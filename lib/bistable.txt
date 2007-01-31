@@ -1,0 +1,65 @@
+(*
+ * (c) 26 Feb 2001 David Campbell
+ *
+ * Offered to the public under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
+ *
+ * This code is made available on the understanding that it will not be
+ * used in safety-critical situations without a full and competent review.
+ *)
+
+(*
+ * An IEC 61131-3 IL and ST compiler.
+ *
+ * Based on the
+ * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
+ *
+ *)
+
+
+(*
+ * This is part of the library conatining the functions
+ * and function blocks defined in the standard.
+ *
+ * SR and RS function blocks
+ * -------------------------
+ *)
+
+
+FUNCTION_BLOCK SR
+  VAR_INPUT
+    S1 : BOOL;
+    R  : BOOL;
+  END_VAR
+  VAR_OUTPUT
+    Q1 : BOOL;
+  END_VAR
+  VAR
+    Q_INTERNAL : BOOL;
+  END_VAR
+
+  Q_INTERNAL := S1 OR ( Q_INTERNAL AND (NOT R));
+  Q1 := Q_INTERNAL;
+END_FUNCTION_BLOCK
+
+FUNCTION_BLOCK RS
+  VAR_INPUT
+    S : BOOL;
+    R1 : BOOL;
+  END_VAR
+  VAR_OUTPUT
+    Q1 : BOOL;
+  END_VAR
+  VAR
+    Q_INTERNAL : BOOL;
+  END_VAR
+
+  Q_INTERNAL := (NOT R1) AND (S OR Q_INTERNAL);
+  Q1 := Q_INTERNAL;
+END_FUNCTION_BLOCK

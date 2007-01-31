@@ -1,0 +1,117 @@
+(*
+ * (c) 2003 Mario de Sousa
+ *
+ * Offered to the public under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
+ *
+ * This code is made available on the understanding that it will not be
+ * used in safety-critical situations without a full and competent review.
+ *)
+
+(*
+ * An IEC 61131-3 IL and ST compiler.
+ *
+ * Based on the
+ * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
+ *
+ *)
+
+(*
+ * This is part of the library conatining the functions
+ * and function blocks defined in the standard.
+ *
+ * Conversion to BCD
+ * -----------------
+ *)
+
+
+
+
+FUNCTION USINT_TO_BCD_BYTE: BYTE
+  VAR_INPUT
+    VALUE : USINT;
+  END_VAR
+
+  USINT_TO_BCD_BYTE := VALUE MOD 10;
+  VALUE := VALUE / 10;
+  USINT_TO_BCD_BYTE := USINT_TO_BCD_BYTE + 16*VALUE;
+  IF VALUE > 9
+  THEN
+    (* The standard is silent on how to handle overflows!! *)
+    (* We simply set it to the highets value!              *)
+    USINT_TO_BCD_BYTE := 16#99;
+  END_IF;
+END_FUNCTION
+
+
+
+
+FUNCTION UINT_TO_BCD_WORD: WORD
+  VAR_INPUT
+    VALUE : UINT;
+  END_VAR
+
+  UINT_TO_BCD_WORD := VALUE MOD 10;
+  VALUE := VALUE / 10;
+  UINT_TO_BCD_WORD := UINT_TO_BCD_WORD + 16*(VALUE MOD 10);
+  VALUE := VALUE / 10;
+  UINT_TO_BCD_WORD := UINT_TO_BCD_WORD + 16*16*(VALUE MOD 10);
+  VALUE := VALUE / 10;
+  UINT_TO_BCD_WORD := UINT_TO_BCD_WORD + 16*16*16*VALUE;
+  IF VALUE > 9
+  THEN
+    (* The standard is silent on how to handle overflows!! *)
+    (* We simply set it to the highets value!              *)
+    UINT_TO_BCD_WORD := 16#9999;
+  END_IF;
+END_FUNCTION
+
+
+
+
+FUNCTION UDINT_TO_BCD_DWORD: DWORD
+  VAR_INPUT
+    VALUE : UINT;
+  END_VAR
+
+  UDINT_TO_BCD_DWORD := VALUE MOD 16;
+  VALUE := VALUE / 10;
+  UDINT_TO_BCD_DWORD := UDINT_TO_BCD_DWORD + 16*(VALUE MOD 10);
+  VALUE := VALUE / 10;
+  UDINT_TO_BCD_DWORD := UDINT_TO_BCD_DWORD + 256*(VALUE MOD 10);
+  VALUE := VALUE / 10;
+  UDINT_TO_BCD_DWORD := UDINT_TO_BCD_DWORD + 16*256*(VALUE MOD 10);
+  VALUE := VALUE / 10;
+  UDINT_TO_BCD_DWORD := UDINT_TO_BCD_DWORD + 256*256*(VALUE MOD 10);
+  VALUE := VALUE / 10;
+  UDINT_TO_BCD_DWORD := UDINT_TO_BCD_DWORD + 16*256*256*(VALUE MOD 10);
+  VALUE := VALUE / 10;
+  UDINT_TO_BCD_DWORD := UDINT_TO_BCD_DWORD + 256*256*256*(VALUE MOD 10);
+  VALUE := VALUE / 10;
+  UDINT_TO_BCD_DWORD := UDINT_TO_BCD_DWORD + 16*256*256*256*VALUE;
+  IF VALUE > 9
+  THEN
+    (* The standard is silent on how to handle overflows!! *)
+    (* We simply set it to the highest value!              *)
+    UDINT_TO_BCD_DWORD := 16#9999_9999;
+  END_IF;
+END_FUNCTION
+
+
+
+
+FUNCTION ULINT_TO_BCD_LWORD: LWORD
+  VAR_INPUT
+    VALUE : UINT;
+  END_VAR
+
+  ULINT_TO_BCD_LWORD := UDINT_TO_BCD_DWORD(VALUE MOD 1_0000_0000);
+  VALUE := VALUE / 1_0000_0000;
+  ULINT_TO_BCD_LWORD := ULINT_TO_BCD_LWORD + 256*256*256*256*UDINT_TO_BCD_DWORD(VALUE);
+END_FUNCTION

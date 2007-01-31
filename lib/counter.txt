@@ -1,0 +1,94 @@
+(* Following taken directly from the IEC 61131.3 draft standard *)
+
+(*
+ * An IEC 61131-3 IL and ST compiler.
+ *
+ * Based on the
+ * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
+ *
+ *)
+
+
+(*
+ * This is part of the library conatining the functions
+ * and function blocks defined in the standard.
+ *
+ * Counter function blocks
+ * -----------------------
+ *)
+
+
+FUNCTION_BLOCK CTU
+  VAR_INPUT
+    CU : BOOL;
+    R : BOOL;
+    PV : INT;
+  END_VAR
+  VAR_OUTPUT
+    Q : BOOL;
+    CV : INT;
+  END_VAR
+  VAR RETAIN
+    PVmax : INT;
+  END_VAR
+  IF R THEN CV := 0 ;
+  ELSIF CU AND (CV < PVmax)
+       THEN CV := CV+1;
+  END_IF ;
+  Q := (CV >= PV) ;
+END_FUNCTION_BLOCK
+
+
+FUNCTION_BLOCK CTD
+  VAR_INPUT
+    CD : BOOL;
+    LD : BOOL;
+    PV : INT;
+  END_VAR
+  VAR_OUTPUT
+    Q : BOOL;
+    CV : INT;
+  END_VAR
+  VAR RETAIN
+    PVmin : INT;
+  END_VAR
+  IF LD THEN CV := PV ;
+  ELSIF CD AND (CV > PVmin)
+      THEN CV := CV-1;
+  END_IF ;
+  Q := (CV <= 0) ;
+END_FUNCTION_BLOCK
+
+
+FUNCTION_BLOCK CTUD
+  VAR_INPUT
+    CU : BOOL;
+    CD : BOOL;
+    R  : BOOL;
+    LD : BOOL;
+    PV : INT;
+  END_VAR
+  VAR_OUTPUT
+    QU : BOOL;
+    QD : BOOL;
+    CV : INT;
+  END_VAR
+  VAR RETAIN
+    PVmax : INT;
+    PVmin : INT;
+  END_VAR
+  IF R THEN CV := 0 ;
+  ELSIF LD THEN CV := PV ;
+  ELSE
+    IF NOT (CU AND CD) THEN
+      IF CU AND (CV < PVmax)
+      THEN CV := CV+1;
+      ELSIF CD AND (CV > PVmin)
+      THEN CV := CV-1;
+      END_IF;
+    END_IF;
+  END_IF ;
+  QU := (CV >= PV) ;
+  QD := (CV <= 0) ;
+END_FUNCTION_BLOCK
+
