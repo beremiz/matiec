@@ -171,7 +171,7 @@ extern YYLTYPE yylloc;
 
 /* Function only called from within flex, but defined
  * in iec.y!
- * We delcare it here...
+ * We declare it here...
  *
  * Search for a symbol in either of the two symbol tables
  * and return the token id of the first symbol found.
@@ -180,6 +180,19 @@ extern YYLTYPE yylloc;
  */
 //token_id_t get_identifier_token(const char *identifier_str);
 int get_identifier_token(const char *identifier_str);
+%}
+
+
+/*********************************************/
+/* Change parse state to body definitions... */
+/*********************************************/
+
+%{
+static int goto_body_state__ = 0;
+
+void cmd_goto_body_state(void) {goto_body_state__ = 1;}
+int  get_goto_body_state(void) {return goto_body_state__;}
+void rst_goto_body_state(void) {goto_body_state__ = 0;}
 %}
 
 
@@ -270,38 +283,38 @@ void unput_text(unsigned int n);
  * to be later matched correctly by the apropriate language parser (st or il).
  * The state machine has 6 possible states (INITIAL, config, decl, body, st, il)
  * Possible state changes are:
- *   INITIAL -> decl (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found,
+ *   INITIAL -> decl_state (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found,
  *                    and followed by a VAR declaration)
- *   INITIAL -> body (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found,
+ *   INITIAL -> il_st_state (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found,
  *                    and _not_ followed by a VAR declaration)
- *   INITIAL -> config (when a CONFIGURATION is found)
- *   decl    -> body (when the last END_VAR is found, i.e. the function body starts)
- *   body    -> sfc (when it figures out it is parsing sfc language)
- *   body    -> st (when it figures out it is parsing st language)
- *   body    -> il (when it figures out it is parsing il language)
- *   decl    -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
- *   st      -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
- *   sfc     -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
- *   il      -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
- *   config  -> INITIAL (when a END_CONFIGURATION is found)
+ *   INITIAL -> config_state (when a CONFIGURATION is found)
+ *   decl_state    -> il_st_state (when the last END_VAR is found, i.e. the function body starts)
+ *   il_st_state   -> sfc_state (when it figures out it is parsing sfc language)
+ *   il_st_state   -> st_state (when it figures out it is parsing st language)
+ *   il_st_state   -> il_state (when it figures out it is parsing il language)
+ *   decl_state    -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
+ *   st_state      -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
+ *   sfc_state     -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
+ *   il_state      -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
+ *   config_state  -> INITIAL (when a END_CONFIGURATION is found)
  */
 /* we are parsing a configuration. */
-%s config
+%s config_state
 
 /* we are parsing a function, program or function block declaration */
-%s decl
+%s decl_state
 
 /* we will be parsing a function body. Whether il/st is remains unknown */
-%x body
+%x il_st_state
 
 /* we are parsing il code -> flex must return the EOL tokens!       */
-%s il
+%s il_state
 
 /* we are parsing st code -> flex must not return the EOL tokens!   */
-%s st
+%s st_state
 
 /* we are parsing sfc code -> flex must not return the EOL tokens!   */
-%s sfc
+%s sfc_state
 
 
 
@@ -620,6 +633,11 @@ incompl_location	%[IQM]\*
 	/*****************************************************/
 	/*****************************************************/
 
+  	if (goto_body_state__) {
+    	yy_push_state(il_st_state);
+    	goto_body_state__ = 0;
+  	}
+
 	/*********************************/
 	/* Handle the pragmas!     */
 	/*********************************/
@@ -634,7 +652,7 @@ incompl_location	%[IQM]\*
 		 yylval.ID=strdup(yytext+1);
 		 return pragma_token;
 		}
-<body>{pragma} {/* return the pragmma without the enclosing '{' and '}' */
+<il_st_state>{pragma} {/* return the pragmma without the enclosing '{' and '}' */
 		 yytext[strlen(yytext)-2] = '\0';
 		 yylval.ID=strdup(yytext+1);
 		 return pragma_token;
@@ -710,9 +728,9 @@ incompl_location	%[IQM]\*
 	/* Handle all the state changes! */
 	/*********************************/
 
-	/* INITIAL -> decl */
+	/* INITIAL -> decl_state */
 <INITIAL>{
-	/* NOTE: how about functions that do not delcare variables, and go directly to the body???
+	/* NOTE: how about functions that do not declare variables, and go directly to the il_st_state???
 	 *      - According to Section 2.5.1.3 (Function Declaration), item 2 in the list, a FUNCTION
 	 *        must have at least one input argument, so a correct declaration will have at least
 	 *        one VAR_INPUT ... VAR_END construct!
@@ -724,65 +742,76 @@ incompl_location	%[IQM]\*
 	 *        construct!
 	 *
 	 *       All the above means that we needn't worry about PROGRAMs, FUNCTIONs or
-	 *       FUNCTION_BLOCKs that do not have at least one VAR_END before the body.
+	 *       FUNCTION_BLOCKs that do not have at least one VAR_END before the il_st_state.
 	 *       If the code has an error, and no VAR_END before the body, we will simply
-	 *       continue in the <decl> state, untill the end of the FUNCTION, FUNCTION_BLOCK
+	 *       continue in the <decl_state> state, untill the end of the FUNCTION, FUNCTION_BLOCK
 	 *       or PROGAM.
 	 */
-FUNCTION				BEGIN(decl); return FUNCTION;
-FUNCTION_BLOCK				BEGIN(decl); return FUNCTION_BLOCK;
-PROGRAM					BEGIN(decl); return PROGRAM;
-CONFIGURATION				BEGIN(config); return CONFIGURATION;
+FUNCTION				BEGIN(decl_state); return FUNCTION;
+FUNCTION_BLOCK				BEGIN(decl_state); return FUNCTION_BLOCK;
+PROGRAM					BEGIN(decl_state); return PROGRAM;
+CONFIGURATION				BEGIN(config_state); return CONFIGURATION;
 }
 
-	/* INITIAL -> body */
+	/* INITIAL -> il_st_state */
 	/* required if the function, program, etc.. has no VAR block! */
 <INITIAL>{
-FUNCTION	BEGIN(body); return FUNCTION;
-FUNCTION_BLOCK	BEGIN(body); return FUNCTION_BLOCK;
-PROGRAM		BEGIN(body); return PROGRAM;
+FUNCTION	BEGIN(il_st_state); return FUNCTION;
+FUNCTION_BLOCK	BEGIN(il_st_state); return FUNCTION_BLOCK;
+PROGRAM		BEGIN(il_st_state); return PROGRAM;
 }
 
-	/* decl -> body */
-<decl>{
+	/* decl_state -> il_st_state */
+<decl_state>{
 END_VAR{st_whitespace}VAR			unput_text(strlen("END_VAR")); return END_VAR;
-END_VAR{st_whitespace}				unput_text(strlen("END_VAR")); BEGIN(body); return END_VAR;
+END_VAR{st_whitespace}				unput_text(strlen("END_VAR")); BEGIN(il_st_state); return END_VAR;
 }
 
-	/* body -> (il | st | sfc) */
-<body>INITIAL_STEP				unput_text(0); BEGIN(sfc);
+	/* il_st_state -> (il_state | st_state | sfc_state) */
+<il_st_state>{
+INITIAL_STEP				unput_text(0); BEGIN(sfc_state);
+{qualified_identifier}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
+{qualified_identifier}"["			unput_text(0); BEGIN(st_state);
 
-<body>{
-{qualified_identifier}{st_whitespace}":="	unput_text(0); BEGIN(st);
-{qualified_identifier}"["			unput_text(0); BEGIN(st);
+RETURN						unput_text(0); BEGIN(st_state);
+IF						unput_text(0); BEGIN(st_state);
+CASE						unput_text(0); BEGIN(st_state);
+FOR						unput_text(0); BEGIN(st_state);
+WHILE						unput_text(0); BEGIN(st_state);
+REPEAT						unput_text(0); BEGIN(st_state);
+EXIT						unput_text(0); BEGIN(st_state);
+:=						unput_text(0); BEGIN(st_state);  /* occurs only in transitions, and not FB bodies! */
 
-RETURN						unput_text(0); BEGIN(st);
-IF						unput_text(0); BEGIN(st);
-CASE						unput_text(0); BEGIN(st);
-FOR						unput_text(0); BEGIN(st);
-WHILE						unput_text(0); BEGIN(st);
-REPEAT						unput_text(0); BEGIN(st);
-EXIT						unput_text(0); BEGIN(st);
 
 
 {identifier}	{int token = get_identifier_token(yytext);
 		 if (token == prev_declared_fb_name_token) {
 		   /* the code has a call to a function block */
-		   BEGIN(st);
+		   BEGIN(st_state);
 		 } else {
-		   BEGIN(il);
+		   BEGIN(il_state);
 		 }
 		 unput_text(0);
 		}
-.		unput_text(0); BEGIN(il);
+.		unput_text(0); BEGIN(il_state);
 
-}	/* end of body lexical parser */
+}	/* end of il_st_state lexical parser */
 
-	/* (decl | body | il | st | sfc) -> INITIAL */
+	/* (il_state | st_state) -> $previous_state (decl_state or sfc_state) */
+<il_state,st_state>{
+END_FUNCTION		yy_pop_state(); unput_text(0);
+END_FUNCTION_BLOCK	yy_pop_state(); unput_text(0);
+END_PROGRAM		yy_pop_state(); unput_text(0);
+END_TRANSITION		yy_pop_state(); unput_text(0);
+END_ACTION			yy_pop_state(); unput_text(0);
+}
+
+	/* (decl_state | sfc_state) -> INITIAL */
+<decl_state,sfc_state>{
 END_FUNCTION		BEGIN(INITIAL); return END_FUNCTION;
 END_FUNCTION_BLOCK	BEGIN(INITIAL); return END_FUNCTION_BLOCK;
 END_PROGRAM		BEGIN(INITIAL); return END_PROGRAM;
-
+}
 	/* config -> INITIAL */
 END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 
@@ -793,8 +822,8 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	/***************************************/
 	/* NOTE: pragmas are handled right at the beginning... */
 
-<INITIAL,config,decl,st,sfc,body>{st_whitespace_no_pragma}	/* Eat any whitespace */
-<il,body>{il_whitespace_no_pragma}		/* Eat any whitespace */
+<INITIAL,config_state,decl_state,st_state,sfc_state,il_st_state>{st_whitespace_no_pragma}	/* Eat any whitespace */
+<il_state,il_st_state>{il_whitespace_no_pragma}		/* Eat any whitespace */
 
 
 	/*****************************************/
@@ -1000,7 +1029,7 @@ END_PROGRAM	return END_PROGRAM;
 	 * ignore them!
 	 */
 	 
-<sfc>{
+<sfc_state>{
 ACTION		return ACTION;
 END_ACTION	return END_ACTION;
 
@@ -1054,7 +1083,7 @@ READ_ONLY		return READ_ONLY;
 	/***********************************/
 	/* B 2.1 Instructions and Operands */
 	/***********************************/
-<il>\n		return EOL;
+<il_state>\n		return EOL;
 
 
 	/*******************/
@@ -1247,8 +1276,8 @@ EXIT		return EXIT;
 	/*****************************************/
 	/* B.1.1 Letters, digits and identifiers */
 	/*****************************************/
-<st>{identifier}/({st_whitespace})"=>"	{yylval.ID=strdup(yytext); return sendto_identifier_token;}
-<il>{identifier}/({il_whitespace})"=>"	{yylval.ID=strdup(yytext); return sendto_identifier_token;}
+<st_state>{identifier}/({st_whitespace})"=>"	{yylval.ID=strdup(yytext); return sendto_identifier_token;}
+<il_state>{identifier}/({il_whitespace})"=>"	{yylval.ID=strdup(yytext); return sendto_identifier_token;}
 {identifier} 				{yylval.ID=strdup(yytext);
 					 /*printf("returning identifier...: %s, %d\n", yytext, get_identifier_token(yytext));*/
 					 return get_identifier_token(yytext);}
@@ -1278,9 +1307,6 @@ EXIT		return EXIT;
 
 
 %%
-
-
-
 
 
 /***********************************/

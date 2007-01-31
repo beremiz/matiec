@@ -168,7 +168,9 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
 /************************/
 /* The functions declared here are defined in iec.flex... */
 void print_include_stack(void);
-
+void cmd_goto_body_state(void);
+int  get_goto_body_state(void);
+void rst_goto_body_state(void);
 
 %}
 
@@ -181,7 +183,13 @@ void print_include_stack(void);
     struct {
       symbol_c	*first;
       symbol_c	*second;
-    } double_symbol; /* used by il_simple_operator_clash_il_operand */
+      symbol_c	*third;
+      symbol_c	*fourth;
+    } tmp_symbol; /* used as a temorary reference to symbols by:
+                                     il_simple_operator_clash_il_operand
+                                     transaction_tmp
+                                     action_tmp
+                             */
 }
 
 
@@ -809,7 +817,10 @@ void print_include_stack(void);
 %type  <leaf>	transition
 %type  <leaf>	steps
 %type  <list>	step_name_list
-%type  <leaf>	transition_condition
+%type  <tmp_symbol> transition_header
+%type  <leaf>	transition_condition_il
+%type  <leaf>	transition_condition_st
+%type  <tmp_symbol> action_header
 %type  <leaf>	action
 %type  <leaf>	transition_name
 
@@ -946,7 +957,7 @@ void print_include_stack(void);
 %type  <leaf>	label
 %type  <leaf>	il_simple_operation
 // helper symbol for il_simple_operation
-%type <double_symbol> il_simple_operator_clash_il_operand
+%type <tmp_symbol> il_simple_operator_clash_il_operand
 %type  <leaf>	il_expression
 %type  <leaf>	il_jump_operation
 %type  <leaf>	il_fb_call
@@ -3629,7 +3640,7 @@ program_access_decl:
 
 /********************************************/
 /* B 1.6 Sequential Function Chart elements *
-/********************************************/////////////////////////////////////////////////////////////////////////////////////////////
+/********************************************/
 /* TODO ... */
 
 sequential_function_chart:
@@ -3728,17 +3739,6 @@ action_time:
 
 indicator_name: variable_name;
 
-transition:
-  TRANSITION FROM steps TO steps transition_condition END_TRANSITION
-	{$$ = new transition_c(NULL, NULL, $3, $5, $6, NULL);}
-| TRANSITION transition_name FROM steps TO steps transition_condition END_TRANSITION
-	{$$ = new transition_c($2, NULL, $4, $6, $7, NULL);}
-| TRANSITION '(' PRIORITY ASSIGN integer ')' FROM steps TO steps transition_condition END_TRANSITION
-	{$$ = new transition_c(NULL, $5, $8, $10, $11, NULL);}
-| TRANSITION transition_name '(' PRIORITY ASSIGN integer ')' FROM steps TO steps transition_condition END_TRANSITION
-	{$$ = new transition_c($2, $6, $9, $11, $12, NULL);}
-;
-
 transition_name: identifier;
 
 steps:
@@ -3755,16 +3755,43 @@ step_name_list:
 	{$$ = $1; $$->add_element($3);}
 ;
 
-transition_condition:
-  ':' simple_instr_list
-	{$$ = new transition_condition_c($2, NULL);} 
-| ASSIGN expression ';'
-	{$$ = new transition_condition_c(NULL, $2);} 
+transition_header:
+  TRANSITION FROM steps TO steps
+	{$$.first = NULL; $$.second = NULL; $$.third = $3; $$.fourth = $5; cmd_goto_body_state();}
+| TRANSITION transition_name FROM steps TO steps 
+	{$$.first = $2; $$.second = NULL; $$.third = $4; $$.fourth = $6; cmd_goto_body_state();}
+| TRANSITION '(' PRIORITY ASSIGN integer ')' FROM steps TO steps
+	{$$.first = NULL; $$.second = $5; $$.third = $8; $$.fourth = $10; cmd_goto_body_state();}
+| TRANSITION transition_name '(' PRIORITY ASSIGN integer ')' FROM steps TO steps
+	{$$.first = $2; $$.second = $6; $$.third = $9; $$.fourth = $11; cmd_goto_body_state();}
 ;
 
+transition_condition_il:
+  ':' simple_instr_list
+	{$$ = new transition_condition_c($2, NULL);} ;
+
+transition_condition_st:
+  ASSIGN expression ';'
+	{$$ = new transition_condition_c(NULL, $2);};
+
+transition:
+  transition_header transition_condition_il END_TRANSITION
+        {$$ = new transition_c($1.first, $1.second, $1.third, $1.fourth, $2, 
+NULL);}
+|  transition_header transition_condition_st END_TRANSITION
+        {$$ = new transition_c($1.first, $1.second, $1.third, $1.fourth, NULL, 
+$2);}
+;
+
+action_header:
+  ACTION action_name ':' 
+	{$$.first = $2; cmd_goto_body_state();}
+;
+
+
 action:
-  ACTION action_name ':' function_block_body END_ACTION
-	{$$ = new action_c($2, $4);}
+  action_header function_block_body END_ACTION
+	{$$ = new action_c($1.first, $2);}
 ;
 
 

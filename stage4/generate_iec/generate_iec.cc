@@ -1135,7 +1135,12 @@ void *visit(transition_c *symbol) {
   symbol->to_steps->accept(*this);
   s4o.indent_right();
   s4o.print(s4o.indent_spaces);
-  symbol->transition_condition->accept(*this);
+  if (symbol->transition_condition_il != NULL) {
+  	symbol->transition_condition_il->accept(*this);
+  }
+  if (symbol->transition_condition_st != NULL) {
+  	symbol->transition_condition_st->accept(*this);
+  }
   s4o.indent_left();
   s4o.print(s4o.indent_spaces);
   s4o.print("END_TRANSITION");
