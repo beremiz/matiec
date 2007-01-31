@@ -276,10 +276,12 @@ void unput_text(unsigned int n);
  *                    and _not_ followed by a VAR declaration)
  *   INITIAL -> config (when a CONFIGURATION is found)
  *   decl    -> body (when the last END_VAR is found, i.e. the function body starts)
+ *   body    -> sfc (when it figures out it is parsing sfc language)
  *   body    -> st (when it figures out it is parsing st language)
  *   body    -> il (when it figures out it is parsing il language)
  *   decl    -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
  *   st      -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
+ *   sfc     -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
  *   il      -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
  *   config  -> INITIAL (when a END_CONFIGURATION is found)
  */
@@ -298,6 +300,8 @@ void unput_text(unsigned int n);
 /* we are parsing st code -> flex must not return the EOL tokens!   */
 %s st
 
+/* we are parsing sfc code -> flex must not return the EOL tokens!   */
+%s sfc
 
 
 
@@ -690,7 +694,7 @@ incompl_location	%[IQM]\*
 			    yylineno = include_stack[include_stack_ptr].lineno;
 			      /* removing constness of char *. This is safe actually,
 			       * since the only real const char * that is stored on the stack is
-			       * the first one (i.e. the opne that gets stored in include_stack[0],
+			       * the first one (i.e. the one that gets stored in include_stack[0],
 			       * which is never free'd!
 			       */
 			    free((char *)current_filename);
@@ -745,7 +749,9 @@ END_VAR{st_whitespace}VAR			unput_text(strlen("END_VAR")); return END_VAR;
 END_VAR{st_whitespace}				unput_text(strlen("END_VAR")); BEGIN(body); return END_VAR;
 }
 
-	/* body -> (il | st) */
+	/* body -> (il | st | sfc) */
+<body>INITIAL_STEP				unput_text(0); BEGIN(sfc);
+
 <body>{
 {qualified_identifier}{st_whitespace}":="	unput_text(0); BEGIN(st);
 {qualified_identifier}"["			unput_text(0); BEGIN(st);
@@ -772,7 +778,7 @@ EXIT						unput_text(0); BEGIN(st);
 
 }	/* end of body lexical parser */
 
-	/* (decl | body | il | st) -> INITIAL */
+	/* (decl | body | il | st | sfc) -> INITIAL */
 END_FUNCTION		BEGIN(INITIAL); return END_FUNCTION;
 END_FUNCTION_BLOCK	BEGIN(INITIAL); return END_FUNCTION_BLOCK;
 END_PROGRAM		BEGIN(INITIAL); return END_PROGRAM;
@@ -787,7 +793,7 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	/***************************************/
 	/* NOTE: pragmas are handled right at the beginning... */
 
-<INITIAL,config,decl,st,body>{st_whitespace_no_pragma}	/* Eat any whitespace */
+<INITIAL,config,decl,st,sfc,body>{st_whitespace_no_pragma}	/* Eat any whitespace */
 <il,body>{il_whitespace_no_pragma}		/* Eat any whitespace */
 
 
@@ -993,7 +999,8 @@ END_PROGRAM	return END_PROGRAM;
 	 * They will have to be handled when we include parsing of SFC... For now, simply
 	 * ignore them!
 	 */
-	 /*
+	 
+<sfc>{
 ACTION		return ACTION;
 END_ACTION	return END_ACTION;
 
@@ -1018,7 +1025,7 @@ P		return P;
 
 R		return R;
 S		return S;
-	*/
+}
 
 
 	/********************************/

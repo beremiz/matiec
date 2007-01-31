@@ -945,7 +945,8 @@ void *visit(function_declaration_c *symbol) {
 void *visit(var_declarations_list_c *symbol) {return print_list(symbol);}
 
 void *visit(function_var_decls_c *symbol) {
-  s4o.print(s4o.indent_spaces); s4o.print("VAR ");
+  //s4o.print(s4o.indent_spaces); 
+  s4o.print("VAR ");
   if (symbol->option != NULL)
     symbol->option->accept(*this);
   s4o.print("\n");
@@ -1012,12 +1013,180 @@ void *visit(program_declaration_c *symbol) {
   symbol->program_type_name->accept(*this);
   s4o.print("\n");
   s4o.indent_right();
+  s4o.print(s4o.indent_spaces);
   symbol->var_declarations->accept(*this);
   s4o.print("\n");
   symbol->function_block_body->accept(*this);
   s4o.indent_left();
-  s4o.print(s4o.indent_spaces + "END_PROGRAM\n\n\n");
+  s4o.print("\n");
+  s4o.print("END_PROGRAM\n\n\n");
   return NULL;
+}
+
+/***********************************/
+/* B 1.6 Sequential Function Chart */
+/***********************************/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void *visit(sequential_function_chart_c *symbol) {
+  print_list(symbol, "", "\n\n", "");
+  return NULL;
+}
+
+void *visit(sfc_network_c *symbol) {
+  print_list(symbol, "", "\n\n", "");
+  return NULL;
+}
+
+void *visit(initial_step_c *symbol) {
+  s4o.print(s4o.indent_spaces);
+  s4o.print("INITIAL_STEP ");
+  symbol->step_name->accept(*this);
+  s4o.print(" :\n");
+  s4o.indent_right();
+  symbol->action_association_list->accept(*this);
+  s4o.print("\n");
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces);
+  s4o.print("END_STEP ");
+  return NULL;
+}
+
+void *visit(step_c *symbol) {
+  s4o.print(s4o.indent_spaces);
+  s4o.print("STEP ");
+  symbol->step_name->accept(*this);
+  s4o.print(" :\n");
+  s4o.indent_right();
+  symbol->action_association_list->accept(*this);
+  s4o.print("\n");
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces);
+  s4o.print("END_STEP ");
+  return NULL;
+}
+
+void *visit(action_association_list_c *symbol) {
+  print_list(symbol, "", "\n", "");
+  return NULL;
+}
+
+void *visit(action_association_c *symbol) {
+  if(symbol->action_qualifier != NULL){
+    symbol->action_name->accept(*this);
+  }
+  s4o.print(" (");
+  if(symbol->action_qualifier != NULL){
+    symbol->action_qualifier->accept(*this);
+  }
+  s4o.print(" ");
+  if(symbol->action_qualifier != NULL){
+    symbol->indicator_name_list->accept(*this);
+  }
+  s4o.print(" )");
+  return NULL;
+}
+
+void *visit(indicator_name_list_c *symbol) {
+ print_list(symbol, "", ", ", "");
+ return NULL;
+}
+
+void *visit(action_qualifier_c *symbol) {
+ symbol->action_qualifier->accept(*this);
+ symbol->action_time->accept(*this);
+ return NULL;
+}
+
+void *visit(qualifier_c *symbol) {
+ symbol->accept(*this);
+ return NULL;
+}
+
+void *visit(timed_qualifier_c *symbol) {
+ symbol->accept(*this);
+ return NULL;
+}
+
+void *visit(transition_c *symbol) {
+  s4o.print(s4o.indent_spaces);
+  s4o.print("TRANSITION ");
+  if (symbol->transition_name != NULL){
+    symbol->transition_name->accept(*this);
+    s4o.print(" ");
+  }
+  if (symbol->integer != NULL){
+    s4o.print("(PRIORITY := ");
+    symbol->integer->accept(*this);
+    s4o.print(") ");
+  }
+  s4o.print("FROM ");
+  symbol->from_steps->accept(*this);
+  s4o.print("TO ");
+  symbol->to_steps->accept(*this);
+  s4o.indent_right();
+  s4o.print(s4o.indent_spaces);
+  symbol->transition_condition->accept(*this);
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces);
+  s4o.print("END_TRANSITION");
+  return NULL;
+}
+
+void *visit(steps_c *symbol) {
+  if(symbol->step_name != NULL){
+    symbol->step_name->accept(*this);
+    s4o.print(" ");
+  }
+  if(symbol->step_name_list != NULL){
+    symbol->step_name_list->accept(*this);
+  }
+  return NULL;
+}
+
+void *visit(step_name_list_c *symbol) {
+  print_list(symbol, "(", ", ", ") ");
+  return NULL;
+}
+
+void *visit(transition_condition_c *symbol) {
+  if (symbol->simple_instr_list != NULL) {
+    s4o.print(s4o.indent_spaces);
+    s4o.print(":\n");
+    symbol->simple_instr_list->accept(*this);
+  }
+  if (symbol->expression != NULL) {
+    s4o.print("\n");
+    s4o.print(s4o.indent_spaces);
+    s4o.print(":= ");
+    symbol->expression->accept(*this);
+    s4o.print(";\n");
+  }
+  return NULL;
+}
+
+void *visit(action_c *symbol) {
+ s4o.print(s4o.indent_spaces);
+ s4o.print("ACTION ");
+ symbol->action_name->accept(*this);
+ s4o.print(": ");
+ s4o.indent_right();
+ s4o.print(s4o.indent_spaces);
+ symbol->function_block_body->accept(*this);
+ s4o.print("\n ");
+ s4o.indent_left();
+ s4o.print(s4o.indent_spaces);
+ s4o.print("END_ACTION");
+ return NULL;
 }
 
 

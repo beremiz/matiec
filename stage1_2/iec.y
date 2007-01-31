@@ -790,18 +790,19 @@ void print_include_stack(void);
 /* B 1.6 Sequential Function Chart elements */
 /********************************************/
 /* TODO */
-/*
+
 %type  <list>	sequential_function_chart
-%type  <leaf>	sfc_network
+%type  <list>	sfc_network
 %type  <leaf>	initial_step
 %type  <leaf>	step
-%type  <leaf>	action_association_list
+%type  <list>	action_association_list
 %type  <leaf>	step_name
 %type  <leaf>	action_association
-/* helper symbol for action_association *
+/* helper symbol for action_association */
 %type  <list>	indicator_name_list
 %type  <leaf>	action_name
 %type  <leaf>	action_qualifier
+%type  <leaf>	qualifier
 %type  <leaf>	timed_qualifier
 %type  <leaf>	action_time
 %type  <leaf>	indicator_name
@@ -810,7 +811,8 @@ void print_include_stack(void);
 %type  <list>	step_name_list
 %type  <leaf>	transition_condition
 %type  <leaf>	action
-*/
+%type  <leaf>	transition_name
+
 
 %token ASSIGN
 %token ACTION
@@ -1542,22 +1544,6 @@ identifier:
 | JMP_operator		{$$ = il_operator_c_2_identifier_c($1);}
 | JMPC_operator		{$$ = il_operator_c_2_identifier_c($1);}
 | JMPCN_operator	{$$ = il_operator_c_2_identifier_c($1);}
-/**/
-| L		{$$ = new identifier_c(strdup("L"));}
-| D		{$$ = new identifier_c(strdup("D"));}
-| SD		{$$ = new identifier_c(strdup("SD"));}
-| DS		{$$ = new identifier_c(strdup("DS"));}
-| SL		{$$ = new identifier_c(strdup("SL"));}
-| N		{$$ = new identifier_c(strdup("N"));}
-/* NOTE: the following two clash with the R and S IL operators.
- * It will have to be handled when we include parsing of SFC...
- */
-/*
-| R		{$$ = new identifier_c(strdup("R"));}
-| S		{$$ = new identifier_c(strdup("S"));}
-*/
-| P		{$$ = new identifier_c(strdup("P"));}
-
 ;
 
 /*********************/
@@ -3566,8 +3552,8 @@ non_retentive_var_decls:
 function_block_body:
   statement_list	{$$ = $1;}
 | instruction_list	{$$ = $1;}
+| sequential_function_chart	{$$ = $1;}
 /*
-| sequential_function_chart
 | ladder_diagram
 | function_block_diagram
 | <other languages>
@@ -3642,110 +3628,145 @@ program_access_decl:
 
 
 /********************************************/
-/* B 1.6 Sequential Function Chart elements */
-/********************************************/
+/* B 1.6 Sequential Function Chart elements *
+/********************************************/////////////////////////////////////////////////////////////////////////////////////////////
 /* TODO ... */
 
-/*
 sequential_function_chart:
   sfc_network
+	{$$ = new sequential_function_chart_c(); $$->add_element($1);}
 | sequential_function_chart sfc_network
+	{$$ = $1; $$->add_element($2);}
 ;
 
 sfc_network:
   initial_step
+	{$$ = new sfc_network_c(); $$->add_element($1);}
 | sfc_network step
+	{$$ = $1; $$->add_element($2);}
 | sfc_network transition
+	{$$ = $1; $$->add_element($2);}
 | sfc_network action
+	{$$ = $1; $$->add_element($2);}
 ;
 
 initial_step:
   INITIAL_STEP step_name ':' action_association_list END_STEP
+	{$$ = new initial_step_c($2, $4);}
 ;
 
 step:
   STEP step_name ':' action_association_list END_STEP
+	{$$ = new step_c($2, $4);}
 ;
 
 /* helper symbol for:
  *  - initial_step
  *  - step
- *
+ */
 action_association_list:
-  /* empty *
+  /* empty */
+	{$$ = new action_association_list_c();}
 | action_association_list action_association ';'
+	{$$ = $1; $$->add_element($2);}
 ;
+
 
 step_name: identifier;
 
 action_association:
   action_name '(' action_qualifier indicator_name_list ')'
+	{$$ = new action_association_c($1, $3, $4, NULL);}
 ;
 
-/* helper symbol for action_association *
+/* helper symbol for action_association */
 indicator_name_list:
-  /* empty *
+  /* empty */
+	{$$ = new indicator_name_list_c();}
 | indicator_name_list ',' indicator_name
+	{$$ = $1; $$->add_element($3);}
 ;
 
 action_name: identifier;
 
 action_qualifier:
-  /* empty *
-| N
-| R
-| S
-| P
+  /* empty */
+	{$$ = NULL;}
+| qualifier
+	{$$ = new action_qualifier_c($1, NULL);}
 | timed_qualifier ',' action_time
+	{$$ = new action_qualifier_c($1, $3);}
+;
+
+//N_token: N 	{$$ = new N_token_c();};
+
+qualifier:
+N		{$$ = new qualifier_c(strdup("N"));}
+/* NOTE: the following two clash with the R and S IL operators.
+ * It will have to be handled when we include parsing of SFC...
+ */
+/*
+| R		{$$ = new identifier_c(strdup("R"));}
+| S		{$$ = new identifier_c(strdup("S"));}
+*/
+| P		{$$ = new qualifier_c(strdup("P"));}
 ;
 
 timed_qualifier:
-  L
-| D
-| SD
-| DS
-| SL
+L		{$$ = new timed_qualifier_c(strdup("L"));}
+| D		{$$ = new timed_qualifier_c(strdup("D"));}
+| SD		{$$ = new timed_qualifier_c(strdup("SD"));}
+| DS		{$$ = new timed_qualifier_c(strdup("DS"));}
+| SL		{$$ = new timed_qualifier_c(strdup("SL"));}
 ;
 
 action_time:
   duration
 | variable_name
+| transition_name
 ;
 
 indicator_name: variable_name;
 
 transition:
   TRANSITION FROM steps TO steps transition_condition END_TRANSITION
+	{$$ = new transition_c(NULL, NULL, $3, $5, $6, NULL);}
 | TRANSITION transition_name FROM steps TO steps transition_condition END_TRANSITION
+	{$$ = new transition_c($2, NULL, $4, $6, $7, NULL);}
 | TRANSITION '(' PRIORITY ASSIGN integer ')' FROM steps TO steps transition_condition END_TRANSITION
+	{$$ = new transition_c(NULL, $5, $8, $10, $11, NULL);}
 | TRANSITION transition_name '(' PRIORITY ASSIGN integer ')' FROM steps TO steps transition_condition END_TRANSITION
+	{$$ = new transition_c($2, $6, $9, $11, $12, NULL);}
 ;
 
 transition_name: identifier;
 
 steps:
   step_name
+	{$$ = new steps_c($1, NULL);}
 | '(' step_name_list ')'
+	{$$ = new steps_c(NULL, $2);}
 ;
-
 
 step_name_list:
   step_name ',' step_name
+	{$$ = new step_name_list_c(); $$->add_element($1); $$->add_element($3);}
 | step_name_list ',' step_name
+	{$$ = $1; $$->add_element($3);}
 ;
 
-
 transition_condition:
-  ':' simple_instruction_list
+  ':' simple_instr_list
+	{$$ = new transition_condition_c($2, NULL);} 
 | ASSIGN expression ';'
-| ':' fbd_network
-| ':' rung
+	{$$ = new transition_condition_c(NULL, $2);} 
 ;
 
 action:
   ACTION action_name ':' function_block_body END_ACTION
+	{$$ = new action_c($2, $4);}
 ;
-*/
+
 
 /********************************/
 /* B 1.7 Configuration elements */
