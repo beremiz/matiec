@@ -3730,11 +3730,10 @@ L		{$$ = new timed_qualifier_c(strdup("L"));}
 
 action_time:
   duration
-| variable_name
-//| transition_name
+| variable
 ;
 
-indicator_name: variable_name;
+indicator_name: variable;
 
 transition_name: identifier;
 
@@ -3764,12 +3763,14 @@ transition_header:
 ;
 
 transition_condition_il:
-  ':' simple_instr_list
-	{$$ = new transition_condition_c($2, NULL);} ;
+  ':' eol_list simple_instr_list
+	{$$ = new transition_condition_c($3, NULL);}
+;
 
 transition_condition_st:
   ASSIGN expression ';'
-	{$$ = new transition_condition_c(NULL, $2);};
+	{$$ = new transition_condition_c(NULL, $2);}
+;
 
 transition:
   transition_header transition_condition_il END_TRANSITION
