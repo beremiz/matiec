@@ -773,7 +773,7 @@ END_VAR{st_whitespace}VAR		{unput_text(strlen("END_VAR"));
 					 return END_VAR;
 					}
 END_VAR{st_whitespace}INITIAL_STEP	{unput_text(strlen("END_VAR")); 
-					 BEGIN(sfc_state); 
+					 yy_push_state(sfc_state); 
 					 return END_VAR;
 					}
 END_VAR{st_whitespace}			{unput_text(strlen("END_VAR")); 
