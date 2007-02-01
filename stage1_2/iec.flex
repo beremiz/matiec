@@ -764,12 +764,12 @@ PROGRAM		BEGIN(il_st_state); return PROGRAM;
 	/* decl_state -> il_st_state */
 <decl_state>{
 END_VAR{st_whitespace}VAR			unput_text(strlen("END_VAR")); return END_VAR;
-END_VAR{st_whitespace}				unput_text(strlen("END_VAR")); BEGIN(il_st_state); return END_VAR;
+END_VAR{st_whitespace}				unput_text(strlen("END_VAR")); yy_push_state(il_st_state); return END_VAR;
 }
 
 	/* il_st_state -> (il_state | st_state | sfc_state) */
 <il_st_state>{
-INITIAL_STEP				unput_text(0); BEGIN(sfc_state);
+INITIAL_STEP				unput_text(0); yy_push_state(sfc_state);
 {qualified_identifier}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
 {qualified_identifier}"["			unput_text(0); BEGIN(st_state);
 
@@ -806,8 +806,15 @@ END_TRANSITION		yy_pop_state(); unput_text(0);
 END_ACTION			yy_pop_state(); unput_text(0);
 }
 
-	/* (decl_state | sfc_state) -> INITIAL */
-<decl_state,sfc_state>{
+	/* sfc_state -> INITIAL */
+<sfc_state>{
+END_FUNCTION		yy_pop_state(); unput_text(0);
+END_FUNCTION_BLOCK	yy_pop_state(); unput_text(0);
+END_PROGRAM		yy_pop_state(); unput_text(0);
+}
+
+	/* decl_state -> INITIAL */
+<decl_state>{
 END_FUNCTION		BEGIN(INITIAL); return END_FUNCTION;
 END_FUNCTION_BLOCK	BEGIN(INITIAL); return END_FUNCTION_BLOCK;
 END_PROGRAM		BEGIN(INITIAL); return END_PROGRAM;
