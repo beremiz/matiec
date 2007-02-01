@@ -1037,6 +1037,9 @@ void *visit(program_declaration_c *symbol) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
 /* sequential_function_chart {sfc_network} */
 void *visit(sequential_function_chart_c *symbol) {
   print_list(symbol, "", "\n\n", "");
@@ -1120,16 +1123,21 @@ void *visit(action_qualifier_c *symbol) {
 
 /* N | R | S | P */
 void *visit(qualifier_c *symbol) {
- symbol->accept(*this);
- return NULL;
+  symbol->accept(*this);
+  return NULL;
 }
 
 /* L | D | SD | DS | SL */
 void *visit(timed_qualifier_c *symbol) {
- symbol->accept(*this);
- return NULL;
+  symbol->accept(*this);
+  return NULL;
 }
 
+/* TRANSITION [transition_name] ['(' 'PRIORITY' ':=' integer ')']
+ *   FROM steps TO steps 
+ *   transition_condition
+ * END_TRANSITION
+ */
 void *visit(transition_c *symbol) {
   s4o.print(s4o.indent_spaces);
   s4o.print("TRANSITION ");
@@ -1160,6 +1168,7 @@ void *visit(transition_c *symbol) {
   return NULL;
 }
 
+/* step_name | step_name_list */
 void *visit(steps_c *symbol) {
   if(symbol->step_name != NULL){
     symbol->step_name->accept(*this);
@@ -1171,11 +1180,13 @@ void *visit(steps_c *symbol) {
   return NULL;
 }
 
+/* '(' step_name ',' step_name {',' step_name} ')' */
 void *visit(step_name_list_c *symbol) {
   print_list(symbol, "(", ", ", ") ");
   return NULL;
 }
 
+/* ':' simple_instr_list | ':=' expression */
 void *visit(transition_condition_c *symbol) {
   if (symbol->simple_instr_list != NULL) {
     s4o.print(s4o.indent_spaces);
@@ -1192,23 +1203,24 @@ void *visit(transition_condition_c *symbol) {
   return NULL;
 }
 
+/* ACTION action_name ':' function_block_body END_ACTION */
 void *visit(action_c *symbol) {
- s4o.print(s4o.indent_spaces);
- s4o.print("ACTION ");
- symbol->action_name->accept(*this);
- s4o.print(": ");
- s4o.indent_right();
- s4o.print(s4o.indent_spaces);
- symbol->function_block_body->accept(*this);
- s4o.print("\n ");
- s4o.indent_left();
- s4o.print(s4o.indent_spaces);
- s4o.print("END_ACTION");
- return NULL;
+  s4o.print(s4o.indent_spaces);
+  s4o.print("ACTION ");
+  symbol->action_name->accept(*this);
+  s4o.print(": ");
+  s4o.indent_right();
+  s4o.print(s4o.indent_spaces);
+  symbol->function_block_body->accept(*this);
+  s4o.print("\n ");
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces);
+  s4o.print("END_ACTION");
+  return NULL;
 }
-
-
-
+ 
+ 
+ 
 /********************************/
 /* B 1.7 Configuration elements */
 /********************************/
