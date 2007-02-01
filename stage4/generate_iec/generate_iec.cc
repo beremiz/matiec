@@ -1037,16 +1037,19 @@ void *visit(program_declaration_c *symbol) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* sequential_function_chart {sfc_network} */
 void *visit(sequential_function_chart_c *symbol) {
   print_list(symbol, "", "\n\n", "");
   return NULL;
 }
 
+/* sfc_network {step | transition | action} */
 void *visit(sfc_network_c *symbol) {
   print_list(symbol, "", "\n\n", "");
   return NULL;
 }
 
+/* INITIAL_STEP step_name ':' [action_association_list] END_STEP */
 void *visit(initial_step_c *symbol) {
   s4o.print(s4o.indent_spaces);
   s4o.print("INITIAL_STEP ");
@@ -1061,6 +1064,7 @@ void *visit(initial_step_c *symbol) {
   return NULL;
 }
 
+/* STEP step_name ':' [action_association_list] END_STEP */
 void *visit(step_c *symbol) {
   s4o.print(s4o.indent_spaces);
   s4o.print("STEP ");
@@ -1075,11 +1079,13 @@ void *visit(step_c *symbol) {
   return NULL;
 }
 
+/* action_association_list {action_association} */
 void *visit(action_association_list_c *symbol) {
   print_list(symbol, "", "\n", "");
   return NULL;
 }
 
+/* action_name '(' [action_qualifier] [indicator_name_list] ')' */
 void *visit(action_association_c *symbol) {
   if(symbol->action_qualifier != NULL){
     symbol->action_name->accept(*this);
@@ -1089,29 +1095,36 @@ void *visit(action_association_c *symbol) {
     symbol->action_qualifier->accept(*this);
   }
   s4o.print(" ");
-  if(symbol->action_qualifier != NULL){
+  if(symbol->indicator_name_list != NULL){
     symbol->indicator_name_list->accept(*this);
   }
   s4o.print(" )");
   return NULL;
 }
 
+/* indicator_name_list ',' indicator_name */
 void *visit(indicator_name_list_c *symbol) {
- print_list(symbol, "", ", ", "");
- return NULL;
+  print_list(symbol, "", ", ", "");
+  return NULL;
 }
 
+/* action_qualifier [',' action_time] */
 void *visit(action_qualifier_c *symbol) {
- symbol->action_qualifier->accept(*this);
- symbol->action_time->accept(*this);
- return NULL;
+  symbol->action_qualifier->accept(*this);
+  if(symbol->action_time != NULL){
+    s4o.print(", ");
+    symbol->action_time->accept(*this);
+  }
+  return NULL;
 }
 
+/* N | R | S | P */
 void *visit(qualifier_c *symbol) {
  symbol->accept(*this);
  return NULL;
 }
 
+/* L | D | SD | DS | SL */
 void *visit(timed_qualifier_c *symbol) {
  symbol->accept(*this);
  return NULL;
