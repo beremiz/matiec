@@ -633,10 +633,10 @@ incompl_location	%[IQM]\*
 	/*****************************************************/
 	/*****************************************************/
 
-  	if (goto_body_state__) {
-    	yy_push_state(il_st_state);
-    	goto_body_state__ = 0;
-  	}
+	if (goto_body_state__) {
+	  yy_push_state(il_st_state);
+	  goto_body_state__ = 0;
+	}
 
 	/*********************************/
 	/* Handle the pragmas!     */
@@ -755,21 +755,35 @@ CONFIGURATION				BEGIN(config_state); return CONFIGURATION;
 
 	/* INITIAL -> il_st_state */
 	/* required if the function, program, etc.. has no VAR block! */
+	/* We comment it out since the standard does not allow this.  */
+	/* NOTE: Even if we were to include the following code, it    */
+	/*       would have no effect whatsoever since the above      */
+	/*       rules will take precendence!                         */
+	/*
 <INITIAL>{
 FUNCTION	BEGIN(il_st_state); return FUNCTION;
 FUNCTION_BLOCK	BEGIN(il_st_state); return FUNCTION_BLOCK;
 PROGRAM		BEGIN(il_st_state); return PROGRAM;
 }
+	*/
 
-	/* decl_state -> il_st_state */
+	/* decl_state -> (il_st_state | sfc_state) */
 <decl_state>{
-END_VAR{st_whitespace}VAR			unput_text(strlen("END_VAR")); return END_VAR;
-END_VAR{st_whitespace}				unput_text(strlen("END_VAR")); yy_push_state(il_st_state); return END_VAR;
+END_VAR{st_whitespace}VAR		{unput_text(strlen("END_VAR")); 
+					 return END_VAR;
+					}
+END_VAR{st_whitespace}INITIAL_STEP	{unput_text(strlen("END_VAR")); 
+					 BEGIN(sfc_state); 
+					 return END_VAR;
+					}
+END_VAR{st_whitespace}			{unput_text(strlen("END_VAR")); 
+					 cmd_goto_body_state(); 
+					 return END_VAR;
+					}
 }
 
-	/* il_st_state -> (il_state | st_state | sfc_state) */
+	/* il_st_state -> (il_state | st_state) */
 <il_st_state>{
-INITIAL_STEP				unput_text(0); yy_push_state(sfc_state);
 {qualified_identifier}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
 {qualified_identifier}"["			unput_text(0); BEGIN(st_state);
 
@@ -780,8 +794,8 @@ FOR						unput_text(0); BEGIN(st_state);
 WHILE						unput_text(0); BEGIN(st_state);
 REPEAT						unput_text(0); BEGIN(st_state);
 EXIT						unput_text(0); BEGIN(st_state);
-:=						unput_text(0); BEGIN(st_state);  /* occurs only in transitions, and not FB bodies! */
-
+	/* ':=' occurs only in transitions, and not Function or FB bodies! */
+:=						unput_text(0); BEGIN(st_state);  
 
 
 {identifier}	{int token = get_identifier_token(yytext);
@@ -803,7 +817,7 @@ END_FUNCTION		yy_pop_state(); unput_text(0);
 END_FUNCTION_BLOCK	yy_pop_state(); unput_text(0);
 END_PROGRAM		yy_pop_state(); unput_text(0);
 END_TRANSITION		yy_pop_state(); unput_text(0);
-END_ACTION			yy_pop_state(); unput_text(0);
+END_ACTION		yy_pop_state(); unput_text(0);
 }
 
 	/* sfc_state -> INITIAL */
