@@ -3641,7 +3641,6 @@ program_access_decl:
 /********************************************/
 /* B 1.6 Sequential Function Chart elements *
 /********************************************/
-/* TODO ... */
 
 sequential_function_chart:
   sfc_network
@@ -3709,8 +3708,6 @@ action_qualifier:
 	{$$ = new action_qualifier_c($1, $3);}
 ;
 
-//N_token: N 	{$$ = new N_token_c();};
-
 qualifier:
 N		{$$ = new qualifier_c(strdup("N"));}
 /* NOTE: the following two clash with the R and S IL operators.
@@ -3734,7 +3731,7 @@ L		{$$ = new timed_qualifier_c(strdup("L"));}
 action_time:
   duration
 | variable_name
-| transition_name
+//| transition_name
 ;
 
 indicator_name: variable_name;
@@ -3776,11 +3773,9 @@ transition_condition_st:
 
 transition:
   transition_header transition_condition_il END_TRANSITION
-        {$$ = new transition_c($1.first, $1.second, $1.third, $1.fourth, $2, 
-NULL);}
+        {$$ = new transition_c($1.first, $1.second, $1.third, $1.fourth, $2, NULL);}
 |  transition_header transition_condition_st END_TRANSITION
-        {$$ = new transition_c($1.first, $1.second, $1.third, $1.fourth, NULL, 
-$2);}
+        {$$ = new transition_c($1.first, $1.second, $1.third, $1.fourth, NULL, $2);}
 ;
 
 action_header:
