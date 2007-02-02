@@ -582,11 +582,11 @@ integer_ms		{integer}ms
 /* B.1.4.1   Directly Represented Variables */
 /********************************************/
 /* The correct definition, if the standard were to be followed... */
-/*
-location_prefix		[IQM]
-size_prefix		[XBWDL]
-direct_variable		%{location_prefix}({size_prefix}?){integer}((.{integer})*)
-*/
+
+location_prefix			[IQM]
+size_prefix			[XBWDL]
+direct_variable_standard	%{location_prefix}({size_prefix}?){integer}((.{integer})*)
+
 
 /* For the MatPLC, we will accept %<identifier>
  * as a direct variable, this being mapped onto the MatPLC point
@@ -605,10 +605,12 @@ direct_variable		%{location_prefix}({size_prefix}?){integer}((.{integer})*)
  *    VAR
  *       AT %I3 : BYTE := 255;
  *    END_VAR
- *    in which case we are currently using "I3" as the variable
- *    name. For the other names, this would create havoc!!!
+ *    in which case we are currently using "%I3" as the variable
+ *    name.
  */
-direct_variable		%{identifier}
+direct_variable_matplc		%{identifier}
+
+direct_variable			{direct_variable_standard}|{direct_variable_matplc}
 
 /******************************************/
 /* B 1.4.3 - Declaration & Initialisation */
