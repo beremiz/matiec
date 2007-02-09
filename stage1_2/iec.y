@@ -176,6 +176,12 @@ void rst_goto_body_state(void);
 
 
 
+%glr-parser
+// %expect-rr 1
+
+
+
+
 %union {
     symbol_c 	*leaf;
     list_c	*list;
@@ -543,6 +549,7 @@ void rst_goto_body_state(void);
 /* helper symbol for enumerated_value */
 %type  <list>	enumerated_value_list
 %type  <leaf>	enumerated_value
+%type  <leaf>	enumerated_value_without_identifier
 
 %type  <leaf>	array_type_declaration
 %type  <leaf>	array_spec_init
@@ -797,7 +804,6 @@ void rst_goto_body_state(void);
 /********************************************/
 /* B 1.6 Sequential Function Chart elements */
 /********************************************/
-/* TODO */
 
 %type  <list>	sequential_function_chart
 %type  <list>	sfc_network
@@ -2315,6 +2321,11 @@ enumerated_value:
 ;
 
 
+enumerated_value_without_identifier:
+  prev_declared_enumerated_type_name '#' any_identifier
+	{$$ = new enumerated_value_c($1, $3);}
+;
+
 
 array_type_declaration:
 /*  array_type_name ':' array_spec_init */
@@ -2524,11 +2535,13 @@ symbolic_variable:
 /* NOTE: To be entirely correct, variable_name should be replacemed by
  *         prev_declared_variable_name | prev_declared_fb_name | prev_declared_global_var_name
  */
-  prev_declared_variable_name
+ identifier
 	{$$ = new symbolic_variable_c($1);}
 | prev_declared_fb_name
 	{$$ = new symbolic_variable_c($1);}
 | prev_declared_global_var_name
+	{$$ = new symbolic_variable_c($1);}
+| prev_declared_variable_name
 	{$$ = new symbolic_variable_c($1);}
 | multi_element_variable
 ;
@@ -3662,11 +3675,13 @@ sfc_network:
 
 initial_step:
   INITIAL_STEP step_name ':' action_association_list END_STEP
+//  INITIAL_STEP identifier ':' action_association_list END_STEP
 	{$$ = new initial_step_c($2, $4);}
 ;
 
 step:
   STEP step_name ':' action_association_list END_STEP
+//  STEP identifier ':' action_association_list END_STEP
 	{$$ = new step_c($2, $4);}
 ;
 
@@ -3682,7 +3697,8 @@ action_association_list:
 ;
 
 
-step_name: identifier;
+// step_name: identifier;
+step_name: any_identifier;
 
 action_association:
   action_name '(' action_qualifier indicator_name_list ')'
@@ -3697,7 +3713,8 @@ indicator_name_list:
 	{$$ = $1; $$->add_element($3);}
 ;
 
-action_name: identifier;
+// action_name: identifier;
+action_name: any_identifier;
 
 action_qualifier:
   /* empty */
@@ -3735,7 +3752,9 @@ action_time:
 
 indicator_name: variable;
 
-transition_name: identifier;
+// transition_name: identifier;
+transition_name: any_identifier;
+
 
 steps:
   step_name
@@ -3751,14 +3770,17 @@ step_name_list:
 	{$$ = $1; $$->add_element($3);}
 ;
 
+
 transition_header:
   TRANSITION FROM steps TO steps
 	{$$.first = NULL; $$.second = NULL; $$.third = $3; $$.fourth = $5; cmd_goto_body_state();}
 | TRANSITION transition_name FROM steps TO steps 
+//| TRANSITION identifier FROM steps TO steps 
 	{$$.first = $2; $$.second = NULL; $$.third = $4; $$.fourth = $6; cmd_goto_body_state();}
 | TRANSITION '(' PRIORITY ASSIGN integer ')' FROM steps TO steps
 	{$$.first = NULL; $$.second = $5; $$.third = $8; $$.fourth = $10; cmd_goto_body_state();}
 | TRANSITION transition_name '(' PRIORITY ASSIGN integer ')' FROM steps TO steps
+//| TRANSITION identifier '(' PRIORITY ASSIGN integer ')' FROM steps TO steps
 	{$$.first = $2; $$.second = $6; $$.third = $9; $$.fourth = $11; cmd_goto_body_state();}
 ;
 
@@ -3781,6 +3803,7 @@ transition:
 
 action_header:
   ACTION action_name ':' 
+//  ACTION identifier ':' 
 	{$$.first = $2; cmd_goto_body_state();}
 ;
 
@@ -3925,7 +3948,7 @@ resource_declaration:
    single_resource_declaration
   END_RESOURCE
 	{$$ = new resource_declaration_c($3, $5, $6, $7);
-         variable_name_symtable.pop();
+	 variable_name_symtable.pop();
 	 variable_name_symtable.insert($3, prev_declared_resource_name_token);
 	}
 ;
@@ -4258,6 +4281,8 @@ eol_list:
 instruction_list:
   il_instruction
 	{$$ = new instruction_list_c(); $$->add_element($1);}
+| pragma eol_list
+	{$$ = new instruction_list_c(); $$->add_element($1);}
 | instruction_list il_instruction
 	{$$ = $1; $$->add_element($2);}
 | instruction_list pragma
@@ -4458,9 +4483,13 @@ il_expr_operator_clash_eol_list:
 ;
 
 
+/* NOTE: We use enumerated_value_without_identifier instead of enumerated_value
+ *       in order to remove a reduce/reduce conflict between reducing an
+ *       identifier to a variable or an enumerated_value.
+ */
 il_operand:
   variable
-| enumerated_value
+| enumerated_value_without_identifier
 | constant
 ;
 
@@ -4855,10 +4884,14 @@ unary_operator: '-' | 'NOT'
  *       To remove the conlfict, we only allow constants without
  *       a preceding '-' to be used in primary_expression
  */
+/* NOTE: We use enumerated_value_without_identifier instead of enumerated_value
+ *       in order to remove a reduce/reduce conflict between reducing an
+ *       identifier to a variable or an enumerated_value.
+ */
 primary_expression:
 /* constant */
   non_negative_constant
-| enumerated_value
+| enumerated_value_without_identifier
 | variable
 | '(' expression ')'
 	{$$ = $2;}
@@ -4903,8 +4936,10 @@ function_invocation:
 /* B 3.2 Statements */
 /********************/
 statement_list:
-  /* empty */
-	{$$ = new statement_list_c();}
+  statement ';'
+	{$$ = new statement_list_c(); $$->add_element($1);}
+| pragma
+	{$$ = new statement_list_c(); $$->add_element($1);}
 | statement_list statement ';'
 	{$$ = $1; $$->add_element($2);}
 | statement_list pragma
@@ -5058,6 +5093,12 @@ case_list_element:
   signed_integer
 | enumerated_value
 | subrange
+/*
+| identifier
+	{$$ = $1;}
+| prev_declared_enumerated_type_name '#' any_identifier
+	{$$ = new enumerated_value_c($1, $3);}
+*/
 ;
 
 
@@ -5090,10 +5131,14 @@ for_statement:
  *
  * Obviously this presuposes that the control_variable
  * must have been declared in some VAR .. END_VAR
- * construct, so I (Mario) changed the syntax to read
+ * We could therefore change the syntax to read
  * control_variable: prev_declared_variable_name;
+ * 
+ * However, it is probaly best if we leave the semantic checks
+ * to the semantic analyser of pass 2.
 */
-control_variable: prev_declared_variable_name {$$ = $1;};
+// control_variable: prev_declared_variable_name {$$ = $1;};
+control_variable: identifier {$$ = $1;};
 
 /* Integrated directly into for_statement */
 /*

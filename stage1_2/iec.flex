@@ -635,9 +635,9 @@ incompl_location	%[IQM]\*
 	/*****************************************************/
 	/*****************************************************/
 
-	if (goto_body_state__) {
+	if (get_goto_body_state()) {
 	  yy_push_state(il_st_state);
-	  goto_body_state__ = 0;
+	  rst_goto_body_state();
 	}
 
 	/*********************************/
@@ -648,14 +648,14 @@ incompl_location	%[IQM]\*
 <INITIAL>{file_include_pragma}	unput_text(0); yy_push_state(include_beg);
 
 	/* Any other pragma we find, we just pass it up to the syntax parser...   */
-	/* Note that the <body> state is exclusive, so we have to include it here too. */
+	/* Note that the <il_st_state> state is exclusive, so we have to include it here too. */
 {pragma}	{/* return the pragmma without the enclosing '{' and '}' */
-		 yytext[strlen(yytext)-2] = '\0';
+		 yytext[strlen(yytext)-1] = '\0';
 		 yylval.ID=strdup(yytext+1);
 		 return pragma_token;
 		}
 <il_st_state>{pragma} {/* return the pragmma without the enclosing '{' and '}' */
-		 yytext[strlen(yytext)-2] = '\0';
+		 yytext[strlen(yytext)-1] = '\0';
 		 yylval.ID=strdup(yytext+1);
 		 return pragma_token;
 		}
@@ -786,6 +786,7 @@ END_VAR{st_whitespace}			{unput_text(strlen("END_VAR"));
 
 	/* il_st_state -> (il_state | st_state) */
 <il_st_state>{
+{st_whitespace_no_pragma}			/* Eat any whitespace */
 {qualified_identifier}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
 {qualified_identifier}"["			unput_text(0); BEGIN(st_state);
 
@@ -810,7 +811,6 @@ EXIT						unput_text(0); BEGIN(st_state);
 		 unput_text(0);
 		}
 .		unput_text(0); BEGIN(il_state);
-
 }	/* end of il_st_state lexical parser */
 
 	/* (il_state | st_state) -> $previous_state (decl_state or sfc_state) */
@@ -845,8 +845,8 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	/***************************************/
 	/* NOTE: pragmas are handled right at the beginning... */
 
-<INITIAL,config_state,decl_state,st_state,sfc_state,il_st_state>{st_whitespace_no_pragma}	/* Eat any whitespace */
-<il_state,il_st_state>{il_whitespace_no_pragma}		/* Eat any whitespace */
+<INITIAL,config_state,decl_state,st_state,sfc_state>{st_whitespace_no_pragma}	/* Eat any whitespace */
+<il_state>{il_whitespace_no_pragma}		/* Eat any whitespace */
 
 
 	/*****************************************/
@@ -865,16 +865,28 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	 *       checking whether they may be a 'keyword', is to check whether
 	 *       they have been previously declared as a variable name,
 	 *
-	 *      TODO: how about function names?
+	 *       However, we have a dilema! Should we here also check for
+	 *       prev_declared_derived_function_name_token?
+	 *       If we do, then the 'MOD' default library function (defined in
+	 *       the standard) will always be returned as a function name, and
+	 *       it will therefore not be possible to use it as an operator as 
+	 *       in the following ST expression 'X := Y MOD Z;' !
+	 *       If we don't, then even it will not be possible to use 'MOD'
+	 *       as a funtion as in 'X := MOD(Y, Z);'
+	 *       We solve this by NOT testing for function names here, and
+	 *       handling this function and keyword clash in bison!
 	 */
 {identifier} 	{int token = get_identifier_token(yytext);
 		 if ((token == prev_declared_variable_name_token) ||
+//		     (token == prev_declared_derived_function_name_token) || // DO NOT add this condition!
 		     (token == prev_declared_fb_name_token)) {
 		 /*
 		 if (token != identifier_token)
 		 */
-		 /* NOTE: if we use the above line, then 'MOD' et al must be removed
-		  * from the library_symbol_table as a default function name!
+		 /* NOTE: if we replace the above uncommented conditions with
+                  *       the simple test of (token != identifier_token), then 
+                  *       'MOD' et al must be removed from the 
+                  *       library_symbol_table as a default function name!
 		  */
 		   yylval.ID=strdup(yytext);
 		   return token;
