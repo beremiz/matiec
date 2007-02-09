@@ -683,13 +683,14 @@ void *visit(program_declaration_c *symbol) {
   /* (A) Class (Function Block) declaration... */
   /* (A.1) Class (Function Block) name */
   s4o.print("// PROGRAM\n");
-  s4o.print(s4o.indent_spaces + "class ");
+  s4o.print(s4o.indent_spaces);
   symbol->program_type_name->accept(*this);
-  s4o.print(" {\n");
+  s4o.print("\n //Data part\n");
+  s4o.print("typedef struct {\n");
   s4o.indent_right();
 
   /* (A.2) Public variables: i.e. the program parameters... */
-  s4o.print(s4o.indent_spaces + "public:\n");
+  s4o.print(s4o.indent_spaces + "//PROGRAM interface IN OUT IN_OUT variables\n");
   s4o.indent_right();
   vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::local_vf,
@@ -702,7 +703,7 @@ void *visit(program_declaration_c *symbol) {
   s4o.print("\n");
 
   /* (A.3) Private internal variables */
-  s4o.print(s4o.indent_spaces + "private:\n");
+  s4o.print(s4o.indent_spaces + "// PROGRAM private variables - TEMP, private and located variables\n");
   s4o.indent_right();
   vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::local_vf,
@@ -711,68 +712,78 @@ void *visit(program_declaration_c *symbol) {
 				      generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
+  s4o.print("\n ");
   s4o.indent_left();
-  s4o.print("\n");
-
+  s4o.print("} ");
+  symbol->program_type_name->accept(*this);
+  s4o.print(";\n\n ");
   /* (B) Constructor */
   /* (B.1) Constructor name... */
-  s4o.print(s4o.indent_spaces + "public:\n");
+  s4o.print("// Code part");
+  /*PROGRAM Interface*/
   s4o.indent_right();
   s4o.print(s4o.indent_spaces);
+  s4o.print("void ");
   symbol->program_type_name->accept(*this);
-
+  s4o.print(FB_FUNCTION_SUFFIX);
   /* (B.2) Constructor parameters (i.e. the external variables)... */
   s4o.print("(");
+  symbol->program_type_name->accept(*this);
   s4o.indent_right();
+  s4o.print(" ");
   vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::finterface_vf,
   				      generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
-  s4o.print(")\n");
+  s4o.print(")");
+  s4o.print("{\n");
   s4o.indent_left();
 
   /* (B.2) Member initializations... */
   s4o.indent_right();
-  s4o.print(s4o.indent_spaces);
-  vardecl = new generate_cc_vardecl_c(&s4o,
+  s4o.print(s4o.indent_spaces + "//Initialise PROGRAM variables\n");
+  vardecl = new generate_cc_vardecl_c(&s4o,s4o.print("void ");
   				      generate_cc_vardecl_c::constructorinit_vf,
   				      generate_cc_vardecl_c::input_vt |
   				      generate_cc_vardecl_c::output_vt |
   				      generate_cc_vardecl_c::inoutput_vt |
   				      generate_cc_vardecl_c::private_vt |
 				      generate_cc_vardecl_c::external_vt);
-  vardecl->print(symbol->var_declarations);
+  vardecl->print(symbol->var_declarations, NULL, FB_FUNCTION_PARAM"->");
   delete vardecl;
-  s4o.print("\n" + s4o.indent_spaces + "{}\n\n");
+  s4o.print("\n" + s4o.indent_spaces);
   s4o.indent_left();
   s4o.indent_left();
 
   /* (C) Public Function*/
   /* (C.1) Public Function declaration */
-  s4o.print(s4o.indent_spaces + "public:\n");
-  s4o.indent_right();
-  s4o.print(s4o.indent_spaces + "void f(void) {\n");
+  s4o.print(s4o.indent_spaces);
+  //s4o.indent_right();
+  //s4o.print(s4o.indent_spaces + "void f(void) {\n");
 
   /* (C.2) Temporary variables */
-  s4o.indent_right();
-  vardecl = new generate_cc_vardecl_c(&s4o, generate_cc_vardecl_c::localinit_vf, generate_cc_vardecl_c::temp_vt);
-  vardecl->print(symbol->var_declarations);
-  delete vardecl;
-  s4o.indent_left();
+  //s4o.indent_right();
+  //vardecl = new generate_cc_vardecl_c(&s4o, generate_cc_vardecl_c::localinit_vf, generate_cc_vardecl_c::temp_vt);
+  //vardecl->print(symbol->var_declarations);
+  //delete vardecl;
+  //s4o.indent_left();
   s4o.print("\n");
 
   /* (C.3) Public Function body */
   s4o.indent_right();
-  generate_cc_IL_and_ST_c generate_cc_code(&s4o, symbol);
+  generate_cc_IL_and_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
   symbol->function_block_body->accept(generate_cc_code);
   s4o.indent_left();
-  s4o.print(s4o.indent_spaces + "} /* f() */\n\n");
+  s4o.print(s4o.indent_spaces + "} //");
+  symbol->program_type_name->accept(*this);
+  s4o.print(FB_FUNCTION_SUFFIX);
+  s4o.print("()\n");
   s4o.indent_left();
 
   /* (D) Close the class declaration... */
   s4o.indent_left();
-  s4o.print(s4o.indent_spaces + "}; /* class ");
+  s4o.print(s4o.indent_spaces + "}; /* void ");
   symbol->program_type_name->accept(*this);
   s4o.print(" */\n\n\n");
 
