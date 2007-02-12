@@ -743,7 +743,7 @@ void *visit(program_declaration_c *symbol) {
   /* (B.2) Member initializations... */
   s4o.indent_right();
   s4o.print(s4o.indent_spaces + "//Initialise PROGRAM variables\n");
-  vardecl = new generate_cc_vardecl_c(&s4o,s4o.print("void ");
+  vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::constructorinit_vf,
   				      generate_cc_vardecl_c::input_vt |
   				      generate_cc_vardecl_c::output_vt |
