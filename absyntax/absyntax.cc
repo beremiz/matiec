@@ -38,8 +38,6 @@
 
 
 
-symbol_c *tree_root = NULL;
-
 
 
 

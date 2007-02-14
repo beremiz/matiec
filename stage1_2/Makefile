@@ -7,7 +7,8 @@ default:	all
 
 .PHONY: iec.flex
 
-all: iec.flex.o iec.y.o
+all: iec.flex.o iec.y.o stage1_2.o
+
 
 clean:
 	-rm -f *.o Makefile.depend
@@ -47,3 +48,11 @@ iec.y.o: iec.y.cc iec.y.hh
 #how to make things from other directories if they are missing
 ../% /%:
 	$(MAKE) -C $(@D) $(@F)
+
+
+Makefile.depend depend:
+	$(CXX) -MM -MG -I. *.cc \
+	  | perl -pe 's/:/ Makefile.depend:/' > Makefile.depend
+
+include Makefile.depend
+

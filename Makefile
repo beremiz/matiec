@@ -38,7 +38,7 @@ CXXFLAGS += -I.
 
 
 LIBS  = absyntax/absyntax.o absyntax/visitor.o
-LIBS += stage1_2/iec.y.o stage1_2/iec.flex.o
+LIBS += stage1_2/stage1_2.o stage1_2/iec.y.o stage1_2/iec.flex.o 
 
 iec2cc: main.o stage4/generate_cc/generate_cc.o stage4/stage4.o $(LIBS)
 	$(CXX) -o iec2cc main.o stage4/stage4.o stage4/generate_cc/generate_cc.o $(LIBS)
