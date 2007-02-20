@@ -172,7 +172,6 @@ class generate_cc_base_c: public iterator_visitor_c {
       return NULL;
     }
 
-
     void *print_unary_expression(symbol_c *exp,
 				 const char *operation) {
       s4o.print(operation);
@@ -182,6 +181,32 @@ class generate_cc_base_c: public iterator_visitor_c {
       return NULL;
     }
 
+    void *print_binary_function(const char *function,
+          symbol_c *l_exp,
+				  symbol_c *r_exp) {
+      s4o.print(function);
+      s4o.print("(");
+      l_exp->accept(*this);
+      s4o.print(", ");
+      r_exp->accept(*this);
+      s4o.print(")");
+      return NULL;
+   	}
+
+    void *print_compare_function(const char *function,
+          const char *compare_sign,
+          symbol_c *l_exp,
+          symbol_c *r_exp) {
+      s4o.print(function);
+      s4o.print("(");
+      s4o.print(compare_sign);
+      s4o.print(", ");
+      l_exp->accept(*this);
+      s4o.print(", ");
+      r_exp->accept(*this);
+      s4o.print(")");
+      return NULL;
+    }
 
 /***************************/
 /* 2.1.6 - Pragmas */
@@ -309,7 +334,7 @@ void *visit(neg_time_c *symbol) {s4o.print("-1"); /* negative time value */; ret
 /* SYM_REF2(duration_c, neg, interval) */
 void *visit(duration_c *symbol) {
   TRACE("duration_c");
-  s4o.print("TIME(");
+  s4o.print("__time_to_timespec(");
   if (NULL == symbol->neg)
     s4o.print("1");  /* positive time value */
   else
@@ -318,6 +343,10 @@ void *visit(duration_c *symbol) {
   s4o.print(", ");
 
   symbol->interval->accept(*this);
+  if (typeid(*symbol->interval) == typeid(hours_c)) {s4o.print(", 0");}
+  if (typeid(*symbol->interval) == typeid(minutes_c)) {s4o.print(", 0, 0");}
+  if (typeid(*symbol->interval) == typeid(seconds_c)) {s4o.print(", 0, 0, 0");}
+  if (typeid(*symbol->interval) == typeid(milliseconds_c)) {s4o.print(", 0, 0, 0, 0");}
   s4o.print(")");
   return NULL;
 }
@@ -401,7 +430,7 @@ void *visit(milliseconds_c *symbol) {
 /* SYM_REF2(time_of_day_c, daytime, unused) */
 void *visit(time_of_day_c *symbol) {
   TRACE("time_of_day_c");
-  s4o.print("TOD(");
+  s4o.print("__tod_to_timespec(");
   symbol->daytime->accept(*this);
   s4o.print(")");
   return NULL;
@@ -423,7 +452,7 @@ void *visit(daytime_c *symbol) {
 /* SYM_REF2(date_c, date_literal, unused) */
 void *visit(date_c *symbol) {
   TRACE("date_c");
-  s4o.print("DATE(");
+  s4o.print("__date_to_timespec(");
   symbol->date_literal->accept(*this);
   s4o.print(")");
   return NULL;
@@ -445,7 +474,7 @@ void *visit(date_literal_c *symbol) {
 /* SYM_REF2(date_and_time_c, date_literal, daytime) */
 void *visit(date_and_time_c *symbol) {
   TRACE("date_and_time_c");
-  s4o.print("DT(");
+  s4o.print("__dt_to_timespec(");
   symbol->daytime->accept(*this);
   s4o.print(", ");
   symbol->date_literal->accept(*this);

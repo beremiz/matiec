@@ -32,7 +32,10 @@
  */
 
 
-
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
 
 
 class generate_cc_st_c: public generate_cc_typedecl_c {
@@ -53,16 +56,27 @@ class generate_cc_st_c: public generate_cc_typedecl_c {
      */
     search_fb_instance_decl_c *search_fb_instance_decl;
 
+    /* When compiling st code, it becomes necessary to determine the
+     * data type of st expressions. To do this, we must first find the
+     * st operand's declaration, within the scope of the function block
+     * or function currently being processed.
+     * The following object does just that...
+     * This object instance will then later be called while the
+     * remaining st code is being handled.
+     */
+    search_expression_type_c *search_expression_type;
 
   public:
     generate_cc_st_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_cc_typedecl_c(s4o_ptr) {
       search_fb_instance_decl = new search_fb_instance_decl_c(scope);
+      search_expression_type = new search_expression_type_c(scope);
       this->set_variable_prefix(variable_prefix);
     }
 
     virtual ~generate_cc_st_c(void) {
       delete search_fb_instance_decl;
+      delete search_expression_type;
     }
 
 
@@ -107,25 +121,141 @@ class generate_cc_st_c: public generate_cc_typedecl_c {
     }
 
   private:
+  
 /***************************************/
 /* B.3 - Language ST (Structured Text) */
 /***************************************/
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
-void *visit(or_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " || ");}
-/* TODO ...  XOR expression... */
-void *visit(xor_expression_c *symbol) {ERROR; return print_binary_expression(symbol->l_exp, symbol->r_exp, " XOR ");}
-void *visit(and_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " && ");}
-void *visit(equ_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " == ");}
-void *visit(notequ_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " != ");}
-void *visit(lt_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");}
-void *visit(gt_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");}
-void *visit(le_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");}
-void *visit(ge_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");}
-void *visit(add_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " + ");}
-void *visit(sub_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " - ");}
-void *visit(mul_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " * ");}
+void *visit(or_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (typeid(*left_type) == typeid(bool_type_name_c) && typeid(*right_type) == typeid(bool_type_name_c)) {
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " || ");
+  }
+  if (search_expression_type->is_numeric_compatible(left_type) && search_expression_type->is_numeric_compatible(right_type)) {
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " | ");
+  }
+  ERROR;
+  return NULL;
+}
+
+void *visit(xor_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (typeid(*left_type) == typeid(bool_type_name_c) && typeid(*right_type) == typeid(bool_type_name_c)) {
+    s4o.print("(");
+    symbol->l_exp->accept(*this);
+    s4o.print(" && !");
+    symbol->r_exp->accept(*this);
+    s4o.print(") || (!");
+    symbol->l_exp->accept(*this);
+    s4o.print(" && ");
+    symbol->r_exp->accept(*this);
+    s4o.print(")");
+  }
+  if (search_expression_type->is_numeric_compatible(left_type) && search_expression_type->is_numeric_compatible(right_type)) {
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " ^ ");
+  }
+  ERROR;
+  return NULL;
+}
+
+void *visit(and_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (typeid(*left_type) == typeid(bool_type_name_c) && typeid(*right_type) == typeid(bool_type_name_c)) {
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " && ");
+  }
+  if (search_expression_type->is_numeric_compatible(left_type) && search_expression_type->is_numeric_compatible(right_type)) {
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " & ");
+  }
+  ERROR;
+  return NULL;
+}
+
+void *visit(equ_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+    return print_compare_function("__compare_timespec", "==", symbol->l_exp, symbol->r_exp);
+  }
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " == ");
+}
+
+void *visit(notequ_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+    return print_compare_function("__compare_timespec", "!=", symbol->l_exp, symbol->r_exp);
+  }
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " != ");
+}
+
+void *visit(lt_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+    return print_compare_function("__compare_timespec", "<", symbol->l_exp, symbol->r_exp);
+  }
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");
+}
+
+void *visit(gt_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+    return print_compare_function("__compare_timespec", ">", symbol->l_exp, symbol->r_exp);
+  }
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");
+}
+
+void *visit(le_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+    return print_compare_function("__compare_timespec", "<=", symbol->l_exp, symbol->r_exp);
+  }
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");
+}
+
+void *visit(ge_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+    return print_compare_function("__compare_timespec", ">=", symbol->l_exp, symbol->r_exp);
+  }
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");
+}
+
+void *visit(add_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+	symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+	if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+		return print_binary_function("__add_timespec", symbol->l_exp, symbol->r_exp);
+	}
+	return print_binary_expression(symbol->l_exp, symbol->r_exp, " + ");
+}
+
+void *visit(sub_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+    return print_binary_function("__sub_timespec", symbol->l_exp, symbol->r_exp);
+  }
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " - ");
+}
+
+void *visit(mul_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+    return print_binary_function("__mul_timespec", symbol->l_exp, symbol->r_exp);
+  }
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " * ");
+}
+
 void *visit(div_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " / ");}
 void *visit(mod_expression_c *symbol) {
   s4o.print("((");

@@ -1163,7 +1163,7 @@ void *visit(steps_c *symbol) {
 
 /* '(' step_name ',' step_name {',' step_name} ')' */
 void *visit(step_name_list_c *symbol) {
-  print_list(symbol, "(", ", ", ") ");
+  print_list(symbol, "(", ", ", ")");
   return NULL;
 }
 

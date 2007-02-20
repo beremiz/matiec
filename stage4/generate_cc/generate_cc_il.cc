@@ -53,6 +53,7 @@
  * (function, function block or program within which
  * the possible il_operand variable instance was declared).
  */
+
 class search_il_operand_type_c {
 
   private:
@@ -175,7 +176,8 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
      * This object instance will then later be called while the
      * remaining il code is being handled.
      */
-    search_il_operand_type_c *search_il_operand_type;
+    //search_il_operand_type_c *search_il_operand_type;
+    search_expression_type_c *search_expression_type;
 
     /* The initial value that should be given to the IL default variable
      * imediately after a parenthesis is opened.
@@ -296,7 +298,8 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
       default_variable_name(IL_DEFVAR, NULL),
       default_variable_back_name(IL_DEFVAR_BACK, NULL)
     {
-      search_il_operand_type  = new search_il_operand_type_c(scope);
+      //search_il_operand_type  = new search_il_operand_type_c(scope);
+      search_expression_type = new search_expression_type_c(scope);
       search_fb_instance_decl = new search_fb_instance_decl_c(scope);
       current_operand = NULL;
       current_operand_type = NULL;
@@ -306,7 +309,8 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
 
     virtual ~generate_cc_il_c(void) {
       delete search_fb_instance_decl;
-      delete search_il_operand_type;
+      //delete search_il_operand_type;
+      delete search_expression_type;
     }
 
     void generate(instruction_list_c *il) {
@@ -317,9 +321,11 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
 
   private:
     /* A helper function... */
+    /*
     bool is_bool_type(symbol_c *type_symbol) {
       return (NULL != dynamic_cast<bool_type_name_c *>(type_symbol));
     }
+    */
 
     /* A helper function... */
     void *XXX_operator(symbol_c *lo, const char *op, symbol_c *ro) {
@@ -329,6 +335,22 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
       lo->accept(*this);
       s4o.print(op);
       ro->accept(*this);
+      return NULL;
+    }
+
+    /* A helper function... */
+    void *XXX_function(const char *func, symbol_c *lo, symbol_c *ro) {
+      if ((NULL == lo) || (NULL == ro)) ERROR;
+      if (NULL == func) ERROR;
+
+      lo->accept(*this);
+      s4o.print(" = ");
+      s4o.print(func);
+      s4o.print("(");
+      lo->accept(*this);
+      s4o.print(", ");
+      ro->accept(*this);
+      s4o.print(")");
       return NULL;
     }
 
@@ -365,12 +387,23 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
       this->default_variable_name.accept(*this);
       this->default_variable_name.current_type = backup;
 
-      s4o.print(" = (");
-      this->default_variable_name.accept(*this);
-      s4o.print(operation);
-      o->accept(*this);
-      s4o.print(")");
-
+      if (search_expression_type->is_time_compatible(this->default_variable_name.current_type) &&
+          search_expression_type->is_time_compatible(this->current_operand_type)) {
+        s4o.print(" = __compare_timespec(");
+        s4o.print(operation);
+        s4o.print(", ");
+        this->default_variable_name.accept(*this);
+        s4o.print(", ");
+        o->accept(*this);
+        s4o.print(")");
+      }
+      else {
+        s4o.print(" = (");
+        this->default_variable_name.accept(*this);
+        s4o.print(operation);
+        o->accept(*this);
+        s4o.print(")");
+      }
       /* the data type resulting from this operation... */
       this->default_variable_name.current_type = &(this->bool_type);
       return NULL;
@@ -379,20 +412,22 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
 
     /* A helper function... */
     void C_modifier(void) {
-      if (NULL == this->default_variable_name.current_type) ERROR;
-
-      s4o.print("if (");
-      this->default_variable_name.accept(*this);
-      s4o.print(") ");
+      if (search_expression_type->is_numeric_compatible(default_variable_name.current_type)) {
+        s4o.print("if (");
+        this->default_variable_name.accept(*this);
+        s4o.print(") ");
+      }
+      else {ERROR;}
     }
 
     /* A helper function... */
     void CN_modifier(void) {
-      if (NULL == this->default_variable_name.current_type) ERROR;
-
-      s4o.print("if (!");
-      this->default_variable_name.accept(*this);
-      s4o.print(") ");
+      if (search_expression_type->is_numeric_compatible(default_variable_name.current_type)) {
+        s4o.print("if (!");
+        this->default_variable_name.accept(*this);
+        s4o.print(") ");
+      }
+      else {ERROR;}
     }
 
 
@@ -486,7 +521,7 @@ void *visit(il_simple_operation_c *symbol) {
   if (NULL == this->current_operand) {
     this->current_operand_type = NULL;
   } else {
-    this->current_operand_type = search_il_operand_type->get_type(this->current_operand);
+    this->current_operand_type = search_expression_type->get_type(this->current_operand);
     if (NULL == this->current_operand_type) ERROR;
   }
 
@@ -975,7 +1010,7 @@ void *visit(LDN_operator_c *symbol)	{
   /* the data type resulting from this operation... */
   this->default_variable_name.current_type = this->current_operand_type;
   XXX_operator(&(this->default_variable_name),
-               is_bool_type(this->current_operand_type)?" = !":" = ~",
+               search_expression_type->is_bool_type(this->current_operand_type)?" = !":" = ~",
                this->current_operand);
   return NULL;
 }
@@ -988,7 +1023,7 @@ void *visit(ST_operator_c *symbol)	{
 
 void *visit(STN_operator_c *symbol)	{
   XXX_operator(this->current_operand,
-               is_bool_type(this->current_operand_type)?" = !":" = ~",
+               search_expression_type->is_bool_type(this->current_operand_type)?" = !":" = ~",
                &(this->default_variable_name));
   /* the data type resulting from this operation is unchamged. */
   return NULL;
@@ -997,7 +1032,7 @@ void *visit(STN_operator_c *symbol)	{
 void *visit(NOT_operator_c *symbol)	{
   if ((NULL != this->current_operand) || (NULL != this->current_operand_type)) ERROR;
   XXX_operator(&(this->default_variable_name),
-               is_bool_type(this->default_variable_name.current_type)?" = !":" = ~",
+               search_expression_type->is_bool_type(this->default_variable_name.current_type)?" = !":" = ~",
                &(this->default_variable_name));
   /* the data type resulting from this operation is unchanged. */
   return NULL;
@@ -1008,7 +1043,7 @@ void *visit(S_operator_c *symbol)	{
 
   C_modifier();
   this->current_operand->accept(*this);
-  s4o.print(is_bool_type(this->current_operand_type)?" = true":" = 1");
+  s4o.print(search_expression_type->is_bool_type(this->current_operand_type)?" = true":" = 1");
   /* the data type resulting from this operation is unchanged! */
   return NULL;
 }
@@ -1018,7 +1053,7 @@ void *visit(R_operator_c *symbol)	{
 
   C_modifier();
   this->current_operand->accept(*this);
-  s4o.print(is_bool_type(this->current_operand_type)?" = false":" = 0");
+  s4o.print(search_expression_type->is_bool_type(this->current_operand_type)?" = false":" = 0");
   /* the data type resulting from this operation is unchanged! */
   return NULL;
 }
@@ -1033,87 +1068,155 @@ void *visit(IN_operator_c *symbol)	{return XXX_CAL_operator("IN", this->current_
 void *visit(PT_operator_c *symbol)	{return XXX_CAL_operator("PT", this->current_operand);}
 
 void *visit(AND_operator_c *symbol)	{
-  XXX_operator(&(this->default_variable_name), " &= ", this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    XXX_operator(&(this->default_variable_name), " &= ", this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+  }
+  else {ERROR;}
   return NULL;
 }
 
 void *visit(OR_operator_c *symbol)	{
-  XXX_operator(&(this->default_variable_name), " |= ", this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    XXX_operator(&(this->default_variable_name), " |= ", this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+  }
+  else {ERROR;}
   return NULL;
 }
 
 void *visit(XOR_operator_c *symbol)	{
-  // '^' is a bit by bit exclusive OR !! Also seems to work with boolean types!
-  XXX_operator(&(this->default_variable_name), " ^= ", this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    // '^' is a bit by bit exclusive OR !! Also seems to work with boolean types!
+    XXX_operator(&(this->default_variable_name), " ^= ", this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+  }
+  else {ERROR;}
   return NULL;
 }
 
 void *visit(ANDN_operator_c *symbol)	{
-  XXX_operator(&(this->default_variable_name),
-               is_bool_type(this->current_operand_type)?" &= !":" &= ~",
-               this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    XXX_operator(&(this->default_variable_name),
+                 search_expression_type->is_bool_type(this->current_operand_type)?" &= !":" &= ~",
+                 this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+  }
+  else {ERROR;}
   return NULL;
 }
 
 void *visit(ORN_operator_c *symbol)	{
-  XXX_operator(&(this->default_variable_name),
-               is_bool_type(this->current_operand_type)?" |= !":" |= ~",
-               this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    XXX_operator(&(this->default_variable_name),
+                 search_expression_type->is_bool_type(this->current_operand_type)?" |= !":" |= ~",
+                 this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+  }
+  else {ERROR;}
   return NULL;
 }
 
 void *visit(XORN_operator_c *symbol)	{
-  XXX_operator(&(this->default_variable_name),
-               // bit by bit exclusive OR !! Also seems to work with boolean types!
-               is_bool_type(this->current_operand_type)?" ^= !":" ^= ~",
-               this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    XXX_operator(&(this->default_variable_name),
+                 // bit by bit exclusive OR !! Also seems to work with boolean types!
+                 search_expression_type->is_bool_type(this->current_operand_type)?" ^= !":" ^= ~",
+                 this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+  }
+  else {ERROR;}
   return NULL;
 }
 
 void *visit(ADD_operator_c *symbol)	{
-  XXX_operator(&(this->default_variable_name), " += ", this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_time_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_time_compatible(this->current_operand_type)) {
+    XXX_function("__add_timespec", &(this->default_variable_name), this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+    return NULL;
+  }
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    XXX_operator(&(this->default_variable_name), " += ", this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+    return NULL;
+  }
+  ERROR;
   return NULL;
 }
 
 void *visit(SUB_operator_c *symbol)	{
-  XXX_operator(&(this->default_variable_name), " -= ", this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_time_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_time_compatible(this->current_operand_type)) {
+    XXX_function("__sub_timespec", &(this->default_variable_name), this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+    return NULL;
+  }
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    XXX_operator(&(this->default_variable_name), " -= ", this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+    return NULL;
+  }
+  ERROR;
   return NULL;
 }
 
 void *visit(MUL_operator_c *symbol)	{
-  XXX_operator(&(this->default_variable_name), " *= ", this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_time_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_time_compatible(this->current_operand_type)) {
+    XXX_function("__mul_timespec", &(this->default_variable_name), this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+    return NULL;
+  }
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    XXX_operator(&(this->default_variable_name), " *= ", this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+    return NULL;
+  }
+  ERROR;
   return NULL;
 }
 
 void *visit(DIV_operator_c *symbol)	{
-  XXX_operator(&(this->default_variable_name), " /= ", this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    XXX_operator(&(this->default_variable_name), " /= ", this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+  }
+  else {ERROR;}
   return NULL;
 }
 
 void *visit(MOD_operator_c *symbol)	{
-  XXX_operator(&(this->default_variable_name), " %= ", this->current_operand);
-  /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
+      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+    XXX_operator(&(this->default_variable_name), " %= ", this->current_operand);
+    /* the data type resulting from this operation... */
+    this->default_variable_name.current_type = this->current_operand_type;
+  }
+  else {ERROR;}
   return NULL;
 }
 

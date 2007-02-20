@@ -182,15 +182,100 @@ static inline struct timespec __mul_timespec (const struct timespec &t1, const l
 
 
 /* Some necessary forward declarations... */
+/*
 class TIME;
 class TOD;
 class DT;
 class DATE;
 
 typedef struct timespec __timebase_t;
+*/
+
+typedef struct TIME timespec;
+typedef struct TOD timespec;
+typedef struct DT timespec;
+typedef struct DATE timespec;
+
+static inline struct timespec __time_to_timespec(int sign, double mseconds, double seconds, double minutes, double hours, double days) {
+  struct timespec ts;
+  
+  /* sign is 1 for positive values, -1 for negative time... */
+  long double total_sec = ((days*24 + hours)*60 + minutes)*60 + seconds + mseconds/1e3;
+  if (sign >= 0) sign = 1; else sign = -1;
+  ts.tv_sec = sign * (long int)total_sec;
+  ts.tv_nsec = sign * (long int)((total_sec - ts.tv_sec)*1e9);
+
+  return ts;
+}
+
+
+static inline struct timespec __tod_to_timespec(double seconds, double minutes, double hours) {
+  struct timespec ts;
+  
+  long double total_sec = (hours*60 + minutes)*60 + seconds;
+  ts.tv_sec = (long int)total_sec;
+  ts.tv_nsec = (long int)((total_sec - ts.tv_sec)*1e9);
+  
+  return ts;
+}
+
+static inline struct timespec __date_to_timespec(int day, int month, int year) {
+  struct timespec ts;
+  struct tm broken_down_time;
+
+  broken_down_time.tm_sec = 0;
+  broken_down_time.tm_min = 0;
+  broken_down_time.tm_hour = 0;
+  broken_down_time.tm_mday = day;  /* day of month, from 1 to 31 */
+  broken_down_time.tm_mon = month - 1;   /* month since January, in the range 0 to 11 */
+  broken_down_time.tm_year = year - 1900;  /* number of years since 1900 */
+
+  time_t epoch_seconds = mktime(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
+
+  if ((time_t)(-1) == epoch_seconds)
+    IEC_error();
+
+  ts.tv_sec = epoch_seconds;
+  ts.tv_nsec = 0;
+  
+  return ts;
+}
+
+static inline struct timespec __dt_to_timespec(double seconds,  double minutes, double hours, int day, int month, int year) {
+  struct timespec ts;
+  
+  long double total_sec = (hours*60 + minutes)*60 + seconds;
+  ts.tv_sec = (long int)total_sec;
+  ts.tv_nsec = (long int)((total_sec - ts.tv_sec)*1e9);
+
+  struct tm broken_down_time;
+  broken_down_time.tm_sec = 0;
+  broken_down_time.tm_min = 0;
+  broken_down_time.tm_hour = 0;
+  broken_down_time.tm_mday = day;  /* day of month, from 1 to 31 */
+  broken_down_time.tm_mon = month - 1;   /* month since January, in the range 0 to 11 */
+  broken_down_time.tm_year = year - 1900;  /* number of years since 1900 */
+
+  time_t epoch_seconds = mktime(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
+  if ((time_t)(-1) == epoch_seconds)
+    IEC_error();
+
+  ts.tv_sec += epoch_seconds;
+  if (ts.tv_sec < epoch_seconds)
+    /* since the TOD is always positive, if the above happens then we had an overflow */
+    IEC_error();
+
+  return ts;
+}
 
 
 
+
+
+
+
+
+#ifdef 0
 class TIME{
   private:
     /* private variable that contains the value of time. */
@@ -451,6 +536,7 @@ TIME operator/ (const TIME &time, const long double value) {return TIME(__mul_ti
 DT operator+ (const DATE &date, const TOD &tod) {return DT(__add_timespec(date.time, tod.time));};
 DT operator+ (const TOD &tod, const DATE &date) {return DT(__add_timespec(date.time, tod.time));};
 
+#endif
 
 /* global variable that will be used to implement the timers TON, TOFF and TP */
 extern TIME __CURRENT_TIME;
@@ -490,16 +576,18 @@ typedef union __IL_DEFVAR_T {
 	 *   member function to each class that allows it to be converted to that same base data type,
 	 *   acompanied by a constructor using that data type.
 	 */
-	/*
+	
 	TIME	TIMEvar;
 	TOD	TODvar;
 	DT	DTvar;
 	DATE	DATEvar;
-	*/
+	
+  /*
 	__timebase_t	TIMEvar;
 	__timebase_t	TODvar;
 	__timebase_t	DTvar;
 	__timebase_t	DATEvar;
+  */
 } __IL_DEFVAR_T;
   /*TODO TODO TODO TODO TODO TODO TODO TODO TODO
    * How do we add support for the possibility of storing

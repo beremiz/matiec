@@ -38,6 +38,7 @@
 // #include <stdio.h>  /* required for NULL */
 #include <string>
 #include <iostream>
+#include <typeinfo>
 
 #include "../../util/symtable.hh"
 #include "../../util/dsymtable.hh"
@@ -176,6 +177,7 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 #include "decompose_var_instance_name.cc"
 #include "search_varfb_instance_type.cc"
 #include "search_constant_type.cc"
+#include "search_expression_type.cc"
 
 #include "generate_cc_base.cc"
 #include "generate_cc_typedecl.cc"
@@ -523,7 +525,7 @@ void *visit(function_block_declaration_c *symbol) {
   symbol->fblock_name->accept(*this);
   s4o.print(FB_FUNCTION_SUFFIX);
   s4o.print("(");
-    /* first and only parameter is a pointer to the data */
+  /* first and only parameter is a pointer to the data */
   symbol->fblock_name->accept(*this);
   s4o.print(" *");
   s4o.print(FB_FUNCTION_PARAM);
@@ -548,107 +550,6 @@ void *visit(function_block_declaration_c *symbol) {
   symbol->fblock_name->accept(*this);
   s4o.print(FB_FUNCTION_SUFFIX);
   s4o.print(s4o.indent_spaces + "() \n\n");
-
-
-
-
-
-
-
-#if 0
-
-+++++++++++++++++++++++++++++++++++++
-  s4o.print(s4o.indent_spaces + "class ");
-  symbol->fblock_name->accept(*this);
-  s4o.print(" {\n");
-  s4o.indent_right();
-
-  /* (A.2) Public variables: i.e. the function parameters... */
-  s4o.print(s4o.indent_spaces + "public:\n");
-  s4o.indent_right();
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::local_vf,
-  				      generate_cc_vardecl_c::input_vt |
-  				      generate_cc_vardecl_c::output_vt |
-  				      generate_cc_vardecl_c::inoutput_vt);
-  vardecl->print(symbol->var_declarations);
-  delete vardecl;
-  s4o.indent_left();
-  s4o.print("\n");
-
-  /* (A.3) Private internal variables */
-  s4o.print(s4o.indent_spaces + "private:\n");
-  s4o.indent_right();
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::local_vf,
-  				      generate_cc_vardecl_c::private_vt |
-  				      generate_cc_vardecl_c::located_vt);
-  vardecl->print(symbol->var_declarations);
-  delete vardecl;
-  s4o.indent_left();
-  s4o.print("\n");
-
----------------------------------
-  /* (B) Constructor */
-  s4o.print(s4o.indent_spaces + "public:\n");
-  s4o.indent_right();
-  s4o.print(s4o.indent_spaces);
-  symbol->fblock_name->accept(*this);
-  s4o.print("(void)\n");
-  s4o.indent_right();
-  s4o.print(s4o.indent_spaces);
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::constructorinit_vf,
-  				      generate_cc_vardecl_c::input_vt |
-  				      generate_cc_vardecl_c::output_vt |
-  				      generate_cc_vardecl_c::inoutput_vt |
-  				      generate_cc_vardecl_c::private_vt);
-  vardecl->print(symbol->var_declarations);
-  delete vardecl;
-  s4o.print("\n" + s4o.indent_spaces + "{}\n\n");
-  s4o.indent_left();
-  s4o.indent_left();
----------------------------------
-
-
-  /* (C) Public Function*/
-  /* (C.1) Public Function declaration */
-  s4o.print(s4o.indent_spaces + "public:\n");
-  s4o.indent_right();
-  s4o.print(s4o.indent_spaces + "void f(void) {\n");
-
-  /* (C.2) Temporary variables */
-  s4o.indent_right();
-  vardecl = new generate_cc_vardecl_c(&s4o, generate_cc_vardecl_c::localinit_vf, generate_cc_vardecl_c::temp_vt);
-  vardecl->print(symbol->var_declarations);
-  delete vardecl;
-  s4o.indent_left();
-  s4o.print("\n");
-
-  /* (C.3) Public Function body */
-  s4o.indent_right();
-  this->current_scope = symbol;
-  symbol->fblock_body->accept(*this);
-  this->current_scope = NULL;
-  s4o.indent_left();
-  s4o.print(s4o.indent_spaces + "} /* f() */\n\n");
-  s4o.indent_left();
-
-  /* (D) Close the class declaration... */
-  s4o.indent_left();
-  s4o.print(s4o.indent_spaces + "}; /* class ");
-  symbol->fblock_name->accept(*this);
-  s4o.print(" */\n");
-
----------------------------------
-  /* (E) Initialise the static member variables... */
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::globalinit_vf,
-  				      generate_cc_vardecl_c::located_vt);
-  vardecl->print(symbol->var_declarations, symbol->fblock_name);
-  delete vardecl;
-
-#endif
 
   s4o.indent_left();
   s4o.print("\n\n\n\n");
@@ -680,18 +581,16 @@ void *visit(program_declaration_c *symbol) {
    */
   program_type_symtable.insert(symbol->program_type_name, symbol);
 
-  /* (A) Class (Function Block) declaration... */
-  /* (A.1) Class (Function Block) name */
-  s4o.print("// PROGRAM\n");
-  s4o.print(s4o.indent_spaces);
+  /* (A) Program data structure declaration... */
+  /* (A.1) Data structure declaration */
+  s4o.print("// PROGRAM ");
   symbol->program_type_name->accept(*this);
-  s4o.print("\n //Data part\n");
+  s4o.print("\n// Data part\n");
   s4o.print("typedef struct {\n");
   s4o.indent_right();
 
   /* (A.2) Public variables: i.e. the program parameters... */
-  s4o.print(s4o.indent_spaces + "//PROGRAM interface IN OUT IN_OUT variables\n");
-  s4o.indent_right();
+  s4o.print(s4o.indent_spaces + "// PROGRAM Interface - IN, OUT, IN_OUT variables\n");
   vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::local_vf,
   				      generate_cc_vardecl_c::input_vt |
@@ -699,100 +598,60 @@ void *visit(program_declaration_c *symbol) {
   				      generate_cc_vardecl_c::inoutput_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
-  s4o.indent_left();
   s4o.print("\n");
-
   /* (A.3) Private internal variables */
   s4o.print(s4o.indent_spaces + "// PROGRAM private variables - TEMP, private and located variables\n");
-  s4o.indent_right();
   vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::local_vf,
+				      generate_cc_vardecl_c::temp_vt |
   				      generate_cc_vardecl_c::private_vt |
   				      generate_cc_vardecl_c::located_vt |
-				      generate_cc_vardecl_c::external_vt);
-  vardecl->print(symbol->var_declarations);
-  delete vardecl;
-  s4o.print("\n ");
-  s4o.indent_left();
-  s4o.print("} ");
-  symbol->program_type_name->accept(*this);
-  s4o.print(";\n\n ");
-  /* (B) Constructor */
-  /* (B.1) Constructor name... */
-  s4o.print("// Code part");
-  /*PROGRAM Interface*/
-  s4o.indent_right();
-  s4o.print(s4o.indent_spaces);
-  s4o.print("void ");
-  symbol->program_type_name->accept(*this);
-  s4o.print(FB_FUNCTION_SUFFIX);
-  /* (B.2) Constructor parameters (i.e. the external variables)... */
-  s4o.print("(");
-  symbol->program_type_name->accept(*this);
-  s4o.indent_right();
-  s4o.print(" ");
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::finterface_vf,
   				      generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
-  s4o.print(")");
-  s4o.print("{\n");
-  s4o.indent_left();
-
-  /* (B.2) Member initializations... */
-  s4o.indent_right();
-  s4o.print(s4o.indent_spaces + "//Initialise PROGRAM variables\n");
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::constructorinit_vf,
-  				      generate_cc_vardecl_c::input_vt |
-  				      generate_cc_vardecl_c::output_vt |
-  				      generate_cc_vardecl_c::inoutput_vt |
-  				      generate_cc_vardecl_c::private_vt |
-				      generate_cc_vardecl_c::external_vt);
-  vardecl->print(symbol->var_declarations, NULL, FB_FUNCTION_PARAM"->");
-  delete vardecl;
-  s4o.print("\n" + s4o.indent_spaces);
-  s4o.indent_left();
-  s4o.indent_left();
-
-  /* (C) Public Function*/
-  /* (C.1) Public Function declaration */
-  s4o.print(s4o.indent_spaces);
-  //s4o.indent_right();
-  //s4o.print(s4o.indent_spaces + "void f(void) {\n");
-
-  /* (C.2) Temporary variables */
-  //s4o.indent_right();
-  //vardecl = new generate_cc_vardecl_c(&s4o, generate_cc_vardecl_c::localinit_vf, generate_cc_vardecl_c::temp_vt);
-  //vardecl->print(symbol->var_declarations);
-  //delete vardecl;
-  //s4o.indent_left();
   s4o.print("\n");
 
-  /* (C.3) Public Function body */
+  /* (A.4) Program data structure type name. */
+  s4o.indent_left();
+  s4o.print("} ");
+  symbol->program_type_name->accept(*this);
+  s4o.print(";\n\n");
+
+  /* (B) Function with PROGRAM body */
+  /* (B.1) Function declaration */
+  s4o.print("// Code part\n");
+  /* function interface */
+  s4o.print("void ");
+  symbol->program_type_name->accept(*this);
+  s4o.print(FB_FUNCTION_SUFFIX);
+  s4o.print("(");
+  /* first and only parameter is a pointer to the data */
+  symbol->program_type_name->accept(*this);
+  s4o.print(" *");
+  s4o.print(FB_FUNCTION_PARAM);
+  s4o.print(") {\n");
   s4o.indent_right();
+
+  /* (B.2) Initialize TEMP variables */
+  /* function body */
+  s4o.print(s4o.indent_spaces + "// Initialise TEMP variables\n");
+  vardecl = new generate_cc_vardecl_c(&s4o,
+  				      generate_cc_vardecl_c::init_vf,
+				      generate_cc_vardecl_c::temp_vt);
+  vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
+  delete vardecl;
+  s4o.print("\n");
+
+  /* (B.3) Function code */
   generate_cc_IL_and_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
   symbol->function_block_body->accept(generate_cc_code);
   s4o.indent_left();
-  s4o.print(s4o.indent_spaces + "} //");
+  s4o.print(s4o.indent_spaces + "} // ");
   symbol->program_type_name->accept(*this);
   s4o.print(FB_FUNCTION_SUFFIX);
-  s4o.print("()\n");
-  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "() \n\n");
 
-  /* (D) Close the class declaration... */
   s4o.indent_left();
-  s4o.print(s4o.indent_spaces + "}; /* void ");
-  symbol->program_type_name->accept(*this);
-  s4o.print(" */\n\n\n");
-
-  /* (E) Initialise the static member variables... */
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::globalinit_vf,
-  				      generate_cc_vardecl_c::located_vt);
-  vardecl->print(symbol->var_declarations, symbol->program_type_name);
-  delete vardecl;
   s4o.print("\n\n\n\n");
 
   return NULL;
