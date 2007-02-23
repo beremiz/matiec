@@ -3771,12 +3771,12 @@ transition_header:
 
 transition_condition_il:
   ':' eol_list simple_instr_list
-	{$$ = new transition_condition_c($3, NULL);}
+	{$$ = $3;}
 ;
 
 transition_condition_st:
   ASSIGN expression ';'
-	{$$ = new transition_condition_c(NULL, $2);}
+	{$$ = $2}
 ;
 
 transition:

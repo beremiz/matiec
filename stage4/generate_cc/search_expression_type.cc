@@ -71,6 +71,7 @@ class search_expression_type_c: public search_constant_type_c {
       if (typeid(*type_symbol) == typeid(ulint_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(real_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(lreal_type_name_c)) {return true;}
+      if (typeid(*type_symbol) == typeid(bool_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(byte_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(word_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(dword_type_name_c)) {return true;}

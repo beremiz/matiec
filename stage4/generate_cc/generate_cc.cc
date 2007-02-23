@@ -180,6 +180,7 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 #include "search_expression_type.cc"
 
 #include "generate_cc_base.cc"
+#include "generate_cc_sfcdecl.cc"
 #include "generate_cc_typedecl.cc"
 #include "generate_cc_vardecl.cc"
 #include "generate_cc_configbody.cc"
@@ -213,58 +214,75 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 /***********************************************************************/
 
 /* A helper class that knows how to generate code for both the IL and ST languages... */
-class generate_cc_IL_and_ST_c: public null_visitor_c {
+class generate_cc_SFC_IL_ST_c: public null_visitor_c {
   private:
     stage4out_c *s4o_ptr;
     symbol_c *scope;
     const char *variable_prefix;
 
   public:
-    generate_cc_IL_and_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL) {
-      if (NULL == scope) ERROR;
-      this->s4o_ptr = s4o_ptr;
-      this->scope = scope;
-      this->variable_prefix = variable_prefix;
-    }
+    generate_cc_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL);
+    /*********************************************/
+    /* B.1.6  Sequential function chart elements */
+    /*********************************************/
+    
+    /*| sequential_function_chart sfc_network*/
+    void *visit(sequential_function_chart_c * symbol);
+    
+    /****************************************/
+    /* B.2 - Language IL (Instruction List) */
+    /****************************************/
+    
+    /***********************************/
+    /* B 2.1 Instructions and Operands */
+    /***********************************/
+    /*| instruction_list il_instruction */
+    void *visit(instruction_list_c *symbol);
+    
+    /* Remainder implemented in generate_cc_il_c... */
+    
+    /***************************************/
+    /* B.3 - Language ST (Structured Text) */
+    /***************************************/
+    /***********************/
+    /* B 3.1 - Expressions */
+    /***********************/
+    /* Implemented in generate_cc_st_c */
+    
+    /********************/
+    /* B 3.2 Statements */
+    /********************/
+    void *visit(statement_list_c *symbol);
 
+/* Remainder implemented in generate_cc_st_c... */
+};
 
-  public:
-/****************************************/
-/* B.2 - Language IL (Instruction List) */
-/****************************************/
+#include "generate_cc_sfc.cc"
 
-/***********************************/
-/* B 2.1 Instructions and Operands */
-/***********************************/
-/*| instruction_list il_instruction */
-void *visit(instruction_list_c *symbol) {
+generate_cc_SFC_IL_ST_c::generate_cc_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix) {
+  if (NULL == scope) ERROR;
+  this->s4o_ptr = s4o_ptr;
+  this->scope = scope;
+  this->variable_prefix = variable_prefix;
+}
+
+void *generate_cc_SFC_IL_ST_c::visit(sequential_function_chart_c * symbol) {
+  generate_cc_sfc_c generate_cc_sfc(s4o_ptr, scope, variable_prefix);
+  generate_cc_sfc.generate(symbol);
+  return NULL;
+}
+
+void *generate_cc_SFC_IL_ST_c::visit(instruction_list_c *symbol) {
   generate_cc_il_c generate_cc_il(s4o_ptr, scope, variable_prefix);
   generate_cc_il.generate(symbol);
   return NULL;
 }
 
-/* Remainder implemented in generate_cc_il_c... */
-
-/***************************************/
-/* B.3 - Language ST (Structured Text) */
-/***************************************/
-/***********************/
-/* B 3.1 - Expressions */
-/***********************/
-/* Implemented in generate_cc_st_c */
-
-/********************/
-/* B 3.2 Statements */
-/********************/
-void *visit(statement_list_c *symbol) {
+void *generate_cc_SFC_IL_ST_c::visit(statement_list_c *symbol) {
   generate_cc_st_c generate_cc_st(s4o_ptr, scope, variable_prefix);
   generate_cc_st.generate(symbol);
   return NULL;
 }
-
-/* Remainder implemented in generate_cc_st_c... */
-};
-
 
 
 
@@ -450,7 +468,7 @@ void *visit(function_declaration_c *symbol) {
   s4o.print(";\n\n");
 
   /* (C) Function body */
-  generate_cc_IL_and_ST_c generate_cc_code(&s4o, symbol);
+  generate_cc_SFC_IL_ST_c generate_cc_code(&s4o, symbol);
   symbol->function_body->accept(generate_cc_code);
   s4o.print(s4o.indent_spaces + "return ");
   symbol->derived_function_name->accept(*this);
@@ -543,7 +561,7 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print("\n");
 
   /* (B.3) Function code */
-  generate_cc_IL_and_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
+  generate_cc_SFC_IL_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
   symbol->fblock_body->accept(generate_cc_code);
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
@@ -602,16 +620,20 @@ void *visit(program_declaration_c *symbol) {
   /* (A.3) Private internal variables */
   s4o.print(s4o.indent_spaces + "// PROGRAM private variables - TEMP, private and located variables\n");
   vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::local_vf,
-				      generate_cc_vardecl_c::temp_vt |
-  				      generate_cc_vardecl_c::private_vt |
-  				      generate_cc_vardecl_c::located_vt |
-  				      generate_cc_vardecl_c::external_vt);
+                generate_cc_vardecl_c::local_vf,
+                generate_cc_vardecl_c::temp_vt |
+                generate_cc_vardecl_c::private_vt |
+                generate_cc_vardecl_c::located_vt |
+                generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   s4o.print("\n");
 
-  /* (A.4) Program data structure type name. */
+  /* (A.4) Generate private internal variables for SFC*/
+  generate_cc_sfcdecl_c generate_cc_sfcdecl(&s4o);
+  symbol->function_block_body->accept(generate_cc_sfcdecl);
+
+  /* (A.5) Program data structure type name. */
   s4o.indent_left();
   s4o.print("} ");
   symbol->program_type_name->accept(*this);
@@ -643,7 +665,7 @@ void *visit(program_declaration_c *symbol) {
   s4o.print("\n");
 
   /* (B.3) Function code */
-  generate_cc_IL_and_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
+  generate_cc_SFC_IL_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
   symbol->function_block_body->accept(generate_cc_code);
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");

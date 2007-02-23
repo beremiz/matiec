@@ -82,15 +82,15 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
         str1 = s1;
         str2 = s2;
         print_flag = false;
-	embedded_scope = NULL;
+        embedded_scope = NULL;
       }
 
       std::string get(void) {
         if (NULL != embedded_scope)
-	  return embedded_scope->get();
+          return embedded_scope->get();
 
         bool old_print_flag = print_flag;
-	print_flag = true;
+        print_flag = true;
         if (!old_print_flag)
           return str1;
         else
@@ -103,21 +103,21 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
        */
       void push(std::string s1, std::string s2) {
         if (NULL != embedded_scope)
-	  return embedded_scope->push(s1, s2);
+          return embedded_scope->push(s1, s2);
 
         embedded_scope = new next_var_c(s1, s2);
-	if (NULL == embedded_scope)
-	  ERROR;
-	return;
+        if (NULL == embedded_scope)
+          ERROR;
+        return;
       }
 
       /* Remove the inner-most scope... */
       void pop(void) {
         if (NULL != embedded_scope)
-	  return embedded_scope->pop();
+          return embedded_scope->pop();
 
-	delete embedded_scope;
-	embedded_scope = NULL;
+        delete embedded_scope;
+        embedded_scope = NULL;
       }
   };
 
@@ -285,16 +285,16 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
         for(int i = 0; i < list->n; i++) {
           s4o.print(s4o.indent_spaces);
           if (wanted_varformat != init_vf) {
-	    this->current_var_type_symbol->accept(*this);
+            this->current_var_type_symbol->accept(*this);
             s4o.print(" ");
-	  }
-	  this->print_variable_prefix();
+          }
+          this->print_variable_prefix();
           list->elements[i]->accept(*this);
           if (wanted_varformat != local_vf) {
             if (this->current_var_init_symbol != NULL) {
               s4o.print(" = ");
               this->current_var_init_symbol->accept(*this);
-	    }
+            }
           }
           s4o.print(";\n");
         }
@@ -366,7 +366,7 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
         case finterface_vf:      /* fall through... */
         case localinit_vf:       /* fall through... */
         case local_vf:           nv = new next_var_c("", ", "); break;
-	default:                 nv = NULL;
+        default:                 nv = NULL;
       } /* switch() */
 
       symbol->accept(*this);

@@ -319,6 +319,21 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
       il->accept(*this);
     }
 
+    /* Declare the backup to the default variable, that will store the result
+     * of the IL operations executed inside a parenthesis...
+     */
+    void declare_backup_variable(void) {
+      s4o.print(s4o.indent_spaces);
+      s4o.print(IL_DEFVAR_T);
+      s4o.print(" ");
+      print_backup_variable();
+      s4o.print(";\n");
+    }
+    
+    void print_backup_variable(void) {
+      this->default_variable_back_name.accept(*this);
+    }
+
   private:
     /* A helper function... */
     /*
@@ -458,15 +473,12 @@ private:
 
 /*| instruction_list il_instruction */
 void *visit(instruction_list_c *symbol) {
+  
   /* Declare the backup to the default variable, that will store the result
    * of the IL operations executed inside a parenthesis...
    */
-  s4o.print(s4o.indent_spaces);
-  s4o.print(IL_DEFVAR_T);
-  s4o.print(" ");
-  this->default_variable_back_name.accept(*this);
-  s4o.print(";\n");
-
+  declare_backup_variable();
+  
   /* Declare the default variable, that will store the result of the IL operations... */
   s4o.print(s4o.indent_spaces);
   s4o.print(IL_DEFVAR_T);

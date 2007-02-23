@@ -1118,7 +1118,7 @@ void *visit(timed_qualifier_c *symbol) {
 
 /* TRANSITION [transition_name] ['(' 'PRIORITY' ':=' integer ')']
  *   FROM steps TO steps 
- *   transition_condition
+ *   ':' simple_instr_list | ':=' expression
  * END_TRANSITION
  */
 void *visit(transition_c *symbol) {
@@ -1139,10 +1139,15 @@ void *visit(transition_c *symbol) {
   symbol->to_steps->accept(*this);
   s4o.indent_right();
   if (symbol->transition_condition_il != NULL) {
-  	symbol->transition_condition_il->accept(*this);
+  	s4o.print(":\n");
+    symbol->transition_condition_il->accept(*this);
   }
   if (symbol->transition_condition_st != NULL) {
-  	symbol->transition_condition_st->accept(*this);
+  	s4o.print("\n");
+    s4o.print(s4o.indent_spaces);
+    s4o.print(":= ");
+    symbol->transition_condition_st->accept(*this);
+    s4o.print(";\n");
   }
   s4o.indent_left();
   s4o.print(s4o.indent_spaces);
@@ -1164,22 +1169,6 @@ void *visit(steps_c *symbol) {
 /* '(' step_name ',' step_name {',' step_name} ')' */
 void *visit(step_name_list_c *symbol) {
   print_list(symbol, "(", ", ", ")");
-  return NULL;
-}
-
-/* ':' simple_instr_list | ':=' expression */
-void *visit(transition_condition_c *symbol) {
-  if (symbol->simple_instr_list != NULL) {
-    s4o.print(":\n");
-    symbol->simple_instr_list->accept(*this);
-  }
-  if (symbol->expression != NULL) {
-    s4o.print("\n");
-    s4o.print(s4o.indent_spaces);
-    s4o.print(":= ");
-    symbol->expression->accept(*this);
-    s4o.print(";\n");
-  }
   return NULL;
 }
 
