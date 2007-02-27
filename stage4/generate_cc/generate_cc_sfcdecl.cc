@@ -39,6 +39,222 @@
 /***********************************************************************/
 /***********************************************************************/
 
+class generate_cc_sfc_steptable_c: public generate_cc_base_c {
+  
+  private:
+    char step_number;
+    
+  public:
+    generate_cc_sfc_steptable_c(stage4out_c *s4o_ptr): generate_cc_base_c(s4o_ptr) {}
+    ~generate_cc_sfc_steptable_c(void) {}
+    
+    void reset_step_number(void) {step_number = 0;}
+    void print_step_number(void) {
+      char str[10];
+      sprintf(str, "%d", step_number);
+      s4o.print(str);
+    }
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+    
+    void *visit(initial_step_c *symbol) {
+      if (step_number > 0) {
+        s4o.print(",\n");
+      }
+      s4o.print(s4o.indent_spaces + "{1, 0, 0}");
+      step_number++;
+      return NULL;
+    }
+    
+    void *visit(step_c *symbol) {
+      if (step_number > 0) {
+        s4o.print(",\n");
+      }
+      s4o.print(s4o.indent_spaces + "{0, 0, 0}");
+      step_number++;
+      return NULL;
+    }
+
+    void *visit(transition_c *symbol) {return NULL;}
+
+    void *visit(action_c *symbol) {return NULL;}
+
+}; /* generate_cc_sfc_steptable_c */
+
+
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+class generate_cc_sfc_actiontable_c: public generate_cc_base_c {
+  
+  private:
+    char action_number;
+    
+  public:
+    generate_cc_sfc_actiontable_c(stage4out_c *s4o_ptr): generate_cc_base_c(s4o_ptr) {}
+    ~generate_cc_sfc_actiontable_c(void) {}
+    
+    void reset_action_number(void) {action_number = 0;}
+    void print_action_number(void) {
+      char str[10];
+      sprintf(str, "%d", action_number);
+      s4o.print(str);
+    }
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+    
+    void *visit(initial_step_c *symbol) {return NULL;}
+    
+    void *visit(step_c *symbol) {return NULL;}
+
+    void *visit(transition_c *symbol) {return NULL;}
+
+    void *visit(action_c *symbol) {
+      if (action_number > 0) {
+        s4o.print(",\n");
+      }
+      s4o.print(s4o.indent_spaces + "{0, 0, 0, 0, 0, 0}");
+      action_number++;
+      return NULL;
+    }
+
+}; /* generate_cc_sfc_actiontable_c */
+
+
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+class generate_cc_sfc_transitiontable_c: public generate_cc_base_c {
+  
+  private:
+    char transition_number;
+    
+  public:
+    generate_cc_sfc_transitiontable_c(stage4out_c *s4o_ptr): generate_cc_base_c(s4o_ptr) {}
+    ~generate_cc_sfc_transitiontable_c(void) {}
+    
+    void reset_transition_number(void) {transition_number = 0;}
+    void print_transition_number(void) {
+      char str[10];
+      sprintf(str, "%d", transition_number);
+      s4o.print(str);
+    }
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+    
+    void *visit(initial_step_c *symbol) {return NULL;}
+    
+    void *visit(step_c *symbol) {return NULL;}
+
+    void *visit(transition_c *symbol) {return NULL;}
+
+    void *visit(action_c *symbol) {
+      transition_number++;
+      return NULL;
+    }
+
+}; /* generate_cc_sfc_steptable_c */
+
+
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+class generate_cc_sfctables_c: public iterator_visitor_c {
+  
+  protected:
+    stage4out_c &s4o;
+  
+  private:
+    generate_cc_sfc_steptable_c *generate_cc_sfc_steptable;
+    generate_cc_sfc_actiontable_c *generate_cc_sfc_actiontable;
+    generate_cc_sfc_transitiontable_c *generate_cc_sfc_transitiontable;
+
+  public:
+    generate_cc_sfctables_c(stage4out_c *s4o_ptr) : s4o(*s4o_ptr) {
+      generate_cc_sfc_steptable = new generate_cc_sfc_steptable_c(s4o_ptr);
+      generate_cc_sfc_actiontable = new generate_cc_sfc_actiontable_c(s4o_ptr);
+      generate_cc_sfc_transitiontable = new generate_cc_sfc_transitiontable_c(s4o_ptr);
+    }
+
+    virtual ~generate_cc_sfctables_c(void) {
+      delete generate_cc_sfc_steptable;
+      delete generate_cc_sfc_actiontable;
+      delete generate_cc_sfc_transitiontable;
+    }
+
+  public:
+
+    /* generate steps and actions tables */
+    void *visit(sequential_function_chart_c *symbol) {
+      /* generate steps table */
+      generate_cc_sfc_steptable->reset_step_number();
+      s4o.print(s4o.indent_spaces + "STEP step_list[] = {\n");
+      s4o.indent_right();
+      symbol->accept(*generate_cc_sfc_steptable);
+      s4o.indent_left();
+      s4o.print("\n" + s4o.indent_spaces + "};\n" + s4o.indent_spaces + "nb_steps = ");
+      generate_cc_sfc_steptable->print_step_number();
+      s4o.print(";\n");
+      
+      /* generate actions table */
+      generate_cc_sfc_actiontable->reset_action_number();
+      s4o.print(s4o.indent_spaces + "ACTION action_list[] = {\n");
+      s4o.indent_right();
+      symbol->accept(*generate_cc_sfc_actiontable);
+      s4o.indent_left();
+      s4o.print("\n" + s4o.indent_spaces + "};\n" + s4o.indent_spaces + "nb_actions = ");
+      generate_cc_sfc_actiontable->print_action_number();
+      s4o.print(";\n");
+      
+      /* generate actions table */
+      generate_cc_sfc_transitiontable->reset_transition_number();
+      s4o.print(s4o.indent_spaces + "char transition_list[");
+      generate_cc_sfc_transitiontable->print_transition_number();
+      s4o.print("];\n");
+      
+      return NULL;
+    }
+
+/***********************************/
+/* B 2.1 Instructions and Operands */
+/***********************************/
+/*| instruction_list il_instruction */
+    void *visit(instruction_list_c *symbol) {return NULL;}
+
+/***************************************/
+/* B.3 - Language ST (Structured Text) */
+/***************************************/
+/********************/
+/* B 3.2 Statements */
+/********************/
+    void *visit(statement_list_c *symbol) {return NULL;}
+
+/* Remainder implemented in generate_cc_sfcdecl_c... */
+};
+
+    
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
 class generate_cc_sfc_stepdecl_c: public generate_cc_base_c {
   
   private:
@@ -49,8 +265,6 @@ class generate_cc_sfc_stepdecl_c: public generate_cc_base_c {
     ~generate_cc_sfc_stepdecl_c(void) {}
     
     void reset_step_number(void) {step_number = 0;}
-    char get_step_number(void) {return step_number;}
-    void increment_step_number(void) {step_number++;}
     void print_step_number(void) {
       char str[10];
       sprintf(str, "%d", step_number);
@@ -63,21 +277,23 @@ class generate_cc_sfc_stepdecl_c: public generate_cc_base_c {
     
     void *visit(initial_step_c *symbol) {
       s4o.print("#define ");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
       symbol->step_name->accept(*this);
       s4o.print(" ");
       print_step_number();
       s4o.print("\n");
-      increment_step_number();
+      step_number++;
       return NULL;
     }
     
     void *visit(step_c *symbol) {
       s4o.print("#define ");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
       symbol->step_name->accept(*this);
       s4o.print(" ");
       print_step_number();
       s4o.print("\n");
-      increment_step_number();
+      step_number++;
       return NULL;
     }
 
@@ -105,8 +321,6 @@ class generate_cc_sfc_actiondecl_c: public generate_cc_base_c {
     ~generate_cc_sfc_actiondecl_c(void) {}
     
     void reset_action_number(void) {action_number = 0;}
-    char get_action_number(void) {return action_number;}
-    void increment_action_number(void) {action_number++;}
     void print_action_number(void) {
       char str[10];
       sprintf(str, "%d", action_number);
@@ -125,15 +339,17 @@ class generate_cc_sfc_actiondecl_c: public generate_cc_base_c {
 
     void *visit(action_c *symbol) {
       s4o.print("#define ");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
       symbol->action_name->accept(*this);
       s4o.print(" ");
       print_action_number();
       s4o.print("\n");
-      increment_action_number();
+      action_number++;
       return NULL;
     }
 
 }; /* generate_cc_sfc_actiondecl_c */
+
 
 
 
@@ -164,55 +380,19 @@ class generate_cc_sfcdecl_c: public iterator_visitor_c {
 
   public:
 
-/*********************************************/
-/* B.1.6  Sequential function chart elements */
-/*********************************************/
-
-    /*| sequential_function_chart sfc_network*/
-    void *visit(sfc_network_c *symbol) {
-      char i;
-      
-      /* generate step number definitions */
-      s4o.print(s4o.indent_spaces + "// Steps declaration\n");
+    /* generate steps and actions tables */
+    void *visit(sequential_function_chart_c *symbol) {
+      /* generate steps definitions */
       generate_cc_sfc_stepdecl->reset_step_number();
+      s4o.print("// Steps definitions\n");
       symbol->accept(*generate_cc_sfc_stepdecl);
-      s4o.print("\n" + s4o.indent_spaces + "nb_steps = ");
-      generate_cc_sfc_stepdecl->print_step_number();
-      s4o.print(";\n" + s4o.indent_spaces + "STEP step_list[");
-      generate_cc_sfc_stepdecl->print_step_number();
-      s4o.print("] = {\n");
-      s4o.indent_right();
-      for (i = 0; i < generate_cc_sfc_stepdecl->get_step_number(); i++) {
-        if (i == 0) {
-          s4o.print(s4o.indent_spaces + "{1, 0, 0}");
-        }
-        else {
-          s4o.print(",\n" + s4o.indent_spaces + "{0, 0, 0}");
-        }
-      }
-      s4o.indent_left();  
-      s4o.print("\n" + s4o.indent_spaces + "};\n\n");
+      s4o.print("\n");
       
-      /* generate action number definitions */
-      s4o.print(s4o.indent_spaces + "// Actions declaration\n");
+      /* generate actions definitions */
       generate_cc_sfc_actiondecl->reset_action_number();
+      s4o.print("// Actions definitions\n");
       symbol->accept(*generate_cc_sfc_actiondecl);
-      s4o.print("\n" + s4o.indent_spaces + "nb_actions = ");
-      generate_cc_sfc_actiondecl->print_action_number();
-      s4o.print(";\n" + s4o.indent_spaces + "STEP step_list[");
-      generate_cc_sfc_actiondecl->print_action_number();
-      s4o.print("] = {\n");
-      s4o.indent_right();
-      for (i = 0; i < generate_cc_sfc_actiondecl->get_action_number(); i++) {
-        if (i == 0) {
-          s4o.print(s4o.indent_spaces + "{0, 0, 0, 0, 0, 0}");
-        }
-        else {
-          s4o.print(",\n" + s4o.indent_spaces + "{0, 0, 0, 0, 0, 0}");
-        }
-      }
-      s4o.indent_left();  
-      s4o.print("\n" + s4o.indent_spaces + "};\n\n");
+      s4o.print("\n");
       
       return NULL;
     }
@@ -229,7 +409,147 @@ class generate_cc_sfcdecl_c: public iterator_visitor_c {
 /********************/
 /* B 3.2 Statements */
 /********************/
-void *visit(statement_list_c *symbol) {return NULL;}
+    void *visit(statement_list_c *symbol) {return NULL;}
+
+/* Remainder implemented in generate_cc_sfcdecl_c... */
+};
+
+
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+class generate_cc_sfc_stepundecl_c: public generate_cc_base_c {
+  
+  public:
+    generate_cc_sfc_stepundecl_c(stage4out_c *s4o_ptr): generate_cc_base_c(s4o_ptr) {}
+    ~generate_cc_sfc_stepundecl_c(void) {}
+
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+    
+    void *visit(initial_step_c *symbol) {
+      s4o.print("#undef ");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
+      symbol->step_name->accept(*this);
+      s4o.print("\n");
+      return NULL;
+    }
+    
+    void *visit(step_c *symbol) {
+      s4o.print("#undef ");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
+      symbol->step_name->accept(*this);
+      s4o.print("\n");
+      return NULL;
+    }
+
+    void *visit(transition_c *symbol) {return NULL;}
+
+    void *visit(action_c *symbol) {return NULL;}
+
+}; /* generate_cc_sfc_stepdecl_c */
+
+
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+class generate_cc_sfc_actionundecl_c: public generate_cc_base_c {
+  
+  public:
+    generate_cc_sfc_actionundecl_c(stage4out_c *s4o_ptr): generate_cc_base_c(s4o_ptr) {}
+    ~generate_cc_sfc_actionundecl_c(void) {}
+
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+    
+    void *visit(initial_step_c *symbol) {return NULL;}
+    
+    void *visit(step_c *symbol) {return NULL;}
+
+    void *visit(transition_c *symbol) {return NULL;}
+
+    void *visit(action_c *symbol) {
+      s4o.print("#undef ");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
+      symbol->action_name->accept(*this);
+      s4o.print("\n");
+      return NULL;
+    }
+
+}; /* generate_cc_sfc_stepdecl_c */
+
+
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+class generate_cc_sfcundecl_c: public iterator_visitor_c {
+  
+  protected:
+    stage4out_c &s4o;
+  
+  private:
+    generate_cc_sfc_stepundecl_c *generate_cc_sfc_stepundecl;
+    generate_cc_sfc_actionundecl_c *generate_cc_sfc_actionundecl;
+
+  public:
+    generate_cc_sfcundecl_c(stage4out_c *s4o_ptr) : s4o(*s4o_ptr) {
+      generate_cc_sfc_stepundecl = new generate_cc_sfc_stepundecl_c(s4o_ptr);
+      generate_cc_sfc_actionundecl = new generate_cc_sfc_actionundecl_c(s4o_ptr);
+    }
+
+    virtual ~generate_cc_sfcundecl_c(void) {
+      delete generate_cc_sfc_stepundecl;
+      delete generate_cc_sfc_actionundecl;
+    }
+
+  public:
+
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+
+    /* generate steps and actions tables */
+    void *visit(sequential_function_chart_c *symbol) {
+      /* generate steps undefinitions */
+      s4o.print("// Steps undefinitions\n");
+      symbol->accept(*generate_cc_sfc_stepundecl);
+      s4o.print("\n");
+      
+      /* generate actions table */
+      s4o.print("// Actions undefinitions\n");
+      symbol->accept(*generate_cc_sfc_actionundecl);
+      s4o.print("\n");
+      
+      return NULL;
+    }
+
+/***********************************/
+/* B 2.1 Instructions and Operands */
+/***********************************/
+/*| instruction_list il_instruction */
+    void *visit(instruction_list_c *symbol) {return NULL;}
+
+/***************************************/
+/* B.3 - Language ST (Structured Text) */
+/***************************************/
+/********************/
+/* B 3.2 Statements */
+/********************/
+    void *visit(statement_list_c *symbol) {return NULL;}
 
 /* Remainder implemented in generate_cc_sfcdecl_c... */
 };

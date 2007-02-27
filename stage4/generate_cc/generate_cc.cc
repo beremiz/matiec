@@ -147,7 +147,7 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 #define FB_FUNCTION_SUFFIX "_body__"
 
 /* The FB body function is passed as the only parameter a pointer to the FB data
- * structure instance. The name of this parameter is given by the following cosntant.
+ * structure instance. The name of this parameter is given by the following constant.
  * In order not to clash with any variable in the IL and ST source codem the
  * following constant should contain a double underscore, which is not allowed
  * in IL and ST.
@@ -158,6 +158,9 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
  */
 
 #define FB_FUNCTION_PARAM "data__"
+
+
+#define SFC_STEP_ACTION_PREFIX "__SFC_"
 
 
 /***********************************************************************/
@@ -521,7 +524,7 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "// FB private variables - TEMP, private and located variables\n");
   vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::local_vf,
-				      generate_cc_vardecl_c::temp_vt |
+				        generate_cc_vardecl_c::temp_vt |
   				      generate_cc_vardecl_c::private_vt |
   				      generate_cc_vardecl_c::located_vt);
   vardecl->print(symbol->var_declarations);
@@ -627,11 +630,10 @@ void *visit(program_declaration_c *symbol) {
                 generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
+  /* (A.4) Generate private internal variables for SFC */
+  generate_cc_sfctables_c generate_cc_sfctables(&s4o);
+  symbol->function_block_body->accept(generate_cc_sfctables);
   s4o.print("\n");
-
-  /* (A.4) Generate private internal variables for SFC*/
-  generate_cc_sfcdecl_c generate_cc_sfcdecl(&s4o);
-  symbol->function_block_body->accept(generate_cc_sfcdecl);
 
   /* (A.5) Program data structure type name. */
   s4o.indent_left();
@@ -640,7 +642,11 @@ void *visit(program_declaration_c *symbol) {
   s4o.print(";\n\n");
 
   /* (B) Function with PROGRAM body */
-  /* (B.1) Function declaration */
+  /* (B.1) Step and Action definitions */
+  generate_cc_sfcdecl_c generate_cc_sfcdecl(&s4o);
+  symbol->function_block_body->accept(generate_cc_sfcdecl);
+
+  /* (B.2) Function declaration */
   s4o.print("// Code part\n");
   /* function interface */
   s4o.print("void ");
@@ -654,7 +660,7 @@ void *visit(program_declaration_c *symbol) {
   s4o.print(") {\n");
   s4o.indent_right();
 
-  /* (B.2) Initialize TEMP variables */
+  /* (B.3) Initialize TEMP variables */
   /* function body */
   s4o.print(s4o.indent_spaces + "// Initialise TEMP variables\n");
   vardecl = new generate_cc_vardecl_c(&s4o,
@@ -664,7 +670,7 @@ void *visit(program_declaration_c *symbol) {
   delete vardecl;
   s4o.print("\n");
 
-  /* (B.3) Function code */
+  /* (B.4) Function code */
   generate_cc_SFC_IL_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
   symbol->function_block_body->accept(generate_cc_code);
   s4o.indent_left();
@@ -672,6 +678,10 @@ void *visit(program_declaration_c *symbol) {
   symbol->program_type_name->accept(*this);
   s4o.print(FB_FUNCTION_SUFFIX);
   s4o.print(s4o.indent_spaces + "() \n\n");
+
+  /* (B.5) Step and Action undefinitions */
+  generate_cc_sfcundecl_c generate_cc_sfcundecl(&s4o);
+  symbol->function_block_body->accept(generate_cc_sfcundecl);
 
   s4o.indent_left();
   s4o.print("\n\n\n\n");

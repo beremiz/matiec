@@ -41,6 +41,9 @@
 class generate_cc_sfc_transitiontest_c: public generate_cc_base_c {
   
   private:
+    char transition_number;
+  
+  private:
     generate_cc_il_c *generate_cc_il;
     generate_cc_st_c *generate_cc_st;
     
@@ -57,82 +60,20 @@ class generate_cc_sfc_transitiontest_c: public generate_cc_base_c {
       delete generate_cc_st;
     }
 
+    void reset_transition_number(void) {transition_number = 0;}
+    void print_transition_number(void) {
+      char str[10];
+      sprintf(str, "%d", transition_number);
+      s4o.print(str);
+    }
+
     void print_step_argument(symbol_c *step_name, const char* argument) {
       print_variable_prefix();
       s4o.print("step_list[");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
       step_name->accept(*this);
       s4o.print("].");
       s4o.print(argument);
-    }
-    
-    void print_reset_step(symbol_c *step_name) {
-      s4o.print(s4o.indent_spaces);
-      print_step_argument(step_name, "state");
-      s4o.print(" = 0;\n" + s4o.indent_spaces + "if (");
-      print_step_argument(step_name, "pulse");
-      s4o.print(" != 1 {\n");
-      s4o.indent_right();
-      s4o.print(s4o.indent_spaces);
-      print_step_argument(step_name, "pulse");
-      s4o.print(" = 2;\n");
-      s4o.indent_left();
-      s4o.print(s4o.indent_spaces + "}\n" + s4o.indent_spaces + "else {\n");
-      s4o.indent_right();
-      s4o.print(s4o.indent_spaces);
-      print_step_argument(step_name, "pulse");
-      s4o.print(" = 0;\n");
-      s4o.indent_left();
-      s4o.print(s4o.indent_spaces + "}\n" + s4o.indent_spaces);
-      print_step_argument(step_name, "elapsed_time");
-      s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);");
-    }
-    
-    void print_set_step(symbol_c *step_name) {
-      s4o.print(s4o.indent_spaces);
-      print_step_argument(step_name, "state");
-      s4o.print(" = 1;\n" + s4o.indent_spaces);
-      print_step_argument(step_name, "pulse");
-      s4o.print(" = 1;");
-    } 
-    
-    void print_steps_state_test(steps_c *symbol) {
-      if (symbol->step_name != NULL) {
-        print_step_argument(symbol->step_name, "state");
-      }
-      if (symbol->step_name_list != NULL) {
-        for(int i = 0; i < ((list_c*)symbol->step_name_list)->n; i++) {
-          print_step_argument(((list_c*)symbol->step_name_list)->elements[i], "state");
-          if (i < ((list_c*)symbol->step_name_list)->n - 1) {
-            s4o.print(" && ");
-          }
-        }
-      }
-    }
-      
-    void print_reset_steps(steps_c *symbol) {
-      if (symbol->step_name != NULL) {
-        print_reset_step(symbol->step_name);
-        s4o.print("\n");
-      }
-      if (symbol->step_name_list != NULL) {
-        for(int i = 0; i < ((list_c*)symbol->step_name_list)->n; i++) {
-          print_reset_step(((list_c*)symbol->step_name_list)->elements[i]);
-          s4o.print("\n");
-        }
-      }
-    }
-
-    void print_set_steps(steps_c *symbol) {
-      if (symbol->step_name != NULL) {
-        print_set_step(symbol->step_name);
-        s4o.print("\n");
-      }
-      if (symbol->step_name_list != NULL) {
-        for(int i = 0; i < ((list_c*)symbol->step_name_list)->n; i++) {
-          print_set_step(((list_c*)symbol->step_name_list)->elements[i]);
-          s4o.print("\n");
-        }
-      }
     }
 
 /*********************************************/
@@ -145,7 +86,7 @@ class generate_cc_sfc_transitiontest_c: public generate_cc_base_c {
 
     void *visit(transition_c *symbol) {
       s4o.print(s4o.indent_spaces + "if (");
-      print_steps_state_test((steps_c *)symbol->from_steps);
+      symbol->from_steps->accept(*this);
       s4o.print(") {\n");
       s4o.indent_right();
       
@@ -154,30 +95,229 @@ class generate_cc_sfc_transitiontest_c: public generate_cc_base_c {
         generate_cc_il->declare_backup_variable();
         s4o.print(s4o.indent_spaces);
         symbol->transition_condition_il->accept(*generate_cc_il);
-        s4o.print("if (");
+        print_variable_prefix();
+        s4o.print("transition_list[");
+        print_transition_number();
+        s4o.print("] = ");
         generate_cc_il->print_backup_variable();
-        s4o.print(") {\n");
+        s4o.print(";\n");
       }
       if (symbol->transition_condition_st != NULL) {
-        s4o.print(s4o.indent_spaces + "if (");
+        print_variable_prefix();
+        s4o.print("transition_list[");
+        print_transition_number();
+        s4o.print("] = ");
         symbol->transition_condition_st->accept(*generate_cc_st);
-        s4o.print(") {\n");
+        s4o.print(";\n");
       }
-      
-      s4o.indent_right();      
-      print_reset_steps((steps_c *)symbol->from_steps);
-      print_set_steps((steps_c *)symbol->to_steps);      
       s4o.indent_left();
-
+      s4o.print(s4o.indent_spaces + "}\n" + s4o.indent_spaces + "else {\n");
+      s4o.indent_right();
+      s4o.print(s4o.indent_spaces);
+      print_variable_prefix();
+      s4o.print("transition_list[");
+      print_transition_number();
+      s4o.print("] = 0;\n");
+      s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
-      s4o.indent_left();
-      s4o.print(s4o.indent_spaces + "}\n\n");
+      
+      transition_number++;
+      return NULL;
+    }
+    
+    void *visit(steps_c *symbol) {
+      if (symbol->step_name != NULL) {
+        print_step_argument(symbol->step_name, "state");
+      }
+      if (symbol->step_name_list != NULL) {
+        symbol->step_name_list->accept(*this);
+      }
+      return NULL;
+    }
+    
+    void *visit(step_name_list_c *symbol) {
+      for(int i = 0; i < symbol->n; i++) {
+        print_step_argument(symbol->elements[i], "state");
+        if (i < symbol->n - 1) {
+          s4o.print(" && ");
+        }
+      }
       return NULL;
     }
     
     void *visit(action_c *symbol) {return NULL;}
 
 }; /* generate_cc_sfc_transitiontest_c */
+
+
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+class generate_cc_sfc_transitionresetsteps_c: public generate_cc_base_c {
+  
+  private:
+    char transition_number;
+  
+  public:
+    generate_cc_sfc_transitionresetsteps_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
+    : generate_cc_base_c(s4o_ptr) {
+      this->set_variable_prefix(variable_prefix);
+    }
+    
+    void reset_transition_number(void) {transition_number = 0;}
+    void print_transition_number(void) {
+      char str[10];
+      sprintf(str, "%d", transition_number);
+      s4o.print(str);
+    }
+    
+    void print_step_argument(symbol_c *step_name, const char* argument) {
+      print_variable_prefix();
+      s4o.print("step_list[");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
+      step_name->accept(*this);
+      s4o.print("].");
+      s4o.print(argument);
+    }
+
+    void print_reset_step(symbol_c *step_name) {
+      s4o.print(s4o.indent_spaces);
+      print_step_argument(step_name, "state");
+      s4o.print(" = 0;\n" + s4o.indent_spaces);
+      print_step_argument(step_name, "elapsed_time");
+      s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
+    }
+
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+    
+    void *visit(initial_step_c *symbol) {return NULL;}
+    
+    void *visit(step_c *symbol) {return NULL;}
+
+    void *visit(transition_c *symbol) {
+      s4o.print(s4o.indent_spaces + "if (");
+      print_variable_prefix();
+      s4o.print("transition_list[");
+      print_transition_number();
+      s4o.print("]) {\n");
+      s4o.indent_right();
+      symbol->from_steps->accept(*this);
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "}\n");
+      transition_number++;
+      return NULL;
+    }
+    
+    void *visit(steps_c *symbol) {
+      if (symbol->step_name != NULL) {
+        print_reset_step(symbol->step_name);
+      }
+      if (symbol->step_name_list != NULL) {
+        symbol->step_name_list->accept(*this);
+      }
+      return NULL;
+    }
+    
+    void *visit(step_name_list_c *symbol) {
+      for(int i = 0; i < symbol->n; i++) {
+        print_reset_step(symbol->elements[i]);
+      }
+      return NULL;
+    }
+    
+    void *visit(action_c *symbol) {return NULL;}
+
+}; /* generate_cc_sfc_transitionresetsteps_c */
+      
+
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+class generate_cc_sfc_transitionsetsteps_c: public generate_cc_base_c {
+  
+  private:
+    char transition_number;
+  
+  public:
+    generate_cc_sfc_transitionsetsteps_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
+    : generate_cc_base_c(s4o_ptr) {
+      this->set_variable_prefix(variable_prefix);
+    }
+    
+    void reset_transition_number(void) {transition_number = 0;}
+    void print_transition_number(void) {
+      char str[10];
+      sprintf(str, "%d", transition_number);
+      s4o.print(str);
+    }
+    
+    void print_step_argument(symbol_c *step_name, const char* argument) {
+      print_variable_prefix();
+      s4o.print("step_list[");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
+      step_name->accept(*this);
+      s4o.print("].");
+      s4o.print(argument);
+    }
+
+    void print_set_step(symbol_c *step_name) {
+      s4o.print(s4o.indent_spaces);
+      print_step_argument(step_name, "state");
+      s4o.print(" = 1;\n");
+    }
+
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+    
+    void *visit(initial_step_c *symbol) {return NULL;}
+    
+    void *visit(step_c *symbol) {return NULL;}
+
+    void *visit(transition_c *symbol) {
+      s4o.print(s4o.indent_spaces + "if (");
+      print_variable_prefix();
+      s4o.print("transition_list[");
+      print_transition_number();
+      s4o.print("]) {\n");
+      s4o.indent_right();
+      symbol->to_steps->accept(*this);
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "}\n");
+      transition_number++;
+      return NULL;
+    }
+    
+    void *visit(steps_c *symbol) {
+      if (symbol->step_name != NULL) {
+        print_set_step(symbol->step_name);
+      }
+      if (symbol->step_name_list != NULL) {
+        symbol->step_name_list->accept(*this);
+      }
+      return NULL;
+    }
+    
+    void *visit(step_name_list_c *symbol) {
+      for(int i = 0; i < symbol->n; i++) {
+        print_set_step(symbol->elements[i]);
+      }
+      return NULL;
+    }
+    
+    void *visit(action_c *symbol) {return NULL;}
+
+}; /* generate_cc_sfc_transitionsetsteps_c */
 
 
 
@@ -202,6 +342,7 @@ class generate_cc_sfc_stepassociation_c: public generate_cc_base_c {
     void print_step_argument(symbol_c *step_name, const char* argument) {
       print_variable_prefix();
       s4o.print("step_list[");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
       step_name->accept(*this);
       s4o.print("].");
       s4o.print(argument);
@@ -210,6 +351,7 @@ class generate_cc_sfc_stepassociation_c: public generate_cc_base_c {
     void print_action_argument(symbol_c *action_name, const char* argument) {
       print_variable_prefix();
       s4o.print("action_list[");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
       action_name->accept(*this);
       s4o.print("].");
       s4o.print(argument);
@@ -220,20 +362,58 @@ class generate_cc_sfc_stepassociation_c: public generate_cc_base_c {
 /*********************************************/
     
     void *visit(initial_step_c *symbol) {
-      s4o.print(s4o.indent_spaces + "// ");
-      symbol->step_name->accept(*this);
-      s4o.print(" action associations\n");
-      current_step = symbol->step_name;
-      symbol->action_association_list->accept(*this);
+      if (((list_c*)symbol->action_association_list)->n > 0) {
+        s4o.print(s4o.indent_spaces + "// ");
+        symbol->step_name->accept(*this);
+        s4o.print(" action associations\n");
+        current_step = symbol->step_name;
+        s4o.print(s4o.indent_spaces + "{\n");
+        s4o.indent_right();
+        s4o.print(s4o.indent_spaces + "char activated = ");
+        print_step_argument(current_step, "state");
+        s4o.print(" && !");
+        print_step_argument(current_step, "prev_state");
+        s4o.print(";\n");
+        s4o.print(s4o.indent_spaces + "char desactivated = !");
+        print_step_argument(current_step, "state");
+        s4o.print(" && ");
+        print_step_argument(current_step, "prev_state");
+        s4o.print(";\n");
+        s4o.print(s4o.indent_spaces + "char active = ");
+        print_step_argument(current_step, "state");
+        s4o.print(";\n");
+        symbol->action_association_list->accept(*this);
+        s4o.indent_left();
+        s4o.print(s4o.indent_spaces + "}\n\n");
+      }
       return NULL;
     }
     
     void *visit(step_c *symbol) {
-      s4o.print(s4o.indent_spaces + "// ");
-      symbol->step_name->accept(*this);
-      s4o.print(" action associations\n");
-      current_step = symbol->step_name;
-      symbol->action_association_list->accept(*this);
+      if (((list_c*)symbol->action_association_list)->n > 0) {
+        s4o.print(s4o.indent_spaces + "// ");
+        symbol->step_name->accept(*this);
+        s4o.print(" action associations\n");
+        current_step = symbol->step_name;
+        s4o.print(s4o.indent_spaces + "{\n");
+        s4o.indent_right();
+        s4o.print(s4o.indent_spaces + "char activated = ");
+        print_step_argument(current_step, "state");
+        s4o.print(" && !");
+        print_step_argument(current_step, "prev_state");
+        s4o.print(";\n");
+        s4o.print(s4o.indent_spaces + "char desactivated = !");
+        print_step_argument(current_step, "state");
+        s4o.print(" && ");
+        print_step_argument(current_step, "prev_state");
+        s4o.print(";\n");
+        s4o.print(s4o.indent_spaces + "char active = ");
+        print_step_argument(current_step, "state");
+        s4o.print(";\n");
+        symbol->action_association_list->accept(*this);
+        s4o.indent_left();
+        s4o.print(s4o.indent_spaces + "}\n\n");
+      }
       return NULL;
     }
 
@@ -242,7 +422,7 @@ class generate_cc_sfc_stepassociation_c: public generate_cc_base_c {
     void *visit(action_c *symbol) {return NULL;}
 
     void *visit(action_association_list_c* symbol) {
-      print_list(symbol, "", "\n", "\n\n");
+      print_list(symbol, "", "\n", "\n");
       return NULL;
     }
 
@@ -270,16 +450,14 @@ class generate_cc_sfc_stepassociation_c: public generate_cc_base_c {
       
       s4o.print(s4o.indent_spaces + "if (");
       if (strcmp(qualifier, "N") == 0) {
-        print_step_argument(current_step, "state");
+        s4o.print("active");
       }
       if (strcmp(qualifier, "P") == 0 || strcmp(qualifier, "SD") == 0 || 
           strcmp(qualifier, "DS") == 0 || strcmp(qualifier, "SL") == 0) {
-        print_step_argument(current_step, "pulse");
-        s4o.print(" == 1");
+        s4o.print("activated");
       }
       if (strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
-        print_step_argument(current_step, "state");
-        s4o.print(" && ");
+        s4o.print("active && ");
         print_step_argument(current_step, "elapsed_time");
         if (strcmp(qualifier, "D") == 0) {
           s4o.print(" >= ");
@@ -312,8 +490,7 @@ class generate_cc_sfc_stepassociation_c: public generate_cc_base_c {
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}");
       if (strcmp(qualifier, "DS") == 0) {
-        print_step_argument(current_step, "pulse");
-        s4o.print(" == 2) {\n");
+        s4o.print("desactivated");
         s4o.indent_right();
         s4o.print(s4o.indent_spaces);
         print_action_argument(current_action, "set_remaining_time");
@@ -370,6 +547,7 @@ class generate_cc_sfc_actionexecution_c: public generate_cc_base_c {
       s4o.print(s4o.indent_spaces + "if(");
       print_variable_prefix();
       s4o.print("action_list[");
+      s4o.print(SFC_STEP_ACTION_PREFIX);
       symbol->action_name->accept(*this);
       s4o.print("].state) {");
       s4o.indent_right();
@@ -395,6 +573,8 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
   
   private:
     generate_cc_sfc_transitiontest_c *generate_cc_sfc_transitiontest;
+    generate_cc_sfc_transitionresetsteps_c *generate_cc_sfc_transitionresetsteps;
+    generate_cc_sfc_transitionsetsteps_c *generate_cc_sfc_transitionsetsteps;
     generate_cc_sfc_stepassociation_c *generate_cc_sfc_stepassociation;
     generate_cc_sfc_actionexecution_c *generate_cc_sfc_actionexecution;
   
@@ -402,6 +582,8 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
     generate_cc_sfc_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_cc_typedecl_c(s4o_ptr) {
       generate_cc_sfc_transitiontest = new generate_cc_sfc_transitiontest_c(s4o_ptr, scope, variable_prefix);
+      generate_cc_sfc_transitionresetsteps = new generate_cc_sfc_transitionresetsteps_c(s4o_ptr, scope, variable_prefix);
+      generate_cc_sfc_transitionsetsteps = new generate_cc_sfc_transitionsetsteps_c(s4o_ptr, scope, variable_prefix);
       generate_cc_sfc_stepassociation = new generate_cc_sfc_stepassociation_c(s4o_ptr, scope, variable_prefix);
       generate_cc_sfc_actionexecution = new generate_cc_sfc_actionexecution_c(s4o_ptr, scope, variable_prefix);
       this->set_variable_prefix(variable_prefix);
@@ -409,6 +591,8 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
   
     virtual ~generate_cc_sfc_c(void) {
       delete generate_cc_sfc_transitiontest;
+      delete generate_cc_sfc_transitionresetsteps;
+      delete generate_cc_sfc_transitionsetsteps;
       delete generate_cc_sfc_stepassociation;
       delete generate_cc_sfc_actionexecution;
     }
@@ -429,7 +613,9 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("step_list[i].pulse = 0;\n");
+      s4o.print("step_list[i].prev_state = ");
+      print_variable_prefix();
+      s4o.print("step_list[i].state;\n");
       s4o.print(s4o.indent_spaces + "if (");
       print_variable_prefix();
       s4o.print("step_list[i].state) {\n");
@@ -510,7 +696,20 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
       
       /* generate transition tests */
       s4o.print(s4o.indent_spaces + "// Transitions fire test\n");
+      generate_cc_sfc_transitiontest->reset_transition_number();
       symbol->accept(*generate_cc_sfc_transitiontest);
+      s4o.print("\n");
+      
+      /* generate transition reset steps */
+      s4o.print(s4o.indent_spaces + "// Transitions reset steps\n");
+      generate_cc_sfc_transitionresetsteps->reset_transition_number();
+      symbol->accept(*generate_cc_sfc_transitionresetsteps);
+      s4o.print("\n");
+      
+      /* generate transition set steps */
+      s4o.print(s4o.indent_spaces + "// Transitions set steps\n");
+      generate_cc_sfc_transitionsetsteps->reset_transition_number();
+      symbol->accept(*generate_cc_sfc_transitionsetsteps);
       s4o.print("\n");
       
        /* generate step association */
