@@ -29,6 +29,17 @@
 
 
 
+/* !!! WARNING !!!
+ *
+ *       Whoever includes this file (stage1_2_priv.hh) will need
+ *       to first inlcude iec.y.hh !!
+ *
+ *       Read other comments further down to understand why we don't
+ *       include iec.y.hh in this file.
+ */
+
+
+
 /* file with the declarations of symbol tables... */
 #include "../util/symtable.hh"
 
@@ -89,7 +100,7 @@ void rst_goto_body_state(void);
 /* NOTE: BOGUS_TOKEN_ID is defined in the bison generated file iec.y.hh.
  *       We need this constant defined before we can declare the symbol tables.
  *       However, we cannot #include "iec.y.hh" in this file (stage1_2_priv.hh) directly
- *       because of the way bison ver. 3.2 is copying all declarations in the prologue
+ *       because of the way bison ver. 2.3 is copying all declarations in the prologue
  *       of iec.y to the iec.y.hh file (including an #include stage1_2_priv.hh).
  *       So, if we were to include "iec.y.hh" here, we would get a circular include.
  *       All this means that whoever includes this file (stage1_2_priv.hh) will need

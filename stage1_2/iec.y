@@ -70,7 +70,7 @@ void yyerror (const char *error_msg);
  * Printing of debug info must then be activated by setting
  * the variable yydebug to 1.
  */
-#define YYDEBUG 0
+#define YYDEBUG 1
 
 
 /* file with declaration of absyntax classes... */
@@ -151,7 +151,7 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
 
 
 
-%glr-parser
+// %glr-parser
 // %expect-rr 1
 
 
@@ -5063,6 +5063,8 @@ case_element_list:
 case_element:
   case_list ':' statement_list
 	{$$ = new case_element_c($1, $3);}
+| case_list ':' statement_list identifier BOGUS_TOKEN_ID
+	{$$ = new case_element_c($1, $3); ERROR;}
 ;
 
 

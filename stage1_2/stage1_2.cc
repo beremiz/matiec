@@ -29,6 +29,9 @@
  */
 
 
+/* file with declaration of absyntax classes... */
+#include "../absyntax/absyntax.hh"
+
 
 // #include "stage1_2.hh"
 #include "iec.y.hh"
