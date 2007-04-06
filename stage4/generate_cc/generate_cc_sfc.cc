@@ -102,9 +102,7 @@ class generate_cc_sfc_transitionresetsteps_c: public generate_cc_base_c {
     void print_reset_step(symbol_c *step_name) {
       s4o.print(s4o.indent_spaces);
       print_step_argument(step_name, "state");
-      s4o.print(" = 0;\n" + s4o.indent_spaces);
-      print_step_argument(step_name, "elapsed_time");
-      s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
+      s4o.print(" = 0;\n");
     }
 
 /*********************************************/
@@ -190,7 +188,9 @@ class generate_cc_sfc_transitionsetsteps_c: public generate_cc_base_c {
     void print_set_step(symbol_c *step_name) {
       s4o.print(s4o.indent_spaces);
       print_step_argument(step_name, "state");
-      s4o.print(" = 1;\n");
+      s4o.print(" = 1;\n" + s4o.indent_spaces);
+      print_step_argument(step_name, "elapsed_time");
+      s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
     }
 
 /*********************************************/
@@ -288,9 +288,7 @@ class generate_cc_sfc_transitiontest_c: public generate_cc_base_c {
     void print_reset_step(symbol_c *step_name) {
       s4o.print(s4o.indent_spaces);
       print_step_argument(step_name, "state");
-      s4o.print(" = 0;\n" + s4o.indent_spaces);
-      print_step_argument(step_name, "elapsed_time");
-      s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
+      s4o.print(" = 0;\n");
     }
 
 /*********************************************/
