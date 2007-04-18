@@ -314,6 +314,7 @@ class generate_cc_sfc_transitiontest_c: public generate_cc_base_c {
         s4o.print(";\n");
       }
       if (symbol->transition_condition_st != NULL) {
+        s4o.print(s4o.indent_spaces);
         print_variable_prefix();
         s4o.print("transition_list[");
         print_transition_number();

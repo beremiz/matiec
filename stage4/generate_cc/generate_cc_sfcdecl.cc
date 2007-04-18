@@ -157,12 +157,12 @@ class generate_cc_sfc_transitiontable_c: public generate_cc_base_c {
     
     void *visit(step_c *symbol) {return NULL;}
 
-    void *visit(transition_c *symbol) {return NULL;}
-
-    void *visit(action_c *symbol) {
+    void *visit(transition_c *symbol) {
       transition_number++;
       return NULL;
     }
+
+    void *visit(action_c *symbol) {return NULL;}
 
 }; /* generate_cc_sfc_steptable_c */
 
@@ -221,8 +221,9 @@ class generate_cc_sfctables_c: public iterator_visitor_c {
       generate_cc_sfc_actiontable->print_action_number();
       s4o.print(";\n");
       
-      /* generate actions table */
+      /* generate transitions table */
       generate_cc_sfc_transitiontable->reset_transition_number();
+      symbol->accept(*generate_cc_sfc_transitiontable);
       s4o.print(s4o.indent_spaces + "char transition_list[");
       generate_cc_sfc_transitiontable->print_transition_number();
       s4o.print("];\n");

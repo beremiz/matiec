@@ -131,7 +131,7 @@ class generate_cc_st_c: public generate_cc_typedecl_c {
 void *visit(or_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (typeid(*left_type) == typeid(bool_type_name_c) && typeid(*right_type) == typeid(bool_type_name_c)) {
+  if (search_expression_type->is_bool_type(left_type) && search_expression_type->is_bool_type(right_type)) {
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " || ");
   }
   if (search_expression_type->is_numeric_compatible(left_type) && search_expression_type->is_numeric_compatible(right_type)) {
@@ -144,7 +144,7 @@ void *visit(or_expression_c *symbol) {
 void *visit(xor_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (typeid(*left_type) == typeid(bool_type_name_c) && typeid(*right_type) == typeid(bool_type_name_c)) {
+  if (search_expression_type->is_bool_type(left_type) && search_expression_type->is_bool_type(right_type)) {
     s4o.print("(");
     symbol->l_exp->accept(*this);
     s4o.print(" && !");
@@ -165,7 +165,7 @@ void *visit(xor_expression_c *symbol) {
 void *visit(and_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (typeid(*left_type) == typeid(bool_type_name_c) && typeid(*right_type) == typeid(bool_type_name_c)) {
+  if (search_expression_type->is_bool_type(left_type) && search_expression_type->is_bool_type(right_type)) {
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " && ");
   }
   if (search_expression_type->is_numeric_compatible(left_type) && search_expression_type->is_numeric_compatible(right_type)) {

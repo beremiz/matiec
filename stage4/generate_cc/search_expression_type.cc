@@ -117,6 +117,29 @@ class search_expression_type_c: public search_constant_type_c {
     return NULL;
   }
 
+/*************************************/
+/* B 1.4.2 - Multi-element variables */
+/*************************************/
+
+  void *visit(array_variable_c *symbol) {
+    symbol_c *res;
+    
+    /* Nope, now we assume it is a variable, and determine its type... */
+    res = search_varfb_instance_type->get_type(symbol);
+    if (NULL != res) return res;
+    
+    return NULL;
+  }
+
+  void *visit(structured_variable_c *symbol) {
+    symbol_c *res;
+    
+    /* Nope, now we assume it is a variable, and determine its type... */
+    res = search_varfb_instance_type->get_type(symbol);
+    if (NULL != res) return res;
+    
+    return NULL;
+  }
 
 /***************************************/
 /* B.3 - Language ST (Structured Text) */
