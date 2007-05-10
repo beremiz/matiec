@@ -146,6 +146,9 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 
 #define FB_FUNCTION_SUFFIX "_body__"
 
+/* Idem as body, but for initializer FB function */
+#define FB_INIT_SUFFIX "_init__"
+
 /* The FB body function is passed as the only parameter a pointer to the FB data
  * structure instance. The name of this parameter is given by the following constant.
  * In order not to clash with any variable in the IL and ST source codem the
@@ -524,9 +527,10 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "// FB private variables - TEMP, private and located variables\n");
   vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::local_vf,
-				        generate_cc_vardecl_c::temp_vt |
+				      generate_cc_vardecl_c::temp_vt |
   				      generate_cc_vardecl_c::private_vt |
-  				      generate_cc_vardecl_c::located_vt);
+  				      generate_cc_vardecl_c::located_vt |
+  				      generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   s4o.print("\n");
@@ -536,6 +540,47 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print("} ");
   symbol->fblock_name->accept(*this);
   s4o.print(";\n\n");
+
+
+
+
+
+
+
+
+
+
+  /* (B) Constructor */
+  /* (B.1) Constructor name... */
+  s4o.print(s4o.indent_spaces + "void ");
+  symbol->fblock_name->accept(*this);
+  s4o.print(FB_INIT_SUFFIX);
+  s4o.print("(");
+
+  /* first and only parameter is a pointer to the data */
+  symbol->fblock_name->accept(*this);
+  s4o.print(" *");
+  s4o.print(FB_FUNCTION_PARAM);
+  s4o.print(") {\n");
+  s4o.indent_right();
+
+  /* (B.2) Member initializations... */
+  s4o.print(s4o.indent_spaces);
+  vardecl = new generate_cc_vardecl_c(&s4o,
+  				      generate_cc_vardecl_c::constructorinit_vf,
+  				      generate_cc_vardecl_c::input_vt |
+  				      generate_cc_vardecl_c::output_vt |
+  				      generate_cc_vardecl_c::inoutput_vt |
+  				      generate_cc_vardecl_c::private_vt |
+				      generate_cc_vardecl_c::external_vt);
+  vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
+  delete vardecl;
+  s4o.indent_left();
+  s4o.print("\n" + s4o.indent_spaces + "}\n\n");
+
+  
+
+
 
 
   /* (B) Function with FB body */

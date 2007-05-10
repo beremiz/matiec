@@ -273,7 +273,7 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
     /* Note that located variables are the exception, they
      * being declared in the located_var_decl_c visitor...
      */
-    void *declare_variables(symbol_c *symbol) {
+    void *declare_variables(symbol_c *symbol, bool is_fb = false) {
       list_c *list = dynamic_cast<list_c *>(symbol);
       /* should NEVER EVER occur!! */
       if (list == NULL) ERROR;
@@ -288,7 +288,7 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
             this->current_var_type_symbol->accept(*this);
             s4o.print(" ");
           }
-          this->print_variable_prefix();
+          print_variable_prefix();
           list->elements[i]->accept(*this);
           if (wanted_varformat != local_vf) {
             if (this->current_var_init_symbol != NULL) {
@@ -323,12 +323,22 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
 
       if (wanted_varformat == constructorinit_vf) {
         for(int i = 0; i < list->n; i++) {
-          if (this->current_var_init_symbol != NULL) {
+          if (is_fb) {
             s4o.print(nv->get());
-            list->elements[i]->accept(*this);
+            this->current_var_type_symbol->accept(*this);
+            s4o.print(FB_INIT_SUFFIX);
             s4o.print("(");
+            this->print_variable_prefix();
+            list->elements[i]->accept(*this);
+            s4o.print(");");
+          }
+          else if (this->current_var_init_symbol != NULL) {
+            s4o.print(nv->get());
+            this->print_variable_prefix();
+            list->elements[i]->accept(*this);
+            s4o.print(" = ");
             this->current_var_init_symbol->accept(*this);
-            s4o.print(")");
+            s4o.print(";");
           }
         }
       }
@@ -362,7 +372,7 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
       finterface_var_count = 0;
 
       switch (wanted_varformat) {
-        case constructorinit_vf: nv = new next_var_c(": ", ", "); break;
+        case constructorinit_vf: nv = new next_var_c("", "\n"+s4o.indent_spaces); break;
         case finterface_vf:      /* fall through... */
         case localinit_vf:       /* fall through... */
         case local_vf:           nv = new next_var_c("", ", "); break;
@@ -562,7 +572,7 @@ void *visit(fb_name_decl_c *symbol) {
 /* fb_name_list ',' fb_name */
 void *visit(fb_name_list_c *symbol) {
   TRACE("fb_name_list_c");
-  declare_variables(symbol);
+  declare_variables(symbol, true);
   return NULL;
 }
 
@@ -830,9 +840,8 @@ void *visit(external_declaration_c *symbol) {
     case local_vf:
     case localinit_vf:
       s4o.print(s4o.indent_spaces);
-      s4o.print("__ext_ref_c<");
       this->current_var_type_symbol->accept(*this);
-      s4o.print("> &");
+      s4o.print(" *");
       symbol->global_var_name->accept(*this);
       if ((wanted_varformat == localinit_vf) &&
           (this->current_var_init_symbol != NULL)) {
@@ -844,18 +853,21 @@ void *visit(external_declaration_c *symbol) {
 
     case constructorinit_vf:
       s4o.print(nv->get());
+      s4o.print("{extern ");
       symbol->global_var_name->accept(*this);
-      s4o.print("(*");
+      s4o.print(";");
+      print_variable_prefix();
       symbol->global_var_name->accept(*this);
-      s4o.print(")");
+      s4o.print(" = &");
+      symbol->global_var_name->accept(*this);
+      s4o.print(";}");
       break;
 
     case finterface_vf:
       finterface_var_count++;
       s4o.print(nv->get());
-      s4o.print("__ext_ref_c<");
       this->current_var_type_symbol->accept(*this);
-      s4o.print("> *");
+      s4o.print(" *");
       symbol->global_var_name->accept(*this);
       break;
 
@@ -1440,6 +1452,7 @@ private:
         break;
 
       case function_param_iterator_c::direction_extref:
+#if 0
         if (param_value == NULL)
 	  /* This is illegal in ST and IL languages.
 	   * All variables declared in a VAR_EXTERNAL __must__
@@ -1452,6 +1465,7 @@ private:
         s4o.print(nv->get());
         s4o.print("&");
         param_value->accept(*this);
+#endif
 	break;
 #if 0
         if (param_value == NULL) {
