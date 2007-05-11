@@ -397,6 +397,7 @@ void *visit(fb_invocation_c *symbol) {
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_in) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
+        print_variable_prefix();
         symbol->fb_name->accept(*this);
         s4o.print(".");
         param_name->accept(*this);
@@ -409,7 +410,8 @@ void *visit(fb_invocation_c *symbol) {
   /* now call the function... */
   function_block_type_name->accept(*this);
   s4o.print(FB_FUNCTION_SUFFIX);
-  s4o.print("(&");
+  s4o.print("(");
+  print_variable_prefix();
   symbol->fb_name->accept(*this);
   s4o.print(")");
 
@@ -435,6 +437,7 @@ void *visit(fb_invocation_c *symbol) {
         s4o.print(";\n"+ s4o.indent_spaces);
         param_value->accept(*this);
         s4o.print(" = ");
+        print_variable_prefix();
         symbol->fb_name->accept(*this);
         s4o.print(".");
         param_name->accept(*this);
