@@ -58,9 +58,14 @@ class search_var_instance_decl_c: public search_visitor_c {
     symbol_c *search_scope;
     symbol_c *search_name;
     symbol_c *current_type_decl;
+    
+    /* variable used to store the type of variable currently being processed... */
+    /* Will contain a single value of generate_cc_vardecl_c::XXXX_vt */
+    unsigned int current_vartype;
 
   public:
     search_var_instance_decl_c(symbol_c *search_scope) {
+      this->current_vartype = none_vt;
       this->search_scope = search_scope;
       this->search_name = NULL;
       this->current_type_decl = NULL;
@@ -71,7 +76,23 @@ class search_var_instance_decl_c: public search_visitor_c {
       return (symbol_c *)search_scope->accept(*this);
     }
 
+    unsigned int get_vartype() {
+      return current_vartype;
+    }
+
   public:
+  
+    /* the types of variables that need to be processed... */
+    static const unsigned int none_vt   = 0x0000;
+    static const unsigned int input_vt    = 0x0001;  // VAR_INPUT
+    static const unsigned int output_vt   = 0x0002;  // VAR_OUTPUT
+    static const unsigned int inoutput_vt = 0x0004;  // VAR_IN_OUT
+    static const unsigned int private_vt  = 0x0008;  // VAR
+    static const unsigned int temp_vt   = 0x0010;  // VAR_TEMP
+    static const unsigned int external_vt = 0x0020;  // VAR_EXTERNAL
+    static const unsigned int located_vt  = 0x0080;  // VAR <var_name> AT <location>
+
+
 /***************************/
 /* B 0 - Programming Model */
 /***************************/
@@ -90,6 +111,82 @@ class search_var_instance_decl_c: public search_visitor_c {
 /* edge -> The F_EDGE or R_EDGE directive */
 // SYM_REF2(edge_declaration_c, edge, var1_list)
 // TODO
+
+    void *visit(input_declarations_c *symbol) {
+      current_vartype = input_vt;
+      void *res = symbol->input_declaration_list->accept(*this);
+      if (res == NULL) {
+        current_vartype = none_vt;
+      }
+      return res;
+    }
+
+/* VAR_OUTPUT [RETAIN | NON_RETAIN] var_init_decl_list END_VAR */
+/* option -> may be NULL ! */
+    void *visit(output_declarations_c *symbol) {
+      current_vartype = output_vt;
+      void *res = symbol->var_init_decl_list->accept(*this);
+      if (res == NULL) {
+        current_vartype = none_vt;
+      }
+      return res;
+    }
+
+/*  VAR_IN_OUT var_declaration_list END_VAR */
+    void *visit(input_output_declarations_c *symbol) {
+      current_vartype = inoutput_vt;
+      void *res = symbol->var_declaration_list->accept(*this);
+      if (res == NULL) {
+        current_vartype = none_vt;
+      }
+      return res;
+    }
+
+/* VAR [CONSTANT] var_init_decl_list END_VAR */
+/* option -> may be NULL ! */
+/* helper symbol for input_declarations */
+    void *visit(var_declarations_c *symbol) {
+      current_vartype = private_vt;
+      void *res = symbol->var_init_decl_list->accept(*this);
+      if (res == NULL) {
+        current_vartype = none_vt;
+      }
+      return NULL;
+    }
+
+/*  VAR RETAIN var_init_decl_list END_VAR */
+    void *visit(retentive_var_declarations_c *symbol) {
+      current_vartype = private_vt;
+      void *res = symbol->var_init_decl_list->accept(*this);
+      if (res == NULL) {
+        current_vartype = none_vt;
+      }
+      return NULL;
+    }
+
+/*  VAR [CONSTANT|RETAIN|NON_RETAIN] located_var_decl_list END_VAR */
+/* option -> may be NULL ! */
+//SYM_REF2(located_var_declarations_c, option, located_var_decl_list)
+    void *visit(located_var_declarations_c *symbol) {
+      current_vartype = located_vt;
+      void *res = symbol->located_var_decl_list->accept(*this);
+      if (res == NULL) {
+        current_vartype = none_vt;
+      }
+      return NULL;
+    }
+
+/*| VAR_EXTERNAL [CONSTANT] external_declaration_list END_VAR */
+/* option -> may be NULL ! */
+//SYM_REF2(external_var_declarations_c, option, external_declaration_list)
+    void *visit(external_var_declarations_c *symbol) {
+      current_vartype = external_vt;
+      void *res = symbol->external_declaration_list->accept(*this);
+      if (res == NULL) {
+        current_vartype = none_vt;
+      }
+      return NULL;
+    }
 
 /* var1_list is one of the following...
  *    simple_spec_init_c *

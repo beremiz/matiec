@@ -75,7 +75,7 @@ class search_varfb_instance_type_c: public search_base_type_c {
       symbol_c *var_decl = search_var_instance_decl.get_decl(var_name_part);
       if (NULL == var_decl) {
         /* variable instance declaration not found! */
- 	return NULL;
+ 	      return NULL;
       }
 
       /* if it is a struct or function block, we must search the type
@@ -87,6 +87,40 @@ class search_varfb_instance_type_c: public search_base_type_c {
       symbol_c *res = (symbol_c *)var_decl->accept(*this);
       if (NULL == res) ERROR;
 
+      /* make sure that we have decomposed all strcuture elements of the variable name */
+      symbol_c *var_name = decompose_var_instance_name->next_part();
+      if (NULL != var_name) ERROR;
+
+      return res;
+    }
+
+    unsigned int get_vartype(symbol_c *variable_name) {
+      this->current_structelement_name = NULL;
+      this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
+      if (NULL == decompose_var_instance_name) ERROR;
+
+      /* find the part of the variable name that will appear in the
+       * variable declaration, for e.g., in window.point.x, this would be
+       * window!
+       */
+      symbol_c *var_name_part = decompose_var_instance_name->next_part();
+      if (NULL == var_name_part) ERROR;
+
+      /* Now we try to find the variable instance declaration, to determine its type... */
+      symbol_c *var_decl = search_var_instance_decl.get_decl(var_name_part);
+      if (NULL == var_decl) {
+        /* variable instance declaration not found! */
+        return 0;
+      }
+
+      /* if it is a struct or function block, we must search the type
+       * of the struct or function block member.
+       * This is done by this class visiting the var_decl.
+       * This class, while visiting, will recursively call
+       * decompose_var_instance_name->get_next() when and if required...
+       */
+      unsigned int res = search_var_instance_decl.get_vartype();
+      
       /* make sure that we have decomposed all strcuture elements of the variable name */
       symbol_c *var_name = decompose_var_instance_name->next_part();
       if (NULL != var_name) ERROR;

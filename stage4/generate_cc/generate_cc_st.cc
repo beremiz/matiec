@@ -66,17 +66,21 @@ class generate_cc_st_c: public generate_cc_typedecl_c {
      */
     search_expression_type_c *search_expression_type;
 
+    search_varfb_instance_type_c *search_varfb_instance_type;
+
   public:
     generate_cc_st_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_cc_typedecl_c(s4o_ptr) {
       search_fb_instance_decl = new search_fb_instance_decl_c(scope);
       search_expression_type = new search_expression_type_c(scope);
+      search_varfb_instance_type = new search_varfb_instance_type_c(scope);
       this->set_variable_prefix(variable_prefix);
     }
 
     virtual ~generate_cc_st_c(void) {
       delete search_fb_instance_decl;
       delete search_expression_type;
+      delete search_varfb_instance_type;
     }
 
 
@@ -121,7 +125,23 @@ class generate_cc_st_c: public generate_cc_typedecl_c {
     }
 
   private:
-  
+
+/*********************/
+/* B 1.4 - Variables */
+/*********************/
+void *visit(symbolic_variable_c *symbol) {
+  unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+  if (vartype == search_var_instance_decl_c::external_vt) {
+    s4o.print("*(");
+    generate_cc_base_c::visit(symbol);
+    s4o.print(")");
+  }
+  else {
+    generate_cc_base_c::visit(symbol);
+  }
+  return NULL;
+}
+
 /***************************************/
 /* B.3 - Language ST (Structured Text) */
 /***************************************/
