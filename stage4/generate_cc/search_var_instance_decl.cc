@@ -151,7 +151,7 @@ class search_var_instance_decl_c: public search_visitor_c {
       if (res == NULL) {
         current_vartype = none_vt;
       }
-      return NULL;
+      return res;
     }
 
 /*  VAR RETAIN var_init_decl_list END_VAR */
@@ -161,7 +161,7 @@ class search_var_instance_decl_c: public search_visitor_c {
       if (res == NULL) {
         current_vartype = none_vt;
       }
-      return NULL;
+      return res;
     }
 
 /*  VAR [CONSTANT|RETAIN|NON_RETAIN] located_var_decl_list END_VAR */
@@ -173,7 +173,7 @@ class search_var_instance_decl_c: public search_visitor_c {
       if (res == NULL) {
         current_vartype = none_vt;
       }
-      return NULL;
+      return res;
     }
 
 /*| VAR_EXTERNAL [CONSTANT] external_declaration_list END_VAR */
@@ -185,7 +185,7 @@ class search_var_instance_decl_c: public search_visitor_c {
       if (res == NULL) {
         current_vartype = none_vt;
       }
-      return NULL;
+      return res;
     }
 
 /* var1_list is one of the following...

@@ -79,6 +79,15 @@ void *stage4out_c::printupper(const char *str) {
   return NULL;
 }
 
+void *stage4out_c::printlocation(const char *str) {
+  std::cout << "__";
+  for (int i = 0; str[i] != '\0'; i++)
+    if(str[i] == '.')
+      std::cout << '_';
+    else
+      std::cout << (unsigned char)toupper(str[i]);
+  return NULL;
+}
 
 void *stage4out_c::print(std::string str) {
   std::cout << str;
@@ -100,7 +109,9 @@ void *stage4out_c::printupper(std::string str) {
 #endif
   return NULL;
 }
-
+void *stage4out_c::printlocation(std::string str) {
+  printlocation(str.c_str());
+}
 
 
 /***********************************************************************/

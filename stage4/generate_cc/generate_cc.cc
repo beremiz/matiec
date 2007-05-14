@@ -564,6 +564,7 @@ void *visit(function_block_declaration_c *symbol) {
   				      generate_cc_vardecl_c::output_vt |
   				      generate_cc_vardecl_c::inoutput_vt |
   				      generate_cc_vardecl_c::private_vt |
+				      generate_cc_vardecl_c::located_vt |
 				      generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
@@ -703,6 +704,7 @@ void *visit(program_declaration_c *symbol) {
   				      generate_cc_vardecl_c::output_vt |
   				      generate_cc_vardecl_c::inoutput_vt |
   				      generate_cc_vardecl_c::private_vt |
+  				      generate_cc_vardecl_c::located_vt |
 				      generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;

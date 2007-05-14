@@ -722,25 +722,29 @@ void *visit(located_var_decl_c *symbol) {
   /* now to produce the c equivalent... */
   switch(wanted_varformat) {
     case local_vf:
-      /* NOTE: located variables must be declared static, as the connection to the
-       * MatPLC point must be initialised at program startup, and not whenever
-       * a new function block is instantiated!
-       * Since they always refer to the same MatPLC point, it is OK to let several
-       * function block instances share the same located variable!
-       * If the IEC compiler maps IEC tasks to Linux threads, with tasks/threads
-       * running simultaneously, then we must make sure the MatPLC IO library
-       * is thread safe!
-       */
-      s4o.print(s4o.indent_spaces + "static __plc_pt_c<");
+      s4o.print(s4o.indent_spaces);
       this->current_var_type_symbol->accept(*this);
-      s4o.print(", 8*sizeof(");
-      this->current_var_type_symbol->accept(*this);
-      s4o.print(")> ");
+      s4o.print(" *");
       if (symbol->variable_name != NULL)
         symbol->variable_name->accept(*this);
       else
         symbol->location->accept(*this);
       s4o.print(";\n");
+      break;
+
+    case constructorinit_vf:
+      s4o.print(nv->get());
+      s4o.print("{extern ");
+      symbol->location->accept(*this);
+      s4o.print(";");
+      print_variable_prefix();
+      if (symbol->variable_name != NULL)
+        symbol->variable_name->accept(*this);
+      else
+        symbol->location->accept(*this);
+      s4o.print(" = &");
+      symbol->location->accept(*this);
+      s4o.print(";}");
       break;
 
     case globalinit_vf:
@@ -858,7 +862,7 @@ void *visit(external_declaration_c *symbol) {
       s4o.print(";");
       print_variable_prefix();
       symbol->global_var_name->accept(*this);
-      s4o.print(" = &");
+      s4o.print(" = ");
       symbol->global_var_name->accept(*this);
       s4o.print(";}");
       break;
@@ -1441,8 +1445,10 @@ private:
 
     function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
 
+#if 0
     /* Get the value from a foo(<param_name> = <param_value>) style call */
     symbol_c *param_value = function_call_param_iterator.search(param_name);
+#endif
 
     switch (param_direction) {
       case function_param_iterator_c::direction_in:

@@ -537,7 +537,7 @@ void *visit(symbolic_variable_c *symbol) {
 void *visit(direct_variable_c *symbol) {
   TRACE("direct_variable_c");
   /* Do not use print_token() as it will change everything into uppercase */
-  return s4o.print(symbol->value);
+  return s4o.printlocation(symbol->value);
 }
 
 

@@ -131,7 +131,7 @@ class generate_cc_st_c: public generate_cc_typedecl_c {
 /*********************/
 void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-  if (vartype == search_var_instance_decl_c::external_vt) {
+  if (vartype == search_var_instance_decl_c::external_vt || vartype == search_var_instance_decl_c::located_vt) {
     s4o.print("*(");
     generate_cc_base_c::visit(symbol);
     s4o.print(")");

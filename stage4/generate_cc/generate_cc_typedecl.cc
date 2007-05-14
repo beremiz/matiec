@@ -370,7 +370,7 @@ void *visit(direct_variable_c *symbol) {
   TRACE("direct_variable_c");
   /* Do not use print_token() as it will change everything into uppercase */
   if (strlen(symbol->value) == 0) ERROR;
-  return s4o.print(symbol->value + 1);
+  return s4o.printlocation(symbol->value + 1);
 }
 
 
