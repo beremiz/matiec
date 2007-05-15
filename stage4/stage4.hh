@@ -31,7 +31,6 @@
 
 #include "../absyntax/absyntax.hh"
 
-
 class stage4out_c {
   public:
     std::string indent_level;
@@ -39,6 +38,7 @@ class stage4out_c {
 
   public:
     stage4out_c(std::string indent_level = "  ");
+    stage4out_c(const char *radix, const char *extension, std::string indent_level = "  ");
     ~stage4out_c(void);
 
     void indent_right(void);
@@ -52,6 +52,10 @@ class stage4out_c {
 
     void *printlocation(const char *str);
     void *printlocation(std::string str);
+
+  protected:
+    std::ostream *out;
+    std::fstream *m_file;
 
 };
 

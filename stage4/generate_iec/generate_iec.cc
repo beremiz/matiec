@@ -42,6 +42,7 @@
 // #include <stdio.h>  /* required for NULL */
 #include <string>
 #include <iostream>
+#include <sstream>
 #include "generate_iec.hh"
 
 #include "../stage4.hh"

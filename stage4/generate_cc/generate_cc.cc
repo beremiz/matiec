@@ -38,6 +38,7 @@
 // #include <stdio.h>  /* required for NULL */
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <typeinfo>
 
 #include "../../util/symtable.hh"
@@ -300,12 +301,12 @@ void *generate_cc_SFC_IL_ST_c::visit(statement_list_c *symbol) {
 /***********************************************************************/
 
 
-class generate_cc_c: public generate_cc_typedecl_c {
+class generate_cc_pous_c: public generate_cc_typedecl_c {
 
   public:
-    generate_cc_c(stage4out_c *s4o_ptr)
+    generate_cc_pous_c(stage4out_c *s4o_ptr)
       : generate_cc_typedecl_c(s4o_ptr) {};
-    virtual ~generate_cc_c(void) {}
+    virtual ~generate_cc_pous_c(void) {}
 
 
   public:
@@ -767,16 +768,24 @@ void *visit(program_declaration_c *symbol) {
   return NULL;
 }
 
+}; /* generate_cc_pous_c */
 
-/* intermediate helper symbol for program_declaration_c */
-/*  { io_var_declarations | other_var_declarations }   */
-/*
- * NOTE: we re-use the var_declarations_list_c
- */
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
 
-/*********************************************/
-/* B.1.6  Sequential function chart elements */
-/*********************************************/
+class generate_cc_config_c: public generate_cc_typedecl_c {
+
+  public:
+    generate_cc_config_c(stage4out_c *s4o_ptr)
+      : generate_cc_typedecl_c(s4o_ptr) {};
+    virtual ~generate_cc_config_c(void) {}
+
 
 /********************************/
 /* B 1.7 Configuration elements */
@@ -884,93 +893,131 @@ void *visit(configuration_declaration_c *symbol) {
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}; /* class ");
   symbol->configuration_name->accept(*this);
+
   s4o.print(" */\n\n\n");
 
   return NULL;
 }
+    
+};
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
 
 
+class generate_cc_resources_c: public generate_cc_typedecl_c {
 
+  public:
+    generate_cc_resources_c(stage4out_c *s4o_ptr)
+      : generate_cc_typedecl_c(s4o_ptr) {};
+    virtual ~generate_cc_resources_c(void) {}
 
+    void *visit(resource_declaration_c *symbol) {
+    	return NULL;
+    }
 
+    void *visit(single_resource_declaration_c *symbol) {
+    	return NULL;
+    }
+    
+};
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
 
+class generate_cc_c: public iterator_visitor_c {
+  protected:
+    stage4out_c &s4o;
+    stage4out_c pous_s4o;
+    generate_cc_pous_c generate_cc_pous;
 
-#if 0
+    const char *current_name;
 
-/* helper symbol for configuration_declaration */
-SYM_LIST(resource_declaration_list_c)
+  public:
+    generate_cc_c(stage4out_c *s4o_ptr): 
+            s4o(*s4o_ptr),
+            generate_cc_pous(&pous_s4o) {}
+            
+    ~generate_cc_c(void) {}
 
-/*
-RESOURCE resource_name ON resource_type_name
-   optional_global_var_declarations
-   single_resource_declaration
-END_RESOURCE
-*/
-SYM_REF4(resource_declaration_c, resource_name, resource_type_name, global_var_declarations, resource_declaration)
+/*************************/
+/* B.1 - Common elements */
+/*************************/
+/*******************************************/
+/* B 1.1 - Letters, digits and identifiers */
+/*******************************************/
+    void *visit(identifier_c *symbol) {
+    	current_name = symbol->value;
+    	return NULL;
+    }
 
-/* task_configuration_list program_configuration_list */
-SYM_REF2(single_resource_declaration_c, task_configuration_list, program_configuration_list)
+/**************************************/
+/* B.1.5 - Program organization units */
+/**************************************/
+/***********************/
+/* B 1.5.1 - Functions */
+/***********************/
+    void *visit(function_declaration_c *symbol) {
+    	symbol->accept(generate_cc_pous);
+    	return NULL;
+    }
+    
+/*****************************/
+/* B 1.5.2 - Function Blocks */
+/*****************************/
+    void *visit(function_block_declaration_c *symbol) {
+    	symbol->accept(generate_cc_pous);
+    	return NULL;
+    }
+    
+/**********************/
+/* B 1.5.3 - Programs */
+/**********************/    
+    void *visit(program_declaration_c *symbol) {
+    	symbol->accept(generate_cc_pous);
+    	return NULL;
+    }
+    
 
-/* helper symbol for single_resource_declaration */
-SYM_LIST(task_configuration_list_c)
+/********************************/
+/* B 1.7 Configuration elements */
+/********************************/
+    void *visit(configuration_declaration_c *symbol) {
+    	symbol->configuration_name->accept(*this);
+    	stage4out_c config_s4o(current_name, "c");
+    	generate_cc_config_c generate_cc_config(&config_s4o);
+    	symbol->accept(generate_cc_config);
+    	return NULL;
+    }
 
-/* helper symbol for single_resource_declaration */
-SYM_LIST(program_configuration_list_c)
+    void *visit(resource_declaration_c *symbol) {
+    	symbol->resource_name->accept(*this);
+    	stage4out_c resources_s4o(current_name, "c");
+    	generate_cc_resources_c generate_cc_resources(&resources_s4o);
+    	symbol->accept(generate_cc_resources);
+    	return NULL;
+    }
 
-/* helper symbol for
- *  - access_path
- *  - instance_specific_init
- */
-SYM_LIST(any_fb_name_list_c)
+    void *visit(single_resource_declaration_c *symbol) {
+    	stage4out_c resources_s4o("resource", "c");
+    	generate_cc_resources_c generate_cc_resources(&resources_s4o);
+    	symbol->accept(generate_cc_resources);
+    	return NULL;
+    }
 
-/*  [resource_name '.'] global_var_name ['.' structure_element_name] */
-SYM_REF4(global_var_reference_c, resource_name, global_var_name, structure_element_name, unused)
-
-/*  prev_declared_program_name '.' symbolic_variable */
-SYM_REF2(program_output_reference_c, program_name, symbolic_variable)
-
-/*  TASK task_name task_initialization */
-SYM_REF2(task_configuration_c, task_name, task_initialization)
-
-/*  '(' [SINGLE ASSIGN data_source ','] [INTERVAL ASSIGN data_source ','] PRIORITY ASSIGN integer ')' */
-SYM_REF4(task_initialization_c, single_data_source, interval_data_source, priority_data_source, unused)
-
-/*  PROGRAM [RETAIN | NON_RETAIN] program_name [WITH task_name] ':' program_type_name ['(' prog_conf_elements ')'] */
-SYM_REF6(program_configuration_c, retain_option, program_name, task_name, program_type_name, prog_conf_elements, unused)
-
-/* prog_conf_elements ',' prog_conf_element */
-SYM_LIST(prog_conf_elements_c)
-
-/*  fb_name WITH task_name */
-SYM_REF2(fb_task_c, fb_name, task_name)
-
-/*  any_symbolic_variable ASSIGN prog_data_source */
-SYM_REF2(prog_cnxn_assign_c, symbolic_variable, prog_data_source)
-
-/* any_symbolic_variable SENDTO data_sink */
-SYM_REF2(prog_cnxn_sendto_c, symbolic_variable, prog_data_source)
-
-/* VAR_CONFIG instance_specific_init_list END_VAR_BOGUS */
-SYM_REF2(instance_specific_initializations_c, instance_specific_init_list, unused)
-
-/* helper symbol for instance_specific_initializations */
-SYM_LIST(instance_specific_init_list_c)
-
-/* resource_name '.' program_name '.' {fb_name '.'}
-    ((variable_name [location] ':' located_var_spec_init) | (fb_name ':' fb_initialization))
-*/
-SYM_REF6(instance_specific_init_c, resource_name, program_name, any_fb_name_list, variable_name, location, initialization)
-
-/* helper symbol for instance_specific_init */
-/* function_block_type_name ':=' structure_initialization */
-SYM_REF2(fb_initialization_c, function_block_type_name, structure_initialization)
-
-#endif
-
-
-}; /* generate_cc_c */
-
-
+    
+};
 
 /***********************************************************************/
 /***********************************************************************/

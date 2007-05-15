@@ -36,8 +36,7 @@
 // #include <stdio.h>  /* required for NULL */
 #include <string>
 #include <iostream>
-
-
+#include <fstream>
 
 
 #include "stage4.hh"
@@ -47,12 +46,31 @@
 
 
 
-stage4out_c::stage4out_c(std::string indent_level) {
+stage4out_c::stage4out_c(std::string indent_level):
+	m_file(NULL) {
+  out = &std::cout;
   this->indent_level = indent_level;
   this->indent_spaces = "";
 }
 
-stage4out_c::~stage4out_c(void) {}
+stage4out_c::stage4out_c(const char *radix, const char *extension, std::string indent_level) {	
+  std::string filename(radix);
+  filename += ".";
+  filename += extension;
+  std::fstream *file = new std::fstream(filename.c_str(), std::fstream::out);
+  out = file;
+  m_file = file;
+  this->indent_level = indent_level;
+  this->indent_spaces = "";
+}
+
+stage4out_c::~stage4out_c(void) {
+  if(m_file)
+  {
+    m_file->close();
+    delete m_file;
+  }
+}
 
 
 void stage4out_c::indent_right(void) {
@@ -68,29 +86,29 @@ void stage4out_c::indent_left(void) {
 
 
 void *stage4out_c::print(const char *str) {
-  std::cout << str;
+  *out << str;
   return NULL;
 }
 
 
 void *stage4out_c::printupper(const char *str) {
   for (int i = 0; str[i] != '\0'; i++)
-    std::cout << (unsigned char)toupper(str[i]);
+    *out << (unsigned char)toupper(str[i]);
   return NULL;
 }
 
 void *stage4out_c::printlocation(const char *str) {
-  std::cout << "__";
+  *out << "__";
   for (int i = 0; str[i] != '\0'; i++)
     if(str[i] == '.')
-      std::cout << '_';
+      *out << '_';
     else
-      std::cout << (unsigned char)toupper(str[i]);
+      *out << (unsigned char)toupper(str[i]);
   return NULL;
 }
 
 void *stage4out_c::print(std::string str) {
-  std::cout << str;
+  *out << str;
   return NULL;
 }
 
@@ -102,7 +120,7 @@ void *stage4out_c::printupper(std::string str) {
 #if 0
   /* The C++ way of doint things... */
   for (string::const_iterator p = str.begin(); p != str.end(); ++p)
-    std::cout << (unsigned char)toupper(*p);
+    *out << (unsigned char)toupper(*p);
 #else
   /* Or more simply... */
     printupper(str.c_str());
@@ -110,7 +128,7 @@ void *stage4out_c::printupper(std::string str) {
   return NULL;
 }
 void *stage4out_c::printlocation(std::string str) {
-  printlocation(str.c_str());
+  return printlocation(str.c_str());
 }
 
 
