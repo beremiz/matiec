@@ -1165,9 +1165,10 @@ END_RESOURCE
         vardecl = new generate_cc_vardecl_c(&s4o,
                       generate_cc_vardecl_c::local_vf,
                       generate_cc_vardecl_c::global_vt);
-        vardecl->print(symbol);
+        vardecl->print(current_global_vars);
         delete vardecl;
       }
+      s4o.print("\n");
       
       /* (A.4) Resource programs declaration... */
       wanted_declaretype = declare_dt;
@@ -1188,9 +1189,10 @@ END_RESOURCE
         vardecl = new generate_cc_vardecl_c(&s4o,
                       generate_cc_vardecl_c::constructorinit_vf,
                       generate_cc_vardecl_c::global_vt);
-        vardecl->print(symbol);
+        vardecl->print(current_global_vars);
         delete vardecl;
       }
+      s4o.print("\n");
       
       /* (B.3) Resource programs initialisations... */
       wanted_declaretype = init_dt;
