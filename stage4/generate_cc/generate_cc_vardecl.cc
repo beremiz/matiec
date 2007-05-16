@@ -735,8 +735,10 @@ void *visit(located_var_decl_c *symbol) {
     case constructorinit_vf:
       s4o.print(nv->get());
       s4o.print("{extern ");
+      this->current_var_type_symbol->accept(*this);
+      s4o.print(" ");
       symbol->location->accept(*this);
-      s4o.print(";");
+      s4o.print("; ");
       print_variable_prefix();
       if (symbol->variable_name != NULL)
         symbol->variable_name->accept(*this);
@@ -858,8 +860,10 @@ void *visit(external_declaration_c *symbol) {
     case constructorinit_vf:
       s4o.print(nv->get());
       s4o.print("{extern ");
+      this->current_var_type_symbol->accept(*this);
+      s4o.print(" ");
       symbol->global_var_name->accept(*this);
-      s4o.print(";");
+      s4o.print("; ");
       print_variable_prefix();
       symbol->global_var_name->accept(*this);
       s4o.print(" = ");
@@ -966,32 +970,36 @@ void *visit(global_var_spec_c *symbol) {
        * be created, directly at startup, so it is not necessary that the variables
        * be declared static.
        */
-      s4o.print(s4o.indent_spaces + "__plc_pt_c<");
-      this->current_var_type_symbol->accept(*this);
-      s4o.print(", 8*sizeof(");
-      this->current_var_type_symbol->accept(*this);
-      s4o.print(")> ");
-      if (symbol->global_var_name != NULL)
-        symbol->global_var_name->accept(*this);
-      else
+      s4o.print(s4o.indent_spaces);
+      if (symbol->global_var_name != NULL) {
+        s4o.print("{extern ");
+        this->current_var_type_symbol->accept(*this);
+        s4o.print(" ");
         symbol->location->accept(*this);
-      s4o.print(";\n");
+        s4o.print("; ");
+        this->current_var_type_symbol->accept(*this);
+        s4o.print(" *");
+        symbol->global_var_name->accept(*this);
+        s4o.print(" = &");
+        symbol->location->accept(*this);
+        s4o.print(";}\n");
+      }
       break;
 
     case constructorinit_vf:
       s4o.print(nv->get());
-      if (symbol->global_var_name != NULL)
+      
+      if (symbol->global_var_name != NULL) {
+        s4o.print("*");
         symbol->global_var_name->accept(*this);
+      }
       else
         symbol->location->accept(*this);
-      s4o.print("(\"");
-      symbol->location->accept(*this);
-      s4o.print("\"");
+      s4o.print(" = ");
       if (this->current_var_init_symbol != NULL) {
-        s4o.print(", ");
         this->current_var_init_symbol->accept(*this);
       }
-      s4o.print(")");
+      s4o.print(";");
       break;
 
     default:
@@ -1025,16 +1033,23 @@ void *visit(global_var_list_c *symbol) {
     case localinit_vf:
       for(int i = 0; i < list->n; i++) {
         s4o.print(s4o.indent_spaces);
-        s4o.print("__ext_element_c<");
         this->current_var_type_symbol->accept(*this);
-        s4o.print("> ");
+        s4o.print(" __");
         list->elements[i]->accept(*this);
+        s4o.print(";\n");
+        this->current_var_type_symbol->accept(*this);
+        s4o.print(" *");
+        list->elements[i]->accept(*this);
+        s4o.print(" = &__");
+        list->elements[i]->accept(*this);
+#if 0
         if (wanted_varformat == localinit_vf) {
           if (this->current_var_init_symbol != NULL) {
             s4o.print(" = ");
             this->current_var_init_symbol->accept(*this);
           }
         }
+#endif
         s4o.print(";\n");
       }
       break;
@@ -1044,10 +1059,11 @@ void *visit(global_var_list_c *symbol) {
         for(int i = 0; i < list->n; i++) {
           s4o.print(nv->get());
 
+          s4o.print("*");
           list->elements[i]->accept(*this);
-          s4o.print("(");
+          s4o.print(" = ");
           this->current_var_init_symbol->accept(*this);
-          s4o.print(")");
+          s4o.print(";");
 #if 0
  	  /* The following code would be for globalinit_vf !!
 	   * But it is not currently required...

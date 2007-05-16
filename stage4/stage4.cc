@@ -90,6 +90,10 @@ void *stage4out_c::print(const char *str) {
   return NULL;
 }
 
+void *stage4out_c::print_integer(int integer) {
+  *out << integer;
+  return NULL;
+}
 
 void *stage4out_c::printupper(const char *str) {
   for (int i = 0; str[i] != '\0'; i++)

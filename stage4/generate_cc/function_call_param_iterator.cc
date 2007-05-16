@@ -316,7 +316,7 @@ SYM_REF2(fb_task_c, fb_name, task_name)
       if (NULL == symb_var)
         ERROR;
 
-      return handle_parameter_assignment(symb_var->var_name, symbol->prog_data_source);
+      return handle_parameter_assignment(symb_var->var_name, symbol->data_sink);
     }
 
 /* VAR_CONFIG instance_specific_init_list END_VAR */

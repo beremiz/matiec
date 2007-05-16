@@ -644,7 +644,7 @@ SYM_REF2(fb_task_c, fb_name, task_name)
 SYM_REF2(prog_cnxn_assign_c, symbolic_variable, prog_data_source)
 
 /* any_symbolic_variable SENDTO data_sink */
-SYM_REF2(prog_cnxn_sendto_c, symbolic_variable, prog_data_source)
+SYM_REF2(prog_cnxn_sendto_c, symbolic_variable, data_sink)
 
 /* VAR_CONFIG instance_specific_init_list END_VAR */
 SYM_REF2(instance_specific_initializations_c, instance_specific_init_list, unused)

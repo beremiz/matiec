@@ -46,6 +46,8 @@ class stage4out_c {
 
     void *print(const char *str);
     void *print(std::string str);
+    
+    void *print_integer(int integer);
 
     void *printupper(const char *str);
     void *printupper(std::string str);

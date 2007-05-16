@@ -2981,6 +2981,7 @@ global_var_decl:
 global_var_spec:
   global_var_list	{$$ = $1;}
 | location
+	{$$ = new global_var_spec_c(NULL, $1);}
 | global_var_name location
 	{$$ = new global_var_spec_c($1, $2);
 	 variable_name_symtable.insert($1, prev_declared_global_var_name_token);

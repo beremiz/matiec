@@ -90,6 +90,7 @@ class search_var_instance_decl_c: public search_visitor_c {
     static const unsigned int private_vt  = 0x0008;  // VAR
     static const unsigned int temp_vt   = 0x0010;  // VAR_TEMP
     static const unsigned int external_vt = 0x0020;  // VAR_EXTERNAL
+    static const unsigned int global_vt = 0x0040;  // VAR_GLOBAL
     static const unsigned int located_vt  = 0x0080;  // VAR <var_name> AT <location>
 
 
@@ -188,6 +189,18 @@ class search_var_instance_decl_c: public search_visitor_c {
       return res;
     }
 
+/*| VAR_GLOBAL [CONSTANT|RETAIN] global_var_decl_list END_VAR */
+/* option -> may be NULL ! */
+//SYM_REF2(global_var_declarations_c, option, global_var_decl_list)
+    void *visit(global_var_declarations_c *symbol) {
+      current_vartype = global_vt;
+      void *res = symbol->global_var_decl_list->accept(*this);
+      if (res == NULL) {
+        current_vartype = none_vt;
+      }
+      return res;
+    }
+
 /* var1_list is one of the following...
  *    simple_spec_init_c *
  *    subrange_spec_init_c *
@@ -268,6 +281,50 @@ class search_var_instance_decl_c: public search_visitor_c {
       if (compare_identifiers(symbol->global_var_name, search_name) == 0)
           return symbol->specification;
       return NULL;
+    }
+
+/*| global_var_spec ':' [located_var_spec_init|function_block_type_name] */
+/* type_specification ->may be NULL ! */
+// SYM_REF2(global_var_decl_c, global_var_spec, type_specification)
+    void *visit(global_var_decl_c *symbol) {
+      if (symbol->type_specification != NULL) {
+        current_type_decl = symbol->type_specification;
+        return symbol->global_var_spec->accept(*this);
+      }
+      else
+        return NULL;
+    }
+
+/*| global_var_name location */
+//SYM_REF2(global_var_spec_c, global_var_name, location)
+    void *visit(global_var_spec_c *symbol) {
+      if (symbol->global_var_name != NULL && compare_identifiers(symbol->global_var_name, search_name) == 0)
+          return current_type_decl;
+      else 
+        return symbol->location->accept(*this);
+    }
+
+/*| global_var_list ',' global_var_name */
+//SYM_LIST(global_var_list_c)
+    void *visit(global_var_list_c *symbol) {
+      list_c *list = symbol;
+      for(int i = 0; i < list->n; i++) {
+        if (compare_identifiers(list->elements[i], search_name) == 0)
+          /* by now, current_type_decl should be != NULL */
+          return current_type_decl;
+      }
+      return NULL;
+    }
+
+/*  AT direct_variable */
+//SYM_REF2(location_c, direct_variable, unused)
+    void *visit(location_c *symbol) {
+      if (compare_identifiers(symbol->direct_variable, search_name) == 0) {
+        current_vartype = located_vt;
+        return current_type_decl;
+      }
+      else
+        return NULL;
     }
 
 /*| global_var_spec ':' [located_var_spec_init|function_block_type_name] */
@@ -363,6 +420,57 @@ class search_var_instance_decl_c: public search_visitor_c {
     }
 
 
+/********************************/
+/* B 1.7 Configuration elements */
+/********************************/
+
+/*
+CONFIGURATION configuration_name
+   optional_global_var_declarations
+   (resource_declaration_list | single_resource_declaration)
+   optional_access_declarations
+   optional_instance_specific_initializations
+END_CONFIGURATION
+*/
+/*
+SYM_REF6(configuration_declaration_c, configuration_name, global_var_declarations, resource_declarations, access_declarations, instance_specific_initializations, unused)
+*/
+    void *visit(configuration_declaration_c *symbol) {
+      /* no need to search through all the configuration, so we only
+       * visit the global variable declarations...!
+       */
+      if (symbol->global_var_declarations != NULL)
+        return symbol->global_var_declarations->accept(*this);
+      else
+        return NULL;
+    }
+
+/*
+RESOURCE resource_name ON resource_type_name
+   optional_global_var_declarations
+   single_resource_declaration
+END_RESOURCE
+*/
+// SYM_REF4(resource_declaration_c, resource_name, resource_type_name, global_var_declarations, resource_declaration)
+    void *visit(resource_declaration_c *symbol) {
+      /* no need to search through all the resource, so we only
+       * visit the global variable declarations...!
+       */
+      if (symbol->global_var_declarations != NULL)
+        return symbol->global_var_declarations->accept(*this);
+      else
+        return NULL;
+    }
+
+/* task_configuration_list program_configuration_list */
+// SYM_REF2(single_resource_declaration_c, task_configuration_list, program_configuration_list)
+    void *visit(single_resource_declaration_c *symbol) {
+      /* no need to search through all the resource,
+       * and there is no global variable declarations...!
+       */
+      return NULL;
+    }
+
 #if 0
 /*********************/
 /* B 1.4 - Variables */
@@ -394,8 +502,4 @@ SYM_REF2(structured_variable_c, record_variable, field_selector)
 
 #endif
 };
-
-
-
-
 

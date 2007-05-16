@@ -1368,7 +1368,7 @@ void *visit(prog_cnxn_assign_c *symbol) {
 void *visit(prog_cnxn_sendto_c *symbol) {
   symbol->symbolic_variable->accept(*this);
   s4o.print(" => ");
-  symbol->prog_data_source->accept(*this);
+  symbol->data_sink->accept(*this);
   return NULL;
 }
 

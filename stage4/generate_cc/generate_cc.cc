@@ -104,9 +104,9 @@ symtable_c<symbol_c *, &null_symbol4> type_symtable;
 /* NOTE: it must ignore case!! */
 static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 
-  identifier_c *name1 = dynamic_cast<identifier_c *>(ident1);
-  identifier_c *name2 = dynamic_cast<identifier_c *>(ident2);
-
+  token_c *name1 = dynamic_cast<token_c *>(ident1);
+  token_c *name2 = dynamic_cast<token_c *>(ident2);
+  
   if ((name1 == NULL) || (name2 == NULL))
     /* invalid identifiers... */
     return -1;
@@ -150,6 +150,9 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 /* Idem as body, but for initializer FB function */
 #define FB_INIT_SUFFIX "_init__"
 
+/* Idem as body, but for run CONFIG and RESOURCE function */
+#define FB_RUN_SUFFIX "_run__"
+
 /* The FB body function is passed as the only parameter a pointer to the FB data
  * structure instance. The name of this parameter is given by the following constant.
  * In order not to clash with any variable in the IL and ST source codem the
@@ -165,7 +168,6 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 
 
 #define SFC_STEP_ACTION_PREFIX "__SFC_"
-
 
 /***********************************************************************/
 /***********************************************************************/
@@ -213,7 +215,151 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 
 #include "generate_cc.hh"
 
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
 
+#define MILLISECOND 1000000
+#define SECOND 1000 * MILLISECOND
+
+/* A helper class that knows how to generate code for both the IL and ST languages... */
+class calculate_time_c: public iterator_visitor_c {
+  private:
+    unsigned long time;
+    float current_value;
+  
+  public:
+    calculate_time_c(void){time = 0;};
+    
+    unsigned long get_time(void) {return time;};
+
+    void *get_integer_value(token_c *token) {
+      std::string str = "";
+      for (unsigned int i = 0; i < strlen(token->value); i++)
+        if (token->value[i] != '_')
+          str += token->value[i];
+      current_value = atof(str.c_str());
+      return NULL;
+    }
+
+    void *get_float_value(token_c *token) {
+      current_value = atof(token->value);
+      return NULL;
+    }
+
+/******************************/
+/* B 1.2.1 - Numeric Literals */
+/******************************/
+
+    void *visit(integer_c *symbol) {return get_integer_value(symbol);}
+    
+/************************/
+/* B 1.2.3.1 - Duration */
+/************************/
+  
+    /* SYM_REF2(duration_c, neg, interval) */
+    void *visit(duration_c *symbol) {
+      if (symbol->neg != NULL)
+        ERROR;
+      symbol->interval->accept(*this);
+      return NULL;
+    }
+    
+    /* SYM_TOKEN(fixed_point_c) */
+    void *visit(fixed_point_c *symbol) {return get_float_value(symbol);}
+    
+    /* SYM_REF2(days_c, days, hours) */
+    void *visit(days_c *symbol) {
+      if (symbol->hours)
+        symbol->hours->accept(*this);
+      symbol->days->accept(*this);
+      time += (unsigned long)(current_value * 24 * 3600 * SECOND);
+      return NULL;
+    }
+    
+    /* SYM_REF2(hours_c, hours, minutes) */
+    void *visit(hours_c *symbol) {
+      if (symbol->minutes)
+        symbol->minutes->accept(*this);
+      symbol->hours->accept(*this);
+      time += (unsigned long)(current_value * 3600 * SECOND);
+      return NULL;
+    }
+    
+    /* SYM_REF2(minutes_c, minutes, seconds) */
+    void *visit(minutes_c *symbol) {
+      if (symbol->seconds)
+        symbol->seconds->accept(*this);
+      symbol->minutes->accept(*this);
+      time += (unsigned long)(current_value * 60 * SECOND);
+      return NULL;
+    }
+    
+    /* SYM_REF2(seconds_c, seconds, milliseconds) */
+    void *visit(seconds_c *symbol) {
+      if (symbol->milliseconds)
+        symbol->milliseconds->accept(*this);
+      symbol->seconds->accept(*this);
+      time += (unsigned long)(current_value * SECOND);
+      return NULL;
+    }
+    
+    /* SYM_REF2(milliseconds_c, milliseconds, unused) */
+    void *visit(milliseconds_c *symbol) {
+      symbol->milliseconds->accept(*this);
+      time += (unsigned long)(current_value * MILLISECOND);
+      return NULL;
+    }
+};
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+class calculate_common_ticktime_c: public iterator_visitor_c {
+  private:
+    unsigned long common_ticktime;
+    
+  public:
+    calculate_common_ticktime_c(void){common_ticktime = 0;}
+    
+    unsigned long euclide(unsigned long a, unsigned long b) {
+      unsigned long c = a % b;
+      if (c == 0)
+        return b;
+      else
+        return euclide(b, c);
+    }
+    
+    void update_ticktime(unsigned long time) {
+      if (common_ticktime == 0)
+        common_ticktime = time;
+      else if (time > common_ticktime)
+        common_ticktime = euclide(time, common_ticktime);
+      else
+        common_ticktime = euclide(common_ticktime, time);
+    }
+
+    unsigned long get_ticktime(void) {
+      return common_ticktime;
+    }
+
+/*  TASK task_name task_initialization */
+//SYM_REF2(task_configuration_c, task_name, task_initialization)  
+    void *visit(task_initialization_c *symbol) {
+      calculate_time_c calculate_time;
+      unsigned long time = 0;
+      if (symbol->interval_data_source != NULL) {
+        symbol->interval_data_source->accept(calculate_time);
+        time = calculate_time.get_time();
+      }
+      if (time > 0)
+        update_ticktime(time);
+      return NULL;
+    }
+};    
 
 /***********************************************************************/
 /***********************************************************************/
@@ -528,7 +674,7 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "// FB private variables - TEMP, private and located variables\n");
   vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::local_vf,
-				      generate_cc_vardecl_c::temp_vt |
+				        generate_cc_vardecl_c::temp_vt |
   				      generate_cc_vardecl_c::private_vt |
   				      generate_cc_vardecl_c::located_vt |
   				      generate_cc_vardecl_c::external_vt);
@@ -565,8 +711,8 @@ void *visit(function_block_declaration_c *symbol) {
   				      generate_cc_vardecl_c::output_vt |
   				      generate_cc_vardecl_c::inoutput_vt |
   				      generate_cc_vardecl_c::private_vt |
-				      generate_cc_vardecl_c::located_vt |
-				      generate_cc_vardecl_c::external_vt);
+				        generate_cc_vardecl_c::located_vt |
+				        generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.indent_left();
@@ -676,13 +822,6 @@ void *visit(program_declaration_c *symbol) {
   symbol->program_type_name->accept(*this);
   s4o.print(";\n\n");
 
-
-
-
-
-
-
-
   /* (B) Constructor */
   /* (B.1) Constructor name... */
   s4o.print(s4o.indent_spaces + "void ");
@@ -711,14 +850,6 @@ void *visit(program_declaration_c *symbol) {
   delete vardecl;
   s4o.indent_left();
   s4o.print("\n" + s4o.indent_spaces + "}\n\n");
-
-
-
-
-
-
-
-
 
   /* (C) Function with PROGRAM body */
   /* (C.1) Step and Action definitions */
@@ -781,11 +912,19 @@ void *visit(program_declaration_c *symbol) {
 
 class generate_cc_config_c: public generate_cc_typedecl_c {
 
-  public:
+    public:
     generate_cc_config_c(stage4out_c *s4o_ptr)
       : generate_cc_typedecl_c(s4o_ptr) {};
     virtual ~generate_cc_config_c(void) {}
 
+    typedef enum {
+      initprotos_dt,
+      initdeclare_dt,
+      runprotos_dt,
+      rundeclare_dt
+    } declaretype_t;
+
+    declaretype_t wanted_declaretype;
 
 /********************************/
 /* B 1.7 Configuration elements */
@@ -805,100 +944,128 @@ END_CONFIGURATION
 SYM_REF6(configuration_declaration_c, configuration_name, global_var_declarations, resource_declarations, access_declarations, instance_specific_initializations, unused)
 */
 void *visit(configuration_declaration_c *symbol) {
-  static int configuration_count = 0;
   generate_cc_vardecl_c *vardecl;
-  TRACE("configuration_declaration_c");
-
-  configuration_count++;
-  if (configuration_count == 1) {
-    /* the first configuration is the one we will use!! */
-    s4o.print("#define __configuration_c ");
-    symbol->configuration_name->accept(*this);
-    s4o.print("\n" + s4o.indent_spaces);
-  }
-
-  /* (A) Class (__configuration) declaration... */
+  
+  /* (A) configuration declaration... */
   /* (A.1) configuration name in comment */
-  s4o.print("// CONFIGURATION\n" + s4o.indent_spaces);
-  s4o.print("class ");
+  s4o.print("// CONFIGURATION ");
   symbol->configuration_name->accept(*this);
-  s4o.print(" {\n");
-  s4o.indent_right();
-
-  /* (A.2) Global variables
-   *    AND
-   * (A.3) Programs in the Configuration
-   */
-  /* Programs types are mapped onto classes,
-   * and programs are then instantiated inside the configuration
-   * as objects of the appropriate class!
-   */
-  s4o.print(s4o.indent_spaces + "private:\n");
-  s4o.indent_right();
+  s4o.print("\n");
+  
+  /* (A.2) Global variables */
   vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::local_vf,
-  				      generate_cc_vardecl_c::global_vt |
-				      generate_cc_vardecl_c::program_vt |
-  				      generate_cc_vardecl_c::resource_vt);
+  				      generate_cc_vardecl_c::global_vt);
   vardecl->print(symbol);
   delete vardecl;
-  s4o.indent_left();
   s4o.print("\n");
 
-
-
-  /* (B) Constructor */
-  /* (B.1) Constructor name... */
-  s4o.print(s4o.indent_spaces + "public:\n");
+  /* (B) Initialisation Function */
+  /* (B.1) Ressources initialisation protos... */
+  wanted_declaretype = initprotos_dt;
+  symbol->resource_declarations->accept(*this);
+  s4o.print("\n");
+  
+  /* (B.2) Initialisation function name... */
+  s4o.print(s4o.indent_spaces + "void config");
+  s4o.print(FB_INIT_SUFFIX);
+  s4o.print("(void) {\n");
   s4o.indent_right();
-  s4o.print(s4o.indent_spaces);
-  symbol->configuration_name->accept(*this);
-  s4o.print("(void)\n");
-
-  /* (B.2) Member initializations... */
-  s4o.indent_right();
+  
+  /* (B.3) Global variables initializations... */
   s4o.print(s4o.indent_spaces);
   vardecl = new generate_cc_vardecl_c(&s4o,
   				      generate_cc_vardecl_c::constructorinit_vf,
-				      generate_cc_vardecl_c::program_vt |
-  				      generate_cc_vardecl_c::global_vt |
-  				      generate_cc_vardecl_c::resource_vt);
+  				      generate_cc_vardecl_c::global_vt);
   vardecl->print(symbol);
   delete vardecl;
-
-  /* (B.3) Constructor Body... */
-  s4o.print("\n" + s4o.indent_spaces + "{}\n\n");
+  s4o.print("\n");
+  
+  /* (B.3) Resources initializations... */
+  wanted_declaretype = initdeclare_dt;
+  symbol->resource_declarations->accept(*this);
+  
   s4o.indent_left();
-  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "}\n\n");
 
-  /* (C) Public Function*/
-  /* (C.1) Public Function declaration */
-  s4o.print(s4o.indent_spaces + "public:\n");
+
+  /* (C) Run Function*/
+  /* (C.1) Resources run functions protos... */
+  wanted_declaretype = runprotos_dt;
+  symbol->resource_declarations->accept(*this);
+  s4o.print("\n");
+
+  /* (C.2) Run function name... */
+  s4o.print(s4o.indent_spaces + "void config");
+  s4o.print(FB_RUN_SUFFIX);
+  s4o.print("(int tick) {\n");
   s4o.indent_right();
-  s4o.print(s4o.indent_spaces + "void run(void) {\n");
 
-  /* (C.2) Public Function body */
-  /* Invoke each program in the configuration */
-  s4o.indent_right();
-  generate_cc_configbody_c *configbody = new generate_cc_configbody_c(&s4o);
-  symbol->accept(*configbody);
-  delete configbody;
-  s4o.indent_left();
+  /* (C.3) Resources initializations... */
+  wanted_declaretype = rundeclare_dt;
+  symbol->resource_declarations->accept(*this);
 
   /* (C.3) Close Public Function body */
-  s4o.print(s4o.indent_spaces + "} /* f() */\n\n");
   s4o.indent_left();
-
-  /* (D) Close the class declaration... */
-  s4o.indent_left();
-  s4o.print(s4o.indent_spaces + "}; /* class ");
-  symbol->configuration_name->accept(*this);
-
-  s4o.print(" */\n\n\n");
+  s4o.print(s4o.indent_spaces + "}\n");
 
   return NULL;
 }
-    
+
+void *visit(resource_declaration_c *symbol) {
+  if (wanted_declaretype == initprotos_dt || wanted_declaretype == runprotos_dt) {
+    s4o.print(s4o.indent_spaces + "void ");
+    symbol->resource_name->accept(*this);
+    if (wanted_declaretype == initprotos_dt) {
+      s4o.print(FB_INIT_SUFFIX);
+      s4o.print("(void);\n");
+    }
+    else {
+      s4o.print(FB_RUN_SUFFIX);
+      s4o.print("(int tick);\n");
+    }
+  }
+  if (wanted_declaretype == initdeclare_dt || wanted_declaretype == rundeclare_dt) {
+    s4o.print(s4o.indent_spaces);
+    symbol->resource_name->accept(*this);
+    if (wanted_declaretype == initdeclare_dt) {
+      s4o.print(FB_INIT_SUFFIX);
+      s4o.print("();\n");
+    }
+    else {
+      s4o.print(FB_RUN_SUFFIX);
+      s4o.print("(tick);\n");
+    }
+  }
+  return NULL;
+}
+
+void *visit(single_resource_declaration_c *symbol) {
+  if (wanted_declaretype == initprotos_dt || wanted_declaretype == runprotos_dt) {
+    s4o.print(s4o.indent_spaces + "void RESOURCE");
+    if (wanted_declaretype == initprotos_dt) {
+      s4o.print(FB_INIT_SUFFIX);
+      s4o.print("(void);\n");
+    }
+    else {
+      s4o.print(FB_RUN_SUFFIX);
+      s4o.print("(int tick);\n");
+    }
+  }
+  if (wanted_declaretype == initdeclare_dt || wanted_declaretype == rundeclare_dt) {
+    s4o.print(s4o.indent_spaces + "RESOURCE");
+    if (wanted_declaretype == initdeclare_dt) {
+      s4o.print(FB_INIT_SUFFIX);
+      s4o.print("();\n");
+    }
+    else {
+      s4o.print(FB_RUN_SUFFIX);
+      s4o.print("(tick);\n");
+    }
+  }
+  return NULL;
+}
+
 };
 
 /***********************************************************************/
@@ -913,20 +1080,300 @@ void *visit(configuration_declaration_c *symbol) {
 
 class generate_cc_resources_c: public generate_cc_typedecl_c {
 
-  public:
-    generate_cc_resources_c(stage4out_c *s4o_ptr)
-      : generate_cc_typedecl_c(s4o_ptr) {};
-    virtual ~generate_cc_resources_c(void) {}
+  search_var_instance_decl_c *search_config_instance;
+  search_var_instance_decl_c *search_resource_instance;
 
-    void *visit(resource_declaration_c *symbol) {
-    	return NULL;
+  private:
+    /* The name of the resource curretnly being processed... */
+    symbol_c *current_resource_name;
+    symbol_c *current_global_vars;
+
+  public:
+    generate_cc_resources_c(stage4out_c *s4o_ptr, symbol_c *config_scope, symbol_c *resource_scope, unsigned long time)
+      : generate_cc_typedecl_c(s4o_ptr) {
+      search_config_instance = new search_var_instance_decl_c(config_scope);
+      search_resource_instance = new search_var_instance_decl_c(resource_scope);
+      common_ticktime = time;
+      current_resource_name = NULL;
+      current_global_vars = NULL;
+    };
+    virtual ~generate_cc_resources_c(void) {
+      delete search_config_instance;
+      delete search_resource_instance;
     }
 
+    typedef enum {
+      declare_dt,
+      init_dt,
+      run_dt
+    } declaretype_t;
+
+    declaretype_t wanted_declaretype;
+
+    unsigned long common_ticktime;
+    
+    const char *current_program_name;
+
+    typedef enum {
+      assign_at,
+      send_at
+    } assigntype_t;
+
+    assigntype_t wanted_assigntype;
+
+/********************************/
+/* B 1.7 Configuration elements */
+/********************************/
+
+/*
+RESOURCE resource_name ON resource_type_name
+   optional_global_var_declarations
+   single_resource_declaration
+END_RESOURCE
+*/
+// SYM_REF4(resource_declaration_c, resource_name, resource_type_name, global_var_declarations, resource_declaration)
+    void *visit(resource_declaration_c *symbol) {
+      current_resource_name = symbol->resource_name;
+      current_global_vars = symbol->global_var_declarations;
+      
+      symbol->resource_declaration->accept(*this);
+      
+      current_resource_name = NULL;
+      current_global_vars = NULL;
+      return NULL;
+    }
+
+/* task_configuration_list program_configuration_list */
+// SYM_REF2(single_resource_declaration_c, task_configuration_list, program_configuration_list)
     void *visit(single_resource_declaration_c *symbol) {
-    	return NULL;
+    	bool single_resource = current_resource_name == NULL;
+      if (single_resource)
+        current_resource_name = new identifier_c("RESOURCE");
+      generate_cc_vardecl_c *vardecl;
+      
+      /* (A) resource declaration... */
+      /* (A.1) resource name in comment */
+      s4o.print("// RESOURCE ");
+      current_resource_name->accept(*this);
+      s4o.print("\n");
+       
+      /* (A.2) POUs inclusion */
+      s4o.print("#include \"POUS.c\"\n\n");
+      
+      /* (A.3) Global variables... */
+      if (current_global_vars != NULL) {
+        vardecl = new generate_cc_vardecl_c(&s4o,
+                      generate_cc_vardecl_c::local_vf,
+                      generate_cc_vardecl_c::global_vt);
+        vardecl->print(symbol);
+        delete vardecl;
+      }
+      
+      /* (A.4) Resource programs declaration... */
+      wanted_declaretype = declare_dt;
+      symbol->program_configuration_list->accept(*this);
+      s4o.print("\n");
+      
+      /* (B) resource initialisation function... */
+      /* (B.1) initialisation function name... */
+      s4o.print("void ");
+      current_resource_name->accept(*this);
+      s4o.print(FB_INIT_SUFFIX);
+      s4o.print("(void) {\n");
+      s4o.indent_right();
+      
+      /* (B.2) Global variables initialisations... */
+      if (current_global_vars != NULL) {
+        s4o.print(s4o.indent_spaces);
+        vardecl = new generate_cc_vardecl_c(&s4o,
+                      generate_cc_vardecl_c::constructorinit_vf,
+                      generate_cc_vardecl_c::global_vt);
+        vardecl->print(symbol);
+        delete vardecl;
+      }
+      
+      /* (B.3) Resource programs initialisations... */
+      wanted_declaretype = init_dt;
+      symbol->program_configuration_list->accept(*this);
+      
+      s4o.indent_left();
+      s4o.print("}\n\n");
+      
+      /* (C) Resource run function... */
+      /* (C.1) Run function name... */
+      s4o.print("void ");
+      current_resource_name->accept(*this);
+      s4o.print(FB_RUN_SUFFIX);
+      s4o.print("(int tick) {\n");
+      s4o.indent_right();
+      
+      /* (C.2) Task management... */
+      symbol->task_configuration_list->accept(*this);
+      
+      /* (C.3) Program run declaration... */
+      wanted_declaretype = run_dt;
+      symbol->program_configuration_list->accept(*this);
+      
+      s4o.indent_left();
+      s4o.print("}\n\n");
+      
+      if (single_resource)
+        delete current_resource_name;
+      return NULL;
     }
     
+/*  PROGRAM [RETAIN | NON_RETAIN] program_name [WITH task_name] ':' program_type_name ['(' prog_conf_elements ')'] */
+//SYM_REF6(program_configuration_c, retain_option, program_name, task_name, program_type_name, prog_conf_elements, unused)
+    void *visit(program_configuration_c *symbol) {
+      if (wanted_declaretype == declare_dt) {
+        s4o.print(s4o.indent_spaces);
+        symbol->program_type_name->accept(*this);
+        s4o.print(" ");
+        symbol->program_name->accept(*this);
+        s4o.print(";\n");
+      }
+      if (wanted_declaretype == init_dt) {
+        s4o.print(s4o.indent_spaces);
+        symbol->program_type_name->accept(*this);
+        s4o.print(FB_INIT_SUFFIX);
+        s4o.print("(&");
+        symbol->program_name->accept(*this);
+        s4o.print(");\n");
+      }
+      if (wanted_declaretype == run_dt) {
+        current_program_name = ((identifier_c*)(symbol->program_name))->value;
+        if (symbol->task_name != NULL) {
+          s4o.print(s4o.indent_spaces);
+          s4o.print("if (");
+          symbol->task_name->accept(*this);
+          s4o.print(") {\n");
+          s4o.indent_right(); 
+        }
+        
+        wanted_assigntype = assign_at;
+        symbol->prog_conf_elements->accept(*this);
+        
+        s4o.print(s4o.indent_spaces);
+        symbol->program_type_name->accept(*this);
+        s4o.print(FB_FUNCTION_SUFFIX);
+        s4o.print("(&");
+        symbol->program_name->accept(*this);
+        s4o.print(");\n");
+        
+        wanted_assigntype = send_at;
+        symbol->prog_conf_elements->accept(*this);
+        
+        if (symbol->task_name != NULL) {
+          s4o.indent_left();
+          s4o.print(s4o.indent_spaces + "}\n");
+        }
+      }
+      return NULL;
+    }
+    
+/*  TASK task_name task_initialization */
+//SYM_REF2(task_configuration_c, task_name, task_initialization)
+    void *visit(task_configuration_c *symbol) {
+      s4o.print(s4o.indent_spaces + "int ");
+      symbol->task_name->accept(*this);
+      s4o.print(" = ");
+      symbol->task_initialization->accept(*this);
+      s4o.print(";\n");
+      return NULL;
+    }
+    
+/*  '(' [SINGLE ASSIGN data_source ','] [INTERVAL ASSIGN data_source ','] PRIORITY ASSIGN integer ')' */
+//SYM_REF4(task_initialization_c, single_data_source, interval_data_source, priority_data_source, unused)
+    void *visit(task_initialization_c *symbol) {
+      if (symbol->interval_data_source != NULL) {
+        calculate_time_c calculate_time;
+        symbol->interval_data_source->accept(calculate_time);
+        unsigned long time = calculate_time.get_time();
+        if (time != 0) {
+          s4o.print("tick % ");
+          s4o.print_integer((int)(time / common_ticktime));
+        }
+        else
+          s4o.print("1");
+      }
+      else
+        s4o.print("1");
+      return NULL;
+    }
+
+/*  any_symbolic_variable ASSIGN prog_data_source */
+//SYM_REF2(prog_cnxn_assign_c, symbolic_variable, prog_data_source)
+    void *visit(prog_cnxn_assign_c *symbol) {
+      if (wanted_assigntype == assign_at) {
+        symbol_c *var_decl;
+        unsigned int vartype = 0;
+        symbol_c *current_var_reference = ((global_var_reference_c *)(symbol->prog_data_source))->global_var_name;
+        var_decl = search_resource_instance->get_decl(current_var_reference);
+        if (var_decl == NULL) {
+          var_decl = search_config_instance->get_decl(current_var_reference);
+          if (var_decl == NULL)
+            ERROR;
+          else
+            vartype = search_config_instance->get_vartype();
+        }
+        else
+          vartype = search_resource_instance->get_vartype();
+        
+        s4o.print(s4o.indent_spaces + "{extern ");
+        var_decl->accept(*this);
+        s4o.print(" ");
+        symbol->prog_data_source->accept(*this);
+        s4o.print("; ");
+        s4o.print(current_program_name);
+        s4o.print(".");
+        symbol->symbolic_variable->accept(*this);
+        s4o.print(" = ");
+        if (vartype || search_var_instance_decl_c::global_vt)
+          s4o.print("*");
+        symbol->prog_data_source->accept(*this);
+        s4o.print(";}\n");
+      }
+      return NULL;
+    }
+
+/* any_symbolic_variable SENDTO data_sink */
+//SYM_REF2(prog_cnxn_sendto_c, symbolic_variable, data_sink)
+    void *visit(prog_cnxn_sendto_c *symbol) {
+      if (wanted_assigntype == send_at) {
+        symbol_c *var_decl;
+        unsigned int vartype = 0;
+        symbol_c *current_var_reference = ((global_var_reference_c *)(symbol->data_sink))->global_var_name;
+        var_decl = search_resource_instance->get_decl(current_var_reference);
+        if (var_decl == NULL) {
+          var_decl = search_config_instance->get_decl(current_var_reference);
+          if (var_decl == NULL)
+            ERROR;
+          else
+            vartype = search_config_instance->get_vartype();
+        }
+        else
+          vartype = search_resource_instance->get_vartype();
+        
+        s4o.print(s4o.indent_spaces);
+        s4o.print(s4o.indent_spaces + "{extern ");
+        var_decl->accept(*this);
+        s4o.print(" ");
+        symbol->data_sink->accept(*this);
+        s4o.print("; ");
+        if (vartype || search_var_instance_decl_c::global_vt)
+          s4o.print("*");
+        symbol->data_sink->accept(*this);
+        s4o.print(" = ");
+        s4o.print(current_program_name);
+        s4o.print(".");
+        symbol->symbolic_variable->accept(*this);
+        s4o.print("};\n");
+      }
+      return NULL;
+    }
+
 };
+
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
@@ -942,12 +1389,19 @@ class generate_cc_c: public iterator_visitor_c {
     stage4out_c pous_s4o;
     generate_cc_pous_c generate_cc_pous;
 
+    symbol_c *current_configuration;
+
     const char *current_name;
+
+    unsigned long common_ticktime;
 
   public:
     generate_cc_c(stage4out_c *s4o_ptr): 
             s4o(*s4o_ptr),
-            generate_cc_pous(&pous_s4o) {}
+            pous_s4o("POUS", "c"),
+            generate_cc_pous(&pous_s4o) {
+      current_configuration = NULL;
+    }
             
     ~generate_cc_c(void) {}
 
@@ -994,28 +1448,47 @@ class generate_cc_c: public iterator_visitor_c {
 /* B 1.7 Configuration elements */
 /********************************/
     void *visit(configuration_declaration_c *symbol) {
-    	symbol->configuration_name->accept(*this);
+  	  static int configuration_count = 0;
+  
+      if (configuration_count++) {
+        /* the first configuration is the one we will use!! */
+        ERROR;
+      }
+      
+      current_configuration = symbol;
+      
+      calculate_common_ticktime_c calculate_common_ticktime;
+      symbol->accept(calculate_common_ticktime);
+      common_ticktime = calculate_common_ticktime.get_ticktime();
+      s4o.print("common_ticktime : ");
+      s4o.print_integer((int)(common_ticktime / 1000000));
+      s4o.print("ms\n");
+      
+      symbol->configuration_name->accept(*this);
     	stage4out_c config_s4o(current_name, "c");
     	generate_cc_config_c generate_cc_config(&config_s4o);
     	symbol->accept(generate_cc_config);
-    	return NULL;
+      symbol->resource_declarations->accept(*this);
+    	
+      current_configuration = NULL;
+      
+      return NULL;
     }
 
     void *visit(resource_declaration_c *symbol) {
     	symbol->resource_name->accept(*this);
     	stage4out_c resources_s4o(current_name, "c");
-    	generate_cc_resources_c generate_cc_resources(&resources_s4o);
+      generate_cc_resources_c generate_cc_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
     	symbol->accept(generate_cc_resources);
     	return NULL;
     }
 
     void *visit(single_resource_declaration_c *symbol) {
-    	stage4out_c resources_s4o("resource", "c");
-    	generate_cc_resources_c generate_cc_resources(&resources_s4o);
+    	stage4out_c resources_s4o("RESOURCE", "c");
+      generate_cc_resources_c generate_cc_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
     	symbol->accept(generate_cc_resources);
     	return NULL;
     }
-
     
 };
 
