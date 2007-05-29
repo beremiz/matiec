@@ -121,7 +121,7 @@ class generate_location_list_c: protected iterator_visitor_c {
       current_var_type_symbol->accept(*generate_cc_base);
       s4o.print(" ");
       /* Do not use print_token() as it will change everything into uppercase */
-      s4o.printlocation(symbol->value);
+      s4o.printlocation((symbol->value)+1);
       s4o.print("\n");
       return NULL;
     }
