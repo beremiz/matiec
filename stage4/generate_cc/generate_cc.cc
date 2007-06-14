@@ -627,7 +627,7 @@ void *visit(function_block_declaration_c *symbol) {
    * function block declaration symbol table...
    */
   function_block_type_symtable.insert(symbol->fblock_name, symbol);
-
+  
   /* (A) Function Block data structure declaration... */
   /* (A.1) Data structure declaration */
   s4o.print("// FUNCTION_BLOCK ");
@@ -1403,7 +1403,7 @@ class generate_cc_c: public iterator_visitor_c {
       generate_location_list_c generate_location_list(&s4o);
       symbol->accept(generate_location_list);
       
-      for(int i = 1; i < symbol->n; i++) {
+      for(int i = 0; i < symbol->n; i++) {
         symbol->elements[i]->accept(*this);
       }
       return NULL;

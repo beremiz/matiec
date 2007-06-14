@@ -2,3 +2,4 @@ Makefile.depend
 iec2iec
 iec2cc
 *.txt
+*.c

@@ -114,7 +114,11 @@ class generate_cc_tempvardecl_c: generate_cc_typedecl_c {
         identifier_c *fcalled_name = fcall_iterator.fname();
         /* get that function's declaration... */
         function_declaration_c *fdecl = function_symtable.find_value(fcalled_name);
-        if (fdecl == function_symtable.end_value()) ERROR;
+        if (fdecl == function_symtable.end_value()) {
+          function_type_t function_type = get_function_type(fcalled_name);
+          if (function_type == function_none) ERROR;
+          return;
+        }
         /* create iterator to iterate through each of the called function's parameters... */
         function_param_iterator_c fp_iterator(fdecl);
 

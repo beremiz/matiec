@@ -51,6 +51,8 @@ class search_constant_type_c: public search_visitor_c {
   static dt_type_name_c       dt_type_name;
   static tod_type_name_c      tod_type_name;
 
+  static constant_real_type_name_c     constant_real_type_name;
+  static constant_int_type_name_c      constant_int_type_name;
 
   public:
     symbol_c *get_type(symbol_c *constant) {
@@ -65,11 +67,11 @@ class search_constant_type_c: public search_visitor_c {
 /******************************/
 /* B 1.2.1 - Numeric Literals */
 /******************************/
-    void *visit(real_c *symbol) {return (void *)&real_type_name;}
-    void *visit(integer_c *symbol) {return (void *)&int_type_name;}
-    void *visit(binary_integer_c *symbol) {return (void *)&int_type_name;}
-    void *visit(octal_integer_c *symbol) {return (void *)&int_type_name;}
-    void *visit(hex_integer_c *symbol) {return (void *)&int_type_name;}
+    void *visit(real_c *symbol) {return (void *)&constant_real_type_name;}
+    void *visit(integer_c *symbol) {return (void *)&constant_int_type_name;}
+    void *visit(binary_integer_c *symbol) {return (void *)&constant_int_type_name;}
+    void *visit(octal_integer_c *symbol) {return (void *)&constant_int_type_name;}
+    void *visit(hex_integer_c *symbol) {return (void *)&constant_int_type_name;}
 
     void *visit(numeric_literal_c *symbol)
       {return (void *)((symbol->type!=NULL)?symbol->type:symbol->value->accept(*this));}
@@ -122,6 +124,8 @@ date_type_name_c     search_constant_type_c::date_type_name;
 dt_type_name_c       search_constant_type_c::dt_type_name;
 tod_type_name_c      search_constant_type_c::tod_type_name;
 
+constant_real_type_name_c     search_constant_type_c::constant_real_type_name;
+constant_int_type_name_c      search_constant_type_c::constant_int_type_name;
 
 
 

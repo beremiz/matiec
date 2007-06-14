@@ -155,7 +155,8 @@ SYM_REF0(dword_type_name_c)
 SYM_REF0(lword_type_name_c)
 SYM_REF0(string_type_name_c)
 SYM_REF0(wstring_type_name_c)
-
+SYM_REF0(constant_int_type_name_c)
+SYM_REF0(constant_real_type_name_c)
 
 
 /********************************/

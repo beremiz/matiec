@@ -88,30 +88,30 @@ class function_call_param_iterator_c : public null_visitor_c {
         case iterate_op:
           for(int i = 0; i < list->n; i++) {
             void *res = list->elements[i]->accept(*this);
-	    if (NULL != res) {
-	      /* It went through the handle_parameter_assignment() function,
-	       * and is therefore a parameter assignment (<param> = <value>),
-	       * and not a simple expression (<value>).
-	       */
-	       /* we do nothing... */
-	    } else {
+            if (NULL != res) {
+              /* It went through the handle_parameter_assignment() function,
+               * and is therefore a parameter assignment (<param> = <value>),
+               * and not a simple expression (<value>).
+               */
+              /* we do nothing... */
+            } else {
               param_count++;
               if (param_count == next_param) {
                 return list->elements[i];
-	      }
-	    }
+              }
+            }
           }
           return NULL;
-	  break;
+          break;
 
-	case search_op:
+        case search_op:
           for(int i = 0; i < list->n; i++) {
             void *res = list->elements[i]->accept(*this);
             if (res != NULL)
               return res;
           }
           return NULL;
-	  break;
+          break;
       } /* switch */
       return NULL;
     }
@@ -121,18 +121,18 @@ class function_call_param_iterator_c : public null_visitor_c {
     void *handle_parameter_assignment(symbol_c *variable_name, symbol_c *expression) {
       switch (current_operation) {
         case iterate_op:
-	       /* UGLY HACK -> this will be detected in the search_list() function */
-	  return (void *)this; /* anything, as long as it is not NULL!! */
-	  break;
+	        /* UGLY HACK -> this will be detected in the search_list() function */
+          return (void *)this; /* anything, as long as it is not NULL!! */
+          break;
 
-	case search_op:
+        case search_op:
           identifier_c *variable_name2 = dynamic_cast<identifier_c *>(variable_name);
           if (variable_name2 == NULL) ERROR;
           if (strcasecmp(search_param_name->value, variable_name2->value) == 0)
             /* FOUND! This is the same parameter!! */
-	    return (void *)expression;
+            return (void *)expression;
           return NULL;
-	  break;
+          break;
       }
 
       ERROR;
@@ -466,7 +466,10 @@ SYM_REF2(function_invocation_c, function_name, parameter_assignment_list)
 */
     void *visit(function_invocation_c *symbol) {
       TRACE("function_invocation_c");
-      return symbol->parameter_assignment_list->accept(*this);
+      if ((symbol_c *)symbol == f_call)
+        return symbol->parameter_assignment_list->accept(*this);
+      else
+        return NULL;
     }
 
 

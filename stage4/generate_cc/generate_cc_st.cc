@@ -151,12 +151,12 @@ void *visit(symbolic_variable_c *symbol) {
 void *visit(or_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_bool_type(left_type) && search_expression_type->is_bool_type(right_type)) {
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_bool_type(left_type))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " || ");
-  }
-  if (search_expression_type->is_numeric_compatible(left_type) && search_expression_type->is_numeric_compatible(right_type)) {
+  if (search_expression_type->is_binary_type(left_type))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " | ");
-  }
   ERROR;
   return NULL;
 }
@@ -164,7 +164,9 @@ void *visit(or_expression_c *symbol) {
 void *visit(xor_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_bool_type(left_type) && search_expression_type->is_bool_type(right_type)) {
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_bool_type(left_type)) {
     s4o.print("(");
     symbol->l_exp->accept(*this);
     s4o.print(" && !");
@@ -175,9 +177,8 @@ void *visit(xor_expression_c *symbol) {
     symbol->r_exp->accept(*this);
     s4o.print(")");
   }
-  if (search_expression_type->is_numeric_compatible(left_type) && search_expression_type->is_numeric_compatible(right_type)) {
+  if (search_expression_type->is_binary_type(left_type))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " ^ ");
-  }
   ERROR;
   return NULL;
 }
@@ -185,12 +186,12 @@ void *visit(xor_expression_c *symbol) {
 void *visit(and_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_bool_type(left_type) && search_expression_type->is_bool_type(right_type)) {
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_bool_type(left_type))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " && ");
-  }
-  if (search_expression_type->is_numeric_compatible(left_type) && search_expression_type->is_numeric_compatible(right_type)) {
+  if (search_expression_type->is_binary_type(left_type))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " & ");
-  }
   ERROR;
   return NULL;
 }
@@ -198,91 +199,135 @@ void *visit(and_expression_c *symbol) {
 void *visit(equ_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_time_type(left_type))
     return print_compare_function("__compare_timespec", "==", symbol->l_exp, symbol->r_exp);
-  }
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " == ");
 }
 
 void *visit(notequ_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_time_type(left_type))
     return print_compare_function("__compare_timespec", "!=", symbol->l_exp, symbol->r_exp);
-  }
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " != ");
 }
 
 void *visit(lt_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_time_type(left_type))
     return print_compare_function("__compare_timespec", "<", symbol->l_exp, symbol->r_exp);
-  }
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");
 }
 
 void *visit(gt_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_time_type(left_type))
     return print_compare_function("__compare_timespec", ">", symbol->l_exp, symbol->r_exp);
-  }
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");
 }
 
 void *visit(le_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_time_type(left_type))
     return print_compare_function("__compare_timespec", "<=", symbol->l_exp, symbol->r_exp);
-  }
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");
 }
 
 void *visit(ge_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_time_type(left_type))
     return print_compare_function("__compare_timespec", ">=", symbol->l_exp, symbol->r_exp);
-  }
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");
 }
 
 void *visit(add_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
 	symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-	if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
-		return print_binary_function("__add_timespec", symbol->l_exp, symbol->r_exp);
-	}
-	return print_binary_expression(symbol->l_exp, symbol->r_exp, " + ");
+	if ((typeid(*left_type) == typeid(time_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
+      (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
+      (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)))
+    return print_binary_function("__add_timespec", symbol->l_exp, symbol->r_exp);
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " + ");
+  ERROR;
+  return NULL;
 }
 
 void *visit(sub_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+  if ((typeid(*left_type) == typeid(time_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
+      (typeid(*left_type) == typeid(date_type_name_c) && typeid(*right_type) == typeid(date_type_name_c)) ||
+      (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
+      (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(tod_type_name_c)) ||
+      (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
+      (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(dt_type_name_c)))
     return print_binary_function("__sub_timespec", symbol->l_exp, symbol->r_exp);
-  }
-  return print_binary_expression(symbol->l_exp, symbol->r_exp, " - ");
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " - ");
+  ERROR;
+  return NULL;
 }
 
 void *visit(mul_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (search_expression_type->is_time_compatible(left_type) && search_expression_type->is_time_compatible(right_type)) {
+  if ((typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_integer_type(right_type)) ||
+      (typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_real_type(right_type)))
     return print_binary_function("__mul_timespec", symbol->l_exp, symbol->r_exp);
-  }
-  return print_binary_expression(symbol->l_exp, symbol->r_exp, " * ");
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " * ");
+  ERROR;
+  return NULL;
 }
 
-void *visit(div_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " / ");}
+void *visit(div_expression_c *symbol) {
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " / ");
+  ERROR;
+  return NULL;
+}
+
 void *visit(mod_expression_c *symbol) {
-  s4o.print("((");
-  symbol->r_exp->accept(*this);
-  s4o.print(" == 0)?0:");
-  print_binary_expression(symbol->l_exp, symbol->r_exp, " % ");
-  s4o.print(")");
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (!search_expression_type->is_same_type(left_type, right_type))
+      ERROR;
+  if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type)) {
+    s4o.print("((");
+    symbol->r_exp->accept(*this);
+    s4o.print(" == 0)?0:");
+    print_binary_expression(symbol->l_exp, symbol->r_exp, " % ");
+    s4o.print(")");
+    return NULL;
+  }
+  ERROR;
   return NULL;
 }
 
@@ -293,71 +338,186 @@ void *visit(not_expression_c *symbol) {return print_unary_expression(symbol->exp
 
 void *visit(function_invocation_c *symbol) {
   function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
-
-  if (f_decl == function_symtable.end_value())
-    /* should never occur. The function being called MUST be in the symtable... */
-    ERROR;
-
-  symbol->function_name->accept(*this);
-  s4o.print("(");
-
-  /* loop through each function parameter, find the value we should pass
-   * to it, and then output the c equivalent...
-   */
-
-  function_param_iterator_c fp_iterator(f_decl);
-  identifier_c *param_name;
-  function_call_param_iterator_c function_call_param_iterator(symbol);
-  for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
-    if (i != 1)
-      s4o.print(", ");
-
-    symbol_c *param_type = fp_iterator.param_type();
-    if (param_type == NULL) ERROR;
-
-    function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
-
-    /* Get the value from a foo(<param_name> = <param_value>) style call */
-    symbol_c *param_value = function_call_param_iterator.search(param_name);
-
-    /* Get the value from a foo(<param_value>) style call */
-    if (param_value == NULL)
-      param_value = function_call_param_iterator.next();
-
-    switch (param_direction) {
-      case function_param_iterator_c::direction_in:
-        if (param_value == NULL) {
-          /* No value given for parameter, so we must use the default... */
-          /* First check whether default value specified in function declaration...*/
-          param_value = fp_iterator.default_value();
-        }
-        if (param_value == NULL) {
-          /* If not, get the default value of this variable's type */
-          param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
-        }
-        if (param_value == NULL) ERROR;
-        param_value->accept(*this);
-	break;
-      case function_param_iterator_c::direction_out:
-      case function_param_iterator_c::direction_inout:
-        if (param_value == NULL) {
-	  /* no parameter value given, so we pass a previously declared temporary variable. */
-          std::string *temp_var_name = temp_var_name_factory.new_name();
-          s4o.print(*temp_var_name);
-          delete temp_var_name;
-	} else {
+  
+  if (f_decl == function_symtable.end_value()) {
+    /* The function called is not in the symtable, so we test if it is a
+     * standard function defined in standard */
+    
+    function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
+    if (current_function_type == function_none) ERROR;
+    
+    symbol_c *function_return_type = search_expression_type->get_type(symbol);
+    
+    function_call_param_iterator_c function_call_param_iterator(symbol);
+    
+    int nb_param = ((list_c *)symbol->parameter_assignment_list)->n;
+    for(int current_param = 0; current_param < nb_param; current_param++) {
+      symbol_c *param_name = NULL;
+      switch (current_function_type) {
+        case function_add:
+        case function_and:
+        case function_or:
+          param_name = generate_param_name("IN%d", current_param + 1);
+          break;
+        case function_sub:
+          if (current_param < 2)
+            param_name = generate_param_name("IN%d", current_param + 1);
+          else
+            ERROR;
+          break;
+        default: ERROR;
+      }
+      
+      /* Get the value from a foo(<param_name> = <param_value>) style call */
+      symbol_c *param_value = function_call_param_iterator.search(param_name);
+      delete param_name;
+      
+      /* Get the value from a foo(<param_value>) style call */
+      if (param_value == NULL)
+        param_value = function_call_param_iterator.next();
+      
+      if (param_value == NULL) ERROR;
+      
+      switch (current_function_type) {
+        case function_add:
+          if (search_expression_type->is_time_type(function_return_type)) {
+            if (current_param == 0) {
+              s4o.print("__add_timespec(");
+              param_value->accept(*this);
+            }
+            else if (current_param == 1) {
+              s4o.print(", ");
+              param_value->accept(*this);
+              s4o.print(")");
+            }
+            else ERROR;
+          }
+          else {
+            if (current_param == 0)
+              s4o.print("(");
+            else
+              s4o.print(" + ");
+            param_value->accept(*this);
+            if (current_param == nb_param - 1)
+              s4o.print(")");
+          }
+          break;
+        case function_sub:
+          if (search_expression_type->is_time_type(function_return_type)) {
+            if (current_param == 0) {
+              s4o.print("__sub_timespec(");
+              param_value->accept(*this);
+            }
+            else if (current_param == 1) {
+              s4o.print(", ");
+              param_value->accept(*this);
+              s4o.print(")");
+            }
+            else ERROR;
+          }
+          else {
+            if (current_param == 0) {
+              s4o.print("(");
+              param_value->accept(*this);
+            }
+            else if (current_param == 1) {
+              s4o.print(" - ");
+              param_value->accept(*this);
+              s4o.print(")");
+            }
+            else ERROR;
+          }
+          break;
+        case function_and:
+          if (current_param == 0)
+            s4o.print("(");
+          else
+            if (search_expression_type->is_bool_type(function_return_type))
+              s4o.print(" && ");
+            else
+              s4o.print(" & ");
           param_value->accept(*this);
-	}
-	break;
-      case function_param_iterator_c::direction_extref:
-        /* TODO! */
-        ERROR;
-        break;
-    } /* switch */
-  } /* for(...) */
+          if (current_param == nb_param - 1)
+            s4o.print(")");
+          break;
+        case function_or:
+          if (current_param == 0)
+            s4o.print("(");
+          else
+            if (search_expression_type->is_bool_type(function_return_type))
+              s4o.print(" || ");
+            else
+              s4o.print(" | ");
+          param_value->accept(*this);
+          if (current_param == nb_param - 1)
+            s4o.print(")");
+          break;
+        default: ERROR;
+      }
+    } /* for(...) */
+  }
+  else {
+    /* loop through each function parameter, find the value we should pass
+     * to it, and then output the c equivalent...
+     */
+    function_param_iterator_c fp_iterator(f_decl);
+  
+    symbol->function_name->accept(*this);
+    s4o.print("(");
+  
+    identifier_c *param_name;
+    function_call_param_iterator_c function_call_param_iterator(symbol);
+    for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
+      if (i != 1)
+        s4o.print(", ");
+  
+      function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
+  
+      /* Get the value from a foo(<param_name> = <param_value>) style call */
+      symbol_c *param_value = function_call_param_iterator.search(param_name);
+  
+      /* Get the value from a foo(<param_value>) style call */
+      if (param_value == NULL)
+        param_value = function_call_param_iterator.next();
+  
+      symbol_c *param_type = fp_iterator.param_type();
+      if (param_type == NULL) ERROR;
+  
+      switch (param_direction) {
+        case function_param_iterator_c::direction_in:
+          if (param_value == NULL) {
+            /* No value given for parameter, so we must use the default... */
+            /* First check whether default value specified in function declaration...*/
+            param_value = fp_iterator.default_value();
+          }
+          if (param_value == NULL) {
+            /* If not, get the default value of this variable's type */
+            param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
+          }
+          if (param_value == NULL) ERROR;
+          param_value->accept(*this);
+          break;
+        case function_param_iterator_c::direction_out:
+        case function_param_iterator_c::direction_inout:
+          if (param_value == NULL) {
+            /* no parameter value given, so we pass a previously declared temporary variable. */
+            std::string *temp_var_name = temp_var_name_factory.new_name();
+            s4o.print(*temp_var_name);
+            delete temp_var_name;
+          } else {
+            param_value->accept(*this);
+          }
+          break;
+        case function_param_iterator_c::direction_extref:
+          /* TODO! */
+          ERROR;
+          break;
+      } /* switch */
+    } /* for(...) */
+    // symbol->parameter_assignment->accept(*this);
+    s4o.print(")");
+  }
 
-  // symbol->parameter_assignment->accept(*this);
-  s4o.print(")");
   return NULL;
 }
 

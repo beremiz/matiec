@@ -402,8 +402,8 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
       this->default_variable_name.accept(*this);
       this->default_variable_name.current_type = backup;
 
-      if (search_expression_type->is_time_compatible(this->default_variable_name.current_type) &&
-          search_expression_type->is_time_compatible(this->current_operand_type)) {
+      if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
+          search_expression_type->is_time_type(this->current_operand_type)) {
         s4o.print(" = __compare_timespec(");
         s4o.print(operation);
         s4o.print(", ");
@@ -427,7 +427,7 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
 
     /* A helper function... */
     void C_modifier(void) {
-      if (search_expression_type->is_numeric_compatible(default_variable_name.current_type)) {
+      if (search_expression_type->is_bool_type(default_variable_name.current_type)) {
         s4o.print("if (");
         this->default_variable_name.accept(*this);
         s4o.print(") ");
@@ -437,7 +437,7 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
 
     /* A helper function... */
     void CN_modifier(void) {
-      if (search_expression_type->is_numeric_compatible(default_variable_name.current_type)) {
+      if (search_expression_type->is_bool_type(default_variable_name.current_type)) {
         s4o.print("if (!");
         this->default_variable_name.accept(*this);
         s4o.print(") ");
@@ -550,101 +550,156 @@ void *visit(il_simple_operation_c *symbol) {
 void *visit(il_function_call_c *symbol) {
   function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
 
-  if (f_decl == function_symtable.end_value())
+  if (f_decl == function_symtable.end_value()) {
     /* should never occur. The function being called MUST be in the symtable... */
-    ERROR;
-
-  /* determine the base data type returned by the function being called... */
-  search_base_type_c search_base_type;
-  symbol_c *return_data_type = (symbol_c *)f_decl->type_name->accept(search_base_type);
-  symbol_c *param_data_type = default_variable_name.current_type;
-  if (NULL == return_data_type) ERROR;
-
-  default_variable_name.current_type = return_data_type;
-  this->default_variable_name.accept(*this);
-  default_variable_name.current_type = param_data_type;
-  s4o.print(" = ");
-
-  symbol->function_name->accept(*this);
-  s4o.print("(");
-
-  /* loop through each function parameter, find the value we should pass
-   * to it, and then output the c equivalent...
-   */
-
-  function_param_iterator_c fp_iterator(f_decl);
-  identifier_c *param_name;
-  function_call_param_iterator_c function_call_param_iterator(symbol);
-  for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
-    if (i != 1)
-      s4o.print(", ");
-
-    symbol_c *param_type = fp_iterator.param_type();
-    if (param_type == NULL) ERROR;
-
-    function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
-
-
-    symbol_c *param_value = NULL;
-
-    /* if it is the first parameter, semantics specifies that we should
-     * get the value off the IL default variable!
-     */
-   if (1 == i)
-     param_value = &this->default_variable_name;
-
-    /* Get the value from a foo(<param_name> = <param_value>) style call */
-    /* NOTE: the following line of code is not required in this case, but it doesn't
-     * harm to leave it in, as in the case of a non-formal syntax function call,
-     * it will always return NULL.
-     * We leave it in in case we later decide to merge this part of the code together
-     * with the function calling code in generate_cc_st_c, which does require
-     * the following line...
-     */
-    if (param_value == NULL)
-      param_value = function_call_param_iterator.search(param_name);
-
-    /* Get the value from a foo(<param_value>) style call */
-    if (param_value == NULL)
-      param_value = function_call_param_iterator.next();
-
-    switch (param_direction) {
-      case function_param_iterator_c::direction_in:
-        if (param_value == NULL) {
-          /* No value given for parameter, so we must use the default... */
-          /* First check whether default value specified in function declaration...*/
-          param_value = fp_iterator.default_value();
+    function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
+    if (current_function_type == function_none) ERROR;
+    
+    symbol_c *param_data_type = default_variable_name.current_type;
+    symbol_c *return_data_type = (symbol_c *)search_expression_type->compute_standard_function_il(symbol, param_data_type);
+    if (NULL == return_data_type) ERROR;
+    
+    default_variable_name.current_type = return_data_type;
+    this->default_variable_name.accept(*this);
+    default_variable_name.current_type = param_data_type;
+    s4o.print(" = ");
+    
+    function_call_param_iterator_c function_call_param_iterator(symbol);
+    
+    int nb_param = 1;
+    if (symbol->il_operand_list != NULL)
+      nb_param += ((list_c *)symbol->il_operand_list)->n;
+    
+    for(int current_param = 0; current_param < nb_param; current_param++) {
+      symbol_c *param_value;
+      if (current_param == 0)
+        param_value = &this->default_variable_name;
+      else {
+        symbol_c *param_name = NULL;
+        switch (current_function_type) {
+          default: ERROR;
         }
-        if (param_value == NULL) {
-          /* If not, get the default value of this variable's type */
-          param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
-        }
+        
+         
+        /* Get the value from a foo(<param_name> = <param_value>) style call */
+        param_value = function_call_param_iterator.search(param_name);
+        delete param_name;
+        
+        /* Get the value from a foo(<param_value>) style call */
+        if (param_value == NULL)
+          param_value = function_call_param_iterator.next();
+        
         if (param_value == NULL) ERROR;
-        param_value->accept(*this);
-	break;
-      case function_param_iterator_c::direction_out:
-      case function_param_iterator_c::direction_inout:
-        if (param_value == NULL) {
-	  /* no parameter value given, so we pass a previously declared temporary variable. */
-          std::string *temp_var_name = temp_var_name_factory.new_name();
-          s4o.print(*temp_var_name);
-          delete temp_var_name;
-	} else {
+      }
+      
+      switch (current_function_type) {
+        case (function_sqrt):
+          if (current_param == 0) {
+            s4o.print("sqrt(");
+            param_value->accept(*this);
+            s4o.print(")");
+          }
+          else ERROR;
+          break;
+        default: ERROR;
+      }
+    } /* for(...) */
+    
+    /* the data type returned by the function, and stored in the il default variable... */
+    default_variable_name.current_type = return_data_type;
+  }
+  else {
+    /* determine the base data type returned by the function being called... */
+    search_base_type_c search_base_type;
+    symbol_c *return_data_type = (symbol_c *)f_decl->type_name->accept(search_base_type);
+    symbol_c *param_data_type = default_variable_name.current_type;
+    if (NULL == return_data_type) ERROR;
+  
+    default_variable_name.current_type = return_data_type;
+    this->default_variable_name.accept(*this);
+    default_variable_name.current_type = param_data_type;
+    s4o.print(" = ");
+  
+    symbol->function_name->accept(*this);
+    s4o.print("(");
+  
+    /* loop through each function parameter, find the value we should pass
+     * to it, and then output the c equivalent...
+     */
+  
+    function_param_iterator_c fp_iterator(f_decl);
+    identifier_c *param_name;
+    function_call_param_iterator_c function_call_param_iterator(symbol);
+    for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
+      if (i != 1)
+        s4o.print(", ");
+  
+      symbol_c *param_type = fp_iterator.param_type();
+      if (param_type == NULL) ERROR;
+  
+      function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
+  
+  
+      symbol_c *param_value = NULL;
+  
+      /* if it is the first parameter, semantics specifies that we should
+       * get the value off the IL default variable!
+       */
+     if (1 == i)
+       param_value = &this->default_variable_name;
+  
+      /* Get the value from a foo(<param_name> = <param_value>) style call */
+      /* NOTE: the following line of code is not required in this case, but it doesn't
+       * harm to leave it in, as in the case of a non-formal syntax function call,
+       * it will always return NULL.
+       * We leave it in in case we later decide to merge this part of the code together
+       * with the function calling code in generate_cc_st_c, which does require
+       * the following line...
+       */
+      if (param_value == NULL)
+        param_value = function_call_param_iterator.search(param_name);
+  
+      /* Get the value from a foo(<param_value>) style call */
+      if (param_value == NULL)
+        param_value = function_call_param_iterator.next();
+  
+      switch (param_direction) {
+        case function_param_iterator_c::direction_in:
+          if (param_value == NULL) {
+            /* No value given for parameter, so we must use the default... */
+            /* First check whether default value specified in function declaration...*/
+            param_value = fp_iterator.default_value();
+          }
+          if (param_value == NULL) {
+            /* If not, get the default value of this variable's type */
+            param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
+          }
+          if (param_value == NULL) ERROR;
           param_value->accept(*this);
-	}
-	break;
-      case function_param_iterator_c::direction_extref:
-        /* TODO! */
-        ERROR;
-	break;
-    } /* switch */
-  } /* for(...) */
-
-  s4o.print(")");
-
-  /* the data type returned by the function, and stored in the il default variable... */
-  default_variable_name.current_type = return_data_type;
-
+          break;
+        case function_param_iterator_c::direction_out:
+        case function_param_iterator_c::direction_inout:
+          if (param_value == NULL) {
+  	  /* no parameter value given, so we pass a previously declared temporary variable. */
+            std::string *temp_var_name = temp_var_name_factory.new_name();
+            s4o.print(*temp_var_name);
+            delete temp_var_name;
+          } else {
+            param_value->accept(*this);
+          }
+          break;
+        case function_param_iterator_c::direction_extref:
+          /* TODO! */
+          ERROR;
+          break;
+      } /* switch */
+    } /* for(...) */
+  
+    s4o.print(")");
+    /* the data type returned by the function, and stored in the il default variable... */
+    default_variable_name.current_type = return_data_type;
+  }
+  
   return NULL;
 }
 
@@ -1080,8 +1135,8 @@ void *visit(IN_operator_c *symbol)	{return XXX_CAL_operator("IN", this->current_
 void *visit(PT_operator_c *symbol)	{return XXX_CAL_operator("PT", this->current_operand);}
 
 void *visit(AND_operator_c *symbol)	{
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name), " &= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
@@ -1091,8 +1146,8 @@ void *visit(AND_operator_c *symbol)	{
 }
 
 void *visit(OR_operator_c *symbol)	{
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name), " |= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
@@ -1102,8 +1157,8 @@ void *visit(OR_operator_c *symbol)	{
 }
 
 void *visit(XOR_operator_c *symbol)	{
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     // '^' is a bit by bit exclusive OR !! Also seems to work with boolean types!
     XXX_operator(&(this->default_variable_name), " ^= ", this->current_operand);
     /* the data type resulting from this operation... */
@@ -1114,8 +1169,8 @@ void *visit(XOR_operator_c *symbol)	{
 }
 
 void *visit(ANDN_operator_c *symbol)	{
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name),
                  search_expression_type->is_bool_type(this->current_operand_type)?" &= !":" &= ~",
                  this->current_operand);
@@ -1127,8 +1182,8 @@ void *visit(ANDN_operator_c *symbol)	{
 }
 
 void *visit(ORN_operator_c *symbol)	{
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name),
                  search_expression_type->is_bool_type(this->current_operand_type)?" |= !":" |= ~",
                  this->current_operand);
@@ -1140,8 +1195,8 @@ void *visit(ORN_operator_c *symbol)	{
 }
 
 void *visit(XORN_operator_c *symbol)	{
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name),
                  // bit by bit exclusive OR !! Also seems to work with boolean types!
                  search_expression_type->is_bool_type(this->current_operand_type)?" ^= !":" ^= ~",
@@ -1154,15 +1209,15 @@ void *visit(XORN_operator_c *symbol)	{
 }
 
 void *visit(ADD_operator_c *symbol)	{
-  if (search_expression_type->is_time_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_time_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_time_type(this->current_operand_type)) {
     XXX_function("__add_timespec", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
   }
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name), " += ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
@@ -1173,15 +1228,15 @@ void *visit(ADD_operator_c *symbol)	{
 }
 
 void *visit(SUB_operator_c *symbol)	{
-  if (search_expression_type->is_time_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_time_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_time_type(this->current_operand_type)) {
     XXX_function("__sub_timespec", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
   }
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name), " -= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
@@ -1192,15 +1247,15 @@ void *visit(SUB_operator_c *symbol)	{
 }
 
 void *visit(MUL_operator_c *symbol)	{
-  if (search_expression_type->is_time_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_time_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_integer_type(this->current_operand_type)) {
     XXX_function("__mul_timespec", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
   }
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name), " *= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
@@ -1211,8 +1266,8 @@ void *visit(MUL_operator_c *symbol)	{
 }
 
 void *visit(DIV_operator_c *symbol)	{
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name), " /= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
@@ -1222,8 +1277,8 @@ void *visit(DIV_operator_c *symbol)	{
 }
 
 void *visit(MOD_operator_c *symbol)	{
-  if (search_expression_type->is_numeric_compatible(this->default_variable_name.current_type) &&
-      search_expression_type->is_numeric_compatible(this->current_operand_type)) {
+  if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name), " %= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;

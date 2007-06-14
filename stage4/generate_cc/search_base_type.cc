@@ -49,7 +49,7 @@ class search_base_type_c: public null_visitor_c {
       symbol_c *type_decl = type_symtable.find_value(type_name);
       if (type_decl == type_symtable.end_value())
         /* Type declaration not found!! */
-	ERROR;
+        ERROR;
 
       return type_decl->accept(*this);
     }

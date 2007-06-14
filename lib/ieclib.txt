@@ -27,10 +27,11 @@
  * and function blocks defined in the standard.
  *)
 
-{#include "bcd_to_int.txt" }
-{#include "int_to_bcd.txt" }
+
+(*{#include "bcd_to_int.txt" }*)
+(*{#include "int_to_bcd.txt" }*)
 {#include "edge_detection.txt" }
 {#include "bistable.txt" }
 {#include "counter.txt" }
 {#include "timer.txt" }
-{#include "time_math.txt" }
+(*{#include "time_math.txt" }*)
