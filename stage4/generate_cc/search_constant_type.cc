@@ -43,13 +43,26 @@ class search_constant_type_c: public search_visitor_c {
 /* B 1.3.1 - Elementary Data Types */
 /***********************************/
   static real_type_name_c     real_type_name;
-  static int_type_name_c      int_type_name;
-  static string_type_name_c   string_type_name;
-  static wstring_type_name_c  wstring_type_name;
-  static time_type_name_c     time_type_name;
+  static sint_type_name_c     sint_type_name;
+  static lint_type_name_c     lint_type_name;
+  static dint_type_name_c     dint_type_name;
   static date_type_name_c     date_type_name;
-  static dt_type_name_c       dt_type_name;
-  static tod_type_name_c      tod_type_name;
+  static dword_type_name_c     dword_type_name;
+  static dt_type_name_c     dt_type_name;
+  static tod_type_name_c     tod_type_name;
+  static udint_type_name_c     udint_type_name;
+  static word_type_name_c     word_type_name;
+  static wstring_type_name_c     wstring_type_name;
+  static string_type_name_c     string_type_name;
+  static lword_type_name_c     lword_type_name;
+  static uint_type_name_c     uint_type_name;
+  static lreal_type_name_c     lreal_type_name;
+  static byte_type_name_c     byte_type_name;
+  static usint_type_name_c     usint_type_name;
+  static ulint_type_name_c     ulint_type_name;
+  static bool_type_name_c     bool_type_name;
+  static time_type_name_c     time_type_name;
+  static int_type_name_c     int_type_name;
 
   static constant_real_type_name_c     constant_real_type_name;
   static constant_int_type_name_c      constant_int_type_name;
@@ -115,14 +128,28 @@ class search_constant_type_c: public search_visitor_c {
     void *visit(date_and_time_c *symbol) {return (void *)&dt_type_name;}
 };
 
+
 real_type_name_c     search_constant_type_c::real_type_name;
-int_type_name_c      search_constant_type_c::int_type_name;
-string_type_name_c   search_constant_type_c::string_type_name;
-wstring_type_name_c  search_constant_type_c::wstring_type_name;
-time_type_name_c     search_constant_type_c::time_type_name;
+sint_type_name_c     search_constant_type_c::sint_type_name;
+lint_type_name_c     search_constant_type_c::lint_type_name;
+dint_type_name_c     search_constant_type_c::dint_type_name;
 date_type_name_c     search_constant_type_c::date_type_name;
-dt_type_name_c       search_constant_type_c::dt_type_name;
-tod_type_name_c      search_constant_type_c::tod_type_name;
+dword_type_name_c     search_constant_type_c::dword_type_name;
+dt_type_name_c     search_constant_type_c::dt_type_name;
+tod_type_name_c     search_constant_type_c::tod_type_name;
+udint_type_name_c     search_constant_type_c::udint_type_name;
+word_type_name_c     search_constant_type_c::word_type_name;
+wstring_type_name_c     search_constant_type_c::wstring_type_name;
+string_type_name_c     search_constant_type_c::string_type_name;
+lword_type_name_c     search_constant_type_c::lword_type_name;
+uint_type_name_c     search_constant_type_c::uint_type_name;
+lreal_type_name_c     search_constant_type_c::lreal_type_name;
+byte_type_name_c     search_constant_type_c::byte_type_name;
+usint_type_name_c     search_constant_type_c::usint_type_name;
+ulint_type_name_c     search_constant_type_c::ulint_type_name;
+bool_type_name_c     search_constant_type_c::bool_type_name;
+time_type_name_c     search_constant_type_c::time_type_name;
+int_type_name_c     search_constant_type_c::int_type_name;
 
 constant_real_type_name_c     search_constant_type_c::constant_real_type_name;
 constant_int_type_name_c      search_constant_type_c::constant_int_type_name;

@@ -351,6 +351,10 @@ void *visit(function_invocation_c *symbol) {
     function_call_param_iterator_c function_call_param_iterator(symbol);
     
     int nb_param = ((list_c *)symbol->parameter_assignment_list)->n;
+
+#include "st_code_gen.c"
+
+#if 0
     for(int current_param = 0; current_param < nb_param; current_param++) {
       symbol_c *param_name = NULL;
       switch (current_function_type) {
@@ -455,6 +459,7 @@ void *visit(function_invocation_c *symbol) {
         default: ERROR;
       }
     } /* for(...) */
+#endif
   }
   else {
     /* loop through each function parameter, find the value we should pass

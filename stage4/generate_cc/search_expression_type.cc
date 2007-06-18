@@ -32,6 +32,10 @@
  *       etc...
  */
 
+#include "function_type_decl.h"
+#include "get_function_type_decl.c"
+
+#if 0
 typedef enum {function_add,
               function_sub,
               function_and,
@@ -53,6 +57,7 @@ function_type_t get_function_type(identifier_c *function_name) {
     return function_sqrt;
   else return function_none;
 }
+#endif
 
 
 symbol_c *generate_param_name(const char *name) {
@@ -157,12 +162,17 @@ class search_expression_type_c: public search_constant_type_c {
   private:
 
   void *compute_standard_function_st(function_invocation_c *symbol) {
+#if 0
     symbol_c *current_type = NULL;
     symbol_c *return_type = NULL;
+#endif
+
     function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
-    
     function_call_param_iterator_c function_call_param_iterator(symbol);
+    search_expression_type_c* search_expression_type = this;
+    #include "search_type_code.c"
     
+#if 0
     for(int current_param = 0; current_param < ((list_c *)symbol->parameter_assignment_list)->n; current_param++) {
       symbol_c *param_name = NULL;
       switch (current_function_type) {
@@ -248,14 +258,15 @@ class search_expression_type_c: public search_constant_type_c {
         default: ERROR;
       }
     }
-    
     return (void *)return_type;
+#endif
+    
   }
 
   public:
 
   void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_type) {
-    symbol_c *current_type = NULL;
+    /*symbol_c *current_type = NULL;*/
     symbol_c *return_type = NULL;
     function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
     if (current_function_type == function_none) ERROR;
@@ -300,7 +311,7 @@ class search_expression_type_c: public search_constant_type_c {
     return (void *)return_type;
   }
 
-  static bool_type_name_c bool_type_name;
+  /*static bool_type_name_c bool_type_name;*/
 
   /* A helper function... */
   void *compute_boolean_expression(symbol_c *left_type, symbol_c *right_type) {
@@ -502,5 +513,5 @@ class search_expression_type_c: public search_constant_type_c {
 
 };
 
-bool_type_name_c     search_expression_type_c::bool_type_name;
+/*bool_type_name_c     search_expression_type_c::bool_type_name;*/
 
