@@ -569,7 +569,10 @@ void *visit(il_function_call_c *symbol) {
     int nb_param = 1;
     if (symbol->il_operand_list != NULL)
       nb_param += ((list_c *)symbol->il_operand_list)->n;
-    
+
+#include "il_code_gen.c"
+
+#if 0
     for(int current_param = 0; current_param < nb_param; current_param++) {
       symbol_c *param_value;
       if (current_param == 0)
@@ -604,7 +607,8 @@ void *visit(il_function_call_c *symbol) {
         default: ERROR;
       }
     } /* for(...) */
-    
+#endif
+
     /* the data type returned by the function, and stored in the il default variable... */
     default_variable_name.current_type = return_data_type;
   }

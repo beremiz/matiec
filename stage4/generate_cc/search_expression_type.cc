@@ -158,21 +158,18 @@ class search_expression_type_c: public search_constant_type_c {
       if ((typeid(*first_type) == typeid(constant_real_type_name_c) && is_real_type(second_type))) {return second_type;}
       return NULL;
     }
-    
-  private:
 
-  void *compute_standard_function_st(function_invocation_c *symbol) {
+#include "search_type_code.c"
+
 #if 0
+  void *compute_standard_function_st(function_invocation_c *symbol) {
     symbol_c *current_type = NULL;
     symbol_c *return_type = NULL;
-#endif
 
     function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
     function_call_param_iterator_c function_call_param_iterator(symbol);
     search_expression_type_c* search_expression_type = this;
-    #include "search_type_code.c"
     
-#if 0
     for(int current_param = 0; current_param < ((list_c *)symbol->parameter_assignment_list)->n; current_param++) {
       symbol_c *param_name = NULL;
       switch (current_function_type) {
@@ -259,11 +256,7 @@ class search_expression_type_c: public search_constant_type_c {
       }
     }
     return (void *)return_type;
-#endif
-    
   }
-
-  public:
 
   void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_type) {
     /*symbol_c *current_type = NULL;*/
@@ -310,6 +303,7 @@ class search_expression_type_c: public search_constant_type_c {
     
     return (void *)return_type;
   }
+#endif
 
   /*static bool_type_name_c bool_type_name;*/
 
