@@ -27,6 +27,10 @@ CXXFLAGS += -I. -I../* -I../../absyntax
 ../% /%:
 	$(MAKE) -C $(@D) $(@F)
 
+test_iec_std_lib: test_iec_std_lib.c iec_std_lib.h
+	gcc -o test_iec_std_lib test_iec_std_lib.c
+	
+test: test_iec_std_lib
 
 Makefile.depend depend:
 	$(CXX) -MM -MG -I. *.cc \

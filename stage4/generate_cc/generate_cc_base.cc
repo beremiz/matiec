@@ -265,43 +265,43 @@ class generate_cc_base_c: public iterator_visitor_c {
 
     void *visit(single_byte_character_string_c *symbol) {
       std::string str = "";
-
+      unsigned int count = 0; 
       str += '"';
       /* we ignore the first and last bytes, they will be the character ' */
       for (unsigned int i = 1; i < strlen(symbol->value) - 1; i++) {
         char c = symbol->value[i];
         if ((c == '\\') || (c == '"'))
-          {str += '\\'; str += c; continue;}
+          {str += '\\'; str += c; count ++; continue;}
         if (c != '$')
-          {str += c; continue;}
+          {str += c; count++; continue;}
         /* this should be safe, since the code has passed the syntax parser!! */
         c = symbol->value[++i];
         switch (c) {
           case '$':
           case '\'':
-            {str += c; continue;}
+            {str += c; count++; continue;}
           case 'L':
           case 'l':
-            {str += "\x0A"; /* LF */; continue;}
+            {str += "\x0A"; /* LF */; count++; continue;}
           case 'N':
           case 'n':
-            {str += "\\x0A"; /* NL */; continue;}
+            {str += "\\x0A"; /* NL */; count++; continue;}
           case 'P':
           case 'p':
-            {str += "\\f"; /* FF */; continue;}
+            {str += "\\f"; /* FF */; count++; continue;}
           case 'R':
           case 'r':
-            {str += "\\r"; /* CR */; continue;}
+            {str += "\\r"; /* CR */; count++; continue;}
           case 'T':
           case 't':
-            {str += "\\t"; /* tab */; continue;}
+            {str += "\\t"; /* tab */; count++; continue;}
           default: {
             if (isxdigit(c)) {
               /* this should be safe, since the code has passed the syntax parser!! */
 	      char c2 = symbol->value[++i];
 	      if (isxdigit(c2)) {
 	        str += '\\'; str += 'x'; str += c; str += c2;
-	        continue;
+	        count++; continue;
 	      }
 	    }
           }
@@ -312,8 +312,11 @@ class generate_cc_base_c: public iterator_visitor_c {
       } /* for() */
 
       str += '"';
-
+      s4o.print("(STRING){");
+      s4o.print_integer(count); 
+      s4o.print(",");
       s4o.print(str);
+      s4o.print("}");
       return NULL;
     }
 
