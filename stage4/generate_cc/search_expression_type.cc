@@ -127,14 +127,18 @@ class search_expression_type_c: public search_constant_type_c {
       return is_real_type(type_symbol) || is_integer_type(type_symbol);
     }
 
-    bool is_binary_type(symbol_c *type_symbol) {
-      if (typeid(*type_symbol) == typeid(bool_type_name_c)) {return true;}
+    bool is_nbinary_type(symbol_c *type_symbol) {
       if (typeid(*type_symbol) == typeid(byte_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(word_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(dword_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(lword_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(constant_int_type_name_c)) {return true;}
       return false;
+    }
+
+    bool is_binary_type(symbol_c *type_symbol) {
+      if (typeid(*type_symbol) == typeid(bool_type_name_c)) {return true;}
+      return is_nbinary_type(type_symbol);
     }
     
     bool is_same_type(symbol_c *first_type, symbol_c *second_type) {

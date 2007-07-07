@@ -60,12 +60,17 @@ typedef struct timespec DATE;
 typedef struct timespec DT;
 typedef struct timespec TOD;
 
+#define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t2.tv_nsec - t1.tv_nsec : t1.tv_sec - t2.tv_sec) 
+
 #define STR_MAX_LEN 40
 typedef int8_t __strlen_t;
 typedef struct {
     __strlen_t len;
     u_int8_t body[STR_MAX_LEN];
 } STRING;
+
+#define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
+
 
 /* TODO
 typedef struct {
@@ -689,15 +694,11 @@ inline TYPENAME __limit_##TYPENAME( TYPENAME MN, TYPENAME IN, TYPENAME MX){\
 ANY_NBIT(__limit_)
 ANY_NUM(__limit_)
 
-inline TIME __limit_ptime( TIME* MN, TIME* IN, TIME* MX){
-    return IN->tv_sec > MN->tv_sec || (IN->tv_sec == MN->tv_sec && IN->tv_nsec > MN->tv_nsec) ? /* IN>MN ?*/
-           IN->tv_sec < MX->tv_sec || (IN->tv_sec == MX->tv_sec && IN->tv_nsec < MX->tv_nsec) ? /* IN<MX ?*/
-           *IN : *MX : *MN;
-}
-
 #define __limit_time(TYPENAME)\
 inline TIME __limit_##TYPENAME( TYPENAME MN, TYPENAME IN, TYPENAME MX){\
-    return __limit_ptime(&MN, &IN, &MX);\
+    return __TIME_CMP(IN, MN) > 0 ? /* IN>MN ?*/\
+           __TIME_CMP(IN, MX) < 0 ? /* IN<MX ?*/\
+           IN : MX : MN;\
 }
 
 /* Call previously defined macro for each concerned type */
@@ -705,7 +706,7 @@ ANY_DATE(__limit_time)
 __limit_time(TIME)
 
 inline STRING __limit_STRING( STRING MN, STRING IN, STRING MX){
-    return strcmp((char*)&IN.body, (char*)&MN.body) > 0 ? strcmp((char*)&IN.body, (char*)&MX.body) < 0 ? IN : MX : MN;
+    return __STR_CMP(IN, MN) > 0 ? __STR_CMP(IN, MX) < 0 ? IN : MX : MN;
 }
 
     /**************/
@@ -755,8 +756,8 @@ inline TYPENAME fname##TYPENAME( UINT param_count, TYPENAME op1, ...){\
 ANY_NBIT(__max_num)
 ANY_NUM(__max_num)
 
-__extrem_(__max_, STRING, strcmp((char*)&op1.body,(char*)&tmp.body) < 0)
-#define __max_time(TYPENAME) __extrem_(__max_, TYPENAME, tmp.tv_sec > op1.tv_sec || (tmp.tv_sec == op1.tv_sec && tmp.tv_nsec > op1.tv_nsec))
+__extrem_(__max_, STRING, __STR_CMP(op1,tmp) < 0)
+#define __max_time(TYPENAME) __extrem_(__max_, TYPENAME, __TIME_CMP(op1, tmp) < 0)
 
 /* Call previously defined macro for each concerned type */
 ANY_DATE(__max_time)
@@ -769,9 +770,9 @@ __max_time(TIME)
 ANY_NBIT(__min_num)
 ANY_NUM(__min_num)
 
-__extrem_(__min, STRING, strcmp((char*)&op1.body,(char*)&tmp.body) > 0)
+__extrem_(__min, STRING, __STR_CMP(op1,tmp) > 0)
 
-#define __min_time(TYPENAME) __extrem_(__min_, TYPENAME, tmp.tv_sec < op1.tv_sec || (tmp.tv_sec == op1.tv_sec && tmp.tv_nsec < op1.tv_nsec))
+#define __min_time(TYPENAME) __extrem_(__min_, TYPENAME, __TIME_CMP(op1, tmp) > 0)
 
 /* Call previously defined macro for each concerned type */
 ANY_DATE(__min_time)
@@ -829,8 +830,8 @@ inline BOOL fname##TYPENAME( UINT param_count, TYPENAME op1, ...){\
 }
 
 #define __compare_num(fname, TYPENAME, TEST) __compare_(fname, TYPENAME, op1 TEST tmp )
-#define __compare_time(fname, TYPENAME, TEST) __compare_(fname, TYPENAME, op1.tv_sec TEST tmp.tv_sec || (op1.tv_sec == tmp.tv_sec && op1.tv_nsec TEST tmp.tv_nsec))
-#define __compare_string(fname, TEST) __compare_(fname, STRING, strcmp((char*)&op1.body, (char*)&tmp.body) TEST 0 )
+#define __compare_time(fname, TYPENAME, TEST) __compare_(fname, TYPENAME, __TIME_CMP(op1, tmp) TEST 0)
+#define __compare_string(fname, TEST) __compare_(fname, STRING, __STR_CMP(op1, tmp) TEST 0 )
 
     /**************/
     /*     GT     */

@@ -313,7 +313,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__real_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -506,9 +506,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__real_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -517,39 +517,6 @@ switch(current_function_type){
         }
         
     }/*function_real_to_string*/
-    break;
-
-/****
- *REAL_TO_WSTRING
- */
-    case function_real_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_wstring*/
     break;
 
 /****
@@ -572,7 +539,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__real_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -605,7 +572,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__real_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -638,7 +605,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__real_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -959,7 +926,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__real_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -1152,9 +1119,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__real_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -1163,39 +1130,6 @@ switch(current_function_type){
         }
         
     }/*function_lreal_to_string*/
-    break;
-
-/****
- *LREAL_TO_WSTRING
- */
-    case function_lreal_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_wstring*/
     break;
 
 /****
@@ -1218,7 +1152,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__real_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -1251,7 +1185,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__real_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -1284,7 +1218,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__real_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -1605,7 +1539,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -1798,9 +1732,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__sint_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -1809,39 +1743,6 @@ switch(current_function_type){
         }
         
     }/*function_sint_to_string*/
-    break;
-
-/****
- *SINT_TO_WSTRING
- */
-    case function_sint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_wstring*/
     break;
 
 /****
@@ -1864,7 +1765,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -1897,7 +1798,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -1930,7 +1831,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -2251,7 +2152,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -2444,9 +2345,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__sint_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -2455,39 +2356,6 @@ switch(current_function_type){
         }
         
     }/*function_int_to_string*/
-    break;
-
-/****
- *INT_TO_WSTRING
- */
-    case function_int_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_wstring*/
     break;
 
 /****
@@ -2510,7 +2378,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -2543,7 +2411,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -2576,7 +2444,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -2897,7 +2765,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -3090,9 +2958,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__sint_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -3101,39 +2969,6 @@ switch(current_function_type){
         }
         
     }/*function_dint_to_string*/
-    break;
-
-/****
- *DINT_TO_WSTRING
- */
-    case function_dint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_wstring*/
     break;
 
 /****
@@ -3156,7 +2991,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -3189,7 +3024,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -3222,7 +3057,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -3543,7 +3378,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -3736,9 +3571,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__sint_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -3747,39 +3582,6 @@ switch(current_function_type){
         }
         
     }/*function_lint_to_string*/
-    break;
-
-/****
- *LINT_TO_WSTRING
- */
-    case function_lint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_wstring*/
     break;
 
 /****
@@ -3802,7 +3604,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -3835,7 +3637,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -3868,7 +3670,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -4189,7 +3991,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -4382,9 +4184,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__uint_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -4393,39 +4195,6 @@ switch(current_function_type){
         }
         
     }/*function_usint_to_string*/
-    break;
-
-/****
- *USINT_TO_WSTRING
- */
-    case function_usint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_wstring*/
     break;
 
 /****
@@ -4448,7 +4217,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -4481,7 +4250,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -4514,7 +4283,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -4835,7 +4604,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -5028,9 +4797,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__uint_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -5039,39 +4808,6 @@ switch(current_function_type){
         }
         
     }/*function_uint_to_string*/
-    break;
-
-/****
- *UINT_TO_WSTRING
- */
-    case function_uint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_wstring*/
     break;
 
 /****
@@ -5094,7 +4830,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -5127,7 +4863,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -5160,7 +4896,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -5481,7 +5217,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -5674,9 +5410,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__uint_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -5685,39 +5421,6 @@ switch(current_function_type){
         }
         
     }/*function_udint_to_string*/
-    break;
-
-/****
- *UDINT_TO_WSTRING
- */
-    case function_udint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_wstring*/
     break;
 
 /****
@@ -5740,7 +5443,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -5773,7 +5476,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -5806,7 +5509,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6127,7 +5830,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6320,9 +6023,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__uint_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -6331,39 +6034,6 @@ switch(current_function_type){
         }
         
     }/*function_ulint_to_string*/
-    break;
-
-/****
- *ULINT_TO_WSTRING
- */
-    case function_ulint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_wstring*/
     break;
 
 /****
@@ -6386,7 +6056,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6419,7 +6089,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6452,7 +6122,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6485,7 +6155,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_real(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6518,7 +6188,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_real(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6551,7 +6221,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6584,7 +6254,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6617,7 +6287,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6650,7 +6320,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6683,7 +6353,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6716,7 +6386,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6749,7 +6419,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6782,7 +6452,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6815,7 +6485,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6848,7 +6518,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6881,7 +6551,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6914,7 +6584,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6947,7 +6617,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6980,7 +6650,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_string(");
+                s4o.print(")__time_to_string(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -6991,39 +6661,6 @@ switch(current_function_type){
         }
         
     }/*function_time_to_string*/
-    break;
-
-/****
- *TIME_TO_WSTRING
- */
-    case function_time_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")time_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_wstring*/
     break;
 
 /****
@@ -7366,7 +7003,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -7527,9 +7164,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__bool_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 16)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -7538,39 +7175,6 @@ switch(current_function_type){
         }
         
     }/*function_bool_to_string*/
-    break;
-
-/****
- *BOOL_TO_WSTRING
- */
-    case function_bool_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 16)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_wstring*/
     break;
 
 /****
@@ -7593,7 +7197,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -7626,7 +7230,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -7659,7 +7263,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -8012,7 +7616,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -8173,9 +7777,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__bit_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 16)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -8184,39 +7788,6 @@ switch(current_function_type){
         }
         
     }/*function_byte_to_string*/
-    break;
-
-/****
- *BYTE_TO_WSTRING
- */
-    case function_byte_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 16)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_wstring*/
     break;
 
 /****
@@ -8239,7 +7810,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -8272,7 +7843,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -8305,7 +7876,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -8658,7 +8229,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -8819,9 +8390,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__bit_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 16)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -8830,39 +8401,6 @@ switch(current_function_type){
         }
         
     }/*function_word_to_string*/
-    break;
-
-/****
- *WORD_TO_WSTRING
- */
-    case function_word_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 16)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_wstring*/
     break;
 
 /****
@@ -8885,7 +8423,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -8918,7 +8456,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -8951,7 +8489,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -9304,7 +8842,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -9465,9 +9003,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__bit_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 16)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -9476,39 +9014,6 @@ switch(current_function_type){
         }
         
     }/*function_dword_to_string*/
-    break;
-
-/****
- *DWORD_TO_WSTRING
- */
-    case function_dword_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 16)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_wstring*/
     break;
 
 /****
@@ -9531,7 +9036,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -9564,7 +9069,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -9597,7 +9102,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -9950,7 +9455,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -10111,9 +9616,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
+                s4o.print(")__bit_to_string(");
                 IN_param_value->accept(*this);
-                s4o.print(", 16)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10122,39 +9627,6 @@ switch(current_function_type){
         }
         
     }/*function_lword_to_string*/
-    break;
-
-/****
- *LWORD_TO_WSTRING
- */
-    case function_lword_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")int_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(", 16)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_wstring*/
     break;
 
 /****
@@ -10177,7 +9649,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -10210,7 +9682,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -10243,7 +9715,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")real_to_time(");
+                s4o.print(")__int_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -10276,9 +9748,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_real(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10309,9 +9781,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_real(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10342,9 +9814,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_sint(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10375,9 +9847,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_sint(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10408,9 +9880,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_sint(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10441,9 +9913,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_sint(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10474,9 +9946,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_uint(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10507,9 +9979,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_uint(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10540,9 +10012,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_uint(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10573,9 +10045,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_uint(");
                 IN_param_value->accept(*this);
-                s4o.print(", 10)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10606,7 +10078,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_time(");
+                s4o.print(")__string_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -10639,9 +10111,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_bool(");
                 IN_param_value->accept(*this);
-                s4o.print(", 16)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10672,9 +10144,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_bit(");
                 IN_param_value->accept(*this);
-                s4o.print(", 16)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10705,9 +10177,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_bit(");
                 IN_param_value->accept(*this);
-                s4o.print(", 16)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10738,9 +10210,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_bit(");
                 IN_param_value->accept(*this);
-                s4o.print(", 16)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10771,9 +10243,9 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
+                s4o.print(")__string_to_bit(");
                 IN_param_value->accept(*this);
-                s4o.print(", 16)");
+                s4o.print(")");
                 return NULL;
                 
             }
@@ -10804,7 +10276,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_time(");
+                s4o.print(")__string_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -10837,7 +10309,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_time(");
+                s4o.print(")__string_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -10870,7 +10342,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")string_to_time(");
+                s4o.print(")__string_to_time(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -10881,633 +10353,6 @@ switch(current_function_type){
         }
         
     }/*function_string_to_dt*/
-    break;
-
-/****
- *WSTRING_TO_REAL
- */
-    case function_wstring_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_real*/
-    break;
-
-/****
- *WSTRING_TO_LREAL
- */
-    case function_wstring_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_lreal*/
-    break;
-
-/****
- *WSTRING_TO_SINT
- */
-    case function_wstring_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_sint*/
-    break;
-
-/****
- *WSTRING_TO_INT
- */
-    case function_wstring_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_int*/
-    break;
-
-/****
- *WSTRING_TO_DINT
- */
-    case function_wstring_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_dint*/
-    break;
-
-/****
- *WSTRING_TO_LINT
- */
-    case function_wstring_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_lint*/
-    break;
-
-/****
- *WSTRING_TO_USINT
- */
-    case function_wstring_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_usint*/
-    break;
-
-/****
- *WSTRING_TO_UINT
- */
-    case function_wstring_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_uint*/
-    break;
-
-/****
- *WSTRING_TO_UDINT
- */
-    case function_wstring_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_udint*/
-    break;
-
-/****
- *WSTRING_TO_ULINT
- */
-    case function_wstring_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 10)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_ulint*/
-    break;
-
-/****
- *WSTRING_TO_TIME
- */
-    case function_wstring_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_time*/
-    break;
-
-/****
- *WSTRING_TO_BOOL
- */
-    case function_wstring_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 16)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_bool*/
-    break;
-
-/****
- *WSTRING_TO_BYTE
- */
-    case function_wstring_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 16)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_byte*/
-    break;
-
-/****
- *WSTRING_TO_WORD
- */
-    case function_wstring_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 16)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_word*/
-    break;
-
-/****
- *WSTRING_TO_DWORD
- */
-    case function_wstring_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 16)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_dword*/
-    break;
-
-/****
- *WSTRING_TO_LWORD
- */
-    case function_wstring_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(", 16)");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_lword*/
-    break;
-
-/****
- *WSTRING_TO_DATE
- */
-    case function_wstring_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_date*/
-    break;
-
-/****
- *WSTRING_TO_TOD
- */
-    case function_wstring_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_tod*/
-    break;
-
-/****
- *WSTRING_TO_DT
- */
-    case function_wstring_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")string_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_dt*/
     break;
 
 /****
@@ -11530,7 +10375,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_real(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11563,7 +10408,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_real(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11596,7 +10441,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11629,7 +10474,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11662,7 +10507,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11695,7 +10540,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11728,7 +10573,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11761,7 +10606,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11794,7 +10639,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11827,7 +10672,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11860,7 +10705,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11893,7 +10738,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11926,7 +10771,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11959,7 +10804,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -11992,7 +10837,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12025,7 +10870,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_string(");
+                s4o.print(")__date_to_string(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12036,39 +10881,6 @@ switch(current_function_type){
         }
         
     }/*function_date_to_string*/
-    break;
-
-/****
- *DATE_TO_WSTRING
- */
-    case function_date_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")time_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_wstring*/
     break;
 
 /****
@@ -12091,7 +10903,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_real(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12124,7 +10936,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_real(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12157,7 +10969,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12190,7 +11002,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12223,7 +11035,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12256,7 +11068,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12289,7 +11101,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12322,7 +11134,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12355,7 +11167,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12388,7 +11200,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12421,7 +11233,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12454,7 +11266,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12487,7 +11299,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12520,7 +11332,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12553,7 +11365,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12586,7 +11398,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_string(");
+                s4o.print(")__tod_to_string(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12597,39 +11409,6 @@ switch(current_function_type){
         }
         
     }/*function_tod_to_string*/
-    break;
-
-/****
- *TOD_TO_WSTRING
- */
-    case function_tod_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")time_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_wstring*/
     break;
 
 /****
@@ -12652,7 +11431,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_real(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12685,7 +11464,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_real(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12718,7 +11497,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12751,7 +11530,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12784,7 +11563,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12817,7 +11596,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12850,7 +11629,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12883,7 +11662,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12916,7 +11695,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12949,7 +11728,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -12982,7 +11761,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13015,7 +11794,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13048,7 +11827,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13081,7 +11860,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13114,7 +11893,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_real(");
+                s4o.print(")__time_to_int(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13147,7 +11926,7 @@ switch(current_function_type){
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 s4o.print("(");
                 return_type_symbol->accept(*this);
-                s4o.print(")time_to_string(");
+                s4o.print(")__dt_to_string(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13158,39 +11937,6 @@ switch(current_function_type){
         }
         
     }/*function_dt_to_string*/
-    break;
-
-/****
- *DT_TO_WSTRING
- */
-    case function_dt_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")time_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_wstring*/
     break;
 
 /****
@@ -13224,138 +11970,6 @@ switch(current_function_type){
     break;
 
 /****
- *BCD_TO_SINT
- */
-    case function_bcd_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("__bcd_to_something(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_sint*/
-    break;
-
-/****
- *BCD_TO_INT
- */
-    case function_bcd_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("__bcd_to_something(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_int*/
-    break;
-
-/****
- *BCD_TO_DINT
- */
-    case function_bcd_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("__bcd_to_something(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_dint*/
-    break;
-
-/****
- *BCD_TO_LINT
- */
-    case function_bcd_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("__bcd_to_something(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_lint*/
-    break;
-
-/****
  *BCD_TO_USINT
  */
     case function_bcd_to_usint :
@@ -13369,13 +11983,13 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("__bcd_to_something(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
+                s4o.print("(");
+                return_type_symbol->accept(*this);
+                s4o.print(")__bcd_to_uint(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13402,13 +12016,13 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("__bcd_to_something(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
+                s4o.print("(");
+                return_type_symbol->accept(*this);
+                s4o.print(")__bcd_to_uint(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13435,13 +12049,13 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("__bcd_to_something(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
+                s4o.print("(");
+                return_type_symbol->accept(*this);
+                s4o.print(")__bcd_to_uint(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13468,13 +12082,13 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("__bcd_to_something(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
+                s4o.print("(");
+                return_type_symbol->accept(*this);
+                s4o.print(")__bcd_to_uint(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13485,138 +12099,6 @@ switch(current_function_type){
         }
         
     }/*function_bcd_to_ulint*/
-    break;
-
-/****
- *SINT_TO_BCD
- */
-    case function_sint_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("__something_to_bcd(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_bcd*/
-    break;
-
-/****
- *INT_TO_BCD
- */
-    case function_int_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("__something_to_bcd(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_bcd*/
-    break;
-
-/****
- *DINT_TO_BCD
- */
-    case function_dint_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("__something_to_bcd(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_bcd*/
-    break;
-
-/****
- *LINT_TO_BCD
- */
-    case function_lint_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("__something_to_bcd(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_bcd*/
     break;
 
 /****
@@ -13637,9 +12119,9 @@ switch(current_function_type){
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("__something_to_bcd(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
+                s4o.print("(");
+                return_type_symbol->accept(*this);
+                s4o.print(")__uint_to_bcd(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13670,9 +12152,9 @@ switch(current_function_type){
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("__something_to_bcd(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
+                s4o.print("(");
+                return_type_symbol->accept(*this);
+                s4o.print(")__uint_to_bcd(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13703,9 +12185,9 @@ switch(current_function_type){
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("__something_to_bcd(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
+                s4o.print("(");
+                return_type_symbol->accept(*this);
+                s4o.print(")__uint_to_bcd(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13736,9 +12218,9 @@ switch(current_function_type){
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("__something_to_bcd(sizeof(");
-                IN_type_symbol->accept(*this);
-                s4o.print("),&");
+                s4o.print("(");
+                return_type_symbol->accept(*this);
+                s4o.print(")__uint_to_bcd(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13769,7 +12251,7 @@ switch(current_function_type){
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("__date_and_time_to_time_of_day(&");
+                s4o.print("__date_and_time_to_time_of_day(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -13800,7 +12282,7 @@ switch(current_function_type){
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("__date_and_time_to_time_of_day(&");
+                s4o.print("__date_and_time_to_date(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -14246,9 +12728,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                        s4o.print("__time_add(&");
+                        s4o.print("__time_add(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14278,9 +12760,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                        s4o.print("__time_add(&");
+                        s4o.print("__time_add(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14310,9 +12792,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_add(&");
+                        s4o.print("__time_add(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14420,9 +12902,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_mul(&");
+                        s4o.print("__time_mul(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14504,9 +12986,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_sub(&");
+                        s4o.print("__time_sub(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14536,9 +13018,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_sub(&");
+                        s4o.print("__time_sub(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14549,9 +13031,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                        s4o.print("__time_sub(&");
+                        s4o.print("__time_sub(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14581,9 +13063,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_sub(&");
+                        s4o.print("__time_sub(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14594,9 +13076,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                        s4o.print("__time_sub(&");
+                        s4o.print("__time_sub(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14626,9 +13108,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_sub(&");
+                        s4o.print("__time_sub(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14710,9 +13192,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_div(&");
+                        s4o.print("__time_div(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14814,9 +13296,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.print("pow(&");
+                        s4o.print("pow(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -14977,7 +13459,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if(search_expression_type->is_nbinary_type(IN_type_symbol))
             {
         
                 {
@@ -14995,9 +13477,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = IN_type_symbol;
-                        s4o.print("__ror(sizeof(");
+                        s4o.print("__ror_");
                         IN_type_symbol->accept(*this);
-                        s4o.print("), &");
+                        s4o.print("(");
                         IN_param_value->accept(*this);
                         s4o.print(", ");
                         N_param_value->accept(*this);
@@ -15031,7 +13513,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if(search_expression_type->is_nbinary_type(IN_type_symbol))
             {
         
                 {
@@ -15049,9 +13531,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = IN_type_symbol;
-                        s4o.print("__rol(sizeof(");
+                        s4o.print("__rol_");
                         IN_type_symbol->accept(*this);
-                        s4o.print("), &");
+                        s4o.print("(");
                         IN_param_value->accept(*this);
                         s4o.print(", ");
                         N_param_value->accept(*this);
@@ -16279,7 +14761,7 @@ switch(current_function_type){
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("__len(&");
+                s4o.print("__len(");
                 IN_param_value->accept(*this);
                 s4o.print(")");
                 return NULL;
@@ -16324,7 +14806,7 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                        s4o.print("__left(&");
+                        s4o.print("__left(");
                         IN_param_value->accept(*this);
                         s4o.print(", ");
                         L_param_value->accept(*this);
@@ -16376,7 +14858,7 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                        s4o.print("__right(&");
+                        s4o.print("__right(");
                         IN_param_value->accept(*this);
                         s4o.print(", ");
                         L_param_value->accept(*this);
@@ -16442,7 +14924,7 @@ switch(current_function_type){
                             {
                         
                                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                                s4o.print("__mid(&");
+                                s4o.print("__mid(");
                                 IN_param_value->accept(*this);
                                 s4o.print(", ");
                                 L_param_value->accept(*this);
@@ -16501,9 +14983,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                        s4o.print("__time_add(&");
+                        s4o.print("__time_add(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;
@@ -16627,9 +15109,9 @@ switch(current_function_type){
                             {
                         
                                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                                s4o.print("__insert(&");
+                                s4o.print("__insert(");
                                 IN1_param_value->accept(*this);
-                                s4o.print(", &");
+                                s4o.print(", ");
                                 IN2_param_value->accept(*this);
                                 s4o.print(", ");
                                 P_param_value->accept(*this);
@@ -16700,7 +15182,7 @@ switch(current_function_type){
                             {
                         
                                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                                s4o.print("__delete(&");
+                                s4o.print("__delete(");
                                 IN_param_value->accept(*this);
                                 s4o.print(", ");
                                 L_param_value->accept(*this);
@@ -16787,9 +15269,9 @@ switch(current_function_type){
                                     {
                                 
                                         symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                                        s4o.print("__replace(&");
+                                        s4o.print("__replace(");
                                         IN1_param_value->accept(*this);
-                                        s4o.print(", &");
+                                        s4o.print(", ");
                                         IN2_param_value->accept(*this);
                                         s4o.print(", ");
                                         L_param_value->accept(*this);
@@ -16853,9 +15335,9 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                        s4o.print("__find(&");
+                        s4o.print("__find(");
                         IN1_param_value->accept(*this);
-                        s4o.print(", &");
+                        s4o.print(", ");
                         IN2_param_value->accept(*this);
                         s4o.print(")");
                         return NULL;

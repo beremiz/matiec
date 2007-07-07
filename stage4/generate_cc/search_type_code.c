@@ -525,38 +525,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *REAL_TO_WSTRING
- */
-    case function_real_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_wstring*/
-    break;
-
-/****
  *REAL_TO_DATE
  */
     case function_real_to_date :
@@ -1162,38 +1130,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
         }
         
     }/*function_lreal_to_string*/
-    break;
-
-/****
- *LREAL_TO_WSTRING
- */
-    case function_lreal_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_wstring*/
     break;
 
 /****
@@ -1805,38 +1741,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *SINT_TO_WSTRING
- */
-    case function_sint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_wstring*/
-    break;
-
-/****
  *SINT_TO_DATE
  */
     case function_sint_to_date :
@@ -2442,38 +2346,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
         }
         
     }/*function_int_to_string*/
-    break;
-
-/****
- *INT_TO_WSTRING
- */
-    case function_int_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_wstring*/
     break;
 
 /****
@@ -3085,38 +2957,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *DINT_TO_WSTRING
- */
-    case function_dint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_wstring*/
-    break;
-
-/****
  *DINT_TO_DATE
  */
     case function_dint_to_date :
@@ -3722,38 +3562,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
         }
         
     }/*function_lint_to_string*/
-    break;
-
-/****
- *LINT_TO_WSTRING
- */
-    case function_lint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_wstring*/
     break;
 
 /****
@@ -4365,38 +4173,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *USINT_TO_WSTRING
- */
-    case function_usint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_wstring*/
-    break;
-
-/****
  *USINT_TO_DATE
  */
     case function_usint_to_date :
@@ -5002,38 +4778,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
         }
         
     }/*function_uint_to_string*/
-    break;
-
-/****
- *UINT_TO_WSTRING
- */
-    case function_uint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_wstring*/
     break;
 
 /****
@@ -5645,38 +5389,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *UDINT_TO_WSTRING
- */
-    case function_udint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_wstring*/
-    break;
-
-/****
  *UDINT_TO_DATE
  */
     case function_udint_to_date :
@@ -6282,38 +5994,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
         }
         
     }/*function_ulint_to_string*/
-    break;
-
-/****
- *ULINT_TO_WSTRING
- */
-    case function_ulint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_wstring*/
     break;
 
 /****
@@ -6925,38 +6605,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *TIME_TO_WSTRING
- */
-    case function_time_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_wstring*/
-    break;
-
-/****
  *BOOL_TO_REAL
  */
     case function_bool_to_real :
@@ -7466,38 +7114,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
         }
         
     }/*function_bool_to_string*/
-    break;
-
-/****
- *BOOL_TO_WSTRING
- */
-    case function_bool_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_wstring*/
     break;
 
 /****
@@ -8109,38 +7725,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *BYTE_TO_WSTRING
- */
-    case function_byte_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_wstring*/
-    break;
-
-/****
  *BYTE_TO_DATE
  */
     case function_byte_to_date :
@@ -8746,38 +8330,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
         }
         
     }/*function_word_to_string*/
-    break;
-
-/****
- *WORD_TO_WSTRING
- */
-    case function_word_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_wstring*/
     break;
 
 /****
@@ -9389,38 +8941,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *DWORD_TO_WSTRING
- */
-    case function_dword_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_wstring*/
-    break;
-
-/****
  *DWORD_TO_DATE
  */
     case function_dword_to_date :
@@ -10026,38 +9546,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
         }
         
     }/*function_lword_to_string*/
-    break;
-
-/****
- *LWORD_TO_WSTRING
- */
-    case function_lword_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_wstring*/
     break;
 
 /****
@@ -10765,614 +10253,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *WSTRING_TO_REAL
- */
-    case function_wstring_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_real*/
-    break;
-
-/****
- *WSTRING_TO_LREAL
- */
-    case function_wstring_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_lreal*/
-    break;
-
-/****
- *WSTRING_TO_SINT
- */
-    case function_wstring_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_sint*/
-    break;
-
-/****
- *WSTRING_TO_INT
- */
-    case function_wstring_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_int*/
-    break;
-
-/****
- *WSTRING_TO_DINT
- */
-    case function_wstring_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_dint*/
-    break;
-
-/****
- *WSTRING_TO_LINT
- */
-    case function_wstring_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_lint*/
-    break;
-
-/****
- *WSTRING_TO_USINT
- */
-    case function_wstring_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_usint*/
-    break;
-
-/****
- *WSTRING_TO_UINT
- */
-    case function_wstring_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_uint*/
-    break;
-
-/****
- *WSTRING_TO_UDINT
- */
-    case function_wstring_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_udint*/
-    break;
-
-/****
- *WSTRING_TO_ULINT
- */
-    case function_wstring_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_ulint*/
-    break;
-
-/****
- *WSTRING_TO_TIME
- */
-    case function_wstring_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_time*/
-    break;
-
-/****
- *WSTRING_TO_BOOL
- */
-    case function_wstring_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_bool*/
-    break;
-
-/****
- *WSTRING_TO_BYTE
- */
-    case function_wstring_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_byte*/
-    break;
-
-/****
- *WSTRING_TO_WORD
- */
-    case function_wstring_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_word*/
-    break;
-
-/****
- *WSTRING_TO_DWORD
- */
-    case function_wstring_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_dword*/
-    break;
-
-/****
- *WSTRING_TO_LWORD
- */
-    case function_wstring_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_lword*/
-    break;
-
-/****
- *WSTRING_TO_DATE
- */
-    case function_wstring_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_date*/
-    break;
-
-/****
- *WSTRING_TO_TOD
- */
-    case function_wstring_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_tod*/
-    break;
-
-/****
- *WSTRING_TO_DT
- */
-    case function_wstring_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_dt*/
-    break;
-
-/****
  *DATE_TO_REAL
  */
     case function_date_to_real :
@@ -11882,38 +10762,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
         }
         
     }/*function_date_to_string*/
-    break;
-
-/****
- *DATE_TO_WSTRING
- */
-    case function_date_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_wstring*/
     break;
 
 /****
@@ -12429,38 +11277,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *TOD_TO_WSTRING
- */
-    case function_tod_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_wstring*/
-    break;
-
-/****
  *DT_TO_REAL
  */
     case function_dt_to_real :
@@ -12973,38 +11789,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *DT_TO_WSTRING
- */
-    case function_dt_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_wstring*/
-    break;
-
-/****
  *TRUNC
  */
     case function_trunc :
@@ -13037,134 +11821,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
     break;
 
 /****
- *BCD_TO_SINT
- */
-    case function_bcd_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_sint*/
-    break;
-
-/****
- *BCD_TO_INT
- */
-    case function_bcd_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_int*/
-    break;
-
-/****
- *BCD_TO_DINT
- */
-    case function_bcd_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_dint*/
-    break;
-
-/****
- *BCD_TO_LINT
- */
-    case function_bcd_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_lint*/
-    break;
-
-/****
  *BCD_TO_USINT
  */
     case function_bcd_to_usint :
@@ -13182,7 +11838,7 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -13214,7 +11870,7 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -13246,7 +11902,7 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -13278,7 +11934,7 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -13290,134 +11946,6 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
         }
         
     }/*function_bcd_to_ulint*/
-    break;
-
-/****
- *SINT_TO_BCD
- */
-    case function_sint_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_bcd*/
-    break;
-
-/****
- *INT_TO_BCD
- */
-    case function_int_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_bcd*/
-    break;
-
-/****
- *DINT_TO_BCD
- */
-    case function_dint_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_bcd*/
-    break;
-
-/****
- *LINT_TO_BCD
- */
-    case function_lint_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_bcd*/
     break;
 
 /****
@@ -14681,7 +13209,7 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if(search_expression_type->is_nbinary_type(IN_type_symbol))
             {
         
                 {
@@ -14732,7 +13260,7 @@ void *compute_standard_function_st(function_invocation_c *symbol) {
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if(search_expression_type->is_nbinary_type(IN_type_symbol))
             {
         
                 {
@@ -16545,31 +15073,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *REAL_TO_WSTRING
- */
-    case function_real_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_wstring*/
-    break;
-
-/****
  *REAL_TO_DATE
  */
     case function_real_to_date :
@@ -17042,31 +15545,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
         }
         
     }/*function_lreal_to_string*/
-    break;
-
-/****
- *LREAL_TO_WSTRING
- */
-    case function_lreal_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_wstring*/
     break;
 
 /****
@@ -17545,31 +16023,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *SINT_TO_WSTRING
- */
-    case function_sint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_wstring*/
-    break;
-
-/****
  *SINT_TO_DATE
  */
     case function_sint_to_date :
@@ -18042,31 +16495,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
         }
         
     }/*function_int_to_string*/
-    break;
-
-/****
- *INT_TO_WSTRING
- */
-    case function_int_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_wstring*/
     break;
 
 /****
@@ -18545,31 +16973,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *DINT_TO_WSTRING
- */
-    case function_dint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_wstring*/
-    break;
-
-/****
  *DINT_TO_DATE
  */
     case function_dint_to_date :
@@ -19042,31 +17445,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
         }
         
     }/*function_lint_to_string*/
-    break;
-
-/****
- *LINT_TO_WSTRING
- */
-    case function_lint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_wstring*/
     break;
 
 /****
@@ -19545,31 +17923,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *USINT_TO_WSTRING
- */
-    case function_usint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_wstring*/
-    break;
-
-/****
  *USINT_TO_DATE
  */
     case function_usint_to_date :
@@ -20042,31 +18395,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
         }
         
     }/*function_uint_to_string*/
-    break;
-
-/****
- *UINT_TO_WSTRING
- */
-    case function_uint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_wstring*/
     break;
 
 /****
@@ -20545,31 +18873,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *UDINT_TO_WSTRING
- */
-    case function_udint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_wstring*/
-    break;
-
-/****
  *UDINT_TO_DATE
  */
     case function_udint_to_date :
@@ -21042,31 +19345,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
         }
         
     }/*function_ulint_to_string*/
-    break;
-
-/****
- *ULINT_TO_WSTRING
- */
-    case function_ulint_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_wstring*/
     break;
 
 /****
@@ -21545,31 +19823,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *TIME_TO_WSTRING
- */
-    case function_time_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_wstring*/
-    break;
-
-/****
  *BOOL_TO_REAL
  */
     case function_bool_to_real :
@@ -21967,31 +20220,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
         }
         
     }/*function_bool_to_string*/
-    break;
-
-/****
- *BOOL_TO_WSTRING
- */
-    case function_bool_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_wstring*/
     break;
 
 /****
@@ -22470,31 +20698,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *BYTE_TO_WSTRING
- */
-    case function_byte_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_wstring*/
-    break;
-
-/****
  *BYTE_TO_DATE
  */
     case function_byte_to_date :
@@ -22967,31 +21170,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
         }
         
     }/*function_word_to_string*/
-    break;
-
-/****
- *WORD_TO_WSTRING
- */
-    case function_word_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_wstring*/
     break;
 
 /****
@@ -23470,31 +21648,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *DWORD_TO_WSTRING
- */
-    case function_dword_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_wstring*/
-    break;
-
-/****
  *DWORD_TO_DATE
  */
     case function_dword_to_date :
@@ -23967,31 +22120,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
         }
         
     }/*function_lword_to_string*/
-    break;
-
-/****
- *LWORD_TO_WSTRING
- */
-    case function_lword_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_wstring*/
     break;
 
 /****
@@ -24545,481 +22673,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *WSTRING_TO_REAL
- */
-    case function_wstring_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_real*/
-    break;
-
-/****
- *WSTRING_TO_LREAL
- */
-    case function_wstring_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_lreal*/
-    break;
-
-/****
- *WSTRING_TO_SINT
- */
-    case function_wstring_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_sint*/
-    break;
-
-/****
- *WSTRING_TO_INT
- */
-    case function_wstring_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_int*/
-    break;
-
-/****
- *WSTRING_TO_DINT
- */
-    case function_wstring_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_dint*/
-    break;
-
-/****
- *WSTRING_TO_LINT
- */
-    case function_wstring_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_lint*/
-    break;
-
-/****
- *WSTRING_TO_USINT
- */
-    case function_wstring_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_usint*/
-    break;
-
-/****
- *WSTRING_TO_UINT
- */
-    case function_wstring_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_uint*/
-    break;
-
-/****
- *WSTRING_TO_UDINT
- */
-    case function_wstring_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_udint*/
-    break;
-
-/****
- *WSTRING_TO_ULINT
- */
-    case function_wstring_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_ulint*/
-    break;
-
-/****
- *WSTRING_TO_TIME
- */
-    case function_wstring_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_time*/
-    break;
-
-/****
- *WSTRING_TO_BOOL
- */
-    case function_wstring_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_bool*/
-    break;
-
-/****
- *WSTRING_TO_BYTE
- */
-    case function_wstring_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_byte*/
-    break;
-
-/****
- *WSTRING_TO_WORD
- */
-    case function_wstring_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_word*/
-    break;
-
-/****
- *WSTRING_TO_DWORD
- */
-    case function_wstring_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_dword*/
-    break;
-
-/****
- *WSTRING_TO_LWORD
- */
-    case function_wstring_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_lword*/
-    break;
-
-/****
- *WSTRING_TO_DATE
- */
-    case function_wstring_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_date*/
-    break;
-
-/****
- *WSTRING_TO_TOD
- */
-    case function_wstring_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_tod*/
-    break;
-
-/****
- *WSTRING_TO_DT
- */
-    case function_wstring_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(wstring_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_wstring_to_dt*/
-    break;
-
-/****
  *DATE_TO_REAL
  */
     case function_date_to_real :
@@ -25417,31 +23070,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
         }
         
     }/*function_date_to_string*/
-    break;
-
-/****
- *DATE_TO_WSTRING
- */
-    case function_date_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_wstring*/
     break;
 
 /****
@@ -25845,31 +23473,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *TOD_TO_WSTRING
- */
-    case function_tod_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_wstring*/
-    break;
-
-/****
  *DT_TO_REAL
  */
     case function_dt_to_real :
@@ -26270,31 +23873,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *DT_TO_WSTRING
- */
-    case function_dt_to_wstring :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::wstring_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_wstring*/
-    break;
-
-/****
  *TRUNC
  */
     case function_trunc :
@@ -26320,106 +23898,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
     break;
 
 /****
- *BCD_TO_SINT
- */
-    case function_bcd_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_sint*/
-    break;
-
-/****
- *BCD_TO_INT
- */
-    case function_bcd_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_int*/
-    break;
-
-/****
- *BCD_TO_DINT
- */
-    case function_bcd_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_dint*/
-    break;
-
-/****
- *BCD_TO_LINT
- */
-    case function_bcd_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_binary_type(IN_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_lint*/
-    break;
-
-/****
  *BCD_TO_USINT
  */
     case function_bcd_to_usint :
@@ -26430,7 +23908,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -26455,7 +23933,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -26480,7 +23958,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -26505,7 +23983,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -26517,106 +23995,6 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
         }
         
     }/*function_bcd_to_ulint*/
-    break;
-
-/****
- *SINT_TO_BCD
- */
-    case function_sint_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_bcd*/
-    break;
-
-/****
- *INT_TO_BCD
- */
-    case function_int_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_bcd*/
-    break;
-
-/****
- *DINT_TO_BCD
- */
-    case function_dint_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_bcd*/
-    break;
-
-/****
- *LINT_TO_BCD
- */
-    case function_lint_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                return return_type_symbol;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_bcd*/
     break;
 
 /****
@@ -27691,7 +25069,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if(search_expression_type->is_nbinary_type(IN_type_symbol))
             {
         
                 {
@@ -27735,7 +25113,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_binary_type(IN_type_symbol))
+            if(search_expression_type->is_nbinary_type(IN_type_symbol))
             {
         
                 {
