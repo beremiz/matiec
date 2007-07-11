@@ -1208,8 +1208,10 @@ END_RESOURCE
       s4o.indent_left();
       s4o.print("}\n\n");
       
-      if (single_resource)
+      if (single_resource) {
         delete current_resource_name;
+        current_resource_name = NULL;
+      }
       return NULL;
     }
     
@@ -1242,7 +1244,8 @@ END_RESOURCE
         }
         
         wanted_assigntype = assign_at;
-        symbol->prog_conf_elements->accept(*this);
+        if (symbol->prog_conf_elements != NULL)
+          symbol->prog_conf_elements->accept(*this);
         
         s4o.print(s4o.indent_spaces);
         symbol->program_type_name->accept(*this);
@@ -1252,7 +1255,8 @@ END_RESOURCE
         s4o.print(");\n");
         
         wanted_assigntype = send_at;
-        symbol->prog_conf_elements->accept(*this);
+        if (symbol->prog_conf_elements != NULL)
+          symbol->prog_conf_elements->accept(*this);
         
         if (symbol->task_name != NULL) {
           s4o.indent_left();
