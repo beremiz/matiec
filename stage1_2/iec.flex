@@ -101,7 +101,7 @@
  * in the syntax parser header file...
  */
 #ifdef TEST_MAIN
-#define LIBDIRECTORY "just_testing"
+#define DEFAULT_LIBDIR "just_testing"
 #endif
 
 
@@ -347,12 +347,11 @@ include_stack_t include_stack[MAX_INCLUDE_DEPTH];
 int include_stack_ptr = 0;
 
 const char *INCLUDE_DIRECTORIES[] = {
-	"",
-	"lib/",
-	"/lib/",
-	"/usr/lib/",
-	"/usr/lib/iec/",
-	LIBDIRECTORY "/",
+	DEFAULT_LIBDIR,
+	".",
+	"/lib",
+	"/usr/lib",
+	"/usr/lib/iec",
 	NULL /* must end with NULL!! */
 	};
 
@@ -666,7 +665,7 @@ incompl_location	%[IQM]\*
 			  current_filename = strdup(yytext);
 
 			  for (i = 0, yyin = NULL; (INCLUDE_DIRECTORIES[i] != NULL) && (yyin == NULL); i++) {
-			    char *full_name = strdup2(INCLUDE_DIRECTORIES[i], yytext);
+			    char *full_name = strdup3(INCLUDE_DIRECTORIES[i], "/", yytext);
 			    if (full_name == NULL) {
 			      fprintf(stderr, "Out of memory!\n");
 			      exit( 1 );

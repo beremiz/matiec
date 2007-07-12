@@ -5289,63 +5289,7 @@ symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator) {
 }
 
 
-
-
-const char *standard_function_names[] = {
-// 2.5.1.5.1  Type conversion functions
-/*
- *_TO_**
- TRUNC
- *_BCD_TO_**
- **_TO_BCD_*
- (REAL or LREAL to SINT, INT, DINT or LINT)
-*/
-"TRUNC",
-"TIME_TO_REAL",
-// 2.5.1.5.2  Numerical functions
-//   Table 23 - Standard functions of one numeric variable
-"ABS","SQRT","LN","LOG","EXP","SIN","COS","TAN","ASIN","ACOS","ATAN",
-//   Table 24 - Standard arithmetic functions
-"ADD","MUL","SUB","DIV","MOD"/* See note (a) */,"EXPT","MOVE",
-// 2.5.1.5.3  Bit string functions
-//   Table 25 - Standard bit shift functions
-"SHL","SHR","ROR","ROL",
-// 2.5.1.5.4  Selection and comparison functions
-//   Table 26 - Standard bitwise Boolean functions
-"AND","OR","XOR","NOT",
-//   Table 27 - Standard selection functions
-"SEL","MAX","MIN","LIMIT","MUX",
-//   Table 28 - Standard comparison functions
-"GT","GE","EQ","LE","LT","NE",
-// 2.5.1.5.5  Character string functions
-//   Table 29 - Standard character string functions
-"LEN","LEFT","RIGHT","MID","CONCAT","INSERT","DELETE","REPLACE","FIND",
-// 2.5.1.5.6  Functions of time data types
-//   Table 30 - Functions of time data types
-"ADD_TIME","ADD_TOD_TIME","ADD_DT_TIME","SUB_TIME","SUB_DATE_DATE",
-"SUB_TOD_TIME","SUB_TOD_TOD","SUB_DT_TIME","SUB_DT_DT","MULTIME",
-"DIVTIME","CONCAT_DATE_TOD",
-// 2.5.1.5.7  Functions of enumerated data types
-//   Table 31 - Functions of enumerated data types
-// "SEL", /* already above! We cannot have duplicates! */
-// "MUX", /* already above! We cannot have duplicates! */
-// "EQ",  /* already above! We cannot have duplicates! */
-// "NE",  /* already above! We cannot have duplicates! */
-
-/* end of array marker! Do not remove! */
-NULL
-
-/* Note (a):
- *  This function has a name equal to a reserved keyword.
- *  This means that adding it here is irrelevant because the
- *  lexical parser will consider it the XXX token before
- *  it interprets it as an identifier and looks it up
- *  in the library elements symbol table.
- */
-};
-
-
-
+#include "standard_function_names.c"
 
 const char *standard_function_block_names[] = {
 // 2.5.2.3.1  Bistable elements
@@ -5370,6 +5314,8 @@ NULL
 #define LIBFILE "ieclib.txt"
 #define DEF_LIBFILENAME LIBDIRECTORY "/" LIBFILE
 
+extern const char *INCLUDE_DIRECTORIES[];
+
 int stage1_2__(const char *filename, const char *includedir, symbol_c **tree_root_ref) {
   FILE *in_file = NULL, *lib_file = NULL;
   char *libfilename = NULL;
@@ -5382,30 +5328,17 @@ int stage1_2__(const char *filename, const char *includedir, symbol_c **tree_roo
   }
 
   if (includedir != NULL) {
-    if ((libfilename = strdup3(includedir, "/", LIBFILE)) == NULL) {
-      fprintf (stderr, "Out of memory. Bailing out!\n");
-      return -1;
-    }
-
-    if((lib_file = fopen(libfilename, "r")) == NULL) {
-      char *errmsg = strdup2("Error opening library file ", libfilename);
-      perror(errmsg);
-      free(errmsg);
-    }
+    INCLUDE_DIRECTORIES[0] = includedir;
+  }
+  if ((libfilename = strdup3(INCLUDE_DIRECTORIES[0], "/", LIBFILE)) == NULL) {
+    fprintf (stderr, "Out of memory. Bailing out!\n");
+    return -1;
   }
 
-  if (lib_file == NULL) {
-    /* we try again... */
-    if ((libfilename = strdup(DEF_LIBFILENAME)) == NULL) {
-      fprintf (stderr, "Out of memory. Bailing out!\n");
-      return -1;
-    }
-
-    if((lib_file = fopen(libfilename, "r")) == NULL) {
-      char *errmsg = strdup2("Error opening library file ", libfilename);
-      perror(errmsg);
-      free(errmsg);
-    }
+  if((lib_file = fopen(libfilename, "r")) == NULL) {
+    char *errmsg = strdup2("Error opening library file ", libfilename);
+    perror(errmsg);
+    free(errmsg);
   }
 
   if (lib_file == NULL) {

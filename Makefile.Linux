@@ -1,0 +1,15 @@
+ 
+
+#get warnings, debugging information and optimization
+CFLAGS  = -Wall -pedantic -Wpointer-arith -Wwrite-strings
+# CFLAGS += -Werror
+#CFLAGS += -ggdb -O3 -funroll-loops
+CFLAGS += -O3 -funroll-loops
+# Note: if the optimizer crashes, we'll leave out the -O3 for those files
+
+#get warnings, debugging information and optimization
+CXXFLAGS  = -Wall -pedantic -Wpointer-arith -Wwrite-strings
+#CXXFLAGS += -ggdb -O3 -funroll-loops
+CXXFLAGS += -O3 -funroll-loops
+
+IECLIBDIR=lib

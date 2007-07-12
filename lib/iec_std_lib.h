@@ -12,21 +12,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-
-/* Macro that expand to subtypes */
-#define ANY(DO) ANY_DERIVED(DO) ANY_ELEMENTARY(DO)
-#define ANY_DERIVED(DO)
-#define ANY_ELEMENTARY(DO) ANY_MAGNITUDE(DO) ANY_BIT(DO) ANY_STRING(DO) ANY_DATE(DO)
-#define ANY_MAGNITUDE(DO) ANY_NUM(DO) DO(TIME)
-#define ANY_BIT(DO) ANY_NBIT(DO) DO(BOOL)
-#define ANY_NBIT(DO) DO(BYTE) DO(WORD) DO(DWORD) DO(LWORD)
-#define ANY_STRING(DO) DO(STRING) /*DO(WSTRING) TODO */
-#define ANY_DATE(DO) DO(DATE) DO(TOD) DO(DT)
-#define ANY_NUM(DO) ANY_REAL(DO) ANY_INT(DO)
-#define ANY_REAL(DO) DO(REAL) DO(LREAL)
-#define ANY_INT(DO) ANY_SINT(DO) ANY_UINT(DO)
-#define ANY_SINT(DO) DO(SINT) DO(INT) DO(DINT) DO(LINT)
-#define ANY_UINT(DO) DO(USINT) DO(UINT) DO(UDINT) DO(ULINT)
+#include "iec_std_lib_generated.h"
 
 /*****************/
 /*  Types defs   */
