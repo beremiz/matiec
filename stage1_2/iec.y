@@ -70,7 +70,7 @@ void yyerror (const char *error_msg);
  * Printing of debug info must then be activated by setting
  * the variable yydebug to 1.
  */
-#define YYDEBUG 1
+#define YYDEBUG 0
 
 
 /* file with declaration of absyntax classes... */

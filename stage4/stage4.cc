@@ -58,6 +58,12 @@ stage4out_c::stage4out_c(const char *radix, const char *extension, std::string i
   filename += ".";
   filename += extension;
   std::fstream *file = new std::fstream(filename.c_str(), std::fstream::out);
+  if(file->fail()){
+    std::cerr << "Cannot open " << filename << " for write access \n";
+    exit(EXIT_FAILURE);
+  }else{
+    std::cout << filename << "\n";
+  }
   out = file;
   m_file = file;
   this->indent_level = indent_level;

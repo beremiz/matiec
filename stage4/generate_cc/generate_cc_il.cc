@@ -402,23 +402,15 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
       this->default_variable_name.accept(*this);
       this->default_variable_name.current_type = backup;
 
-      if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
-          search_expression_type->is_time_type(this->current_operand_type)) {
-        s4o.print(" = __compare_timespec(");
-        s4o.print(operation);
-        s4o.print(", ");
-        this->default_variable_name.accept(*this);
-        s4o.print(", ");
-        o->accept(*this);
-        s4o.print(")");
-      }
-      else {
-        s4o.print(" = (");
-        this->default_variable_name.accept(*this);
-        s4o.print(operation);
-        o->accept(*this);
-        s4o.print(")");
-      }
+      s4o.print(" = ");
+      s4o.print(operation);
+      this->default_variable_name.current_type->accept(*this);
+      s4o.print("(2, ");
+      this->default_variable_name.accept(*this);
+      s4o.print(", ");
+      o->accept(*this);
+      s4o.print(")");
+
       /* the data type resulting from this operation... */
       this->default_variable_name.current_type = &(this->bool_type);
       return NULL;
@@ -1215,7 +1207,7 @@ void *visit(XORN_operator_c *symbol)	{
 void *visit(ADD_operator_c *symbol)	{
   if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
       search_expression_type->is_time_type(this->current_operand_type)) {
-    XXX_function("__add_timespec", &(this->default_variable_name), this->current_operand);
+    XXX_function("__time_add", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
@@ -1234,7 +1226,7 @@ void *visit(ADD_operator_c *symbol)	{
 void *visit(SUB_operator_c *symbol)	{
   if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
       search_expression_type->is_time_type(this->current_operand_type)) {
-    XXX_function("__sub_timespec", &(this->default_variable_name), this->current_operand);
+    XXX_function("__time_sub", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
@@ -1253,7 +1245,7 @@ void *visit(SUB_operator_c *symbol)	{
 void *visit(MUL_operator_c *symbol)	{
   if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
       search_expression_type->is_integer_type(this->current_operand_type)) {
-    XXX_function("__mul_timespec", &(this->default_variable_name), this->current_operand);
+    XXX_function("__time_mul", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
@@ -1292,27 +1284,27 @@ void *visit(MOD_operator_c *symbol)	{
 }
 
 void *visit(GT_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, " > ");
+  return CMP_operator(this->current_operand, "__gt_");
 }
 
 void *visit(GE_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, " >= ");
+  return CMP_operator(this->current_operand, "__ge_");
 }
 
 void *visit(EQ_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, " == ");
+  return CMP_operator(this->current_operand, "__eq_");
 }
 
 void *visit(LT_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, " < ");
+  return CMP_operator(this->current_operand, "__lt_");
 }
 
 void *visit(LE_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, " <= ");
+  return CMP_operator(this->current_operand, "__le_");
 }
 
 void *visit(NE_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, " != ");
+  return CMP_operator(this->current_operand, "__ne_");
 }
 
 

@@ -316,11 +316,11 @@ class search_var_instance_decl_c: public search_visitor_c {
       return NULL;
     }
 
-/*  AT direct_variable */
-//SYM_REF2(location_c, direct_variable, unused)
-    void *visit(location_c *symbol) {
-      if (compare_identifiers(symbol->direct_variable, search_name) == 0) {
-        current_vartype = located_vt;
+/*  [variable_name] location ':' located_var_spec_init */
+/* variable_name -> may be NULL ! */
+//SYM_REF4(located_var_decl_c, variable_name, location, located_var_spec_init, unused)
+    void *visit(located_var_decl_c *symbol) {
+      if (symbol->variable_name != NULL && compare_identifiers(symbol->variable_name, search_name) == 0) {
         return current_type_decl;
       }
       else

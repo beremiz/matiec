@@ -1146,18 +1146,18 @@ END_RESOURCE
       current_resource_name->accept(*this);
       s4o.print("\n");
        
-      /* (A.2) POUs inclusion */
-      s4o.print("#include \"POUS.c\"\n\n");
-      
-      /* (A.3) Global variables... */
+      /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
         vardecl = new generate_cc_vardecl_c(&s4o,
-                      generate_cc_vardecl_c::local_vf,
+                      generate_cc_vardecl_c::localstatic_vf,
                       generate_cc_vardecl_c::global_vt);
         vardecl->print(current_global_vars);
         delete vardecl;
       }
       s4o.print("\n");
+      
+      /* (A.3) POUs inclusion */
+      s4o.print("#include \"POUS.c\"\n\n");
       
       /* (A.4) Resource programs declaration... */
       wanted_declaretype = declare_dt;
@@ -1382,6 +1382,7 @@ class generate_cc_c: public iterator_visitor_c {
   protected:
     stage4out_c &s4o;
     stage4out_c pous_s4o;
+    stage4out_c located_variables_s4o;
     generate_cc_pous_c generate_cc_pous;
 
     symbol_c *current_configuration;
@@ -1394,6 +1395,7 @@ class generate_cc_c: public iterator_visitor_c {
     generate_cc_c(stage4out_c *s4o_ptr): 
             s4o(*s4o_ptr),
             pous_s4o("POUS", "c"),
+            located_variables_s4o("LOCATED_VARIABLES","h"),
             generate_cc_pous(&pous_s4o) {
       current_configuration = NULL;
     }
@@ -1404,7 +1406,7 @@ class generate_cc_c: public iterator_visitor_c {
 /* B 0 - Programming Model */
 /***************************/
     void *visit(library_c *symbol) {
-      generate_location_list_c generate_location_list(&s4o);
+      generate_location_list_c generate_location_list(&located_variables_s4o);
       symbol->accept(generate_location_list);
       
       for(int i = 0; i < symbol->n; i++) {
@@ -1468,16 +1470,18 @@ class generate_cc_c: public iterator_visitor_c {
       calculate_common_ticktime_c calculate_common_ticktime;
       symbol->accept(calculate_common_ticktime);
       common_ticktime = calculate_common_ticktime.get_ticktime();
-      s4o.print("common_ticktime : ");
-      s4o.print_integer((int)(common_ticktime / 1000000));
-      s4o.print("ms\n");
       
       symbol->configuration_name->accept(*this);
-    	stage4out_c config_s4o(current_name, "c");
-    	generate_cc_config_c generate_cc_config(&config_s4o);
-    	symbol->accept(generate_cc_config);
+      stage4out_c config_s4o(current_name, "c");
+      generate_cc_config_c generate_cc_config(&config_s4o);
+      symbol->accept(generate_cc_config);
+        
+      config_s4o.print("int common_ticktime__ = ");
+      config_s4o.print_integer((int)(common_ticktime / 1000000));
+      config_s4o.print("; /*ms*/\n");
+      
       symbol->resource_declarations->accept(*this);
-    	
+
       current_configuration = NULL;
       
       return NULL;

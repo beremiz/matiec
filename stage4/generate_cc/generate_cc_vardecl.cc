@@ -200,6 +200,7 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
      */
     typedef enum {finterface_vf,
                     local_vf,
+                    localstatic_vf,
 		    localinit_vf,
 		    init_vf,
 		    constructorinit_vf,
@@ -327,7 +328,7 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
             s4o.print(nv->get());
             this->current_var_type_symbol->accept(*this);
             s4o.print(FB_INIT_SUFFIX);
-            s4o.print("(");
+            s4o.print("(&");
             this->print_variable_prefix();
             list->elements[i]->accept(*this);
             s4o.print(");");
@@ -861,7 +862,7 @@ void *visit(external_declaration_c *symbol) {
       s4o.print(nv->get());
       s4o.print("{extern ");
       this->current_var_type_symbol->accept(*this);
-      s4o.print(" ");
+      s4o.print(" *");
       symbol->global_var_name->accept(*this);
       s4o.print("; ");
       print_variable_prefix();
@@ -962,6 +963,7 @@ void *visit(global_var_spec_c *symbol) {
   /* now to produce the c equivalent... */
   switch(wanted_varformat) {
     case local_vf:
+    case localstatic_vf:
       /* NOTE: located variables must be declared static, as the connection to the
        * MatPLC point must be initialised at program startup, and not whenever
        * a new function block is instantiated!
@@ -972,17 +974,19 @@ void *visit(global_var_spec_c *symbol) {
        */
       s4o.print(s4o.indent_spaces);
       if (symbol->global_var_name != NULL) {
-        s4o.print("{extern ");
+        s4o.print("extern ");
         this->current_var_type_symbol->accept(*this);
         s4o.print(" ");
         symbol->location->accept(*this);
-        s4o.print("; ");
+        s4o.print(";\n");
+        if (wanted_varformat == localstatic_vf)
+          s4o.print("static ");
         this->current_var_type_symbol->accept(*this);
         s4o.print(" *");
         symbol->global_var_name->accept(*this);
         s4o.print(" = &");
         symbol->location->accept(*this);
-        s4o.print(";}\n");
+        s4o.print(";\n");
       }
       break;
 

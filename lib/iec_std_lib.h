@@ -8,6 +8,7 @@
 #include <time.h>
 #include <sys/types.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
@@ -47,6 +48,7 @@ typedef struct timespec DT;
 typedef struct timespec TOD;
 
 #define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t2.tv_nsec - t1.tv_nsec : t1.tv_sec - t2.tv_sec) 
+extern TIME __CURRENT_TIME;
 
 #define STR_MAX_LEN 40
 typedef int8_t __strlen_t;
@@ -57,13 +59,34 @@ typedef struct {
 
 #define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
 
-
 /* TODO
 typedef struct {
     __strlen_t len;
     u_int16_t body[STR_MAX_LEN];
 } WSTRING;
 */
+
+#define __INIT_REAL 0
+#define __INIT_LREAL 0
+#define __INIT_SINT 0
+#define __INIT_INT 0
+#define __INIT_DINT 0
+#define __INIT_LINT 0
+#define __INIT_USINT 0
+#define __INIT_UINT 0
+#define __INIT_UDINT 0
+#define __INIT_ULINT 0
+#define __INIT_TIME (TIME){0,0}
+#define __INIT_BOOL 0
+#define __INIT_BYTE 0
+#define __INIT_WORD 0
+#define __INIT_DWORD 0
+#define __INIT_LWORD 0
+#define __INIT_STRING (STRING){0,""}
+//#define __INIT_WSTRING
+#define __INIT_DATE (DATE){0,0}
+#define __INIT_TOD (TOD){0,0}
+#define __INIT_DT (DT){0,0}
 
 typedef union __IL_DEFVAR_T {
     BOOL    BOOLvar;
@@ -100,7 +123,7 @@ typedef union __IL_DEFVAR_T {
 /*****************/
 
 /* function that generates an IEC runtime error */
-void IEC_error(void) {
+static inline void IEC_error(void) {
   /* TODO... */
   fprintf(stderr, "IEC 61131-3 runtime error.\n");
   /*exit(1);*/
@@ -193,25 +216,25 @@ static inline struct timespec __dt_to_timespec(double seconds,  double minutes, 
 /***************/
 /*   Time ops  */
 /***************/
-inline TIME __date_and_time_to_time_of_day(TIME IN){
+static inline TIME __date_and_time_to_time_of_day(TIME IN){
   return (TIME){IN.tv_sec % 86400, IN.tv_nsec};
 }
-inline TIME __date_and_time_to_date(TIME IN){
+static inline TIME __date_and_time_to_date(TIME IN){
   return (TIME){IN.tv_sec - (IN.tv_sec % (24*60*60)), 0};
 }
-inline TIME __time_add(TIME IN1, TIME IN2){
+static inline TIME __time_add(TIME IN1, TIME IN2){
   TIME res ={IN1.tv_sec + IN2.tv_sec,
              IN1.tv_nsec + IN2.tv_nsec };
   __normalize_timespec(&res);
   return res;
 }
-inline TIME __time_sub(TIME IN1, TIME IN2){
+static inline TIME __time_sub(TIME IN1, TIME IN2){
   TIME res ={IN1.tv_sec - IN2.tv_sec,
              IN1.tv_nsec - IN2.tv_nsec };
   __normalize_timespec(&res);
   return res;
 }
-inline TIME __time_mul(TIME IN1, LREAL IN2){
+static inline TIME __time_mul(TIME IN1, LREAL IN2){
   LREAL s_f = IN1.tv_sec * IN2;
   time_t s = s_f;
   div_t ns = div((LREAL)IN1.tv_nsec * IN2, 1000000000);
@@ -220,7 +243,7 @@ inline TIME __time_mul(TIME IN1, LREAL IN2){
   __normalize_timespec(&res);
   return res;
 }
-inline TIME __time_div(TIME IN1, LREAL IN2){
+static inline TIME __time_div(TIME IN1, LREAL IN2){
   LREAL s_f = IN1.tv_sec / IN2;
   time_t s = s_f;
   TIME res = {s,
@@ -232,36 +255,38 @@ inline TIME __time_div(TIME IN1, LREAL IN2){
 /***************/
 /* String ops  */
 /***************/
-inline UINT __len(STRING IN){
+static inline UINT __len(STRING IN){
     return IN.len;
 }
-inline STRING __left(STRING IN, SINT L){
-    STRING res = {0,};
-    memcpy(&res.body, &IN.body, L < res.len ? L : res.len);
-    return res;
-}
-inline STRING __right(STRING IN, SINT L){
-    STRING res = {0,};
+static inline STRING __left(STRING IN, SINT L){
+    STRING res = __INIT_STRING;
     L = L < IN.len ? L : IN.len;
-    memcpy(&res, &IN.body[IN.len - L], L);
+    memcpy(&res.body, &IN.body, L);
     res.len = L;
     return res;
 }
-inline STRING __mid(STRING IN, SINT L, SINT P){
-    STRING res = {0,};
+static inline STRING __right(STRING IN, SINT L){
+    STRING res = __INIT_STRING;
+    L = L < IN.len ? L : IN.len;
+    memcpy(&res.body, &IN.body[IN.len - L], L);
+    res.len = L;
+    return res;
+}
+static inline STRING __mid(STRING IN, SINT L, SINT P){
+    STRING res = __INIT_STRING;
     if(P <= IN.len){
 	    P -= 1; /* now can be used as [index]*/
 	    L = L + P <= IN.len ? L : IN.len - P;
-	    memcpy(&res, &IN.body[P] , L);
+	    memcpy(&res.body, &IN.body[P] , L);
         res.len = L;
     }
     return res;
 }
-inline STRING __concat(SINT param_count, ...){
+static inline STRING __concat(SINT param_count, ...){
   va_list ap;
   UINT i;
   __strlen_t charcount = 0;
-  STRING res = {0,};
+  STRING res = __INIT_STRING;
 
   va_start (ap, param_count);         /* Initialize the argument list.  */
 
@@ -279,11 +304,11 @@ inline STRING __concat(SINT param_count, ...){
   va_end (ap);                  /* Clean up.  */
   return res;
 }
-inline STRING __insert(STRING IN1, STRING IN2, SINT P){
-    STRING res = {0,};
+static inline STRING __insert(STRING IN1, STRING IN2, SINT P){
+    STRING res = __INIT_STRING;
     __strlen_t to_copy;
     
-    to_copy = P > IN1.len ? IN1.len : P;
+    to_copy = P > IN1.len ? IN1.len : P - 1;
     memcpy(&res.body, &IN1.body , to_copy);
     P = res.len = to_copy;
     
@@ -297,44 +322,54 @@ inline STRING __insert(STRING IN1, STRING IN2, SINT P){
 
     return res;
 }
-inline STRING __delete(STRING IN, SINT L_value, SINT P){
-    STRING res = {0,};
+static inline STRING __delete(STRING IN, SINT L, SINT P){
+    STRING res = __INIT_STRING;
     __strlen_t to_copy;
     
-    to_copy = P > IN.len ? IN.len : P;
+    to_copy = P > IN.len ? IN.len : P-1;
     memcpy(&res.body, &IN.body , to_copy);
     P = res.len = to_copy;
 
-    to_copy = IN.len - P;
-    memcpy(&res.body[res.len], &IN.body[P] , to_copy);
-    res.len += to_copy;
+    if( IN.len > P + L ){
+        to_copy = IN.len - P - L;
+        memcpy(&res.body[res.len], &IN.body[P + L], to_copy);
+        res.len += to_copy;
+    }
 
     return res;
 }
-inline STRING __replace(STRING IN1, STRING IN2, SINT L, SINT P){
-    STRING res = {0,};
+static inline STRING __replace(STRING IN1, STRING IN2, SINT L, SINT P){
+    STRING res = __INIT_STRING;
     __strlen_t to_copy;
     
-    to_copy = P > IN1.len ? IN1.len : P;
+    to_copy = P > IN1.len ? IN1.len : P-1;
     memcpy(&res.body, &IN1.body , to_copy);
     P = res.len = to_copy;
     
-    to_copy = IN2.len + res.len > STR_MAX_LEN ? STR_MAX_LEN - res.len : IN2.len;
+    to_copy = IN2.len < L ? IN2.len : L;
+
+    if( to_copy + res.len > STR_MAX_LEN ) 
+       to_copy = STR_MAX_LEN - res.len;   
+
     memcpy(&res.body[res.len], &IN2.body , to_copy);
     res.len += to_copy;
 
-    to_copy = res.len < IN1.len ? IN1.len - res.len : 0;
-    memcpy(&res.body[res.len], &IN1.body[res.len] , to_copy);
-    res.len += to_copy;
+    P += L;
+    if( res.len <  STR_MAX_LEN && P < IN1.len)
+    {
+        to_copy = IN1.len - P;
+        memcpy(&res.body[res.len], &IN1.body[P] , to_copy);
+        res.len += to_copy;
+    }
 
     return res;
 }
 
 
 
-inline UINT __pfind(STRING* IN1, STRING* IN2){
-    UINT count1 = 0;
-    UINT count2 = 0;
+static inline UINT __pfind(STRING* IN1, STRING* IN2){
+    UINT count1 = 0; /* offset of first matching char in IN1 */
+    UINT count2 = 0; /* count of matching char */
     while(count1 + count2 < IN1->len && count2 < IN2->len)
     {
         if(IN1->body[count1 + count2] != IN2->body[count2++]){
@@ -342,9 +377,9 @@ inline UINT __pfind(STRING* IN1, STRING* IN2){
             count2 = 0;
         }        
     }
-    return count2 == IN2->len ? 0 : count1;
+    return count2 == IN2->len -1 ? 0 : count1 + 1;
 }
-inline UINT __find(STRING IN1, STRING IN2){
+static inline UINT __find(STRING IN1, STRING IN2){
     return __pfind(&IN1, &IN2);
 }
 
@@ -354,32 +389,32 @@ inline UINT __find(STRING IN1, STRING IN2){
     /***************/
     /*  TO_STRING  */
     /***************/
-inline STRING __bool_to_string(BOOL IN)
+static inline STRING __bool_to_string(BOOL IN)
 {
     if(IN)
         return (STRING){4, "TRUE"};
     return (STRING){5,"FALSE"};
 }
-inline STRING __bit_to_string(LWORD IN){
-    STRING res = {0,};
+static inline STRING __bit_to_string(LWORD IN){
+    STRING res = __INIT_STRING;
     res.len = snprintf(res.body, STR_MAX_LEN, "16#%llx", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-inline STRING __real_to_string(LREAL IN){
-    STRING res = {0,};
+static inline STRING __real_to_string(LREAL IN){
+    STRING res = __INIT_STRING;
     res.len = snprintf(res.body, STR_MAX_LEN, "%g", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-inline STRING __sint_to_string(LINT IN){
-    STRING res = {0,};
+static inline STRING __sint_to_string(LINT IN){
+    STRING res = __INIT_STRING;
     res.len = snprintf(res.body, STR_MAX_LEN, "%lld", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-inline STRING __uint_to_string(ULINT IN){
-    STRING res = {0,};
+static inline STRING __uint_to_string(ULINT IN){
+    STRING res = __INIT_STRING;
     res.len = snprintf(res.body, STR_MAX_LEN, "16#%llu", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
@@ -387,11 +422,11 @@ inline STRING __uint_to_string(ULINT IN){
     /***************/
     /* FROM_STRING */
     /***************/
-inline BOOL __string_to_bool(STRING IN){
+static inline BOOL __string_to_bool(STRING IN){
     return IN.len == 5 ? !memcmp(&IN.body,"TRUE", IN.len) : 0;
 }
 
-inline LINT __pstring_to_sint(STRING* IN){
+static inline LINT __pstring_to_sint(STRING* IN){
     LINT res = 0;
     char tmp[STR_MAX_LEN];
     char tmp2[STR_MAX_LEN];
@@ -444,22 +479,26 @@ inline LINT __pstring_to_sint(STRING* IN){
                 res += ( c - '0') * fac;
                 fac *= 10;
                 shift += 1;
-            }
+            }else if( c >= '.' ){ /* reset value */
+                res = 0;
+                fac = 1;
+                shift = 0;
+            }            
         }
     }
     return res;
 }
 
-inline LINT __string_to_sint(STRING IN){
+static inline LINT __string_to_sint(STRING IN){
     return (LWORD)__pstring_to_sint(&IN);
 }
-inline LWORD __string_to_bit(STRING IN){
+static inline LWORD __string_to_bit(STRING IN){
     return (LWORD)__pstring_to_sint(&IN);
 }
-inline ULINT __string_to_uint(STRING IN){
+static inline ULINT __string_to_uint(STRING IN){
     return (ULINT)__pstring_to_sint(&IN);
 }
-inline LREAL __string_to_real(STRING IN){
+static inline LREAL __string_to_real(STRING IN){
     /* search the dot */
     __strlen_t l = IN.len;
     while(--l > 0 && IN.body[l] != '.');
@@ -473,14 +512,14 @@ inline LREAL __string_to_real(STRING IN){
     /***************/
     /*   TO_TIME   */
     /***************/
-inline TIME __int_to_time(LINT IN){
+static inline TIME __int_to_time(LINT IN){
     return (TIME){IN, 0};
 }
 
-inline TIME __real_to_time(LREAL IN){
+static inline TIME __real_to_time(LREAL IN){
     return (TIME){IN, (IN - (LINT)IN) * 1000000000};
 }
-inline TIME __string_to_time(STRING IN){
+static inline TIME __string_to_time(STRING IN){
     /* TODO :
      *
      *  Duration literals without underlines: T#14ms    T#-14ms   T#14.7s   T#14.7m
@@ -516,15 +555,15 @@ inline TIME __string_to_time(STRING IN){
     /***************/
     /*  FROM_TIME  */
     /***************/
-inline LREAL __time_to_real(TIME IN){
+static inline LREAL __time_to_real(TIME IN){
     return (LREAL)IN.tv_sec + ((LREAL)IN.tv_nsec/1000000000);
 }
-inline LINT __time_to_int(TIME IN){
+static inline LINT __time_to_int(TIME IN){
     return IN.tv_sec;
 }
-inline STRING __time_to_string(TIME IN){
+static inline STRING __time_to_string(TIME IN){
     /*t#5d14h12m18s3.5ms*/
-    STRING res = {0,};
+    STRING res = __INIT_STRING;
     div_t days = div(IN.tv_sec ,86400);
     if(!days.rem && IN.tv_nsec == 0){
         res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd", days.quot);
@@ -548,9 +587,9 @@ inline STRING __time_to_string(TIME IN){
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-inline STRING __date_to_string(DATE IN){
+static inline STRING __date_to_string(DATE IN){
     /* D#1984-06-25 */
-    STRING res = {0,};
+    STRING res = __INIT_STRING;
     struct tm broken_down_time;
     time_t seconds = IN.tv_sec;
     if (NULL == gmtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
@@ -561,9 +600,9 @@ inline STRING __date_to_string(DATE IN){
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-inline STRING __tod_to_string(TOD IN){
+static inline STRING __tod_to_string(TOD IN){
     /* TOD#15:36:55.36 */
-    STRING res = {0,};
+    STRING res = __INIT_STRING;
     struct tm broken_down_time;
     time_t seconds = IN.tv_sec;
     if (NULL == gmtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
@@ -578,7 +617,7 @@ inline STRING __tod_to_string(TOD IN){
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-inline STRING __dt_to_string(DT IN){
+static inline STRING __dt_to_string(DT IN){
     /* DT#1984-06-25-15:36:55.36 */
     STRING res;
     struct tm broken_down_time;
@@ -608,7 +647,7 @@ inline STRING __dt_to_string(DT IN){
     return res;
 }
     /* BCD */
-inline ULINT __bcd_to_uint(LWORD IN){
+static inline ULINT __bcd_to_uint(LWORD IN){
     return IN & 0xf +
            ((IN >>= 4) & 0xf) * 10 + 
            ((IN >>= 4) & 0xf) * 100 + 
@@ -626,7 +665,7 @@ inline ULINT __bcd_to_uint(LWORD IN){
            ((IN >>= 4) & 0xf) * 100000000000000 + 
            ((IN >>= 4) & 0xf) * 1000000000000000;
 }
-inline LWORD __uint_to_bcd(ULINT IN){
+static inline LWORD __uint_to_bcd(ULINT IN){
     return (IN - (IN /= 10))|
            (IN - (IN /= 10)) << 4 |
            (IN - (IN /= 10)) << 8 |
@@ -649,7 +688,7 @@ inline LWORD __uint_to_bcd(ULINT IN){
 /* Binary ops */
 /**************/
 #define __ror_(TYPENAME)\
-inline TYPENAME __ror_##TYPENAME( TYPENAME IN, USINT N){\
+static inline TYPENAME __ror_##TYPENAME( TYPENAME IN, USINT N){\
  N %= 8*sizeof(TYPENAME);\
  return (IN >> N) | (IN << 8*sizeof(TYPENAME)-N);\
 }
@@ -657,7 +696,7 @@ inline TYPENAME __ror_##TYPENAME( TYPENAME IN, USINT N){\
 ANY_NBIT(__ror_)
 
 #define __rol_(TYPENAME)\
-inline TYPENAME __rol_##TYPENAME( TYPENAME IN, USINT N){\
+static inline TYPENAME __rol_##TYPENAME( TYPENAME IN, USINT N){\
  N %= 8*sizeof(TYPENAME);\
  return (IN << N) | (IN >> 8*sizeof(TYPENAME)-N);\
 }
@@ -672,7 +711,7 @@ ANY_NBIT(__rol_)
 	/**************/
 
 #define __limit_(TYPENAME)\
-inline TYPENAME __limit_##TYPENAME( TYPENAME MN, TYPENAME IN, TYPENAME MX){\
+static inline TYPENAME __limit_##TYPENAME( TYPENAME MN, TYPENAME IN, TYPENAME MX){\
  return IN > MN ? IN < MX ? IN : MX : MN;\
 }
 
@@ -681,7 +720,7 @@ ANY_NBIT(__limit_)
 ANY_NUM(__limit_)
 
 #define __limit_time(TYPENAME)\
-inline TIME __limit_##TYPENAME( TYPENAME MN, TYPENAME IN, TYPENAME MX){\
+static inline TIME __limit_##TYPENAME( TYPENAME MN, TYPENAME IN, TYPENAME MX){\
     return __TIME_CMP(IN, MN) > 0 ? /* IN>MN ?*/\
            __TIME_CMP(IN, MX) < 0 ? /* IN<MX ?*/\
            IN : MX : MN;\
@@ -691,7 +730,7 @@ inline TIME __limit_##TYPENAME( TYPENAME MN, TYPENAME IN, TYPENAME MX){\
 ANY_DATE(__limit_time)
 __limit_time(TIME)
 
-inline STRING __limit_STRING( STRING MN, STRING IN, STRING MX){
+static inline STRING __limit_STRING( STRING MN, STRING IN, STRING MX){
     return __STR_CMP(IN, MN) > 0 ? __STR_CMP(IN, MX) < 0 ? IN : MX : MN;
 }
 
@@ -723,7 +762,7 @@ inline STRING __limit_STRING( STRING MN, STRING IN, STRING MX){
 #define VA_ARGS_DT DT
 
 #define __extrem_(fname,TYPENAME, COND) \
-inline TYPENAME fname##TYPENAME( UINT param_count, TYPENAME op1, ...){\
+static inline TYPENAME fname##TYPENAME( UINT param_count, TYPENAME op1, ...){\
   va_list ap;\
   UINT i;\
   \
@@ -768,15 +807,16 @@ __min_time(TIME)
     /*     MUX    */
     /**************/
 #define __mux_(TYPENAME) \
-inline TYPENAME __mux_##TYPENAME( UINT param_count, UINT K, TYPENAME op1, ...){\
+static inline TYPENAME __mux_##TYPENAME( UINT param_count, UINT K, ...){\
   va_list ap;\
   UINT i;\
+  TYPENAME tmp = __INIT_##TYPENAME;\
   \
-  va_start (ap, op1);         /* Initialize the argument list.  */\
+  va_start (ap, K);         /* Initialize the argument list.  */\
   \
   for (i = 0; i < param_count; i++){\
     if(K == i){\
-        TYPENAME tmp = va_arg (ap, VA_ARGS_##TYPENAME);\
+        tmp = va_arg (ap, VA_ARGS_##TYPENAME);\
         va_end (ap);                  /* Clean up.  */\
         return tmp;\
     }else{\
@@ -785,7 +825,7 @@ inline TYPENAME __mux_##TYPENAME( UINT param_count, UINT K, TYPENAME op1, ...){\
   }\
   \
   va_end (ap);                  /* Clean up.  */\
-  return op1;\
+  return tmp;\
 }
 
 ANY(__mux_)
@@ -795,7 +835,7 @@ ANY(__mux_)
 /**************/
 
 #define __compare_(fname,TYPENAME, COND) \
-inline BOOL fname##TYPENAME( UINT param_count, TYPENAME op1, ...){\
+static inline BOOL fname##TYPENAME( UINT param_count, TYPENAME op1, ...){\
   va_list ap;\
   UINT i;\
   \

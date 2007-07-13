@@ -16703,7 +16703,7 @@ switch(current_function_type){
                         s4o.print_integer(nb_param);
                         s4o.print(",");
                         IN1_param_value->accept(*this);
-                        s4o.print(",&");
+                        s4o.print(",");
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -16724,7 +16724,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",&");
+                                s4o.print(",");
                                 param_value->accept(*this);
                                 
                             }

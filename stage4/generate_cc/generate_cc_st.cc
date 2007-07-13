@@ -202,7 +202,7 @@ void *visit(equ_expression_c *symbol) {
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_time_type(left_type))
-    return print_compare_function("__compare_timespec", "==", symbol->l_exp, symbol->r_exp);
+    return print_compare_function("__eq_", left_type, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " == ");
 }
 
@@ -212,7 +212,7 @@ void *visit(notequ_expression_c *symbol) {
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_time_type(left_type))
-    return print_compare_function("__compare_timespec", "!=", symbol->l_exp, symbol->r_exp);
+    return print_compare_function("__ne_", left_type, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " != ");
 }
 
@@ -222,7 +222,7 @@ void *visit(lt_expression_c *symbol) {
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_time_type(left_type))
-    return print_compare_function("__compare_timespec", "<", symbol->l_exp, symbol->r_exp);
+    return print_compare_function("__lt_", left_type, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");
 }
 
@@ -232,7 +232,7 @@ void *visit(gt_expression_c *symbol) {
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_time_type(left_type))
-    return print_compare_function("__compare_timespec", ">", symbol->l_exp, symbol->r_exp);
+    return print_compare_function("__gt_", left_type, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");
 }
 
@@ -242,7 +242,7 @@ void *visit(le_expression_c *symbol) {
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_time_type(left_type))
-    return print_compare_function("__compare_timespec", "<=", symbol->l_exp, symbol->r_exp);
+    return print_compare_function("__le_", left_type, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");
 }
 
@@ -252,7 +252,7 @@ void *visit(ge_expression_c *symbol) {
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_time_type(left_type))
-    return print_compare_function("__compare_timespec", ">=", symbol->l_exp, symbol->r_exp);
+    return print_compare_function("__ge_", left_type, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");
 }
 
@@ -262,7 +262,7 @@ void *visit(add_expression_c *symbol) {
 	if ((typeid(*left_type) == typeid(time_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
       (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
       (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)))
-    return print_binary_function("__add_timespec", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_add", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -280,7 +280,7 @@ void *visit(sub_expression_c *symbol) {
       (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(tod_type_name_c)) ||
       (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
       (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(dt_type_name_c)))
-    return print_binary_function("__sub_timespec", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_sub", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -294,7 +294,7 @@ void *visit(mul_expression_c *symbol) {
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
   if ((typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_integer_type(right_type)) ||
       (typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_real_type(right_type)))
-    return print_binary_function("__mul_timespec", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_mul", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -386,7 +386,7 @@ void *visit(function_invocation_c *symbol) {
         case function_add:
           if (search_expression_type->is_time_type(function_return_type)) {
             if (current_param == 0) {
-              s4o.print("__add_timespec(");
+              s4o.print("__time_add(");
               param_value->accept(*this);
             }
             else if (current_param == 1) {
@@ -409,7 +409,7 @@ void *visit(function_invocation_c *symbol) {
         case function_sub:
           if (search_expression_type->is_time_type(function_return_type)) {
             if (current_param == 0) {
-              s4o.print("__sub_timespec(");
+              s4o.print("__time_sub(");
               param_value->accept(*this);
             }
             else if (current_param == 1) {
@@ -595,7 +595,7 @@ void *visit(fb_invocation_c *symbol) {
   /* now call the function... */
   function_block_type_name->accept(*this);
   s4o.print(FB_FUNCTION_SUFFIX);
-  s4o.print("(");
+  s4o.print("(&");
   print_variable_prefix();
   symbol->fb_name->accept(*this);
   s4o.print(")");

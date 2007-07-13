@@ -194,13 +194,12 @@ class generate_cc_base_c: public iterator_visitor_c {
    	}
 
     void *print_compare_function(const char *function,
-          const char *compare_sign,
+          symbol_c *compare_type,
           symbol_c *l_exp,
           symbol_c *r_exp) {
       s4o.print(function);
-      s4o.print("(");
-      s4o.print(compare_sign);
-      s4o.print(", ");
+      compare_type->accept(*this);
+      s4o.print("(2, ");
       l_exp->accept(*this);
       s4o.print(", ");
       r_exp->accept(*this);
