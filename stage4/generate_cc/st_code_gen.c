@@ -23,7 +23,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -59,7 +59,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -95,7 +95,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -131,7 +131,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -167,7 +167,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -203,7 +203,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -239,7 +239,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -275,7 +275,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -311,7 +311,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -347,7 +347,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -383,7 +383,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -420,7 +420,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -457,7 +457,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -494,7 +494,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -531,7 +531,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -568,7 +568,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -604,7 +604,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -640,7 +640,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -676,7 +676,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -712,7 +712,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -748,7 +748,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -784,7 +784,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -820,7 +820,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -856,7 +856,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -892,7 +892,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -928,7 +928,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -964,7 +964,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -1000,7 +1000,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -1036,7 +1036,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -1072,7 +1072,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -1109,7 +1109,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -1146,7 +1146,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -1183,7 +1183,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -1220,7 +1220,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -1257,7 +1257,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -1293,7 +1293,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -1329,7 +1329,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -1365,7 +1365,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(sint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -1401,7 +1401,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -1437,7 +1437,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -1473,7 +1473,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -1509,7 +1509,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -1545,7 +1545,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -1581,7 +1581,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -1617,7 +1617,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -1653,7 +1653,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -1689,7 +1689,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -1725,7 +1725,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -1761,7 +1761,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -1798,7 +1798,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -1835,7 +1835,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -1872,7 +1872,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -1909,7 +1909,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -1946,7 +1946,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -1982,7 +1982,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -2018,7 +2018,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -2054,7 +2054,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(int_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -2090,7 +2090,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -2126,7 +2126,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -2162,7 +2162,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -2198,7 +2198,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -2234,7 +2234,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -2270,7 +2270,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -2306,7 +2306,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -2342,7 +2342,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -2378,7 +2378,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -2414,7 +2414,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -2450,7 +2450,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -2487,7 +2487,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -2524,7 +2524,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -2561,7 +2561,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -2598,7 +2598,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -2635,7 +2635,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -2671,7 +2671,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -2707,7 +2707,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -2743,7 +2743,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -2779,7 +2779,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -2815,7 +2815,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -2851,7 +2851,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -2887,7 +2887,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -2923,7 +2923,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -2959,7 +2959,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -2995,7 +2995,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -3031,7 +3031,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -3067,7 +3067,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -3103,7 +3103,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -3139,7 +3139,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -3176,7 +3176,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -3213,7 +3213,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -3250,7 +3250,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -3287,7 +3287,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -3324,7 +3324,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -3360,7 +3360,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -3396,7 +3396,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -3432,7 +3432,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -3468,7 +3468,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -3504,7 +3504,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -3540,7 +3540,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -3576,7 +3576,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -3612,7 +3612,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -3648,7 +3648,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -3684,7 +3684,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -3720,7 +3720,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -3756,7 +3756,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -3792,7 +3792,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -3828,7 +3828,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -3865,7 +3865,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -3902,7 +3902,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -3939,7 +3939,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -3976,7 +3976,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -4013,7 +4013,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -4049,7 +4049,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -4085,7 +4085,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -4121,7 +4121,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -4157,7 +4157,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -4193,7 +4193,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -4229,7 +4229,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -4265,7 +4265,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -4301,7 +4301,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -4337,7 +4337,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -4373,7 +4373,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -4409,7 +4409,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -4445,7 +4445,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -4481,7 +4481,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -4517,7 +4517,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -4554,7 +4554,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -4591,7 +4591,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -4628,7 +4628,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -4665,7 +4665,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -4702,7 +4702,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -4738,7 +4738,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -4774,7 +4774,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -4810,7 +4810,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -4846,7 +4846,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -4882,7 +4882,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -4918,7 +4918,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -4954,7 +4954,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -4990,7 +4990,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -5026,7 +5026,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -5062,7 +5062,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -5098,7 +5098,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -5134,7 +5134,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -5170,7 +5170,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -5206,7 +5206,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -5243,7 +5243,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -5280,7 +5280,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -5317,7 +5317,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -5354,7 +5354,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -5391,7 +5391,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -5427,7 +5427,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -5463,7 +5463,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -5499,7 +5499,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -5535,7 +5535,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -5571,7 +5571,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -5607,7 +5607,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -5643,7 +5643,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -5679,7 +5679,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -5715,7 +5715,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -5751,7 +5751,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -5787,7 +5787,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -5823,7 +5823,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -5859,7 +5859,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -5895,7 +5895,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -5932,7 +5932,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -5969,7 +5969,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -6006,7 +6006,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -6043,7 +6043,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -6080,7 +6080,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -6116,7 +6116,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -6152,7 +6152,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -6188,7 +6188,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -6224,7 +6224,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -6260,7 +6260,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -6296,7 +6296,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -6332,7 +6332,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -6368,7 +6368,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -6404,7 +6404,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -6440,7 +6440,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -6476,7 +6476,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -6512,7 +6512,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -6548,7 +6548,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -6584,7 +6584,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -6621,7 +6621,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -6658,7 +6658,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -6695,7 +6695,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -6732,7 +6732,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -6769,7 +6769,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -6805,7 +6805,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -6841,7 +6841,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -6877,7 +6877,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(real_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -6913,7 +6913,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -6949,7 +6949,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -6985,7 +6985,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -7021,7 +7021,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -7057,7 +7057,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -7093,7 +7093,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -7129,7 +7129,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -7165,7 +7165,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -7201,7 +7201,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -7237,7 +7237,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -7273,7 +7273,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -7310,7 +7310,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -7347,7 +7347,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -7384,7 +7384,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -7421,7 +7421,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -7458,7 +7458,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -7494,7 +7494,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -7530,7 +7530,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -7566,7 +7566,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lreal_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -7582,43 +7582,6 @@ switch(current_function_type){
         }
         
     }/*function_lreal_to_lword*/
-    break;
-
-/****
- *TIME_TO_BOOL
- */
-    case function_time_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_bool*/
     break;
 
 /****
@@ -7639,7 +7602,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -7676,7 +7639,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -7713,7 +7676,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -7750,7 +7713,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -7787,7 +7750,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -7824,7 +7787,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -7861,7 +7824,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -7898,7 +7861,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -7935,7 +7898,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -7972,7 +7935,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -8009,7 +7972,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -8046,7 +8009,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -8083,7 +8046,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -8120,7 +8083,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -8157,7 +8120,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -8174,43 +8137,6 @@ switch(current_function_type){
         }
         
     }/*function_time_to_lword*/
-    break;
-
-/****
- *DATE_TO_BOOL
- */
-    case function_date_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_bool*/
     break;
 
 /****
@@ -8231,7 +8157,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -8268,7 +8194,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -8305,7 +8231,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -8342,7 +8268,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -8379,7 +8305,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -8416,7 +8342,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -8453,7 +8379,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -8490,7 +8416,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -8527,7 +8453,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -8564,7 +8490,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -8601,7 +8527,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -8638,7 +8564,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -8675,7 +8601,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -8712,7 +8638,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -8749,7 +8675,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -8766,43 +8692,6 @@ switch(current_function_type){
         }
         
     }/*function_date_to_lword*/
-    break;
-
-/****
- *TOD_TO_BOOL
- */
-    case function_tod_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_bool*/
     break;
 
 /****
@@ -8823,7 +8712,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -8860,7 +8749,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -8897,7 +8786,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -8934,7 +8823,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -8971,7 +8860,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -9008,7 +8897,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -9045,7 +8934,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -9082,7 +8971,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -9119,7 +9008,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -9156,7 +9045,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -9193,7 +9082,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -9230,7 +9119,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -9267,7 +9156,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -9304,7 +9193,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -9341,7 +9230,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -9358,43 +9247,6 @@ switch(current_function_type){
         }
         
     }/*function_tod_to_lword*/
-    break;
-
-/****
- *DT_TO_BOOL
- */
-    case function_dt_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            identifier_c param_name("IN");
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
-            symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
-            last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_bool*/
     break;
 
 /****
@@ -9415,7 +9267,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -9452,7 +9304,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -9489,7 +9341,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -9526,7 +9378,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -9563,7 +9415,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -9600,7 +9452,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -9637,7 +9489,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -9674,7 +9526,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -9711,7 +9563,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -9748,7 +9600,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -9785,7 +9637,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -9822,7 +9674,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -9859,7 +9711,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -9896,7 +9748,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -9933,7 +9785,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -9970,7 +9822,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -10007,7 +9859,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -10044,7 +9896,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -10081,7 +9933,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -10118,7 +9970,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -10155,7 +10007,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -10192,7 +10044,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -10229,7 +10081,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -10266,7 +10118,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -10303,7 +10155,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -10340,7 +10192,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -10377,7 +10229,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -10414,7 +10266,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -10451,7 +10303,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -10488,7 +10340,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -10525,7 +10377,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -10562,7 +10414,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -10599,7 +10451,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -10636,7 +10488,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -10673,7 +10525,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -10709,7 +10561,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -10745,7 +10597,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -10781,7 +10633,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -10817,7 +10669,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -10853,7 +10705,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -10889,7 +10741,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -10925,7 +10777,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -10961,7 +10813,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -10997,7 +10849,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -11033,7 +10885,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -11069,7 +10921,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -11106,7 +10958,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -11143,7 +10995,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -11180,7 +11032,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -11217,7 +11069,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -11254,7 +11106,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -11290,7 +11142,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -11326,7 +11178,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -11362,7 +11214,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -11398,7 +11250,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -11434,7 +11286,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -11470,7 +11322,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -11506,7 +11358,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -11542,7 +11394,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -11578,7 +11430,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -11614,7 +11466,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -11650,7 +11502,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -11686,7 +11538,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -11722,7 +11574,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -11758,7 +11610,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -11795,7 +11647,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -11832,7 +11684,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -11869,7 +11721,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -11906,7 +11758,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -11943,7 +11795,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -11979,7 +11831,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -12015,7 +11867,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -12051,7 +11903,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -12087,7 +11939,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -12123,7 +11975,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -12159,7 +12011,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -12195,7 +12047,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -12231,7 +12083,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -12267,7 +12119,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -12303,7 +12155,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -12339,7 +12191,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -12375,7 +12227,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -12411,7 +12263,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -12447,7 +12299,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -12484,7 +12336,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -12521,7 +12373,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -12558,7 +12410,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -12595,7 +12447,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -12632,7 +12484,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -12668,7 +12520,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -12704,7 +12556,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
@@ -12740,7 +12592,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
@@ -12776,7 +12628,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
@@ -12812,7 +12664,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -12848,7 +12700,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
@@ -12884,7 +12736,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -12920,7 +12772,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -12956,7 +12808,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -12992,7 +12844,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -13028,7 +12880,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -13064,7 +12916,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
@@ -13100,7 +12952,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
@@ -13136,7 +12988,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -13173,7 +13025,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -13210,7 +13062,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -13247,7 +13099,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -13284,7 +13136,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
@@ -13321,7 +13173,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
@@ -13357,7 +13209,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
@@ -13393,7 +13245,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
@@ -13463,7 +13315,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(byte_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
@@ -13500,7 +13352,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(word_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
@@ -13537,7 +13389,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
@@ -13574,7 +13426,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(lword_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
@@ -13611,7 +13463,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(usint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
@@ -13648,7 +13500,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(uint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
@@ -13685,7 +13537,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(udint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
@@ -13722,7 +13574,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(ulint_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
@@ -13759,7 +13611,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -13794,7 +13646,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
@@ -14234,9 +14086,10 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.print("(");
+                        s4o.indent_right();
+                        s4o.print("(\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print("+");
+                        s4o.print("+\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -14257,13 +14110,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print("+");
+                                s4o.print("+\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -14274,7 +14128,7 @@ switch(current_function_type){
                 
             }
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 {
@@ -14288,7 +14142,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -14306,7 +14160,7 @@ switch(current_function_type){
                 
             }
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 {
@@ -14320,7 +14174,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -14338,7 +14192,7 @@ switch(current_function_type){
                 
             }
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 {
@@ -14352,7 +14206,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -14412,9 +14266,10 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.print("(");
+                        s4o.indent_right();
+                        s4o.print("(\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print("*");
+                        s4o.print("*\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -14435,13 +14290,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print("*");
+                                s4o.print("*\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -14452,7 +14308,7 @@ switch(current_function_type){
                 
             }
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 {
@@ -14526,11 +14382,13 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.print("(");
+                        s4o.indent_right();
+                        s4o.print("(\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print("-");
+                        s4o.print("-\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                     }
@@ -14540,7 +14398,7 @@ switch(current_function_type){
                 
             }
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 {
@@ -14554,7 +14412,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -14572,7 +14430,7 @@ switch(current_function_type){
                 
             }
             
-            if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
                 {
@@ -14586,7 +14444,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(dt_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -14599,7 +14457,7 @@ switch(current_function_type){
                         
                     }
                     
-                    if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -14617,7 +14475,7 @@ switch(current_function_type){
                 
             }
             
-            if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
             {
         
                 {
@@ -14631,7 +14489,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -14644,7 +14502,7 @@ switch(current_function_type){
                         
                     }
                     
-                    if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
@@ -14662,7 +14520,7 @@ switch(current_function_type){
                 
             }
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 {
@@ -14676,7 +14534,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
@@ -14736,11 +14594,13 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.print("(");
+                        s4o.indent_right();
+                        s4o.print("(\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print("/");
+                        s4o.print("/\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                     }
@@ -14750,7 +14610,7 @@ switch(current_function_type){
                 
             }
             
-            if (typeid(*last_type_symbol) == typeid(time_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
             {
         
                 {
@@ -14824,11 +14684,13 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.print("(");
+                        s4o.indent_right();
+                        s4o.print("(\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print("%");
+                        s4o.print("%\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                     }
@@ -15193,11 +15055,12 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
+                        s4o.indent_right();
                         s4o.print("(");
                         if (search_expression_type->is_bool_type(last_type_symbol))
-                          s4o.print("(");
+                          s4o.print("(\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print("&");
+                        s4o.print("&\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -15218,7 +15081,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print("&");
+                                s4o.print("&\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
@@ -15230,6 +15093,7 @@ switch(current_function_type){
                           s4o.print(")");
                         }
                         s4o.print("");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -15282,11 +15146,12 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
+                        s4o.indent_right();
                         s4o.print("(");
                         if (search_expression_type->is_bool_type(last_type_symbol))
-                          s4o.print("(");
+                          s4o.print("(\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print("|");
+                        s4o.print("|\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -15307,7 +15172,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print("|");
+                                s4o.print("|\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
@@ -15319,6 +15184,7 @@ switch(current_function_type){
                           s4o.print(")");
                         }
                         s4o.print("");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -15371,11 +15237,12 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
+                        s4o.indent_right();
                         s4o.print("(");
                         if (search_expression_type->is_bool_type(last_type_symbol))
-                          s4o.print("(");
+                          s4o.print("(\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print("^");
+                        s4o.print("^\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -15396,7 +15263,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print("^");
+                                s4o.print("^\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
@@ -15408,6 +15275,7 @@ switch(current_function_type){
                           s4o.print(")");
                         }
                         s4o.print("");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -15476,7 +15344,7 @@ switch(current_function_type){
             symbol_c *G_type_symbol = search_expression_type->get_type(G_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(G_type_symbol, last_type_symbol) ? search_expression_type->common_type(G_type_symbol, last_type_symbol) : G_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(bool_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
                 {
@@ -15569,13 +15437,14 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
+                        s4o.indent_right();
                         s4o.print("__max_");
                         return_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -15596,13 +15465,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -15655,13 +15525,14 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = last_type_symbol;
+                        s4o.indent_right();
                         s4o.print("__min_");
                         return_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -15682,13 +15553,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -15834,15 +15706,16 @@ switch(current_function_type){
                             {
                         
                                 symbol_c * return_type_symbol = last_type_symbol;
+                                s4o.indent_right();
                                 s4o.print("__mux_");
                                 return_type_symbol->accept(*this);
                                 s4o.print("(");
                                 s4o.print_integer(nb_param);
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 K_param_value->accept(*this);
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 IN0_param_value->accept(*this);
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 IN1_param_value->accept(*this);
                                 
                                 int base_num = 2;
@@ -15863,13 +15736,14 @@ switch(current_function_type){
                                         last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                                     
                                         /*Function specific CODE */
-                                        s4o.print(",");
+                                        s4o.print(",\n" + s4o.indent_spaces);
                                         param_value->accept(*this);
                                         
                                     }
                                     
                                 }while(param_value != NULL);
                                 s4o.print(")");
+                                s4o.indent_left();
                                 return NULL;
                                 
                                 
@@ -15927,13 +15801,14 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        s4o.indent_right();
                         s4o.print("__gt_");
                         return_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -15954,13 +15829,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -16013,13 +15889,14 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        s4o.indent_right();
                         s4o.print("__ge_");
                         return_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -16040,13 +15917,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -16099,13 +15977,14 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        s4o.indent_right();
                         s4o.print("__eq_");
                         return_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -16126,13 +16005,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -16185,13 +16065,14 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        s4o.indent_right();
                         s4o.print("__lt_");
                         return_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -16212,13 +16093,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -16271,13 +16153,14 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        s4o.indent_right();
                         s4o.print("__le_");
                         return_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -16298,13 +16181,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -16357,13 +16241,14 @@ switch(current_function_type){
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        s4o.indent_right();
                         s4o.print("__ne_");
                         return_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -16384,13 +16269,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -16425,7 +16311,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
@@ -16460,7 +16346,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 {
@@ -16516,7 +16402,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 {
@@ -16572,7 +16458,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 {
@@ -16649,7 +16535,7 @@ switch(current_function_type){
             symbol_c *IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(date_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
                 {
@@ -16663,7 +16549,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(tod_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
@@ -16681,7 +16567,7 @@ switch(current_function_type){
                 
             }
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 {
@@ -16695,15 +16581,16 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                        s4o.indent_right();
                         s4o.print("__concat(");
                         s4o.print_integer(nb_param);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN1_param_value->accept(*this);
-                        s4o.print(",");
+                        s4o.print(",\n" + s4o.indent_spaces);
                         IN2_param_value->accept(*this);
                         
                         int base_num = 3;
@@ -16724,13 +16611,14 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",");
+                                s4o.print(",\n" + s4o.indent_spaces);
                                 param_value->accept(*this);
                                 
                             }
                             
                         }while(param_value != NULL);
                         s4o.print(")");
+                        s4o.indent_left();
                         return NULL;
                         
                         
@@ -16765,7 +16653,7 @@ switch(current_function_type){
             symbol_c *IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 {
@@ -16779,7 +16667,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
                     {
                 
                         {
@@ -16842,7 +16730,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 {
@@ -16919,7 +16807,7 @@ switch(current_function_type){
             symbol_c *IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 {
@@ -16933,7 +16821,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
                     {
                 
                         {
@@ -17017,7 +16905,7 @@ switch(current_function_type){
             symbol_c *IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
             
-            if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
                 {
@@ -17031,7 +16919,7 @@ switch(current_function_type){
                     symbol_c *IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                     last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
                     
-                    if (typeid(*last_type_symbol) == typeid(string_type_name_c))
+                    if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
                     {
                 
                         symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;

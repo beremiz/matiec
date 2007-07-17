@@ -632,9 +632,6 @@ if (!strcasecmp(function_name->value, "LREAL_TO_DWORD"))
 if (!strcasecmp(function_name->value, "LREAL_TO_LWORD"))
     return function_lreal_to_lword;
 
-if (!strcasecmp(function_name->value, "TIME_TO_BOOL"))
-    return function_time_to_bool;
-
 if (!strcasecmp(function_name->value, "TIME_TO_SINT"))
     return function_time_to_sint;
 
@@ -679,9 +676,6 @@ if (!strcasecmp(function_name->value, "TIME_TO_DWORD"))
 
 if (!strcasecmp(function_name->value, "TIME_TO_LWORD"))
     return function_time_to_lword;
-
-if (!strcasecmp(function_name->value, "DATE_TO_BOOL"))
-    return function_date_to_bool;
 
 if (!strcasecmp(function_name->value, "DATE_TO_SINT"))
     return function_date_to_sint;
@@ -728,9 +722,6 @@ if (!strcasecmp(function_name->value, "DATE_TO_DWORD"))
 if (!strcasecmp(function_name->value, "DATE_TO_LWORD"))
     return function_date_to_lword;
 
-if (!strcasecmp(function_name->value, "TOD_TO_BOOL"))
-    return function_tod_to_bool;
-
 if (!strcasecmp(function_name->value, "TOD_TO_SINT"))
     return function_tod_to_sint;
 
@@ -775,9 +766,6 @@ if (!strcasecmp(function_name->value, "TOD_TO_DWORD"))
 
 if (!strcasecmp(function_name->value, "TOD_TO_LWORD"))
     return function_tod_to_lword;
-
-if (!strcasecmp(function_name->value, "DT_TO_BOOL"))
-    return function_dt_to_bool;
 
 if (!strcasecmp(function_name->value, "DT_TO_SINT"))
     return function_dt_to_sint;

@@ -430,16 +430,18 @@ class search_expression_type_c: public search_constant_type_c {
   void *visit(mul_expression_c *symbol) {
     symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
     symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-    if (typeid(*left_type) == typeid(time_type_name_c) && is_integer_type(right_type)) {return (void *)&time_type_name;}
-    if (typeid(*left_type) == typeid(time_type_name_c) && is_real_type(right_type)) {return (void *)&time_type_name;}
+    if (typeid(*left_type) == typeid(time_type_name_c) && is_num_type(right_type)) {
+        return (void *)&time_type_name;
+    }
     return compute_numeric_expression(left_type, right_type);
   }
   
   void *visit(div_expression_c *symbol) {
     symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
     symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-    if (typeid(*left_type) == typeid(time_type_name_c) && is_integer_type(right_type)) {return (void *)&time_type_name;}
-    if (typeid(*left_type) == typeid(time_type_name_c) && is_real_type(right_type)) {return (void *)&time_type_name;}
+    if (typeid(*left_type) == typeid(time_type_name_c) && is_num_type(right_type)){
+        return (void *)&time_type_name;
+    }
     return compute_numeric_expression(left_type, right_type);
   }
 
@@ -452,39 +454,18 @@ class search_expression_type_c: public search_constant_type_c {
   void *visit(power_expression_c *symbol) {
     symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
     symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-    if (typeid(*left_type) == typeid(real_type_name_c) and typeid(*right_type) == typeid(sint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(real_type_name_c) and typeid(*right_type) == typeid(int_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(real_type_name_c) and typeid(*right_type) == typeid(dint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(real_type_name_c) and typeid(*right_type) == typeid(lint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(real_type_name_c) and typeid(*right_type) == typeid(usint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(real_type_name_c) and typeid(*right_type) == typeid(uint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(real_type_name_c) and typeid(*right_type) == typeid(udint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(real_type_name_c) and typeid(*right_type) == typeid(ulint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(lreal_type_name_c) and typeid(*right_type) == typeid(sint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(lreal_type_name_c) and typeid(*right_type) == typeid(int_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(lreal_type_name_c) and typeid(*right_type) == typeid(dint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(lreal_type_name_c) and typeid(*right_type) == typeid(lint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(lreal_type_name_c) and typeid(*right_type) == typeid(usint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(lreal_type_name_c) and typeid(*right_type) == typeid(uint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(lreal_type_name_c) and typeid(*right_type) == typeid(udint_type_name_c)) {return (void *)left_type;}
-    if (typeid(*left_type) == typeid(lreal_type_name_c) and typeid(*right_type) == typeid(ulint_type_name_c)) {return (void *)left_type;}
+    if (is_real_type(left_type) && is_num_type(right_type)) {
+        return (void *)left_type;
+    }
     ERROR;
     return NULL;
   }
   
   void *visit(neg_expression_c *symbol) {
     symbol_c *exp_type = base_type((symbol_c *)symbol->exp->accept(*this));
-    if (typeid(*exp_type) == typeid(sint_type_name_c)) {return (void *)exp_type;}
-    if (typeid(*exp_type) == typeid(int_type_name_c)) {return (void *)exp_type;}
-    if (typeid(*exp_type) == typeid(dint_type_name_c)) {return (void *)exp_type;}
-    if (typeid(*exp_type) == typeid(lint_type_name_c)) {return (void *)exp_type;}
-    if (typeid(*exp_type) == typeid(usint_type_name_c)) {return (void *)exp_type;}
-    if (typeid(*exp_type) == typeid(uint_type_name_c)) {return (void *)exp_type;}
-    if (typeid(*exp_type) == typeid(udint_type_name_c)) {return (void *)exp_type;}
-    if (typeid(*exp_type) == typeid(ulint_type_name_c)) {return (void *)exp_type;}
-    if (typeid(*exp_type) == typeid(real_type_name_c)) {return (void *)exp_type;}
-    if (typeid(*exp_type) == typeid(lreal_type_name_c)) {return (void *)exp_type;}
-    if (typeid(*exp_type) == typeid(time_type_name_c)) {return (void *)exp_type;}
+    if (is_num_type(exp_type) || typeid(*exp_type) == typeid(time_type_name_c)){
+            return (void *)exp_type;
+         }
     ERROR;
     return NULL;
   }

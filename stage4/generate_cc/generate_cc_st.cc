@@ -469,12 +469,13 @@ void *visit(function_invocation_c *symbol) {
   
     symbol->function_name->accept(*this);
     s4o.print("(");
+    s4o.indent_right();
   
     identifier_c *param_name;
     function_call_param_iterator_c function_call_param_iterator(symbol);
     for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
       if (i != 1)
-        s4o.print(", ");
+        s4o.print(",\n"+s4o.indent_spaces);
   
       function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
   
@@ -521,6 +522,7 @@ void *visit(function_invocation_c *symbol) {
     } /* for(...) */
     // symbol->parameter_assignment->accept(*this);
     s4o.print(")");
+    s4o.indent_left();
   }
 
   return NULL;

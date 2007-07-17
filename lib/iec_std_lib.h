@@ -415,7 +415,7 @@ static inline STRING __sint_to_string(LINT IN){
 }
 static inline STRING __uint_to_string(ULINT IN){
     STRING res = __INIT_STRING;
-    res.len = snprintf(res.body, STR_MAX_LEN, "16#%llu", IN);
+    res.len = snprintf(res.body, STR_MAX_LEN, "%llu", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
@@ -579,7 +579,7 @@ static inline STRING __time_to_string(TIME IN){
                 if(IN.tv_nsec == 0){
                     res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm%ds", days.quot, hours.quot, minuts.quot, minuts.rem);
                 }else{
-                    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm%ds%gms", days.quot, hours.quot, minuts.quot, minuts.rem, IN.tv_nsec / 1000000);
+                    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm%ds%gms", days.quot, hours.quot, minuts.quot, minuts.rem, (LREAL)IN.tv_nsec / 1000000);
                 }
             }
         }
@@ -592,11 +592,11 @@ static inline STRING __date_to_string(DATE IN){
     STRING res = __INIT_STRING;
     struct tm broken_down_time;
     time_t seconds = IN.tv_sec;
-    if (NULL == gmtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
+    if (NULL == localtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
         IEC_error();
         return (STRING){7,"D#ERROR"};
     }
-    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "D#%d-%2.2d-%2.2d", broken_down_time.tm_year, broken_down_time.tm_mon, broken_down_time.tm_mday);
+    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "D#%d-%2.2d-%2.2d", broken_down_time.tm_year + 1900, broken_down_time.tm_mon + 1, broken_down_time.tm_mday);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
@@ -605,14 +605,14 @@ static inline STRING __tod_to_string(TOD IN){
     STRING res = __INIT_STRING;
     struct tm broken_down_time;
     time_t seconds = IN.tv_sec;
-    if (NULL == gmtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
+    if (NULL == localtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
         IEC_error();
         return (STRING){9,"TOD#ERROR"};
     }
     if(IN.tv_nsec == 0){
         res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%d", broken_down_time.tm_hour, broken_down_time.tm_min, broken_down_time.tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%g", broken_down_time.tm_hour, broken_down_time.tm_min, (LREAL)broken_down_time.tm_sec + (LREAL)IN.tv_nsec / 1000000);
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%g", broken_down_time.tm_hour, broken_down_time.tm_min, (LREAL)broken_down_time.tm_sec + (LREAL)IN.tv_nsec / 1e9);
     }
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
@@ -622,7 +622,7 @@ static inline STRING __dt_to_string(DT IN){
     STRING res;
     struct tm broken_down_time;
     time_t seconds = IN.tv_sec;
-    if (NULL == gmtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
+    if (NULL == localtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
         IEC_error();
         return (STRING){8,"DT#ERROR"};
     }
@@ -635,13 +635,13 @@ static inline STRING __dt_to_string(DT IN){
                  broken_down_time.tm_min,
                  broken_down_time.tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%d",
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%g",
                  broken_down_time.tm_year,
                  broken_down_time.tm_mon,
                  broken_down_time.tm_mday,
                  broken_down_time.tm_hour,
                  broken_down_time.tm_min,
-                 (LREAL)broken_down_time.tm_sec + ((LREAL)IN.tv_nsec / 1000000));
+                 (LREAL)broken_down_time.tm_sec + ((LREAL)IN.tv_nsec / 1e9));
     }
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
