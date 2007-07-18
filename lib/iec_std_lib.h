@@ -15,6 +15,35 @@
 
 #include "iec_std_lib_generated.h"
 
+#define __print_BOOL(name) printf("  %s = (BOOL) %s\n",#name, name?"TRUE":"FALSE");
+#define __print_SINT(name) printf("  %s = (SINT) %d\n",#name, name);
+#define __print_INT(name) printf("  %s = (INT) %d\n",#name, name);
+#define __print_DINT(name) printf("  %s = (DINT) %d\n",#name, name);
+#define __print_LINT(name) printf("  %s = (LINT) %d\n",#name, name);
+#define __print_USINT(name) printf("  %s = (USINT) %u\n",#name, name);
+#define __print_UINT(name) printf("  %s = (UINT) %u\n",#name, name);
+#define __print_UDINT(name) printf("  %s = (UDINT) %u\n",#name, name);
+#define __print_ULINT(name) printf("  %s = (ULINT) %lu\n",#name, name);
+#define __print_REAL(name) printf("  %s = (REAL) %f\n",#name, (double)name);
+#define __print_LREAL(name) printf("  %s = (LREAL) %f\n",#name, (double)name);
+#define __print_TIME(name) {STRING __tmp = __time_to_string(name);__tmp.body[__tmp.len] = 0; printf("  %s = (TIME) %*s\n",#name, __tmp.len, &__tmp.body);}
+#define __print_DATE(name) {STRING __tmp = __date_to_string(name);__tmp.body[__tmp.len] = 0; printf("  %s = (DATE) %*s\n",#name, __tmp.len, &__tmp.body);}
+#define __print_TOD(name) {STRING __tmp = __tod_to_string(name);__tmp.body[__tmp.len] = 0; printf("  %s = (TOD) %*s\n",#name, __tmp.len, &__tmp.body);}
+#define __print_DT(name) {STRING __tmp = __dt_to_string(name);__tmp.body[__tmp.len] = 0; printf("  %s = (DT) %*s\n",#name, __tmp.len, &__tmp.body);}
+#define __print_STRING(name) printf("  %s = (STRING) {%d, \"%*s\"}\n",#name, name.len, name.len, &name.body);
+#define __print_BYTE(name) printf("  %s = (BYTE) 0x%2.2x\n",#name, name);
+#define __print_WORD(name) printf("  %s = (WORD) 0x%4.4x\n",#name, name);
+#define __print_DWORD(name) printf("  %s = (DWORD) 0x%8.8x\n",#name, name);
+#define __print_LWORD(name) printf("  %s = (LWORD) 0x%16.16lx\n",#name, name);
+
+#ifdef DEBUG_IEC
+#define DBG(...) printf(__VA_ARGS__);
+#define DBG_TYPE(TYPENAME, name) __print_##TYPENAME(name);
+#else
+#define DBG(...)
+#define DBG_TYPE(TYPENAME, name)
+#endif
+
 /*****************/
 /*  Types defs   */
 /*****************/
@@ -403,7 +432,7 @@ static inline STRING __bit_to_string(LWORD IN){
 }
 static inline STRING __real_to_string(LREAL IN){
     STRING res = __INIT_STRING;
-    res.len = snprintf(res.body, STR_MAX_LEN, "%g", IN);
+    res.len = snprintf(res.body, STR_MAX_LEN, "%.10g", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
@@ -453,19 +482,19 @@ static inline LINT __pstring_to_sint(STRING* IN){
                 shift += 3;
             }
         }
-    }else if(IN->body[0]=='1' && IN->body[1]=='6' && IN->body[1]=='#'){
+    }else if(IN->body[0]=='1' && IN->body[1]=='6' && IN->body[2]=='#'){
         /* 16#1234_5678_9abc_DEFG */
         for(l = IN->len - 1; l >= 3 && shift < 64; l--)
         {
             char c = IN->body[l];
             if( c >= '0' && c <= '9'){
-                res |= ( c - '0') << shift;
+                res |= (LWORD)( c - '0') << shift;
                 shift += 4;
             }else if( c >= 'a' && c <= 'f'){
-                res |= ( c - 'a' + 10 ) << shift;
+                res |= (LWORD)( c - 'a' + 10 ) << shift;
                 shift += 4;
             }else if( c >= 'A' && c <= 'F'){
-                res |= ( c - 'A' + 10 ) << shift;
+                res |= (LWORD)( c - 'A' + 10 ) << shift;
                 shift += 4;
             }
         }
@@ -840,9 +869,12 @@ static inline BOOL fname##TYPENAME( UINT param_count, TYPENAME op1, ...){\
   UINT i;\
   \
   va_start (ap, op1);         /* Initialize the argument list.  */\
+  DBG(#fname #TYPENAME "\n")\
+  DBG_TYPE(TYPENAME, op1)\
   \
-  for (i = 0; i < param_count; i++){\
+  for (i = 0; i < param_count - 1; i++){\
     TYPENAME tmp = va_arg (ap, VA_ARGS_##TYPENAME);\
+    DBG_TYPE(TYPENAME, tmp)\
     if(COND){\
         op1 = tmp;\
     }else{\
@@ -878,7 +910,7 @@ __compare_string(__gt_, > )
     /**************/
 
 #define __ge_num(TYPENAME) __compare_num(__ge_, TYPENAME, >= )
-ANY_NBIT(__ge_num)
+ANY_BIT(__ge_num)
 ANY_NUM(__ge_num)
 
 #define __ge_time(TYPENAME) __compare_time(__ge_, TYPENAME, >= )
@@ -892,7 +924,7 @@ __compare_string(__ge_, >=)
     /**************/
 
 #define __eq_num(TYPENAME) __compare_num(__eq_, TYPENAME, == )
-ANY_NBIT(__eq_num)
+ANY_BIT(__eq_num)
 ANY_NUM(__eq_num)
 
 #define __eq_time(TYPENAME) __compare_time(__eq_, TYPENAME, == )
@@ -906,7 +938,7 @@ __compare_string(__eq_, == )
     /**************/
 
 #define __lt_num(TYPENAME) __compare_num(__lt_, TYPENAME, < )
-ANY_NBIT(__lt_num)
+ANY_BIT(__lt_num)
 ANY_NUM(__lt_num)
 
 #define __lt_time(TYPENAME) __compare_time(__lt_, TYPENAME, < )
@@ -920,7 +952,7 @@ __compare_string(__lt_, < )
     /**************/
 
 #define __le_num(TYPENAME) __compare_num(__le_, TYPENAME, <= )
-ANY_NBIT(__le_num)
+ANY_BIT(__le_num)
 ANY_NUM(__le_num)
 
 #define __le_time(TYPENAME) __compare_time(__le_, TYPENAME, <= )
@@ -934,7 +966,7 @@ __compare_string(__le_, <= )
     /**************/
 
 #define __ne_num(TYPENAME) __compare_num(__ne_, TYPENAME, != )
-ANY_NBIT(__ne_num)
+ANY_BIT(__ne_num)
 ANY_NUM(__ne_num)
 
 #define __ne_time(TYPENAME) __compare_time(__ne_, TYPENAME, != )

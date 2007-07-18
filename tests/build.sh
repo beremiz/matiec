@@ -1,9 +1,12 @@
 #!/bin/bash
 
-../iec2cc STD_TEST.st -I ../lib
+CFLAGS=$*
 
-gcc -I ../lib -c -g STD_RESSOURCE.c
+../iec2cc STD_TEST.st -I ../lib 
+#2>/dev/null
 
-gcc -I ../lib -c  -g STD_CONF.c
+gcc -I ../lib -c STD_RESSOURCE.c $CFLAGS
 
-gcc -I ../lib main.c STD_CONF.o STD_RESSOURCE.o -g -l rt -o test
+gcc -I ../lib -c  STD_CONF.c $CFLAGS
+
+gcc -I ../lib main.c STD_CONF.o STD_RESSOURCE.o $CFLAGS -l rt -o test

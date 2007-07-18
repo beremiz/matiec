@@ -20,27 +20,6 @@ TIME __CURRENT_TIME;
 #include "LOCATED_VARIABLES.h"
 #undef __LOCATED_VAR
 
-#define print_BOOL(name) printf("  %s = (BOOL) %s\n",#name, name?"TRUE":"FALSE");
-#define print_SINT(name) printf("  %s = (SINT) %d\n",#name, name);
-#define print_INT(name) printf("  %s = (INT) %d\n",#name, name);
-#define print_DINT(name) printf("  %s = (DINT) %d\n",#name, name);
-#define print_LINT(name) printf("  %s = (LINT) %d\n",#name, name);
-#define print_USINT(name) printf("  %s = (USINT) %u\n",#name, name);
-#define print_UINT(name) printf("  %s = (UINT) %u\n",#name, name);
-#define print_UDINT(name) printf("  %s = (UDINT) %u\n",#name, name);
-#define print_ULINT(name) printf("  %s = (ULINT) %lu\n",#name, name);
-#define print_REAL(name) printf("  %s = (REAL) %f\n",#name, (double)name);
-#define print_LREAL(name) printf("  %s = (LREAL) %f\n",#name, (double)name);
-#define print_TIME(name) {tmp STRING = __time_to_string(name);tmp.body[tmp.len] = 0; printf("  %s = (TIME) %s*s\n",#name, tmp.len, &tmp.body);}
-#define print_DATE(name) {tmp STRING = __date_to_string(name);tmp.body[tmp.len] = 0; printf("  %s = (TIME) %*s\n",#name, tmp.len, &tmp.body);}
-#define print_TOD(name) {tmp STRING = __tod_to_string(name);tmp.body[tmp.len] = 0; printf("  %s = (TIME) %*s\n",#name, tmp.len, &tmp.body);}
-#define print_DT(name) {tmp STRING = __dt_to_string(name);tmp.body[tmp.len] = 0; printf("  %s = (TIME) %*s\n",#name, tmp.len, &tmp.body);}
-#define print_STRING(name) printf("  %s = (STRING) {%d, \"%*s\"}\n",#name, name.len, name.len, &name.body);
-#define print_BYTE(name) printf("  %s = (BYTE) 0x%2.2x\n",#name, name);
-#define print_WORD(name) printf("  %s = (WORD) 0x%d4.4\n",#name, name);
-#define print_DWORD(name) printf("  %s = (DWORD) 0x%d8.8\n",#name, name);
-#define print_LWORD(name) printf("  %s = (LWORD) 0x%d16.16\n",#name, name);
-
 static int tick = 0;
 void timer_notify(sigval_t val)
 {
@@ -48,7 +27,7 @@ void timer_notify(sigval_t val)
     printf("Tick %d\n",tick);
     config_run__(tick++);
     printf("  Located variables : \n");
-#define __LOCATED_VAR(type, name) print_##type(name);
+#define __LOCATED_VAR(type, name) __print_##type(name);
 #include "LOCATED_VARIABLES.h"
 #undef __LOCATED_VAR
 }

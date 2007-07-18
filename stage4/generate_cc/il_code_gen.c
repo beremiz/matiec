@@ -14175,7 +14175,7 @@ switch(current_function_type){
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                         s4o.indent_right();
                         s4o.print("__gt_");
-                        return_type_symbol->accept(*this);
+                        last_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
                         s4o.print(",\n" + s4o.indent_spaces);
@@ -14259,7 +14259,7 @@ switch(current_function_type){
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                         s4o.indent_right();
                         s4o.print("__ge_");
-                        return_type_symbol->accept(*this);
+                        last_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
                         s4o.print(",\n" + s4o.indent_spaces);
@@ -14343,7 +14343,7 @@ switch(current_function_type){
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                         s4o.indent_right();
                         s4o.print("__eq_");
-                        return_type_symbol->accept(*this);
+                        last_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
                         s4o.print(",\n" + s4o.indent_spaces);
@@ -14427,7 +14427,7 @@ switch(current_function_type){
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                         s4o.indent_right();
                         s4o.print("__lt_");
-                        return_type_symbol->accept(*this);
+                        last_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
                         s4o.print(",\n" + s4o.indent_spaces);
@@ -14511,7 +14511,7 @@ switch(current_function_type){
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                         s4o.indent_right();
                         s4o.print("__le_");
-                        return_type_symbol->accept(*this);
+                        last_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
                         s4o.print(",\n" + s4o.indent_spaces);
@@ -14595,7 +14595,7 @@ switch(current_function_type){
                         symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                         s4o.indent_right();
                         s4o.print("__ne_");
-                        return_type_symbol->accept(*this);
+                        last_type_symbol->accept(*this);
                         s4o.print("(");
                         s4o.print_integer(nb_param);
                         s4o.print(",\n" + s4o.indent_spaces);
