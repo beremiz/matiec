@@ -1,8 +1,12 @@
 #!/bin/bash
 
+STFILE=$1
+
+shift
+
 CFLAGS=$*
 
-../iec2cc STD_TEST.st -I ../lib 
+../iec2cc $STFILE -I ../lib 
 #2>/dev/null
 
 gcc -I ../lib -c STD_RESSOURCE.c $CFLAGS
