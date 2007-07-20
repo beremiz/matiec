@@ -1347,7 +1347,8 @@ SYM_REF6(configuration_declaration_c, configuration_name, global_var_declaration
 void *visit(configuration_declaration_c *symbol) {
   TRACE("configuration_declaration_c");
 
-  symbol->global_var_declarations->accept(*this); // will contain VAR_GLOBAL declarations!!
+  if(symbol->global_var_declarations)
+    symbol->global_var_declarations->accept(*this); // will contain VAR_GLOBAL declarations!!
   symbol->resource_declarations->accept(*this);   // will contain PROGRAM declarations!!
   return NULL;
 }

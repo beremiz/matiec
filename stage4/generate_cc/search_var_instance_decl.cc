@@ -321,7 +321,7 @@ class search_var_instance_decl_c: public search_visitor_c {
 //SYM_REF4(located_var_decl_c, variable_name, location, located_var_spec_init, unused)
     void *visit(located_var_decl_c *symbol) {
       if (symbol->variable_name != NULL && compare_identifiers(symbol->variable_name, search_name) == 0) {
-        return current_type_decl;
+        return symbol->located_var_spec_init;
       }
       else
         return NULL;

@@ -342,7 +342,7 @@ QX2 := TRUE;
               </connectionPointOut>
               <condition>
                 <inline name="">
-                  <ST>QX1 OR GX2 OR QX3 = FALSE</ST>
+                  <ST>NOT ( QX1 OR QX2 OR QX3 )</ST>
                 </inline>
               </condition>
             </transition>
@@ -376,7 +376,7 @@ QX2 := TRUE;
               </connectionPointOut>
               <condition>
                 <inline name="">
-                  <ST>QX1 OR GX2 OR QX3 = FALSE</ST>
+                  <ST>NOT ( QX1 OR QX2 OR QX3 )</ST>
                 </inline>
               </condition>
             </transition>
@@ -410,7 +410,7 @@ QX2 := TRUE;
               </connectionPointOut>
               <condition>
                 <inline name="">
-                  <ST>QX1 OR GX2 OR QX3 = FALSE</ST>
+                  <ST>NOT ( QX1 OR QX2 OR QX3 )</ST>
                 </inline>
               </condition>
             </transition>
@@ -471,7 +471,7 @@ QX2 := TRUE;
               </connectionPointOut>
               <condition>
                 <inline name="">
-                  <ST>QX1 AND GX2 AND QX3 = TRUE</ST>
+                  <ST>QX1 AND QX2 AND QX3</ST>
                 </inline>
               </condition>
             </transition>
@@ -498,7 +498,7 @@ QX2 := TRUE;
                 <reference name="ONSTEP1"/>
               </action>
             </actionBlock>
-            <actionBlock localId="35" height="30" width="289">
+            <actionBlock localId="35" height="30" width="293">
               <position y="186" x="140"/>
               <connectionPointIn>
                 <relPosition y="15" x="0"/>
@@ -509,7 +509,7 @@ QX2 := TRUE;
               </connectionPointIn>
               <action qualifier="P">
                 <inline>
-                  <ST>QX1 := QX2 XOR QX1; QX2 := NOT QX2</ST>
+                  <ST>QX1 := QX2 XOR QX1; QX2 := NOT QX2;</ST>
                 </inline>
               </action>
             </actionBlock>
@@ -638,7 +638,7 @@ QX2 := TRUE;
                 </connection>
               </connectionPointIn>
             </jumpStep>
-            <actionBlock localId="54" height="30" width="107">
+            <actionBlock localId="54" height="30" width="111">
               <position y="291" x="135"/>
               <connectionPointIn>
                 <relPosition y="15" x="0"/>
@@ -649,11 +649,11 @@ QX2 := TRUE;
               </connectionPointIn>
               <action qualifier="N">
                 <inline>
-                  <ST>IX1 := TRUE</ST>
+                  <ST>IX1 := TRUE;</ST>
                 </inline>
               </action>
             </actionBlock>
-            <actionBlock localId="55" height="30" width="113">
+            <actionBlock localId="55" height="30" width="117">
               <position y="291" x="439"/>
               <connectionPointIn>
                 <relPosition y="15" x="0"/>
@@ -664,11 +664,11 @@ QX2 := TRUE;
               </connectionPointIn>
               <action qualifier="N">
                 <inline>
-                  <ST>IX1 := FALSE</ST>
+                  <ST>IX1 := FALSE;</ST>
                 </inline>
               </action>
             </actionBlock>
-            <actionBlock localId="56" height="30" width="107">
+            <actionBlock localId="56" height="30" width="111">
               <position y="291" x="714"/>
               <connectionPointIn>
                 <relPosition y="15" x="0"/>
@@ -679,7 +679,7 @@ QX2 := TRUE;
               </connectionPointIn>
               <action qualifier="N">
                 <inline>
-                  <ST>IX1 := TRUE</ST>
+                  <ST>IX1 := TRUE;</ST>
                 </inline>
               </action>
             </actionBlock>
@@ -694,7 +694,7 @@ QX2 := TRUE;
               </connectionPointIn>
               <action qualifier="N">
                 <inline>
-                  <ST>QX1 : = FALSE</ST>
+                  <ST>QX1 := FALSE;</ST>
                 </inline>
               </action>
             </actionBlock>
@@ -709,7 +709,7 @@ QX2 := TRUE;
               </connectionPointIn>
               <action qualifier="N">
                 <inline>
-                  <ST>QX2 : = FALSE</ST>
+                  <ST>QX2 := FALSE;</ST>
                 </inline>
               </action>
             </actionBlock>
@@ -724,11 +724,11 @@ QX2 := TRUE;
               </connectionPointIn>
               <action qualifier="N">
                 <inline>
-                  <ST>QX2 : = FALSE</ST>
+                  <ST>QX2 := FALSE;</ST>
                 </inline>
               </action>
             </actionBlock>
-            <actionBlock localId="60" height="30" width="114">
+            <actionBlock localId="60" height="30" width="118">
               <position y="402" x="936"/>
               <connectionPointIn>
                 <relPosition y="15" x="0"/>
@@ -739,11 +739,11 @@ QX2 := TRUE;
               </connectionPointIn>
               <action qualifier="N">
                 <inline>
-                  <ST>QX1 := TRUE</ST>
+                  <ST>QX1 := TRUE;</ST>
                 </inline>
               </action>
             </actionBlock>
-            <actionBlock localId="61" height="30" width="114">
+            <actionBlock localId="61" height="30" width="118">
               <position y="402" x="1185"/>
               <connectionPointIn>
                 <relPosition y="15" x="0"/>
@@ -754,11 +754,11 @@ QX2 := TRUE;
               </connectionPointIn>
               <action qualifier="N">
                 <inline>
-                  <ST>QX2 := TRUE</ST>
+                  <ST>QX2 := TRUE;</ST>
                 </inline>
               </action>
             </actionBlock>
-            <actionBlock localId="62" height="30" width="114">
+            <actionBlock localId="62" height="30" width="118">
               <position y="406" x="1422"/>
               <connectionPointIn>
                 <relPosition y="15" x="0"/>
@@ -769,7 +769,7 @@ QX2 := TRUE;
               </connectionPointIn>
               <action qualifier="N">
                 <inline>
-                  <ST>QX3 := TRUE</ST>
+                  <ST>QX3 := TRUE;</ST>
                 </inline>
               </action>
             </actionBlock>

@@ -49,6 +49,8 @@ class transition_element {
 
   public:
     transition_element(transition_c *tr, char pr, char idx) {
+      prev = NULL;
+      next = NULL;
       transition = tr;
       priority = pr;
       index = idx;
