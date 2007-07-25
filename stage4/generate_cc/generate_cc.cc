@@ -1388,15 +1388,17 @@ class generate_cc_c: public iterator_visitor_c {
     symbol_c *current_configuration;
 
     const char *current_name;
+    const char *current_builddir;
 
     unsigned long common_ticktime;
 
   public:
-    generate_cc_c(stage4out_c *s4o_ptr): 
+    generate_cc_c(stage4out_c *s4o_ptr, const char *builddir): 
             s4o(*s4o_ptr),
-            pous_s4o("POUS", "c"),
-            located_variables_s4o("LOCATED_VARIABLES","h"),
+            pous_s4o(builddir, "POUS", "c"),
+            located_variables_s4o(builddir, "LOCATED_VARIABLES","h"),
             generate_cc_pous(&pous_s4o) {
+      current_builddir = builddir;
       current_configuration = NULL;
     }
             
@@ -1472,7 +1474,7 @@ class generate_cc_c: public iterator_visitor_c {
       common_ticktime = calculate_common_ticktime.get_ticktime();
       
       symbol->configuration_name->accept(*this);
-      stage4out_c config_s4o(current_name, "c");
+      stage4out_c config_s4o(current_builddir, current_name, "c");
       generate_cc_config_c generate_cc_config(&config_s4o);
       symbol->accept(generate_cc_config);
         
@@ -1489,14 +1491,14 @@ class generate_cc_c: public iterator_visitor_c {
 
     void *visit(resource_declaration_c *symbol) {
     	symbol->resource_name->accept(*this);
-    	stage4out_c resources_s4o(current_name, "c");
+    	stage4out_c resources_s4o(current_builddir, current_name, "c");
       generate_cc_resources_c generate_cc_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
     	symbol->accept(generate_cc_resources);
     	return NULL;
     }
 
     void *visit(single_resource_declaration_c *symbol) {
-    	stage4out_c resources_s4o("RESOURCE", "c");
+    	stage4out_c resources_s4o(current_builddir, "RESOURCE", "c");
       generate_cc_resources_c generate_cc_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
     	symbol->accept(generate_cc_resources);
     	return NULL;
@@ -1516,7 +1518,7 @@ class generate_cc_c: public iterator_visitor_c {
 
 
 
-visitor_c *new_code_generator(stage4out_c *s4o)  {return new generate_cc_c(s4o);}
+visitor_c *new_code_generator(stage4out_c *s4o, const char *builddir)  {return new generate_cc_c(s4o, builddir);}
 void delete_code_generator(visitor_c *code_generator) {delete code_generator;}
 
 

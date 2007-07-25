@@ -38,7 +38,7 @@ class stage4out_c {
 
   public:
     stage4out_c(std::string indent_level = "  ");
-    stage4out_c(const char *radix, const char *extension, std::string indent_level = "  ");
+    stage4out_c(const char *dir, const char *radix, const char *extension, std::string indent_level = "  ");
     ~stage4out_c(void);
 
     void indent_right(void);

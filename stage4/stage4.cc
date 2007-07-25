@@ -53,11 +53,17 @@ stage4out_c::stage4out_c(std::string indent_level):
   this->indent_spaces = "";
 }
 
-stage4out_c::stage4out_c(const char *radix, const char *extension, std::string indent_level) {	
+stage4out_c::stage4out_c(const char *dir, const char *radix, const char *extension, std::string indent_level) {	
   std::string filename(radix);
   filename += ".";
   filename += extension;
-  std::fstream *file = new std::fstream(filename.c_str(), std::fstream::out);
+  std::string filepath("");
+  if (dir != NULL) {
+    filepath += dir;
+    filepath += "/";
+  }
+  filepath += filename;
+  std::fstream *file = new std::fstream(filepath.c_str(), std::fstream::out);
   if(file->fail()){
     std::cerr << "Cannot open " << filename << " for write access \n";
     exit(EXIT_FAILURE);
@@ -157,13 +163,13 @@ void *stage4out_c::printlocation(std::string str) {
 
 /* forward declarations... */
 /* These functions will be implemented in generate_XXX.cc */
-visitor_c *new_code_generator(stage4out_c *s4o);
+visitor_c *new_code_generator(stage4out_c *s4o, const char *builddir);
 void delete_code_generator(visitor_c *code_generator);
 
 
-int stage4(symbol_c *tree_root) {
+int stage4(symbol_c *tree_root, const char *builddir) {
   stage4out_c s4o;
-  visitor_c *generate_code = new_code_generator(&s4o);
+  visitor_c *generate_code = new_code_generator(&s4o, builddir);
 
   if (NULL == generate_code)
     return -1;

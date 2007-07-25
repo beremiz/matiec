@@ -1843,7 +1843,7 @@ void *visit(exit_statement_c *symbol) {
 
 
 
-visitor_c *new_code_generator(stage4out_c *s4o)  {return new generate_iec_c(s4o);}
+visitor_c *new_code_generator(stage4out_c *s4o, const char *builddir)  {return new generate_iec_c(s4o);}
 void delete_code_generator(visitor_c *code_generator) {delete code_generator;}
 
 

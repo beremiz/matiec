@@ -82,7 +82,7 @@ void error_exit(const char *file_name, int line_no) {
 /* forward declarations... */
 int stage1_2(const char *filename, const char *includedir, symbol_c **tree_root);
 //int stage3(symbol_c *tree_root);
-int stage4(symbol_c *tree_root);
+int stage4(symbol_c *tree_root, const char *builddir);
 
 
 static void printusage(const char *cmd) {
@@ -94,6 +94,12 @@ static void printusage(const char *cmd) {
 int main(int argc, char **argv) {
   symbol_c *tree_root;
   char * includedir = NULL;
+  char * builddir = NULL;
+
+  if (argc == 5) {
+    builddir = argv[4];
+    argc = 4;
+  }
 
   if (argc == 4) {
     if (strcmp(argv[2], "-I") != 0) {
@@ -103,6 +109,11 @@ int main(int argc, char **argv) {
     includedir = argv[3];
     argc = 2;
   }
+
+  if (argc == 3) {
+    builddir = argv[2];
+    argc = 2;
+  }    
 
   if (argc != 2) {
     printusage(argv[0]);
@@ -121,7 +132,7 @@ int main(int argc, char **argv) {
   */
 
   /* 3rd Pass */
-  if (stage4(tree_root) < 0)
+  if (stage4(tree_root, builddir) < 0)
     return EXIT_FAILURE;
 
   /* 4th Pass */
