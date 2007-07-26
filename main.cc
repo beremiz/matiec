@@ -86,7 +86,7 @@ int stage4(symbol_c *tree_root, const char *builddir);
 
 
 static void printusage(const char *cmd) {
-  printf("%s [<input_file>] [-I <include_directory>]\n", cmd);
+  printf("%s [<input_file>] [-I <include_directory>] [<target_directory>]\n", cmd);
 }
 
 
