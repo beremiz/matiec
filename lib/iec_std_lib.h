@@ -676,23 +676,25 @@ static inline STRING __dt_to_string(DT IN){
     return res;
 }
     /* BCD */
+#define __bcd_digit(fac) 
 static inline ULINT __bcd_to_uint(LWORD IN){
     return IN & 0xf +
-           ((IN >>= 4) & 0xf) * 10 + 
-           ((IN >>= 4) & 0xf) * 100 + 
-           ((IN >>= 4) & 0xf) * 1000 + 
-           ((IN >>= 4) & 0xf) * 10000 + 
-           ((IN >>= 4) & 0xf) * 100000 + 
-           ((IN >>= 4) & 0xf) * 1000000 + 
-           ((IN >>= 4) & 0xf) * 10000000 + 
-           ((IN >>= 4) & 0xf) * 100000000 + 
-           ((IN >>= 4) & 0xf) * 1000000000 + 
-           ((IN >>= 4) & 0xf) * 10000000000 + 
-           ((IN >>= 4) & 0xf) * 100000000000 + 
-           ((IN >>= 4) & 0xf) * 1000000000000 + 
-           ((IN >>= 4) & 0xf) * 10000000000000 + 
-           ((IN >>= 4) & 0xf) * 100000000000000 + 
-           ((IN >>= 4) & 0xf) * 1000000000000000;
+           !(IN >>= 4) ? 0 : IN & 0xf * 10ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 100ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 1000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 10000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 100000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 1000000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 10000000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 100000000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 1000000000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 10000000000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 100000000000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 1000000000000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 10000000000000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 100000000000000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 1000000000000000ULL;
+           
 }
 static inline LWORD __uint_to_bcd(ULINT IN){
     return (IN - (IN /= 10))|
