@@ -189,8 +189,8 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 #include "search_expression_type.cc"
 
 #include "generate_cc_base.cc"
-#include "generate_cc_sfcdecl.cc"
 #include "generate_cc_typedecl.cc"
+#include "generate_cc_sfcdecl.cc"
 #include "generate_cc_vardecl.cc"
 #include "generate_cc_configbody.cc"
 #include "generate_location_list.cc"
@@ -751,6 +751,7 @@ public:
 //SYM_REF4(program_declaration_c, program_type_name, var_declarations, function_block_body, unused)
 void *visit(program_declaration_c *symbol) {
   generate_cc_vardecl_c *vardecl;
+  generate_cc_sfcdecl_c *sfcdecl;
   TRACE("program_declaration_c");
 
   /* start off by adding this declaration to the global
@@ -787,10 +788,10 @@ void *visit(program_declaration_c *symbol) {
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   /* (A.4) Generate private internal variables for SFC */
-  generate_cc_sfctables_c generate_cc_sfctables(&s4o);
-  symbol->function_block_body->accept(generate_cc_sfctables);
-  s4o.print("\n");
-
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcdecl_sg);
+  sfcdecl->print(symbol->function_block_body);
+  delete sfcdecl;
+  
   /* (A.5) Program data structure type name. */
   s4o.indent_left();
   s4o.print("} ");
@@ -823,15 +824,27 @@ void *visit(program_declaration_c *symbol) {
 				      generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
+  s4o.print("\n");
+  /* (B.3) Generate private internal variables for SFC */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcinit_sg);
+  sfcdecl->print(symbol->function_block_body,FB_FUNCTION_PARAM"->");
+  delete sfcdecl;
+
   s4o.indent_left();
-  s4o.print("\n" + s4o.indent_spaces + "}\n\n");
+  s4o.print(s4o.indent_spaces + "}\n\n");
 
   /* (C) Function with PROGRAM body */
-  /* (C.1) Step and Action definitions */
-  generate_cc_sfcdecl_c generate_cc_sfcdecl(&s4o);
-  symbol->function_block_body->accept(generate_cc_sfcdecl);
+  /* (C.1) Step definitions */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepdef_sg);
+  sfcdecl->print(symbol->function_block_body);
+  delete sfcdecl;
+  
+  /* (C.2) Action definitions */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actiondef_sg);
+  sfcdecl->print(symbol->function_block_body);
+  delete sfcdecl;
 
-  /* (C.2) Function declaration */
+  /* (C.3) Function declaration */
   s4o.print("// Code part\n");
   /* function interface */
   s4o.print("void ");
@@ -845,7 +858,7 @@ void *visit(program_declaration_c *symbol) {
   s4o.print(") {\n");
   s4o.indent_right();
 
-  /* (C.3) Initialize TEMP variables */
+  /* (C.4) Initialize TEMP variables */
   /* function body */
   s4o.print(s4o.indent_spaces + "// Initialise TEMP variables\n");
   vardecl = new generate_cc_vardecl_c(&s4o,
@@ -855,7 +868,7 @@ void *visit(program_declaration_c *symbol) {
   delete vardecl;
   s4o.print("\n");
 
-  /* (C.4) Function code */
+  /* (C.5) Function code */
   generate_cc_SFC_IL_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
   symbol->function_block_body->accept(generate_cc_code);
   s4o.indent_left();
@@ -864,10 +877,16 @@ void *visit(program_declaration_c *symbol) {
   s4o.print(FB_FUNCTION_SUFFIX);
   s4o.print(s4o.indent_spaces + "() \n\n");
 
-  /* (C.5) Step and Action undefinitions */
-  generate_cc_sfcundecl_c generate_cc_sfcundecl(&s4o);
-  symbol->function_block_body->accept(generate_cc_sfcundecl);
-
+  /* (C.6) Step undefinitions */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepundef_sg);
+  sfcdecl->print(symbol->function_block_body);
+  delete sfcdecl;
+  
+  /* (C.7) Action undefinitions */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actionundef_sg);
+  sfcdecl->print(symbol->function_block_body);
+  delete sfcdecl;
+  
   s4o.indent_left();
   s4o.print("\n\n\n\n");
 
