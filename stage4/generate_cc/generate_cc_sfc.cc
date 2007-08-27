@@ -641,11 +641,13 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
       
       /* generate transition reset steps */
       s4o.print(s4o.indent_spaces + "// Transitions reset steps\n");
+      generate_cc_sfc_elements->reset_transition_number();
       generate_cc_sfc_elements->generate((symbol_c *) symbol, generate_cc_sfc_elements_c::stepreset_sg);
       s4o.print("\n");
       
       /* generate transition set steps */
       s4o.print(s4o.indent_spaces + "// Transitions set steps\n");
+      generate_cc_sfc_elements->reset_transition_number();
       generate_cc_sfc_elements->generate((symbol_c *) symbol, generate_cc_sfc_elements_c::stepset_sg);
       s4o.print("\n");
       
