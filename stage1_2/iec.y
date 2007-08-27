@@ -3716,8 +3716,8 @@ N		{$$ = new qualifier_c(strdup("N"));}
 /* NOTE: the following two clash with the R and S IL operators.
  * It will have to be handled when we include parsing of SFC...
  */
-| R_operator		{$$ = new qualifier_c(strdup("R"));}
-| S_operator		{$$ = new qualifier_c(strdup("S"));}
+| R		{$$ = new qualifier_c(strdup("R"));}
+| S		{$$ = new qualifier_c(strdup("S"));}
 | P		{$$ = new qualifier_c(strdup("P"));}
 ;
 

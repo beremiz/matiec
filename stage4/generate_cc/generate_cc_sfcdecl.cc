@@ -43,25 +43,25 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
   
   public:
       typedef enum {
-        sfcdecl_sg,
-        sfcinit_sg,
-        stepdef_sg,
-        stepundef_sg,
-        actiondef_sg,
-        actionundef_sg
-       } sfcgeneration_t;
+        sfcdecl_sd,
+        sfcinit_sd,
+        stepdef_sd,
+        stepundef_sd,
+        actiondef_sd,
+        actionundef_sd
+       } sfcdeclaration_t;
   
   private:
     char step_number;
     char action_number;
     char transition_number;
     
-    sfcgeneration_t wanted_sfcgeneration;
+    sfcdeclaration_t wanted_sfcdeclaration;
     
   public:
-    generate_cc_sfcdecl_c(stage4out_c *s4o_ptr, sfcgeneration_t sfcgeneration)
+    generate_cc_sfcdecl_c(stage4out_c *s4o_ptr, sfcdeclaration_t sfcdeclaration)
     : generate_cc_typedecl_c(s4o_ptr) {
-      wanted_sfcgeneration = sfcgeneration;
+      wanted_sfcdeclaration = sfcdeclaration;
     }
     ~generate_cc_sfcdecl_c(void) {}
     
@@ -79,8 +79,8 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
       step_number = 0;
       action_number = 0;
       transition_number = 0;
-      switch (wanted_sfcgeneration) {
-        case sfcdecl_sg:
+      switch (wanted_sfcdeclaration) {
+        case sfcdecl_sd:
           for(int i = 0; i < symbol->n; i++)
             symbol->elements[i]->accept(*this);
           
@@ -105,7 +105,7 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
           s4o.print_integer(transition_number);
           s4o.print("];\n");
           break;
-        case sfcinit_sg:
+        case sfcinit_sd:
           /* steps table initialisation */
           s4o.print(s4o.indent_spaces + "STEP temp_step = {0, 0, 0};\n");
           s4o.print(s4o.indent_spaces + "for(UINT i = 0; i < ");
@@ -132,25 +132,25 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
           s4o.indent_left();
           s4o.print(s4o.indent_spaces + "}\n");
           break;
-        case stepdef_sg:
+        case stepdef_sd:
           s4o.print("// Steps definitions\n");
           for(int i = 0; i < symbol->n; i++)
             symbol->elements[i]->accept(*this);
           s4o.print("\n");
           break;
-        case actiondef_sg:
+        case actiondef_sd:
           s4o.print("// Actions definitions\n");
           for(int i = 0; i < symbol->n; i++)
             symbol->elements[i]->accept(*this);
           s4o.print("\n");
           break;
-        case stepundef_sg:
+        case stepundef_sd:
           s4o.print("// Steps undefinitions\n");
           for(int i = 0; i < symbol->n; i++)
             symbol->elements[i]->accept(*this);
           s4o.print("\n");
           break;
-        case actionundef_sg:
+        case actionundef_sd:
           s4o.print("// Actions undefinitions\n");
           for(int i = 0; i < symbol->n; i++)
             symbol->elements[i]->accept(*this);
@@ -161,11 +161,11 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
     }
     
     void *visit(initial_step_c *symbol) {
-      switch (wanted_sfcgeneration) {
-        case sfcdecl_sg:
+      switch (wanted_sfcdeclaration) {
+        case sfcdecl_sd:
           step_number++;
           break;
-        case sfcinit_sg:
+        case sfcinit_sd:
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
           s4o.print("action_list[");
@@ -173,7 +173,7 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
           s4o.print("].state = 1;\n");
           step_number++;
           break;
-        case stepdef_sg:
+        case stepdef_sd:
           s4o.print("#define ");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->step_name->accept(*this);
@@ -182,7 +182,7 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
           s4o.print("\n");
           step_number++;
           break;
-        case stepundef_sg:
+        case stepundef_sd:
           s4o.print("#undef ");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->step_name->accept(*this);
@@ -195,11 +195,11 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
     }
     
     void *visit(step_c *symbol) {
-      switch (wanted_sfcgeneration) {
-        case sfcdecl_sg:
+      switch (wanted_sfcdeclaration) {
+        case sfcdecl_sd:
           step_number++;
           break;
-        case stepdef_sg:
+        case stepdef_sd:
           s4o.print("#define ");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->step_name->accept(*this);
@@ -208,7 +208,7 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
           s4o.print("\n");
           step_number++;
           break;
-        case stepundef_sg:
+        case stepundef_sd:
           s4o.print("#undef ");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->step_name->accept(*this);
@@ -221,8 +221,8 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
     }
 
     void *visit(transition_c *symbol) {
-      switch (wanted_sfcgeneration) {
-        case sfcdecl_sg:
+      switch (wanted_sfcdeclaration) {
+        case sfcdecl_sd:
           transition_number++;
           break;
         default:
@@ -232,8 +232,8 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
     }
 
     void *visit(action_c *symbol) {
-      switch (wanted_sfcgeneration) {
-        case actiondef_sg:
+      switch (wanted_sfcdeclaration) {
+        case actiondef_sd:
           s4o.print("#define ");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->action_name->accept(*this);
@@ -242,13 +242,13 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
           s4o.print("\n");
           action_number++;
           break;
-        case actionundef_sg:
+        case actionundef_sd:
           s4o.print("#undef ");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->action_name->accept(*this);
           s4o.print("\n");
           break;
-        case sfcdecl_sg:
+        case sfcdecl_sd:
           action_number++;
           break;
         default:

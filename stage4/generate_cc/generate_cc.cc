@@ -788,7 +788,7 @@ void *visit(program_declaration_c *symbol) {
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   /* (A.4) Generate private internal variables for SFC */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcdecl_sg);
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcdecl_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
   
@@ -826,7 +826,7 @@ void *visit(program_declaration_c *symbol) {
   delete vardecl;
   s4o.print("\n");
   /* (B.3) Generate private internal variables for SFC */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcinit_sg);
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcinit_sd);
   sfcdecl->print(symbol->function_block_body,FB_FUNCTION_PARAM"->");
   delete sfcdecl;
 
@@ -835,12 +835,12 @@ void *visit(program_declaration_c *symbol) {
 
   /* (C) Function with PROGRAM body */
   /* (C.1) Step definitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepdef_sg);
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepdef_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
   
   /* (C.2) Action definitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actiondef_sg);
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actiondef_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
 
@@ -878,12 +878,12 @@ void *visit(program_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "() \n\n");
 
   /* (C.6) Step undefinitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepundef_sg);
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepundef_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
   
   /* (C.7) Action undefinitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actionundef_sg);
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actionundef_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
   
