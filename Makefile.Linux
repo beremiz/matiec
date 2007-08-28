@@ -1,4 +1,5 @@
- 
+#CXX = i686-mingw32-c++ 
+CXX = g++ 
 
 #get warnings, debugging information and optimization
 CFLAGS  = -Wall -pedantic -Wpointer-arith -Wwrite-strings
@@ -9,7 +10,7 @@ CFLAGS += -O3 -funroll-loops
 
 #get warnings, debugging information and optimization
 CXXFLAGS  = -Wall -pedantic -Wpointer-arith -Wwrite-strings
-#CXXFLAGS += -ggdb -O3 -funroll-loops
-CXXFLAGS += -O3 -funroll-loops
+CXXFLAGS += -ggdb
+#CXXFLAGS += -O3 -funroll-loops
 
 IECLIBDIR=lib

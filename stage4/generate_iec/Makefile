@@ -1,7 +1,5 @@
 # include the system specific Makefile
-#include ../../../../Makefile.$(shell uname)
-
-
+include ../../Makefile.$(shell uname)
 
 default: all
 
@@ -12,9 +10,9 @@ clean:
 	-rm -f *.o */*.o 
 
 #get warnings, debugging information and optimization
-CXXFLAGS  = -Wall -pedantic -Wpointer-arith -Wwrite-strings
+#CXXFLAGS  = -Wall -pedantic -Wpointer-arith -Wwrite-strings
 # CXXFLAGS += -Werror
-CXXFLAGS += -ggdb -O3 -funroll-loops
+#CXXFLAGS += -ggdb -O3 -funroll-loops
 # Note: if the optimizer crashes, we'll leave out the -O3 for those files
 
 CXXFLAGS += -I. -I../* -I../../absyntax
