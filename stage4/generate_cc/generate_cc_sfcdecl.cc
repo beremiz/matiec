@@ -257,5 +257,13 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
       return NULL;
     }
 
+    void *visit(instruction_list_c *symbol) {
+      return NULL;
+    }
+    
+    void *visit(statement_list_c *symbol) {
+      return NULL;
+    }
+
 }; /* generate_cc_sfcdecl_c */
 
