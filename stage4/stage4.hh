@@ -55,6 +55,8 @@ class stage4out_c {
     void *printlocation(const char *str);
     void *printlocation(std::string str);
 
+    void *printlocation_comasep(const char *str);
+
   protected:
     std::ostream *out;
     std::fstream *m_file;

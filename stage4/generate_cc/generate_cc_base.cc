@@ -88,10 +88,11 @@ class generate_cc_base_c: public iterator_visitor_c {
     }
 
     void *print_literal(symbol_c *type, symbol_c *value) {
-      s4o.print("(");
+      s4o.print("__");
       type->accept(*this);
-      s4o.print(")");
+      s4o.print("_LITERAL(");
       value->accept(*this);
+      s4o.print(")");
       return NULL;
     }
 

@@ -123,6 +123,20 @@ void *stage4out_c::printlocation(const char *str) {
   return NULL;
 }
 
+void *stage4out_c::printlocation_comasep(const char *str) {
+  *out << (unsigned char)toupper(str[0]);
+  *out << ',';
+  *out << (unsigned char)toupper(str[1]);
+  *out << ',';
+  for (int i = 2; str[i] != '\0'; i++)
+    if(str[i] == '.')
+      *out << ',';
+    else
+      *out << (unsigned char)toupper(str[i]);
+  return NULL;
+}
+
+
 void *stage4out_c::print(std::string str) {
   *out << str;
   return NULL;

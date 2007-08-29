@@ -95,6 +95,29 @@ typedef struct {
 } WSTRING;
 */
 
+#define __BOOL_literal(value) (BOOL)value
+#define __SINT_literal(value) (SINT)value
+#define __INT_literal(value) (INT)value
+#define __DINT_literal(value) (DINT)value
+#define __LINT_literal(value) (LINT)value
+#define __USINT_literal(value) (USINT)value
+#define __UINT_literal(value) (UINT)value
+#define __UDINT_literal(value) (UDINT)value
+#define __ULINT_literal(value) (ULINT)value
+#define __REAL_literal(value) (REAL)value
+#define __LREAL_literal(value) (LREAL)value
+#define __TIME_literal(value) (TIME)value
+#define __DATE_literal(value) (DATE)value
+#define __TOD_literal(value) (TOD)value
+#define __DT_literal(value) (DT)value
+#define __STRING_literal(value) (STRING)value
+#define __BYTE_literal(value) (BYTE)value
+#define __WORD_literal(value) (WORD)value
+#define __DWORD_literal(value) (DWORD)value
+#define __LWORD_literal(value) (LWORD)value
+
+
+
 #define __INIT_REAL 0
 #define __INIT_LREAL 0
 #define __INIT_SINT 0
