@@ -6,7 +6,7 @@
 #include <float.h>
 #include <math.h>
 #include <time.h>
-#include <sys/types.h>
+#include <stdint.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,7 +48,7 @@
 /*  Types defs   */
 /*****************/
 
-typedef u_int8_t  BOOL;
+typedef uint8_t  BOOL;
 
 #define TRUE 1
 #define FALSE 0
@@ -58,18 +58,30 @@ typedef int16_t   INT;
 typedef int32_t   DINT;
 typedef int64_t   LINT;
 
-typedef u_int8_t    USINT;
-typedef u_int16_t   UINT;
-typedef u_int32_t   UDINT;
-typedef u_int64_t   ULINT;
+typedef uint8_t    USINT;
+typedef uint16_t   UINT;
+typedef uint32_t   UDINT;
+typedef uint64_t   ULINT;
 
-typedef u_int8_t    BYTE;
-typedef u_int16_t   WORD;
-typedef u_int32_t   DWORD;
-typedef u_int64_t   LWORD;
+typedef uint8_t    BYTE;
+typedef uint16_t   WORD;
+typedef uint32_t   DWORD;
+typedef uint64_t   LWORD;
 
 typedef float    REAL;
 typedef double   LREAL;
+
+
+#if !defined __timespec_defined
+# define __timespec_defined     1
+
+struct timespec
+  {
+    long int tv_sec;            /* Seconds.  */
+    long int tv_nsec;           /* Nanoseconds.  */
+  };
+
+#endif
 
 typedef struct timespec TIME;
 typedef struct timespec DATE;
@@ -83,7 +95,7 @@ extern TIME __CURRENT_TIME;
 typedef int8_t __strlen_t;
 typedef struct {
     __strlen_t len;
-    u_int8_t body[STR_MAX_LEN];
+    uint8_t body[STR_MAX_LEN];
 } STRING;
 
 #define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
@@ -95,26 +107,38 @@ typedef struct {
 } WSTRING;
 */
 
-#define __BOOL_literal(value) (BOOL)value
-#define __SINT_literal(value) (SINT)value
-#define __INT_literal(value) (INT)value
-#define __DINT_literal(value) (DINT)value
-#define __LINT_literal(value) (LINT)value
-#define __USINT_literal(value) (USINT)value
-#define __UINT_literal(value) (UINT)value
-#define __UDINT_literal(value) (UDINT)value
-#define __ULINT_literal(value) (ULINT)value
-#define __REAL_literal(value) (REAL)value
-#define __LREAL_literal(value) (LREAL)value
-#define __TIME_literal(value) (TIME)value
-#define __DATE_literal(value) (DATE)value
-#define __TOD_literal(value) (TOD)value
-#define __DT_literal(value) (DT)value
-#define __STRING_literal(value) (STRING)value
-#define __BYTE_literal(value) (BYTE)value
-#define __WORD_literal(value) (WORD)value
-#define __DWORD_literal(value) (DWORD)value
-#define __LWORD_literal(value) (LWORD)value
+# if __WORDSIZE == 64
+#define __32b_sufix
+#define __64b_sufix L
+#else
+#define __32b_sufix L
+#define __64b_sufix LL 
+#endif 
+
+#define __lit(type,value,sfx) (type)value##sfx
+// Keep this macro expention step to let sfx change into L or LL 
+#define __literal(type,value,sfx) __lit(type,value,sfx)
+
+#define __BOOL_LITERAL(value) __literal(BOOL,value,)
+#define __SINT_LITERAL(value) __literal(SINT,value,)
+#define __INT_LITERAL(value) __literal(INT,value,)
+#define __DINT_LITERAL(value) __literal(DINT,value,__32b_sufix)
+#define __LINT_LITERAL(value) __literal(LINT,value,__64b_sufix)
+#define __USINT_LITERAL(value) __literal(USINT,value,)
+#define __UINT_LITERAL(value) __literal(UINT,value,)
+#define __UDINT_LITERAL(value) __literal(UDINT,value,__32b_sufix)
+#define __ULINT_LITERAL(value) __literal(ULINT,value,__64b_sufix)
+#define __REAL_LITERAL(value) __literal(REAL,value,__32b_sufix)
+#define __LREAL_LITERAL(value) __literal(LREAL,value,__64b_sufix)
+#define __TIME_LITERAL(value) __literal(TIME,value,)
+#define __DATE_LITERAL(value) __literal(DATE,value,)
+#define __TOD_LITERAL(value) __literal(TOD,value,)
+#define __DT_LITERAL(value) __literal(DT,value,)
+#define __STRING_LITERAL(value) __literal(STRING,value,)
+#define __BYTE_LITERAL(value) __literal(BYTE,value,)
+#define __WORD_LITERAL(value) __literal(WORD,value,)
+#define __DWORD_LITERAL(value) __literal(DWORD,value,__32b_sufix)
+#define __LWORD_LITERAL(value) __literal(LWORD,value,__32b_sufix)
 
 
 
@@ -642,29 +666,29 @@ static inline STRING __time_to_string(TIME IN){
 static inline STRING __date_to_string(DATE IN){
     /* D#1984-06-25 */
     STRING res = __INIT_STRING;
-    struct tm broken_down_time;
+    struct tm* broken_down_time;
     time_t seconds = IN.tv_sec;
-    if (NULL == localtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
+    if (NULL == (broken_down_time = localtime(&seconds))){ /* get the UTC (GMT) broken down time */
         IEC_error();
         return (STRING){7,"D#ERROR"};
     }
-    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "D#%d-%2.2d-%2.2d", broken_down_time.tm_year + 1900, broken_down_time.tm_mon + 1, broken_down_time.tm_mday);
+    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "D#%d-%2.2d-%2.2d", broken_down_time->tm_year + 1900, broken_down_time->tm_mon + 1, broken_down_time->tm_mday);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
 static inline STRING __tod_to_string(TOD IN){
     /* TOD#15:36:55.36 */
     STRING res = __INIT_STRING;
-    struct tm broken_down_time;
+    struct tm* broken_down_time;
     time_t seconds = IN.tv_sec;
-    if (NULL == localtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
+    if (NULL == (broken_down_time = localtime(&seconds))){ /* get the UTC (GMT) broken down time */
         IEC_error();
         return (STRING){9,"TOD#ERROR"};
     }
     if(IN.tv_nsec == 0){
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%d", broken_down_time.tm_hour, broken_down_time.tm_min, broken_down_time.tm_sec);
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%d", broken_down_time->tm_hour, broken_down_time->tm_min, broken_down_time->tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%g", broken_down_time.tm_hour, broken_down_time.tm_min, (LREAL)broken_down_time.tm_sec + (LREAL)IN.tv_nsec / 1e9);
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%g", broken_down_time->tm_hour, broken_down_time->tm_min, (LREAL)broken_down_time->tm_sec + (LREAL)IN.tv_nsec / 1e9);
     }
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
@@ -672,28 +696,28 @@ static inline STRING __tod_to_string(TOD IN){
 static inline STRING __dt_to_string(DT IN){
     /* DT#1984-06-25-15:36:55.36 */
     STRING res;
-    struct tm broken_down_time;
+    struct tm* broken_down_time;
     time_t seconds = IN.tv_sec;
-    if (NULL == localtime_r(&seconds, &broken_down_time)){ /* get the UTC (GMT) broken down time */
+    if (NULL == (broken_down_time = localtime(&seconds))){ /* get the UTC (GMT) broken down time */
         IEC_error();
         return (STRING){8,"DT#ERROR"};
     }
     if(IN.tv_nsec == 0){
         res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%d",
-                 broken_down_time.tm_year,
-                 broken_down_time.tm_mon,
-                 broken_down_time.tm_mday,
-                 broken_down_time.tm_hour,
-                 broken_down_time.tm_min,
-                 broken_down_time.tm_sec);
+                 broken_down_time->tm_year,
+                 broken_down_time->tm_mon,
+                 broken_down_time->tm_mday,
+                 broken_down_time->tm_hour,
+                 broken_down_time->tm_min,
+                 broken_down_time->tm_sec);
     }else{
         res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%g",
-                 broken_down_time.tm_year,
-                 broken_down_time.tm_mon,
-                 broken_down_time.tm_mday,
-                 broken_down_time.tm_hour,
-                 broken_down_time.tm_min,
-                 (LREAL)broken_down_time.tm_sec + ((LREAL)IN.tv_nsec / 1e9));
+                 broken_down_time->tm_year,
+                 broken_down_time->tm_mon,
+                 broken_down_time->tm_mday,
+                 broken_down_time->tm_hour,
+                 broken_down_time->tm_min,
+                 (LREAL)broken_down_time->tm_sec + ((LREAL)IN.tv_nsec / 1e9));
     }
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;

@@ -1,35 +1,77 @@
+#ifdef __WIN32__
+#include <stdio.h>
+#include <sys/timeb.h>
+#include <time.h>
+#include <windows.h>
+#else
+#include <stdio.h>
+#include <string.h>
 #include <time.h>
 #include <signal.h>
-
-#include "iec_std_lib.h"
+#endif
 
 /*
  * Functions and variables provied by generated C softPLC
  **/ 
-void config_run__(int tick);
-void config_init__(void);
 extern int common_ticktime__;
 
 /*
- *  Functions and variables to export to generated C softPLC
- **/
- 
-TIME __CURRENT_TIME;
+ * Functions and variables provied by plc.c
+ **/ 
+void run(long int tv_sec, long int tv_nsec);
 
-#define __LOCATED_VAR(type, name) type name;
-#include "LOCATED_VARIABLES.h"
-#undef __LOCATED_VAR
+#define maxval(a,b) ((a>b)?a:b)
 
-static int tick = 0;
+#ifdef __WIN32__
+void timer_notify()
+{
+   struct _timeb timebuffer;
+
+   _ftime( &timebuffer );
+   run(timebuffer.time, timebuffer.millitm * 1000000);
+}
+
+int main(int argc,char **argv)
+{
+    HANDLE hTimer = NULL;
+    LARGE_INTEGER liDueTime;
+
+    liDueTime.QuadPart = -10000 * maxval(common_ticktime__,1);;
+
+    // Create a waitable timer.
+    hTimer = CreateWaitableTimer(NULL, TRUE, "WaitableTimer");
+    if (NULL == hTimer)
+    {
+        printf("CreateWaitableTimer failed (%d)\n", GetLastError());
+        return 1;
+    }
+
+    config_init__();
+
+    // Set a timer to wait for 10 seconds.
+    if (!SetWaitableTimer(hTimer, &liDueTime, common_ticktime__, NULL, NULL, 0))
+    {
+        printf("SetWaitableTimer failed (%d)\n", GetLastError());
+        return 2;
+    }
+
+    while(1){
+    // Wait for the timer.
+        if (WaitForSingleObject(hTimer, INFINITE) != WAIT_OBJECT_0)
+        {
+            printf("WaitForSingleObject failed (%d)\n", GetLastError());
+            break;
+        }
+        timer_notify();
+    }
+    return 0;
+}
+#else
 void timer_notify(sigval_t val)
 {
-    clock_gettime(CLOCK_REALTIME, &__CURRENT_TIME);
-    printf("Tick %d\n",tick);
-    config_run__(tick++);
-    printf("  Located variables : \n");
-#define __LOCATED_VAR(type, name) __print_##type(name);
-#include "LOCATED_VARIABLES.h"
-#undef __LOCATED_VAR
+    struct timespec CURRENT_TIME;
+    clock_gettime(CLOCK_REALTIME, &CURRENT_TIME);
+    run(CURRENT_TIME.tv_sec, CURRENT_TIME.tv_nsec);
 }
 
 void catch_signal(int sig)
@@ -39,7 +81,6 @@ void catch_signal(int sig)
   printf("Got Signal %d\n",sig);
 }
 
-#define maxval(a,b) ((a>b)?a:b)
 int main(int argc,char **argv)
 {
     timer_t timer;
@@ -74,3 +115,4 @@ int main(int argc,char **argv)
     
     return 0;
 }
+#endif
