@@ -44,59 +44,47 @@
 #define DBG_TYPE(TYPENAME, name)
 #endif
 
-/*****************/
-/*  Types defs   */
-/*****************/
+/*********************/
+/*  IEC Types defs   */
+/*********************/
 
-typedef uint8_t  BOOL;
+/* Include non windows.h clashing typedefs */
+#include "iec_types.h"
+
+/* Those typdefs clash with windows.h */
+/* i.e. this file cannot be included aside windows.h */
+typedef IEC_BOOL  BOOL;
 
 #define TRUE 1
 #define FALSE 0
 
-typedef int8_t    SINT;
-typedef int16_t   INT;
-typedef int32_t   DINT;
-typedef int64_t   LINT;
+typedef IEC_SINT    SINT;
+typedef IEC_INT   INT;
+typedef IEC_DINT   DINT;
+typedef IEC_LINT   LINT;
 
-typedef uint8_t    USINT;
-typedef uint16_t   UINT;
-typedef uint32_t   UDINT;
-typedef uint64_t   ULINT;
+typedef IEC_USINT    USINT;
+typedef IEC_UINT   UINT;
+typedef IEC_UDINT   UDINT;
+typedef IEC_ULINT   ULINT;
 
-typedef uint8_t    BYTE;
-typedef uint16_t   WORD;
-typedef uint32_t   DWORD;
-typedef uint64_t   LWORD;
+typedef IEC_BYTE    BYTE;
+typedef IEC_WORD   WORD;
+typedef IEC_DWORD   DWORD;
+typedef IEC_LWORD   LWORD;
 
-typedef float    REAL;
-typedef double   LREAL;
+typedef IEC_REAL    REAL;
+typedef IEC_LREAL   LREAL;
 
-
-#if !defined __timespec_defined
-# define __timespec_defined     1
-
-struct timespec
-  {
-    long int tv_sec;            /* Seconds.  */
-    long int tv_nsec;           /* Nanoseconds.  */
-  };
-
-#endif
-
-typedef struct timespec TIME;
-typedef struct timespec DATE;
-typedef struct timespec DT;
-typedef struct timespec TOD;
+typedef IEC_TIME TIME;
+typedef IEC_DATE DATE;
+typedef IEC_DT DT;
+typedef IEC_TOD TOD;
 
 #define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t2.tv_nsec - t1.tv_nsec : t1.tv_sec - t2.tv_sec) 
 extern TIME __CURRENT_TIME;
 
-#define STR_MAX_LEN 40
-typedef int8_t __strlen_t;
-typedef struct {
-    __strlen_t len;
-    uint8_t body[STR_MAX_LEN];
-} STRING;
+typedef IEC_STRING STRING;
 
 #define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
 
