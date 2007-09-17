@@ -4229,6 +4229,23 @@ This POU tests:
               </type>
             </variable>
           </localVars>
+	  <localVars>
+		  <variable name="my_from_str_test">
+			  <type>
+				  <derived name="TEST_FROM_STRINGS"/>
+			  </type>
+		  </variable>
+		  <variable name="my_string_ops">
+			  <type>
+				  <derived name="TEST_STRINGS_OPS"/>
+			  </type>
+		  </variable>
+		  <variable name="my_to_str">
+			  <type>
+				  <derived name="TEST_TO_STRINGS"/>
+			  </type>
+		  </variable>
+	  </localVars>
         </interface>
         <body>
           <FBD>
