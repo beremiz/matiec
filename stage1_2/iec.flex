@@ -770,6 +770,7 @@ END_VAR{st_whitespace}			{unput_text(strlen("END_VAR"));
 <il_st_state>{
 {st_whitespace_no_pragma}			/* Eat any whitespace */
 {qualified_identifier}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
+{direct_variable}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
 {qualified_identifier}"["			unput_text(0); BEGIN(st_state);
 
 RETURN						unput_text(0); BEGIN(st_state);
@@ -899,9 +900,11 @@ ENO	return ENO;
 	/* B 1.2.1 - Numeric Literals */
 	/******************************/
 TRUE		return TRUE;
-BOOL#1  	return TRUE;
+BOOL#1		return TRUE;
+BOOL#TRUE		return TRUE;
 FALSE		return FALSE;
-BOOL#0  	return FALSE;
+BOOL#0		return FALSE;
+BOOL#FALSE		return FALSE;
 
 
 	/************************/
