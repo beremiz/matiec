@@ -142,6 +142,21 @@ void *visit(symbolic_variable_c *symbol) {
   return NULL;
 }
 
+/********************************************/
+/* B.1.4.1   Directly Represented Variables */
+/********************************************/
+// direct_variable: direct_variable_token   {$$ = new direct_variable_c($1);};
+void *visit(direct_variable_c *symbol) {
+  TRACE("direct_variable_c");
+  /* Do not use print_token() as it will change everything into uppercase */
+  if (strlen(symbol->value) == 0) ERROR;
+  s4o.print("*(");
+  this->print_variable_prefix();
+  s4o.printlocation(symbol->value + 1);
+  s4o.print(")");
+  return NULL;
+}
+
 /***************************************/
 /* B.3 - Language ST (Structured Text) */
 /***************************************/
