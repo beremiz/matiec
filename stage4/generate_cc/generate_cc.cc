@@ -1168,7 +1168,7 @@ END_RESOURCE
       /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
         vardecl = new generate_cc_vardecl_c(&s4o,
-                      generate_cc_vardecl_c::localstatic_vf,
+                      generate_cc_vardecl_c::local_vf,
                       generate_cc_vardecl_c::global_vt);
         vardecl->print(current_global_vars);
         delete vardecl;

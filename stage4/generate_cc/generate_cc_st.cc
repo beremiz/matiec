@@ -349,7 +349,13 @@ void *visit(mod_expression_c *symbol) {
 /* TODO: power expression... */
 void *visit(power_expression_c *symbol) {ERROR; return print_binary_expression(symbol->l_exp, symbol->r_exp, " ** ");}
 void *visit(neg_expression_c *symbol) {return print_unary_expression(symbol->exp, " -");}
-void *visit(not_expression_c *symbol) {return print_unary_expression(symbol->exp, search_expression_type->is_bool_type(symbol->exp)?"!":"~");}
+
+void *visit(not_expression_c *symbol) {
+  symbol_c *exp_type = search_expression_type->get_type(symbol->exp);
+  if (!search_expression_type->is_binary_type(exp_type))
+     ERROR;
+  return print_unary_expression(symbol->exp, search_expression_type->is_bool_type(exp_type)?"!":"~");
+}
 
 void *visit(function_invocation_c *symbol) {
   function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);

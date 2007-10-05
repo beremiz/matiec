@@ -466,7 +466,7 @@ SYM_REF2(function_invocation_c, function_name, parameter_assignment_list)
 */
     void *visit(function_invocation_c *symbol) {
       TRACE("function_invocation_c");
-      if ((symbol_c *)symbol == f_call)
+      if ((symbol_c *)symbol == f_call && symbol->parameter_assignment_list != NULL)
         return symbol->parameter_assignment_list->accept(*this);
       else
         return NULL;
@@ -498,7 +498,10 @@ SYM_REF2(assignment_statement_c, l_exp, r_exp)
 // SYM_REF2(fb_invocation_c, fb_name, param_assignment_list)
     void *visit(fb_invocation_c *symbol) {
       TRACE("fb_invocation_c");
-      return symbol->param_assignment_list->accept(*this);
+      if (symbol->param_assignment_list != NULL)
+        return symbol->param_assignment_list->accept(*this);
+      else
+        return NULL;
     }
 
 /* helper symbol for fb_invocation */

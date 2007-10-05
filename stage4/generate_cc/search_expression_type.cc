@@ -472,9 +472,7 @@ class search_expression_type_c: public search_constant_type_c {
   
   void *visit(not_expression_c *symbol) {
     symbol_c *exp_type = base_type((symbol_c *)symbol->exp->accept(*this));
-    if (typeid(*exp_type) == typeid(bool_type_name_c)) {return (void *)exp_type;}
-    ERROR;
-    return NULL;
+    return compute_boolean_expression(exp_type, exp_type);
   }
   
   void *visit(function_invocation_c *symbol) {
