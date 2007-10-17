@@ -621,6 +621,7 @@ public:
 //SYM_REF4(function_block_declaration_c, fblock_name, var_declarations, fblock_body, unused)
 void *visit(function_block_declaration_c *symbol) {
   generate_cc_vardecl_c *vardecl;
+  generate_cc_sfcdecl_c *sfcdecl;
   TRACE("function_block_declaration_c");
 
   /* start off by adding this declaration to the global
@@ -655,9 +656,13 @@ void *visit(function_block_declaration_c *symbol) {
   				      generate_cc_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
+  /* (A.4) Generate private internal variables for SFC */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcdecl_sd);
+  sfcdecl->print(symbol->fblock_body);
+  delete sfcdecl;
   s4o.print("\n");
 
-  /* (A.4) Function Block data structure type name. */
+  /* (A.5) Function Block data structure type name. */
   s4o.indent_left();
   s4o.print("} ");
   symbol->fblock_name->accept(*this);
@@ -688,14 +693,29 @@ void *visit(function_block_declaration_c *symbol) {
   				      generate_cc_vardecl_c::private_vt |
 				        generate_cc_vardecl_c::located_vt |
 				        generate_cc_vardecl_c::external_vt);
-  vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
+  vardecl->print(symbol->var_declarations, NULL, FB_FUNCTION_PARAM"->");
   delete vardecl;
+  s4o.print("\n");
+  /* (B.3) Generate private internal variables for SFC */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcinit_sd);
+  sfcdecl->print(symbol->fblock_body, FB_FUNCTION_PARAM"->");
+  delete sfcdecl;
   s4o.indent_left();
-  s4o.print("\n" + s4o.indent_spaces + "}\n\n");
+  s4o.print(s4o.indent_spaces + "}\n\n");
 
   
   /* (C) Function with FB body */
-  /* (C.1) Function declaration */
+  /* (C.1) Step definitions */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepdef_sd);
+  sfcdecl->print(symbol->fblock_body);
+  delete sfcdecl;
+  
+  /* (C.2) Action definitions */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actiondef_sd);
+  sfcdecl->print(symbol->fblock_body);
+  delete sfcdecl;
+  
+  /* (C.3) Function declaration */
   s4o.print("// Code part\n");
   /* function interface */
   s4o.print("void ");
@@ -709,7 +729,7 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print(") {\n");
   s4o.indent_right();
 
-  /* (C.2) Initialize TEMP variables */
+  /* (C.4) Initialize TEMP variables */
   /* function body */
   s4o.print(s4o.indent_spaces + "// Initialise TEMP variables\n");
   vardecl = new generate_cc_vardecl_c(&s4o,
@@ -719,7 +739,7 @@ void *visit(function_block_declaration_c *symbol) {
   delete vardecl;
   s4o.print("\n");
 
-  /* (C.3) Function code */
+  /* (C.5) Function code */
   generate_cc_SFC_IL_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
   symbol->fblock_body->accept(generate_cc_code);
   s4o.indent_left();
@@ -727,6 +747,16 @@ void *visit(function_block_declaration_c *symbol) {
   symbol->fblock_name->accept(*this);
   s4o.print(FB_FUNCTION_SUFFIX);
   s4o.print(s4o.indent_spaces + "() \n\n");
+
+  /* (C.6) Step undefinitions */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepundef_sd);
+  sfcdecl->print(symbol->fblock_body);
+  delete sfcdecl;
+  
+  /* (C.7) Action undefinitions */
+  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actionundef_sd);
+  sfcdecl->print(symbol->fblock_body);
+  delete sfcdecl;
 
   s4o.indent_left();
   s4o.print("\n\n\n\n");

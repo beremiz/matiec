@@ -65,6 +65,7 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
     generate_cc_il_c *generate_cc_il;
     generate_cc_st_c *generate_cc_st;
     generate_cc_SFC_IL_ST_c *generate_cc_code;
+    search_var_instance_decl_c *search_var_instance_decl;
     
     int transition_number;
     std::list<TRANSITION> transition_list;
@@ -80,6 +81,7 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
       generate_cc_il = new generate_cc_il_c(s4o_ptr, scope, variable_prefix);
       generate_cc_st = new generate_cc_st_c(s4o_ptr, scope, variable_prefix);
       generate_cc_code = new generate_cc_SFC_IL_ST_c(s4o_ptr, scope, variable_prefix);
+      search_var_instance_decl = new search_var_instance_decl_c(scope);
       this->set_variable_prefix(variable_prefix);
     }
     
@@ -87,6 +89,7 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
       delete generate_cc_il;
       delete generate_cc_st;
       delete generate_cc_code;
+      delete search_var_instance_decl;
     }
 
     void reset_transition_number(void) {transition_number = 0;}
@@ -147,6 +150,12 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
       s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
     }
     
+    bool is_variable(symbol_c *symbol) {
+      /* we try to find the variable instance declaration, to determine its type... */
+      symbol_c *var_decl = search_var_instance_decl->get_decl(symbol);
+      
+      return var_decl != NULL;
+    }
 
 /*********************************************/
 /* B.1.6  Sequential function chart elements */
@@ -231,7 +240,7 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
             if (symbol->integer != NULL) {
               transition->priority = atoi(((token_c *)symbol->integer)->value);
               std::list<TRANSITION>::iterator pt = transition_list.begin();
-              while (pt != transition_list.end() && pt->priority > transition->priority) {
+              while (pt != transition_list.end() && pt->priority <= transition->priority) {
                 pt++;
               } 
               transition_list.insert(pt, *transition);
@@ -467,12 +476,24 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
               s4o.print(" = 1;\n");  
             }
             if (strcmp(qualifier, "S") == 0) {
-              print_action_argument(current_action, "set");
+              if (is_variable(current_action)) {
+                print_variable_prefix();
+                current_action->accept(*this);
+              }
+              else
+                print_action_argument(current_action, "set");
               s4o.print(" = 1;\n");
             }
             if (strcmp(qualifier, "R") == 0) {
-              print_action_argument(current_action, "reset");
-              s4o.print(" = 1;\n");
+              if (is_variable(current_action)) {
+                print_variable_prefix();
+                current_action->accept(*this);
+                s4o.print(" = 0;\n");
+              }
+              else {
+                print_action_argument(current_action, "reset");
+                s4o.print(" = 1;\n");
+              }
             }
             if (strcmp(qualifier, "SD") == 0 || strcmp(qualifier, "DS") == 0 || 
                 strcmp(qualifier, "SL") == 0) {
@@ -564,7 +585,9 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
       print_variable_prefix();
       s4o.print("step_list[i].elapsed_time = __time_add(");
       print_variable_prefix();
-      s4o.print("step_list[i].elapsed_time, PERIOD);\n");
+      s4o.print("step_list[i].elapsed_time, ");
+      print_variable_prefix();
+      s4o.print("period);\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
       s4o.indent_left();
@@ -586,17 +609,21 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
       print_variable_prefix();
       s4o.print("action_list[i].reset = 0;\n");
       s4o.print(s4o.indent_spaces + "if (");
+      s4o.print("__gt_TIME(2, ");
       print_variable_prefix();
-      s4o.print("__gt_TIME(action_list[i].set_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0)) {\n");
+      s4o.print("action_list[i].set_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
       s4o.print("action_list[i].set_remaining_time = __time_sub(");
       print_variable_prefix();
-      s4o.print("action_list[i].set_remaining_time, PERIOD);\n");
-      s4o.print(s4o.indent_spaces + "if (");
+      s4o.print("action_list[i].set_remaining_time, ");
       print_variable_prefix();
-      s4o.print("__le_TIME(action_list[i].set_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0)) {\n");
+      s4o.print("period);\n");
+      s4o.print(s4o.indent_spaces + "if (");
+      s4o.print("__le_TIME(2, ");
+      print_variable_prefix();
+      s4o.print("action_list[i].set_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
@@ -609,17 +636,21 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
       s4o.print(s4o.indent_spaces + "if (");
+      s4o.print("__gt_TIME(2, ");
       print_variable_prefix();
-      s4o.print("__gt_TIME(action_list[i].reset_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0)) {\n");
+      s4o.print("action_list[i].reset_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
       s4o.print("action_list[i].reset_remaining_time = __time_sub(");
       print_variable_prefix();
-      s4o.print("action_list[i].reset_remaining_time, PERIOD);\n");
-      s4o.print(s4o.indent_spaces + "if (");
+      s4o.print("action_list[i].reset_remaining_time, ");
       print_variable_prefix();
-      s4o.print("__le_TIME(action_list[i].reset_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0)) {\n");
+      s4o.print("period);\n");
+      s4o.print(s4o.indent_spaces + "if (");
+      s4o.print("__le_TIME(2, ");
+      print_variable_prefix();
+      s4o.print("action_list[i].reset_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
@@ -676,9 +707,9 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].set_remaining_time = 0;\n" + s4o.indent_spaces);
+      s4o.print("action_list[i].set_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n" + s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].reset_remaining_time = 0;\n" + s4o.indent_spaces);
+      s4o.print("action_list[i].reset_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n" + s4o.indent_spaces);
       print_variable_prefix();
       s4o.print("action_list[i].stored = 0;\n");
       s4o.indent_left();

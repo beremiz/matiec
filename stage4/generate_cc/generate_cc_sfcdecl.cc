@@ -45,10 +45,12 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
       typedef enum {
         sfcdecl_sd,
         sfcinit_sd,
+        stepcount_sd,
         stepdef_sd,
         stepundef_sd,
         actiondef_sd,
-        actionundef_sd
+        actionundef_sd,
+        actioncount_sd
        } sfcdeclaration_t;
   
   private:
@@ -88,27 +90,41 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
           s4o.print(s4o.indent_spaces + "STEP step_list[");
           s4o.print_integer(step_number);
           s4o.print("];\n");
-          s4o.print(s4o.indent_spaces + "UINT nb_steps = ");
-          s4o.print_integer(step_number);
-          s4o.print(";\n");
+          s4o.print(s4o.indent_spaces + "UINT nb_steps;\n");
           
           /* actions table declaration */
           s4o.print(s4o.indent_spaces + "ACTION action_list[");
           s4o.print_integer(action_number);
           s4o.print("];\n");
-          s4o.print(s4o.indent_spaces + "UINT nb_actions = ");
-          s4o.print_integer(action_number);
-          s4o.print(";\n");
+          s4o.print(s4o.indent_spaces + "UINT nb_actions;\n");
           
           /* transitions table declaration */
           s4o.print(s4o.indent_spaces + "USINT transition_list[");
           s4o.print_integer(transition_number);
           s4o.print("];\n");
+          
+          /* period declaration */
+          s4o.print(s4o.indent_spaces + "TIME period;\n");
           break;
         case sfcinit_sd:
+          s4o.print(s4o.indent_spaces);
+          s4o.print("UINT i;\n");
+          
+          /* steps table count */
+          wanted_sfcdeclaration = stepcount_sd;
+          for(int i = 0; i < symbol->n; i++)
+            symbol->elements[i]->accept(*this);
+          s4o.print(s4o.indent_spaces);
+          print_variable_prefix();
+          s4o.print("nb_steps = ");
+          s4o.print_integer(step_number);
+          s4o.print(";\n");
+          step_number = 0;
+          wanted_sfcdeclaration = sfcinit_sd;
+          
           /* steps table initialisation */
           s4o.print(s4o.indent_spaces + "STEP temp_step = {0, 0, 0};\n");
-          s4o.print(s4o.indent_spaces + "for(UINT i = 0; i < ");
+          s4o.print(s4o.indent_spaces + "for(i = 0; i < ");
           print_variable_prefix();
           s4o.print("nb_steps; i++) {\n");
           s4o.indent_right();
@@ -120,15 +136,33 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
           for(int i = 0; i < symbol->n; i++)
             symbol->elements[i]->accept(*this);
           
+          /* steps table count */
+          wanted_sfcdeclaration = actioncount_sd;
+          for(int i = 0; i < symbol->n; i++)
+            symbol->elements[i]->accept(*this);
+          s4o.print(s4o.indent_spaces);
+          print_variable_prefix();
+          s4o.print("nb_actions = ");
+          s4o.print_integer(action_number);
+          s4o.print(";\n");
+          action_number = 0;
+          wanted_sfcdeclaration = sfcinit_sd;
+          
           /* actions table initialisation */
           s4o.print(s4o.indent_spaces + "ACTION temp_action = {0, 0, 0, 0, 0, 0};\n");
-          s4o.print(s4o.indent_spaces + "for(UINT i = 0; i < ");
+          s4o.print(s4o.indent_spaces + "for(i = 0; i < ");
           print_variable_prefix();
           s4o.print("nb_actions; i++) {\n");
           s4o.indent_right();
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
           s4o.print("action_list[i] = temp_action;\n");
+          
+          /* period initialisation */
+          s4o.print(s4o.indent_spaces);
+          print_variable_prefix();
+          s4o.print("period = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
+          
           s4o.indent_left();
           s4o.print(s4o.indent_spaces + "}\n");
           break;
@@ -156,19 +190,22 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
             symbol->elements[i]->accept(*this);
           s4o.print("\n");
           break;
+        default:
+          break;
       }
       return NULL;
     }
     
     void *visit(initial_step_c *symbol) {
       switch (wanted_sfcdeclaration) {
+        case stepcount_sd:
         case sfcdecl_sd:
           step_number++;
           break;
         case sfcinit_sd:
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
-          s4o.print("action_list[");
+          s4o.print("step_list[");
           s4o.print_integer(step_number);
           s4o.print("].state = 1;\n");
           step_number++;
@@ -196,6 +233,7 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
     
     void *visit(step_c *symbol) {
       switch (wanted_sfcdeclaration) {
+        case stepcount_sd:
         case sfcdecl_sd:
           step_number++;
           break;
@@ -248,6 +286,7 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
           symbol->action_name->accept(*this);
           s4o.print("\n");
           break;
+        case actioncount_sd:
         case sfcdecl_sd:
           action_number++;
           break;
