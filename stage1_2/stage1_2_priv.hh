@@ -83,12 +83,29 @@ extern const char *current_filename;
 
 
 
-/*****************************************************/
-/* Controlling the entry to the st_il_state in flex. */
-/*****************************************************/
+/****************************************************/
+/* Controlling the entry to the body_state in flex. */
+/****************************************************/
 void cmd_goto_body_state(void);
 int  get_goto_body_state(void);
 void rst_goto_body_state(void);
+
+
+/*************************************************************/
+/* Controlling the entry to the sfc_qualifier_state in flex. */
+/*************************************************************/
+void cmd_goto_sfc_qualifier_state(void);
+int  get_goto_sfc_qualifier_state(void);
+void rst_goto_sfc_qualifier_state(void);
+
+
+/****************************************************************/
+/* Returning to state in flex previously pushed onto the stack. */
+/****************************************************************/
+void cmd_pop_state(void);
+int  get_pop_state(void);
+void rst_pop_state(void);
+
 
 
 /*********************************/

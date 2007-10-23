@@ -268,30 +268,78 @@ void unput_text(unsigned int n);
  * We therefore use an extra 'body' state. When the lexical parser
  * finds that last END_VAR, it enters the body state. This state
  * must figure out what language is being parsed from the first few
- * tokens, and switch to the correct state (st or il) according to the
+ * tokens, and switch to the correct state (st, il or sfc) according to the
  * language. This means that we insert quite a bit of knowledge of the
  * syntax of the languages into the lexical parser. This is ugly, but it
  * works, and at least it is possible to keep all the state changes together
  * to make it easier to remove them later on if need be.
- * The body state returns any matched text back to the buffer with unput(),
- * to be later matched correctly by the apropriate language parser (st or il).
- * The state machine has 6 possible states (INITIAL, config, decl, body, st, il)
+ * Once the language being parsed has been identified, 
+ * the body state returns any matched text back to the buffer with unput(),
+ * to be later matched correctly by the apropriate language parser (st, il or sfc).
+ *
+ * Aditionally, in sfc state it may further recursively enter the body state
+ * once again. This is because an sfc body may contain ACTIONS, which are then
+ * written in one of the three languages (ST, IL or SFC), so once again we need
+ * to figure out which language the ACTION in the SFC was written in. We already
+ * ahve all that done in the body state, so we recursively transition to the body 
+ * state once again.
+ * Note that in this case, when coming out of the st/il state (whichever language
+ * the action was written in) the sfc state will become active again. This is done by
+ * pushing and poping the previously active state!
+ *
+ * The sfc_qualifier_state is required because when parsing actions within an
+ * sfc, we will be expecting action qualifiers (N, P, R, S, DS, SD, ...). In order
+ * to bison to work correctly, these qualifiers must be returned as tokens. However,
+ * these tokens are not reserved keywords, which means it should be possible to
+ * define variables/functions/FBs with any of these names (including 
+ * S and R which are special because they are also IL operators). So, when we are not
+ * expecting any action qualifiers, flex does not return these tokens, and is free
+ * to interpret them as previously defined variables/functions/... as the case may be.
+ *
+ * The state machine has 7 possible states (INITIAL, config, decl, body, st, il, sfc)
  * Possible state changes are:
- *   INITIAL -> decl_state (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found,
- *                    and followed by a VAR declaration)
- *   INITIAL -> il_st_state (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found,
- *                    and _not_ followed by a VAR declaration)
- *   INITIAL -> config_state (when a CONFIGURATION is found)
- *   decl_state    -> il_st_state (when the last END_VAR is found, i.e. the function body starts)
- *   il_st_state   -> sfc_state (when it figures out it is parsing sfc language)
- *   il_st_state   -> st_state (when it figures out it is parsing st language)
- *   il_st_state   -> il_state (when it figures out it is parsing il language)
- *   decl_state    -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
- *   st_state      -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
- *   sfc_state     -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
- *   il_state      -> INITIAL (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
- *   config_state  -> INITIAL (when a END_CONFIGURATION is found)
+ *   INITIAL -> goto(decl_state)
+ *               (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found,
+ *                and followed by a VAR declaration)
+ *   INITIAL -> goto(body_state) 
+ *                (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found,
+ *                 and _not_ followed by a VAR declaration)
+ *                (This transition is actually commented out, since the syntax
+ *                 does not allow the declaration of functions, FBs, or programs
+ *                 without any VAR declaration!)
+ *   INITIAL -> goto(config_state)
+ *                (when a CONFIGURATION is found)
+ *   decl_state    -> push(decl_state); goto(body_state)
+ *                     (when the last END_VAR is found, i.e. the function body starts)
+ *   decl_state    -> push(decl_state); goto(sfc_state)
+ *                     (when it figures out it is parsing sfc language)
+ *   body_state    -> goto(st_state)
+ *                     (when it figures out it is parsing st language)
+ *   body_state    -> goto(il_state)
+ *                     (when it figures out it is parsing il language)
+ *   st_state      -> pop()
+ *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, END_PROGRAM,
+ *                      END_ACTION or END_TRANSITION is found)
+ *   il_state      -> pop()
+ *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, END_PROGRAM,
+ *                      END_ACTION or END_TRANSITION is found)
+ *   decl_state    -> goto(INITIAL)
+ *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
+ *   sfc_state     -> goto(INITIAL)
+ *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
+ *   config_state  -> goto(INITIAL)
+ *                     (when a END_CONFIGURATION is found)
+ *   sfc_state     -> push(sfc_state); goto(body_state)
+ *                     (when parsing an action. This transition is requested by bison)
+ *   sfc_state     -> push(sfc_state); goto(sfc_qualifier_state)
+ *                     (when expecting an action qualifier. This transition is requested by bison)
+ *   sfc_qualifier_state -> pop()
+ *                     (when no longer expecting an action qualifier. This transition is requested by bison)
+ *
  */
+
+
+
 /* we are parsing a configuration. */
 %s config_state
 
@@ -299,7 +347,7 @@ void unput_text(unsigned int n);
 %s decl_state
 
 /* we will be parsing a function body. Whether il/st is remains unknown */
-%x il_st_state
+%x body_state
 
 /* we are parsing il code -> flex must return the EOL tokens!       */
 %s il_state
@@ -307,9 +355,11 @@ void unput_text(unsigned int n);
 /* we are parsing st code -> flex must not return the EOL tokens!   */
 %s st_state
 
-/* we are parsing sfc code -> flex must not return the EOL tokens!   */
+/* we are parsing sfc code -> flex must not return the EOL tokens!  */
 %s sfc_state
 
+/* we are parsing sfc code, and expecting an action qualifier.      */
+%s sfc_qualifier_state
 
 
 /*******************/
@@ -617,26 +667,40 @@ incompl_location	%[IQM]\*
 	/*****************************************************/
 	/*****************************************************/
 
+	/***********************************************************/
+	/* Handle requests sent by bison for flex to change state. */
+	/***********************************************************/
 	if (get_goto_body_state()) {
-	  yy_push_state(il_st_state);
+	  yy_push_state(body_state);
 	  rst_goto_body_state();
 	}
 
-	/*********************************/
+	if (get_goto_sfc_qualifier_state()) {
+	  yy_push_state(sfc_qualifier_state);
+	  rst_goto_sfc_qualifier_state();
+	}
+
+	if (get_pop_state()) {
+	  yy_pop_state();
+	  rst_pop_state();
+	}
+
+
+	/***************************/
 	/* Handle the pragmas!     */
-	/*********************************/
+	/***************************/
 
 	/* We start off by searching for the pragmas we handle in the lexical parser. */
 <INITIAL>{file_include_pragma}	unput_text(0); yy_push_state(include_beg);
 
 	/* Any other pragma we find, we just pass it up to the syntax parser...   */
-	/* Note that the <il_st_state> state is exclusive, so we have to include it here too. */
+	/* Note that the <body_state> state is exclusive, so we have to include it here too. */
 {pragma}	{/* return the pragmma without the enclosing '{' and '}' */
 		 yytext[strlen(yytext)-1] = '\0';
 		 yylval.ID=strdup(yytext+1);
 		 return pragma_token;
 		}
-<il_st_state>{pragma} {/* return the pragmma without the enclosing '{' and '}' */
+<body_state>{pragma} {/* return the pragmma without the enclosing '{' and '}' */
 		 yytext[strlen(yytext)-1] = '\0';
 		 yylval.ID=strdup(yytext+1);
 		 return pragma_token;
@@ -714,7 +778,7 @@ incompl_location	%[IQM]\*
 
 	/* INITIAL -> decl_state */
 <INITIAL>{
-	/* NOTE: how about functions that do not declare variables, and go directly to the il_st_state???
+	/* NOTE: how about functions that do not declare variables, and go directly to the body_state???
 	 *      - According to Section 2.5.1.3 (Function Declaration), item 2 in the list, a FUNCTION
 	 *        must have at least one input argument, so a correct declaration will have at least
 	 *        one VAR_INPUT ... VAR_END construct!
@@ -726,7 +790,7 @@ incompl_location	%[IQM]\*
 	 *        construct!
 	 *
 	 *       All the above means that we needn't worry about PROGRAMs, FUNCTIONs or
-	 *       FUNCTION_BLOCKs that do not have at least one VAR_END before the il_st_state.
+	 *       FUNCTION_BLOCKs that do not have at least one VAR_END before the body_state.
 	 *       If the code has an error, and no VAR_END before the body, we will simply
 	 *       continue in the <decl_state> state, untill the end of the FUNCTION, FUNCTION_BLOCK
 	 *       or PROGAM.
@@ -737,7 +801,7 @@ PROGRAM					BEGIN(decl_state); return PROGRAM;
 CONFIGURATION				BEGIN(config_state); return CONFIGURATION;
 }
 
-	/* INITIAL -> il_st_state */
+	/* INITIAL -> body_state */
 	/* required if the function, program, etc.. has no VAR block! */
 	/* We comment it out since the standard does not allow this.  */
 	/* NOTE: Even if we were to include the following code, it    */
@@ -745,13 +809,13 @@ CONFIGURATION				BEGIN(config_state); return CONFIGURATION;
 	/*       rules will take precendence!                         */
 	/*
 <INITIAL>{
-FUNCTION	BEGIN(il_st_state); return FUNCTION;
-FUNCTION_BLOCK	BEGIN(il_st_state); return FUNCTION_BLOCK;
-PROGRAM		BEGIN(il_st_state); return PROGRAM;
+FUNCTION	BEGIN(body_state); return FUNCTION;
+FUNCTION_BLOCK	BEGIN(body_state); return FUNCTION_BLOCK;
+PROGRAM		BEGIN(body_state); return PROGRAM;
 }
 	*/
 
-	/* decl_state -> (il_st_state | sfc_state) */
+	/* decl_state -> (body_state | sfc_state) */
 <decl_state>{
 END_VAR{st_whitespace}VAR		{unput_text(strlen("END_VAR")); 
 					 return END_VAR;
@@ -766,11 +830,10 @@ END_VAR{st_whitespace}			{unput_text(strlen("END_VAR"));
 					}
 }
 
-	/* il_st_state -> (il_state | st_state) */
-<il_st_state>{
+	/* body_state -> (il_state | st_state) */
+<body_state>{
 {st_whitespace_no_pragma}			/* Eat any whitespace */
 {qualified_identifier}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
-{direct_variable}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
 {qualified_identifier}"["			unput_text(0); BEGIN(st_state);
 
 RETURN						unput_text(0); BEGIN(st_state);
@@ -783,18 +846,34 @@ EXIT						unput_text(0); BEGIN(st_state);
 	/* ':=' occurs only in transitions, and not Function or FB bodies! */
 :=						unput_text(0); BEGIN(st_state);  
 
+	/* Hopefully, the above rules (along with the last one),
+         * used to distinguish ST from IL, are 
+	 * enough to handle all ocurrences. However, if
+	 * there is some situation where the compiler is getting confused,
+	 * we add the following rule to detect 'label:' in IL code. This will
+	 * allow the user to insert a label right at the beginning (which
+	 * will probably not be used further by his code) simply as a way
+	 * to force the compiler to interpret his code as IL code.
+	 */
+{identifier}{st_whitespace}":"{st_whitespace}	unput_text(0); BEGIN(il_state);
 
 {identifier}	{int token = get_identifier_token(yytext);
 		 if (token == prev_declared_fb_name_token) {
 		   /* the code has a call to a function block */
+		   /* NOTE: if we ever decide to allow the user to use IL operator tokens
+		    * (LD, ST, ...) as identifiers for variable names (including
+		    * function block instances), then the above inference/conclusion 
+		    * may be incorrect, and this condition may have to be changed!
+		    */	
 		   BEGIN(st_state);
 		 } else {
 		   BEGIN(il_state);
 		 }
 		 unput_text(0);
 		}
+
 .		unput_text(0); BEGIN(il_state);
-}	/* end of il_st_state lexical parser */
+}	/* end of body_state lexical parser */
 
 	/* (il_state | st_state) -> $previous_state (decl_state or sfc_state) */
 <il_state,st_state>{
@@ -900,11 +979,11 @@ ENO	return ENO;
 	/* B 1.2.1 - Numeric Literals */
 	/******************************/
 TRUE		return TRUE;
-BOOL#1		return TRUE;
-BOOL#TRUE		return TRUE;
+BOOL#1  	return TRUE;
+BOOL#TRUE	return TRUE;
 FALSE		return FALSE;
-BOOL#0		return FALSE;
-BOOL#FALSE		return FALSE;
+BOOL#0  	return FALSE;
+BOOL#FALSE  	return FALSE;
 
 
 	/************************/
@@ -1049,7 +1128,6 @@ END_PROGRAM	return END_PROGRAM;
 	 * ignore them!
 	 */
 	 
-<sfc_state>{
 ACTION		return ACTION;
 END_ACTION	return END_ACTION;
 
@@ -1063,15 +1141,14 @@ INITIAL_STEP	return INITIAL_STEP;
 STEP		return STEP;
 END_STEP	return END_STEP;
 
+<sfc_qualifier_state>{
 L		return L;
 D		return D;
 SD		return SD;
 DS		return DS;
 SL		return SL;
-
 N		return N;
 P		return P;
-
 R		return R;
 S		return S;
 }
@@ -1125,13 +1202,37 @@ READ_ONLY		return READ_ONLY;
 	 *       different tokens for & and AND (and similarly
 	 *       ANDN and &N)!
 	 */
+ /* The following tokens clash with ST expression operators and Standard Functions */
+AND		return AND;
+MOD		return MOD;
+OR		return OR;
+XOR		return XOR;
+NOT		return NOT;
+
+ /* The following tokens clash with Standard Functions */
+ADD		return ADD;
+DIV		return DIV;
+EQ		return EQ;
+GE		return GE;
+GT		return GT;
+LE		return LE;
+LT		return LT;
+MUL		return MUL;
+NE		return NE;
+SUB		return SUB;
+
+ /* The following tokens clash with SFC action qualifiers */
+S		return S;
+R		return R;
+
+ /* The following tokens clash with ST expression operators */
+&		return AND2;
+
+ /* The following tokens have no clashes */
 LD		return LD;
 LDN		return LDN;
 ST		return ST;
 STN		return STN;
-NOT		return NOT;
-S		return S;
-R		return R;
 S1		return S1;
 R1		return R1;
 CLK		return CLK;
@@ -1140,25 +1241,10 @@ CD		return CD;
 PV		return PV;
 IN		return IN;
 PT		return PT;
-AND		return AND;
-&		return AND2;
-OR		return OR;
-XOR		return XOR;
 ANDN		return ANDN;
 &N		return ANDN2;
 ORN		return ORN;
 XORN		return XORN;
-ADD		return ADD;
-SUB		return SUB;
-MUL		return MUL;
-DIV		return DIV;
-MOD		return MOD;
-GT		return GT;
-GE		return GE;
-EQ		return EQ;
-LT		return LT;
-LE		return LE;
-NE		return NE;
 CAL		return CAL;
 CALC		return CALC;
 CALCN		return CALCN;

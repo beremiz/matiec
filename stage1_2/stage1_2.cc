@@ -57,16 +57,33 @@ const char *current_filename = NULL;
 
 
 
-/*****************************************************/
-/* Controlling the entry to the st_il_state in flex. */
-/*****************************************************/
-
+/****************************************************/
+/* Controlling the entry to the body_state in flex. */
+/****************************************************/
 static int goto_body_state__ = 0;
 
 void cmd_goto_body_state(void) {goto_body_state__ = 1;}
 int  get_goto_body_state(void) {return goto_body_state__;}
 void rst_goto_body_state(void) {goto_body_state__ = 0;}
 
+/*************************************************************/
+/* Controlling the entry to the sfc_qualifier_state in flex. */
+/*************************************************************/
+static int goto_sfc_qualifier_state__ = 0;
+
+void cmd_goto_sfc_qualifier_state(void) {goto_sfc_qualifier_state__ = 1;}
+int  get_goto_sfc_qualifier_state(void) {return goto_sfc_qualifier_state__;}
+void rst_goto_sfc_qualifier_state(void) {goto_sfc_qualifier_state__ = 0;}
+
+
+/****************************************************************/
+/* Returning to state in flex previously pushed onto the stack. */
+/****************************************************************/
+static int pop_state__ = 0;
+
+void cmd_pop_state(void) {pop_state__ = 1;}
+int  get_pop_state(void) {return pop_state__;}
+void rst_pop_state(void) {pop_state__ = 0;}
 
 
 /*********************************/

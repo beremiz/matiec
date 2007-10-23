@@ -10,18 +10,26 @@ default:	all
 all: iec.flex.o iec.y.o stage1_2.o
 
 
+
 clean:
 	-rm -f *.o Makefile.depend
 	-rm -f iec.flex.c iec.y.cc iec.y.hh iec.y.output
+	-rm -f iec.noerrorcheck.y
 	-rm -f test_flex
 
 
 CFLAGS += -I. -I../* -I../../absyntax
 
+
+
 test_flex: iec.flex.c iec.y.hh
 	$(CXX) -o test_flex.o -c iec.flex.c -DTEST_MAIN $(CFLAGS)
 	$(CXX) -o test_flex test_flex.o
 #	$(CXX) -o test_flex test_flex.o ../util/symtable.o -DTEST_MAIN
+
+
+
+
 
 iec.flex.c: iec.flex
 	flex -oiec.flex.c iec.flex
@@ -35,6 +43,13 @@ iec.y.hh iec.y.cc: iec.y
 iec.y.o: iec.y.cc iec.y.hh
 	$(CXX) -c iec.y.cc $(CFLAGS)
 
+
+noerrorcheck: iec.y
+	sed '/ERROR_CHECK_BEGIN/,/ERROR_CHECK_END/ d' iec.y > iec.noerrorcheck.y
+	flex -oiec.flex.c iec.flex
+	$(CXX) -c iec.flex.c -D DEFAULT_LIBDIR='"$(IECLIBDIR)"' $(CFLAGS)
+	bison -d -v -o iec.y.cc iec.noerrorcheck.y
+	$(CXX) -c iec.y.cc $(CFLAGS)
 
 
 
