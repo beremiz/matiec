@@ -78,11 +78,11 @@ function_declaration_c null_symbol1(NULL,NULL,NULL,NULL);
 dsymtable_c<function_declaration_c *, &null_symbol1> function_symtable;
 
 /* A symbol table with all globally declared functions block types... */
-function_block_declaration_c null_symbol2(NULL,NULL,NULL,NULL);
+function_block_declaration_c null_symbol2(NULL,NULL,NULL);
 symtable_c<function_block_declaration_c *, &null_symbol2> function_block_type_symtable;
 
 /* A symbol table with all globally declared program types... */
-program_declaration_c null_symbol3(NULL,NULL,NULL,NULL);
+program_declaration_c null_symbol3(NULL,NULL,NULL);
 symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
 
 /* A symbol table with all user declared type definitions... */

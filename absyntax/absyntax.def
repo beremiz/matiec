@@ -115,16 +115,16 @@ SYM_REF2(days_c, days, hours)
 SYM_REF2(hours_c, hours, minutes)
 SYM_REF2(minutes_c, minutes, seconds)
 SYM_REF2(seconds_c, seconds, milliseconds)
-SYM_REF2(milliseconds_c, milliseconds, unused)
+SYM_REF1(milliseconds_c, milliseconds)
 
 
 /************************************/
 /* B 1.2.3.2 - Time of day and Date */
 /************************************/
-SYM_REF2(time_of_day_c, daytime, unused)
-SYM_REF4(daytime_c, day_hour, day_minute, day_second, unused)
-SYM_REF2(date_c, date_literal, unused)
-SYM_REF4(date_literal_c, year, month, day, unused)
+SYM_REF1(time_of_day_c, daytime)
+SYM_REF3(daytime_c, day_hour, day_minute, day_second)
+SYM_REF1(date_c, date_literal)
+SYM_REF3(date_literal_c, year, month, day)
 SYM_REF2(date_and_time_c, date_literal, daytime)
 
 
@@ -167,7 +167,7 @@ SYM_REF0(constant_real_type_name_c)
 /* B 1.3.3 - Derived data types */
 /********************************/
 /*  TYPE type_declaration_list END_TYPE */
-SYM_REF2(data_type_declaration_c, type_declaration_list, unused)
+SYM_REF1(data_type_declaration_c, type_declaration_list)
 
 /* helper symbol for data_type_declaration */
 SYM_LIST(type_declaration_list_c)
@@ -320,7 +320,7 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
-SYM_REF2(symbolic_variable_c, var_name, unused)
+SYM_REF1(symbolic_variable_c, var_name)
 
 /********************************************/
 /* B.1.4.1   Directly Represented Variables */
@@ -381,7 +381,7 @@ SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
 
 /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
 /* structure_initialization -> may be NULL ! */
-SYM_REF4(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization, unused)
+SYM_REF3(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization)
 
 /* fb_name_list ',' fb_name */
 SYM_LIST(fb_name_list_c)
@@ -391,7 +391,7 @@ SYM_LIST(fb_name_list_c)
 SYM_REF2(output_declarations_c, option, var_init_decl_list)
 
 /*  VAR_IN_OUT var_declaration_list END_VAR */
-SYM_REF2(input_output_declarations_c, var_declaration_list, unused)
+SYM_REF1(input_output_declarations_c, var_declaration_list)
 
 /* helper symbol for input_output_declarations */
 /* var_declaration_list var_declaration ';' */
@@ -408,7 +408,7 @@ SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
 SYM_REF2(var_declarations_c, option, var_init_decl_list)
 
 /*  VAR RETAIN var_init_decl_list END_VAR */
-SYM_REF2(retentive_var_declarations_c, var_init_decl_list, unused)
+SYM_REF1(retentive_var_declarations_c, var_init_decl_list)
 
 /*  VAR [CONSTANT|RETAIN|NON_RETAIN] located_var_decl_list END_VAR */
 /* option -> may be NULL ! */
@@ -420,7 +420,7 @@ SYM_LIST(located_var_decl_list_c)
 
 /*  [variable_name] location ':' located_var_spec_init */
 /* variable_name -> may be NULL ! */
-SYM_REF4(located_var_decl_c, variable_name, location, located_var_spec_init, unused)
+SYM_REF3(located_var_decl_c, variable_name, location, located_var_spec_init)
 
 /*| VAR_EXTERNAL [CONSTANT] external_declaration_list END_VAR */
 /* option -> may be NULL ! */
@@ -449,7 +449,7 @@ SYM_REF2(global_var_decl_c, global_var_spec, type_specification)
 SYM_REF2(global_var_spec_c, global_var_name, location)
 
 /*  AT direct_variable */
-SYM_REF2(location_c, direct_variable, unused)
+SYM_REF1(location_c, direct_variable)
 
 /*| global_var_list ',' global_var_name */
 SYM_LIST(global_var_list_c)
@@ -479,7 +479,7 @@ SYM_REF2(incompl_located_var_declarations_c, option, incompl_located_var_decl_li
 SYM_LIST(incompl_located_var_decl_list_c)
 
 /*  variable_name incompl_location ':' var_spec */
-SYM_REF4(incompl_located_var_decl_c, variable_name, incompl_location, var_spec, unused)
+SYM_REF3(incompl_located_var_decl_c, variable_name, incompl_location, var_spec)
 
 /*  AT incompl_location_token */
 SYM_TOKEN(incompl_location_c)
@@ -519,7 +519,7 @@ SYM_LIST(var2_init_decl_list_c)
 /* B 1.5.2 - Function Blocks */
 /*****************************/
 /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
-SYM_REF4(function_block_declaration_c, fblock_name, var_declarations, fblock_body, unused)
+SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
 
 /* intermediate helper symbol for function_declaration */
 /*  { io_var_declarations | other_var_declarations }   */
@@ -528,20 +528,20 @@ SYM_REF4(function_block_declaration_c, fblock_name, var_declarations, fblock_bod
  */
 
 /*  VAR_TEMP temp_var_decl_list END_VAR */
-SYM_REF2(temp_var_decls_c, var_decl_list, unused)
+SYM_REF1(temp_var_decls_c, var_decl_list)
 
 /* intermediate helper symbol for temp_var_decls */
 SYM_LIST(temp_var_decls_list_c)
 
 /*  VAR NON_RETAIN var_init_decl_list END_VAR */
-SYM_REF2(non_retentive_var_decls_c, var_decl_list, unused)
+SYM_REF1(non_retentive_var_decls_c, var_decl_list)
 
 
 /**********************/
 /* B 1.5.3 - Programs */
 /**********************/
 /*  PROGRAM program_type_name program_var_declarations_list function_block_body END_PROGRAM */
-SYM_REF4(program_declaration_c, program_type_name, var_declarations, function_block_body, unused)
+SYM_REF3(program_declaration_c, program_type_name, var_declarations, function_block_body)
 
 /* intermediate helper symbol for program_declaration_c */
 /*  { io_var_declarations | other_var_declarations }   */
@@ -563,7 +563,7 @@ SYM_REF2(initial_step_c, step_name, action_association_list)
 
 SYM_LIST(action_association_list_c)
 SYM_REF2(step_c, step_name, action_association_list)
-SYM_REF4(action_association_c, action_name, action_qualifier, indicator_name_list, unused)
+SYM_REF3(action_association_c, action_name, action_qualifier, indicator_name_list)
 
 SYM_TOKEN(qualifier_c)
 SYM_TOKEN(timed_qualifier_c)
@@ -592,7 +592,7 @@ CONFIGURATION configuration_name
    optional_instance_specific_initializations
 END_CONFIGURATION
 */
-SYM_REF6(configuration_declaration_c, configuration_name, global_var_declarations, resource_declarations, access_declarations, instance_specific_initializations, unused)
+SYM_REF5(configuration_declaration_c, configuration_name, global_var_declarations, resource_declarations, access_declarations, instance_specific_initializations)
 
 /* helper symbol for configuration_declaration */
 SYM_LIST(resource_declaration_list_c)
@@ -621,7 +621,7 @@ SYM_LIST(program_configuration_list_c)
 SYM_LIST(any_fb_name_list_c)
 
 /*  [resource_name '.'] global_var_name ['.' structure_element_name] */
-SYM_REF4(global_var_reference_c, resource_name, global_var_name, structure_element_name, unused)
+SYM_REF3(global_var_reference_c, resource_name, global_var_name, structure_element_name)
 
 /*  prev_declared_program_name '.' symbolic_variable */
 SYM_REF2(program_output_reference_c, program_name, symbolic_variable)
@@ -630,10 +630,10 @@ SYM_REF2(program_output_reference_c, program_name, symbolic_variable)
 SYM_REF2(task_configuration_c, task_name, task_initialization)
 
 /*  '(' [SINGLE ASSIGN data_source ','] [INTERVAL ASSIGN data_source ','] PRIORITY ASSIGN integer ')' */
-SYM_REF4(task_initialization_c, single_data_source, interval_data_source, priority_data_source, unused)
+SYM_REF3(task_initialization_c, single_data_source, interval_data_source, priority_data_source)
 
 /*  PROGRAM [RETAIN | NON_RETAIN] program_name [WITH task_name] ':' program_type_name ['(' prog_conf_elements ')'] */
-SYM_REF6(program_configuration_c, retain_option, program_name, task_name, program_type_name, prog_conf_elements, unused)
+SYM_REF5(program_configuration_c, retain_option, program_name, task_name, program_type_name, prog_conf_elements)
 
 /* prog_conf_elements ',' prog_conf_element */
 SYM_LIST(prog_conf_elements_c)
@@ -648,7 +648,7 @@ SYM_REF2(prog_cnxn_assign_c, symbolic_variable, prog_data_source)
 SYM_REF2(prog_cnxn_sendto_c, symbolic_variable, data_sink)
 
 /* VAR_CONFIG instance_specific_init_list END_VAR */
-SYM_REF2(instance_specific_initializations_c, instance_specific_init_list, unused)
+SYM_REF1(instance_specific_initializations_c, instance_specific_init_list)
 
 /* helper symbol for instance_specific_initializations */
 SYM_LIST(instance_specific_init_list_c)
@@ -685,7 +685,7 @@ SYM_REF2(il_function_call_c, function_name, il_operand_list)
 
 
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
-SYM_REF4(il_expression_c, il_expr_operator, il_operand, simple_instr_list, unused)
+SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list)
 
 /*  il_jump_operator label */
 SYM_REF2(il_jump_operation_c, il_jump_operator, label)
@@ -714,7 +714,7 @@ SYM_LIST(il_param_list_c)
 /*  il_assign_operator il_operand
  * | il_assign_operator '(' eol_list simple_instr_list ')'
  */
-SYM_REF4(il_param_assignment_c, il_assign_operator, il_operand, simple_instr_list, unused)
+SYM_REF3(il_param_assignment_c, il_assign_operator, il_operand, simple_instr_list)
 
 /*  il_assign_out_operator variable */
 SYM_REF2(il_param_out_assignment_c, il_assign_out_operator, variable)
@@ -792,8 +792,8 @@ SYM_REF2(mul_expression_c, l_exp, r_exp)
 SYM_REF2(div_expression_c, l_exp, r_exp)
 SYM_REF2(mod_expression_c, l_exp, r_exp)
 SYM_REF2(power_expression_c, l_exp, r_exp)
-SYM_REF2(neg_expression_c, exp, unused)
-SYM_REF2(not_expression_c, exp, unused)
+SYM_REF1(neg_expression_c, exp)
+SYM_REF1(not_expression_c, exp)
 
 SYM_REF2(function_invocation_c, function_name, parameter_assignment_list)
 
@@ -828,7 +828,7 @@ SYM_LIST(param_assignment_list_c)
 SYM_REF2(input_variable_param_assignment_c, variable_name, expression)
 
 /* [NOT] variable_name '=>' variable */
-SYM_REF4(output_variable_param_assignment_c, not_param, variable_name, variable, unused)
+SYM_REF3(output_variable_param_assignment_c, not_param, variable_name, variable)
 
 /* helper CLASS for output_variable_param_assignment */
 SYM_REF0(not_paramassign_c)
@@ -848,7 +848,7 @@ SYM_LIST(elseif_statement_list_c)
 SYM_REF2(elseif_statement_c, expression, statement_list)
 
 /* CASE expression OF case_element_list ELSE statement_list END_CASE */
-SYM_REF4(case_statement_c, expression, case_element_list, statement_list, unused)
+SYM_REF3(case_statement_c, expression, case_element_list, statement_list)
 
 /* helper symbol for case_statement */
 SYM_LIST(case_element_list_c)
@@ -863,7 +863,7 @@ SYM_LIST(case_list_c)
 /* B 3.2.4 Iteration Statements */
 /********************************/
 /*  FOR control_variable ASSIGN expression TO expression [BY expression] DO statement_list END_FOR */
-SYM_REF6(for_statement_c, control_variable, beg_expression, end_expression, by_expression, statement_list, unused)
+SYM_REF5(for_statement_c, control_variable, beg_expression, end_expression, by_expression, statement_list)
 
 /*  WHILE expression DO statement_list END_WHILE */
 SYM_REF2(while_statement_c, expression, statement_list)

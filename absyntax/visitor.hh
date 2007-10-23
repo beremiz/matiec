@@ -80,10 +80,19 @@
 #define SYM_REF0(class_name_c)	\
   virtual void *visit(class_name_c *symbol) = 0;
 
+#define SYM_REF1(class_name_c, ref1)		\
+  virtual void *visit(class_name_c *symbol) = 0;
+
 #define SYM_REF2(class_name_c, ref1, ref2)	\
   virtual void *visit(class_name_c *symbol) = 0;
 
+#define SYM_REF3(class_name_c, ref1, ref2, ref3)	\
+  virtual void *visit(class_name_c *symbol) = 0;
+
 #define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4)	\
+  virtual void *visit(class_name_c *symbol) = 0;
+
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5)		\
   virtual void *visit(class_name_c *symbol) = 0;
 
 #define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6)	\
@@ -99,8 +108,11 @@ class visitor_c {
 #undef SYM_LIST
 #undef SYM_TOKEN
 #undef SYM_REF0
+#undef SYM_REF1
 #undef SYM_REF2
+#undef SYM_REF3
 #undef SYM_REF4
+#undef SYM_REF5
 #undef SYM_REF6
 
 
@@ -117,10 +129,19 @@ class visitor_c {
 #define SYM_REF0(class_name_c)	\
   virtual void *visit(class_name_c *symbol);
 
+#define SYM_REF1(class_name_c, ref1)		\
+  virtual void *visit(class_name_c *symbol);
+
 #define SYM_REF2(class_name_c, ref1, ref2)	\
   virtual void *visit(class_name_c *symbol);
 
+#define SYM_REF3(class_name_c, ref1, ref2, ref3)	\
+  virtual void *visit(class_name_c *symbol);
+
 #define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4)	\
+  virtual void *visit(class_name_c *symbol);
+
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5)		\
   virtual void *visit(class_name_c *symbol);
 
 #define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6)	\
@@ -164,8 +185,11 @@ class search_visitor_c: public visitor_c {
 #undef SYM_LIST
 #undef SYM_TOKEN
 #undef SYM_REF0
+#undef SYM_REF1
 #undef SYM_REF2
+#undef SYM_REF3
 #undef SYM_REF4
+#undef SYM_REF5
 #undef SYM_REF6
 
 #endif /*  _VISITOR_HH */

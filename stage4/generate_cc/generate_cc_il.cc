@@ -379,8 +379,8 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
 
       identifier_c param(param_name);
 
-      //SYM_REF4(il_param_assignment_c, il_assign_operator, il_operand, simple_instr_list, unused)
-      il_param_assignment_c il_param_assignment(&param, &this->default_variable_name, NULL, NULL);
+      //SYM_REF3(il_param_assignment_c, il_assign_operator, il_operand, simple_instr_list)
+      il_param_assignment_c il_param_assignment(&param, &this->default_variable_name, NULL);
       // SYM_LIST(il_param_list_c)
       il_param_list_c il_param_list;
       il_param_list.add_element(&il_param_assignment);
