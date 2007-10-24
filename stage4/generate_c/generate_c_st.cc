@@ -38,7 +38,7 @@
 /***********************************************************************/
 
 
-class generate_cc_st_c: public generate_cc_typedecl_c {
+class generate_c_st_c: public generate_c_typedecl_c {
 
   private:
     /* When calling a function block, we must first find it's type,
@@ -69,15 +69,15 @@ class generate_cc_st_c: public generate_cc_typedecl_c {
     search_varfb_instance_type_c *search_varfb_instance_type;
 
   public:
-    generate_cc_st_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_cc_typedecl_c(s4o_ptr) {
+    generate_c_st_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
+    : generate_c_typedecl_c(s4o_ptr) {
       search_fb_instance_decl = new search_fb_instance_decl_c(scope);
       search_expression_type = new search_expression_type_c(scope);
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
       this->set_variable_prefix(variable_prefix);
     }
 
-    virtual ~generate_cc_st_c(void) {
+    virtual ~generate_c_st_c(void) {
       delete search_fb_instance_decl;
       delete search_expression_type;
       delete search_varfb_instance_type;
@@ -119,8 +119,8 @@ class generate_cc_st_c: public generate_cc_typedecl_c {
 
   public:
     void generate(statement_list_c *stl) {
-      generate_cc_tempvardecl_c generate_cc_tempvardecl(&s4o);
-      generate_cc_tempvardecl.generate(stl, &temp_var_name_factory);
+      generate_c_tempvardecl_c generate_c_tempvardecl(&s4o);
+      generate_c_tempvardecl.generate(stl, &temp_var_name_factory);
       stl->accept(*this);
     }
 
@@ -133,11 +133,11 @@ void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
   if (vartype == search_var_instance_decl_c::external_vt || vartype == search_var_instance_decl_c::located_vt) {
     s4o.print("*(");
-    generate_cc_base_c::visit(symbol);
+    generate_c_base_c::visit(symbol);
     s4o.print(")");
   }
   else {
-    generate_cc_base_c::visit(symbol);
+    generate_c_base_c::visit(symbol);
   }
   return NULL;
 }
@@ -835,7 +835,7 @@ void *visit(exit_statement_c *symbol) {
 
 
 
-}; /* generate_cc_st_c */
+}; /* generate_c_st_c */
 
 
 

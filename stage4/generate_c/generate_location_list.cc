@@ -59,16 +59,16 @@ class generate_location_list_c: protected iterator_visitor_c {
 
   private:
     symbol_c *current_var_type_symbol;
-    generate_cc_base_c *generate_cc_base;
+    generate_c_base_c *generate_c_base;
     search_base_type_c search_base_type;
     
   public:
     generate_location_list_c(stage4out_c *s4o_ptr): s4o(*s4o_ptr) {
-      generate_cc_base = new generate_cc_base_c(s4o_ptr);
+      generate_c_base = new generate_c_base_c(s4o_ptr);
       current_var_type_symbol = NULL;
     }
     ~generate_location_list_c(void) {
-      delete generate_cc_base;
+      delete generate_c_base;
     }
 
     bool test_location_type(symbol_c *direct_variable) {
@@ -120,7 +120,7 @@ class generate_location_list_c: protected iterator_visitor_c {
     void *visit(direct_variable_c *symbol) {
       if (current_var_type_symbol) {
         s4o.print("__LOCATED_VAR(");
-        current_var_type_symbol->accept(*generate_cc_base);
+        current_var_type_symbol->accept(*generate_c_base);
         s4o.print(",");
         /* Do not use print_token() as it will change everything into uppercase */
         s4o.printlocation((symbol->value)+1);

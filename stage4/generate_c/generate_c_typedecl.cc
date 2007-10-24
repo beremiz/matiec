@@ -46,11 +46,11 @@
 
 
 
-class generate_cc_typedecl_c: public generate_cc_base_c {
+class generate_c_typedecl_c: public generate_c_base_c {
 
   public:
-    generate_cc_typedecl_c(stage4out_c *s4o_ptr): generate_cc_base_c(s4o_ptr) {}
-    ~generate_cc_typedecl_c(void) {}
+    generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_c(s4o_ptr) {}
+    ~generate_c_typedecl_c(void) {}
 
 
 /***************************/
@@ -461,7 +461,7 @@ void *visit(direct_variable_c *symbol) {
 
 
 
-}; /* generate_cc_typedecl_c */
+}; /* generate_c_typedecl_c */
 
 
 

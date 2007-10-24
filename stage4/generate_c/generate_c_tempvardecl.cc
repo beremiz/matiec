@@ -102,9 +102,9 @@ class temp_var_name_c {
  *     ...
  */
 
-class generate_cc_tempvardecl_c: generate_cc_typedecl_c {
+class generate_c_tempvardecl_c: generate_c_typedecl_c {
   public:
-    generate_cc_tempvardecl_c(stage4out_c *s4o_ptr): generate_cc_typedecl_c(s4o_ptr) {}
+    generate_c_tempvardecl_c(stage4out_c *s4o_ptr): generate_c_typedecl_c(s4o_ptr) {}
 
     void generate(symbol_c *body, temp_var_name_c *temp_var_name_factory) {
       temp_var_name_factory->reset();

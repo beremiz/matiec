@@ -15,7 +15,7 @@
  */
 
 /*
- * An IEC 61131-3 IL and ST compiler.
+ * An IEC 61131-3 IL, ST and SFC compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
@@ -26,18 +26,18 @@
 /*
  * This is one of the versions available for the 4th stage.
  *
- * This 4th stage generates a c++ source program equivalent
- * to the IL and ST code.
+ * This 4th stage generates a c source program equivalent
+ * to the IL, ST and SFC code.
  */
 
 
 /*
- * generate_cc.HH
+ * generate_c.HH
  */
 
 
-#ifndef _generate_cc_HH
-#define _generate_cc_HH
+#ifndef _generate_c_HH
+#define _generate_c_HH
 
 
 
@@ -52,5 +52,5 @@
 
 
 
-#endif /*  _generate_cc_HH */
+#endif /*  _generate_c_H */
 

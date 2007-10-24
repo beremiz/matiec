@@ -49,7 +49,7 @@ typedef struct
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_cc_sfc_elements_c: public generate_cc_base_c {
+class generate_c_sfc_elements_c: public generate_c_base_c {
   
   public:
     typedef enum {
@@ -62,9 +62,9 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
     } sfcgeneration_t;
 
   private:
-    generate_cc_il_c *generate_cc_il;
-    generate_cc_st_c *generate_cc_st;
-    generate_cc_SFC_IL_ST_c *generate_cc_code;
+    generate_c_il_c *generate_c_il;
+    generate_c_st_c *generate_c_st;
+    generate_c_SFC_IL_ST_c *generate_c_code;
     search_var_instance_decl_c *search_var_instance_decl;
     
     int transition_number;
@@ -76,19 +76,19 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
     sfcgeneration_t wanted_sfcgeneration;
     
   public:
-    generate_cc_sfc_elements_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_cc_base_c(s4o_ptr) {
-      generate_cc_il = new generate_cc_il_c(s4o_ptr, scope, variable_prefix);
-      generate_cc_st = new generate_cc_st_c(s4o_ptr, scope, variable_prefix);
-      generate_cc_code = new generate_cc_SFC_IL_ST_c(s4o_ptr, scope, variable_prefix);
+    generate_c_sfc_elements_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
+    : generate_c_base_c(s4o_ptr) {
+      generate_c_il = new generate_c_il_c(s4o_ptr, scope, variable_prefix);
+      generate_c_st = new generate_c_st_c(s4o_ptr, scope, variable_prefix);
+      generate_c_code = new generate_c_SFC_IL_ST_c(s4o_ptr, scope, variable_prefix);
       search_var_instance_decl = new search_var_instance_decl_c(scope);
       this->set_variable_prefix(variable_prefix);
     }
     
-    ~generate_cc_sfc_elements_c(void) {
-      delete generate_cc_il;
-      delete generate_cc_st;
-      delete generate_cc_code;
+    ~generate_c_sfc_elements_c(void) {
+      delete generate_c_il;
+      delete generate_c_st;
+      delete generate_c_code;
       delete search_var_instance_decl;
     }
 
@@ -260,14 +260,14 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
           
           // Calculate transition value
           if (symbol->transition_condition_il != NULL) {
-            generate_cc_il->declare_backup_variable();
+            generate_c_il->declare_backup_variable();
             s4o.print(s4o.indent_spaces);
-            symbol->transition_condition_il->accept(*generate_cc_il);
+            symbol->transition_condition_il->accept(*generate_c_il);
             print_variable_prefix();
             s4o.print("transition_list[");
             print_transition_number();
             s4o.print("] = ");
-            generate_cc_il->print_backup_variable();
+            generate_c_il->print_backup_variable();
             s4o.print(";\n");
           }
           if (symbol->transition_condition_st != NULL) {
@@ -276,7 +276,7 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
             s4o.print("transition_list[");
             print_transition_number();
             s4o.print("] = ");
-            symbol->transition_condition_st->accept(*generate_cc_st);
+            symbol->transition_condition_st->accept(*generate_c_st);
             s4o.print(";\n");
           }
           if (symbol->integer != NULL) {
@@ -347,7 +347,7 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
           s4o.indent_right();
           
           // generate action code
-          symbol->function_block_body->accept(*generate_cc_code);
+          symbol->function_block_body->accept(*generate_c_code);
           
           s4o.indent_left();
           s4o.print(s4o.indent_spaces + "}\n\n");
@@ -532,7 +532,7 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
       return (void *)symbol->value;
     }
 
-}; /* generate_cc_sfc_actiondecl_c */
+}; /* generate_c_sfc_actiondecl_c */
  
  
  
@@ -541,20 +541,20 @@ class generate_cc_sfc_elements_c: public generate_cc_base_c {
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_cc_sfc_c: public generate_cc_typedecl_c {
+class generate_c_sfc_c: public generate_c_typedecl_c {
   
   private:
-    generate_cc_sfc_elements_c *generate_cc_sfc_elements;
+    generate_c_sfc_elements_c *generate_c_sfc_elements;
     
   public:
-    generate_cc_sfc_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_cc_typedecl_c(s4o_ptr) {
-      generate_cc_sfc_elements = new generate_cc_sfc_elements_c(s4o_ptr, scope, variable_prefix);
+    generate_c_sfc_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
+    : generate_c_typedecl_c(s4o_ptr) {
+      generate_c_sfc_elements = new generate_c_sfc_elements_c(s4o_ptr, scope, variable_prefix);
       this->set_variable_prefix(variable_prefix);
     }
   
-    virtual ~generate_cc_sfc_c(void) {
-      delete generate_cc_sfc_elements;
+    virtual ~generate_c_sfc_c(void) {
+      delete generate_c_sfc_elements;
     }
 
 /*********************************************/
@@ -562,7 +562,7 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
 /*********************************************/
 
     void *visit(sfc_network_c *symbol) {
-      generate_cc_sfc_elements->generate((symbol_c *) symbol, generate_cc_sfc_elements_c::transitionlist_sg);
+      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::transitionlist_sg);
       s4o.print(s4o.indent_spaces +"INT i;\n\n");
       s4o.print(s4o.indent_spaces +"BOOL transition;\n\n");
             
@@ -667,24 +667,24 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
       
       /* generate transition tests */
       s4o.print(s4o.indent_spaces + "// Transitions fire test\n");
-      generate_cc_sfc_elements->generate((symbol_c *) symbol, generate_cc_sfc_elements_c::transitiontest_sg);
+      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::transitiontest_sg);
       s4o.print("\n");
       
       /* generate transition reset steps */
       s4o.print(s4o.indent_spaces + "// Transitions reset steps\n");
-      generate_cc_sfc_elements->reset_transition_number();
-      generate_cc_sfc_elements->generate((symbol_c *) symbol, generate_cc_sfc_elements_c::stepreset_sg);
+      generate_c_sfc_elements->reset_transition_number();
+      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::stepreset_sg);
       s4o.print("\n");
       
       /* generate transition set steps */
       s4o.print(s4o.indent_spaces + "// Transitions set steps\n");
-      generate_cc_sfc_elements->reset_transition_number();
-      generate_cc_sfc_elements->generate((symbol_c *) symbol, generate_cc_sfc_elements_c::stepset_sg);
+      generate_c_sfc_elements->reset_transition_number();
+      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::stepset_sg);
       s4o.print("\n");
       
        /* generate step association */
       s4o.print(s4o.indent_spaces + "// Steps association\n");
-      generate_cc_sfc_elements->generate((symbol_c *) symbol, generate_cc_sfc_elements_c::actionassociation_sg);
+      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::actionassociation_sg);
       s4o.print("\n");
       
       /* generate action state evaluation */
@@ -723,7 +723,7 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
       
       /* generate action execution */
       s4o.print(s4o.indent_spaces + "// Actions execution\n");
-      generate_cc_sfc_elements->generate((symbol_c *) symbol, generate_cc_sfc_elements_c::actionbody_sg);
+      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::actionbody_sg);
       s4o.print("\n");
       
       return NULL;
@@ -733,4 +733,4 @@ class generate_cc_sfc_c: public generate_cc_typedecl_c {
       sfc->accept(*this);
     }
 
-}; /* generate_cc_sfc_c */
+}; /* generate_c_sfc_c */

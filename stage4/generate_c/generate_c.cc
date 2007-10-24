@@ -188,11 +188,11 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 #include "search_constant_type.cc"
 #include "search_expression_type.cc"
 
-#include "generate_cc_base.cc"
-#include "generate_cc_typedecl.cc"
-#include "generate_cc_sfcdecl.cc"
-#include "generate_cc_vardecl.cc"
-#include "generate_cc_configbody.cc"
+#include "generate_c_base.cc"
+#include "generate_c_typedecl.cc"
+#include "generate_c_sfcdecl.cc"
+#include "generate_c_vardecl.cc"
+#include "generate_c_configbody.cc"
 #include "generate_location_list.cc"
 
 /***********************************************************************/
@@ -209,12 +209,12 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 #define TEMP_VAR VAR_LEADER "TMP_"
 #define SOURCE_VAR VAR_LEADER "SRC_"
 
-#include "generate_cc_tempvardecl.cc"
+#include "generate_c_tempvardecl.cc"
 
-#include "generate_cc_st.cc"
-#include "generate_cc_il.cc"
+#include "generate_c_st.cc"
+#include "generate_c_il.cc"
 
-#include "generate_cc.hh"
+#include "generate_c.hh"
 
 /***********************************************************************/
 /***********************************************************************/
@@ -368,14 +368,14 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
 /***********************************************************************/
 
 /* A helper class that knows how to generate code for both the IL and ST languages... */
-class generate_cc_SFC_IL_ST_c: public null_visitor_c {
+class generate_c_SFC_IL_ST_c: public null_visitor_c {
   private:
     stage4out_c *s4o_ptr;
     symbol_c *scope;
     const char *variable_prefix;
 
   public:
-    generate_cc_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL);
+    generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL);
     /*********************************************/
     /* B.1.6  Sequential function chart elements */
     /*********************************************/
@@ -393,7 +393,7 @@ class generate_cc_SFC_IL_ST_c: public null_visitor_c {
     /*| instruction_list il_instruction */
     void *visit(instruction_list_c *symbol);
     
-    /* Remainder implemented in generate_cc_il_c... */
+    /* Remainder implemented in generate_c_il_c... */
     
     /***************************************/
     /* B.3 - Language ST (Structured Text) */
@@ -401,40 +401,40 @@ class generate_cc_SFC_IL_ST_c: public null_visitor_c {
     /***********************/
     /* B 3.1 - Expressions */
     /***********************/
-    /* Implemented in generate_cc_st_c */
+    /* Implemented in generate_c_st_c */
     
     /********************/
     /* B 3.2 Statements */
     /********************/
     void *visit(statement_list_c *symbol);
 
-/* Remainder implemented in generate_cc_st_c... */
+/* Remainder implemented in generate_c_st_c... */
 };
 
-#include "generate_cc_sfc.cc"
+#include "generate_c_sfc.cc"
 
-generate_cc_SFC_IL_ST_c::generate_cc_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix) {
+generate_c_SFC_IL_ST_c::generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix) {
   if (NULL == scope) ERROR;
   this->s4o_ptr = s4o_ptr;
   this->scope = scope;
   this->variable_prefix = variable_prefix;
 }
 
-void *generate_cc_SFC_IL_ST_c::visit(sequential_function_chart_c * symbol) {
-  generate_cc_sfc_c generate_cc_sfc(s4o_ptr, scope, variable_prefix);
-  generate_cc_sfc.generate(symbol);
+void *generate_c_SFC_IL_ST_c::visit(sequential_function_chart_c * symbol) {
+  generate_c_sfc_c generate_c_sfc(s4o_ptr, scope, variable_prefix);
+  generate_c_sfc.generate(symbol);
   return NULL;
 }
 
-void *generate_cc_SFC_IL_ST_c::visit(instruction_list_c *symbol) {
-  generate_cc_il_c generate_cc_il(s4o_ptr, scope, variable_prefix);
-  generate_cc_il.generate(symbol);
+void *generate_c_SFC_IL_ST_c::visit(instruction_list_c *symbol) {
+  generate_c_il_c generate_c_il(s4o_ptr, scope, variable_prefix);
+  generate_c_il.generate(symbol);
   return NULL;
 }
 
-void *generate_cc_SFC_IL_ST_c::visit(statement_list_c *symbol) {
-  generate_cc_st_c generate_cc_st(s4o_ptr, scope, variable_prefix);
-  generate_cc_st.generate(symbol);
+void *generate_c_SFC_IL_ST_c::visit(statement_list_c *symbol) {
+  generate_c_st_c generate_c_st(s4o_ptr, scope, variable_prefix);
+  generate_c_st.generate(symbol);
   return NULL;
 }
 
@@ -448,12 +448,12 @@ void *generate_cc_SFC_IL_ST_c::visit(statement_list_c *symbol) {
 /***********************************************************************/
 
 
-class generate_cc_pous_c: public generate_cc_typedecl_c {
+class generate_c_pous_c: public generate_c_typedecl_c {
 
   public:
-    generate_cc_pous_c(stage4out_c *s4o_ptr)
-      : generate_cc_typedecl_c(s4o_ptr) {};
-    virtual ~generate_cc_pous_c(void) {}
+    generate_c_pous_c(stage4out_c *s4o_ptr)
+      : generate_c_typedecl_c(s4o_ptr) {};
+    virtual ~generate_c_pous_c(void) {}
 
 
   public:
@@ -543,7 +543,7 @@ public:
 /*   FUNCTION derived_function_name ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
 /* | FUNCTION derived_function_name ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
 void *visit(function_declaration_c *symbol) {
-  generate_cc_vardecl_c *vardecl;
+  generate_c_vardecl_c *vardecl;
   TRACE("function_declaration_c");
 
   /* start off by adding this declaration to the global
@@ -562,11 +562,11 @@ void *visit(function_declaration_c *symbol) {
 
   /* (A.3) Function parameters */
   s4o.indent_right();
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::finterface_vf,
-  				      generate_cc_vardecl_c::input_vt |
-				      generate_cc_vardecl_c::output_vt |
-				      generate_cc_vardecl_c::inoutput_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+  				      generate_c_vardecl_c::finterface_vf,
+  				      generate_c_vardecl_c::input_vt |
+				      generate_c_vardecl_c::output_vt |
+				      generate_c_vardecl_c::inoutput_vt);
   vardecl->print(symbol->var_declarations_list);
   delete vardecl;
   s4o.indent_left();
@@ -576,7 +576,7 @@ void *visit(function_declaration_c *symbol) {
   /* (B) Function local variable declaration */
     /* (B.1) Variables declared in ST source code */
   s4o.indent_right();
-  vardecl = new generate_cc_vardecl_c(&s4o, generate_cc_vardecl_c::localinit_vf, generate_cc_vardecl_c::private_vt);
+  vardecl = new generate_c_vardecl_c(&s4o, generate_c_vardecl_c::localinit_vf, generate_c_vardecl_c::private_vt);
   vardecl->print(symbol->var_declarations_list);
   delete vardecl;
 
@@ -596,8 +596,8 @@ void *visit(function_declaration_c *symbol) {
   s4o.print(";\n\n");
 
   /* (C) Function body */
-  generate_cc_SFC_IL_ST_c generate_cc_code(&s4o, symbol);
-  symbol->function_body->accept(generate_cc_code);
+  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol);
+  symbol->function_body->accept(generate_c_code);
   s4o.print(s4o.indent_spaces + "return ");
   symbol->derived_function_name->accept(*this);
   s4o.print(";\n");
@@ -609,7 +609,7 @@ void *visit(function_declaration_c *symbol) {
 
 
 /* The remaining var_declarations_list_c, function_var_decls_c
- * and var2_init_decl_list_c are handled in the generate_cc_vardecl_c class
+ * and var2_init_decl_list_c are handled in the generate_c_vardecl_c class
  */
 
 
@@ -620,8 +620,8 @@ public:
 /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
 //SYM_REF4(function_block_declaration_c, fblock_name, var_declarations, fblock_body, unused)
 void *visit(function_block_declaration_c *symbol) {
-  generate_cc_vardecl_c *vardecl;
-  generate_cc_sfcdecl_c *sfcdecl;
+  generate_c_vardecl_c *vardecl;
+  generate_c_sfcdecl_c *sfcdecl;
   TRACE("function_block_declaration_c");
 
   /* start off by adding this declaration to the global
@@ -638,26 +638,26 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.indent_right();
   /* (A.2) Public variables: i.e. the function parameters... */
   s4o.print(s4o.indent_spaces + "// FB Interface - IN, OUT, IN_OUT variables\n");
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::local_vf,
-  				      generate_cc_vardecl_c::input_vt |
-  				      generate_cc_vardecl_c::output_vt |
-  				      generate_cc_vardecl_c::inoutput_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+  				      generate_c_vardecl_c::local_vf,
+  				      generate_c_vardecl_c::input_vt |
+  				      generate_c_vardecl_c::output_vt |
+  				      generate_c_vardecl_c::inoutput_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   s4o.print("\n");
   /* (A.3) Private internal variables */
   s4o.print(s4o.indent_spaces + "// FB private variables - TEMP, private and located variables\n");
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::local_vf,
-				        generate_cc_vardecl_c::temp_vt |
-  				      generate_cc_vardecl_c::private_vt |
-  				      generate_cc_vardecl_c::located_vt |
-  				      generate_cc_vardecl_c::external_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+  				      generate_c_vardecl_c::local_vf,
+				        generate_c_vardecl_c::temp_vt |
+  				      generate_c_vardecl_c::private_vt |
+  				      generate_c_vardecl_c::located_vt |
+  				      generate_c_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   /* (A.4) Generate private internal variables for SFC */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcdecl_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::sfcdecl_sd);
   sfcdecl->print(symbol->fblock_body);
   delete sfcdecl;
   s4o.print("\n");
@@ -685,19 +685,19 @@ void *visit(function_block_declaration_c *symbol) {
 
   /* (B.2) Member initializations... */
   s4o.print(s4o.indent_spaces);
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::constructorinit_vf,
-  				      generate_cc_vardecl_c::input_vt |
-  				      generate_cc_vardecl_c::output_vt |
-  				      generate_cc_vardecl_c::inoutput_vt |
-  				      generate_cc_vardecl_c::private_vt |
-				        generate_cc_vardecl_c::located_vt |
-				        generate_cc_vardecl_c::external_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+  				      generate_c_vardecl_c::constructorinit_vf,
+  				      generate_c_vardecl_c::input_vt |
+  				      generate_c_vardecl_c::output_vt |
+  				      generate_c_vardecl_c::inoutput_vt |
+  				      generate_c_vardecl_c::private_vt |
+				        generate_c_vardecl_c::located_vt |
+				        generate_c_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations, NULL, FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
   /* (B.3) Generate private internal variables for SFC */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcinit_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::sfcinit_sd);
   sfcdecl->print(symbol->fblock_body, FB_FUNCTION_PARAM"->");
   delete sfcdecl;
   s4o.indent_left();
@@ -706,12 +706,12 @@ void *visit(function_block_declaration_c *symbol) {
   
   /* (C) Function with FB body */
   /* (C.1) Step definitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepdef_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepdef_sd);
   sfcdecl->print(symbol->fblock_body);
   delete sfcdecl;
   
   /* (C.2) Action definitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actiondef_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actiondef_sd);
   sfcdecl->print(symbol->fblock_body);
   delete sfcdecl;
   
@@ -732,16 +732,16 @@ void *visit(function_block_declaration_c *symbol) {
   /* (C.4) Initialize TEMP variables */
   /* function body */
   s4o.print(s4o.indent_spaces + "// Initialise TEMP variables\n");
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::init_vf,
-				      generate_cc_vardecl_c::temp_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+  				      generate_c_vardecl_c::init_vf,
+				      generate_c_vardecl_c::temp_vt);
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
 
   /* (C.5) Function code */
-  generate_cc_SFC_IL_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
-  symbol->fblock_body->accept(generate_cc_code);
+  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
+  symbol->fblock_body->accept(generate_c_code);
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
   symbol->fblock_name->accept(*this);
@@ -749,12 +749,12 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "() \n\n");
 
   /* (C.6) Step undefinitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepundef_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepundef_sd);
   sfcdecl->print(symbol->fblock_body);
   delete sfcdecl;
   
   /* (C.7) Action undefinitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actionundef_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actionundef_sd);
   sfcdecl->print(symbol->fblock_body);
   delete sfcdecl;
 
@@ -766,7 +766,7 @@ void *visit(function_block_declaration_c *symbol) {
 
 
 /* The remaining temp_var_decls_c, temp_var_decls_list_c
- * and non_retentive_var_decls_c are handled in the generate_cc_vardecl_c class
+ * and non_retentive_var_decls_c are handled in the generate_c_vardecl_c class
  */
 
 
@@ -780,8 +780,8 @@ public:
 /*  PROGRAM program_type_name program_var_declarations_list function_block_body END_PROGRAM */
 //SYM_REF4(program_declaration_c, program_type_name, var_declarations, function_block_body, unused)
 void *visit(program_declaration_c *symbol) {
-  generate_cc_vardecl_c *vardecl;
-  generate_cc_sfcdecl_c *sfcdecl;
+  generate_c_vardecl_c *vardecl;
+  generate_c_sfcdecl_c *sfcdecl;
   TRACE("program_declaration_c");
 
   /* start off by adding this declaration to the global
@@ -799,26 +799,26 @@ void *visit(program_declaration_c *symbol) {
 
   /* (A.2) Public variables: i.e. the program parameters... */
   s4o.print(s4o.indent_spaces + "// PROGRAM Interface - IN, OUT, IN_OUT variables\n");
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::local_vf,
-  				      generate_cc_vardecl_c::input_vt |
-  				      generate_cc_vardecl_c::output_vt |
-  				      generate_cc_vardecl_c::inoutput_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+  				      generate_c_vardecl_c::local_vf,
+  				      generate_c_vardecl_c::input_vt |
+  				      generate_c_vardecl_c::output_vt |
+  				      generate_c_vardecl_c::inoutput_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   s4o.print("\n");
   /* (A.3) Private internal variables */
   s4o.print(s4o.indent_spaces + "// PROGRAM private variables - TEMP, private and located variables\n");
-  vardecl = new generate_cc_vardecl_c(&s4o,
-                generate_cc_vardecl_c::local_vf,
-                generate_cc_vardecl_c::temp_vt |
-                generate_cc_vardecl_c::private_vt |
-                generate_cc_vardecl_c::located_vt |
-                generate_cc_vardecl_c::external_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+                generate_c_vardecl_c::local_vf,
+                generate_c_vardecl_c::temp_vt |
+                generate_c_vardecl_c::private_vt |
+                generate_c_vardecl_c::located_vt |
+                generate_c_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   /* (A.4) Generate private internal variables for SFC */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcdecl_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::sfcdecl_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
   
@@ -844,19 +844,19 @@ void *visit(program_declaration_c *symbol) {
 
   /* (B.2) Member initializations... */
   s4o.print(s4o.indent_spaces);
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::constructorinit_vf,
-  				      generate_cc_vardecl_c::input_vt |
-  				      generate_cc_vardecl_c::output_vt |
-  				      generate_cc_vardecl_c::inoutput_vt |
-  				      generate_cc_vardecl_c::private_vt |
-  				      generate_cc_vardecl_c::located_vt |
-				      generate_cc_vardecl_c::external_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+  				      generate_c_vardecl_c::constructorinit_vf,
+  				      generate_c_vardecl_c::input_vt |
+  				      generate_c_vardecl_c::output_vt |
+  				      generate_c_vardecl_c::inoutput_vt |
+  				      generate_c_vardecl_c::private_vt |
+  				      generate_c_vardecl_c::located_vt |
+				      generate_c_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
   /* (B.3) Generate private internal variables for SFC */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::sfcinit_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::sfcinit_sd);
   sfcdecl->print(symbol->function_block_body,FB_FUNCTION_PARAM"->");
   delete sfcdecl;
 
@@ -865,12 +865,12 @@ void *visit(program_declaration_c *symbol) {
 
   /* (C) Function with PROGRAM body */
   /* (C.1) Step definitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepdef_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepdef_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
   
   /* (C.2) Action definitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actiondef_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actiondef_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
 
@@ -891,16 +891,16 @@ void *visit(program_declaration_c *symbol) {
   /* (C.4) Initialize TEMP variables */
   /* function body */
   s4o.print(s4o.indent_spaces + "// Initialise TEMP variables\n");
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::init_vf,
-				      generate_cc_vardecl_c::temp_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+  				      generate_c_vardecl_c::init_vf,
+				      generate_c_vardecl_c::temp_vt);
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
 
   /* (C.5) Function code */
-  generate_cc_SFC_IL_ST_c generate_cc_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
-  symbol->function_block_body->accept(generate_cc_code);
+  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
+  symbol->function_block_body->accept(generate_c_code);
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
   symbol->program_type_name->accept(*this);
@@ -908,12 +908,12 @@ void *visit(program_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "() \n\n");
 
   /* (C.6) Step undefinitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::stepundef_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepundef_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
   
   /* (C.7) Action undefinitions */
-  sfcdecl = new generate_cc_sfcdecl_c(&s4o, generate_cc_sfcdecl_c::actionundef_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actionundef_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
   
@@ -923,7 +923,7 @@ void *visit(program_declaration_c *symbol) {
   return NULL;
 }
 
-}; /* generate_cc_pous_c */
+}; /* generate_c_pous_c */
 
 /***********************************************************************/
 /***********************************************************************/
@@ -934,12 +934,12 @@ void *visit(program_declaration_c *symbol) {
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_cc_config_c: public generate_cc_typedecl_c {
+class generate_c_config_c: public generate_c_typedecl_c {
 
     public:
-    generate_cc_config_c(stage4out_c *s4o_ptr)
-      : generate_cc_typedecl_c(s4o_ptr) {};
-    virtual ~generate_cc_config_c(void) {}
+    generate_c_config_c(stage4out_c *s4o_ptr)
+      : generate_c_typedecl_c(s4o_ptr) {};
+    virtual ~generate_c_config_c(void) {}
 
     typedef enum {
       initprotos_dt,
@@ -968,11 +968,11 @@ END_CONFIGURATION
 SYM_REF6(configuration_declaration_c, configuration_name, global_var_declarations, resource_declarations, access_declarations, instance_specific_initializations, unused)
 */
 void *visit(configuration_declaration_c *symbol) {
-  generate_cc_vardecl_c *vardecl;
+  generate_c_vardecl_c *vardecl;
   
   /* Insert the header... */
   s4o.print("/*******************************************/\n");
-  s4o.print("/*     FILE GENERATED BY iec2cc            */\n");
+  s4o.print("/*     FILE GENERATED BY iec2c             */\n");
   s4o.print("/* Editing this file is not recommended... */\n");
   s4o.print("/*******************************************/\n\n");
   s4o.print("#include \"iec_std_lib.h\"\n\n");
@@ -984,9 +984,9 @@ void *visit(configuration_declaration_c *symbol) {
   s4o.print("\n");
   
   /* (A.2) Global variables */
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::local_vf,
-  				      generate_cc_vardecl_c::global_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+  				      generate_c_vardecl_c::local_vf,
+  				      generate_c_vardecl_c::global_vt);
   vardecl->print(symbol);
   delete vardecl;
   s4o.print("\n");
@@ -1005,9 +1005,9 @@ void *visit(configuration_declaration_c *symbol) {
   
   /* (B.3) Global variables initializations... */
   s4o.print(s4o.indent_spaces);
-  vardecl = new generate_cc_vardecl_c(&s4o,
-  				      generate_cc_vardecl_c::constructorinit_vf,
-  				      generate_cc_vardecl_c::global_vt);
+  vardecl = new generate_c_vardecl_c(&s4o,
+  				      generate_c_vardecl_c::constructorinit_vf,
+  				      generate_c_vardecl_c::global_vt);
   vardecl->print(symbol);
   delete vardecl;
   s4o.print("\n");
@@ -1109,7 +1109,7 @@ void *visit(single_resource_declaration_c *symbol) {
 /***********************************************************************/
 
 
-class generate_cc_resources_c: public generate_cc_typedecl_c {
+class generate_c_resources_c: public generate_c_typedecl_c {
 
   search_var_instance_decl_c *search_config_instance;
   search_var_instance_decl_c *search_resource_instance;
@@ -1120,15 +1120,15 @@ class generate_cc_resources_c: public generate_cc_typedecl_c {
     symbol_c *current_global_vars;
 
   public:
-    generate_cc_resources_c(stage4out_c *s4o_ptr, symbol_c *config_scope, symbol_c *resource_scope, unsigned long time)
-      : generate_cc_typedecl_c(s4o_ptr) {
+    generate_c_resources_c(stage4out_c *s4o_ptr, symbol_c *config_scope, symbol_c *resource_scope, unsigned long time)
+      : generate_c_typedecl_c(s4o_ptr) {
       search_config_instance = new search_var_instance_decl_c(config_scope);
       search_resource_instance = new search_var_instance_decl_c(resource_scope);
       common_ticktime = time;
       current_resource_name = NULL;
       current_global_vars = NULL;
     };
-    virtual ~generate_cc_resources_c(void) {
+    virtual ~generate_c_resources_c(void) {
       delete search_config_instance;
       delete search_resource_instance;
     }
@@ -1180,11 +1180,11 @@ END_RESOURCE
     	bool single_resource = current_resource_name == NULL;
       if (single_resource)
         current_resource_name = new identifier_c("RESOURCE");
-      generate_cc_vardecl_c *vardecl;
+      generate_c_vardecl_c *vardecl;
       
       /* Insert the header... */
       s4o.print("/*******************************************/\n");
-      s4o.print("/*     FILE GENERATED BY iec2cc            */\n");
+      s4o.print("/*     FILE GENERATED BY iec2c             */\n");
       s4o.print("/* Editing this file is not recommended... */\n");
       s4o.print("/*******************************************/\n\n");
       s4o.print("#include \"iec_std_lib.h\"\n\n");
@@ -1197,9 +1197,9 @@ END_RESOURCE
        
       /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
-        vardecl = new generate_cc_vardecl_c(&s4o,
-                      generate_cc_vardecl_c::local_vf,
-                      generate_cc_vardecl_c::global_vt);
+        vardecl = new generate_c_vardecl_c(&s4o,
+                      generate_c_vardecl_c::local_vf,
+                      generate_c_vardecl_c::global_vt);
         vardecl->print(current_global_vars);
         delete vardecl;
       }
@@ -1224,9 +1224,9 @@ END_RESOURCE
       /* (B.2) Global variables initialisations... */
       if (current_global_vars != NULL) {
         s4o.print(s4o.indent_spaces);
-        vardecl = new generate_cc_vardecl_c(&s4o,
-                      generate_cc_vardecl_c::constructorinit_vf,
-                      generate_cc_vardecl_c::global_vt);
+        vardecl = new generate_c_vardecl_c(&s4o,
+                      generate_c_vardecl_c::constructorinit_vf,
+                      generate_c_vardecl_c::global_vt);
         vardecl->print(current_global_vars);
         delete vardecl;
       }
@@ -1286,9 +1286,9 @@ END_RESOURCE
         current_program_name = ((identifier_c*)(symbol->program_name))->value;
         if (symbol->task_name != NULL) {
           s4o.print(s4o.indent_spaces);
-          s4o.print("if (");
+          s4o.print("if (!");
           symbol->task_name->accept(*this);
-          s4o.print(" == 0) {\n");
+          s4o.print(") {\n");
           s4o.indent_right(); 
         }
         
@@ -1427,12 +1427,12 @@ END_RESOURCE
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_cc_c: public iterator_visitor_c {
+class generate_c_c: public iterator_visitor_c {
   protected:
     stage4out_c &s4o;
     stage4out_c pous_s4o;
     stage4out_c located_variables_s4o;
-    generate_cc_pous_c generate_cc_pous;
+    generate_c_pous_c generate_c_pous;
 
     symbol_c *current_configuration;
 
@@ -1442,16 +1442,16 @@ class generate_cc_c: public iterator_visitor_c {
     unsigned long common_ticktime;
 
   public:
-    generate_cc_c(stage4out_c *s4o_ptr, const char *builddir): 
+    generate_c_c(stage4out_c *s4o_ptr, const char *builddir): 
             s4o(*s4o_ptr),
             pous_s4o(builddir, "POUS", "c"),
             located_variables_s4o(builddir, "LOCATED_VARIABLES","h"),
-            generate_cc_pous(&pous_s4o) {
+            generate_c_pous(&pous_s4o) {
       current_builddir = builddir;
       current_configuration = NULL;
     }
             
-    ~generate_cc_c(void) {}
+    ~generate_c_c(void) {}
 
 /***************************/
 /* B 0 - Programming Model */
@@ -1484,7 +1484,7 @@ class generate_cc_c: public iterator_visitor_c {
 /* B 1.5.1 - Functions */
 /***********************/
     void *visit(function_declaration_c *symbol) {
-    	symbol->accept(generate_cc_pous);
+    	symbol->accept(generate_c_pous);
     	return NULL;
     }
     
@@ -1492,7 +1492,7 @@ class generate_cc_c: public iterator_visitor_c {
 /* B 1.5.2 - Function Blocks */
 /*****************************/
     void *visit(function_block_declaration_c *symbol) {
-    	symbol->accept(generate_cc_pous);
+    	symbol->accept(generate_c_pous);
     	return NULL;
     }
     
@@ -1500,7 +1500,7 @@ class generate_cc_c: public iterator_visitor_c {
 /* B 1.5.3 - Programs */
 /**********************/    
     void *visit(program_declaration_c *symbol) {
-    	symbol->accept(generate_cc_pous);
+    	symbol->accept(generate_c_pous);
     	return NULL;
     }
     
@@ -1524,8 +1524,8 @@ class generate_cc_c: public iterator_visitor_c {
       
       symbol->configuration_name->accept(*this);
       stage4out_c config_s4o(current_builddir, current_name, "c");
-      generate_cc_config_c generate_cc_config(&config_s4o);
-      symbol->accept(generate_cc_config);
+      generate_c_config_c generate_c_config(&config_s4o);
+      symbol->accept(generate_c_config);
         
       config_s4o.print("int common_ticktime__ = ");
       config_s4o.print_integer((int)(common_ticktime / 1000000));
@@ -1541,15 +1541,15 @@ class generate_cc_c: public iterator_visitor_c {
     void *visit(resource_declaration_c *symbol) {
     	symbol->resource_name->accept(*this);
     	stage4out_c resources_s4o(current_builddir, current_name, "c");
-      generate_cc_resources_c generate_cc_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
-    	symbol->accept(generate_cc_resources);
+      generate_c_resources_c generate_c_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
+    	symbol->accept(generate_c_resources);
     	return NULL;
     }
 
     void *visit(single_resource_declaration_c *symbol) {
     	stage4out_c resources_s4o(current_builddir, "RESOURCE", "c");
-      generate_cc_resources_c generate_cc_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
-    	symbol->accept(generate_cc_resources);
+      generate_c_resources_c generate_c_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
+    	symbol->accept(generate_c_resources);
     	return NULL;
     }
     
@@ -1567,7 +1567,7 @@ class generate_cc_c: public iterator_visitor_c {
 
 
 
-visitor_c *new_code_generator(stage4out_c *s4o, const char *builddir)  {return new generate_cc_c(s4o, builddir);}
+visitor_c *new_code_generator(stage4out_c *s4o, const char *builddir)  {return new generate_c_c(s4o, builddir);}
 void delete_code_generator(visitor_c *code_generator) {delete code_generator;}
 
 

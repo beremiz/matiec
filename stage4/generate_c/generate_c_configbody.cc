@@ -51,15 +51,15 @@
 
 
 
-class generate_cc_configbody_c: public generate_cc_base_c {
+class generate_c_configbody_c: public generate_c_base_c {
 
   public:
-    generate_cc_configbody_c(stage4out_c *s4o_ptr)
-    : generate_cc_base_c(s4o_ptr) {
+    generate_c_configbody_c(stage4out_c *s4o_ptr)
+    : generate_c_base_c(s4o_ptr) {
       current_resource_name = NULL;
     }
 
-    virtual ~generate_cc_configbody_c(void) {}
+    virtual ~generate_c_configbody_c(void) {}
 
 
   private:
@@ -206,6 +206,6 @@ void *visit(program_configuration_c *symbol) {
 
 
 
-}; /* generate_cc_configbody_c */
+}; /* generate_c_configbody_c */
 
 

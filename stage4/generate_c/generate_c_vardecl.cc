@@ -60,7 +60,7 @@
 
 
 
-class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
+class generate_c_vardecl_c: protected generate_c_typedecl_c {
 
   /* A Helper class to the main class... */
   /* print a string, except the first time it is called */
@@ -211,10 +211,10 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
   private:
     /* variable used to store the types of variables that need to be processed... */
     /* Only set in the constructor...! */
-    /* Will contain a set of values of generate_cc_vardecl_c::XXXX_vt */
+    /* Will contain a set of values of generate_c_vardecl_c::XXXX_vt */
     unsigned int wanted_vartype;
     /* variable used to store the type of variable currently being processed... */
-    /* Will contain a single value of generate_cc_vardecl_c::XXXX_vt */
+    /* Will contain a single value of generate_c_vardecl_c::XXXX_vt */
     unsigned int current_vartype;
 
     /* How variables should be declared: as local variables or
@@ -351,8 +351,8 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
 
 
   public:
-    generate_cc_vardecl_c(stage4out_c *s4o_ptr, varformat_t varformat, unsigned int vartype)
-    : generate_cc_typedecl_c(s4o_ptr) {
+    generate_c_vardecl_c(stage4out_c *s4o_ptr, varformat_t varformat, unsigned int vartype)
+    : generate_c_typedecl_c(s4o_ptr) {
       wanted_varformat = varformat;
       wanted_vartype   = vartype;
       current_vartype  = none_vt;
@@ -362,7 +362,7 @@ class generate_cc_vardecl_c: protected generate_cc_typedecl_c {
       nv = NULL;
     }
 
-    ~generate_cc_vardecl_c(void) {}
+    ~generate_c_vardecl_c(void) {}
 
 
     void print(symbol_c *symbol, symbol_c *scope = NULL, const char *variable_prefix = NULL) {
@@ -1696,7 +1696,7 @@ SYM_REF2(fb_initialization_c, function_block_type_name, structure_initialization
 
 
 
-}; /* generate_cc_vardecl_c */
+}; /* generate_c_vardecl_c */
 
 
 

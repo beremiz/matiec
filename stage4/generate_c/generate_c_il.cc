@@ -144,7 +144,7 @@ class il_default_variable_visitor_c {
  * instruction list inside the parenthesis. We can only know this if we
  * keep track of the data type currently stored in the default variable!
  *
- * We use the current_type inside the generate_cc_il::default_variable_name variable
+ * We use the current_type inside the generate_c_il::default_variable_name variable
  * to track this!
  */
 class il_default_variable_c: public symbol_c {
@@ -165,7 +165,7 @@ class il_default_variable_c: public symbol_c {
 
 
 
-class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visitor_c {
+class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor_c {
 
   private:
     /* When compiling il code, it becomes necessary to determine the
@@ -293,8 +293,8 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
 
 
   public:
-    generate_cc_il_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_cc_typedecl_c(s4o_ptr),
+    generate_c_il_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
+    : generate_c_typedecl_c(s4o_ptr),
       default_variable_name(IL_DEFVAR, NULL),
       default_variable_back_name(IL_DEFVAR_BACK, NULL)
     {
@@ -307,15 +307,15 @@ class generate_cc_il_c: public generate_cc_typedecl_c, il_default_variable_visit
       this->set_variable_prefix(variable_prefix);
     }
 
-    virtual ~generate_cc_il_c(void) {
+    virtual ~generate_c_il_c(void) {
       delete search_fb_instance_decl;
       //delete search_il_operand_type;
       delete search_expression_type;
     }
 
     void generate(instruction_list_c *il) {
-      generate_cc_tempvardecl_c generate_cc_tempvardecl(&s4o);
-      generate_cc_tempvardecl.generate(il, &temp_var_name_factory);
+      generate_c_tempvardecl_c generate_c_tempvardecl(&s4o);
+      generate_c_tempvardecl.generate(il, &temp_var_name_factory);
       il->accept(*this);
     }
 
@@ -665,7 +665,7 @@ void *visit(il_function_call_c *symbol) {
        * harm to leave it in, as in the case of a non-formal syntax function call,
        * it will always return NULL.
        * We leave it in in case we later decide to merge this part of the code together
-       * with the function calling code in generate_cc_st_c, which does require
+       * with the function calling code in generate_c_st_c, which does require
        * the following line...
        */
       if (param_value == NULL)
@@ -911,7 +911,7 @@ void *visit(il_formal_funct_call_c *symbol) {
      * harm to leave it in, as in the case of a formal syntax function call,
      * it will always return NULL.
      * We leave it in in case we later decide to merge this part of the code together
-     * with the function calling code in generate_cc_st_c, which does require
+     * with the function calling code in generate_c_st_c, which does require
      * the following line...
      */
     if (param_value == NULL)
@@ -1023,7 +1023,7 @@ void *visit(simple_instr_list_c *symbol) {
   if (NULL != this->il_default_variable_init_value) {
     /* Yes, we must... */
     /* We will do it by instatiating a LD operator, and having this
-     * same generate_cc_il_c class visiting it!
+     * same generate_c_il_c class visiting it!
      */
     LD_operator_c ld_oper;
     il_simple_operation_c il_simple_oper(&ld_oper, this->il_default_variable_init_value);
@@ -1339,7 +1339,7 @@ void *visit(CALCN_operator_c *symbol) {CN_modifier(); return NULL;}
 /* NOTE: The semantics of the RET operator requires us to return a value
  *       if the IL code is inside a function, but simply return no value if
  *       the IL code is inside a function block or program!
- *       Nevertheless, it is the generate_cc_c class itself that
+ *       Nevertheless, it is the generate_c_c class itself that
  *       introduces the 'reaturn <value>' into the c++ code at the end
  *       of every function. This class does not know whether the IL code
  *       is inside a function or a function block.
@@ -1404,7 +1404,7 @@ void *visit(JMPCN_operator_c *symbol)	{
 SYM_REF2(il_assign_out_operator_c, option, variable_name)
 #endif
 
-}; /* generate_cc_il_c */
+}; /* generate_c_il_c */
 
 
 
@@ -1417,8 +1417,8 @@ SYM_REF2(il_assign_out_operator_c, option, variable_name)
 /* The implementation of the single visit() member function
  * of il_default_variable_c.
  * It can only come after the full declaration of
- * generate_cc_il_c. Since we define and declare
- * generate_cc_il_c simultaneously, it can only come
+ * generate_c_il_c. Since we define and declare
+ * generate_c_il_c simultaneously, it can only come
  * after the definition...
  */
 void *il_default_variable_c::accept(visitor_c &visitor) {
@@ -1437,15 +1437,15 @@ void *il_default_variable_c::accept(visitor_c &visitor) {
    * Note too that we can't cast a visitor_c to a
    * il_default_variable_visitor_c, since they are not related.
    * Nor may the il_default_variable_visitor_c inherit from
-   * visitor_c, because then generate_cc_il_c would contain
+   * visitor_c, because then generate_c_il_c would contain
    * two visitor_c base classes, one each through
-   * il_default_variable_visitor_c and generate_cc_type_c
+   * il_default_variable_visitor_c and generate_c_type_c
    *
    * We could use virtual inheritance of the visitor_c, but it
    * would probably create more problems than it is worth!
    */
-  generate_cc_il_c *v;
-  v = dynamic_cast<generate_cc_il_c *>(&visitor);
+  generate_c_il_c *v;
+  v = dynamic_cast<generate_c_il_c *>(&visitor);
   if (v == NULL) ERROR;
 
   return v->visit(this);

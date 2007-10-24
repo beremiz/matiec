@@ -39,7 +39,7 @@
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
+class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
   
   public:
       typedef enum {
@@ -61,11 +61,11 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
     sfcdeclaration_t wanted_sfcdeclaration;
     
   public:
-    generate_cc_sfcdecl_c(stage4out_c *s4o_ptr, sfcdeclaration_t sfcdeclaration)
-    : generate_cc_typedecl_c(s4o_ptr) {
+    generate_c_sfcdecl_c(stage4out_c *s4o_ptr, sfcdeclaration_t sfcdeclaration)
+    : generate_c_typedecl_c(s4o_ptr) {
       wanted_sfcdeclaration = sfcdeclaration;
     }
-    ~generate_cc_sfcdecl_c(void) {}
+    ~generate_c_sfcdecl_c(void) {}
     
     void print(symbol_c *symbol, const char *variable_prefix = NULL) {
       this->set_variable_prefix(variable_prefix);
@@ -304,5 +304,5 @@ class generate_cc_sfcdecl_c: protected generate_cc_typedecl_c {
       return NULL;
     }
 
-}; /* generate_cc_sfcdecl_c */
+}; /* generate_c_sfcdecl_c */
 

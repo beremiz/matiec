@@ -43,7 +43,7 @@
  * constructor. Another option would be to build a symbol table,
  * and search that instead. Building the symbol table would be done
  * while visiting the variable declaration objects in the parse
- * tree. Unfortuantely, generate_cc_c does not visit these
+ * tree. Unfortuantely, generate_c_c does not visit these
  * objects, delegating it to another class. This means that
  * we would need another specialised class just to build the
  * symbol table. We might just as well have a specialised class

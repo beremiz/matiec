@@ -3,7 +3,7 @@ include ../../Makefile.$(shell uname)
 
 default: all
 
-all: generate_cc.o
+all: generate_c.o
 
 clean:
 	-rm -f *.o */*.o Makefile.depend

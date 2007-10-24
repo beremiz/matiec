@@ -60,7 +60,7 @@ class search_var_instance_decl_c: public search_visitor_c {
     symbol_c *current_type_decl;
     
     /* variable used to store the type of variable currently being processed... */
-    /* Will contain a single value of generate_cc_vardecl_c::XXXX_vt */
+    /* Will contain a single value of generate_c_vardecl_c::XXXX_vt */
     unsigned int current_vartype;
 
   public:

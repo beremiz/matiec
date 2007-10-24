@@ -40,7 +40,7 @@
 
 //#include "../../util/symtable.hh"
 
-//#include "generate_cc.hh"
+//#include "generate_c.hh"
 
 
 

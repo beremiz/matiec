@@ -42,7 +42,7 @@
 
 //#include "../../util/symtable.hh"
 
-//#include "generate_cc.hh"
+//#include "generate_c.hh"
 
 
 
@@ -56,7 +56,7 @@
 
 
 
-class generate_cc_base_c: public iterator_visitor_c {
+class generate_c_base_c: public iterator_visitor_c {
 
   protected:
     stage4out_c &s4o;
@@ -74,8 +74,8 @@ class generate_cc_base_c: public iterator_visitor_c {
 
 
   public:
-    generate_cc_base_c(stage4out_c *s4o_ptr): s4o(*s4o_ptr) {variable_prefix_ = NULL;}
-    ~generate_cc_base_c(void) {}
+    generate_c_base_c(stage4out_c *s4o_ptr): s4o(*s4o_ptr) {variable_prefix_ = NULL;}
+    ~generate_c_base_c(void) {}
 
     void set_variable_prefix(const char *variable_prefix) {variable_prefix_ = variable_prefix;}
     void print_variable_prefix(void) {
@@ -144,13 +144,13 @@ class generate_cc_base_c: public iterator_visitor_c {
       if (visitor == NULL) visitor = this;
 
       if (list->n > 0) {
-//std::cout << "generate_cc_base_c::print_list(n = " << list->n << ")   000\n";
+//std::cout << "generate_c_base_c::print_list(n = " << list->n << ")   000\n";
         s4o.print(pre_elem_str);
         list->elements[0]->accept(*visitor);
       }
 
       for(int i = 1; i < list->n; i++) {
-//std::cout << "generate_cc_base_c::print_list   " << i << "\n";
+//std::cout << "generate_c_base_c::print_list   " << i << "\n";
         s4o.print(inter_elem_str);
         list->elements[i]->accept(*visitor);
       }
@@ -651,7 +651,7 @@ void *visit(structured_variable_c *symbol) {
 /********************************/
   /* leave for derived classes... */
 
-}; /* class generate_cc_basic_c */
+}; /* class generate_c_basic_c */
 
 
 
