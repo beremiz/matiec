@@ -753,8 +753,17 @@ incompl_location	%[IQM]\*
 
 <<EOF>>			{
 			  if (--include_stack_ptr < 0) {
+			      /* yyterminate() terminates the scanner and returns a 0 to the 
+			       * scanner's  caller, indicating "all done".
+			       *	
+			       * Our syntax parser (written with bison) has the token	
+			       * END_OF_INPUT associated to the value 0, so even though
+			       * we don't explicitly return the token END_OF_INPUT
+			       * calling yyterminate() is equivalent to doing that. 
+			       */ 	
 			    yyterminate();
-			  } else {
+			  }      
+ else {
 			    yy_delete_buffer(YY_CURRENT_BUFFER);
 			    yy_switch_to_buffer((include_stack[include_stack_ptr]).buffer_state);
 			    yylineno = include_stack[include_stack_ptr].lineno;
@@ -1203,6 +1212,7 @@ READ_ONLY		return READ_ONLY;
 	 *       ANDN and &N)!
 	 */
  /* The following tokens clash with ST expression operators and Standard Functions */
+ /* They are also keywords! */
 AND		return AND;
 MOD		return MOD;
 OR		return OR;
@@ -1210,6 +1220,7 @@ XOR		return XOR;
 NOT		return NOT;
 
  /* The following tokens clash with Standard Functions */
+<il_state>{
 ADD		return ADD;
 DIV		return DIV;
 EQ		return EQ;
@@ -1220,15 +1231,19 @@ LT		return LT;
 MUL		return MUL;
 NE		return NE;
 SUB		return SUB;
+}
 
  /* The following tokens clash with SFC action qualifiers */
+<il_state>{
 S		return S;
 R		return R;
+}
 
  /* The following tokens clash with ST expression operators */
 &		return AND2;
 
  /* The following tokens have no clashes */
+<il_state>{
 LD		return LD;
 LDN		return LDN;
 ST		return ST;
@@ -1254,7 +1269,7 @@ RETCN		return RETCN;
 JMP		return JMP;
 JMPC		return JMPC;
 JMPCN		return JMPCN;
-
+}
 
 	/***********************/
 	/* B 3.1 - Expressions */

@@ -206,6 +206,15 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
 /*****************************/
 /* Prelimenary constructs... */
 /*****************************/
+/* A token used to identify the very end of the input file
+ * after all includes have already been processed.
+ *
+ * Flex automatically returns the token with value 0
+ * at the end of the file. We therefore specify
+ * a token with that exact same value here.
+ */
+%token END_OF_INPUT 0
+
 /* A bogus token that, in principle, flex MUST NEVER generate */
 /* USE 1:
  * ======
@@ -1384,7 +1393,7 @@ library:
 	}
 | library library_element_declaration
 	{$$ = $1; $$->add_element($2);}
-| library error
+| library error END_OF_INPUT
 	{$$ = NULL;
 	 print_err_msg(current_filename, @2.first_line, "unknown error.");
 	 yyerrok;
@@ -1517,10 +1526,14 @@ identifier:
  * this list MUST be kept consistent!!
  */
 /**/
+/*
 | PRIORITY		{$$ = new identifier_c(strdup("PRIORITY"), locloc(@$));}
 | SINGLE		{$$ = new identifier_c(strdup("SINGLE"), locloc(@$));}
 | INTERVAL		{$$ = new identifier_c(strdup("INTERVAL"), locloc(@$));}
+*/
 /**/
+/* NOTE: AND, NOT, MOD, OR and XOR are keywords, so should not appear on this list... */
+/*
 | LD_operator		{$$ = il_operator_c_2_identifier_c($1);}
 | LDN_operator		{$$ = il_operator_c_2_identifier_c($1);}
 | ST_operator		{$$ = il_operator_c_2_identifier_c($1);}
@@ -1536,11 +1549,12 @@ identifier:
 | IN_operator		{$$ = il_operator_c_2_identifier_c($1);}
 | PT_operator		{$$ = il_operator_c_2_identifier_c($1);}
 | ANDN_operator		{$$ = il_operator_c_2_identifier_c($1);}
+*/
 /* NOTE: ANDN2_operator corresponds to the string '&N' in the source code!
  *       This is __not__ a valid name, so it is omitted from this list!!
  *| ANDN2_operator		{$$ = il_operator_c_2_identifier_c($1);}
  */
-/* NOTE: 'AND' is a keyword, so should not appear on this list... */
+/*
 | ORN_operator		{$$ = il_operator_c_2_identifier_c($1);}
 | XORN_operator		{$$ = il_operator_c_2_identifier_c($1);}
 | ADD_operator		{$$ = il_operator_c_2_identifier_c($1);}
@@ -1562,6 +1576,7 @@ identifier:
 | JMP_operator		{$$ = il_operator_c_2_identifier_c($1);}
 | JMPC_operator		{$$ = il_operator_c_2_identifier_c($1);}
 | JMPCN_operator	{$$ = il_operator_c_2_identifier_c($1);}
+*/
 ;
 
 /*********************/
@@ -5369,7 +5384,7 @@ symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator) {
 const char *standard_function_block_names[] = {
 // 2.5.2.3.1  Bistable elements
 //   Table 34 - Standard bistable function blocks
-//"SR","RS",
+"SR","RS",
 // 2.5.2.3.2  Edge detection
 //   Table 35 - Standard edge detection function blocks
 "R_TRIG","F_TRIG",
