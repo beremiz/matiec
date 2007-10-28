@@ -1118,8 +1118,8 @@ void *visit(timed_qualifier_c *symbol) {
   return NULL;
 }
 
-/* TRANSITION [transition_name] ['(' 'PRIORITY' ':=' integer ')']
- *   FROM steps TO steps 
+/* TRANSITION [transition_name] ['(''PRIORITY'':='integer')']
+ *   FROMstepsTO steps 
  *   ':' simple_instr_list | ':=' expression
  * END_TRANSITION
  */
@@ -1508,18 +1508,21 @@ void *visit(il_fb_call_c *symbol) {
 void *visit(il_formal_funct_call_c *symbol) {
   symbol->function_name->accept(*this);
   s4o.print("(");
+  s4o.print("\n");
   if (symbol->il_param_list != NULL) {
-    s4o.print("\n");
     s4o.indent_right();
     symbol->il_param_list->accept(*this);
     s4o.print(")");
+    s4o.indent_left();
   }
   return NULL;
 }
 
 
 /* | il_operand_list ',' il_operand */
-void *visit(il_operand_list_c *symbol) {return print_list(symbol, "", ", ");}
+void *visit(il_operand_list_c *symbol) {
+  return print_list(symbol, "", ", ");
+}
 
 /* | simple_instr_list il_simple_instruction */
 void *visit(simple_instr_list_c *symbol) {
@@ -1527,14 +1530,17 @@ void *visit(simple_instr_list_c *symbol) {
 }
 
 /* | il_initial_param_list il_param_instruction */
-void *visit(il_param_list_c *symbol) {return print_list(symbol);}
+void *visit(il_param_list_c *symbol) {
+// return print_list(symbol);
+  return print_list(symbol,  s4o.indent_spaces, ",\n" + s4o.indent_spaces, "\n" + s4o.indent_spaces);
+}
 
 /*  il_assign_operator il_operand
  * | il_assign_operator '(' eol_list simple_instr_list ')'
  */
 void *visit(il_param_assignment_c *symbol) {
   symbol->il_assign_operator->accept(*this);
-  s4o.print(" ");
+  s4o.print(" := ");
   if (symbol->il_operand != NULL)
     symbol->il_operand->accept(*this);
   if (symbol->simple_instr_list != NULL) {
@@ -1542,8 +1548,8 @@ void *visit(il_param_assignment_c *symbol) {
     s4o.indent_right();
     symbol->simple_instr_list->accept(*this);
     s4o.print(s4o.indent_spaces);
-    s4o.indent_left();
     s4o.print(")");
+    s4o.indent_left();
   }
   return NULL;
 }
@@ -1551,6 +1557,7 @@ void *visit(il_param_assignment_c *symbol) {
 /*  il_assign_out_operator variable */
 void *visit(il_param_out_assignment_c *symbol) {
   symbol->il_assign_out_operator->accept(*this);
+  s4o.print(" => ");
   symbol->variable->accept(*this);
   return NULL;
 }
