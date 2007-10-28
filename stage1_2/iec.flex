@@ -478,7 +478,7 @@ il_whitespace_text_no_pragma	{il_whitespace_only}|{comment}
 st_whitespace_no_pragma	{st_whitespace_text_no_pragma}*
 il_whitespace_no_pragma	{il_whitespace_text_no_pragma}*
 
-qualified_identifier	{identifier}(\.{identifier})?
+qualified_identifier	{identifier}(\.{identifier})*
 
 
 
