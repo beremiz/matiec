@@ -99,6 +99,14 @@ int  get_goto_sfc_qualifier_state(void);
 void rst_goto_sfc_qualifier_state(void);
 
 
+/*********************************************************/
+/* Controlling the entry to the task_init_state in flex. */
+/*********************************************************/
+void cmd_goto_task_init_state(void);
+int  get_goto_task_init_state(void);
+void rst_goto_task_init_state(void);
+
+
 /****************************************************************/
 /* Returning to state in flex previously pushed onto the stack. */
 /****************************************************************/

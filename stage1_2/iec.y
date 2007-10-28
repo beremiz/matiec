@@ -210,8 +210,9 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
  * after all includes have already been processed.
  *
  * Flex automatically returns the token with value 0
- * at the end of the file. We therefore specify
- * a token with that exact same value here.
+ * at the end of the file. We therefore specify here
+ * a token with that exact same value here, so we can use it
+ * to detect the very end of the input files.
  */
 %token END_OF_INPUT 0
 
@@ -912,6 +913,11 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
 %type  <leaf>	task_configuration
 %type  <leaf>	task_name
 %type  <leaf>	task_initialization
+// 3 helper symbols for task_initialization
+%type  <leaf>	task_initialization_single 	
+%type  <leaf>	task_initialization_interval	
+%type  <leaf>	task_initialization_priority	
+
 %type  <leaf>	data_source
 %type  <leaf>	program_configuration
 // helper symbol for program_configuration
@@ -4140,17 +4146,54 @@ task_configuration:
  */
 task_name: any_identifier;
 
+
 task_initialization:
 //  '(' [SINGLE ASSIGN data_source ','] [INTERVAL ASSIGN data_source ','] PRIORITY ASSIGN integer ')' //
-  '(' PRIORITY ASSIGN integer ')'
-	{$$ = new task_initialization_c(NULL, NULL, $4, locloc(@$));}
-| '(' SINGLE ASSIGN data_source ','   PRIORITY ASSIGN integer ')'
-	{$$ = new task_initialization_c($4, NULL, $8, locloc(@$));}
-| '(' INTERVAL ASSIGN data_source ',' PRIORITY ASSIGN integer ')'
-	{$$ = new task_initialization_c(NULL, $4, $8, locloc(@$));}
-| '(' SINGLE ASSIGN data_source ',' INTERVAL ASSIGN data_source ',' PRIORITY ASSIGN integer ')'
-	{$$ = new task_initialization_c($4, $8, $12, locloc(@$));}
+  '(' task_initialization_single task_initialization_interval task_initialization_priority ')'
+	{$$ = new task_initialization_c($2, $3, $4, locloc(@$));}
 ;
+
+
+task_initialization_single:
+// [SINGLE ASSIGN data_source ',']
+  /* empty */
+	{$$ = NULL;}
+| {cmd_goto_task_init_state();} SINGLE ASSIGN {cmd_pop_state();} data_source ','
+	{$$ = $5;}
+;
+
+
+task_initialization_interval:
+// [INTERVAL ASSIGN data_source ','] 
+  /* empty */
+	{$$ = NULL;}
+| {cmd_goto_task_init_state();} INTERVAL ASSIGN {cmd_pop_state();} data_source ','
+	{$$ = $5;}
+;
+
+
+task_initialization_priority:
+// PRIORITY ASSIGN integer
+{cmd_goto_task_init_state();} PRIORITY ASSIGN {cmd_pop_state();} integer
+	{$$ = $5;}
+;
+
+
+/*
+task_initialization:
+//  '(' [SINGLE ASSIGN data_source ','] [INTERVAL ASSIGN data_source ','] PRIORITY ASSIGN integer ')' //
+  '(' {cmd_goto_task_init_state();} PRIORITY ASSIGN {cmd_pop_state();} integer ')'
+	{$$ = new task_initialization_c(NULL, NULL, $6, locloc(@$));}
+| '(' {cmd_goto_task_init_state();} SINGLE ASSIGN {cmd_pop_state();} data_source ','
+                                    PRIORITY ASSIGN integer ')'
+	{$$ = new task_initialization_c($6, NULL, $10, locloc(@$));}
+| '(' {cmd_goto_task_init_state();} INTERVAL ASSIGN {cmd_pop_state();} data_source ',' PRIORITY ASSIGN integer ')'
+	{$$ = new task_initialization_c(NULL, $6, $10, locloc(@$));}
+| '(' {cmd_goto_task_init_state();} SINGLE ASSIGN {cmd_pop_state();} data_source ',' INTERVAL ASSIGN data_source ',' PRIORITY ASSIGN integer ')'
+	{$$ = new task_initialization_c($6, $10, $14, locloc(@$));}
+;
+*/
+
 
 data_source:
   constant

@@ -335,13 +335,23 @@ void unput_text(unsigned int n);
  *                     (when expecting an action qualifier. This transition is requested by bison)
  *   sfc_qualifier_state -> pop()
  *                     (when no longer expecting an action qualifier. This transition is requested by bison)
+ *   config_state  -> push(config_state); goto(task_init_state)
+ *                     (when parsing a task initialisation. This transition is requested by bison)
+ *   task_init_state -> pop()
+ *                     (when no longer parsing task initialisation parameters. This transition is requested by bison)
  *
  */
 
 
-
 /* we are parsing a configuration. */
 %s config_state
+
+/* Inside a configuration, we are parsing a task initialisation parameters */
+/* This means that PRIORITY, SINGLE and INTERVAL must be handled as
+ * tokens, and not as possible identifiers. Note that the above words
+ * are not keywords.
+ */
+%s task_init_state
 
 /* we are parsing a function, program or function block declaration */
 %s decl_state
@@ -678,6 +688,11 @@ incompl_location	%[IQM]\*
 	if (get_goto_sfc_qualifier_state()) {
 	  yy_push_state(sfc_qualifier_state);
 	  rst_goto_sfc_qualifier_state();
+	}
+
+	if (get_goto_task_init_state()) {
+	  yy_push_state(task_init_state);
+	  rst_goto_task_init_state();
 	}
 
 	if (get_pop_state()) {
@@ -1144,11 +1159,16 @@ TRANSITION	return TRANSITION;
 END_TRANSITION	return END_TRANSITION;
 FROM		return FROM;
 TO		return TO;
-PRIORITY	return PRIORITY;
 
 INITIAL_STEP	return INITIAL_STEP;
 STEP		return STEP;
 END_STEP	return END_STEP;
+
+	/* PRIORITY is not a keyword, so we only return it when 
+	 * it is explicitly required and we are not expecting any identifiers
+	 * that could also use the same letter sequence (i.e. an identifier: piority)
+	 */
+<sfc_state>PRIORITY	return PRIORITY;
 
 <sfc_qualifier_state>{
 L		return L;
@@ -1179,12 +1199,18 @@ WITH			return WITH;
 PROGRAM			return PROGRAM;
 RETAIN			return RETAIN;
 NON_RETAIN		return NON_RETAIN;
-PRIORITY		return PRIORITY;
-SINGLE			return SINGLE;
-INTERVAL		return INTERVAL;
 READ_WRITE		return READ_WRITE;
 READ_ONLY		return READ_ONLY;
 
+	/* PRIORITY, SINGLE and INTERVAL are not a keywords, so we only return them when 
+	 * it is explicitly required and we are not expecting any identifiers
+	 * that could also use the same letter sequence (i.e. an identifier: piority, ...)
+	 */
+<task_init_state>{
+PRIORITY		return PRIORITY;
+SINGLE			return SINGLE;
+INTERVAL		return INTERVAL;
+}
 
 	/***********************************/
 	/* B 2.1 Instructions and Operands */
