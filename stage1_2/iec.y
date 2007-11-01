@@ -914,9 +914,9 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
 %type  <leaf>	task_name
 %type  <leaf>	task_initialization
 // 3 helper symbols for task_initialization
-%type  <leaf>	task_initialization_single 	
-%type  <leaf>	task_initialization_interval	
-%type  <leaf>	task_initialization_priority	
+%type  <leaf>	task_initialization_single
+%type  <leaf>	task_initialization_interval
+%type  <leaf>	task_initialization_priority
 
 %type  <leaf>	data_source
 %type  <leaf>	program_configuration
@@ -4137,7 +4137,7 @@ task_configuration:
 	{$$ = new task_configuration_c($2, $3, locloc(@$));}
 ;
 
-/* NOTE: The specification does nopt mention the namespace to which task names
+/* NOTE: The specification does not mention the namespace to which task names
  *       should belong to. Unlike resource and program names, for the moment we
  *       let the task names belong to their own private namespace, as they do not
  *       produce any conflicts in the syntax parser.
@@ -4149,8 +4149,8 @@ task_name: any_identifier;
 
 task_initialization:
 //  '(' [SINGLE ASSIGN data_source ','] [INTERVAL ASSIGN data_source ','] PRIORITY ASSIGN integer ')' //
-  '(' task_initialization_single task_initialization_interval task_initialization_priority ')'
-	{$$ = new task_initialization_c($2, $3, $4, locloc(@$));}
+  '(' {cmd_goto_task_init_state();} task_initialization_single task_initialization_interval task_initialization_priority ')'
+	{$$ = new task_initialization_c($3, $4, $5, locloc(@$));}
 ;
 
 
@@ -4158,8 +4158,8 @@ task_initialization_single:
 // [SINGLE ASSIGN data_source ',']
   /* empty */
 	{$$ = NULL;}
-| {cmd_goto_task_init_state();} SINGLE ASSIGN {cmd_pop_state();} data_source ','
-	{$$ = $5;}
+| SINGLE ASSIGN {cmd_pop_state();} data_source ',' {cmd_goto_task_init_state();} 
+	{$$ = $4;}
 ;
 
 
@@ -4167,32 +4167,18 @@ task_initialization_interval:
 // [INTERVAL ASSIGN data_source ','] 
   /* empty */
 	{$$ = NULL;}
-| {cmd_goto_task_init_state();} INTERVAL ASSIGN {cmd_pop_state();} data_source ','
-	{$$ = $5;}
+| INTERVAL ASSIGN {cmd_pop_state();} data_source ',' {cmd_goto_task_init_state();}
+	{$$ = $4;}
 ;
+
 
 
 task_initialization_priority:
 // PRIORITY ASSIGN integer
-{cmd_goto_task_init_state();} PRIORITY ASSIGN {cmd_pop_state();} integer
-	{$$ = $5;}
+  PRIORITY ASSIGN {cmd_pop_state();} integer 
+	{$$ = $4;}
 ;
 
-
-/*
-task_initialization:
-//  '(' [SINGLE ASSIGN data_source ','] [INTERVAL ASSIGN data_source ','] PRIORITY ASSIGN integer ')' //
-  '(' {cmd_goto_task_init_state();} PRIORITY ASSIGN {cmd_pop_state();} integer ')'
-	{$$ = new task_initialization_c(NULL, NULL, $6, locloc(@$));}
-| '(' {cmd_goto_task_init_state();} SINGLE ASSIGN {cmd_pop_state();} data_source ','
-                                    PRIORITY ASSIGN integer ')'
-	{$$ = new task_initialization_c($6, NULL, $10, locloc(@$));}
-| '(' {cmd_goto_task_init_state();} INTERVAL ASSIGN {cmd_pop_state();} data_source ',' PRIORITY ASSIGN integer ')'
-	{$$ = new task_initialization_c(NULL, $6, $10, locloc(@$));}
-| '(' {cmd_goto_task_init_state();} SINGLE ASSIGN {cmd_pop_state();} data_source ',' INTERVAL ASSIGN data_source ',' PRIORITY ASSIGN integer ')'
-	{$$ = new task_initialization_c($6, $10, $14, locloc(@$));}
-;
-*/
 
 
 data_source:

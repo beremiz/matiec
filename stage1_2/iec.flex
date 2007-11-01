@@ -372,6 +372,9 @@ void unput_text(unsigned int n);
 %s sfc_qualifier_state
 
 
+
+
+
 /*******************/
 /* File #include's */
 /*******************/
@@ -931,7 +934,7 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	/***************************************/
 	/* NOTE: pragmas are handled right at the beginning... */
 
-<INITIAL,config_state,decl_state,st_state,sfc_state>{st_whitespace_no_pragma}	/* Eat any whitespace */
+<INITIAL,config_state,decl_state,st_state,sfc_state,task_init_state,sfc_qualifier_state>{st_whitespace_no_pragma}	/* Eat any whitespace */
 <il_state>{il_whitespace_no_pragma}		/* Eat any whitespace */
 
 
@@ -963,6 +966,7 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	 *       handling this function and keyword clash in bison!
 	 */
 {identifier} 	{int token = get_identifier_token(yytext);
+		 // printf("flex: analysing identifier '%s'...", yytext); 
 		 if ((token == prev_declared_variable_name_token) ||
 //		     (token == prev_declared_derived_function_name_token) || // DO NOT add this condition!
 		     (token == prev_declared_fb_name_token)) {
@@ -975,9 +979,11 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
                   *       library_symbol_table as a default function name!
 		  */
 		   yylval.ID=strdup(yytext);
+		   // printf("returning token %d\n", token); 
 		   return token;
 		 }
 		 /* otherwise, leave it for the other lexical parser rules... */
+		 // printf("rejecting\n"); 
 		 REJECT;
 		}
 
@@ -1426,7 +1432,7 @@ EXIT		return EXIT;
 <st_state>{identifier}/({st_whitespace})"=>"	{yylval.ID=strdup(yytext); return sendto_identifier_token;}
 <il_state>{identifier}/({il_whitespace})"=>"	{yylval.ID=strdup(yytext); return sendto_identifier_token;}
 {identifier} 				{yylval.ID=strdup(yytext);
-					 /*printf("returning identifier...: %s, %d\n", yytext, get_identifier_token(yytext));*/
+					 // printf("returning identifier...: %s, %d\n", yytext, get_identifier_token(yytext));
 					 return get_identifier_token(yytext);}
 
 
