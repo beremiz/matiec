@@ -769,8 +769,15 @@ incompl_location	%[IQM]\*
 			}
 
 
-<<EOF>>			{
-			  if (--include_stack_ptr < 0) {
+<<EOF>>			{     /* NOTE: We must not change the value of include_stack_ptr
+			       *       just yet. We must only decrement it if we are NOT
+			       *       at the end of the main file.
+			       *       If we have finished parsing the main file, then we
+			       *       must leave include_stack_ptr at 0, in case the 
+			       *       parser is called once again with a new file.
+			       *       (In fact, we currently do just that!)
+			       */
+			  if (include_stack_ptr == 0) {
 			      /* yyterminate() terminates the scanner and returns a 0 to the 
 			       * scanner's  caller, indicating "all done".
 			       *	
@@ -782,6 +789,7 @@ incompl_location	%[IQM]\*
 			    yyterminate();
 			  }      
  else {
+			    --include_stack_ptr;	
 			    yy_delete_buffer(YY_CURRENT_BUFFER);
 			    yy_switch_to_buffer((include_stack[include_stack_ptr]).buffer_state);
 			    yylineno = include_stack[include_stack_ptr].lineno;
