@@ -1399,11 +1399,13 @@ library:
 	}
 | library library_element_declaration
 	{$$ = $1; $$->add_element($2);}
+/* ERROR_CHECK_BEGIN */
 | library error END_OF_INPUT
 	{$$ = NULL;
 	 print_err_msg(current_filename, @2.first_line, "unknown error.");
 	 yyerrok;
 	}
+/* ERROR_CHECK_END */
 ;
 
 
@@ -3364,8 +3366,10 @@ derived_function_name:
   identifier
 | prev_declared_derived_function_name
 	{$$ = $1;
-	 if (not(allow_function_overloading))
+	 if (not(allow_function_overloading)) {
+	   fprintf(stderr, "Function overloading not allowed. Invalid identifier %s\n", ((token_c *)($1))->value);
 	   ERROR;
+	 }
 	}
 ;
 
