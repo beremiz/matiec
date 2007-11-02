@@ -1459,10 +1459,10 @@ library_element_declaration:
  *       Unfortunately, the language (especially IL) uses tokens that are
  *       not defined as keywords in the spec (e.g. 'IN', 'R1', 'S1', 'PT', etc...)!
  *       This means that it is valid to name a function 'IN', a variable 'PT', etc...
- *       BUT, the lexical parser will interpret these names as tokens (keywords).
- *       To allow these names to be used as function names, variable names, etc...,
- *       I (Mario) have augmented the definition of identifier to also include the tokens
- *       that are not explicitly defined as keywords in the spec!!
+ *       In order to solve this potential ambiguity, flex only parses the above 
+ *       identifiers as keywords / tokens if we are currently parsing IL code.
+ *       When parsing all code other than IL code, the above identifiers are treated
+ *       just like any other identifier.
  *
  *
  *
@@ -1529,63 +1529,9 @@ library_element_declaration:
 
 identifier:
   identifier_token	{$$ = new identifier_c($1, locloc(@$));}
-/*  Make sure that all tokens (names) not defined as keywords are included here...
- * I (Mario) have already done this, but if any changes are made to this file,
- * this list MUST be kept consistent!!
- */
-/**/
-/*
-| PRIORITY		{$$ = new identifier_c(strdup("PRIORITY"), locloc(@$));}
-| SINGLE		{$$ = new identifier_c(strdup("SINGLE"), locloc(@$));}
-| INTERVAL		{$$ = new identifier_c(strdup("INTERVAL"), locloc(@$));}
-*/
-/**/
-/* NOTE: AND, NOT, MOD, OR and XOR are keywords, so should not appear on this list... */
-/*
-| LD_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| LDN_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| ST_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| STN_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| S_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| R_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| S1_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| R1_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| CLK_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| CU_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| CD_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| PV_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| IN_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| PT_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| ANDN_operator		{$$ = il_operator_c_2_identifier_c($1);}
-*/
-/* NOTE: ANDN2_operator corresponds to the string '&N' in the source code!
- *       This is __not__ a valid name, so it is omitted from this list!!
- *| ANDN2_operator		{$$ = il_operator_c_2_identifier_c($1);}
- */
-/*
-| ORN_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| XORN_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| ADD_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| SUB_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| MUL_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| DIV_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| GT_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| GE_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| EQ_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| LT_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| LE_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| NE_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| CAL_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| CALC_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| CALCN_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| RET_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| RETC_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| RETCN_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| JMP_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| JMPC_operator		{$$ = il_operator_c_2_identifier_c($1);}
-| JMPCN_operator	{$$ = il_operator_c_2_identifier_c($1);}
-*/
 ;
+
+
 
 /*********************/
 /* B 1.2 - Constants */
@@ -2560,15 +2506,17 @@ symbolic_variable:
 /* NOTE: To be entirely correct, variable_name must be replacemed by
  *         prev_declared_variable_name | prev_declared_fb_name | prev_declared_global_var_name
  */
- identifier
-	{$$ = new symbolic_variable_c($1, locloc(@$));}
-| prev_declared_fb_name
+  prev_declared_fb_name
 	{$$ = new symbolic_variable_c($1, locloc(@$));}
 | prev_declared_global_var_name
 	{$$ = new symbolic_variable_c($1, locloc(@$));}
 | prev_declared_variable_name
 	{$$ = new symbolic_variable_c($1, locloc(@$));}
 | multi_element_variable
+/*
+| identifier
+	{$$ = new symbolic_variable_c($1, locloc(@$));}
+*/
 ;
 
 
@@ -3279,7 +3227,7 @@ function_name_no_NOT_clashes: prev_declared_derived_function_name | standard_fun
  *       with two operators: the  IL 'NOT' operator, and
  *       the unary operator 'NOT' in ST!!
  *
- *  NOTE: The IL language is ambiguous, since using NOT, AND, ...
+ * NOTE: The IL language is ambiguous, since using NOT, AND, ...
  *       may be interpreted as either an IL operator, or
  *       as a standard function call!
  *       I (Mario) opted to interpret it as an IL operator.
@@ -4987,6 +4935,11 @@ unary_operator: '-' | 'NOT'
 /* NOTE: We use enumerated_value_without_identifier instead of enumerated_value
  *       in order to remove a reduce/reduce conflict between reducing an
  *       identifier to a variable or an enumerated_value.
+ *
+ *       This change follows the IEC specification. The specification seems to
+ *       imply (or is it explicit?) that in case the same identifier id used
+ *       for a variable and an enumerated value, then the variable shall be
+ *       considered??????????????
  */
 primary_expression:
 /* constant */
@@ -5180,8 +5133,6 @@ case_element_list:
 case_element:
   case_list ':' statement_list
 	{$$ = new case_element_c($1, $3, locloc(@$));}
-| case_list ':' statement_list identifier BOGUS_TOKEN_ID
-	{$$ = new case_element_c($1, $3, locloc(@$)); ERROR;}
 ;
 
 
@@ -5195,14 +5146,8 @@ case_list:
 
 case_list_element:
   signed_integer
-| enumerated_value
 | subrange
-/*
-| identifier
-	{$$ = $1;}
-| prev_declared_enumerated_type_name '#' any_identifier
-	{$$ = new enumerated_value_c($1, $3);}
-*/
+| enumerated_value
 ;
 
 
