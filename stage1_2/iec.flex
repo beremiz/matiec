@@ -974,7 +974,7 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	 *       handling this function and keyword clash in bison!
 	 */
 {identifier} 	{int token = get_identifier_token(yytext);
-		 // printf("flex: analysing identifier '%s'...", yytext); 
+		 fprintf(stderr, "flex: analysing identifier '%s'...", yytext); 
 		 if ((token == prev_declared_variable_name_token) ||
 //		     (token == prev_declared_derived_function_name_token) || // DO NOT add this condition!
 		     (token == prev_declared_fb_name_token)) {
@@ -987,11 +987,11 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
                   *       library_symbol_table as a default function name!
 		  */
 		   yylval.ID=strdup(yytext);
-		   // printf("returning token %d\n", token); 
+		   fprintf(stderr, "returning token %d\n", token); 
 		   return token;
 		 }
 		 /* otherwise, leave it for the other lexical parser rules... */
-		 // printf("rejecting\n"); 
+		 fprintf(stderr, "rejecting\n"); 
 		 REJECT;
 		}
 
@@ -1182,7 +1182,9 @@ END_STEP	return END_STEP;
 	 * it is explicitly required and we are not expecting any identifiers
 	 * that could also use the same letter sequence (i.e. an identifier: piority)
 	 */
+ /*
 <sfc_state>PRIORITY	return PRIORITY;
+ */
 
 <sfc_qualifier_state>{
 L		return L;
@@ -1357,7 +1359,7 @@ BY		return BY;
 DO		return DO;
 END_FOR		return END_FOR;
 
-WHILE		return WHILE;
+WHILE		{fprintf(stderr, "flex: returning token WHILE\n"); return WHILE;}
 DO		return DO;
 END_WHILE	return END_WHILE;
 
