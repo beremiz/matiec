@@ -5180,14 +5180,14 @@ for_statement:
  *
  * Obviously this presuposes that the control_variable
  * must have been declared in some VAR .. END_VAR
- * We could therefore change the syntax to read
+ * We must therefore change the syntax to read
  * control_variable: prev_declared_variable_name;
  * 
- * However, it is probaly best if we leave the semantic checks
- * to the semantic analyser of pass 2.
+ * If we don't, then the correct use of any previosuly declared 
+ * variable would result in an incorrect syntax error
 */
-// control_variable: prev_declared_variable_name {$$ = $1;};
-control_variable: identifier {$$ = $1;};
+control_variable: prev_declared_variable_name {$$ = $1;};
+// control_variable: identifier {$$ = $1;};
 
 /* Integrated directly into for_statement */
 /*
