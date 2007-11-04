@@ -1009,48 +1009,48 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	/******************************************************/
 
 
-EN	return EN;
-ENO	return ENO;
+EN	return EN;			/* Keyword */
+ENO	return ENO;			/* Keyword */
 
 
 	/******************************/
 	/* B 1.2.1 - Numeric Literals */
 	/******************************/
-TRUE		return TRUE;
-BOOL#1  	return TRUE;
-BOOL#TRUE	return TRUE;
-FALSE		return FALSE;
-BOOL#0  	return FALSE;
-BOOL#FALSE  	return FALSE;
+TRUE		return TRUE;		/* Keyword */
+BOOL#1  	return TRUE;		/* Keyword (Data Type) + Delimiter */
+BOOL#TRUE	return TRUE;		/* Keyword (Data Type) + Delimiter + Keyword */
+FALSE		return FALSE;		/* Keyword */
+BOOL#0  	return FALSE;		/* Keyword (Data Type) + Delimiter */
+BOOL#FALSE  	return FALSE;		/* Keyword (Data Type) + Delimiter + Keyword */
 
 
 	/************************/
 	/* B 1.2.3.1 - Duration */
 	/************************/
-t#		return T_SHARP;
-T#		return T_SHARP;
-TIME		return TIME;
+t#		return T_SHARP;		/* Delimiter */
+T#		return T_SHARP;		/* Delimiter */
+TIME		return TIME;		/* Keyword (Data Type) */
 
 
 	/************************************/
 	/* B 1.2.3.2 - Time of day and Date */
 	/************************************/
-TIME_OF_DAY	return TIME_OF_DAY;
-TOD		return TIME_OF_DAY;
-DATE		return DATE;
-d#		return D_SHARP;
-D#		return D_SHARP;
-DATE_AND_TIME	return DATE_AND_TIME;
-DT		return DATE_AND_TIME;
+TIME_OF_DAY	return TIME_OF_DAY;	/* Keyword (Data Type) */
+TOD		return TIME_OF_DAY;	/* Keyword (Data Type) */
+DATE		return DATE;		/* Keyword (Data Type) */
+d#		return D_SHARP;		/* Delimiter */
+D#		return D_SHARP;		/* Delimiter */
+DATE_AND_TIME	return DATE_AND_TIME;	/* Keyword (Data Type) */
+DT		return DATE_AND_TIME;	/* Keyword (Data Type) */
 
 
 	/***********************************/
 	/* B 1.3.1 - Elementary Data Types */
 	/***********************************/
-BYTE		return BYTE;
-WORD		return WORD;
-DWORD		return DWORD;
-LWORD		return LWORD;
+BYTE		return BYTE;		/* Keyword (Data Type) */
+WORD		return WORD;		/* Keyword (Data Type) */
+DWORD		return DWORD;		/* Keyword (Data Type) */
+LWORD		return LWORD;		/* Keyword (Data Type) */
 
 
 	/********************************/
@@ -1060,101 +1060,101 @@ LWORD		return LWORD;
 	/* But we include them so they become reserved words, and do not
 	 * get passed up to bison as an identifier...
 	 */
-ANY		return ANY;
-ANY_DERIVED	return ANY_DERIVED;
-ANY_ELEMENTARY	return ANY_ELEMENTARY;
-ANY_MAGNITUDE	return ANY_MAGNITUDE;
-ANY_NUM		return ANY_NUM;
-ANY_REAL	return ANY_REAL;
-ANY_INT		return ANY_INT;
-ANY_BIT		return ANY_BIT;
-ANY_STRING	return ANY_STRING;
-ANY_DATE	return ANY_DATE;
+ANY		return ANY;		/* Keyword (Data Type) */
+ANY_DERIVED	return ANY_DERIVED;	/* Keyword (Data Type) */
+ANY_ELEMENTARY	return ANY_ELEMENTARY;	/* Keyword (Data Type) */
+ANY_MAGNITUDE	return ANY_MAGNITUDE;	/* Keyword (Data Type) */
+ANY_NUM		return ANY_NUM;		/* Keyword (Data Type) */
+ANY_REAL	return ANY_REAL;	/* Keyword (Data Type) */
+ANY_INT		return ANY_INT;		/* Keyword (Data Type) */
+ANY_BIT		return ANY_BIT;		/* Keyword (Data Type) */
+ANY_STRING	return ANY_STRING;	/* Keyword (Data Type) */
+ANY_DATE	return ANY_DATE;	/* Keyword (Data Type) */
 
 
 	/********************************/
 	/* B 1.3.3 - Derived data types */
 	/********************************/
-":="		return ASSIGN;
-".."		return DOTDOT;
-TYPE		return TYPE;
-END_TYPE	return END_TYPE;
-ARRAY		return ARRAY;
-OF		return OF;
-STRUCT		return STRUCT;
-END_STRUCT	return END_STRUCT;
+":="		return ASSIGN;		/* Delimiter */
+".."		return DOTDOT;		/* Delimiter */
+TYPE		return TYPE;		/* Keyword */
+END_TYPE	return END_TYPE;	/* Keyword */
+ARRAY		return ARRAY;		/* Keyword */
+OF		return OF;		/* Keyword */
+STRUCT		return STRUCT;		/* Keyword */
+END_STRUCT	return END_STRUCT;	/* Keyword */
 
 
 	/*********************/
 	/* B 1.4 - Variables */
 	/*********************/
-REAL		return REAL;
-LREAL		return LREAL;
+REAL		return REAL;		/* Keyword (Data Type) */
+LREAL		return LREAL;		/* Keyword (Data Type) */
 
-SINT		return SINT;
-INT		return INT;
-DINT		return DINT;
-LINT		return LINT;
+SINT		return SINT;		/* Keyword (Data Type) */
+INT		return INT;		/* Keyword (Data Type) */
+DINT		return DINT;		/* Keyword (Data Type) */
+LINT		return LINT;		/* Keyword (Data Type) */
 
-USINT		return USINT;
-UINT		return UINT;
-UDINT		return UDINT;
-ULINT		return ULINT;
+USINT		return USINT;		/* Keyword (Data Type) */
+UINT		return UINT;		/* Keyword (Data Type) */
+UDINT		return UDINT;		/* Keyword (Data Type) */
+ULINT		return ULINT;		/* Keyword (Data Type) */
 
 
-WSTRING		return WSTRING;
-STRING		return STRING;
-BOOL		return BOOL;
+WSTRING		return WSTRING;		/* Keyword (Data Type) */
+STRING		return STRING;		/* Keyword (Data Type) */
+BOOL		return BOOL;		/* Keyword (Data Type) */
 
-TIME		return TIME;
-DATE		return DATE;
-DT		return DT;
-TOD		return TOD;
-DATE_AND_TIME	return DATE_AND_TIME;
-TIME_OF_DAY	return TIME_OF_DAY;
+TIME		return TIME;		/* Keyword (Data Type) */
+DATE		return DATE;		/* Keyword (Data Type) */
+DT		return DT;		/* Keyword (Data Type) */
+TOD		return TOD;		/* Keyword (Data Type) */
+DATE_AND_TIME	return DATE_AND_TIME;	/* Keyword (Data Type) */
+TIME_OF_DAY	return TIME_OF_DAY;	/* Keyword (Data Type) */
 
 
 	/******************************************/
 	/* B 1.4.3 - Declaration & Initialisation */
 	/******************************************/
-VAR_INPUT	return VAR_INPUT;
-VAR_OUTPUT	return VAR_OUTPUT;
-VAR_IN_OUT	return VAR_IN_OUT;
-VAR_EXTERNAL	return VAR_EXTERNAL;
-VAR_GLOBAL	return VAR_GLOBAL;
-END_VAR		return END_VAR;
-RETAIN		return RETAIN;
-NON_RETAIN	return NON_RETAIN;
-R_EDGE		return R_EDGE;
-F_EDGE		return F_EDGE;
-AT		return AT;
+VAR_INPUT	return VAR_INPUT;	/* Keyword */
+VAR_OUTPUT	return VAR_OUTPUT;	/* Keyword */
+VAR_IN_OUT	return VAR_IN_OUT;	/* Keyword */
+VAR_EXTERNAL	return VAR_EXTERNAL;	/* Keyword */
+VAR_GLOBAL	return VAR_GLOBAL;	/* Keyword */
+END_VAR		return END_VAR;		/* Keyword */
+RETAIN		return RETAIN;		/* Keyword */
+NON_RETAIN	return NON_RETAIN;	/* Keyword */
+R_EDGE		return R_EDGE;		/* Keyword */
+F_EDGE		return F_EDGE;		/* Keyword */
+AT		return AT;		/* Keyword */
 
 
 	/***********************/
 	/* B 1.5.1 - Functions */
 	/***********************/
-FUNCTION	return FUNCTION;
-END_FUNCTION	return END_FUNCTION;
-VAR		return VAR;
-CONSTANT	return CONSTANT;
+FUNCTION	return FUNCTION;	/* Keyword */
+END_FUNCTION	return END_FUNCTION;	/* Keyword */
+VAR		return VAR;		/* Keyword */
+CONSTANT	return CONSTANT;	/* Keyword */
 
 
 	/*****************************/
 	/* B 1.5.2 - Function Blocks */
 	/*****************************/
-FUNCTION_BLOCK		return FUNCTION_BLOCK;
-END_FUNCTION_BLOCK	return END_FUNCTION_BLOCK;
-VAR_TEMP		return VAR_TEMP;
-VAR			return VAR;
-NON_RETAIN		return NON_RETAIN;
-END_VAR			return END_VAR;
+FUNCTION_BLOCK		return FUNCTION_BLOCK;		/* Keyword */
+END_FUNCTION_BLOCK	return END_FUNCTION_BLOCK;	/* Keyword */
+VAR_TEMP		return VAR_TEMP;		/* Keyword */
+VAR			return VAR;			/* Keyword */
+NON_RETAIN		return NON_RETAIN;		/* Keyword */
+END_VAR			return END_VAR;			/* Keyword */
 
 
 	/**********************/
 	/* B 1.5.3 - Programs */
 	/**********************/
-PROGRAM		return PROGRAM;
-END_PROGRAM	return END_PROGRAM;
+PROGRAM		return PROGRAM;			/* Keyword */
+END_PROGRAM	return END_PROGRAM;		/* Keyword */
 
 
 	/********************************************/
@@ -1166,17 +1166,17 @@ END_PROGRAM	return END_PROGRAM;
 	 * ignore them!
 	 */
 	 
-ACTION		return ACTION;
-END_ACTION	return END_ACTION;
+ACTION		return ACTION;			/* Keyword */
+END_ACTION	return END_ACTION;		/* Keyword */
 
-TRANSITION	return TRANSITION;
-END_TRANSITION	return END_TRANSITION;
-FROM		return FROM;
-TO		return TO;
+TRANSITION	return TRANSITION;		/* Keyword */
+END_TRANSITION	return END_TRANSITION;		/* Keyword */
+FROM		return FROM;			/* Keyword */
+TO		return TO;			/* Keyword */
 
-INITIAL_STEP	return INITIAL_STEP;
-STEP		return STEP;
-END_STEP	return END_STEP;
+INITIAL_STEP	return INITIAL_STEP;		/* Keyword */
+STEP		return STEP;			/* Keyword */
+END_STEP	return END_STEP;		/* Keyword */
 
 	/* PRIORITY is not a keyword, so we only return it when 
 	 * it is explicitly required and we are not expecting any identifiers
@@ -1202,21 +1202,21 @@ S		return S;
 	/********************************/
 	/* B 1.7 Configuration elements */
 	/********************************/
-CONFIGURATION		return CONFIGURATION;
-END_CONFIGURATION	return END_CONFIGURATION;
-TASK			return TASK;
-RESOURCE		return RESOURCE;
-ON			return ON;
-END_RESOURCE		return END_RESOURCE;
-VAR_CONFIG		return VAR_CONFIG;
-VAR_ACCESS		return VAR_ACCESS;
-END_VAR			return END_VAR;
-WITH			return WITH;
-PROGRAM			return PROGRAM;
-RETAIN			return RETAIN;
-NON_RETAIN		return NON_RETAIN;
-READ_WRITE		return READ_WRITE;
-READ_ONLY		return READ_ONLY;
+CONFIGURATION		return CONFIGURATION;		/* Keyword */
+END_CONFIGURATION	return END_CONFIGURATION;	/* Keyword */
+TASK			return TASK;			/* Keyword */
+RESOURCE		return RESOURCE;		/* Keyword */
+ON			return ON;			/* Keyword */
+END_RESOURCE		return END_RESOURCE;		/* Keyword */
+VAR_CONFIG		return VAR_CONFIG;		/* Keyword */
+VAR_ACCESS		return VAR_ACCESS;		/* Keyword */
+END_VAR			return END_VAR;			/* Keyword */
+WITH			return WITH;			/* Keyword */
+PROGRAM			return PROGRAM;			/* Keyword */
+RETAIN			return RETAIN;			/* Keyword */
+NON_RETAIN		return NON_RETAIN;		/* Keyword */
+READ_WRITE		return READ_WRITE;		/* Keyword */
+READ_ONLY		return READ_ONLY;		/* Keyword */
 
 	/* PRIORITY, SINGLE and INTERVAL are not a keywords, so we only return them when 
 	 * it is explicitly required and we are not expecting any identifiers
@@ -1255,36 +1255,39 @@ INTERVAL		return INTERVAL;
 	 */
  /* The following tokens clash with ST expression operators and Standard Functions */
  /* They are also keywords! */
-AND		return AND;
-MOD		return MOD;
-OR		return OR;
-XOR		return XOR;
-NOT		return NOT;
+AND		return AND;		/* Keyword */
+MOD		return MOD;		/* Keyword */
+OR		return OR;		/* Keyword */
+XOR		return XOR;		/* Keyword */
+NOT		return NOT;		/* Keyword */
 
  /* The following tokens clash with Standard Functions */
+ /* They are keywords because they are a function name */
 <il_state>{
-ADD		return ADD;
-DIV		return DIV;
-EQ		return EQ;
-GE		return GE;
-GT		return GT;
-LE		return LE;
-LT		return LT;
-MUL		return MUL;
-NE		return NE;
-SUB		return SUB;
+ADD		return ADD;		/* Keyword (Standard Function) */
+DIV		return DIV;		/* Keyword (Standard Function) */
+EQ		return EQ;		/* Keyword (Standard Function) */
+GE		return GE;		/* Keyword (Standard Function) */
+GT		return GT;		/* Keyword (Standard Function) */
+LE		return LE;		/* Keyword (Standard Function) */
+LT		return LT;		/* Keyword (Standard Function) */
+MUL		return MUL;		/* Keyword (Standard Function) */
+NE		return NE;		/* Keyword (Standard Function) */
+SUB		return SUB;		/* Keyword (Standard Function) */
 }
 
  /* The following tokens clash with SFC action qualifiers */
+ /* They are not keywords! */
 <il_state>{
 S		return S;
 R		return R;
 }
 
  /* The following tokens clash with ST expression operators */
-&		return AND2;
+&		return AND2;		/* NOT a Delimiter! */
 
  /* The following tokens have no clashes */
+ /* They are not keywords! */
 <il_state>{
 LD		return LD;
 LDN		return LDN;
@@ -1316,58 +1319,59 @@ JMPCN		return JMPCN;
 	/***********************/
 	/* B 3.1 - Expressions */
 	/***********************/
-"**"		return OPER_EXP;
-"<>"		return OPER_NE;
-">="		return OPER_GE;
-"<="		return OPER_LE;
-AND		return AND;
-XOR		return XOR;
-OR		return OR;
-NOT		return NOT;
-MOD		return MOD;
+"**"		return OPER_EXP;	/* NOT a Delimiter! */
+"<>"		return OPER_NE;		/* NOT a Delimiter! */
+">="		return OPER_GE;		/* NOT a Delimiter! */
+"<="		return OPER_LE;		/* NOT a Delimiter! */
+&		return AND2;		/* NOT a Delimiter! */
+AND		return AND;		/* Keyword */
+XOR		return XOR;		/* Keyword */
+OR		return OR;		/* Keyword */
+NOT		return NOT;		/* Keyword */
+MOD		return MOD;		/* Keyword */
 
 
 	/*****************************************/
 	/* B 3.2.2 Subprogram Control Statements */
 	/*****************************************/
-:=		return ASSIGN;
-=>		return SENDTO;
-RETURN		return RETURN;
+:=		return ASSIGN;		/* Delimiter */
+=>		return SENDTO;		/* Delimiter */
+RETURN		return RETURN;		/* Keyword */
 
 
 	/********************************/
 	/* B 3.2.3 Selection Statements */
 	/********************************/
-IF		return IF;
-THEN		return THEN;
-ELSIF		return ELSIF;
-ELSE		return ELSE;
-END_IF		return END_IF;
+IF		return IF;		/* Keyword */
+THEN		return THEN;		/* Keyword */
+ELSIF		return ELSIF;		/* Keyword */
+ELSE		return ELSE;		/* Keyword */
+END_IF		return END_IF;		/* Keyword */
 
-CASE		return CASE;
-OF		return OF;
-ELSE		return ELSE;
-END_CASE	return END_CASE;
+CASE		return CASE;		/* Keyword */
+OF		return OF;		/* Keyword */
+ELSE		return ELSE;		/* Keyword */
+END_CASE	return END_CASE;	/* Keyword */
 
 
 	/********************************/
 	/* B 3.2.4 Iteration Statements */
 	/********************************/
-FOR		return FOR;
-TO		return TO;
-BY		return BY;
-DO		return DO;
-END_FOR		return END_FOR;
+FOR		return FOR;		/* Keyword */
+TO		return TO;		/* Keyword */
+BY		return BY;		/* Keyword */
+DO		return DO;		/* Keyword */
+END_FOR		return END_FOR;		/* Keyword */
 
-WHILE		return WHILE;
-DO		return DO;
-END_WHILE	return END_WHILE;
+WHILE		return WHILE;		/* Keyword */
+DO		return DO;		/* Keyword */
+END_WHILE	return END_WHILE;	/* Keyword */
 
-REPEAT		return REPEAT;
-UNTIL		return UNTIL;
-END_REPEAT	return END_REPEAT;
+REPEAT		return REPEAT;		/* Keyword */
+UNTIL		return UNTIL;		/* Keyword */
+END_REPEAT	return END_REPEAT;	/* Keyword */
 
-EXIT		return EXIT;
+EXIT		return EXIT;		/* Keyword */
 
 
 
