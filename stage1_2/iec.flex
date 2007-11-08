@@ -973,28 +973,27 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	 *       We solve this by NOT testing for function names here, and
 	 *       handling this function and keyword clash in bison!
 	 */
+ /*
 {identifier} 	{int token = get_identifier_token(yytext);
 		 // fprintf(stderr, "flex: analysing identifier '%s'...", yytext); 
 		 if ((token == prev_declared_variable_name_token) ||
 //		     (token == prev_declared_derived_function_name_token) || // DO NOT add this condition!
 		     (token == prev_declared_fb_name_token)) {
-		 /*
-		 if (token != identifier_token)
-		 */
-		 /* NOTE: if we replace the above uncommented conditions with
+		 // if (token != identifier_token)
+		 // * NOTE: if we replace the above uncommented conditions with
                   *       the simple test of (token != identifier_token), then 
                   *       'MOD' et al must be removed from the 
                   *       library_symbol_table as a default function name!
-		  */
+		  * //
 		   yylval.ID=strdup(yytext);
 		   // fprintf(stderr, "returning token %d\n", token); 
 		   return token;
 		 }
-		 /* otherwise, leave it for the other lexical parser rules... */
+		 // otherwise, leave it for the other lexical parser rules... 
 		 // fprintf(stderr, "rejecting\n"); 
 		 REJECT;
 		}
-
+ */
 
 	/******************************************************/
 	/******************************************************/
