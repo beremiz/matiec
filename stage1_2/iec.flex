@@ -1181,9 +1181,7 @@ END_STEP	return END_STEP;		/* Keyword */
 	 * it is explicitly required and we are not expecting any identifiers
 	 * that could also use the same letter sequence (i.e. an identifier: piority)
 	 */
- /*
 <sfc_state>PRIORITY	return PRIORITY;
- */
 
 <sfc_qualifier_state>{
 L		return L;
