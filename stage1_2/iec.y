@@ -561,7 +561,7 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
 /* helper symbol for enumerated_value */
 %type  <list>	enumerated_value_list
 %type  <leaf>	enumerated_value
-%type  <leaf>	enumerated_value_without_identifier
+//%type  <leaf>	enumerated_value_without_identifier
 
 %type  <leaf>	array_type_declaration
 %type  <leaf>	array_spec_init
@@ -835,10 +835,7 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
 %type  <leaf>	transition
 %type  <leaf>	steps
 %type  <list>	step_name_list
-%type  <tmp_symbol> transition_header
-%type  <leaf>	transition_condition_il
-%type  <leaf>	transition_condition_st
-%type  <tmp_symbol> action_header
+%type  <leaf>	transition_condition
 %type  <leaf>	action
 %type  <leaf>	transition_name
 
@@ -1174,9 +1171,12 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
 %type <leaf>	subprogram_control_statement
 %type <leaf>	return_statement
 %type <leaf>	fb_invocation
-%type <leaf>	param_assignment
-/* helper symbol for fb_invocation */
-%type <list> param_assignment_list
+// %type <leaf>	param_assignment
+%type <leaf>	param_assignment_formal
+%type <leaf>	param_assignment_nonformal
+/* helper symbols for fb_invocation */
+%type <list> param_assignment_formal_list
+%type <list> param_assignment_nonformal_list
 
 // %token ASSIGN
 // %token SENDTO   /* "=>" */
@@ -2287,16 +2287,18 @@ enumerated_value_list:
 
 
 enumerated_value:
-  identifier
+  identifier 
 | prev_declared_enumerated_type_name '#' any_identifier
 	{$$ = new enumerated_value_c($1, $3, locloc(@$));}
 ;
 
 
+/*
 enumerated_value_without_identifier:
   prev_declared_enumerated_type_name '#' any_identifier
 	{$$ = new enumerated_value_c($1, $3, locloc(@$));}
 ;
+*/
 
 
 array_type_declaration:
@@ -3772,49 +3774,49 @@ step_name_list:
 ;
 
 
-transition_header:
-  TRANSITION FROM steps TO steps
-	{$$.first = NULL; $$.second = NULL; $$.third = $3; $$.fourth = $5; cmd_goto_body_state();}
-| TRANSITION transition_name FROM steps TO steps 
-//| TRANSITION identifier FROM steps TO steps 
-	{$$.first = $2; $$.second = NULL; $$.third = $4; $$.fourth = $6; cmd_goto_body_state();}
-| TRANSITION '(' PRIORITY ASSIGN integer ')' FROM steps TO steps
-	{$$.first = NULL; $$.second = $5; $$.third = $8; $$.fourth = $10; cmd_goto_body_state();}
-| TRANSITION transition_name '(' PRIORITY ASSIGN integer ')' FROM steps TO steps
-//| TRANSITION identifier '(' PRIORITY ASSIGN integer ')' FROM steps TO steps
-	{$$.first = $2; $$.second = $6; $$.third = $9; $$.fourth = $11; cmd_goto_body_state();}
+/* NOTE: flex will automatically pop() out of body_state to previous state.
+ *       We do not need to give a command from bison to return to previous flex state!
+ */
+transition:
+  TRANSITION 
+    FROM steps TO steps 
+    {cmd_goto_body_state();} transition_condition 
+  END_TRANSITION 
+	{$$ = new transition_c(NULL, NULL, $3, $5, $7, NULL, locloc(@$));}
+//| TRANSITION identifier FROM steps TO steps ... 
+| TRANSITION transition_name 
+    FROM steps TO steps 
+    {cmd_goto_body_state();} transition_condition 
+  END_TRANSITION 
+	{$$ = new transition_c($2, NULL, $4, $6, $8, NULL, locloc(@$));}
+| TRANSITION '(' PRIORITY ASSIGN integer ')' 
+    FROM steps TO steps 
+    {cmd_goto_body_state();} transition_condition 
+  END_TRANSITION
+        {$$ = new transition_c(NULL, $5, $8, $10, $12, NULL, locloc(@$));}
+//| TRANSITION identifier '(' PRIORITY ASSIGN integer ')' FROM steps TO steps ...
+| TRANSITION transition_name '(' PRIORITY ASSIGN integer ')' 
+    FROM steps TO steps 
+    {cmd_goto_body_state();} transition_condition 
+  END_TRANSITION
+        {$$ = new transition_c($2, $6, $9, $11, $13, NULL, locloc(@$));}
 ;
 
-transition_condition_il:
+
+
+transition_condition:
   ':' eol_list simple_instr_list
 	{$$ = $3;}
-;
-
-transition_condition_st:
-  ASSIGN expression ';'
+| ASSIGN expression ';'
 	{$$ = $2}
 ;
 
 
-/* TODO: Can't we clean this up a bit ? */
-transition:
-  transition_header transition_condition_il END_TRANSITION
-        {$$ = new transition_c($1.first, $1.second, $1.third, $1.fourth, $2, NULL, locloc(@$));}
-        /* TODO: free the memory used up by the no longer used object $1 */
-|  transition_header transition_condition_st END_TRANSITION
-        {$$ = new transition_c($1.first, $1.second, $1.third, $1.fourth, NULL, $2, locloc(@$));}
-;
-
-action_header:
-  ACTION action_name ':' 
-//  ACTION identifier ':' 
-	{$$.first = $2; cmd_goto_body_state();}
-;
-
 
 action:
-  action_header function_block_body END_ACTION
-	{$$ = new action_c($1.first, $2, locloc(@$));}
+//  ACTION identifier ':' ... 
+  ACTION action_name ':' {cmd_goto_body_state();} function_block_body END_ACTION
+	{$$ = new action_c($2, $5, locloc(@$));}
 ;
 
 
@@ -3903,7 +3905,7 @@ configuration_declaration:
 	{$$ = new configuration_declaration_c($2, $3, $4, $5, $6, locloc(@$));
 	 library_element_symtable.insert($2, prev_declared_configuration_name_token);
 	 variable_name_symtable.pop();
-	}
+}
 /* ERROR_CHECK_BEGIN */
 | CONFIGURATION error END_CONFIGURATION
 	{$$ = NULL;
@@ -4560,7 +4562,8 @@ il_expr_operator_clash_eol_list:
  */
 il_operand:
   variable
-| enumerated_value_without_identifier
+//| enumerated_value_without_identifier
+| enumerated_value
 | constant
 ;
 
@@ -4937,14 +4940,16 @@ unary_operator: '-' | 'NOT'
  *       identifier to a variable or an enumerated_value.
  *
  *       This change follows the IEC specification. The specification seems to
- *       imply (or is it explicit?) that in case the same identifier id used
+ *       imply (by introducing syntax that allows to unambiguosly reference an
+ *       enumerated value - enum_type#enum_value) that in case the same identifier is used
  *       for a variable and an enumerated value, then the variable shall be
- *       considered??????????????
+ *       considered.
  */
 primary_expression:
 /* constant */
   non_negative_constant
-| enumerated_value_without_identifier
+//| enumerated_value_without_identifier
+| enumerated_value
 | variable
 | '(' expression ')'
 	{$$ = $2;}
@@ -4979,8 +4984,10 @@ primary_expression:
  *       letting names clash!
  */
 function_invocation:
-/*  function_name '(' param_assignment_list ')' */
-  function_name_no_NOT_clashes '(' param_assignment_list ')'
+/*  function_name '(' [param_assignment_list] ')' */
+  function_name_no_NOT_clashes '(' param_assignment_formal_list ')'
+	{$$ = new function_invocation_c($1, $3, locloc(@$));}
+| function_name_no_NOT_clashes '(' param_assignment_nonformal_list ')'
 	{$$ = new function_invocation_c($1, $3, locloc(@$));}
 ;
 
@@ -5045,7 +5052,9 @@ return_statement:
 fb_invocation:
   prev_declared_fb_name '(' ')'
 	{$$ = new fb_invocation_c($1, NULL, locloc(@$));	}
-| prev_declared_fb_name '(' param_assignment_list ')'
+| prev_declared_fb_name '(' param_assignment_formal_list ')'
+	{$$ = new fb_invocation_c($1, $3, locloc(@$));}
+| prev_declared_fb_name '(' param_assignment_nonformal_list ')'
 	{$$ = new fb_invocation_c($1, $3, locloc(@$));}
 ;
 
@@ -5054,25 +5063,65 @@ fb_invocation:
  * - fb_invocation
  * - function_invocation
  */
-param_assignment_list:
-  param_assignment
+param_assignment_formal_list:
+  param_assignment_formal
 	{$$ = new param_assignment_list_c(locloc(@$)); $$->add_element($1);}
-| param_assignment_list ',' param_assignment
+| param_assignment_formal_list ',' param_assignment_formal
+	{$$ = $1; $$->add_element($3);}
+;
+
+/* helper symbol for
+ * - fb_invocation
+ * - function_invocation
+ */
+param_assignment_nonformal_list:
+  param_assignment_nonformal
+	{$$ = new param_assignment_list_c(locloc(@$)); $$->add_element($1);}
+| param_assignment_nonformal_list ',' param_assignment_nonformal
 	{$$ = $1; $$->add_element($3);}
 ;
 
 
-
+/* NOTE: According to the IEC 61131-3 standard, there are two possible
+ *       syntaxes for calling function blocks within ST.
+ *       The formal method has the form:
+ *        fb ( invar := x, inoutvar := var1, outvar => var2);
+ *       The non-formal method has the form:
+ *        fb (x, var1, var2);
+ *       In the text of IEC 61131-3 (where the semantics are defined),
+ *       it is obvious that mixing the two syntaxes is considered incorrect.
+ *       The following should therefore be incorrect: 
+ *        fb ( invar := x, var1, var2);
+ *       However, according to the syntax definition, as defined in IEC 61131-3,
+ *       mixing the formal and non-formal methods of invocation is allowed.
+ *       We have two alternatives:
+ *        (a) implement the syntax here in iec.y according to the standard,
+ *            and leave it to the semantic analyser stage to find this error
+ *        (b) or implement the syntax in iec.y correctly, not allowing 
+ *            the mixing of formal and non-formal invocation syntaxes.
+ *       Considering that this is a syntax issue, and not semantic issue,
+ *       I (Mario) have decided to go with alternative (a).
+ *       In other words, in iec.y we do not follow the syntax as defined in
+ *       Annex B of the IEC 61131-3 standard, but rather implement
+ *       the syntax also taking into account the textual part of the standard too.
+ */
+/*
 param_assignment:
-/*  variable_name ASSIGN expression */
+  variable_name ASSIGN expression 
+*/
+param_assignment_nonformal:
+  expression
+;
+
+
+param_assignment_formal:
   any_identifier ASSIGN expression
 	{$$ = new input_variable_param_assignment_c($1, $3, locloc(@$));}
-| expression
 /*| variable_name SENDTO variable */
 /*| any_identifier SENDTO variable */
 | sendto_identifier SENDTO variable
 	{$$ = new output_variable_param_assignment_c(NULL,$1, $3, locloc(@$));}
-/*| variable_name SENDTO variable */
+/*| NOT variable_name SENDTO variable */
 /*| NOT any_identifier SENDTO variable*/
 | NOT sendto_identifier SENDTO variable
 	{$$ = new output_variable_param_assignment_c(new not_paramassign_c(locloc(@$)),$2, $4, locloc(@$));}
@@ -5453,8 +5502,12 @@ int stage1_2__(const char *filename, const char *includedir, symbol_c **tree_roo
   yylineno = 1;
   allow_function_overloading = false;
   current_filename = filename;
-  if (yyparse() != 0)
-    exit(EXIT_FAILURE);
+  {int res;
+    if ((res = yyparse()) != 0) {
+      fprintf (stderr, "\nInternal error while parsing file - yyparse() returned %d. Bailing out!\n", res);
+      ERROR;
+    }
+  }
 
   if (yynerrs > 0) {
     fprintf (stderr, "\nFound %d error(s). Bailing out!\n", yynerrs /* global variable */);
