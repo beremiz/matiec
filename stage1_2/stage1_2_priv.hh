@@ -99,6 +99,14 @@ int  get_goto_sfc_qualifier_state(void);
 void rst_goto_sfc_qualifier_state(void);
 
 
+/*************************************************************/
+/* Controlling the entry to the sfc_priority_state in flex.  */
+/*************************************************************/
+void cmd_goto_sfc_priority_state(void);
+int  get_goto_sfc_priority_state(void);
+void rst_goto_sfc_priority_state(void);
+
+
 /*********************************************************/
 /* Controlling the entry to the task_init_state in flex. */
 /*********************************************************/

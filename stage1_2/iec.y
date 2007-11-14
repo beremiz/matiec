@@ -3789,17 +3789,17 @@ transition:
     {cmd_goto_body_state();} transition_condition 
   END_TRANSITION 
 	{$$ = new transition_c($2, NULL, $4, $6, $8, NULL, locloc(@$));}
-| TRANSITION '(' PRIORITY ASSIGN integer ')' 
+| TRANSITION '(' {cmd_goto_sfc_priority_state();} PRIORITY {cmd_pop_state();} ASSIGN integer ')' 
     FROM steps TO steps 
     {cmd_goto_body_state();} transition_condition 
   END_TRANSITION
-        {$$ = new transition_c(NULL, $5, $8, $10, $12, NULL, locloc(@$));}
+        {$$ = new transition_c(NULL, $7, $10, $12, $14, NULL, locloc(@$));}
 //| TRANSITION identifier '(' PRIORITY ASSIGN integer ')' FROM steps TO steps ...
-| TRANSITION transition_name '(' PRIORITY ASSIGN integer ')' 
+| TRANSITION transition_name '(' {cmd_goto_sfc_priority_state();} PRIORITY {cmd_pop_state();} ASSIGN integer ')' 
     FROM steps TO steps 
     {cmd_goto_body_state();} transition_condition 
   END_TRANSITION
-        {$$ = new transition_c($2, $6, $9, $11, $13, NULL, locloc(@$));}
+        {$$ = new transition_c($2, $8, $11, $13, $15, NULL, locloc(@$));}
 ;
 
 

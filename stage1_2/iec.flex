@@ -371,6 +371,8 @@ void unput_text(unsigned int n);
 /* we are parsing sfc code, and expecting an action qualifier.      */
 %s sfc_qualifier_state
 
+/* we are parsing sfc code, and expecting the priority token.       */
+%s sfc_priority_state
 
 
 
@@ -691,6 +693,11 @@ incompl_location	%[IQM]\*
 	if (get_goto_sfc_qualifier_state()) {
 	  yy_push_state(sfc_qualifier_state);
 	  rst_goto_sfc_qualifier_state();
+	}
+
+	if (get_goto_sfc_priority_state()) {
+	  yy_push_state(sfc_priority_state);
+	  rst_goto_sfc_priority_state();
 	}
 
 	if (get_goto_task_init_state()) {
@@ -1181,7 +1188,7 @@ END_STEP	return END_STEP;		/* Keyword */
 	 * it is explicitly required and we are not expecting any identifiers
 	 * that could also use the same letter sequence (i.e. an identifier: piority)
 	 */
-<sfc_state>PRIORITY	return PRIORITY;
+<sfc_priority_state>PRIORITY	return PRIORITY;
 
 <sfc_qualifier_state>{
 L		return L;

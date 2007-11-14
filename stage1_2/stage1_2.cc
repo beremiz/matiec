@@ -76,6 +76,15 @@ int  get_goto_sfc_qualifier_state(void) {return goto_sfc_qualifier_state__;}
 void rst_goto_sfc_qualifier_state(void) {goto_sfc_qualifier_state__ = 0;}
 
 /*************************************************************/
+/* Controlling the entry to the sfc_priority_state in flex.  */
+/*************************************************************/
+static int goto_sfc_priority_state__ = 0;
+
+void cmd_goto_sfc_priority_state(void) {goto_sfc_priority_state__ = 1;}
+int  get_goto_sfc_priority_state(void) {return goto_sfc_priority_state__;}
+void rst_goto_sfc_priority_state(void) {goto_sfc_priority_state__ = 0;}
+
+/*************************************************************/
 /* Controlling the entry to the sfc_qualifier_state in flex. */
 /*************************************************************/
 static int goto_task_init_state__ = 0;
