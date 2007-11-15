@@ -4362,10 +4362,6 @@ il_simple_operation:
 	{$$ = new il_simple_operation_c($1, $2, locloc(@$));}
 | il_simple_operator_clash_il_operand
 	{$$ = new il_simple_operation_c($1.first, $1.second, locloc(@$));}
-	 /* TODO: free the memory used up by the no longer used $1 object! */
-	 /*       I don't do it now because I would have to test the change, and am
-	  *       currently frying bigger fish... (Mario)
-	 /*   free($1); */
 /* NOTE: the line
  *         | il_simple_operator
  *       already contains the 'NOT' operator, as well as all the
