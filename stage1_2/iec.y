@@ -3806,9 +3806,9 @@ transition:
 
 transition_condition:
   ':' eol_list simple_instr_list
-	{$$ = new transition_condition_c($3, NULL);}
+	{$$ = new transition_condition_c($3, NULL, locloc(@$));}
 | ASSIGN expression ';'
-	{$$ = new transition_condition_c(NULL, $2);}
+	{$$ = new transition_condition_c(NULL, $2, locloc(@$));}
 ;
 
 
