@@ -175,12 +175,8 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
     struct {
       symbol_c	*first;
       symbol_c	*second;
-      symbol_c	*third;
-      symbol_c	*fourth;
     } tmp_symbol; /* used as a temorary reference to symbols by:
                                      il_simple_operator_clash_il_operand
-                                     transaction_tmp
-                                     action_tmp
                              */
 }
 
@@ -4376,8 +4372,9 @@ il_simple_operation:
  *       expression operators ('MOD', 'AND', etc...), all of which
  *       may also be a function name! This means that these operators/functions,
  *       without any operands, could be reduced to either an operator or a
- *       function call. I (Mario) have chosen to reduce it to an operator.
+ *       function call. 
  *
+ *       I (Mario) have chosen to reduce it to an operator.
  *       In order to do this, we must remove from the syntax that defines
  *       function calls all the functions whose names clash with the IL operators.
  *
@@ -4397,10 +4394,9 @@ il_simple_operation:
  *       function. This means that (MOD, AND,...) could be interpret as a function name
  *       or as an IL operator! This would lead us to a reduce/reduce conflict!
  *
+ *       I (Mario) have chosen to reduce it to an operand, rather than a function call.
  *       In order to do this, we must remove from the syntax that defines
  *       function calls all the functions whose names clash with the IL operators.
- *
- *       I (Mario) have chosen to reduce it to an operand, rather than a function call.
  *
  *       The line
  *         | function_name il_operand_list
@@ -4556,13 +4552,8 @@ il_expr_operator_clash_eol_list:
 ;
 
 
-/* NOTE: We use enumerated_value_without_identifier instead of enumerated_value
- *       in order to remove a reduce/reduce conflict between reducing an
- *       identifier to a variable or an enumerated_value.
- */
 il_operand:
   variable
-//| enumerated_value_without_identifier
 | enumerated_value
 | constant
 ;
