@@ -96,6 +96,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
 
     void generate(symbol_c *symbol, sfcgeneration_t generation_type) {
       wanted_sfcgeneration = generation_type;
+      transition_number = 0;
       switch (wanted_sfcgeneration) {
         case transitiontest_sg:
           {
@@ -259,26 +260,8 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
           s4o.indent_right();
           
           // Calculate transition value
-          if (symbol->transition_condition_il != NULL) {
-            generate_c_il->declare_backup_variable();
-            s4o.print(s4o.indent_spaces);
-            symbol->transition_condition_il->accept(*generate_c_il);
-            print_variable_prefix();
-            s4o.print("transition_list[");
-            print_transition_number();
-            s4o.print("] = ");
-            generate_c_il->print_backup_variable();
-            s4o.print(";\n");
-          }
-          if (symbol->transition_condition_st != NULL) {
-            s4o.print(s4o.indent_spaces);
-            print_variable_prefix();
-            s4o.print("transition_list[");
-            print_transition_number();
-            s4o.print("] = ");
-            symbol->transition_condition_st->accept(*generate_c_st);
-            s4o.print(";\n");
-          }
+          symbol->transition_condition->accept(*this);
+          
           if (symbol->integer != NULL) {
             s4o.print(s4o.indent_spaces + "if (");
             print_variable_prefix();
@@ -328,6 +311,38 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print(s4o.indent_spaces + "}\n");
           }
           transition_number++;
+          break;
+        default:
+          break;
+      }
+      return NULL;
+    }
+    
+    void *visit(transition_condition_c *symbol) {
+      switch (wanted_sfcgeneration) {
+        case transitiontest_sg:
+          // Transition condition is in IL
+          if (symbol->transition_condition_il != NULL) {
+            generate_c_il->declare_backup_variable();
+            s4o.print(s4o.indent_spaces);
+            symbol->transition_condition_il->accept(*generate_c_il);
+            print_variable_prefix();
+            s4o.print("transition_list[");
+            print_transition_number();
+            s4o.print("] = ");
+            generate_c_il->print_backup_variable();
+            s4o.print(";\n");
+          }
+          // Transition condition is in ST
+          if (symbol->transition_condition_st != NULL) {
+            s4o.print(s4o.indent_spaces);
+            print_variable_prefix();
+            s4o.print("transition_list[");
+            print_transition_number();
+            s4o.print("] = ");
+            symbol->transition_condition_st->accept(*generate_c_st);
+            s4o.print(";\n");
+          }
           break;
         default:
           break;

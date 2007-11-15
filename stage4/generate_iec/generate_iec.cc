@@ -1140,20 +1140,25 @@ void *visit(transition_c *symbol) {
   s4o.print(" TO ");
   symbol->to_steps->accept(*this);
   s4o.indent_right();
+  symbol->transition_condition->accept(*this);
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces);
+  s4o.print("END_TRANSITION\n");
+  return NULL;
+}
+
+void *visit(transition_condition_c *symbol) {
   if (symbol->transition_condition_il != NULL) {
-  	s4o.print(":\n");
+    s4o.print(":\n");
     symbol->transition_condition_il->accept(*this);
   }
   if (symbol->transition_condition_st != NULL) {
-  	s4o.print("\n");
+    s4o.print("\n");
     s4o.print(s4o.indent_spaces);
     s4o.print(":= ");
     symbol->transition_condition_st->accept(*this);
     s4o.print(";\n");
   }
-  s4o.indent_left();
-  s4o.print(s4o.indent_spaces);
-  s4o.print("END_TRANSITION\n");
   return NULL;
 }
 
