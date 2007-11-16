@@ -4446,7 +4446,7 @@ il_simple_operation:
 */
 | il_simple_operator_clash il_operand_list2
 	{
-	 $$ = new il_function_call_c($1, $2, locloc(@$));
+	 $$ = new il_function_call_c(il_operator_c_2_identifier_c($1), $2, locloc(@$));
 	}
 ;
 
