@@ -3739,17 +3739,14 @@ action_qualifier:
 ;
 
 qualifier:
-N		{$$ = new qualifier_c(strdup("N"), locloc(@$));}
-/* NOTE: the following two clash with the R and S IL operators.
- * It will have to be handled when we include parsing of SFC...
- */
+  N		{$$ = new qualifier_c(strdup("N"), locloc(@$));}
 | R		{$$ = new qualifier_c(strdup("R"), locloc(@$));}
 | S		{$$ = new qualifier_c(strdup("S"), locloc(@$));}
 | P		{$$ = new qualifier_c(strdup("P"), locloc(@$));}
 ;
 
 timed_qualifier:
-L		{$$ = new timed_qualifier_c(strdup("L"), locloc(@$));}
+  L		{$$ = new timed_qualifier_c(strdup("L"), locloc(@$));}
 | D		{$$ = new timed_qualifier_c(strdup("D"), locloc(@$));}
 | SD		{$$ = new timed_qualifier_c(strdup("SD"), locloc(@$));}
 | DS		{$$ = new timed_qualifier_c(strdup("DS"), locloc(@$));}
@@ -3783,7 +3780,8 @@ step_name_list:
 
 
 /* NOTE: flex will automatically pop() out of body_state to previous state.
- *       We do not need to give a command from bison to return to previous flex state!
+ *       We do not need to give a command from bison to return to previous flex state,
+ *       after forcing flex to go to body_state.
  */
 transition:
   TRANSITION 
@@ -4310,12 +4308,7 @@ eol_list:
 | eol_list EOL
 ;
 
-/*
-eol_list:
-  '\n'
-| eol_list '\n'
-;
-*/
+
 
 instruction_list:
   il_instruction
@@ -4368,12 +4361,12 @@ label: identifier;
 
 
 il_simple_operation:
-// il_simple_operation ::= (il_simple_operator [il_operand]) | (function_name [il_operand_list])
+// (il_simple_operator [il_operand]) | (function_name [il_operand_list])
   il_simple_operator
 	{$$ = new il_simple_operation_c($1, NULL, locloc(@$));}
 /*
  * Note: Bison is getting confused with the following rule,
- *       i.e. it is finding conflicts where there are really none.
+ *       i.e. it is finding conflicts where there seemingly are really none.
  *       The rule was therefore replaced by the equivalent following
  *       two rules.
  */
@@ -4440,9 +4433,14 @@ il_simple_operation:
 
 
 
-
-
 il_expression:
+// il_expr_operator '(' [il_operand] EOL {EOL} [simple_instr_list] ')'
+/*
+ * Note: Bison is getting confused with the use of il_expr_operator,
+ *       i.e. it is finding conflicts where there seemingly are really none.
+ *       il_expr_operator was therefore replaced by the equivalent 
+ *       il_expr_operator_noclash | il_expr_operator_clash.
+ */
   il_expr_operator_noclash '(' eol_list ')'
 	{$$ = new il_expression_c($1, NULL, NULL, locloc(@$));}
 | il_expr_operator_noclash '(' il_operand eol_list ')'
@@ -4469,6 +4467,7 @@ il_jump_operation:
 
 
 il_fb_call:
+// il_call_operator fb_name ['(' (EOL {EOL} [il_param_list]) | [il_operand_list] ')']
   il_call_operator prev_declared_fb_name
 	{$$ = new il_fb_call_c($1, $2, NULL, NULL, locloc(@$));}
 | il_call_operator prev_declared_fb_name '(' ')'
@@ -4484,6 +4483,7 @@ il_fb_call:
 
 /* NOTE: Please read note above the definition of function_name_without_clashes */
 il_formal_funct_call:
+// function_name '(' EOL {EOL} [il_param_list] ')'
 /*  function_name '(' eol_list ')'  */
 /* NOTE: il_formal_funct_call is only used in the definition of
  *         - il_incomplete_instruction
