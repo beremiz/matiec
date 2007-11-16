@@ -172,15 +172,6 @@ void print_err_msg(const char *filename, int lineno, const char *additional_erro
     symbol_c 	*leaf;
     list_c	*list;
     char 	*ID;	/* token value */
-/*
-    struct {
-      symbol_c	*first;
-      symbol_c	*second;
-    } tmp_symbol;
-*/ 
-/* used as a temorary reference to symbols by:
-                                     il_simple_operator_clash_il_operand
-                             */
 }
 
 /*
@@ -4377,14 +4368,21 @@ label: identifier;
 
 
 il_simple_operation:
+// il_simple_operation ::= (il_simple_operator [il_operand]) | (function_name [il_operand_list])
   il_simple_operator
 	{$$ = new il_simple_operation_c($1, NULL, locloc(@$));}
+/*
+ * Note: Bison is getting confused with the following rule,
+ *       i.e. it is finding conflicts where there are really none.
+ *       The rule was therefore replaced by the equivalent following
+ *       two rules.
+ */
+/*
+| il_simple_operator il_operand
+	{$$ = new il_simple_operation_c($1, $2, locloc(@$));}
+*/
 | il_simple_operator_noclash il_operand
 	{$$ = new il_simple_operation_c($1, $2, locloc(@$));}
-/*
-| il_simple_operator_clash_il_operand
-	{$$ = new il_simple_operation_c($1.first, $1.second, locloc(@$));}
-*/
 | il_simple_operator_clash il_operand
 	{$$ = new il_simple_operation_c($1, $2, locloc(@$));}
 /* NOTE: the line
@@ -4436,28 +4434,10 @@ il_simple_operation:
  */
 | function_name_no_clashes il_operand_list
 	{$$ = new il_function_call_c($1, $2, locloc(@$));}
-/*
-| il_simple_operator_clash_il_operand ',' il_operand_list
-	{list_c *list = new il_operand_list_c(locloc(@$));
-	 list->add_element($1.second);
-	 FOR_EACH_ELEMENT(elem, $3, {list->add_element(elem);})
-	 $$ = new il_function_call_c(il_operator_c_2_identifier_c($1.first), list, locloc(@$));
-	}
-*/
 | il_simple_operator_clash il_operand_list2
-	{
-	 $$ = new il_function_call_c(il_operator_c_2_identifier_c($1), $2, locloc(@$));
-	}
+	{$$ = new il_function_call_c(il_operator_c_2_identifier_c($1), $2, locloc(@$));}
 ;
 
-
-
-/*
-il_simple_operator_clash_il_operand:
-  il_simple_operator_clash il_operand
-	{$$.first = $1; $$.second = $2;}
-;
-*/
 
 
 
@@ -4471,16 +4451,12 @@ il_expression:
 	{$$ = new il_expression_c($1, NULL, $4, locloc(@$));}
 | il_expr_operator_noclash '(' il_operand eol_list simple_instr_list ')'
 	{$$ = new il_expression_c($1, $3, $5, locloc(@$));}
-/*
-*/
 | il_expr_operator_clash '(' eol_list ')'
 	{$$ = new il_expression_c($1, NULL, NULL, locloc(@$));}
 | il_expr_operator_clash '(' il_operand eol_list ')'
 	{$$ = new il_expression_c($1, $3, NULL, locloc(@$));}
 | il_expr_operator_clash '(' il_operand eol_list simple_instr_list ')'
 	{$$ = new il_expression_c($1, $3, $5, locloc(@$));}
-/*
-*/
 | il_expr_operator_clash_eol_list simple_instr_list ')'
 	{$$ = new il_expression_c($1, NULL, $2, locloc(@$));}
 ;
