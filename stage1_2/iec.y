@@ -2649,7 +2649,6 @@ input_declarations:
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
-
 ;
 
 /* helper symbol for input_declarations */
@@ -2795,6 +2794,14 @@ output_declarations:
 	{$$ = new output_declarations_c(new retain_option_c(locloc(@2)), $3, locloc(@$));}
 | VAR_OUTPUT NON_RETAIN var_init_decl_list END_VAR
 	{$$ = new output_declarations_c(new non_retain_option_c(locloc(@2)), $3, locloc(@$));}
+/* ERROR_CHECK_BEGIN */
+| VAR_OUTPUT error END_VAR
+	{$$ = NULL;
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in output variable(s) declaration.");
+	 /* yychar */
+	 yyerrok;
+	}
+/* ERROR_CHECK_END */
 ;
 
 
@@ -2802,6 +2809,14 @@ output_declarations:
 input_output_declarations:
   VAR_IN_OUT var_declaration_list END_VAR
 	{$$ = new input_output_declarations_c($2, locloc(@$));}
+/* ERROR_CHECK_BEGIN */
+| VAR_IN_OUT error END_VAR
+	{$$ = NULL;
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in in_out variable(s) declaration.");
+	 /* yychar */
+	 yyerrok;
+	}
+/* ERROR_CHECK_END */
 ;
 
 
@@ -2861,6 +2876,14 @@ var_declarations:
 retentive_var_declarations:
   VAR RETAIN var_init_decl_list END_VAR
 	{$$ = new retentive_var_declarations_c($3, locloc(@$));}
+/* ERROR_CHECK_BEGIN */
+| VAR RETAIN error END_VAR
+	{$$ = NULL;
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in variable(s) declaration.");
+	 /* yychar */
+	 yyerrok;
+	}
+/* ERROR_CHECK_END */
 ;
 
 
@@ -2902,6 +2925,14 @@ external_var_declarations:
 	{$$ = new external_var_declarations_c(NULL, $2, locloc(@$));}
 | VAR_EXTERNAL CONSTANT external_declaration_list END_VAR
 	{$$ = new external_var_declarations_c(new constant_option_c(locloc(@2)), $3, locloc(@$));}
+/* ERROR_CHECK_BEGIN */
+| VAR_EXTERNAL error END_VAR
+	{$$ = NULL;
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in external variable(s) declaration.");
+	 /* yychar */
+	 yyerrok;
+	}
+/* ERROR_CHECK_END */
 ;
 
 /* helper symbol for external_var_declarations */
@@ -2951,6 +2982,14 @@ global_var_declarations:
 	{$$ = new global_var_declarations_c(new constant_option_c(locloc(@2)), $3, locloc(@$));}
 | VAR_GLOBAL RETAIN global_var_decl_list END_VAR
 	{$$ = new global_var_declarations_c(new retain_option_c(locloc(@2)), $3, locloc(@$));}
+/* ERROR_CHECK_BEGIN */
+| VAR_GLOBAL error END_VAR
+	{$$ = NULL;
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in global variable(s) declaration.");
+	 /* yychar */
+	 yyerrok;
+	}
+/* ERROR_CHECK_END */
 ;
 
 
@@ -3566,6 +3605,15 @@ other_var_declarations:
 | var_declarations
 | retentive_var_declarations
 | incompl_located_var_declarations
+/* TODO: the following error rule is not working! Must be fixed. */
+/* ERROR_CHECK_BEGIN */
+| VAR error END_VAR
+	{$$ = NULL;
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in variable(s) declaration.");
+	 /* yychar */
+	 yyerrok;
+	}
+/* ERROR_CHECK_END */
 ;
 
 
