@@ -155,8 +155,12 @@ extern symbol_c *tree_root;
 symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator);
 
 /* print an error message */
-void print_err_msg(const char *filename, int lineno, const char *additional_error_msg);
-
+void print_err_msg(const char *filename,
+                   int first_line,
+                   int first_column,
+                   int last_line,
+                   int last_column,
+                   const char *additional_error_msg);
 %}
 
 
@@ -1394,7 +1398,7 @@ library:
 /* ERROR_CHECK_BEGIN */
 | library error END_OF_INPUT
 	{$$ = NULL;
-	 print_err_msg(current_filename, @2.first_line, "unknown error.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2637,6 +2641,15 @@ input_declarations:
 	{$$ = new input_declarations_c(new retain_option_c(locloc(@2)), $3, locloc(@$));}
 | VAR_INPUT NON_RETAIN input_declaration_list END_VAR
 	{$$ = new input_declarations_c(new non_retain_option_c(locloc(@2)), $3, locloc(@$));}
+/* ERROR_CHECK_BEGIN */
+| VAR_INPUT error END_VAR
+	{$$ = NULL;
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in input variable(s) declaration.");
+	 /* yychar */
+	 yyerrok;
+	}
+/* ERROR_CHECK_END */
+
 ;
 
 /* helper symbol for input_declarations */
@@ -3371,7 +3384,7 @@ function_declaration:
 /* ERROR_CHECK_BEGIN */
 | FUNCTION error END_FUNCTION
 	{$$ = NULL;
-	 print_err_msg(current_filename, @2.first_line, "error in function declaration.");
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in function declaration.");
 	 /* yychar */
 	 yyerrok;
 	}
@@ -3507,7 +3520,7 @@ function_block_declaration:
 /* ERROR_CHECK_BEGIN */
 | FUNCTION_BLOCK error END_FUNCTION_BLOCK
 	{$$ = NULL;
-	 print_err_msg(current_filename, @2.first_line, "error in function block declaration.");
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in function block declaration.");
 	 /* yychar */
 	 yyerrok;
 	}
@@ -3612,7 +3625,7 @@ program_declaration:
 /* ERROR_CHECK_BEGIN */
 | PROGRAM error END_PROGRAM
 	{$$ = NULL;
-	 print_err_msg(current_filename, @2.first_line, "error in function block declaration.");
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in function block declaration.");
 	 /* yychar */
 	 yyerrok;
 	}
@@ -3915,7 +3928,7 @@ configuration_declaration:
 /* ERROR_CHECK_BEGIN */
 | CONFIGURATION error END_CONFIGURATION
 	{$$ = NULL;
-	 print_err_msg(current_filename, @2.first_line, "error in configuration declaration.");
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in configuration declaration.");
 	 /* yychar */
 	 yyerrok;
 	}
@@ -4331,14 +4344,14 @@ il_instruction:
 /* ERROR_CHECK_BEGIN */
 | error eol_list
 	{$$ = NULL;
-	 print_err_msg(current_filename, @1.first_line, "error in IL instruction.");
+	 print_err_msg(current_filename, locf(@1), locl(@1), "error in IL instruction.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
 /* ERROR_CHECK_BEGIN */
 | label ':' error eol_list
 	{$$ = NULL;
-	 print_err_msg(current_filename, @1.first_line, "error in IL instruction.");
+	 print_err_msg(current_filename, locf(@1), locl(@3), "error in IL instruction.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5007,7 +5020,7 @@ statement_list:
 /* ERROR_CHECK_BEGIN */
 | statement_list error ';'
 	{$$ = $1;
-	 print_err_msg(current_filename, @2.first_line, "error in statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "error in statement.");
 	 /* yychar */
 	 yyerrok;
 	}
@@ -5307,10 +5320,15 @@ void yyerror (const char *error_msg) {
 }
 
 
-void print_err_msg(const char *filename, int lineno, const char *additional_error_msg) {
+void print_err_msg(const char *filename,
+                   int first_line,
+                   int first_column,
+                   int last_line,
+                   int last_column,
+                   const char *additional_error_msg) {
   fprintf(stderr, "error %d: %s\n", yynerrs /* a global variable */, additional_error_msg);
   print_include_stack();
-  fprintf(stderr, "%s:%d: %s\n", filename, lineno, current_error_msg);
+  fprintf(stderr, "%s(%d-%d): %s\n", filename, first_line, last_line, current_error_msg);
 }
 
 
