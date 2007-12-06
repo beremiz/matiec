@@ -43,10 +43,212 @@
 
 
 
+class generate_c_array_initialization_c: public generate_c_typedecl_c {
 
+  public:
+    typedef enum {
+      none_am,
+      dimensioncount_am,
+      initializationvalue_am,
+      arrayassignment_am,
+      varlistparse_am
+    } arrayinitialization_mode_t;
 
+    arrayinitialization_mode_t current_mode;
+    
+    symbol_c* array_default_value;
 
+  private:
+    int dimension_number, current_dimension, array_size;
 
+  public:
+    generate_c_array_initialization_c(stage4out_c *s4o_ptr): generate_c_typedecl_c(s4o_ptr) {}
+    ~generate_c_array_initialization_c(void) {}
+
+    void init_array(symbol_c *var1_list, symbol_c *array_specification, symbol_c *array_initialization) {
+      int i;
+      
+      dimension_number = 0;
+      current_dimension = 0;
+      array_size = 1;
+      array_default_value = NULL;
+      
+      current_mode = dimensioncount_am;
+      array_specification->accept(*this);
+      
+      current_mode = initializationvalue_am;
+      s4o.print("\n");
+      s4o.print(s4o.indent_spaces + "{\n");
+      s4o.indent_right();
+      s4o.print(s4o.indent_spaces + "int index[");
+      print_integer(dimension_number);
+      s4o.print("];\n");
+      s4o.print(s4o.indent_spaces);
+      array_specification->accept(*this);
+      s4o.print(" temp = ");
+      array_initialization->accept(*this);
+      s4o.print(";\n");
+      
+      current_mode = arrayassignment_am;
+      array_specification->accept(*this);
+      
+      current_mode = varlistparse_am;
+      var1_list->accept(*this);
+      
+      current_mode = arrayassignment_am;
+      for (i = 0; i < dimension_number; i++) {
+        s4o.indent_left();
+        s4o.print(s4o.indent_spaces + "}\n");
+      }
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "}");
+    }
+
+    void *visit(identifier_c *type_name) {
+      symbol_c *type_decl;
+      switch (current_mode) {
+        case dimensioncount_am:
+        case arrayassignment_am:
+          /* look up the type declaration... */
+          type_decl = type_symtable.find_value(type_name);
+          if (type_decl == type_symtable.end_value())
+            /* Type declaration not found!! */
+            ERROR;
+          type_decl->accept(*this);
+          break;
+        default:
+          print_token(type_name);
+          break;
+      }
+      return NULL;
+    }
+
+    void *visit(var1_list_c *symbol) {
+      int i, j;
+      
+      for (i = 0; i < symbol->n; i++) {
+        s4o.print(s4o.indent_spaces);
+        print_variable_prefix();
+        symbol->elements[i]->accept(*this);
+        for (j = 0; j < dimension_number; j++) {
+          s4o.print("[index[");
+          print_integer(j);
+          s4o.print("]]");
+        }
+        s4o.print(" = temp");
+        for (j = 0; j < dimension_number; j++) {
+          s4o.print("[index[");
+          print_integer(j);
+          s4o.print("]]");
+        }
+        s4o.print(";\n");
+      }
+      return NULL;
+    }
+
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+    
+    /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+    void *visit(array_specification_c *symbol) {
+      switch (current_mode) {
+        case dimensioncount_am:
+          symbol->array_subrange_list->accept(*this);
+          array_default_value = (symbol_c *)symbol->non_generic_type_name->accept(*type_initial_value_c::instance());;
+          break;
+        default:
+          symbol->array_subrange_list->accept(*this);
+          break;
+      } 
+      return NULL;
+    }
+    
+    /*  signed_integer DOTDOT signed_integer */
+    //SYM_REF2(subrange_c, lower_limit, upper_limit)
+    void *visit(subrange_c *symbol) {
+      switch (current_mode) {
+        case dimensioncount_am:
+          dimension_number++;
+          array_size *= extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
+          break;
+        case arrayassignment_am:
+          s4o.print(s4o.indent_spaces + "for (index[");
+          print_integer(current_dimension);
+          s4o.print("] = 0; index[");
+          print_integer(current_dimension);
+          s4o.print("] <= ");
+          print_integer(extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit));
+          s4o.print("; index[");
+          print_integer(current_dimension);
+          s4o.print("]++) {\n");
+          s4o.indent_right();
+          current_dimension++;
+          break;
+        default:
+          break;
+      }
+      return NULL;
+    }
+    
+    /* helper symbol for array_initialization */
+    /* array_initial_elements_list ',' array_initial_elements */
+    void *visit(array_initial_elements_list_c *symbol) {
+      switch (current_mode) {
+        case initializationvalue_am:
+          int i;
+      
+          s4o.print("{");
+          for (i = 0; i < symbol->n; i++) {
+            if (i > 0)
+              s4o.print(", ");
+            symbol->elements[i]->accept(*this);
+            array_size--;
+          }
+          if (array_size > 0) {
+            if (symbol->n > 0)
+              s4o.print(", ");
+            for (i = 0; i < array_size; i++) {
+              if (i > 0)
+                s4o.print(", ");
+              array_default_value->accept(*this);
+            }
+          }
+          s4o.print("}");
+          break;
+        default:
+          break;
+      }
+      return NULL;
+    }
+    
+    /* integer '(' [array_initial_element] ')' */
+    /* array_initial_element may be NULL ! */
+    void *visit(array_initial_elements_c *symbol) {
+      int initial_element_number;
+      
+      switch (current_mode) {
+        case initializationvalue_am:
+          initial_element_number = extract_integer(symbol->integer);
+          
+          for (int i = 0; i < initial_element_number; i++) {
+            if (i > 0)
+              s4o.print(", ");
+            if (symbol->array_initial_element != NULL)
+              symbol->array_initial_element->accept(*this);
+            else if (array_default_value != NULL)
+              array_default_value->accept(*this);
+          }
+          if (initial_element_number > 1)
+            array_size -= initial_element_number - 1;
+          break;
+        default:
+          break;
+      }
+      return NULL;
+    }
+
+};
 
 /***********************************************************************/
 /***********************************************************************/
@@ -209,6 +411,8 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
 
 
   private:
+    generate_c_array_initialization_c *generate_c_array_initialization;
+    
     /* variable used to store the types of variables that need to be processed... */
     /* Only set in the constructor...! */
     /* Will contain a set of values of generate_c_vardecl_c::XXXX_vt */
@@ -353,6 +557,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
   public:
     generate_c_vardecl_c(stage4out_c *s4o_ptr, varformat_t varformat, unsigned int vartype)
     : generate_c_typedecl_c(s4o_ptr) {
+      generate_c_array_initialization = new generate_c_array_initialization_c(s4o_ptr);
       wanted_varformat = varformat;
       wanted_vartype   = vartype;
       current_vartype  = none_vt;
@@ -362,11 +567,14 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
       nv = NULL;
     }
 
-    ~generate_c_vardecl_c(void) {}
+    ~generate_c_vardecl_c(void) {
+      delete generate_c_array_initialization;
+    }
 
 
     void print(symbol_c *symbol, symbol_c *scope = NULL, const char *variable_prefix = NULL) {
       this->set_variable_prefix(variable_prefix);
+      this->generate_c_array_initialization->set_variable_prefix(variable_prefix);
       if (globalinit_vf == wanted_varformat)
         globalnamespace = scope;
 
@@ -514,11 +722,33 @@ void *visit(raising_edge_option_c *symbol) {
   return NULL;
 }
 
+/*  var1_list ':' array_spec_init */
+// SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
+void *visit(array_var_init_decl_c *symbol) {
+  TRACE("array_var_init_decl_c");
+  /* Please read the comments inside the var1_init_decl_c
+   * visitor, as they apply here too.
+   */
 
-#if 0
-/* var1_list ':' array_spec_init */
-SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
-#endif
+  /* Start off by setting the current_var_type_symbol and
+   * current_var_init_symbol private variables...
+   */
+  update_type_init(symbol->array_spec_init);
+
+  /* now to produce the c equivalent... */
+  if (wanted_varformat == constructorinit_vf)
+    generate_c_array_initialization->init_array(symbol->var1_list, this->current_var_type_symbol, this->current_var_init_symbol);
+  else
+    symbol->var1_list->accept(*this);
+
+  /* Values no longer in scope, and therefore no longer used.
+   * Make an effort to keep them set to NULL when not in use
+   * in order to catch bugs as soon as possible...
+   */
+  void_type_init();
+
+  return NULL;
+}
 
 /*  var1_list ':' initialized_structure */
 // SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
@@ -622,6 +852,11 @@ void *visit(var_declaration_list_c *symbol) {
 /*  var1_list ':' array_specification */
 SYM_REF2(array_var_declaration_c, var1_list, array_specification)
 #endif
+
+void *visit(array_initial_elements_list_c *symbol) {
+  s4o.print(";// array initialisation");
+  return NULL;
+}
 
 /*  var1_list ':' structure_type_name */
 //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)

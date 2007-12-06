@@ -48,10 +48,46 @@
 
 class generate_c_typedecl_c: public generate_c_base_c {
 
+  private:
+    symbol_c* current_type_name;
+    search_base_type_c search_base_type;
+
   public:
-    generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_c(s4o_ptr) {}
+    generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_c(s4o_ptr) {
+      current_typedefinition = none_td;
+      current_basetypedeclaration = none_bd;
+    }
     ~generate_c_typedecl_c(void) {}
 
+    typedef enum {
+      none_td,
+      subrange_td,
+      array_td
+    } typedefinition_t;
+
+    typedefinition_t current_typedefinition;
+
+    typedef enum {
+      none_bd,
+      subrangebasetype_bd,
+      subrangebasetypeexploration_bd,
+      subrangetest_bd,
+      arraybasetype_bd,
+      arraysubrange_bd,
+      arraytranslateindex_bd
+    } basetypedeclaration_t;
+    
+    basetypedeclaration_t current_basetypedeclaration;
+
+    int extract_integer(symbol_c *integer) {
+      return atoi(((integer_c *)integer)->value);
+    }
+
+    void print_integer(unsigned int integer) {
+      char str[10];
+      sprintf(str, "%d", integer);
+      s4o.print(str);
+    }
 
 /***************************/
 /* B 0 - Programming Model */
@@ -110,17 +146,241 @@ class generate_c_typedecl_c: public generate_c_base_c {
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/
+/*  subrange_type_name ':' subrange_spec_init */
+void *visit(subrange_type_declaration_c *symbol) {
+  TRACE("subrange_type_declaration_c");  
+  /* add this type declaration to the type symbol table... */
+  type_symtable.insert(symbol->subrange_type_name, symbol->subrange_spec_init);
+  
+  s4o.print("typedef ");
+  current_basetypedeclaration = subrangebasetype_bd;
+  symbol->subrange_spec_init->accept(*this);
+  current_basetypedeclaration = none_bd;
+  s4o.print(" ");
+  symbol->subrange_type_name->accept(*this);
+  s4o.print(";\n\n");
+  
+  current_basetypedeclaration = subrangebasetypeexploration_bd;
+  symbol->subrange_spec_init->accept(*this);
+  current_basetypedeclaration = none_bd;
+  
+  current_type_name = symbol->subrange_type_name;
+  
+  current_basetypedeclaration = subrangetest_bd;
+  symbol->subrange_spec_init->accept(*this);
+  current_basetypedeclaration = none_bd;
+  
+  return NULL;
+}
+
+/* subrange_specification ASSIGN signed_integer */
 void *visit(subrange_spec_init_c *symbol) {
   TRACE("subrange_spec_init_c");
-  // TODO...
-  ERROR;
+  current_typedefinition = subrange_td;
+  symbol->subrange_specification->accept(*this);
+  current_typedefinition = none_td;
+  return NULL;
+}
+
+/*  integer_type_name '(' subrange')' */
+void *visit(subrange_specification_c *symbol) {
+  switch (current_basetypedeclaration) {
+    case subrangebasetype_bd:
+      symbol->integer_type_name->accept(*this);
+      break;
+    case subrangebasetypeexploration_bd:
+      search_base_type.explore_type(symbol->integer_type_name);
+      break;
+    case subrangetest_bd:
+      if (symbol->subrange != NULL) {
+        current_type_name->accept(*this);
+        s4o.print(" __CHECK_");
+        current_type_name->accept(*this);
+        s4o.print("(");
+        current_type_name->accept(*this);
+        s4o.print(" value) {\n");
+        s4o.indent_right();
+        
+        if (search_base_type.base_is_subrange()) {
+          s4o.print(s4o.indent_spaces + "value = __CHECK_");
+          symbol->integer_type_name->accept(*this);
+          s4o.print("(value);\n");
+        }
+        
+        symbol->subrange->accept(*this);
+        
+        s4o.indent_left();
+        s4o.print("}\n");
+      }
+      else {
+        s4o.print("#define __CHECK_");
+        current_type_name->accept(*this);
+        s4o.print(" __CHECK_");
+        symbol->integer_type_name->accept(*this);
+        s4o.print("\n");
+      } 
+      break;
+    default:
+      break;
+  }
+  return NULL;
+}
+
+/*  signed_integer DOTDOT signed_integer */
+void *visit(subrange_c *symbol) {
+  int dimension;
+  switch (current_typedefinition) {
+    case array_td:
+      if (current_basetypedeclaration == arraysubrange_bd) {
+        s4o.print("[");
+        dimension = extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
+        print_integer(dimension);
+        s4o.print("]");
+      }
+      else
+        symbol->lower_limit->accept(*this);
+      break;
+    case subrange_td:
+      s4o.print(s4o.indent_spaces + "if (value < ");
+      symbol->lower_limit->accept(*this);
+      s4o.print(")\n");
+      s4o.indent_right();
+      s4o.print(s4o.indent_spaces + "return ");
+      symbol->lower_limit->accept(*this);
+      s4o.print(";\n");
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "else if (value > ");
+      symbol->upper_limit->accept(*this);
+      s4o.print(")\n");
+      s4o.indent_right();
+      s4o.print(s4o.indent_spaces + "return ");
+      symbol->upper_limit->accept(*this);
+      s4o.print(";\n");
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "else\n");
+      s4o.indent_right();
+      s4o.print(s4o.indent_spaces + "return value;\n");
+      s4o.indent_left();
+    default:
+      break;
+  }
+  return NULL;
+}
+
+/*  enumerated_type_name ':' enumerated_spec_init */
+void *visit(enumerated_type_declaration_c *symbol) {
+  TRACE("enumerated_type_declaration_c");
+  /* add this type declaration to the type symbol table... */
+  type_symtable.insert(symbol->enumerated_type_name, symbol->enumerated_spec_init);
+  
+  s4o.print("typedef enum {\n");
+  s4o.indent_right();
+  symbol->enumerated_spec_init->accept(*this);
+  s4o.indent_left();
+  s4o.print("} ");
+  symbol->enumerated_type_name->accept(*this);
+  s4o.print(";\n");
   return NULL;
 }
 
 void *visit(enumerated_spec_init_c *symbol) {
   TRACE("enumerated_spec_init_c");
-  // TODO...
-  ERROR;
+  symbol->enumerated_specification->accept(*this);
+  return NULL;
+}
+
+/* helper symbol for enumerated_specification->enumerated_spec_init */
+/* enumerated_value_list ',' enumerated_value */
+void *visit(enumerated_value_list_c *symbol) {
+  print_list(symbol, s4o.indent_spaces, ",\n"+s4o.indent_spaces, "\n");
+  return NULL;
+}
+
+/* enumerated_type_name '#' identifier */
+void *visit(enumerated_value_c *symbol) {
+  symbol->value->accept(*this);
+  return NULL;
+}
+
+/*  identifier ':' array_spec_init */
+void *visit(array_type_declaration_c *symbol) {
+  TRACE("array_type_declaration_c");
+  /* add this type declaration to the type symbol table... */
+  type_symtable.insert(symbol->identifier, symbol->array_spec_init);
+  
+  s4o.print("typedef ");
+  current_basetypedeclaration = arraybasetype_bd;
+  symbol->array_spec_init->accept(*this);
+  current_basetypedeclaration = none_bd;
+  s4o.print(" ");
+  symbol->identifier->accept(*this);
+  current_basetypedeclaration = arraysubrange_bd;
+  symbol->array_spec_init->accept(*this);
+  current_basetypedeclaration = none_bd;
+  s4o.print(";\n");
+  
+  search_base_type.explore_type(symbol->array_spec_init);
+  if (search_base_type.base_is_subrange()) {
+    s4o.print("#define __CHECK_");
+    symbol->identifier->accept(*this);
+    s4o.print(" __CHECK_");
+    current_basetypedeclaration = arraybasetype_bd;
+    symbol->array_spec_init->accept(*this);
+    current_basetypedeclaration = none_bd;
+    s4o.print("\n");
+  }
+  
+  current_type_name = symbol->identifier;
+  current_basetypedeclaration = arraytranslateindex_bd;
+  symbol->array_spec_init->accept(*this);
+  current_basetypedeclaration = none_bd;
+  s4o.print("\n");
+  
+  return NULL;
+}
+
+/* array_specification [ASSIGN array_initialization} */
+/* array_initialization may be NULL ! */
+void *visit(array_spec_init_c *symbol) {
+  TRACE("array_spec_init_c");
+  current_typedefinition = array_td;
+  symbol->array_specification->accept(*this);
+  current_typedefinition = none_td;
+  return NULL;
+}
+
+/* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+void *visit(array_specification_c *symbol) {
+  switch (current_basetypedeclaration) {
+    case arraybasetype_bd:
+      symbol->non_generic_type_name->accept(*this);
+      break;
+    case arraysubrange_bd:
+    case arraytranslateindex_bd:
+      symbol->array_subrange_list->accept(*this);
+      break;
+    default:
+      break;
+  }
+  return NULL;
+}
+
+/* helper symbol for array_specification */
+/* array_subrange_list ',' subrange */
+void *visit(array_subrange_list_c *symbol) {
+  if (current_basetypedeclaration == arraytranslateindex_bd) {
+    for (int i = 0; i < symbol->n; i++) {
+      s4o.print("#define __");
+      current_type_name->accept(*this);
+      s4o.print("_TRANSIDX");
+      print_integer(i);
+      s4o.print("(index) (index) - ");
+      symbol->elements[i]->accept(*this);
+      s4o.print("\n");
+    }
+  }
+  else
+    print_list(symbol);
   return NULL;
 }
 
@@ -135,7 +395,7 @@ void *visit(data_type_declaration_c *symbol) {
 /* helper symbol for data_type_declaration */
 void *visit(type_declaration_list_c *symbol) {
   TRACE("type_declaration_list_c");
-  return print_list(symbol);
+  return print_list(symbol, "", "\n");
 }
 
 /*  simple_type_name ':' simple_spec_init */

@@ -291,6 +291,9 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
      */
     search_fb_instance_decl_c *search_fb_instance_decl;
 
+    search_varfb_instance_type_c *search_varfb_instance_type;
+
+    search_base_type_c search_base_type;
 
   public:
     generate_c_il_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
@@ -301,6 +304,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       //search_il_operand_type  = new search_il_operand_type_c(scope);
       search_expression_type = new search_expression_type_c(scope);
       search_fb_instance_decl = new search_fb_instance_decl_c(scope);
+      search_varfb_instance_type = new search_varfb_instance_type_c(scope);
       current_operand = NULL;
       current_operand_type = NULL;
       il_default_variable_init_value = NULL;
@@ -311,6 +315,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       delete search_fb_instance_decl;
       //delete search_il_operand_type;
       delete search_expression_type;
+      delete search_varfb_instance_type;
     }
 
     void generate(instruction_list_c *il) {
@@ -813,6 +818,11 @@ void *visit(il_fb_call_c *symbol) {
     if (param_value == NULL)
       param_value = function_call_param_iterator.next();
 
+    symbol_c *param_type = fp_iterator.param_type();
+    if (param_type == NULL) ERROR;
+    
+    search_base_type.explore_type(param_type);    
+
     /* now output the value assignment */
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_in) ||
@@ -821,7 +831,14 @@ void *visit(il_fb_call_c *symbol) {
         s4o.print(".");
         param_name->accept(*this);
         s4o.print(" = ");
+        if (search_base_type.base_is_subrange()) {
+          s4o.print("__CHECK_");
+          param_type->accept(*this);
+          s4o.print("(");
+        }
         param_value->accept(*this);
+        if (search_base_type.base_is_subrange())
+          s4o.print(")");
         s4o.print(";\n" + s4o.indent_spaces);
       }
   } /* for(...) */
@@ -852,12 +869,22 @@ void *visit(il_fb_call_c *symbol) {
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
+        symbol_c *param_type = search_varfb_instance_type->get_type(param_value, false);
+        search_base_type.explore_type(param_type);
+        
         s4o.print(";\n"+ s4o.indent_spaces);
         param_value->accept(*this);
         s4o.print(" = ");
+        if (search_base_type.base_is_subrange()) {
+          s4o.print("__CHECK_");
+          param_type->accept(*this);
+          s4o.print("(");
+        }
         symbol->fb_name->accept(*this);
         s4o.print(".");
         param_name->accept(*this);
+        if (search_base_type.base_is_subrange())
+          s4o.print(")");
       }
   } /* for(...) */
 
@@ -917,6 +944,8 @@ void *visit(il_formal_funct_call_c *symbol) {
     if (param_value == NULL)
       param_value = function_call_param_iterator.next();
 
+    search_base_type.explore_type(param_type);
+
     switch (param_direction) {
       case function_param_iterator_c::direction_in:
         if (param_value == NULL) {
@@ -929,7 +958,14 @@ void *visit(il_formal_funct_call_c *symbol) {
           param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
         }
         if (param_value == NULL) ERROR;
+        if (search_base_type.base_is_subrange()) {
+          s4o.print("__CHECK_");
+          param_type->accept(*this);
+          s4o.print("(");
+        }
         param_value->accept(*this);
+        if (search_base_type.base_is_subrange())
+          s4o.print(")");
 	break;
       case function_param_iterator_c::direction_out:
       case function_param_iterator_c::direction_inout:
@@ -1095,15 +1131,41 @@ void *visit(LDN_operator_c *symbol)	{
 }
 
 void *visit(ST_operator_c *symbol)	{
-  XXX_operator(this->current_operand, " = ",&(this->default_variable_name));
+  symbol_c *operand_type = search_varfb_instance_type->get_type(this->current_operand, false);
+  search_base_type.explore_type(operand_type);
+
+  this->current_operand->accept(*this);
+  s4o.print(" = ");
+  if (search_base_type.base_is_subrange()) {
+    s4o.print("__CHECK_");
+    operand_type->accept(*this);
+    s4o.print("(");
+  }
+  this->default_variable_name.accept(*this);
+  if (search_base_type.base_is_subrange())
+    s4o.print(")");
   /* the data type resulting from this operation is unchamged. */
   return NULL;
 }
 
 void *visit(STN_operator_c *symbol)	{
-  XXX_operator(this->current_operand,
-               search_expression_type->is_bool_type(this->current_operand_type)?" = !":" = ~",
-               &(this->default_variable_name));
+  symbol_c *operand_type = search_varfb_instance_type->get_type(this->current_operand, false);
+  search_base_type.explore_type(operand_type);
+
+  this->current_operand->accept(*this);
+  s4o.print(" = ");
+  if (search_base_type.base_is_subrange()) {
+    s4o.print("__CHECK_");
+    operand_type->accept(*this);
+    s4o.print("(");
+  }
+  if (search_expression_type->is_bool_type(this->current_operand_type))
+    s4o.print("!");
+  else
+    s4o.print("~");
+  this->default_variable_name.accept(*this);
+  if (search_base_type.base_is_subrange())
+    s4o.print(")");
   /* the data type resulting from this operation is unchamged. */
   return NULL;
 }

@@ -356,9 +356,11 @@ void *visit(subrange_spec_init_c *symbol) {
 /*  integer_type_name '(' subrange')' */
 void *visit(subrange_specification_c *symbol) {
   symbol->integer_type_name->accept(*this);
-  s4o.print("(");
-  symbol->subrange->accept(*this);
-  s4o.print(")");
+  if (symbol->subrange != NULL) {
+    s4o.print("(");
+    symbol->subrange->accept(*this);
+    s4o.print(")");
+  }
   return NULL;
 }
 

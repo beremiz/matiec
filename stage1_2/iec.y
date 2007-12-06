@@ -2243,6 +2243,7 @@ subrange_specification:
   integer_type_name '(' subrange')'
 	{$$ = new subrange_specification_c($1, $3, locloc(@$));}
 | prev_declared_subrange_type_name
+  {$$ = new subrange_specification_c($1, NULL, locloc(@$));}
 ;
 
 
@@ -2324,7 +2325,7 @@ array_subrange_list:
   subrange
 	{$$ = new array_subrange_list_c(locloc(@$)); $$->add_element($1);}
 | array_subrange_list ',' subrange
-	{$$ = $1; $$->add_element($1);}
+	{$$ = $1; $$->add_element($3);}
 ;
 
 

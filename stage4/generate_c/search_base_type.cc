@@ -38,9 +38,11 @@
 class search_base_type_c: public null_visitor_c {
   private:
     symbol_c *current_type_name;
+    bool is_subrange;
 
   public:
     search_base_type_c(void) {current_type_name = NULL;}
+    bool base_is_subrange() {return this->is_subrange;}
 
   public:
     void *visit(identifier_c *type_name) {
@@ -51,6 +53,11 @@ class search_base_type_c: public null_visitor_c {
         /* Type declaration not found!! */
         ERROR;
 
+      return type_decl->accept(*this);
+    }
+    
+    void *explore_type(symbol_c* type_decl) {
+      this->is_subrange = false;
       return type_decl->accept(*this);
     }
 
@@ -100,6 +107,7 @@ class search_base_type_c: public null_visitor_c {
 
 /* subrange_specification ASSIGN signed_integer */
     void *visit(subrange_spec_init_c *symbol) {
+      this->is_subrange = true;
       return symbol->subrange_specification->accept(*this);
     }
 
@@ -148,7 +156,7 @@ class search_base_type_c: public null_visitor_c {
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
     void *visit(array_specification_c *symbol)	{
       if (NULL == this->current_type_name) ERROR;
-      return (void *)this->current_type_name;
+      return symbol->non_generic_type_name->accept(*this);
     }
 
 /* helper symbol for array_specification */

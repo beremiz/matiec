@@ -113,10 +113,32 @@ void *visit(simple_spec_init_c *symbol) {
 void *visit(subrange_spec_init_c *symbol) {
   TRACE("spec_init_sperator_c::subrange_spec_init_c");
   switch (search_what) {
-    case search_spec: return symbol->subrange_specification;
+    case search_spec: return symbol->subrange_specification->accept(*this);
     case search_init: return symbol->signed_integer;
   }
   ERROR; /* should never occur */
+  return NULL;
+}
+
+/*  integer_type_name '(' subrange')' */
+void *visit(subrange_specification_c *symbol) {
+  TRACE("spec_init_sperator_c::subrange_specification_c");
+  switch (search_what) {
+    case search_spec: return symbol->integer_type_name;
+    case search_init: return NULL; /* should never occur */
+  }
+  ERROR; /* should never occur */
+  return NULL;
+}
+
+/* array_specification [ASSIGN array_initialization} */
+/* array_initialization may be NULL ! */
+void *visit(array_spec_init_c *symbol) {
+  TRACE("spec_init_sperator_c::array_spec_init_c");
+  switch (search_what) {
+    case search_spec: return symbol->array_specification;
+    case search_init: return symbol->array_initialization;
+  }
   return NULL;
 }
 

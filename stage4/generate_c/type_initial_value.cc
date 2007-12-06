@@ -192,7 +192,10 @@ class type_initial_value_c : public null_visitor_c {
 /*  integer_type_name '(' subrange')' */
     void *visit(subrange_specification_c *symbol) {
      /* if no initial value explicitly given, then use the lowest value of the subrange */
-      return symbol->subrange->accept(*this);
+      if (symbol->subrange != NULL)
+        return symbol->subrange->accept(*this);
+      else
+        return symbol->integer_type_name->accept(*this);
     }
 /*  signed_integer DOTDOT signed_integer */
     void *visit(subrange_c *symbol)	{return symbol->lower_limit;}
@@ -253,7 +256,7 @@ class type_initial_value_c : public null_visitor_c {
 	// NOTE: We are leaking memory, as the array_initial_elements_list will never get free'd!!
       array_initial_elements_list_c *array_initial_elements_list  = new array_initial_elements_list_c();
       array_initial_elements_list->add_element(array_initial_elements);
-      return (void *)array_initial_elements_list;
+      return array_initial_elements_list;
     }
 /* helper symbol for array_specification */
 /* array_subrange_list ',' subrange */

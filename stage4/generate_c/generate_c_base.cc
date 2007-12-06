@@ -254,6 +254,12 @@ class generate_c_base_c: public iterator_visitor_c {
     void *visit(boolean_true_c *symbol) {s4o.print("TRUE"); return NULL;}
     void *visit(boolean_false_c *symbol) {s4o.print("FALSE"); return NULL;}
 
+    void *visit(neg_expression_c *symbol) {
+      s4o.print("-");
+      symbol->exp->accept(*this);
+      return NULL;
+    }
+
 /*******************************/
 /* B.1.2.2   Character Strings */
 /*******************************/
@@ -552,8 +558,6 @@ void *visit(direct_variable_c *symbol) {
 /*  subscripted_variable '[' subscript_list ']' */
 SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
 
-/* subscript_list ',' subscript */
-SYM_LIST(subscript_list_c)
 #endif
 
 /*  record_variable '.' field_selector */

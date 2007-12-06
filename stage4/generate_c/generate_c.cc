@@ -1457,12 +1457,11 @@ class generate_c_c: public iterator_visitor_c {
 /* B 0 - Programming Model */
 /***************************/
     void *visit(library_c *symbol) {
-      generate_location_list_c generate_location_list(&located_variables_s4o);
-      symbol->accept(generate_location_list);
-      
       for(int i = 0; i < symbol->n; i++) {
         symbol->elements[i]->accept(*this);
       }
+      generate_location_list_c generate_location_list(&located_variables_s4o);
+      symbol->accept(generate_location_list);
       return NULL;
     }
 
@@ -1475,6 +1474,15 @@ class generate_c_c: public iterator_visitor_c {
     void *visit(identifier_c *symbol) {
     	current_name = symbol->value;
     	return NULL;
+    }
+
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+    /*  TYPE type_declaration_list END_TYPE */
+    void *visit(data_type_declaration_c *symbol) {
+      symbol->accept(generate_c_pous);
+      return NULL;
     }
 
 /**************************************/

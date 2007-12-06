@@ -116,10 +116,10 @@ class decompose_var_instance_name_c: null_visitor_c {
       /* The correct code, is therefore more complex... */
       if (next_variable_name == symbol) {
         /* NOTE: field_selector is always an identifier_c,
-	 * so we do not have to recursevily visit it again...
-	 * return (void *)symbol->field_selector->accept(*this);  -> NOT REQUIRED!!
-	 */
-	return (void *)symbol->field_selector;
+         * so we do not have to recursevily visit it again...
+         * return (void *)symbol->field_selector->accept(*this);  -> NOT REQUIRED!!
+         */
+         return (void *)symbol->field_selector;
       }
 
       current_recursive_variable_name = symbol;

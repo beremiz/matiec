@@ -51,17 +51,19 @@ class search_varfb_instance_type_c: public search_base_type_c {
     search_var_instance_decl_c search_var_instance_decl;
     decompose_var_instance_name_c *decompose_var_instance_name;
     symbol_c *current_structelement_name;
+    bool search_base_type;
 
   public:
     search_varfb_instance_type_c(symbol_c *search_scope): search_var_instance_decl(search_scope) {
       this->decompose_var_instance_name = NULL;
       this->current_structelement_name = NULL;
+      this->search_base_type = false;
     }
 
-
-    symbol_c *get_type(symbol_c *variable_name) {
+    symbol_c *get_type(symbol_c *variable_name, bool base_type = true) {
       this->current_structelement_name = NULL;
       this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
+      this->search_base_type = base_type;
       if (NULL == decompose_var_instance_name) ERROR;
 
       /* find the part of the variable name that will appear in the
@@ -165,12 +167,32 @@ class search_varfb_instance_type_c: public search_base_type_c {
       /* No. It is not a function block, so we let
        * the base class take care of it...
        */
-      return search_base_type_c::visit(type_name);
+      if (this->search_base_type)
+        return search_base_type_c::visit(type_name);
+      else
+        return type_name;
     }
 
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/
+
+/*  identifier ':' array_spec_init */
+    void *visit(array_type_declaration_c *symbol) {
+      return symbol->array_spec_init->accept(*this);
+    }
+    
+/* array_specification [ASSIGN array_initialization} */
+/* array_initialization may be NULL ! */
+    void *visit(array_spec_init_c *symbol) {
+      return symbol->array_specification->accept(*this);
+    }
+    
+/* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+    void *visit(array_specification_c *symbol) {
+      return symbol->non_generic_type_name->accept(*this);
+    }
+
 /*  structure_type_name ':' structure_specification */
     void *visit(structure_type_declaration_c *symbol) {
       return symbol->structure_specification->accept(*this);
