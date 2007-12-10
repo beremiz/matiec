@@ -618,10 +618,6 @@ void *visit(assignment_statement_c *symbol) {
   symbol->r_exp->accept(*this);
   if (search_base_type.base_is_subrange())
     s4o.print(")");
-  s4o.print("; // ");
-  left_type->accept(*this);
-  s4o.print(" ");
-  base_type->accept(*this);
   return NULL;
 }
 
