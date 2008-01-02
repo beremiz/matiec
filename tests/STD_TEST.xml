@@ -31,12 +31,12 @@
           <inputVars>
             <variable name="IN1">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="IN2">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="TESTNR">
@@ -58,7 +58,7 @@
             </variable>
             <variable name="TEST_NAME">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
           </outputVars>
@@ -511,17 +511,17 @@
           <inputVars>
             <variable name="IN1">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="IN2">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="IN3">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="TESTNR">
@@ -548,7 +548,7 @@
           <outputVars>
             <variable name="STRRES">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="NEXT_TEST">
@@ -558,7 +558,7 @@
             </variable>
             <variable name="TEST_NAME">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
           </outputVars>
@@ -1500,7 +1500,7 @@
           <outputVars>
             <variable name="RES_STR">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="NEXT_TEST">
@@ -1510,7 +1510,7 @@
             </variable>
             <variable name="TEST_NAME">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="RES_BOOL">
@@ -4165,7 +4165,7 @@ This POU tests:
           <localVars>
             <variable name="STR1">
               <type>
-                <STRING/>
+                <string/>
               </type>
               <initialValue>
                 <simpleValue value="3.456789"/>
@@ -4183,7 +4183,7 @@ This POU tests:
           <localVars>
             <variable name="RES_TO_STR" address="%QB0">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="RES_FROM_STR" address="%QW1">
@@ -4203,24 +4203,24 @@ This POU tests:
           <externalVars>
             <variable name="TO_STR_TEST_NAME">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="FROM_STR_TEST_NAME">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
           </externalVars>
           <localVars>
             <variable name="RES_STR_OPS" address="%QB3">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="STR_OPS_TEST_NAME" address="%QB4">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
             <variable name="RES_TO_STR_BOOL" address="%QX7">
@@ -4780,7 +4780,7 @@ This POU tests:
           <globalVars>
             <variable name="FROM_STR_TEST_NAME" address="%QB10">
               <type>
-                <STRING/>
+                <string/>
               </type>
             </variable>
           </globalVars>
@@ -4789,7 +4789,7 @@ This POU tests:
         <globalVars>
           <variable name="TO_STR_TEST_NAME" address="%QB2">
             <type>
-              <STRING/>
+              <string/>
             </type>
             <initialValue>
               <simpleValue value="str test name"/>
