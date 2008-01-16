@@ -18,9 +18,13 @@ def generate(base_dir):
     for element in os.listdir(directory):
         element_path=os.path.join(base_dir, element)
         if os.path.isdir(element_path):
-            generate(element_path)
+            basename_element=os.path.basename(element_path)
+            if basename_element == "lib":
+                generate(element_path)
         elif os.path.isfile(element_path):
-            listfile.append(element_path)
+            ext_element=os.path.splitext(element)
+            if ext_element[1] == ".exe" or ext_element[1] == ".h" or ext_element[1] == ".txt" or ext_element[1] == ".c":
+                listfile.append(element_path)
 
 generate("")
 
