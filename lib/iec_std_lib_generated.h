@@ -1,5 +1,5 @@
 /*
- * (c) 2003 Mario de Sousa
+ * (c) 2008 Edouard TISSERANT
  *
  * Offered to the public under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either version 2
@@ -14,15 +14,6 @@
  * used in safety-critical situations without a full and competent review.
  */
 
-/*
- * An IEC 61131-3 IL and ST compiler.
- *
- * Based on the
- * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
- *
- */
- 
- 
 /****
  * IEC 61131-3 standard function lib
  * generated code, do not edit by hand
