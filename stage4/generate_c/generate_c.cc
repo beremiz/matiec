@@ -40,6 +40,7 @@
 #include <iostream>
 #include <sstream>
 #include <typeinfo>
+#include <list>
 
 #include "../../util/symtable.hh"
 #include "../../util/dsymtable.hh"
@@ -181,6 +182,7 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 #include "function_call_param_iterator.cc"
 #include "type_initial_value.cc"
 #include "search_fb_instance_decl.cc"
+#include "search_fb_typedecl.cc"
 #include "search_base_type.cc"
 #include "search_var_instance_decl.cc"
 #include "decompose_var_instance_name.cc"
@@ -194,6 +196,7 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 #include "generate_c_vardecl.cc"
 #include "generate_c_configbody.cc"
 #include "generate_location_list.cc"
+#include "generate_var_list.cc"
 
 /***********************************************************************/
 /***********************************************************************/
@@ -1432,8 +1435,10 @@ class generate_c_c: public iterator_visitor_c {
     stage4out_c &s4o;
     stage4out_c pous_s4o;
     stage4out_c located_variables_s4o;
+    stage4out_c variables_s4o;
     generate_c_pous_c generate_c_pous;
-
+    generate_var_list_c *generate_var_list;
+    
     symbol_c *current_configuration;
 
     const char *current_name;
@@ -1446,6 +1451,7 @@ class generate_c_c: public iterator_visitor_c {
             s4o(*s4o_ptr),
             pous_s4o(builddir, "POUS", "c"),
             located_variables_s4o(builddir, "LOCATED_VARIABLES","h"),
+            variables_s4o(builddir, "VARIABLES","h"),
             generate_c_pous(&pous_s4o) {
       current_builddir = builddir;
       current_configuration = NULL;
@@ -1457,9 +1463,14 @@ class generate_c_c: public iterator_visitor_c {
 /* B 0 - Programming Model */
 /***************************/
     void *visit(library_c *symbol) {
+      generate_var_list = new generate_var_list_c(&variables_s4o, symbol);
+      
       for(int i = 0; i < symbol->n; i++) {
         symbol->elements[i]->accept(*this);
       }
+      
+      delete generate_var_list;
+      
       generate_location_list_c generate_location_list(&located_variables_s4o);
       symbol->accept(generate_location_list);
       return NULL;
@@ -1542,6 +1553,8 @@ class generate_c_c: public iterator_visitor_c {
       symbol->resource_declarations->accept(*this);
 
       current_configuration = NULL;
+      
+      symbol->accept(*generate_var_list);
       
       return NULL;
     }

@@ -31,8 +31,6 @@
  * code.
  */
 
-#include <list>
-
 typedef struct
 {
   transition_c *symbol;
