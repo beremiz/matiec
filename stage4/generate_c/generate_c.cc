@@ -1451,7 +1451,7 @@ class generate_c_c: public iterator_visitor_c {
             s4o(*s4o_ptr),
             pous_s4o(builddir, "POUS", "c"),
             located_variables_s4o(builddir, "LOCATED_VARIABLES","h"),
-            variables_s4o(builddir, "VARIABLES","h"),
+            variables_s4o(builddir, "VARIABLES","csv"),
             generate_c_pous(&pous_s4o) {
       current_builddir = builddir;
       current_configuration = NULL;
