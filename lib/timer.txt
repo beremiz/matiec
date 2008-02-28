@@ -202,7 +202,7 @@ END_FUNCTION_BLOCK
 
 (****************************************************************
 
-             TOFF - Off-delay timing - state machine
+             TOF - Off-delay timing - state machine
 
 
               +--------+        +---+   +--------+
@@ -229,7 +229,7 @@ STATE   1              +----+   |   +---+        +----+
 
 ****************************************************************)
 
-FUNCTION_BLOCK TOFF
+FUNCTION_BLOCK TOF
   VAR_INPUT
     IN : BOOL;  (* first input parameter *)
     PT : TIME;  (* second input parameter *)
