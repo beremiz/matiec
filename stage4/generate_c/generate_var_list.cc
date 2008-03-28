@@ -96,18 +96,18 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       this->current_var_type_symbol = NULL;
     }
     
-    void declare_variables(symbol_c *symbol, bool is_fb = false) {
+    void declare_variables(symbol_c *symbol, const char* type = "VAR") {
       list_c *list = dynamic_cast<list_c *>(symbol);
       /* should NEVER EVER occur!! */
       if (list == NULL) ERROR;
 
       for(int i = 0; i < list->n; i++) {
-        declare_variable(list->elements[i], is_fb);
+        declare_variable(list->elements[i], type);
       }
     }
     
-    void declare_variable(symbol_c *symbol, bool is_fb = false) {
-      if (is_fb) {
+    void declare_variable(symbol_c *symbol, const char* type = "VAR") {
+      if (strcmp(type, "FB") == 0) {
         SYMBOL *current_name;
         current_name = new SYMBOL;
         current_name->symbol = symbol;
@@ -117,6 +117,8 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       }
       else {
         print_var_number();
+        s4o.print(";");
+        s4o.print(type);
         s4o.print(";");
         print_symbol_list();
         symbol->accept(*this);
@@ -176,7 +178,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
         update_var_type_symbol(symbol->located_var_spec_init);
         
         if (symbol->variable_name != NULL)
-          declare_variable(symbol->variable_name);
+          declare_variable(symbol->variable_name, "PT");
         
         current_var_type_symbol = NULL;
         return NULL;
@@ -241,7 +243,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       update_var_type_symbol(symbol, true);
     
       /* now to produce the c equivalent... */
-      declare_variables(symbol->fb_name_list, true);
+      declare_variables(symbol->fb_name_list, "FB");
     
       /* Values no longer in scope, and therefore no longer used.
        * Make an effort to keep them set to NULL when not in use
@@ -267,10 +269,10 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       if (this->current_var_type_symbol == NULL) {
         this->current_var_type_symbol = symbol->specification;
       
-        declare_variable(symbol->global_var_name);
+        declare_variable(symbol->global_var_name, "PT");
       }
       else
-        declare_variable(symbol->global_var_name, true);
+        declare_variable(symbol->global_var_name, "FB");
       
       /* Values no longer in scope, and therefore no longer used.
        * Make an effort to keep them set to NULL when not in use
@@ -382,7 +384,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     //SYM_REF2(initial_step_c, step_name, action_association_list)
     void *visit(initial_step_c *symbol) {
       print_var_number();
-      s4o.print(";");
+      s4o.print(";VAR;");
       print_symbol_list();
       symbol->step_name->accept(*this);
       s4o.print(".X;");
@@ -398,7 +400,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     //SYM_REF2(step_c, step_name, action_association_list)
     void *visit(step_c *symbol) {
       print_var_number();
-      s4o.print(";");
+      s4o.print(";VAR;");
       print_symbol_list();
       symbol->step_name->accept(*this);
       s4o.print(".X;");
@@ -420,7 +422,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     //SYM_REF5(transition_c, transition_name, integer, from_steps, to_steps, transition_condition)
     void *visit(transition_c *symbol) {
       print_var_number();
-      s4o.print(";");
+      s4o.print(";VAR;");
       print_symbol_list();
       symbol->from_steps->accept(*this);
       s4o.print("->");
@@ -461,7 +463,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     //SYM_REF2(action_c, action_name, function_block_body)
     void *visit(action_c *symbol) {
       print_var_number();
-      s4o.print(";");
+      s4o.print(";VAR;");
       print_symbol_list();
       symbol->action_name->accept(*this);
       s4o.print(".Q;");
@@ -487,7 +489,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
        */
       update_var_type_symbol(symbol->program_type_name, true);
       
-      declare_variable(symbol->program_name, true);
+      declare_variable(symbol->program_name, "FB");
       
       /* Values no longer in scope, and therefore no longer used.
        * Make an effort to keep them set to NULL when not in use
