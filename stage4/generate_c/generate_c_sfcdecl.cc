@@ -99,7 +99,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(s4o.indent_spaces + "UINT nb_actions;\n");
           
           /* transitions table declaration */
-          s4o.print(s4o.indent_spaces + "USINT transition_list[");
+          s4o.print(s4o.indent_spaces + "BOOL transition_list[");
           s4o.print_integer(transition_number);
           s4o.print("];\n");
           
