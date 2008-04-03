@@ -300,7 +300,7 @@ class search_var_instance_decl_c: public search_visitor_c {
     void *visit(global_var_spec_c *symbol) {
       if (symbol->global_var_name != NULL && compare_identifiers(symbol->global_var_name, search_name) == 0)
           return current_type_decl;
-      else 
+      else
         return symbol->location->accept(*this);
     }
 
@@ -320,11 +320,12 @@ class search_var_instance_decl_c: public search_visitor_c {
 /* variable_name -> may be NULL ! */
 //SYM_REF4(located_var_decl_c, variable_name, location, located_var_spec_init, unused)
     void *visit(located_var_decl_c *symbol) {
-      if (symbol->variable_name != NULL && compare_identifiers(symbol->variable_name, search_name) == 0) {
+      if (symbol->variable_name != NULL && compare_identifiers(symbol->variable_name, search_name) == 0)
         return symbol->located_var_spec_init;
+      else {
+        current_type_decl = symbol->located_var_spec_init;
+        return symbol->location->accept(*this);
       }
-      else
-        return NULL;
     }
 
 /*| global_var_spec ':' [located_var_spec_init|function_block_type_name] */
@@ -332,14 +333,15 @@ class search_var_instance_decl_c: public search_visitor_c {
 // SYM_REF2(global_var_decl_c, global_var_spec, type_specification)
 // TODO!!
 
-/*| global_var_name location */
-// SYM_REF2(global_var_spec_c, global_var_name, location)
-// TODO!!
-
 /*  AT direct_variable */
 // SYM_REF2(location_c, direct_variable, unused)
-// TODO!!
-
+    void *visit(location_c *symbol) {
+      if (compare_identifiers(symbol->direct_variable, search_name) == 0)
+        return current_type_decl;
+      else
+        return NULL;
+    }
+        
 /*| global_var_list ',' global_var_name */
 // SYM_LIST(global_var_list_c)
 // TODO!!
