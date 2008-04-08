@@ -81,6 +81,8 @@ SYM_TOKEN(signed_integer_c)
 SYM_TOKEN(signed_real_c)
 */
 
+SYM_REF1(neg_literal_c, exp)
+
 SYM_REF2(numeric_literal_c, type, value)
 SYM_REF2(integer_literal_c, type, value)
 SYM_REF2(real_literal_c, type, value)

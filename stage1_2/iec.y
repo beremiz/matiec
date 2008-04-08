@@ -1687,7 +1687,7 @@ integer_literal:
 signed_integer:
   integer
 | '+' integer   {$$ = $2;}
-| '-' integer	{$$ = new neg_expression_c($2, locloc(@$));}
+| '-' integer	{$$ = new neg_literal_c($2, locloc(@$));}
 ;
 
 /* a helper symbol for non_negative_constant */
@@ -1716,7 +1716,7 @@ non_negative_real_literal:
 signed_real:
   real
 | '+' real	{$$ = $2;}
-| '-' real	{$$ = new neg_expression_c($2, locloc(@2));}
+| '-' real	{$$ = new neg_literal_c($2, locloc(@2));}
 ;
 
 /* helper symbol for non_negative_real_literal */

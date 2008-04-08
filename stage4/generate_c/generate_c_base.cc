@@ -254,6 +254,12 @@ class generate_c_base_c: public iterator_visitor_c {
     void *visit(boolean_true_c *symbol) {s4o.print("TRUE"); return NULL;}
     void *visit(boolean_false_c *symbol) {s4o.print("FALSE"); return NULL;}
 
+    void *visit(neg_literal_c *symbol) {
+      s4o.print("-");
+      symbol->exp->accept(*this);
+      return NULL;
+    }
+
     void *visit(neg_expression_c *symbol) {
       s4o.print("-");
       symbol->exp->accept(*this);

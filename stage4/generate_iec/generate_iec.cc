@@ -154,6 +154,8 @@ void *visit(integer_literal_c *symbol) {return print_literal(symbol->type, symbo
 void *visit(real_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
 void *visit(bit_string_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
 void *visit(boolean_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
+void *visit(neg_literal_c *symbol) {return print_unary_expression(symbol->exp, "-");}
+
 
 /* helper class for boolean_literal_c */
 void *visit(boolean_true_c *symbol) {s4o.print(/*"TRUE"*/"1"); return NULL;}
