@@ -235,6 +235,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
       switch (wanted_sfcdeclaration) {
         case stepcount_sd:
         case sfcdecl_sd:
+        case sfcinit_sd:
           step_number++;
           break;
         case stepdef_sd:

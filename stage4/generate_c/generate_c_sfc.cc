@@ -94,7 +94,6 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
 
     void generate(symbol_c *symbol, sfcgeneration_t generation_type) {
       wanted_sfcgeneration = generation_type;
-      transition_number = 0;
       switch (wanted_sfcgeneration) {
         case transitiontest_sg:
           {
@@ -573,13 +572,19 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
 /*********************************************/
 /* B.1.6  Sequential function chart elements */
 /*********************************************/
-
-    void *visit(sfc_network_c *symbol) {
-      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::transitionlist_sg);
-      s4o.print(s4o.indent_spaces +"INT i;\n\n");
+    
+    void *visit(sequential_function_chart_c *symbol) {
+      int i;
+      
+      generate_c_sfc_elements->reset_transition_number();
+      for(i = 0; i < symbol->n; i++) {
+        generate_c_sfc_elements->generate(symbol->elements[i], generate_c_sfc_elements_c::transitionlist_sg);
+      }
+      
+      s4o.print(s4o.indent_spaces +"INT i;\n");
       s4o.print(s4o.indent_spaces +"BOOL transition;\n\n");
-            
-      /* generate step initilizations */
+      
+      /* generate step initialisations */
       s4o.print(s4o.indent_spaces + "// Steps initialisation\n");
       s4o.print(s4o.indent_spaces + "for (i = 0; i < ");
       print_variable_prefix();
@@ -680,24 +685,30 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       
       /* generate transition tests */
       s4o.print(s4o.indent_spaces + "// Transitions fire test\n");
-      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::transitiontest_sg);
+      generate_c_sfc_elements->generate((symbol_c *)symbol, generate_c_sfc_elements_c::transitiontest_sg);
       s4o.print("\n");
       
       /* generate transition reset steps */
       s4o.print(s4o.indent_spaces + "// Transitions reset steps\n");
       generate_c_sfc_elements->reset_transition_number();
-      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::stepreset_sg);
+      for(i = 0; i < symbol->n; i++) {
+        generate_c_sfc_elements->generate(symbol->elements[i], generate_c_sfc_elements_c::stepreset_sg);
+      }
       s4o.print("\n");
       
       /* generate transition set steps */
       s4o.print(s4o.indent_spaces + "// Transitions set steps\n");
       generate_c_sfc_elements->reset_transition_number();
-      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::stepset_sg);
+      for(i = 0; i < symbol->n; i++) {
+        generate_c_sfc_elements->generate(symbol->elements[i], generate_c_sfc_elements_c::stepset_sg);
+      }
       s4o.print("\n");
       
-       /* generate step association */
+      /* generate step association */
       s4o.print(s4o.indent_spaces + "// Steps association\n");
-      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::actionassociation_sg);
+      for(i = 0; i < symbol->n; i++) {
+        generate_c_sfc_elements->generate(symbol->elements[i], generate_c_sfc_elements_c::actionassociation_sg);
+      }
       s4o.print("\n");
       
       /* generate action state evaluation */
@@ -736,12 +747,14 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       
       /* generate action execution */
       s4o.print(s4o.indent_spaces + "// Actions execution\n");
-      generate_c_sfc_elements->generate((symbol_c *) symbol, generate_c_sfc_elements_c::actionbody_sg);
+      for(i = 0; i < symbol->n; i++) {
+        generate_c_sfc_elements->generate(symbol->elements[i], generate_c_sfc_elements_c::actionbody_sg);
+      }
       s4o.print("\n");
       
       return NULL;
     }
-
+    
     void generate(sequential_function_chart_c *sfc) {
       sfc->accept(*this);
     }
