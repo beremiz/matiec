@@ -469,15 +469,16 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
               s4o.print("activated");
             }
             if (strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
-              s4o.print("active && ");
+              s4o.print("active && __TIME_CMP(");
               print_step_argument(current_step, "elapsed_time");
+              s4o.print(", ");
+              symbol->action_time->accept(*this);
               if (strcmp(qualifier, "D") == 0) {
-                s4o.print(" >= ");
+                s4o.print(") >= 0");
               }
               else {
-                s4o.print(" < ");
+                s4o.print(") < 0");
               }
-              symbol->action_time->accept(*this);  
             }
             s4o.print(") {\n");
             s4o.indent_right();

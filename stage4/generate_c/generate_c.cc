@@ -1196,7 +1196,9 @@ END_RESOURCE
       /* (A.1) resource name in comment */
       s4o.print("// RESOURCE ");
       current_resource_name->accept(*this);
-      s4o.print("\n");
+      s4o.print("\n\n");
+      
+      s4o.print("extern int common_ticktime__;\n\n");
        
       /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
@@ -1205,8 +1207,8 @@ END_RESOURCE
                       generate_c_vardecl_c::global_vt);
         vardecl->print(current_global_vars);
         delete vardecl;
+        s4o.print("\n");
       }
-      s4o.print("\n");
       
       /* (A.3) POUs inclusion */
       s4o.print("#include \"POUS.c\"\n\n");

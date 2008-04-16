@@ -161,7 +161,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           /* period initialisation */
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
-          s4o.print("period = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
+          s4o.print("period = __time_to_timespec(1, common_ticktime__, 0, 0, 0, 0);\n");
           
           s4o.indent_left();
           s4o.print(s4o.indent_spaces + "}\n");
