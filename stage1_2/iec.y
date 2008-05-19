@@ -2285,6 +2285,7 @@ enumerated_value_list:
 
 enumerated_value:
   identifier 
+  {$$ = new enumerated_value_c(NULL, $1, locloc(@$));}
 | prev_declared_enumerated_type_name '#' any_identifier
 	{$$ = new enumerated_value_c($1, $3, locloc(@$));}
 ;

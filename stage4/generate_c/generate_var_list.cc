@@ -57,12 +57,22 @@ typedef struct
 
 class generate_var_list_c: protected generate_c_typedecl_c {
   
+  public:
+    typedef enum {
+      none_dt,
+      programs_dt,
+      variables_dt
+    } declarationtype_t;
+
+    declarationtype_t current_declarationtype;
+  
   private:
     symbol_c *current_var_type_symbol;
     unsigned int current_var_number;
     unsigned int step_number;
     unsigned int transition_number;
     unsigned int action_number;
+    bool configuration_defined;
     std::list<SYMBOL> current_symbol_list;
     search_base_type_c search_base_type;
     search_fb_typedecl_c *search_fb_typedecl;
@@ -71,8 +81,9 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     generate_var_list_c(stage4out_c *s4o_ptr, symbol_c *scope)
     : generate_c_typedecl_c(s4o_ptr) {
       search_fb_typedecl = new search_fb_typedecl_c(scope);
-      current_var_type_symbol = NULL;
       current_var_number = 0;
+      current_var_type_symbol = NULL;
+      current_declarationtype = none_dt;
     }
     
     ~generate_var_list_c(void) {
@@ -80,6 +91,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     }
     
     void update_var_type_symbol(symbol_c *symbol, bool is_fb = false) {
+      
       this->current_var_type_symbol = spec_init_sperator_c::get_spec(symbol);
       if (this->current_var_type_symbol == NULL)
         ERROR;
@@ -94,6 +106,26 @@ class generate_var_list_c: protected generate_c_typedecl_c {
 
     void reset_var_type_symbol(void) {
       this->current_var_type_symbol = NULL;
+    }
+    
+    void generate_programs(symbol_c *symbol) {
+      s4o.print("// Programs\n");
+      current_var_number = 0;
+      configuration_defined = false;
+      current_declarationtype = programs_dt;
+      symbol->accept(*this);
+      current_declarationtype = none_dt;
+      s4o.print("\n");
+    }
+    
+    void generate_variables(symbol_c *symbol) {
+      s4o.print("// Variables\n");
+      current_var_number = 0;
+      configuration_defined = false;
+      current_declarationtype = variables_dt;
+      symbol->accept(*this);
+      current_declarationtype = none_dt;
+      s4o.print("\n");
     }
     
     void declare_variables(symbol_c *symbol, const char* type = "VAR") {
@@ -163,10 +195,10 @@ class generate_var_list_c: protected generate_c_typedecl_c {
         s4o.print(".");
       }
     }
-    
-    /********************************************/
-    /* B.1.4.3   Declaration and initilization  */
-    /********************************************/
+
+/********************************************/
+/* B.1.4.3 - Declaration and initialization */
+/********************************************/
     
     /*  [variable_name] location ':' located_var_spec_init */
     /* variable_name -> may be NULL ! */
@@ -342,16 +374,32 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       return NULL;
     }
 
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+    void *visit(data_type_declaration_c *symbol) {
+      return NULL;
+    }
+
 /**************************************/
 /* B.1.5 - Program organization units */
 /**************************************/
+
+/***********************/
+/* B 1.5.1 - Functions */
+/***********************/
+    void *visit(function_declaration_c *symbol) {
+      return NULL;
+    }
 
 /*****************************/
 /* B 1.5.2 - Function Blocks */
 /*****************************/
     void *visit(function_block_declaration_c *symbol) {
-      symbol->var_declarations->accept(*this);
-      symbol->fblock_body->accept(*this);
+      if (current_declarationtype == variables_dt && configuration_defined) {
+        symbol->var_declarations->accept(*this);
+        symbol->fblock_body->accept(*this);
+      }
       return NULL;
     }
 
@@ -359,8 +407,10 @@ class generate_var_list_c: protected generate_c_typedecl_c {
 /* B 1.5.3 - Programs */
 /**********************/
     void *visit(program_declaration_c *symbol) {
-      symbol->var_declarations->accept(*this);
-      symbol->function_block_body->accept(*this);
+      if (current_declarationtype == variables_dt && configuration_defined) {
+        symbol->var_declarations->accept(*this);
+        symbol->function_block_body->accept(*this);
+      }
       return NULL;
     }
 
@@ -484,18 +534,34 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     //SYM_REF6(program_configuration_c, retain_option, program_name, task_name, program_type_name, prog_conf_elements, unused)
     void *visit(program_configuration_c *symbol) {
       
-      /* Start off by setting the current_var_type_symbol and
-       * current_var_init_symbol private variables...
-       */
-      update_var_type_symbol(symbol->program_type_name, true);
-      
-      declare_variable(symbol->program_name, "FB");
-      
-      /* Values no longer in scope, and therefore no longer used.
-       * Make an effort to keep them set to NULL when not in use
-       * in order to catch bugs as soon as possible...
-       */
-      reset_var_type_symbol();
+      switch (current_declarationtype) {
+        case programs_dt:
+          print_var_number();
+          s4o.print(";");
+          print_symbol_list();
+          symbol->program_name->accept(*this);
+          s4o.print(";");
+          symbol->program_type_name->accept(*this);
+          s4o.print(";\n");
+          break;
+        case variables_dt:
+          /* Start off by setting the current_var_type_symbol and
+           * current_var_init_symbol private variables...
+           */
+          update_var_type_symbol(symbol->program_type_name, true);
+          
+          declare_variable(symbol->program_name, "FB");
+          
+          /* Values no longer in scope, and therefore no longer used.
+           * Make an effort to keep them set to NULL when not in use
+           * in order to catch bugs as soon as possible...
+           */
+          reset_var_type_symbol();
+          
+          break;
+        default:
+          break;
+      }
       
       return NULL;
     }
@@ -513,8 +579,10 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       current_name = new SYMBOL;
       current_name->symbol = symbol->configuration_name;
       current_symbol_list.push_back(*current_name);
+      configuration_defined = true;
       symbol->resource_declarations->accept(*this);
       current_symbol_list.pop_back();
+      configuration_defined = false;
       return NULL;
     }
     

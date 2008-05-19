@@ -454,8 +454,8 @@ void *generate_c_SFC_IL_ST_c::visit(statement_list_c *symbol) {
 class generate_c_pous_c: public generate_c_typedecl_c {
 
   public:
-    generate_c_pous_c(stage4out_c *s4o_ptr)
-      : generate_c_typedecl_c(s4o_ptr) {};
+    generate_c_pous_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
+      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {};
     virtual ~generate_c_pous_c(void) {}
 
 
@@ -625,6 +625,7 @@ public:
 void *visit(function_block_declaration_c *symbol) {
   generate_c_vardecl_c *vardecl;
   generate_c_sfcdecl_c *sfcdecl;
+  generate_c_typedecl_c *typedecl;
   TRACE("function_block_declaration_c");
 
   /* start off by adding this declaration to the global
@@ -633,25 +634,26 @@ void *visit(function_block_declaration_c *symbol) {
   function_block_type_symtable.insert(symbol->fblock_name, symbol);
   
   /* (A) Function Block data structure declaration... */
+  typedecl = new generate_c_typedecl_c(&s4o_incl);
   /* (A.1) Data structure declaration */
-  s4o.print("// FUNCTION_BLOCK ");
-  symbol->fblock_name->accept(*this);
-  s4o.print("\n// Data part\n");
-  s4o.print("typedef struct {\n");
-  s4o.indent_right();
+  s4o_incl.print("// FUNCTION_BLOCK ");
+  symbol->fblock_name->accept(*typedecl);
+  s4o_incl.print("\n// Data part\n");
+  s4o_incl.print("typedef struct {\n");
+  s4o_incl.indent_right();
   /* (A.2) Public variables: i.e. the function parameters... */
-  s4o.print(s4o.indent_spaces + "// FB Interface - IN, OUT, IN_OUT variables\n");
-  vardecl = new generate_c_vardecl_c(&s4o,
+  s4o_incl.print(s4o_incl.indent_spaces + "// FB Interface - IN, OUT, IN_OUT variables\n");
+  vardecl = new generate_c_vardecl_c(&s4o_incl,
   				      generate_c_vardecl_c::local_vf,
   				      generate_c_vardecl_c::input_vt |
   				      generate_c_vardecl_c::output_vt |
   				      generate_c_vardecl_c::inoutput_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
-  s4o.print("\n");
+  s4o_incl.print("\n");
   /* (A.3) Private internal variables */
-  s4o.print(s4o.indent_spaces + "// FB private variables - TEMP, private and located variables\n");
-  vardecl = new generate_c_vardecl_c(&s4o,
+  s4o_incl.print(s4o_incl.indent_spaces + "// FB private variables - TEMP, private and located variables\n");
+  vardecl = new generate_c_vardecl_c(&s4o_incl,
   				      generate_c_vardecl_c::local_vf,
 				        generate_c_vardecl_c::temp_vt |
   				      generate_c_vardecl_c::private_vt |
@@ -660,17 +662,17 @@ void *visit(function_block_declaration_c *symbol) {
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   /* (A.4) Generate private internal variables for SFC */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::sfcdecl_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, generate_c_sfcdecl_c::sfcdecl_sd);
   sfcdecl->print(symbol->fblock_body);
   delete sfcdecl;
-  s4o.print("\n");
-
+  s4o_incl.print("\n");
+  
   /* (A.5) Function Block data structure type name. */
-  s4o.indent_left();
-  s4o.print("} ");
-  symbol->fblock_name->accept(*this);
-  s4o.print(";\n\n");
-
+  s4o_incl.indent_left();
+  s4o_incl.print("} ");
+  symbol->fblock_name->accept(*typedecl);
+  s4o_incl.print(";\n\n");
+  delete typedecl;
 
   /* (B) Constructor */
   /* (B.1) Constructor name... */
@@ -785,6 +787,7 @@ public:
 void *visit(program_declaration_c *symbol) {
   generate_c_vardecl_c *vardecl;
   generate_c_sfcdecl_c *sfcdecl;
+  generate_c_typedecl_c *typedecl;
   TRACE("program_declaration_c");
 
   /* start off by adding this declaration to the global
@@ -793,26 +796,27 @@ void *visit(program_declaration_c *symbol) {
   program_type_symtable.insert(symbol->program_type_name, symbol);
 
   /* (A) Program data structure declaration... */
+  typedecl = new generate_c_typedecl_c(&s4o_incl);
   /* (A.1) Data structure declaration */
-  s4o.print("// PROGRAM ");
-  symbol->program_type_name->accept(*this);
-  s4o.print("\n// Data part\n");
-  s4o.print("typedef struct {\n");
-  s4o.indent_right();
+  s4o_incl.print("// PROGRAM ");
+  symbol->program_type_name->accept(*typedecl);
+  s4o_incl.print("\n// Data part\n");
+  s4o_incl.print("typedef struct {\n");
+  s4o_incl.indent_right();
 
   /* (A.2) Public variables: i.e. the program parameters... */
-  s4o.print(s4o.indent_spaces + "// PROGRAM Interface - IN, OUT, IN_OUT variables\n");
-  vardecl = new generate_c_vardecl_c(&s4o,
+  s4o_incl.print(s4o_incl.indent_spaces + "// PROGRAM Interface - IN, OUT, IN_OUT variables\n");
+  vardecl = new generate_c_vardecl_c(&s4o_incl,
   				      generate_c_vardecl_c::local_vf,
   				      generate_c_vardecl_c::input_vt |
   				      generate_c_vardecl_c::output_vt |
   				      generate_c_vardecl_c::inoutput_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
-  s4o.print("\n");
+  s4o_incl.print("\n");
   /* (A.3) Private internal variables */
-  s4o.print(s4o.indent_spaces + "// PROGRAM private variables - TEMP, private and located variables\n");
-  vardecl = new generate_c_vardecl_c(&s4o,
+  s4o_incl.print(s4o_incl.indent_spaces + "// PROGRAM private variables - TEMP, private and located variables\n");
+  vardecl = new generate_c_vardecl_c(&s4o_incl,
                 generate_c_vardecl_c::local_vf,
                 generate_c_vardecl_c::temp_vt |
                 generate_c_vardecl_c::private_vt |
@@ -821,15 +825,16 @@ void *visit(program_declaration_c *symbol) {
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   /* (A.4) Generate private internal variables for SFC */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::sfcdecl_sd);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, generate_c_sfcdecl_c::sfcdecl_sd);
   sfcdecl->print(symbol->function_block_body);
   delete sfcdecl;
   
   /* (A.5) Program data structure type name. */
-  s4o.indent_left();
-  s4o.print("} ");
-  symbol->program_type_name->accept(*this);
-  s4o.print(";\n\n");
+  s4o_incl.indent_left();
+  s4o_incl.print("} ");
+  symbol->program_type_name->accept(*typedecl);
+  s4o_incl.print(";\n\n");
+  delete typedecl;
 
   /* (B) Constructor */
   /* (B.1) Constructor name... */
@@ -1211,6 +1216,7 @@ END_RESOURCE
       }
       
       /* (A.3) POUs inclusion */
+      s4o.print("#include \"POUS.h\"\n\n");
       s4o.print("#include \"POUS.c\"\n\n");
       
       /* (A.4) Resource programs declaration... */
@@ -1436,10 +1442,10 @@ class generate_c_c: public iterator_visitor_c {
   protected:
     stage4out_c &s4o;
     stage4out_c pous_s4o;
+    stage4out_c pous_incl_s4o;
     stage4out_c located_variables_s4o;
     stage4out_c variables_s4o;
     generate_c_pous_c generate_c_pous;
-    generate_var_list_c *generate_var_list;
     
     symbol_c *current_configuration;
 
@@ -1452,9 +1458,10 @@ class generate_c_c: public iterator_visitor_c {
     generate_c_c(stage4out_c *s4o_ptr, const char *builddir): 
             s4o(*s4o_ptr),
             pous_s4o(builddir, "POUS", "c"),
+            pous_incl_s4o(builddir, "POUS", "h"),
             located_variables_s4o(builddir, "LOCATED_VARIABLES","h"),
             variables_s4o(builddir, "VARIABLES","csv"),
-            generate_c_pous(&pous_s4o) {
+            generate_c_pous(&pous_s4o, &pous_incl_s4o) {
       current_builddir = builddir;
       current_configuration = NULL;
     }
@@ -1465,13 +1472,15 @@ class generate_c_c: public iterator_visitor_c {
 /* B 0 - Programming Model */
 /***************************/
     void *visit(library_c *symbol) {
-      generate_var_list = new generate_var_list_c(&variables_s4o, symbol);
-      
+      pous_incl_s4o.print("#ifndef __POUS_H\n#define __POUS_H\n\n");
       for(int i = 0; i < symbol->n; i++) {
         symbol->elements[i]->accept(*this);
       }
+      pous_incl_s4o.print("#endif //__POUS_H\n");
       
-      delete generate_var_list;
+      generate_var_list_c generate_var_list(&variables_s4o, symbol);
+      generate_var_list.generate_programs(symbol);
+      generate_var_list.generate_variables(symbol);
       
       generate_location_list_c generate_location_list(&located_variables_s4o);
       symbol->accept(generate_location_list);
@@ -1555,8 +1564,6 @@ class generate_c_c: public iterator_visitor_c {
       symbol->resource_declarations->accept(*this);
 
       current_configuration = NULL;
-      
-      symbol->accept(*generate_var_list);
       
       return NULL;
     }

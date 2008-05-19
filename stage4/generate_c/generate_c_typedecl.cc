@@ -48,16 +48,29 @@
 
 class generate_c_typedecl_c: public generate_c_base_c {
 
+  protected:
+    stage4out_c &s4o_incl;
+
   private:
     symbol_c* current_type_name;
     search_base_type_c search_base_type;
 
+    generate_c_base_c *basedecl;
+
   public:
-    generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_c(s4o_ptr) {
+    generate_c_typedecl_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr): generate_c_base_c(s4o_ptr), s4o_incl(*s4o_incl_ptr) {
       current_typedefinition = none_td;
       current_basetypedeclaration = none_bd;
+      basedecl = new generate_c_base_c(&s4o_incl);
     }
-    ~generate_c_typedecl_c(void) {}
+    generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_c(s4o_ptr), s4o_incl(*s4o_ptr) {
+      current_typedefinition = none_td;
+      current_basetypedeclaration = none_bd;
+      basedecl = new generate_c_base_c(&s4o_incl);
+    }
+    ~generate_c_typedecl_c(void) {
+      delete basedecl;
+    }
 
     typedef enum {
       none_td,
@@ -73,6 +86,7 @@ class generate_c_typedecl_c: public generate_c_base_c {
       subrangebasetypeexploration_bd,
       subrangetest_bd,
       arraybasetype_bd,
+      arraybasetypeincl_bd,
       arraysubrange_bd,
       arraytranslateindex_bd
     } basetypedeclaration_t;
@@ -88,6 +102,38 @@ class generate_c_typedecl_c: public generate_c_base_c {
       sprintf(str, "%d", integer);
       s4o.print(str);
     }
+
+    void print_integer_incl(unsigned int integer) {
+      char str[10];
+      sprintf(str, "%d", integer);
+      s4o_incl.print(str);
+    }
+
+    void *print_list_incl(list_c *list,
+         std::string pre_elem_str = "",
+         std::string inter_elem_str = "",
+         std::string post_elem_str = "",
+         visitor_c *visitor = NULL) {
+      if (visitor == NULL) visitor = this;
+
+      if (list->n > 0) {
+//std::cout << "generate_c_base_c::print_list(n = " << list->n << ")   000\n";
+        s4o_incl.print(pre_elem_str);
+        list->elements[0]->accept(*visitor);
+      }
+
+      for(int i = 1; i < list->n; i++) {
+//std::cout << "generate_c_base_c::print_list   " << i << "\n";
+        s4o_incl.print(inter_elem_str);
+        list->elements[i]->accept(*visitor);
+      }
+
+      if (list->n > 0)
+        s4o_incl.print(post_elem_str);
+
+      return NULL;
+    }
+
 
 /***************************/
 /* B 0 - Programming Model */
@@ -152,13 +198,13 @@ void *visit(subrange_type_declaration_c *symbol) {
   /* add this type declaration to the type symbol table... */
   type_symtable.insert(symbol->subrange_type_name, symbol->subrange_spec_init);
   
-  s4o.print("typedef ");
+  s4o_incl.print("typedef ");
   current_basetypedeclaration = subrangebasetype_bd;
   symbol->subrange_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
-  s4o.print(" ");
-  symbol->subrange_type_name->accept(*this);
-  s4o.print(";\n\n");
+  s4o_incl.print(" ");
+  symbol->subrange_type_name->accept(*basedecl);
+  s4o_incl.print(";\n\n");
   
   current_basetypedeclaration = subrangebasetypeexploration_bd;
   symbol->subrange_spec_init->accept(*this);
@@ -186,7 +232,7 @@ void *visit(subrange_spec_init_c *symbol) {
 void *visit(subrange_specification_c *symbol) {
   switch (current_basetypedeclaration) {
     case subrangebasetype_bd:
-      symbol->integer_type_name->accept(*this);
+      symbol->integer_type_name->accept(*basedecl);
       break;
     case subrangebasetypeexploration_bd:
       search_base_type.explore_type(symbol->integer_type_name);
@@ -232,10 +278,10 @@ void *visit(subrange_c *symbol) {
   switch (current_typedefinition) {
     case array_td:
       if (current_basetypedeclaration == arraysubrange_bd) {
-        s4o.print("[");
+        s4o_incl.print("[");
         dimension = extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
-        print_integer(dimension);
-        s4o.print("]");
+        print_integer_incl(dimension);
+        s4o_incl.print("]");
       }
       else
         symbol->lower_limit->accept(*this);
@@ -273,13 +319,13 @@ void *visit(enumerated_type_declaration_c *symbol) {
   /* add this type declaration to the type symbol table... */
   type_symtable.insert(symbol->enumerated_type_name, symbol->enumerated_spec_init);
   
-  s4o.print("typedef enum {\n");
-  s4o.indent_right();
+  s4o_incl.print("typedef enum {\n");
+  s4o_incl.indent_right();
   symbol->enumerated_spec_init->accept(*this);
-  s4o.indent_left();
-  s4o.print("} ");
-  symbol->enumerated_type_name->accept(*this);
-  s4o.print(";\n");
+  s4o_incl.indent_left();
+  s4o_incl.print("} ");
+  symbol->enumerated_type_name->accept(*basedecl);
+  s4o_incl.print(";\n");
   return NULL;
 }
 
@@ -292,13 +338,13 @@ void *visit(enumerated_spec_init_c *symbol) {
 /* helper symbol for enumerated_specification->enumerated_spec_init */
 /* enumerated_value_list ',' enumerated_value */
 void *visit(enumerated_value_list_c *symbol) {
-  print_list(symbol, s4o.indent_spaces, ",\n"+s4o.indent_spaces, "\n");
+  print_list_incl(symbol, s4o_incl.indent_spaces, ",\n"+s4o_incl.indent_spaces, "\n");
   return NULL;
 }
 
 /* enumerated_type_name '#' identifier */
 void *visit(enumerated_value_c *symbol) {
-  symbol->value->accept(*this);
+  symbol->value->accept(*basedecl);
   return NULL;
 }
 
@@ -308,16 +354,16 @@ void *visit(array_type_declaration_c *symbol) {
   /* add this type declaration to the type symbol table... */
   type_symtable.insert(symbol->identifier, symbol->array_spec_init);
   
-  s4o.print("typedef ");
-  current_basetypedeclaration = arraybasetype_bd;
+  s4o_incl.print("typedef ");
+  current_basetypedeclaration = arraybasetypeincl_bd;
   symbol->array_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
-  s4o.print(" ");
-  symbol->identifier->accept(*this);
+  s4o_incl.print(" ");
+  symbol->identifier->accept(*basedecl);
   current_basetypedeclaration = arraysubrange_bd;
   symbol->array_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
-  s4o.print(";\n");
+  s4o_incl.print(";\n");
   
   search_base_type.explore_type(symbol->array_spec_init);
   if (search_base_type.base_is_subrange()) {
@@ -354,6 +400,9 @@ void *visit(array_specification_c *symbol) {
   switch (current_basetypedeclaration) {
     case arraybasetype_bd:
       symbol->non_generic_type_name->accept(*this);
+      break;
+    case arraybasetypeincl_bd:
+      symbol->non_generic_type_name->accept(*basedecl);
       break;
     case arraysubrange_bd:
     case arraytranslateindex_bd:
@@ -404,11 +453,11 @@ void *visit(simple_type_declaration_c *symbol) {
   /* add this type declaration to the type symbol table... */
   type_symtable.insert(symbol->simple_type_name, symbol->simple_spec_init);
 
-  s4o.print("typedef ");
+  s4o_incl.print("typedef ");
   symbol->simple_spec_init->accept(*this);
-  s4o.print(" ");
-  symbol->simple_type_name->accept(*this);
-  s4o.print(";\n");
+  s4o_incl.print(" ");
+  symbol->simple_type_name->accept(*basedecl);
+  s4o_incl.print(";\n");
   return NULL;
 }
 
@@ -417,7 +466,7 @@ void *visit(simple_type_declaration_c *symbol) {
 // <constant> may be NULL
 void *visit(simple_spec_init_c *symbol) {
   TRACE("simple_spec_init_c");
-  symbol->simple_specification->accept(*this);
+  symbol->simple_specification->accept(*basedecl);
   return NULL;
 }
 
@@ -478,11 +527,11 @@ void *visit(structure_type_declaration_c *symbol) {
   /* add this type declaration to the type symbol table... */
   type_symtable.insert(symbol->structure_type_name, symbol->structure_specification);
 
-  s4o.print("typedef ");
+  s4o_incl.print("typedef ");
   symbol->structure_specification->accept(*this);
-  s4o.print(" ");
-  symbol->structure_type_name->accept(*this);
-  s4o.print(";\n");
+  s4o_incl.print(" ");
+  symbol->structure_type_name->accept(*basedecl);
+  s4o_incl.print(";\n");
   return NULL;
 }
 

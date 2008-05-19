@@ -355,7 +355,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
           s4o.print("action_list[");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->action_name->accept(*this);
-          s4o.print("].state) {");
+          s4o.print("].state) {\n");
           s4o.indent_right();
           
           // generate action code
