@@ -972,7 +972,7 @@ void *visit(located_var_decl_c *symbol) {
       s4o.print(nv->get());
       s4o.print("{extern ");
       this->current_var_type_symbol->accept(*this);
-      s4o.print(" ");
+      s4o.print("* ");
       symbol->location->accept(*this);
       s4o.print("; ");
       print_variable_prefix();
@@ -980,7 +980,7 @@ void *visit(located_var_decl_c *symbol) {
         symbol->variable_name->accept(*this);
       else
         symbol->location->accept(*this);
-      s4o.print(" = &");
+      s4o.print(" = ");
       symbol->location->accept(*this);
       s4o.print(";}");
       break;
@@ -1211,7 +1211,7 @@ void *visit(global_var_spec_c *symbol) {
       if (symbol->global_var_name != NULL) {
         s4o.print("extern ");
         this->current_var_type_symbol->accept(*this);
-        s4o.print(" ");
+        s4o.print("* ");
         symbol->location->accept(*this);
         s4o.print(";\n");
         if (wanted_varformat == localstatic_vf)
@@ -1219,7 +1219,7 @@ void *visit(global_var_spec_c *symbol) {
         this->current_var_type_symbol->accept(*this);
         s4o.print(" *");
         symbol->global_var_name->accept(*this);
-        s4o.print(" = &");
+        s4o.print(" = ");
         symbol->location->accept(*this);
         s4o.print(";\n");
       }
