@@ -39,11 +39,11 @@ class search_base_type_c: public null_visitor_c {
   private:
     symbol_c *current_type_name;
     bool is_subrange;
+    bool is_enumerated;
 
   public:
     search_base_type_c(void) {current_type_name = NULL;}
-    bool base_is_subrange() {return this->is_subrange;}
-
+    
   public:
     void *visit(identifier_c *type_name) {
       this->current_type_name = type_name;
@@ -56,11 +56,18 @@ class search_base_type_c: public null_visitor_c {
       return type_decl->accept(*this);
     }
     
-    void *explore_type(symbol_c* type_decl) {
+    bool type_is_subrange(symbol_c* type_decl) {
       this->is_subrange = false;
-      return type_decl->accept(*this);
+      type_decl->accept(*this);
+      return this->is_subrange;
     }
 
+    bool type_is_enumerated(symbol_c* type_decl) {
+      this->is_enumerated = false;
+      type_decl->accept(*this);
+      return this->is_enumerated;
+    }
+    
 /***********************************/
 /* B 1.3.1 - Elementary Data Types */
 /***********************************/
@@ -127,6 +134,7 @@ class search_base_type_c: public null_visitor_c {
 
 /* enumerated_specification ASSIGN enumerated_value */
     void *visit(enumerated_spec_init_c *symbol) {
+      this->is_enumerated = true;
       return symbol->enumerated_specification->accept(*this);
     }
 

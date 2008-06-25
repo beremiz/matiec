@@ -83,7 +83,6 @@ class generate_c_typedecl_c: public generate_c_base_c {
     typedef enum {
       none_bd,
       subrangebasetype_bd,
-      subrangebasetypeexploration_bd,
       subrangetest_bd,
       arraybasetype_bd,
       arraybasetypeincl_bd,
@@ -206,10 +205,6 @@ void *visit(subrange_type_declaration_c *symbol) {
   symbol->subrange_type_name->accept(*basedecl);
   s4o_incl.print(";\n\n");
   
-  current_basetypedeclaration = subrangebasetypeexploration_bd;
-  symbol->subrange_spec_init->accept(*this);
-  current_basetypedeclaration = none_bd;
-  
   current_type_name = symbol->subrange_type_name;
   
   current_basetypedeclaration = subrangetest_bd;
@@ -234,9 +229,6 @@ void *visit(subrange_specification_c *symbol) {
     case subrangebasetype_bd:
       symbol->integer_type_name->accept(*basedecl);
       break;
-    case subrangebasetypeexploration_bd:
-      search_base_type.explore_type(symbol->integer_type_name);
-      break;
     case subrangetest_bd:
       if (symbol->subrange != NULL) {
         current_type_name->accept(*this);
@@ -247,7 +239,7 @@ void *visit(subrange_specification_c *symbol) {
         s4o.print(" value) {\n");
         s4o.indent_right();
         
-        if (search_base_type.base_is_subrange()) {
+        if (search_base_type.type_is_subrange(symbol->integer_type_name)) {
           s4o.print(s4o.indent_spaces + "value = __CHECK_");
           symbol->integer_type_name->accept(*this);
           s4o.print("(value);\n");
@@ -365,8 +357,7 @@ void *visit(array_type_declaration_c *symbol) {
   current_basetypedeclaration = none_bd;
   s4o_incl.print(";\n");
   
-  search_base_type.explore_type(symbol->array_spec_init);
-  if (search_base_type.base_is_subrange()) {
+  if (search_base_type.type_is_subrange(current_type_name)) {
     s4o.print("#define __CHECK_");
     symbol->identifier->accept(*this);
     s4o.print(" __CHECK_");

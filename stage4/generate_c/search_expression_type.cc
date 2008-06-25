@@ -103,6 +103,13 @@ class search_expression_type_c: public search_constant_type_c {
     }
 
     /* A helper function... */
+    bool is_string_type(symbol_c *type_symbol) {
+      if (typeid(*type_symbol) == typeid(string_type_name_c)) {return true;}
+      if (typeid(*type_symbol) == typeid(wstring_type_name_c)) {return true;}
+      return false;
+    }
+
+    /* A helper function... */
     bool is_integer_type(symbol_c *type_symbol) {
       if (typeid(*type_symbol) == typeid(sint_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(int_type_name_c)) {return true;}
@@ -464,8 +471,8 @@ class search_expression_type_c: public search_constant_type_c {
   void *visit(neg_expression_c *symbol) {
     symbol_c *exp_type = base_type((symbol_c *)symbol->exp->accept(*this));
     if (is_num_type(exp_type) || typeid(*exp_type) == typeid(time_type_name_c)){
-            return (void *)exp_type;
-         }
+        return (void *)exp_type;
+    }
     ERROR;
     return NULL;
   }

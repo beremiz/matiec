@@ -252,7 +252,8 @@ void *visit(equ_expression_c *symbol) {
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
-  if (search_expression_type->is_time_type(left_type))
+  if (search_expression_type->is_time_type(left_type) ||
+      search_expression_type->is_string_type(left_type))
     return print_compare_function("__eq_", left_type, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " == ");
 }
@@ -262,7 +263,8 @@ void *visit(notequ_expression_c *symbol) {
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
-  if (search_expression_type->is_time_type(left_type))
+  if (search_expression_type->is_time_type(left_type) ||
+      search_expression_type->is_string_type(left_type))
     return print_compare_function("__ne_", left_type, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " != ");
 }
@@ -272,9 +274,13 @@ void *visit(lt_expression_c *symbol) {
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
-  if (search_expression_type->is_time_type(left_type))
+  if (search_expression_type->is_time_type(left_type) ||
+      search_expression_type->is_string_type(left_type))
     return print_compare_function("__lt_", left_type, symbol->l_exp, symbol->r_exp);
-  return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");
+  if (!search_base_type.type_is_enumerated(left_type))
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");
+  ERROR;
+  return NULL;
 }
 
 void *visit(gt_expression_c *symbol) {
@@ -282,9 +288,13 @@ void *visit(gt_expression_c *symbol) {
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
-  if (search_expression_type->is_time_type(left_type))
+  if (search_expression_type->is_time_type(left_type) ||
+      search_expression_type->is_string_type(left_type))
     return print_compare_function("__gt_", left_type, symbol->l_exp, symbol->r_exp);
-  return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");
+  if (!search_base_type.type_is_enumerated(left_type))
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");
+  ERROR;
+  return NULL;
 }
 
 void *visit(le_expression_c *symbol) {
@@ -292,9 +302,13 @@ void *visit(le_expression_c *symbol) {
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
-  if (search_expression_type->is_time_type(left_type))
+  if (search_expression_type->is_time_type(left_type) ||
+      search_expression_type->is_string_type(left_type))
     return print_compare_function("__le_", left_type, symbol->l_exp, symbol->r_exp);
-  return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");
+  if (!search_base_type.type_is_enumerated(left_type))
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");
+  ERROR;
+  return NULL;
 }
 
 void *visit(ge_expression_c *symbol) {
@@ -302,9 +316,13 @@ void *visit(ge_expression_c *symbol) {
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
-  if (search_expression_type->is_time_type(left_type))
+  if (search_expression_type->is_time_type(left_type) ||
+      search_expression_type->is_string_type(left_type))
     return print_compare_function("__ge_", left_type, symbol->l_exp, symbol->r_exp);
-  return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");
+  if (!search_base_type.type_is_enumerated(left_type))
+    return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");
+  ERROR;
+  return NULL;
 }
 
 void *visit(add_expression_c *symbol) {
@@ -384,13 +402,20 @@ void *visit(mod_expression_c *symbol) {
 
 /* TODO: power expression... */
 void *visit(power_expression_c *symbol) {ERROR; return print_binary_expression(symbol->l_exp, symbol->r_exp, " ** ");}
-void *visit(neg_expression_c *symbol) {return print_unary_expression(symbol->exp, " -");}
+void *visit(neg_expression_c *symbol) {
+  symbol_c *exp_type = search_expression_type->get_type(symbol->exp);
+  if (search_expression_type->is_integer_type(exp_type) || search_expression_type->is_real_type(exp_type))
+    return print_unary_expression(symbol->exp, " -");
+  ERROR;
+  return NULL;
+}
 
 void *visit(not_expression_c *symbol) {
   symbol_c *exp_type = search_expression_type->get_type(symbol->exp);
-  if (!search_expression_type->is_binary_type(exp_type))
-     ERROR;
-  return print_unary_expression(symbol->exp, search_expression_type->is_bool_type(exp_type)?"!":"~");
+  if (search_expression_type->is_binary_type(exp_type))
+    return print_unary_expression(symbol->exp, search_expression_type->is_bool_type(exp_type)?"!":"~");
+  ERROR;
+  return NULL;
 }
 
 void *visit(function_invocation_c *symbol) {
@@ -545,8 +570,6 @@ void *visit(function_invocation_c *symbol) {
   
       symbol_c *param_type = fp_iterator.param_type();
       if (param_type == NULL) ERROR;
-  
-      search_base_type.explore_type(param_type);
         
       switch (param_direction) {
         case function_param_iterator_c::direction_in:
@@ -560,13 +583,13 @@ void *visit(function_invocation_c *symbol) {
             param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
           }
           if (param_value == NULL) ERROR;
-          if (search_base_type.base_is_subrange()) {
+          if (search_base_type.type_is_subrange(param_type)) {
             s4o.print("__CHECK_");
             param_type->accept(*this);
             s4o.print("(");
           }
           param_value->accept(*this);
-          if (search_base_type.base_is_subrange())
+          if (search_base_type.type_is_subrange(param_type))
             s4o.print(")");
           break;
         case function_param_iterator_c::direction_out:
@@ -606,17 +629,16 @@ void *visit(statement_list_c *symbol) {
 /*********************************/
 void *visit(assignment_statement_c *symbol) {
   symbol_c *left_type = search_varfb_instance_type->get_type(symbol->l_exp, false);
-  symbol_c *base_type = (symbol_c *)search_base_type.explore_type(left_type);
   
   symbol->l_exp->accept(*this);
   s4o.print(" = ");
-  if (search_base_type.base_is_subrange()) {
+  if (search_base_type.type_is_subrange(left_type)) {
     s4o.print("__CHECK_");
     left_type->accept(*this);
     s4o.print("(");
   }
   symbol->r_exp->accept(*this);
-  if (search_base_type.base_is_subrange())
+  if (search_base_type.type_is_subrange(left_type))
     s4o.print(")");
   return NULL;
 }
@@ -659,8 +681,6 @@ void *visit(fb_invocation_c *symbol) {
     symbol_c *param_type = fp_iterator.param_type();
     if (param_type == NULL) ERROR;
     
-    search_base_type.explore_type(param_type);
-
     /* now output the value assignment */
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_in) ||
@@ -670,13 +690,13 @@ void *visit(fb_invocation_c *symbol) {
         s4o.print(".");
         param_name->accept(*this);
         s4o.print(" = ");
-        if (search_base_type.base_is_subrange()) {
+        if (search_base_type.type_is_subrange(param_type)) {
           s4o.print("__CHECK_");
           param_type->accept(*this);
           s4o.print("(");
         }
         param_value->accept(*this);
-        if (search_base_type.base_is_subrange())
+        if (search_base_type.type_is_subrange(param_type))
           s4o.print(")");
         s4o.print(";\n" + s4o.indent_spaces);
       }
@@ -710,12 +730,11 @@ void *visit(fb_invocation_c *symbol) {
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
         symbol_c *param_type = search_varfb_instance_type->get_type(param_value, false);
-        search_base_type.explore_type(param_type);
         
         s4o.print(";\n"+ s4o.indent_spaces);
         param_value->accept(*this);
         s4o.print(" = ");
-        if (search_base_type.base_is_subrange()) {
+        if (search_base_type.type_is_subrange(param_type)) {
           s4o.print("__CHECK_");
           param_type->accept(*this);
           s4o.print("(");
@@ -724,7 +743,7 @@ void *visit(fb_invocation_c *symbol) {
         symbol->fb_name->accept(*this);
         s4o.print(".");
         param_name->accept(*this);
-        if (search_base_type.base_is_subrange())
+        if (search_base_type.type_is_subrange(param_type))
           s4o.print(")");
       }
   } /* for(...) */

@@ -821,9 +821,7 @@ void *visit(il_fb_call_c *symbol) {
     symbol_c *param_type = fp_iterator.param_type();
     if (param_type == NULL) ERROR;
     
-    search_base_type.explore_type(param_type);    
-
-    /* now output the value assignment */
+        /* now output the value assignment */
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_in) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
@@ -831,13 +829,13 @@ void *visit(il_fb_call_c *symbol) {
         s4o.print(".");
         param_name->accept(*this);
         s4o.print(" = ");
-        if (search_base_type.base_is_subrange()) {
+        if (search_base_type.type_is_subrange(param_type)) {
           s4o.print("__CHECK_");
           param_type->accept(*this);
           s4o.print("(");
         }
         param_value->accept(*this);
-        if (search_base_type.base_is_subrange())
+        if (search_base_type.type_is_subrange(param_type))
           s4o.print(")");
         s4o.print(";\n" + s4o.indent_spaces);
       }
@@ -870,12 +868,11 @@ void *visit(il_fb_call_c *symbol) {
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
         symbol_c *param_type = search_varfb_instance_type->get_type(param_value, false);
-        search_base_type.explore_type(param_type);
         
         s4o.print(";\n"+ s4o.indent_spaces);
         param_value->accept(*this);
         s4o.print(" = ");
-        if (search_base_type.base_is_subrange()) {
+        if (search_base_type.type_is_subrange(param_type)) {
           s4o.print("__CHECK_");
           param_type->accept(*this);
           s4o.print("(");
@@ -883,7 +880,7 @@ void *visit(il_fb_call_c *symbol) {
         symbol->fb_name->accept(*this);
         s4o.print(".");
         param_name->accept(*this);
-        if (search_base_type.base_is_subrange())
+        if (search_base_type.type_is_subrange(param_type))
           s4o.print(")");
       }
   } /* for(...) */
@@ -944,8 +941,6 @@ void *visit(il_formal_funct_call_c *symbol) {
     if (param_value == NULL)
       param_value = function_call_param_iterator.next();
 
-    search_base_type.explore_type(param_type);
-
     switch (param_direction) {
       case function_param_iterator_c::direction_in:
         if (param_value == NULL) {
@@ -958,13 +953,13 @@ void *visit(il_formal_funct_call_c *symbol) {
           param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
         }
         if (param_value == NULL) ERROR;
-        if (search_base_type.base_is_subrange()) {
+        if (search_base_type.type_is_subrange(param_type)) {
           s4o.print("__CHECK_");
           param_type->accept(*this);
           s4o.print("(");
         }
         param_value->accept(*this);
-        if (search_base_type.base_is_subrange())
+        if (search_base_type.type_is_subrange(param_type))
           s4o.print(")");
 	break;
       case function_param_iterator_c::direction_out:
@@ -1132,17 +1127,16 @@ void *visit(LDN_operator_c *symbol)	{
 
 void *visit(ST_operator_c *symbol)	{
   symbol_c *operand_type = search_varfb_instance_type->get_type(this->current_operand, false);
-  search_base_type.explore_type(operand_type);
-
+  
   this->current_operand->accept(*this);
   s4o.print(" = ");
-  if (search_base_type.base_is_subrange()) {
+  if (search_base_type.type_is_subrange(operand_type)) {
     s4o.print("__CHECK_");
     operand_type->accept(*this);
     s4o.print("(");
   }
   this->default_variable_name.accept(*this);
-  if (search_base_type.base_is_subrange())
+  if (search_base_type.type_is_subrange(operand_type))
     s4o.print(")");
   /* the data type resulting from this operation is unchamged. */
   return NULL;
@@ -1150,11 +1144,10 @@ void *visit(ST_operator_c *symbol)	{
 
 void *visit(STN_operator_c *symbol)	{
   symbol_c *operand_type = search_varfb_instance_type->get_type(this->current_operand, false);
-  search_base_type.explore_type(operand_type);
-
+  
   this->current_operand->accept(*this);
   s4o.print(" = ");
-  if (search_base_type.base_is_subrange()) {
+  if (search_base_type.type_is_subrange(operand_type)) {
     s4o.print("__CHECK_");
     operand_type->accept(*this);
     s4o.print("(");
@@ -1164,7 +1157,7 @@ void *visit(STN_operator_c *symbol)	{
   else
     s4o.print("~");
   this->default_variable_name.accept(*this);
-  if (search_base_type.base_is_subrange())
+  if (search_base_type.type_is_subrange(operand_type))
     s4o.print(")");
   /* the data type resulting from this operation is unchamged. */
   return NULL;
@@ -1362,27 +1355,49 @@ void *visit(MOD_operator_c *symbol)	{
 }
 
 void *visit(GT_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, "__gt_");
+  if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
+    return CMP_operator(this->current_operand, "__gt_");
+  ERROR;
+  return NULL;
 }
 
 void *visit(GE_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, "__ge_");
+  if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
+    return CMP_operator(this->current_operand, "__ge_");
+  ERROR;
+  return NULL;
 }
 
 void *visit(EQ_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, "__eq_");
+  if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
+    return CMP_operator(this->current_operand, "__eq_");
+  ERROR;
+  return NULL;
 }
 
 void *visit(LT_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, "__lt_");
+  if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
+    return CMP_operator(this->current_operand, "__lt_");
+  ERROR;
+  return NULL;
 }
 
 void *visit(LE_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, "__le_");
+  if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
+    return CMP_operator(this->current_operand, "__le_");
+  ERROR;
+  return NULL;
 }
 
 void *visit(NE_operator_c *symbol)	{
-  return CMP_operator(this->current_operand, "__ne_");
+  if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
+    return CMP_operator(this->current_operand, "__ne_");
+  ERROR;
+  return NULL;
 }
 
 
