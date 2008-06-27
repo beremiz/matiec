@@ -97,7 +97,7 @@ typedef IEC_DATE DATE;
 typedef IEC_DT DT;
 typedef IEC_TOD TOD;
 
-#define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t2.tv_nsec - t1.tv_nsec : t1.tv_sec - t2.tv_sec) 
+#define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t1.tv_nsec - t2.tv_nsec : t1.tv_sec - t2.tv_sec) 
 extern TIME __CURRENT_TIME;
 
 typedef IEC_STRING STRING;
