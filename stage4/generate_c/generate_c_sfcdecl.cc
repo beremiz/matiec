@@ -103,8 +103,8 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print_integer(transition_number);
           s4o.print("];\n");
           
-          /* period declaration */
-          s4o.print(s4o.indent_spaces + "TIME period;\n");
+          /* last_ticktime declaration */
+          s4o.print(s4o.indent_spaces + "TIME lasttick_time;\n");
           break;
         case sfcinit_sd:
           s4o.print(s4o.indent_spaces);
@@ -157,14 +157,12 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
           s4o.print("action_list[i] = temp_action;\n");
-          
-          /* period initialisation */
-          s4o.print(s4o.indent_spaces);
-          print_variable_prefix();
-          s4o.print("period = __time_to_timespec(1, common_ticktime__, 0, 0, 0, 0);\n");
-          
           s4o.indent_left();
           s4o.print(s4o.indent_spaces + "}\n");
+          
+          /* last_ticktime initialisation */
+          print_variable_prefix();
+          s4o.print("lasttick_time = __CURRENT_TIME;\n");
           break;
         case stepdef_sd:
           s4o.print("// Steps definitions\n");

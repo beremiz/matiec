@@ -583,7 +583,18 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       }
       
       s4o.print(s4o.indent_spaces +"INT i;\n");
-      s4o.print(s4o.indent_spaces +"BOOL transition;\n\n");
+      s4o.print(s4o.indent_spaces +"BOOL transition;\n");
+      s4o.print(s4o.indent_spaces +"TIME elapsed_time, current_time;\n\n");
+      
+      /* generate elapsed_time initialisations */
+      s4o.print(s4o.indent_spaces + "// Calculate elapsed_time\n");
+      s4o.print(s4o.indent_spaces +"current_time = __CURRENT_TIME;\n");
+      s4o.print(s4o.indent_spaces +"elapsed_time = __time_sub(current_time, ");
+      print_variable_prefix();
+      s4o.print("lasttick_time);\n");
+      s4o.print(s4o.indent_spaces);
+      print_variable_prefix();
+      s4o.print("lasttick_time = current_time;\n");
       
       /* generate step initialisations */
       s4o.print(s4o.indent_spaces + "// Steps initialisation\n");
@@ -604,9 +615,7 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       print_variable_prefix();
       s4o.print("step_list[i].elapsed_time = __time_add(");
       print_variable_prefix();
-      s4o.print("step_list[i].elapsed_time, ");
-      print_variable_prefix();
-      s4o.print("period);\n");
+      s4o.print("step_list[i].elapsed_time, elapsed_time);\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
       s4o.indent_left();
@@ -636,9 +645,7 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       print_variable_prefix();
       s4o.print("action_list[i].set_remaining_time = __time_sub(");
       print_variable_prefix();
-      s4o.print("action_list[i].set_remaining_time, ");
-      print_variable_prefix();
-      s4o.print("period);\n");
+      s4o.print("action_list[i].set_remaining_time, elapsed_time);\n");
       s4o.print(s4o.indent_spaces + "if (");
       s4o.print("__le_TIME(2, ");
       print_variable_prefix();
@@ -663,9 +670,7 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       print_variable_prefix();
       s4o.print("action_list[i].reset_remaining_time = __time_sub(");
       print_variable_prefix();
-      s4o.print("action_list[i].reset_remaining_time, ");
-      print_variable_prefix();
-      s4o.print("period);\n");
+      s4o.print("action_list[i].reset_remaining_time, elapsed_time);\n");
       s4o.print(s4o.indent_spaces + "if (");
       s4o.print("__le_TIME(2, ");
       print_variable_prefix();
