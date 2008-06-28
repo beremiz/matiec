@@ -6,3 +6,6 @@ iec2cc
 *.h
 iec2cc.exe
 iec2c
+.settings
+.cproject
+.project
