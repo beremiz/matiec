@@ -10,7 +10,7 @@ CFLAGS=$*
 #CC=gcc
 CC=i686-mingw32-gcc
 
-../iec2cc $STFILE -I ../lib 
+../iec2c $STFILE -I ../lib 
 #2>/dev/null
 
 $CC -I ../lib -c STD_RESSOURCE.c $CFLAGS

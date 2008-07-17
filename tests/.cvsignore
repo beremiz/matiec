@@ -7,3 +7,5 @@ STD_CONF.c
 SFC_TEST.st
 test.exe
 plc.st
+POUS.h
+VARIABLES.csv
