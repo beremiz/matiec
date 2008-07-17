@@ -1041,3 +1041,47 @@ __ne_time(TIME)
 __compare_string(__ne_, != )
 
 
+
+/********************************/
+/*       Type tools             */
+/********************************/
+/* Enumerate native types */
+#define __decl_enum_type(TYPENAME) TYPENAME##_ENUM,
+typedef enum{
+        ANY(__decl_enum_type)
+} __IEC_types_enum;
+
+/* Get size of type from its number */
+#define __decl_size_case(TYPENAME) case TYPENAME##_ENUM: return sizeof(TYPENAME);
+static inline USINT __get_type_enum_size(__IEC_types_enum t){
+ switch(t){
+  ANY(__decl_size_case)
+ }
+}
+
+/* Get string representation of referenced by void pointer where type is given as its number */
+#define __decl_str_case(cat,TYPENAME) case TYPENAME##_ENUM:return __##cat##_to_string(*(TYPENAME*)p);
+#define __decl_str_case_bit(TYPENAME) __decl_str_case(bit,TYPENAME)
+#define __decl_str_case_real(TYPENAME) __decl_str_case(real,TYPENAME)
+#define __decl_str_case_sint(TYPENAME) __decl_str_case(sint,TYPENAME)
+#define __decl_str_case_uint(TYPENAME) __decl_str_case(uint,TYPENAME)
+static inline STRING __get_type_enum_str(__IEC_types_enum t, void* p){
+ switch(t){
+  __decl_str_case(bool,BOOL)
+  ANY_NBIT(__decl_str_case_bit)
+  ANY_REAL(__decl_str_case_real)
+  ANY_SINT(__decl_str_case_sint)
+  ANY_UINT(__decl_str_case_uint)
+  __decl_str_case(time,TIME)
+  __decl_str_case(date,DATE)
+  __decl_str_case(tod,TOD)
+  __decl_str_case(dt, DT)
+ }
+}
+
+
+
+
+
+
+
