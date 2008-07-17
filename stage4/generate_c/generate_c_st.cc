@@ -227,6 +227,7 @@ void *visit(xor_expression_c *symbol) {
     s4o.print(" && ");
     symbol->r_exp->accept(*this);
     s4o.print(")");
+    return NULL;
   }
   if (search_expression_type->is_binary_type(left_type))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " ^ ");
