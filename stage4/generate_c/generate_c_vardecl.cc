@@ -402,7 +402,6 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
      */
     typedef enum {finterface_vf,
                     local_vf,
-                    localstatic_vf,
 		    localinit_vf,
 		    init_vf,
 		    constructorinit_vf,
@@ -1198,15 +1197,6 @@ void *visit(global_var_spec_c *symbol) {
   /* now to produce the c equivalent... */
   switch(wanted_varformat) {
     case local_vf:
-    case localstatic_vf:
-      /* NOTE: located variables must be declared static, as the connection to the
-       * MatPLC point must be initialised at program startup, and not whenever
-       * a new function block is instantiated!
-       * Nevertheless, this construct never occurs inside a Function Block, but
-       * only inside a configuration. In this case, only a single instance will
-       * be created, directly at startup, so it is not necessary that the variables
-       * be declared static.
-       */
       s4o.print(s4o.indent_spaces);
       if (symbol->global_var_name != NULL) {
         s4o.print("extern ");
@@ -1214,13 +1204,9 @@ void *visit(global_var_spec_c *symbol) {
         s4o.print("* ");
         symbol->location->accept(*this);
         s4o.print(";\n");
-        if (wanted_varformat == localstatic_vf)
-          s4o.print("static ");
         this->current_var_type_symbol->accept(*this);
         s4o.print(" *");
         symbol->global_var_name->accept(*this);
-        s4o.print(" = ");
-        symbol->location->accept(*this);
         s4o.print(";\n");
       }
       break;
@@ -1229,7 +1215,12 @@ void *visit(global_var_spec_c *symbol) {
       s4o.print(nv->get());
       
       if (symbol->global_var_name != NULL) {
-        s4o.print("*");
+        symbol->global_var_name->accept(*this);
+      	s4o.print(" = ");
+      	symbol->location->accept(*this);
+      	s4o.print(";");
+        s4o.print(nv->get());
+      	s4o.print("*");
         symbol->global_var_name->accept(*this);
       }
       else
