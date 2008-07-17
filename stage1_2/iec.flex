@@ -1504,13 +1504,18 @@ void unput_text(unsigned int n) {
    * and decrement the line counter acordingly...
    */
   unsigned int i;
+  unsigned int line_number = 0;
+  int before_yylineno = yylineno;
 
   for (i = n; i < strlen(yytext); i++)
     if (yytext[i] == '\n')
-      yylineno--;
+      line_number++;
 
   /* now return all the text back to the input stream... */
   yyless(n);
+  
+  if (line_number > 0 && before_yylineno == yylineno)
+    yylineno = yylineno - line_number;
 }
 
 
