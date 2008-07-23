@@ -1684,46 +1684,46 @@ integer_literal:
 | integer_type_name signed_integer
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between integer type name and value in integer literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between integer type name and value in integer literal.");
 	}
 | integer_type_name binary_integer
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between integer type name and value in integer literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between integer type name and value in integer literal.");
 	}
 | integer_type_name octal_integer
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between integer type name and value in integer literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between integer type name and value in integer literal.");
 	}
 | integer_type_name hex_integer
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between integer type name and value in integer literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between integer type name and value in integer literal.");
 	}
 | integer_type_name error signed_integer
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between integer type name and value in integer literal.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between integer type name and value in integer literal.");
 	 yyerrok;
 	}
 | integer_type_name error binary_integer
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between integer type name and value in integer literal.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between integer type name and value in integer literal.");
 	 yyerrok;
 	}
 | integer_type_name error octal_integer
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between integer type name and value in integer literal.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between integer type name and value in integer literal.");
 	 yyerrok;
 	}
 | integer_type_name error hex_integer
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between integer type name and value in integer literal.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between integer type name and value in integer literal.");
 	 yyerrok;
 	}
 | integer_type_name '#' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for integer literal.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for integer literal.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -1753,16 +1753,16 @@ real_literal:
 | real_type_name signed_real
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between real type name and value in real literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between real type name and value in real literal.");
 	}
 | real_type_name error signed_real
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between real type name and value in real literal.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between real type name and value in real literal.");
 	 yyerrok;
 	}
 | real_type_name '#' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for real literal.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for real literal.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -1810,46 +1810,46 @@ bit_string_literal:
 | bit_string_type_name integer
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between bit string type name and value in bit string literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between bit string type name and value in bit string literal.");
 	}
 | bit_string_type_name binary_integer
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between bit string type name and value in bit string literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between bit string type name and value in bit string literal.");
 	}
 | bit_string_type_name octal_integer
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between bit string type name and value in bit string literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between bit string type name and value in bit string literal.");
 	}
 | bit_string_type_name hex_integer
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between bit string type name and value in bit string literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between bit string type name and value in bit string literal.");
 	}
 | bit_string_type_name error integer
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between bit string type name and value in bit string literal.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between bit string type name and value in bit string literal.");
 	 yyerrok;
 	}
 | bit_string_type_name error binary_integer
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between bit string type name and value in bit string literal.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between bit string type name and value in bit string literal.");
 	 yyerrok;
 	}
 | bit_string_type_name error octal_integer
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between bit string type name and value in bit string literal.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between bit string type name and value in bit string literal.");
 	 yyerrok;
 	}
 | bit_string_type_name error hex_integer
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between bit string type name and value in bit string literal.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between bit string type name and value in bit string literal.");
 	 yyerrok;
 	}
 | bit_string_type_name '#' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for bit string literal.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for bit string literal.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -1955,31 +1955,31 @@ duration:
 | TIME interval
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between 'TIME' and interval in duration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between 'TIME' and interval in duration.");
 	}
 | TIME '-' interval
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between 'TIME' and interval in duration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between 'TIME' and interval in duration.");
 	}
 | TIME error interval
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between 'TIME' and interval in duration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between 'TIME' and interval in duration.");
 	 yyerrok;
 	}
 | TIME error '-' interval
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between 'TIME' and interval in duration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between 'TIME' and interval in duration.");
 	 yyerrok;
 	}
 | TIME '#' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for duration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for duration.");
 	 yyerrok;
 	}
 | T_SHARP error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid value for duration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for duration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2050,7 +2050,7 @@ days:
 /* ERROR_CHECK_BEGIN */
 | integer_d '_' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for hours in duration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for hours in duration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2069,7 +2069,7 @@ hours:
 /* ERROR_CHECK_BEGIN */
 | integer_h '_' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for minutes in duration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for minutes in duration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2088,7 +2088,7 @@ minutes:
 /* ERROR_CHECK_BEGIN */
 | integer_m '_' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for seconds in duration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for seconds in duration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2106,7 +2106,7 @@ seconds:
 /* ERROR_CHECK_BEGIN */
 | integer_s '_' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for milliseconds in duration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for milliseconds in duration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2130,16 +2130,16 @@ time_of_day:
 | TIME_OF_DAY daytime
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between 'TIME_OF_DAY' and daytime in time of day.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between 'TIME_OF_DAY' and daytime in time of day.");
 	}
 | TIME_OF_DAY error daytime
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between 'TIME_OF_DAY' and daytime in time of day.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between 'TIME_OF_DAY' and daytime in time of day.");
 	 yyerrok;
 	}
 | TIME_OF_DAY '#' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for time of day.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for time of day.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2153,36 +2153,36 @@ daytime:
 | day_hour day_minute ':' day_second
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':' missing between hours and minutes in daytime.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between hours and minutes in daytime.");
 	}
 | day_hour error day_minute ':' day_second
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting ':' between hours and minutes in daytime.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ':' between hours and minutes in daytime.");
 	 yyerrok;
 	}
 | day_hour ':' ':' day_second
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no minutes defined in daytime.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no minutes defined in daytime.");
 	}
 | day_hour ':' error ':' day_second
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid value for minutes in daytime.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for minutes in daytime.");
 	 yyerrok;
 	}
 | day_hour ':' day_minute day_second
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "':' missing between minutes and seconds in daytime.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "':' missing between minutes and seconds in daytime.");
 	}
 | day_hour ':' day_minute error day_second
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "expecting ':' between minutes and seconds in daytime.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "expecting ':' between minutes and seconds in daytime.");
 	 yyerrok;
 	}
 | day_hour ':' day_minute ':' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid value for seconds in daytime.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "invalid value for seconds in daytime.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2203,16 +2203,16 @@ date:
 | DATE date_literal
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between 'DATE' and date literal in date.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between 'DATE' and date literal in date.");
 	}
 | DATE error date_literal
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between 'DATE' and date literal in date.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between 'DATE' and date literal in date.");
 	 yyerrok;
 	}
 | DATE '#' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for date.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for date.");
 	 yyerrok;
 	}
 | D_SHARP error
@@ -2231,36 +2231,36 @@ date_literal:
 | year month '-' day
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'-' missing between year and month in date literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'-' missing between year and month in date literal.");
 	}
 | year error month '-' day
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '-' between year and month in date literal.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '-' between year and month in date literal.");
 	 yyerrok;
 	}
 | year '-' '-' day
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no month defined in date literal.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no month defined in date literal.");
 	}
 | year '-' error '-' day
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid value for month in date literal.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for month in date literal.");
 	 yyerrok;
 	}
 | year '-' month day
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "':' missing between month and day in date literal.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "':' missing between month and day in date literal.");
 	}
 | year ':' month error day
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "expecting ':' between month and day in date literal.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "expecting ':' between month and day in date literal.");
 	 yyerrok;
 	}
 | year ':' month ':' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid value for day in date literal.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "invalid value for day in date literal.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2279,36 +2279,36 @@ date_and_time:
 | DATE_AND_TIME date_literal '-' daytime
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between 'DATE_AND_TIME' and date literal in date and time.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between 'DATE_AND_TIME' and date literal in date and time.");
 	}
 | DATE_AND_TIME error date_literal '-' daytime
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between 'DATE_AND_TIME' and date literal in date and time.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '#' between 'DATE_AND_TIME' and date literal in date and time.");
 	 yyerrok;
 	}
 | DATE_AND_TIME '#' '-' daytime
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no value defined for date literal in date and time.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no value defined for date literal in date and time.");
 	}
 | DATE_AND_TIME '#' error '-' daytime
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for date literal in date and time.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for date literal in date and time.");
 	 yyerrok;
 	}
 | DATE_AND_TIME '#' date_literal daytime
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "'-' missing between date literal and daytime in date and time.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "'-' missing between date literal and daytime in date and time.");
 	}
 | DATE_AND_TIME '#' date_literal error daytime
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '-' between date literal and daytime in date and time.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "expecting '-' between date literal and daytime in date and time.");
 	 yyerrok;
 	}
 | DATE_AND_TIME '#' date_literal '-' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for daytime in date and time.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "invalid value for daytime in date and time.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2479,16 +2479,16 @@ data_type_declaration:
 | TYPE END_TYPE
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no data type declared in data type(s) declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no data type declared in data type(s) declaration.");
 	}
 | TYPE error type_declaration_list END_TYPE
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'TYPE' in data type(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'TYPE' in data type(s) declaration.");
 	 yyerrok;
 	}
 | TYPE error END_TYPE
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in data type(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in data type(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2501,23 +2501,28 @@ type_declaration_list:
 | type_declaration_list type_declaration ';'
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
+| error ';'
+	{$$ = new type_declaration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid data type declaration.");
+	 yyerrok;
+	}
 | type_declaration error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at end of data type declaration.");
+	{$$ = new type_declaration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of data type declaration.");
 	 yyerrok;
 	}
 | type_declaration_list type_declaration error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of data type declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of data type declaration.");
 	 yyerrok;
 	}
 | type_declaration_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid data type declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid data type declaration.");
 	 yyerrok;
 	}
 | type_declaration_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after data type declaration.");
 	}
@@ -2547,7 +2552,7 @@ simple_type_declaration:
 | identifier simple_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':' missing between data type name and specification in simple type declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between data type name and specification in simple type declaration.");
 	}
 | identifier ':' identifier
 	{$$ = NULL;
@@ -2556,7 +2561,7 @@ simple_type_declaration:
 	}
 | identifier ':' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no specification defined in data type declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "no specification defined in data type declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2582,12 +2587,12 @@ simple_spec_init:
 | elementary_type_name constant
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':=' missing in specification with initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing in specification with initialization.");
 	}
 | prev_declared_simple_type_name constant
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':=' missing in specification with initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing in specification with initialization.");
 	}
 | identifier ASSIGN constant
 	{$$ = NULL;
@@ -2627,7 +2632,7 @@ subrange_type_declaration:
 | identifier subrange_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':' missing between data type name and specification in subrange type declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between data type name and specification in subrange type declaration.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -2641,7 +2646,7 @@ subrange_spec_init:
 | subrange_specification signed_integer
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':=' missing in subrange specification with initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing in subrange specification with initialization.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -2655,16 +2660,16 @@ subrange_specification:
 | integer_type_name '(' ')'
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no subrange defined in subrange specification.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no subrange defined in subrange specification.");
 	}
 | integer_type_name '(' error ')'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid subrange defined in subrange specification.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid subrange defined in subrange specification.");
 	 yyerrok;
 	}
 | integer_type_name '(' subrange error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "')' missing after subrange defined in subrange specification.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "')' missing after subrange defined in subrange specification.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2678,17 +2683,17 @@ subrange:
 | signed_integer signed_integer
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'..' missing between bounds in subrange definition.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'..' missing between bounds in subrange definition.");
 	}
 | signed_integer error signed_integer
 	{$$ = NULL;
-	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "expecting '..' between bounds in subrange definition.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '..' between bounds in subrange definition.");
+	 yyerrok;
 	}
 | signed_integer DOTDOT error
 	{$$ = NULL;
-	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "invalid value for upper bound in subrange definition.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for upper bound in subrange definition.");
+	 yyerrok;
 	}
 /* ERROR_CHECK_END */
 ;
@@ -2703,7 +2708,7 @@ enumerated_type_declaration:
 | identifier enumerated_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':' missing between data type name and specification in enumerated type declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between data type name and specification in enumerated type declaration.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -2718,7 +2723,7 @@ enumerated_spec_init:
 | enumerated_specification enumerated_value
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':=' missing in enumerated specification with initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing in enumerated specification with initialization.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -2731,16 +2736,16 @@ enumerated_specification:
 | '(' ')'
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no enumerated value list defined in enumerated specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no enumerated value list defined in enumerated specification.");
 	}
 | '(' error ')'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid enumerated value list defined in enumerated specification.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid enumerated value list defined in enumerated specification.");
 	 yyerrok;
 	}
 | '(' enumerated_value_list error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "')' missing at the end of enumerated specification.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "')' missing at the end of enumerated specification.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2754,13 +2759,13 @@ enumerated_value_list:
 	{$$ = $1; $$->add_element($3);}
 /* ERROR_CHECK_BEGIN */
 | enumerated_value_list enumerated_value
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "',' missing in enumerated value list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing in enumerated value list.");
 	}
 | enumerated_value_list ',' error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "invalid value in enumerated value list.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value in enumerated value list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2776,16 +2781,16 @@ enumerated_value:
 | prev_declared_enumerated_type_name any_identifier
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'#' missing between enumerated type name and value in enumerated literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'#' missing between enumerated type name and value in enumerated literal.");
 	}
 | prev_declared_enumerated_type_name error any_identifier
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '#' between enumerated type name and value in enumerated literal.");
+	 print_err_msg(current_filename, locl(@1), locf(@3), "expecting '#' between enumerated type name and value in enumerated literal.");
 	 yyerrok;
 	}
 | prev_declared_enumerated_type_name '#' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for enumerated literal.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for enumerated literal.");
 	 yyerrok;
 	}
 | identifier '#' any_identifier
@@ -2815,7 +2820,7 @@ array_type_declaration:
 | identifier array_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':' missing between data type name and specification in array type declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between data type name and specification in array type declaration.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -2829,7 +2834,7 @@ array_spec_init:
 | array_specification array_initialization
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':=' missing in array specification with initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing in array specification with initialization.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -2843,56 +2848,56 @@ array_specification:
 | ARRAY array_subrange_list ']' OF non_generic_type_name
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'[' missing before subrange list in array specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'[' missing before subrange list in array specification.");
 	}
 | ARRAY error array_subrange_list ']' OF non_generic_type_name
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '[' after 'ARRAY' in array specification.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '[' after 'ARRAY' in array specification.");
 	 yyerrok;
 	}
 | ARRAY '[' ']' OF non_generic_type_name
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no subrange list defined in array specification.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no subrange list defined in array specification.");
 	}
 | ARRAY '[' error ']' OF non_generic_type_name
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid subrange list defined in array specification.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid subrange list defined in array specification.");
 	 yyerrok;
 	}
 | ARRAY OF non_generic_type_name
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no subrange list defined in array specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no subrange list defined in array specification.");
 	}
 | ARRAY error OF non_generic_type_name
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid subrange list defined in array specification.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid subrange list defined in array specification.");
 	 yyerrok;
 	}
 | ARRAY '[' array_subrange_list OF non_generic_type_name
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "']' missing after subrange list in array specification.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "']' missing after subrange list in array specification.");
 	}
 | ARRAY '[' array_subrange_list error OF non_generic_type_name
 	{$$ = NULL;
-	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "expecting '[' after subrange list in array specification.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "expecting '[' after subrange list in array specification.");
+	 yyerrok;
 	}
 | ARRAY '[' array_subrange_list ']' non_generic_type_name
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@5), "'OF' missing between subrange list and item type name in array specification.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "'OF' missing between subrange list and item type name in array specification.");
 	}
 | ARRAY '[' array_subrange_list ']' error non_generic_type_name
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@6), "expecting 'OF' between subrange list and item type name in array specification.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "expecting 'OF' between subrange list and item type name in array specification.");
 	 yyerrok;
 	}
 | ARRAY '[' array_subrange_list ']' OF error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "no itme data type defined in array specification.");
+	 print_err_msg(current_filename, locf(@6), locl(@6), "no item data type defined in array specification.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2906,13 +2911,13 @@ array_subrange_list:
 	{$$ = $1; $$->add_element($3);}
 /* ERROR_CHECK_BEGIN */
 | array_subrange_list subrange
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "',' missing in subrange list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing in subrange list.");
 	}
 | array_subrange_list ',' error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid subrange in subrange list.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid subrange in subrange list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2926,16 +2931,16 @@ array_initialization:
 | '[' ']'
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no initial values list defined in array initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no initial values list defined in array initialization.");
 	}
 | '[' error ']'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "invalid initial values list defined in array initialization.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid initial values list defined in array initialization.");
 	 yyerrok;
 	}
 | '[' array_initial_elements_list error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "']' missing at the end of array initialization.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "']' missing at the end of array initialization.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2950,8 +2955,8 @@ array_initial_elements_list:
 	{$$ = $1; $$->add_element($3);}
 /* ERROR_CHECK_BEGIN 
 | array_initial_elements_list ',' error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid array initial value in array initial values list.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid array initial value in array initial values list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2966,12 +2971,12 @@ array_initial_elements:
 /* ERROR_CHECK_BEGIN 
 | integer '(' error ')'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid array initial value in array initial values list.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid array initial value in array initial values list.");
 	 yyerrok;
 	}
 | integer '(' array_initial_element error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "')' missing at the end of array initial value in array initial values list.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "')' missing at the end of array initial value in array initial values list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -2997,7 +3002,7 @@ structure_type_declaration:
 | identifier structure_specification
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':' missing between data type name and specification in structure type declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between data type name and specification in structure type declaration.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -3018,12 +3023,12 @@ initialized_structure:
 | prev_declared_structure_type_name structure_initialization
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':=' missing in structure specification with initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing in structure specification with initialization.");
 	}
 | identifier ASSIGN structure_initialization
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "unknown type name for structure specification with initialization.");
+	 print_err_msg(current_filename, locf(@1), locl(@1), "unknown type name for structure specification with initialization.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -3036,16 +3041,16 @@ structure_declaration:
 | STRUCT END_STRUCT
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no structure element declared in structure type declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no structure element declared in structure type declaration.");
 	}
 | STRUCT error structure_element_declaration_list END_STRUCT
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'STRUCT' in structure type declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'STRUCT' in structure type declaration.");
 	 yyerrok;
 	}
 | STRUCT error END_STRUCT
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in structure type declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in structure type declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3058,23 +3063,28 @@ structure_element_declaration_list:
 | structure_element_declaration_list structure_element_declaration ';'
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
+| error ';'
+	{$$ = new structure_element_declaration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid structure element declaration.");
+	 yyerrok;
+	}
 | structure_element_declaration error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at end of structure element declaration.");
+	{$$ = new structure_element_declaration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of structure element declaration.");
 	 yyerrok;
 	}
 | structure_element_declaration_list structure_element_declaration error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of structure element declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of structure element declaration.");
 	 yyerrok;
 	}
 | structure_element_declaration_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid structure element declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid structure element declaration.");
 	 yyerrok;
 	}
 | structure_element_declaration_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after structure element declaration.");
 	}
@@ -3097,36 +3107,36 @@ structure_element_declaration:
 | structure_element_name simple_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between structure element name and simple specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between structure element name and simple specification.");
 	}
 | structure_element_name subrange_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between structure element name and subrange specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between structure element name and subrange specification.");
 	}
 | structure_element_name enumerated_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between structure element name and enumerated specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between structure element name and enumerated specification.");
 	}
 | structure_element_name array_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between structure element name and array specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between structure element name and array specification.");
 	}
 | structure_element_name initialized_structure
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between structure element name and structure specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between structure element name and structure specification.");
 	}
 | structure_element_name ':' identifier
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown variable type defined in structure element declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown variable type defined in structure element declaration.");
 	}
 | structure_element_name ':' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no specification defined in structure element declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no specification defined in structure element declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3142,12 +3152,12 @@ structure_initialization:
 /* ERROR_CHECK_BEGIN */
 | '(' error ')'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid structure element initialization list in structure initialization.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid structure element initialization list in structure initialization.");
 	 yyerrok;
 	}
 | '(' structure_element_initialization_list error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ')' at the end of structure element initialization list in structure initialization.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "expecting ')' at the end of structure element initialization list in structure initialization.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3161,13 +3171,13 @@ structure_element_initialization_list:
 	{$$ = $1; $$->add_element($3);}
 /* ERROR_CHECK_BEGIN 
 | structure_element_initialization_list structure_element_initialization
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "',' missing in structure element initialization list in structure initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing in structure element initialization list in structure initialization.");
 	}
 | structure_element_initialization_list ',' error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid structure element initialization in structure initialization.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid structure element initialization in structure initialization.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3187,22 +3197,22 @@ structure_element_initialization:
 | structure_element_name constant
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':=' missing in structure element initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing in structure element initialization.");
 	}
 | structure_element_name enumerated_value
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':=' missing in enumerated structure element initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing in enumerated structure element initialization.");
 	}
 | structure_element_name array_initialization
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':=' missing in array structure element initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing in array structure element initialization.");
 	}
 | structure_element_name structure_initialization
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':=' missing in structured structure element initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing in structured structure element initialization.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -3413,46 +3423,46 @@ input_declarations:
 | VAR_INPUT END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no variable declared in input variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no variable declared in input variable(s) declaration.");
 	}
 | VAR_INPUT RETAIN END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable declared in retentive input variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable declared in retentive input variable(s) declaration.");
 	}
 | VAR_INPUT NON_RETAIN END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable declared in non-retentive input variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable declared in non-retentive input variable(s) declaration.");
 	}
 | VAR_INPUT error input_declaration_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'VAR_INPUT' in input variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'VAR_INPUT' in input variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_INPUT RETAIN error input_declaration_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'RETAIN' in retentive input variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'RETAIN' in retentive input variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_INPUT NON_RETAIN error input_declaration_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'NON_RETAIN' in non-retentive input variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'NON_RETAIN' in non-retentive input variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_INPUT error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in input variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in input variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_INPUT RETAIN error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unknown error in retentive input variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown error in retentive input variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_INPUT NON_RETAIN error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unknown error in non-retentive input variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown error in non-retentive input variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3465,23 +3475,28 @@ input_declaration_list:
 | input_declaration_list input_declaration ';'
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
+| error ';'
+	{$$ = new input_declaration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid input variable(s) declaration.");
+	 yyerrok;
+	}
 | input_declaration error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at end of input variable(s) declaration.");
+	{$$ = new input_declaration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of input variable(s) declaration.");
 	 yyerrok;
 	}
 | input_declaration_list input_declaration error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of input variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of input variable(s) declaration.");
 	 yyerrok;
 	}
 | input_declaration_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid input variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid input variable(s) declaration.");
 	 yyerrok;
 	}
 | input_declaration_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after input variable(s) declaration.");
 	}
@@ -3504,27 +3519,27 @@ edge_declaration:
 | var1_list BOOL R_EDGE
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and specification.");
 	}
 | var1_list BOOL F_EDGE
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and specification.");
 	}
 | var1_list ':' BOOL R_EDGE F_EDGE
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@4), "'R_EDGE' and 'F_EDGE' can't be present at the same time in edge declaration.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "'R_EDGE' and 'F_EDGE' can't be present at the same time in edge declaration.");
 	}
 | var1_list ':' R_EDGE
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "'BOOL' missing in edge declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "'BOOL' missing in edge declaration.");
 	}
 | var1_list ':' F_EDGE
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "'BOOL' missing in edge declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "'BOOL' missing in edge declaration.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -3552,26 +3567,26 @@ var1_init_decl:
 | var1_list simple_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and simple specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and simple specification.");
 	}
 | var1_list subrange_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and subrange specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and subrange specification.");
 	}
 | var1_list enumerated_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and enumerated specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and enumerated specification.");
 	}
 | var1_list ':' identifier
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown variable type defined in variable declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown variable type defined in variable declaration.");
 	}
 | var1_list ':' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no specification defined in variable declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no specification defined in variable declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3589,14 +3604,14 @@ var1_list:
 	}
 /* ERROR_CHECK_BEGIN */
 | var1_list variable_name
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "',' missing in variable list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing in variable list.");
 	}
 | var1_list ',' error
-	{$$ = NULL;
-	 yynerrs++;
+	{$$ = $1;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ',' in variable declaration.");
+	 yyerrok;
 	}
 /* ERROR_CHECK_END */
 ;
@@ -3610,7 +3625,7 @@ array_var_init_decl:
 | var1_list array_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and array specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and array specification.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -3623,7 +3638,7 @@ structured_var_init_decl:
 | var1_list initialized_structure
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and structured specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and structured specification.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -3645,16 +3660,16 @@ fb_name_decl:
 | fb_name_list_with_colon ASSIGN structure_initialization
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no function block type name defined in function block declaration with initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no function block type name defined in function block declaration with initialization.");
 	}
 | fb_name_list_with_colon function_block_type_name structure_initialization
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':=' missing in function block declaration with initialization.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "':=' missing in function block declaration with initialization.");
 	}
 | fb_name_list_with_colon function_block_type_name ASSIGN error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid initialization in function block declaration.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid initialization in function block declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3724,46 +3739,46 @@ output_declarations:
 | VAR_OUTPUT END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no variable declared in output variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no variable declared in output variable(s) declaration.");
 	}
 | VAR_OUTPUT RETAIN END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable declared in retentive output variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable declared in retentive output variable(s) declaration.");
 	}
 | VAR_OUTPUT NON_RETAIN END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable declared in non-retentive output variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable declared in non-retentive output variable(s) declaration.");
 	}
 | VAR_OUTPUT error var_init_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'VAR_OUPUT' in output variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'VAR_OUPUT' in output variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_OUTPUT RETAIN error var_init_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'RETAIN' in retentive output variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'RETAIN' in retentive output variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_OUTPUT NON_RETAIN error var_init_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'NON_RETAIN' in non-retentive output variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'NON_RETAIN' in non-retentive output variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_OUTPUT error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in output variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in output variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_OUTPUT RETAIN error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unknown error in retentive output variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown error in retentive output variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_OUTPUT NON_RETAIN error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unknown error in non-retentive output variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown error in non-retentive output variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3778,11 +3793,11 @@ input_output_declarations:
 | VAR_IN_OUT END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no variable declared in in_out variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no variable declared in in_out variable(s) declaration.");
 	}
 | VAR_IN_OUT error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in in_out variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in in_out variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3797,23 +3812,28 @@ var_declaration_list:
 | var_declaration_list var_declaration ';'
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
+| error ';'
+	{$$ = new var_declaration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid variable(s) declaration.");
+	 yyerrok;
+	}
 | var_declaration error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at end of variable(s) declaration.");
+	{$$ = new var_declaration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of variable(s) declaration.");
 	 yyerrok;
 	}
 | var_declaration_list var_declaration error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of variable(s) declaration.");
 	 yyerrok;
 	}
 | var_declaration_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid variable(s) declaration.");
 	 yyerrok;
 	}
 | var_declaration_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after variable(s) declaration.");
 	}
@@ -3835,27 +3855,27 @@ temp_var_decl:
 ;
 
 var1_declaration:
-  var1_list  ':' simple_specification
+  var1_list ':' simple_specification
 	{$$ = new var1_init_decl_c($1, $3, locloc(@$));}
-| var1_list  ':' subrange_specification
+| var1_list ':' subrange_specification
 	{$$ = new var1_init_decl_c($1, $3, locloc(@$));}
-| var1_list  ':' enumerated_specification
+| var1_list ':' enumerated_specification
 	{$$ = new var1_init_decl_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | var1_list simple_specification
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and simple specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and simple specification.");
 	}
 | var1_list subrange_specification
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and subrange specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and subrange specification.");
 	}
 | var1_list enumerated_specification
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and enumerated specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and enumerated specification.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -3869,7 +3889,7 @@ array_var_declaration:
 | var1_list array_specification
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and array specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and array specification.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -3881,12 +3901,12 @@ structured_var_declaration:
 | var1_list prev_declared_structure_type_name
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and structured specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and structured specification.");
 	}
 | var1_list ':' identifier
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown type name in structured variable declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown type name in structured variable declaration.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -3901,31 +3921,31 @@ var_declarations:
 | VAR END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no variable declared in variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no variable declared in variable(s) declaration.");
 	}
 | VAR CONSTANT END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable declared in constant variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable declared in constant variable(s) declaration.");
 	}
 | VAR error var_init_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'VAR' in variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@3), "unexpected token after 'VAR' in variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR CONSTANT error var_init_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'CONSTANT' in constant variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'CONSTANT' in constant variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR CONSTANT error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in constant variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown error in constant variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3939,16 +3959,16 @@ retentive_var_declarations:
 | VAR RETAIN END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable declared in retentive variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable declared in retentive variable(s) declaration.");
 	}
 | VAR RETAIN error var_init_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'RETAIN' in retentive variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'RETAIN' in retentive variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR RETAIN error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in retentive variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown error in retentive variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -3968,31 +3988,31 @@ located_var_declarations:
 | VAR NON_RETAIN END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable declared in non-retentive located variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable declared in non-retentive located variable(s) declaration.");
 	}
 | VAR error located_var_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'VAR' in located variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'VAR' in located variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR CONSTANT error located_var_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'CONSTANT' in constant located variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'CONSTANT' in constant located variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR RETAIN error located_var_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'RETAIN' in retentive located variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'RETAIN' in retentive located variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR NON_RETAIN error located_var_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'NON_RETAIN' in non-retentive located variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'NON_RETAIN' in non-retentive located variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR NON_RETAIN error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in non retentive variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown error in non retentive variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4006,23 +4026,28 @@ located_var_decl_list:
 | located_var_decl_list located_var_decl ';'
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
+| error ';'
+	{$$ = new located_var_decl_list_c(locloc(@$));
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid located variable declaration.");
+	 yyerrok;
+	}
 | located_var_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at end of located variable declaration.");
+	{$$ = new located_var_decl_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of located variable declaration.");
 	 yyerrok;
 	}
 | located_var_decl_list located_var_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of located variable declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of located variable declaration.");
 	 yyerrok;
 	}
 | located_var_decl_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid located variable declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid located variable declaration.");
 	 yyerrok;
 	}
 | located_var_decl_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after located variable declaration.");
 	}
@@ -4041,21 +4066,21 @@ located_var_decl:
 | variable_name location located_var_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between located variable location and specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between located variable location and specification.");
 	}
 | location located_var_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between located variable location and specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between located variable location and specification.");
 	}
 | variable_name location ':' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no specification defined in located variable declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no specification defined in located variable declaration.");
 	 yyerrok;
 	}
 | location ':' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no specification defined in located variable declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no specification defined in located variable declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4073,31 +4098,31 @@ external_var_declarations:
 | VAR_EXTERNAL END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no variable declared in external variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no variable declared in external variable(s) declaration.");
 	}
 | VAR_EXTERNAL CONSTANT END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "no variable declared in constant external variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable declared in constant external variable(s) declaration.");
 	}
 | VAR_EXTERNAL error external_declaration_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@4), "unexpected token after 'VAR_EXTERNAL' in external variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'VAR_EXTERNAL' in external variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_EXTERNAL CONSTANT error external_declaration_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@5), "unexpected token after 'CONSTANT' in constant external variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'CONSTANT' in constant external variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_EXTERNAL error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in external variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in external variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_EXTERNAL CONSTANT error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unknown error in constant external variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown error in constant external variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4110,23 +4135,28 @@ external_declaration_list:
 | external_declaration_list external_declaration ';'
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
+| error ';'
+	{$$ = new external_declaration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid external variable declaration.");
+	 yyerrok;
+	}
 | external_declaration error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at end of external variable declaration.");
+	{$$ = new external_declaration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of external variable declaration.");
 	 yyerrok;
 	}
 | external_declaration_list external_declaration error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of external variable declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of external variable declaration.");
 	 yyerrok;
 	}
 | external_declaration_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid external variable declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid external variable declaration.");
 	 yyerrok;
 	}
 | external_declaration_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after external variable declaration.");
 	}
@@ -4163,41 +4193,41 @@ external_declaration:
 | global_var_name simple_specification
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between external variable name and simple specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between external variable name and simple specification.");
 	}
 | global_var_name subrange_specification
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between external variable name and subrange specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between external variable name and subrange specification.");
 	}
 | global_var_name enumerated_specification
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between external variable name and enumerated specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between external variable name and enumerated specification.");
 	}
 | global_var_name array_specification
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between external variable name and array specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between external variable name and array specification.");
 	}
 | global_var_name prev_declared_structure_type_name
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between external variable name and structured specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between external variable name and structured specification.");
 	}
 | global_var_name function_block_type_name
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between external variable name and function block type specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between external variable name and function block type specification.");
 	}
 | global_var_name ':' identifier
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown type name in external variable declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown type name in external variable declaration.");
 	}
 | global_var_name ':' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no specification defined in external variable declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no specification defined in external variable declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4218,46 +4248,46 @@ global_var_declarations:
 | VAR_GLOBAL END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no variable declared in global variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no variable declared in global variable(s) declaration.");
 	}
 | VAR_GLOBAL CONSTANT END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable declared in constant global variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable declared in constant global variable(s) declaration.");
 	}
 | VAR_GLOBAL RETAIN END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable declared in retentive global variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable declared in retentive global variable(s) declaration.");
 	}
 | VAR_GLOBAL error global_var_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'VAR_GLOBAL' in global variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'VAR_GLOBAL' in global variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_GLOBAL CONSTANT error global_var_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'CONSTANT' in constant global variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'CONSTANT' in constant global variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_GLOBAL RETAIN error global_var_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'RETAIN' in retentive global variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'RETAIN' in retentive global variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_GLOBAL error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in global variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in global variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_GLOBAL CONSTANT error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unknown error in constant global variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown error in constant global variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_GLOBAL RETAIN error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unknown error in constant global variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown error in constant global variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4271,23 +4301,28 @@ global_var_decl_list:
 | global_var_decl_list global_var_decl ';'
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
+| error ';'
+	{$$ = new global_var_decl_list_c(locloc(@$));
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid global variable(s) declaration.");
+	 yyerrok;
+	}
 | global_var_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at end of global variable(s) declaration.");
+	{$$ = new global_var_decl_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of global variable(s) declaration.");
 	 yyerrok;
 	}
 | global_var_decl_list global_var_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of global variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of global variable(s) declaration.");
 	 yyerrok;
 	}
 | global_var_decl_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid global variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid global variable(s) declaration.");
 	 yyerrok;
 	}
 | global_var_decl_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after global variable(s) declaration.");
 	}
@@ -4308,17 +4343,17 @@ global_var_decl:
 | global_var_list located_var_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between global variable list and type specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between global variable list and type specification.");
 	}
 | global_var_name location located_var_spec_init
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "':' missing between global variable specification and type specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between global variable specification and type specification.");
 	}
 | global_var_spec function_block_type_name
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between global variable specification and function block type specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between global variable specification and function block type specification.");
 	}
 | global_var_spec ':' identifier
 	{$$ = NULL;
@@ -4327,7 +4362,7 @@ global_var_decl:
 	}
 | global_var_spec ':' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no specification defined in global variable declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no specification defined in global variable declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4362,7 +4397,7 @@ location:
 /* ERROR_CHECK_BEGIN */
 | AT error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid location in location declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid location in location declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4381,12 +4416,12 @@ global_var_list:
 	}
 /* ERROR_CHECK_BEGIN */
 | global_var_list global_var_name
-	{$$ = NULL;
+	{$$ = new global_var_list_c(locloc(@$));
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "',' missing in global variable list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing in global variable list.");
 	}
 | global_var_list ',' error
-	{$$ = NULL;
+	{$$ = $1;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ',' in global variable declaration.");
 	 yyerrok;
 	}
@@ -4407,7 +4442,7 @@ single_byte_string_var_declaration:
 | var1_list single_byte_string_spec
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and string type specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and string type specification.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -4459,42 +4494,42 @@ single_byte_string_spec:
 /* ERROR_CHECK_BEGIN */
 | STRING '[' error ']'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid length value for limited string type specification.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid length value for limited string type specification.");
 	 yyerrok;
 	}
 | STRING '[' error ']' ASSIGN single_byte_character_string
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid length value for limited string type specification.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid length value for limited string type specification.");
 	 yyerrok;
 	}
 | STRING '[' ']'
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "missing length value for limited string type specification.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "missing length value for limited string type specification.");
 	}
 | STRING '[' ']' ASSIGN single_byte_character_string
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "missing length value for limited string type specification.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "missing length value for limited string type specification.");
 	}
 | STRING '[' integer error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting ']' after length definition for limited string type specification.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "expecting ']' after length definition for limited string type specification.");
 	 yyerrok;
 	}
 | STRING '[' integer error ASSIGN single_byte_character_string
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "expecting ']' after length definition for limited string type specification.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "expecting ']' after length definition for limited string type specification.");
 	 yyerrok;
 	}
 | STRING '[' integer ']' single_byte_character_string
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@5), "':=' missing before limited string type initialization.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "':=' missing before limited string type initialization.");
 	}
 | STRING '[' integer ']' ASSIGN error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@5), locl(@5), "invalid value for limited string type initialization.");
+	 print_err_msg(current_filename, locf(@6), locl(@6), "invalid value for limited string type initialization.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4508,7 +4543,7 @@ double_byte_string_var_declaration:
 | var1_list double_byte_string_spec
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between variable list and double byte string type specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between variable list and double byte string type specification.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -4528,42 +4563,42 @@ double_byte_string_spec:
 /* ERROR_CHECK_BEGIN */
 | WSTRING '[' error ']'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid length value for limited double byte string type specification.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid length value for limited double byte string type specification.");
 	 yyerrok;
 	}
 | WSTRING '[' error ']' ASSIGN single_byte_character_string
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid length value for limited double byte string type specification.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid length value for limited double byte string type specification.");
 	 yyerrok;
 	}
 | WSTRING '[' ']'
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "missing length value for limited double byte string type specification.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "missing length value for limited double byte string type specification.");
 	}
 | WSTRING '[' ']' ASSIGN single_byte_character_string
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "missing length value for limited double byte string type specification.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "missing length value for limited double byte string type specification.");
 	}
 | WSTRING '[' integer error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting ']' after length definition for limited double byte string type specification.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "expecting ']' after length definition for limited double byte string type specification.");
 	 yyerrok;
 	}
 | WSTRING '[' integer error ASSIGN single_byte_character_string
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "expecting ']' after length definition for limited double byte string type specification.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "expecting ']' after length definition for limited double byte string type specification.");
 	 yyerrok;
 	}
 | WSTRING '[' integer ']' single_byte_character_string
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@5), "':=' missing before limited double byte string type initialization.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "':=' missing before limited double byte string type initialization.");
 	}
 | WSTRING '[' integer ']' ASSIGN error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@5), locl(@5), "invalid value for limited double byte string type initialization.");
+	 print_err_msg(current_filename, locf(@6), locl(@6), "invalid value for limited double byte string type initialization.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4581,17 +4616,17 @@ incompl_located_var_declarations:
 /* ERROR_CHECK_BEGIN */
 | VAR error incompl_located_var_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'VAR' in incomplete located variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'VAR' in incomplete located variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR RETAIN error incompl_located_var_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'RETAIN' in retentive located variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'RETAIN' in retentive located variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR NON_RETAIN error incompl_located_var_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'NON_RETAIN' in non-retentive located variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'NON_RETAIN' in non-retentive located variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4605,22 +4640,22 @@ incompl_located_var_decl_list:
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | incompl_located_var_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at end of incomplete located variable declaration.");
+	{$$ = new incompl_located_var_decl_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of incomplete located variable declaration.");
 	 yyerrok;
 	}
 | incompl_located_var_decl_list incompl_located_var_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of incomplete located variable declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of incomplete located variable declaration.");
 	 yyerrok;
 	}
 | incompl_located_var_decl_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid incomplete located variable declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid incomplete located variable declaration.");
 	 yyerrok;
 	}
 | incompl_located_var_decl_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after incomplete located variable declaration.");
 	}
@@ -4632,15 +4667,15 @@ incompl_located_var_decl:
   variable_name incompl_location ':' var_spec
 	{$$ = new incompl_located_var_decl_c($1, $2, $4, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
-| variable_name incompl_location ':' error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no specification defined in incomplete located variable declaration.");
-	 yyerrok;
-	}
 | variable_name incompl_location var_spec
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':' missing between incomplete located variable and type specification.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing between incomplete located variable and type specification.");
+	}
+| variable_name incompl_location ':' error
+	{$$ = NULL;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no specification defined in incomplete located variable declaration.");
+	 yyerrok;
 	}
 /* ERROR_CHECK_END */
 ;
@@ -4701,13 +4736,13 @@ var_init_decl_list:
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | var_init_decl_list var_init_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of variable(s) declaration.");
 	 yyerrok;
 	}
 | var_init_decl_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -4925,66 +4960,66 @@ function_declaration:
 | function_name_declaration elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':' missing after function name in function declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing after function name in function declaration.");
 	}
 | function_name_declaration derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':' missing after function name in function declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing after function name in function declaration.");
 	}
 | function_name_declaration error derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting ':' after function name in function declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ':' after function name in function declaration.");
 	 yyerrok;
 	}
 | function_name_declaration ':' io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no return type defined in function declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no return type defined in function declaration.");
 	}
 | function_name_declaration ':' error io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid return type defined in function declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid return type defined in function declaration.");
 	 yyerrok;
 	}
 | function_name_declaration ':' identifier io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unknown return type defined in function declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unknown return type defined in function declaration.");
 	}
 | function_name_declaration ':' elementary_type_name function_body END_FUNCTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no variable(s) declared in function declaration.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no variable(s) declared in function declaration.");
 	}
 | function_name_declaration ':' derived_type_name function_body END_FUNCTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no variable(s) declared in function declaration.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no variable(s) declared in function declaration.");
 	}
 | function_name_declaration ':' elementary_type_name io_OR_function_var_declarations_list END_FUNCTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@5), "no body defined in function declaration.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "no body defined in function declaration.");
 	}
 | function_name_declaration ':' derived_type_name io_OR_function_var_declarations_list END_FUNCTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@5), "no body defined in function declaration.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "no body defined in function declaration.");
 	}
 | function_name_declaration ':' elementary_type_name END_FUNCTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no variable(s) declared and body defined in function declaration.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no variable(s) declared and body defined in function declaration.");
 	}
 | function_name_declaration ':' derived_type_name END_FUNCTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no variable(s) declared and body defined in function declaration.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no variable(s) declared and body defined in function declaration.");
 	}
 | function_name_declaration error END_FUNCTION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in function declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in function declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5037,7 +5072,7 @@ function_name_declaration:
 /* ERROR_CHECK_BEGIN */
 | FUNCTION error 
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "no function name defined in function declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no function name defined in function declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5055,6 +5090,53 @@ io_OR_function_var_declarations_list:
 	{$$ = $1; $$->add_element($2);}
 | io_OR_function_var_declarations_list function_var_decls
 	{$$ = $1; $$->add_element($2);}
+/* ERROR_CHECK_BEGIN */
+| io_OR_function_var_declarations_list retentive_var_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected retentive variable(s) declaration in function declaration.");
+	}
+| io_OR_function_var_declarations_list located_var_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected located variable(s) declaration in function declaration.");
+	}
+| io_OR_function_var_declarations_list external_var_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected external variable(s) declaration in function declaration.");
+	}
+| io_OR_function_var_declarations_list global_var_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected global variable(s) declaration in function declaration.");
+	}
+| io_OR_function_var_declarations_list incompl_located_var_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected incomplete located variable(s) declaration in function declaration.");
+	}
+| io_OR_function_var_declarations_list temp_var_decls
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected temporary located variable(s) declaration in function declaration.");
+	}
+| io_OR_function_var_declarations_list non_retentive_var_decls
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected non-retentive variable(s) declaration in function declaration.");
+	}
+/*| io_OR_function_var_declarations_list access_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected access variable(s) declaration in function declaration.");
+	}*/
+| io_OR_function_var_declarations_list instance_specific_initializations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected instance specific initialization(s) in function declaration.");
+	}
+/* ERROR_CHECK_END */
 ;
 
 
@@ -5073,12 +5155,12 @@ function_var_decls:
 /* ERROR_CHECK_BEGIN */
 | VAR error var_init_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'VAR' in function variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'VAR' in function variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR CONSTANT error var_init_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'CONSTANT' in constant function variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'CONSTANT' in constant function variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5092,22 +5174,22 @@ var2_init_decl_list:
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | var2_init_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at end of function variable(s) declaration.");
+	{$$ = new var2_init_decl_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of function variable(s) declaration.");
 	 yyerrok;
 	}
 | var2_init_decl_list var2_init_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of function variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of function variable(s) declaration.");
 	 yyerrok;
 	}
 | var2_init_decl_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid function variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid function variable(s) declaration.");
 	 yyerrok;
 	}
 | var2_init_decl_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after function variable(s) declaration.");
 	}
@@ -5163,31 +5245,31 @@ function_block_declaration:
 | FUNCTION_BLOCK io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no function block name defined in function block declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no function block name defined in function block declaration.");
 	}
 | FUNCTION_BLOCK error io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid function block name in function block declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid function block name in function block declaration.");
 	 yyerrok;
 	}
 | FUNCTION_BLOCK derived_function_block_name function_block_body END_FUNCTION_BLOCK
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable(s) declared in function declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable(s) declared in function declaration.");
 	}
 | FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations_list END_FUNCTION_BLOCK
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no body defined in function block declaration.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no body defined in function block declaration.");
 	}
 | FUNCTION_BLOCK derived_function_block_name END_FUNCTION_BLOCK
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable(s) declared and body defined in function block declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable(s) declared and body defined in function block declaration.");
 	}
 | FUNCTION_BLOCK error END_FUNCTION_BLOCK
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in function block declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in function block declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5209,6 +5291,28 @@ io_OR_other_var_declarations_list:
 	{$$ = $1; $$->add_element($2);}
 | io_OR_other_var_declarations_list other_var_declarations
 	{$$ = $1; $$->add_element($2);}
+/* ERROR_CHECK_BEGIN */
+| io_OR_other_var_declarations_list located_var_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected located variable(s) declaration in function block declaration.");
+	}
+| io_OR_other_var_declarations_list global_var_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected global variable(s) declaration in function block declaration.");
+	}
+/*| io_OR_other_var_declarations_list access_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected access variable(s) declaration in function block declaration.");
+	}*/
+| io_OR_other_var_declarations_list instance_specific_initializations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected instance specific initialization(s) in function block declaration.");
+	}
+/* ERROR_CHECK_END */
 ;
 
 /* NOTE:
@@ -5244,11 +5348,11 @@ temp_var_decls:
 | VAR_TEMP END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no variable declared in temporary variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no variable declared in temporary variable(s) declaration.");
 	}
 | VAR_TEMP error temp_var_decls_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'VAR_TEMP' in function variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'VAR_TEMP' in function variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5262,23 +5366,28 @@ temp_var_decls_list:
 | temp_var_decls_list temp_var_decl ';'
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
+| error ';'
+	{$$ = new temp_var_decls_list_c(locloc(@$));
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid temporary variable(s) declaration.");
+	 yyerrok;
+	}
 | temp_var_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at end of temporary variable(s) declaration.");
+	{$$ = new temp_var_decls_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at end of temporary variable(s) declaration.");
 	 yyerrok;
 	}
 | temp_var_decls_list temp_var_decl error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of temporary variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of temporary variable(s) declaration.");
 	 yyerrok;
 	}
 | temp_var_decls_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid temporary variable(s) declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid temporary variable(s) declaration.");
 	 yyerrok;
 	}
 | temp_var_decls_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after temporary variable(s) declaration.");
 	}
@@ -5292,7 +5401,7 @@ non_retentive_var_decls:
 /* ERROR_CHECK_BEGIN */
 | VAR NON_RETAIN error var_init_decl_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'NON_RETAIN' in non-retentive temporary variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'NON_RETAIN' in non-retentive temporary variable(s) declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5335,31 +5444,31 @@ program_declaration:
 | PROGRAM program_var_declarations_list function_block_body END_PROGRAM
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no program name defined in program declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no program name defined in program declaration.");
 	}
 | PROGRAM error program_var_declarations_list function_block_body END_PROGRAM
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid program name in program declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid program name in program declaration.");
 	 yyerrok;
 	}
 | PROGRAM program_type_name function_block_body END_PROGRAM
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable(s) declared in program declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable(s) declared in program declaration.");
 	}
 | PROGRAM program_type_name program_var_declarations_list END_PROGRAM
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no body defined in program declaration.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no body defined in program declaration.");
 	}
 | PROGRAM program_type_name END_PROGRAM
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no variable(s) declared and body defined in program declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no variable(s) declared and body defined in program declaration.");
 	}
 | PROGRAM error END_PROGRAM
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in program declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in program declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5387,6 +5496,23 @@ program_var_declarations_list:
 | program_var_declarations_list program_access_decls
 	{$$ = $1; $$->add_element($2);}
 */
+/* ERROR_CHECK_BEGIN */
+| program_var_declarations_list global_var_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected global variable(s) declaration in function block declaration.");
+	}
+/*| program_var_declarations_list access_declarations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected access variable(s) declaration in function block declaration.");
+	}*/
+| program_var_declarations_list instance_specific_initializations
+	{$$ = $1;
+	 yynerrs++;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected instance specific initialization(s) in function block declaration.");
+	}
+/* ERROR_CHECK_END */
 ;
 
 
@@ -5437,7 +5563,7 @@ sfc_network:
 /* ERROR_CHECK_BEGIN */
 | sfc_network error 
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "unexpected token after SFC network in sequencial function chart.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "unexpected token after SFC network in sequencial function chart.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5455,27 +5581,27 @@ initial_step:
 	}
 | INITIAL_STEP error ':' action_association_list END_STEP
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid step name defined in initial step declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid step name defined in initial step declaration.");
 	 yyerrok;
 	}
 | INITIAL_STEP step_name action_association_list END_STEP
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "':' missing after step name in initial step declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "':' missing after step name in initial step declaration.");
 	}
 | INITIAL_STEP step_name error action_association_list END_STEP
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "expecting ':' after step name in initial step declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting ':' after step name in initial step declaration.");
 	 yyerrok;
 	}
 | INITIAL_STEP step_name ':' error END_STEP
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid action association list in initial step declaration.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid action association list in initial step declaration.");
 	 yyerrok;
 	}
 | INITIAL_STEP error END_STEP
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in initial step declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in initial step declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5489,31 +5615,31 @@ step:
 | STEP ':' action_association_list END_STEP
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no step name defined in step declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no step name defined in step declaration.");
 	}
 | STEP error ':' action_association_list END_STEP
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid step name defined in step declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid step name defined in step declaration.");
 	 yyerrok;
 	}
 | STEP step_name action_association_list END_STEP
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "':' missing after step name in step declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "':' missing after step name in step declaration.");
 	}
 | STEP step_name error action_association_list END_STEP
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "expecting ':' after step name in step declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting ':' after step name in step declaration.");
 	 yyerrok;
 	}
 | STEP step_name ':' error END_STEP
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid action association list in step declaration.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid action association list in step declaration.");
 	 yyerrok;
 	}
 | STEP error END_STEP
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in step declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in step declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5530,12 +5656,12 @@ action_association_list:
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | action_association_list action_association error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at end of action association declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at end of action association declaration.");
 	 yyerrok;
 	}
 | action_association_list ';'
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after action association declaration.");
 	}
@@ -5552,7 +5678,7 @@ action_association:
 /* ERROR_CHECK_BEGIN */
 /*| action_name '(' error indicator_name_list ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid qualifier defined in action association.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid qualifier defined in action association.");
 	 yyerrok;
 	}*/
 /* ERROR_CHECK_END */
@@ -5566,12 +5692,12 @@ indicator_name_list:
 	{$$ = $1; $$->add_element($3);}
 /* ERROR_CHECK_BEGIN */
 | indicator_name_list indicator_name
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "',' missing at end of action association declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing at end of action association declaration.");
 	}
 | indicator_name_list ',' error
-	{$$ = NULL;
+	{$$ = $1;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after ',' in indicator list.");
 	 yyerrok;
 	}
@@ -5592,7 +5718,7 @@ action_qualifier:
 | timed_qualifier action_time
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "',' missing between timed qualifier and action time in action qualifier.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing between timed qualifier and action time in action qualifier.");
 	}
 | timed_qualifier ',' error
 	{$$ = NULL;
@@ -5636,12 +5762,12 @@ steps:
 /* ERROR_CHECK_BEGIN */
 | '(' step_name_list error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ')' at the end of step list in transition declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "expecting ')' at the end of step list in transition declaration.");
 	 yyerrok;
 	}
 | '(' error ')'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid step list in transition declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid step list in transition declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5654,13 +5780,13 @@ step_name_list:
 	{$$ = $1; $$->add_element($3);}
 /* ERROR_CHECK_BEGIN */
 | step_name_list step_name
-	{$$ = NULL;
+	{$$ = $1;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "',' missing in step list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing in step list.");
 	}
 | step_name_list ',' error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid step name in step list.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ',' in step list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5686,87 +5812,87 @@ transition:
 /* ERROR_CHECK_BEGIN */
 | TRANSITION error transition_priority FROM steps TO steps {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid transition name defined in transition declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid transition name defined in transition declaration.");
 	 yyerrok;
 	} 
 | TRANSITION transition_name error FROM steps TO steps {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid transition priority defined in transition declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid transition priority defined in transition declaration.");
 	 yyerrok;
 	}
 | TRANSITION transition_priority FROM TO steps {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no origin step(s) defined in transition declaration.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no origin step(s) defined in transition declaration.");
 	}
 | TRANSITION transition_name transition_priority FROM TO steps {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@5), "no origin step(s) defined in transition declaration.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "no origin step(s) defined in transition declaration.");
 	}
 | TRANSITION transition_priority FROM error TO steps {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "invalid origin step(s) defined in transition declaration.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid origin step(s) defined in transition declaration.");
 	 yyerrok;
 	}
 | TRANSITION transition_name transition_priority FROM error TO steps {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@6), "invalid origin step(s) defined in transition declaration.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "invalid origin step(s) defined in transition declaration.");
 	 yyerrok;
 	}
 | TRANSITION transition_priority FROM steps steps {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@5), "'TO' missing between origin step(s) and destination step(s) in transition declaration.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "'TO' missing between origin step(s) and destination step(s) in transition declaration.");
 	}
 | TRANSITION transition_name transition_priority FROM steps steps {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@5), locl(@6), "'TO' missing between origin step(s) and destination step(s) in transition declaration.");
+	 print_err_msg(current_filename, locl(@5), locf(@6), "'TO' missing between origin step(s) and destination step(s) in transition declaration.");
 	}
 | TRANSITION transition_priority FROM steps error steps {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@6), "expecting 'TO' between origin step(s) and destination step(s) in transition declaration.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "expecting 'TO' between origin step(s) and destination step(s) in transition declaration.");
 	 yyerrok;
 	}
 | TRANSITION transition_name transition_priority FROM steps error steps {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@5), locl(@7), "expecting 'TO' between origin step(s) and destination step(s) in transition declaration.");
+	 print_err_msg(current_filename, locf(@6), locl(@6), "expecting 'TO' between origin step(s) and destination step(s) in transition declaration.");
 	 yyerrok;
 	}
 | TRANSITION transition_priority FROM steps TO {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@5), locl(@7), "no destination step(s) defined in transition declaration.");
+	 print_err_msg(current_filename, locl(@5), locf(@7), "no destination step(s) defined in transition declaration.");
 	}
 | TRANSITION transition_name transition_priority FROM steps TO {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@6), locl(@8), "no destination step(s) defined in transition declaration.");
+	 print_err_msg(current_filename, locl(@6), locf(@8), "no destination step(s) defined in transition declaration.");
 	}
 | TRANSITION transition_priority FROM steps TO error {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@5), locl(@8), "invalid destination step(s) defined in transition declaration.");
+	 print_err_msg(current_filename, locf(@6), locl(@6), "invalid destination step(s) defined in transition declaration.");
 	 yyerrok;
 	}
 | TRANSITION transition_name transition_priority FROM steps TO error {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@6), locl(@9), "invalid destination step(s) defined in transition declaration.");
+	 print_err_msg(current_filename, locf(@7), locl(@7), "invalid destination step(s) defined in transition declaration.");
 	 yyerrok;
 	}
 | TRANSITION transition_priority {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "no origin and destination step(s) defined in transition declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@4), "no origin and destination step(s) defined in transition declaration.");
 	}
 | TRANSITION transition_name transition_priority {cmd_goto_body_state();} transition_condition END_TRANSITION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "no origin and destination step(s) defined in transition declaration.");
+	 print_err_msg(current_filename, locl(@3), locf(@5), "no origin and destination step(s) defined in transition declaration.");
 	}
 | TRANSITION error END_TRANSITION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in transition declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in transition declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5777,6 +5903,18 @@ transition_priority:
   {$$ = NULL;}
 | '(' {cmd_goto_sfc_priority_state();} PRIORITY {cmd_pop_state();} ASSIGN integer ')'
 	{$$ = $6;}
+/* ERROR_CHECK_BEGIN */
+| '(' ASSIGN integer ')'
+	{$$ = NULL;
+	 yynerrs++;
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'PRIORITY' missing between '(' and ':=' in transition declaration with priority.");
+	}
+| '(' error ASSIGN integer ')'
+	{$$ = NULL;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting 'PRIORITY' between '(' and ':=' in transition declaration with priority.");
+	 yyerrok;
+	}
+//* ERROR_CHECK_END */
 ;
 
 
@@ -5789,17 +5927,17 @@ transition_condition:
 | eol_list simple_instr_list
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "':' missing before IL condition in transition declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing before IL condition in transition declaration.");
 	}
 | ':' eol_list error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no instructions defined in IL condition of transition declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no instructions defined in IL condition of transition declaration.");
 	 yyerrok;
 	}
 | ASSIGN ';'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no expression defined in ST condition of transition declaration.");
-	 yyerrok;
+	 yynerrs++;
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no expression defined in ST condition of transition declaration.");
 	}
 | ASSIGN error ';'
 	{$$ = NULL;
@@ -5808,7 +5946,7 @@ transition_condition:
 	}
 | ASSIGN expression error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ';' after expression defined in ST condition of transition declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "expecting ';' after expression defined in ST condition of transition declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5824,26 +5962,26 @@ action:
 | ACTION ':' {cmd_goto_body_state();} function_block_body END_ACTION
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no action name defined in action declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no action name defined in action declaration.");
 	}
 | ACTION error ':' {cmd_goto_body_state();} function_block_body END_ACTION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid action name defined in action declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid action name defined in action declaration.");
 	 yyerrok;
 	}
 | ACTION action_name {cmd_goto_body_state();} function_block_body END_ACTION
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "':' missing after action name in action declaration.");
+	 print_err_msg(current_filename, locl(@2), locf(@4), "':' missing after action name in action declaration.");
 	}
 | ACTION action_name ':' END_ACTION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no body defined in action declaration.");
-	 yyerrok;
+	 yynerrs++;
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no body defined in action declaration.");
 	}
 | ACTION error END_ACTION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in action declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in action declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -5946,7 +6084,7 @@ configuration_declaration:
   END_CONFIGURATION
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no configuration name defined in configuration declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no configuration name defined in configuration declaration.");
 	}
 | CONFIGURATION
    optional_global_var_declarations
@@ -5956,7 +6094,7 @@ configuration_declaration:
   END_CONFIGURATION
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no configuration name defined in configuration declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no configuration name defined in configuration declaration.");
 	}
 | CONFIGURATION error
    optional_global_var_declarations
@@ -5966,7 +6104,7 @@ configuration_declaration:
    optional_instance_specific_initializations
   END_CONFIGURATION
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid configuration name defined in configuration declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid configuration name defined in configuration declaration.");
 	 yyerrok;
 	}
 | CONFIGURATION error
@@ -5976,7 +6114,7 @@ configuration_declaration:
    optional_instance_specific_initializations
   END_CONFIGURATION
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid configuration name defined in configuration declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid configuration name defined in configuration declaration.");
 	 yyerrok;
 	}
 | CONFIGURATION configuration_name
@@ -5985,8 +6123,8 @@ configuration_declaration:
    optional_instance_specific_initializations
   END_CONFIGURATION
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no resource(s) defined in configuration declaration.");
-	 yyerrok;
+	 yynerrs++;
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no resource(s) defined in configuration declaration.");
 	}
 | CONFIGURATION configuration_name
    optional_global_var_declarations
@@ -5995,12 +6133,12 @@ configuration_declaration:
    optional_instance_specific_initializations
   END_CONFIGURATION
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "invalid resource(s) defined in configuration declaration.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid resource(s) defined in configuration declaration.");
 	 yyerrok;
 	}
 | CONFIGURATION error END_CONFIGURATION
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in configuration declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in configuration declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6039,8 +6177,8 @@ resource_declaration_list:
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | resource_declaration_list error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "unexpected token after resource declaration.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after resource declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6063,11 +6201,11 @@ resource_declaration:
   END_RESOURCE
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "no resource name defined in resource declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@3), "no resource name defined in resource declaration.");
 	}
 | RESOURCE error END_RESOURCE
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in resource declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in resource declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6088,12 +6226,12 @@ task_configuration_list:
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | task_configuration_list task_configuration error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at the end of task configuration in resource declaration.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at the end of task configuration in resource declaration.");
 	 yyerrok;
 	}
 | task_configuration_list ';'
-  {$$ = NULL;
+  {$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after task configuration in resource declaration.");
 	}
@@ -6109,22 +6247,22 @@ program_configuration_list:
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | program_configuration error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at the end of program configuration in resource declaration.");
+  {$$ = new program_configuration_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at the end of program configuration in resource declaration.");
 	 yyerrok;
 	}
 | program_configuration_list program_configuration error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at the end of program configuration in resource declaration.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at the end of program configuration in resource declaration.");
 	 yyerrok;
 	}
 | program_configuration_list error ';'
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid program configuration in resource declaration.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid program configuration in resource declaration.");
 	 yyerrok;
 	}
 | program_configuration_list ';'
-  {$$ = NULL;
+  {$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after program configuration in resource declaration.");
 	}
@@ -6142,16 +6280,16 @@ access_declarations:
 | VAR_ACCESS END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no variable declared in access variable(s) declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no variable declared in access variable(s) declaration.");
 	}
 | VAR_ACCESS error access_declaration_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'VAR_ACCESS' in access variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'VAR_ACCESS' in access variable(s) declaration.");
 	 yyerrok;
 	}
 | VAR_ACCESS error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in access variable(s) declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in access variable(s) declaration.");
 	 yyerrok;
 	}
 // ERROR_CHECK_END //
@@ -6162,23 +6300,28 @@ access_declaration_list:
   access_declaration ';'
 | access_declaration_list access_declaration ';'
 // ERROR_CHECK_BEGIN //
+| error ';'
+  {$$ = // create a new list //;
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid access variable declaration.");
+	 yyerrok;
+	}
 | access_declaration error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at the end of access variable declaration.");
+  {$$ = // create a new list //;
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at the end of access variable declaration.");
 	 yyerrok;
 	}
 | access_declaration_list access_declaration error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at the end of access variable declaration.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at the end of access variable declaration.");
 	 yyerrok;
 	}
 | access_declaration_list error ';'
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid access variable declaration.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid access variable declaration.");
 	 yyerrok;
 	}
 | access_declaration_list ';'
-  {$$ = NULL;
+  {$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after access variable declaration.");
 	}
@@ -6278,16 +6421,16 @@ task_configuration:
 | TASK task_initialization
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no task name defined in task declaration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no task name defined in task declaration.");
 	}
 | TASK error task_initialization
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid task name defined in task declaration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid task name defined in task declaration.");
 	 yyerrok;
 	}
 | TASK task_name error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid task initialization in task declaration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid task initialization in task declaration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6320,21 +6463,21 @@ task_initialization_single:
 | SINGLE {cmd_pop_state();} data_source ',' {cmd_goto_task_init_state();}
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "':=' missing after 'SINGLE' in task initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@3), "':=' missing after 'SINGLE' in task initialization.");
 	}
 | SINGLE error {cmd_pop_state();} data_source ',' {cmd_goto_task_init_state();}
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@4), "expecteing ':=' after 'SINGLE' in task initialization.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ':=' after 'SINGLE' in task initialization.");
 	 yyerrok;
 	}
 | SINGLE ASSIGN {cmd_pop_state();} ',' {cmd_goto_task_init_state();}
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "no data source defined in 'SINGLE' statement of task initialization.");
+	 print_err_msg(current_filename, locl(@2), locf(@4), "no data source defined in 'SINGLE' statement of task initialization.");
 	}
 | SINGLE ASSIGN {cmd_pop_state();} error ',' {cmd_goto_task_init_state();}
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@5), "invalid data source defined in 'SINGLE' statement of task initialization.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid data source defined in 'SINGLE' statement of task initialization.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6351,21 +6494,21 @@ task_initialization_interval:
 | INTERVAL {cmd_pop_state();} data_source ',' {cmd_goto_task_init_state();}
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "':=' missing after 'INTERVAL' in task initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@3), "':=' missing after 'INTERVAL' in task initialization.");
 	}
 | INTERVAL error {cmd_pop_state();} data_source ',' {cmd_goto_task_init_state();}
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@4), "expecting ':=' after 'INTERVAL' in task initialization.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ':=' after 'INTERVAL' in task initialization.");
 	 yyerrok;
 	}
 | INTERVAL ASSIGN {cmd_pop_state();} ',' {cmd_goto_task_init_state();}
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "no data source defined in 'INTERVAL' statement of task initialization.");
+	 print_err_msg(current_filename, locl(@2), locf(@4), "no data source defined in 'INTERVAL' statement of task initialization.");
 	}
 | INTERVAL ASSIGN {cmd_pop_state();} error ',' {cmd_goto_task_init_state();}
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@5), "invalid data source defined in 'INTERVAL' statement of task initialization.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid data source defined in 'INTERVAL' statement of task initialization.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6381,17 +6524,17 @@ task_initialization_priority:
 | PRIORITY {cmd_pop_state();} integer
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "':=' missing after 'PRIORITY' in task initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@3), "':=' missing after 'PRIORITY' in task initialization.");
 	}
 | PRIORITY error {cmd_pop_state();} integer 
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@4), "expecting ':=' after 'PRIORITY' in task initialization.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ':=' after 'PRIORITY' in task initialization.");
 	 yyerrok;
 	}
 | PRIORITY ASSIGN {cmd_pop_state();} error
   {$$ = NULL;
-	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "no priority number defined in 'PRIORITY' statement of task initialization.");
+	 print_err_msg(current_filename, locl(@2), locf(@4), "no priority number defined in 'PRIORITY' statement of task initialization.");
+	 yyerrok;
 	}
 /* ERROR_CHECK_END */
 ;
@@ -6423,107 +6566,107 @@ program_configuration:
 | PROGRAM program_name optional_task_name ':' identifier optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown program type name after ':' in program configuration.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "unknown program type name after ':' in program configuration.");
 	}
 | PROGRAM RETAIN program_name optional_task_name ':' identifier optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unknown program type name after ':' in program configuration.");
+	 print_err_msg(current_filename, locf(@6), locl(@6), "unknown program type name after ':' in program configuration.");
 	}
 | PROGRAM NON_RETAIN program_name optional_task_name ':' identifier optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unknown program type name after ':' in program configuration.");
+	 print_err_msg(current_filename, locf(@6), locl(@6), "unknown program type name after ':' in program configuration.");
 	}
 | PROGRAM error program_name optional_task_name ':' prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'PROGRAM' in program configuration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'PROGRAM' in program configuration.");
 	 yyerrok;
 	}
 | PROGRAM RETAIN error program_name optional_task_name ':' prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'RETAIN' in retentive program configuration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'RETAIN' in retentive program configuration.");
 	 yyerrok;
 	}
 | PROGRAM NON_RETAIN error program_name optional_task_name ':' prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "unexpected token after 'NON_RETAIN' in non-retentive program configuration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "unexpected token after 'NON_RETAIN' in non-retentive program configuration.");
 	 yyerrok;
 	}
 | PROGRAM optional_task_name ':' prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no program name defined in program configuration.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no program name defined in program configuration.");
 	}
 | PROGRAM RETAIN optional_task_name ':' prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no program name defined in retentive program configuration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no program name defined in retentive program configuration.");
 	}
 | PROGRAM NON_RETAIN optional_task_name ':' prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "no program name defined in non-retentive program configuration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no program name defined in non-retentive program configuration.");
 	}
 | PROGRAM error optional_task_name ':' prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "no program name defined in program configuration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "no program name defined in program configuration.");
 	 yyerrok;
 	}
 | PROGRAM RETAIN error optional_task_name ':' prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "no program name defined in retentive program configuration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "no program name defined in retentive program configuration.");
 	 yyerrok;
 	}
 | PROGRAM NON_RETAIN error optional_task_name ':' prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "no program name defined in non-retentive program configuration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "no program name defined in non-retentive program configuration.");
 	 yyerrok;
 	}
 | PROGRAM program_name optional_task_name prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "':' missing after program name or optional task name in program configuration.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "':' missing after program name or optional task name in program configuration.");
 	}
 | PROGRAM RETAIN program_name optional_task_name prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@5), "':' missing after program name or optional task name in program configuration.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "':' missing after program name or optional task name in program configuration.");
 	}
 | PROGRAM NON_RETAIN program_name optional_task_name prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@5), "':' missing after program name or optional task name in program configuration.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "':' missing after program name or optional task name in program configuration.");
 	}
 | PROGRAM program_name optional_task_name error prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "expecting ':' after program name or optional task name in program configuration.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "expecting ':' after program name or optional task name in program configuration.");
 	 yyerrok;
 	}
 | PROGRAM RETAIN program_name optional_task_name error prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@6), "expecting ':' after program name or optional task name in program configuration.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "expecting ':' after program name or optional task name in program configuration.");
 	 yyerrok;
 	}
 | PROGRAM NON_RETAIN program_name optional_task_name error prev_declared_program_type_name optional_prog_conf_elements
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@6), "expecting ':' after program name or optional task name in program configuration.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "expecting ':' after program name or optional task name in program configuration.");
 	 yyerrok;
 	}
 | PROGRAM program_name optional_task_name ':' optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@4), locl(@5), "no program type defined in program configuration.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "no program type defined in program configuration.");
 	}
 | PROGRAM RETAIN program_name optional_task_name ':' optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@5), locl(@6), "no program type defined in program configuration.");
+	 print_err_msg(current_filename, locl(@5), locf(@6), "no program type defined in program configuration.");
 	}
 | PROGRAM NON_RETAIN program_name optional_task_name ':' optional_prog_conf_elements
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@5), locl(@6), "no program type defined in program configuration.");
+	 print_err_msg(current_filename, locl(@5), locf(@6), "no program type defined in program configuration.");
   }
 /* ERROR_CHECK_END */
 ;
@@ -6537,7 +6680,7 @@ optional_task_name:
 /* ERROR_CHECK_BEGIN */
 | WITH error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid tack name in optional task name of program configuration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid tack name in optional task name of program configuration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6552,12 +6695,12 @@ optional_prog_conf_elements:
 /* ERROR_CHECK_BEGIN */
 | '(' error ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid program configuration elements in program configuration.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid program configuration elements in program configuration.");
 	 yyerrok;
 	}
 | '(' prog_conf_elements error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "')' missing at the end of program configuration elements in program configuration.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "')' missing at the end of program configuration elements in program configuration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6573,11 +6716,11 @@ prog_conf_elements:
 | prog_conf_elements prog_conf_element
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "',' missing in program configuration elements list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing in program configuration elements list.");
 	}
 | prog_conf_elements ',' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value for program configuration element in program configuration list.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value for program configuration element in program configuration list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6601,7 +6744,7 @@ fb_task:
 /* ERROR_CHECK_BEGIN */
 | any_identifier WITH error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid task name in function block configuration.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid task name in function block configuration.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6647,31 +6790,31 @@ prog_cnxn:
 | any_symbolic_variable constant
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':=' missing between parameter and value in program configuration element.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing between parameter and value in program configuration element.");
 	}
 | any_symbolic_variable enumerated_value
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':=' missing between parameter and value in program configuration element.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing between parameter and value in program configuration element.");
 	}
 | any_symbolic_variable data_sink
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':=' or '=>' missing between parameter and variable in program configuration element.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' or '=>' missing between parameter and variable in program configuration element.");
 	}
 | any_symbolic_variable error prog_data_source
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ':=' or '=>' after parameter in program configuration element.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "expecting ':=' or '=>' after parameter in program configuration element.");
 	 yyerrok;
 	}
 | any_symbolic_variable ASSIGN error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid value or variable in program configuration assignment element.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid value or variable in program configuration assignment element.");
 	 yyerrok;
 	}
 | any_symbolic_variable SENDTO error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid variable in program configuration sendto element.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid variable in program configuration sendto element.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6696,16 +6839,16 @@ instance_specific_initializations:
 | VAR_CONFIG END_VAR
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no variable declared in configuration variable(s) initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no variable declared in configuration variable(s) initialization.");
 	}
 | VAR_CONFIG error instance_specific_init_list END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unexpected token after 'VAR_CONFIG' in configuration variable(s) initialization.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected token after 'VAR_CONFIG' in configuration variable(s) initialization.");
 	 yyerrok;
 	}
 | VAR_CONFIG error END_VAR
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in configuration variable(s) initialization.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in configuration variable(s) initialization.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6718,23 +6861,28 @@ instance_specific_init_list:
 | instance_specific_init_list instance_specific_init ';'
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
+| error ';'
+  {$$ = new instance_specific_init_list_c(locloc(@$));
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid configuration variable initialization.");
+	 yyerrok;
+	}
 | instance_specific_init error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at the end of configuration variable initialization.");
+  {$$ = new instance_specific_init_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at the end of configuration variable initialization.");
 	 yyerrok;
 	}
 | instance_specific_init_list instance_specific_init error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at the end of configuration variable initialization.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at the end of configuration variable initialization.");
 	 yyerrok;
 	}
 | instance_specific_init_list error ';'
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid configuration variable initialization.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid configuration variable initialization.");
 	 yyerrok;
 	}
 | instance_specific_init_list ';'
-  {$$ = NULL;
+  {$$ = $1;
 	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after configuration variable initialization.");
 	}
@@ -6772,7 +6920,7 @@ fb_initialization:
 | function_block_type_name structure_initialization
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "':=' missing between function block name and initialization in function block initialization.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':=' missing between function block name and initialization in function block initialization.");
 	}
 | function_block_type_name error structure_initialization
   {$$ = NULL;
@@ -6806,8 +6954,8 @@ instruction_list:
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | instruction_list error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid IL instruction.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid IL instruction.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6823,37 +6971,37 @@ il_instruction:
 /* ERROR_CHECK_BEGIN */
 | error eol_list
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid IL instruction.");
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid IL instruction.");
 	 yyerrok;
 	}
 | il_incomplete_instruction error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "EOL missing at the end of IL instruction.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "EOL missing at the end of IL instruction.");
 	 yyerrok;
 	}
 | error ':' il_incomplete_instruction eol_list
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid label in IL instruction.");
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid label in IL instruction.");
 	 yyerrok;
 	}
 | label il_incomplete_instruction eol_list
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':' missing after label in IL instruction.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing after label in IL instruction.");
 	}
 | label error il_incomplete_instruction eol_list
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting ':' after label in IL instruction.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ':' after label in IL instruction.");
 	 yyerrok;
 	}
 | label ':' error eol_list
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "invalid IL instruction.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid IL instruction.");
 	 yyerrok;
 	}
 | label ':' il_incomplete_instruction error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "EOL missing at the end of IL instruction.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "EOL missing at the end of IL instruction.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -6975,37 +7123,37 @@ il_expression:
 /* ERROR_CHECK_BEGIN */
 | il_expr_operator_noclash '(' eol_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "')' missing at the end of IL expression.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "')' missing at the end of IL expression.");
 	 yyerrok;
 	}
 | il_expr_operator_noclash '(' il_operand eol_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@4), "')' missing at the end of IL expression.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "')' missing at the end of IL expression.");
 	 yyerrok;
 	}
 | il_expr_operator_noclash '(' eol_list simple_instr_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@4), "')' missing at the end of IL expression.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "')' missing at the end of IL expression.");
 	 yyerrok;
 	}
 | il_expr_operator_noclash '(' il_operand eol_list simple_instr_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@5), locl(@5), "')' missing at the end of IL expression.");
+	 print_err_msg(current_filename, locl(@5), locf(@6), "')' missing at the end of IL expression.");
 	 yyerrok;
 	}
 | il_expr_operator_clash '(' il_operand eol_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@4), "')' missing at the end of IL expression.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "')' missing at the end of IL expression.");
 	 yyerrok;
 	}
 | il_expr_operator_clash '(' il_operand eol_list simple_instr_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@5), locl(@5), "')' missing at the end of IL expression.");
+	 print_err_msg(current_filename, locl(@5), locf(@6), "')' missing at the end of IL expression.");
 	 yyerrok;
 	}
 | il_expr_operator_clash_eol_list simple_instr_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "')' missing at the end of IL expression.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "')' missing at the end of IL expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7018,7 +7166,7 @@ il_jump_operation:
 /* ERROR_CHECK_BEGIN */
 | il_jump_operator error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid label defined in IL jump operation.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid label defined in IL jump operation.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7040,72 +7188,72 @@ il_fb_call:
 /* ERROR_CHECK_BEGIN */
 | il_call_operator error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid function block name defined in IL function block call.");
 	 yyerrok;
 	}
 | il_call_operator '(' ')'
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no function block name defined in IL function block call.");
 	}
 | il_call_operator '(' eol_list ')'
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no function block name defined in IL function block call.");
 	}
 | il_call_operator '(' il_operand_list ')'
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no function block name defined in IL function block call.");
 	}
 | il_call_operator '(' eol_list il_param_list ')'
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no function block name defined in IL function block call.");
 	}
 | il_call_operator error '(' ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid function block name defined in IL function block call.");
 	 yyerrok;
 	}
 | il_call_operator error '(' eol_list ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid function block name defined in IL function block call.");
 	 yyerrok;
 	}
 | il_call_operator error '(' il_operand_list ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid function block name defined in IL function block call.");
 	 yyerrok;
 	}
 | il_call_operator error '(' eol_list il_param_list ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid function block name defined in IL function block call.");
 	 yyerrok;
 	}
 | il_call_operator prev_declared_fb_name ')'
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "'(' missing after function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "'(' missing after function block name defined in IL function block call.");
 	}
 | il_call_operator prev_declared_fb_name il_operand_list ')'
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "'(' missing after function block name defined in IL function block call.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "'(' missing after function block name defined in IL function block call.");
 	}
 | il_call_operator prev_declared_fb_name '(' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "')' missing at the end of IL function block call.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "')' missing at the end of IL function block call.");
 	 yyerrok;
 	}
 | il_call_operator prev_declared_fb_name '(' eol_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "')' missing at the end of IL function block call.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "')' missing at the end of IL function block call.");
 	 yyerrok;
 	}
 | il_call_operator prev_declared_fb_name '(' il_operand_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "')' missing at the end of IL function block call.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "')' missing at the end of IL function block call.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7178,17 +7326,17 @@ il_formal_funct_call:
 /* ERROR_CHECK_BEGIN */
 | function_name_no_clashes '(' eol_list error ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "invalid parameter list defined in IL formal function call.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid parameter list defined in IL formal function call.");
 	 yyerrok;
 	} 
 | function_name_simpleop_clashes '(' eol_list error ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "invalid parameter list defined in IL formal function call.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid parameter list defined in IL formal function call.");
 	 yyerrok;
 	} 
 | il_expr_operator_clash_eol_list error ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid parameter list defined in IL formal function call.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid parameter list defined in IL formal function call.");
 	 yyerrok;
 	} 
 /* ERROR_CHECK_END */
@@ -7201,8 +7349,8 @@ il_expr_operator_clash_eol_list:
 /* ERROR_CHECK_BEGIN */
 | il_expr_operator_clash '(' error
   {$$ = NULL;
-	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "EOL missing after '(' in IL instruction.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "EOL missing after '(' in IL instruction.");
+	 yyerrok;
 	}
 /* ERROR_CHECK_END */
 ;
@@ -7232,16 +7380,16 @@ il_operand_list2:
 | il_operand_list2 il_operand
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "',' missing in IL operand list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing in IL operand list.");
 	}
 | il_formal_funct_call error il_operand
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting ',' in IL operand list.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ',' in IL operand list.");
 	 yyerrok;
 	}
 | il_formal_funct_call ',' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid operand in IL operand list.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid operand in IL operand list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7263,12 +7411,12 @@ il_simple_instruction:
 /* ERROR_CHECK_BEGIN */
 | il_expression error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "EOL missing after expression IL instruction.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "EOL missing after expression IL instruction.");
 	 yyerrok;
 	}
 | il_formal_funct_call error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "EOL missing after formal function call IL instruction.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "EOL missing after formal function call IL instruction.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7296,19 +7444,19 @@ il_param_list:
 	{$$ = new il_param_list_c(locloc(@$)); $$->add_element($1);}
 /* ERROR_CHECK_BEGIN */
 | il_param_instruction_list error
-  {$$ = NULL;
+  {$$ = $1;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid parameter assignment in parameter assignment list.");
 	 yyerrok;
 	}
 | il_param_last_instruction il_param_last_instruction
-  {$$ = NULL;
+  {$$ = new il_param_list_c(locloc(@$));
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "',' missing at the end of parameter assignment in parameter assignment list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing at the end of parameter assignment in parameter assignment list.");
 	}
 | il_param_instruction_list il_param_last_instruction il_param_last_instruction
-  {$$ = NULL;
+  {$$ = $1;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "',' missing at the end of parameter assignment in parameter assignment list.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "',' missing at the end of parameter assignment in parameter assignment list.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -7322,14 +7470,14 @@ il_param_instruction_list:
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | il_param_last_instruction il_param_instruction
-  {$$ = NULL;
+  {$$ = new il_param_list_c(locloc(@$));
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "',' missing at the end of parameter assignment in parameter assignment list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "',' missing at the end of parameter assignment in parameter assignment list.");
 	}
 | il_param_instruction_list il_param_last_instruction il_param_instruction
-  {$$ = NULL;
+  {$$ = $1;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "',' missing at the end of parameter assignment in parameter assignment list.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "',' missing at the end of parameter assignment in parameter assignment list.");
 	}
 /* ERROR_CHECK_END */
 ;
@@ -7341,12 +7489,12 @@ il_param_instruction:
 /* ERROR_CHECK_BEGIN */
 | il_param_assignment ',' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "EOL missing at the end of parameter assignment in parameter assignment list.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "EOL missing at the end of parameter assignment in parameter assignment list.");
 	 yyerrok;
 	}
 | il_param_out_assignment ',' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "EOL missing at the end of parameter out assignment in parameter assignment list.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "EOL missing at the end of parameter out assignment in parameter assignment list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7359,12 +7507,12 @@ il_param_last_instruction:
 /* ERROR_CHECK_BEGIN */
 | il_param_assignment error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "EOL missing at the end of last parameter assignment in parameter assignment list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "EOL missing at the end of last parameter assignment in parameter assignment list.");
 	 yyerrok;
 	}
 | il_param_out_assignment error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "EOL missing at the end of last parameter out assignment in parameter assignment list.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "EOL missing at the end of last parameter out assignment in parameter assignment list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7380,32 +7528,32 @@ il_param_assignment:
 /* ERROR_CHECK_BEGIN */
 | error il_operand
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid operator in parameter assignment.");
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid operator in parameter assignment.");
 	 yyerrok;
 	}
 | error '(' eol_list simple_instr_list ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid operator in parameter assignment.");
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid operator in parameter assignment.");
 	 yyerrok;
 	}
 | il_assign_operator error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid operand defined in parameter assignment.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "invalid operand defined in parameter assignment.");
 	 yyerrok;
 	}
-| il_assign_operator '(' ')'
+| il_assign_operator '(' eol_list ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "no instruction list defined in parameter assignment.");
-	 yyerrok;
+	 yynerrs++;
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no instruction list defined in parameter assignment.");
 	}
-| il_assign_operator '(' error ')'
+| il_assign_operator '(' eol_list error ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid instruction list defined in parameter assignment.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid instruction list defined in parameter assignment.");
 	 yyerrok;
 	}
 | il_assign_operator '(' eol_list simple_instr_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "')' missing at the end of instruction list defined in parameter assignment.");
+	 print_err_msg(current_filename, locl(@4), locf(@5), "')' missing at the end of instruction list defined in parameter assignment.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7418,7 +7566,7 @@ il_param_out_assignment:
 /* ERROR_CHECK_BEGIN */
 | il_assign_out_operator error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid variable defined in parameter out assignment.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid variable defined in parameter out assignment.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7565,7 +7713,7 @@ il_assign_operator:
 /* ERROR_CHECK_BEGIN */
 | error ASSIGN
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid parameter defined in parameter assignment.");
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid parameter defined in parameter assignment.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7583,17 +7731,17 @@ il_assign_out_operator:
 /* ERROR_CHECK_BEGIN */
 | error SENDTO
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid parameter defined in parameter out assignment.");
+	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid parameter defined in parameter out assignment.");
 	 yyerrok;
 	}
 | NOT SENDTO
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no paramter defined in parameter out assignment.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no parameter defined in parameter out assignment.");
 	}
 | NOT error SENDTO
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid parameter defined in parameter out assignment.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid parameter defined in parameter out assignment.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7631,7 +7779,7 @@ expression:
 /* ERROR_CHECK_BEGIN */
 | expression OR error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after 'OR' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after 'OR' in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7644,7 +7792,7 @@ xor_expression:
 /* ERROR_CHECK_BEGIN */
 | xor_expression XOR error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after 'XOR' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after 'XOR' in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7668,17 +7816,17 @@ and_expression:
 /* ERROR_CHECK_BEGIN */
 | and_expression '&' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '&' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '&' in ST expression.");
 	 yyerrok;
 	}
 | and_expression AND error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after 'AND' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after 'AND' in ST expression.");
 	 yyerrok;
 	}
 | and_expression AND2 error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '&' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '&' in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7693,12 +7841,12 @@ comparison:
 /* ERROR_CHECK_BEGIN */
 | comparison '=' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '=' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '=' in ST expression.");
 	 yyerrok;
 	}
 | comparison OPER_NE error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '<>' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '<>' in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7717,22 +7865,22 @@ equ_expression:
 /* ERROR_CHECK_BEGIN */
 | equ_expression '<' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '<' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '<' in ST expression.");
 	 yyerrok;
 	}
 | equ_expression '>' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '>' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '>' in ST expression.");
 	 yyerrok;
 	}
 | equ_expression OPER_LE error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '<=' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '<=' in ST expression.");
 	 yyerrok;
 	}
 | equ_expression OPER_GE error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '>=' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '>=' in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7751,12 +7899,12 @@ add_expression:
 /* ERROR_CHECK_BEGIN */
 | add_expression '+' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '+' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '+' in ST expression.");
 	 yyerrok;
 	}
 | add_expression '-' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '-' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '-' in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7777,17 +7925,17 @@ term:
 /* ERROR_CHECK_BEGIN */
 | term '*' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '*' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '*' in ST expression.");
 	 yyerrok;
 	}
 | term '/' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '/' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '/' in ST expression.");
 	 yyerrok;
 	}
 | term MOD error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after 'MOD' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after 'MOD' in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7804,7 +7952,7 @@ power_expression:
 /* ERROR_CHECK_BEGIN */
 | power_expression OPER_EXP error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '**' in ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after '**' in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7820,12 +7968,12 @@ unary_expression:
 /* ERROR_CHECK_BEGIN */
 | '-' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid expression after '-' in ST expression.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after '-' in ST expression.");
 	 yyerrok;
 	}
 | NOT error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid expression after 'NOT' in ST expression.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid expression after 'NOT' in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7871,7 +8019,7 @@ primary_expression:
 /* ERROR_CHECK_BEGIN */
 | '(' expression error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "')' missing at the end of expression in ST expression.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "')' missing at the end of expression in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7914,36 +8062,36 @@ function_invocation:
 | function_name_no_NOT_clashes param_assignment_formal_list ')'
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "'(' missing after function name in ST expression.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'(' missing after function name in ST expression.");
 	}
 | function_name_no_NOT_clashes error param_assignment_formal_list ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '(' after function name in ST expression.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '(' after function name in ST expression.");
 	 yyerrok;
 	}
 | function_name_no_NOT_clashes error param_assignment_nonformal_list ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting '(' after function name in ST expression.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '(' after function name in ST expression.");
 	 yyerrok;
 	}
 | function_name_no_NOT_clashes '(' ')'
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "no parameter defined in function invocation of ST expression.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "no parameter defined in function invocation of ST expression.");
 	}
 | function_name_no_NOT_clashes '(' error ')'
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid parameter(s) defined in function invocation of ST expression.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid parameter(s) defined in function invocation of ST expression.");
 	 yyerrok;
 	}
 | function_name_no_NOT_clashes '(' param_assignment_formal_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "')' missing at the end of function invocation in ST expression.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "')' missing at the end of function invocation in ST expression.");
 	 yyerrok;
 	}
 | function_name_no_NOT_clashes '(' param_assignment_nonformal_list error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "')' missing at the end of function invocation in ST expression.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "')' missing at the end of function invocation in ST expression.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -7964,24 +8112,24 @@ statement_list:
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | statement error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "';' missing at the end of statement in ST statement.");
+	{$$ = new statement_list_c(locloc(@$));
+	 print_err_msg(current_filename, locl(@1), locf(@2), "';' missing at the end of statement in ST statement.");
 	 yyerrok;
 	}
 | statement_list statement error
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "';' missing at the end of statement in ST statement.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locl(@2), locf(@3), "';' missing at the end of statement in ST statement.");
 	 yyerrok;
 	}
 | statement_list error ';'
-	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid statement in ST statement.");
+	{$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid statement in ST statement.");
 	 yyerrok;
 	}
 | statement_list ';'
-	{$$ = NULL;
+	{$$ = $1;
+	 yynerrs++;
 	 print_err_msg(current_filename, locf(@2), locl(@2), "unexpected ';' after statement in ST statement.");
-	 yyerrok;
 	}
 /* ERROR_CHECK_END */
 ;
@@ -8004,7 +8152,7 @@ assignment_statement:
 /* ERROR_CHECK_BEGIN */
 | variable ASSIGN error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid expression after ':=' in ST assignment statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression after ':=' in ST assignment statement.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8039,46 +8187,46 @@ fb_invocation:
 | prev_declared_fb_name ')'
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "'(' missing after function block name in ST statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'(' missing after function block name in ST statement.");
 	}
 | prev_declared_fb_name param_assignment_formal_list ')'
 	{$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "'(' missing after function block name in ST statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "'(' missing after function block name in ST statement.");
 	}
 | prev_declared_fb_name error ')'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "expecting '(' after function block name in ST statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '(' after function block name in ST statement.");
 	 yyerrok;
 	}
 | prev_declared_fb_name error param_assignment_formal_list ')'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "expecting '(' after function block name in ST statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '(' after function block name in ST statement.");
 	 yyerrok;
 	}
 | prev_declared_fb_name error param_assignment_nonformal_list ')'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "expecting '(' after function block name in ST statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting '(' after function block name in ST statement.");
 	 yyerrok;
 	}
 | prev_declared_fb_name '(' error ')'
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "invalid parameter list in function block invocation in ST statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid parameter list in function block invocation in ST statement.");
 	 yyerrok;
 	}
 | prev_declared_fb_name '(' error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "')' missing after parameter list of function block invocation in ST statement.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "')' missing after parameter list of function block invocation in ST statement.");
 	 yyerrok;
 	}
 | prev_declared_fb_name '(' param_assignment_formal_list error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "')' missing after parameter list of function block invocation in ST statement.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "')' missing after parameter list of function block invocation in ST statement.");
 	 yyerrok;
 	}
 | prev_declared_fb_name '(' param_assignment_nonformal_list error
 	{$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@1), "')' missing after parameter list of function block invocation in ST statement.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "')' missing after parameter list of function block invocation in ST statement.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8096,13 +8244,13 @@ param_assignment_formal_list:
 	{$$ = $1; $$->add_element($3);}
 /* ERROR_CHECK_BEGIN */
 | param_assignment_formal_list error param_assignment_formal
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "expecting ',' in ST parameter assignment list.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "expecting ',' in ST parameter assignment list.");
 	 yyerrok;
 	}
 | param_assignment_formal_list ',' error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid parameter assignment in ST parameter assignment list.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid parameter assignment in ST parameter assignment list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8119,8 +8267,8 @@ param_assignment_nonformal_list:
 	{$$ = $1; $$->add_element($3);}
 /* ERROR_CHECK_BEGIN */
 | param_assignment_nonformal_list ',' error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "invalid parameter assignment in ST parameter assignment list.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid parameter assignment in ST parameter assignment list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8173,27 +8321,27 @@ param_assignment_formal:
 /* ERROR_CHECK_BEGIN */
 | any_identifier ASSIGN error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "invalid expression in ST formal parameter assignment.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression in ST formal parameter assignment.");
 	 yyerrok;
 	} 
 | sendto_identifier SENDTO error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "invalid expression in ST formal parameter out assignment.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid expression in ST formal parameter out assignment.");
 	 yyerrok;
 	}
 | NOT SENDTO variable
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no parameter name defined in ST formal parameter out negated assignment.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no parameter name defined in ST formal parameter out negated assignment.");
 	}
 | NOT error SENDTO variable
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "invalid parameter name defined in ST formal parameter out negated assignment.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid parameter name defined in ST formal parameter out negated assignment.");
 	 yyerrok;
 	}
 | NOT sendto_identifier SENDTO error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "invalid expression in ST formal parameter out negated assignment.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid expression in ST formal parameter out negated assignment.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8221,56 +8369,56 @@ if_statement:
 | IF THEN statement_list elseif_statement_list END_IF
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no test expression defined in ST 'IF' statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no test expression defined in ST 'IF' statement.");
 	}
 | IF THEN statement_list elseif_statement_list ELSE statement_list END_IF
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no test expression defined in ST 'IF' statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no test expression defined in ST 'IF' statement.");
 	}
 | IF error THEN statement_list elseif_statement_list END_IF
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid test expression defined for ST 'IF' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid test expression defined for ST 'IF' statement.");
 	 yyerrok;
 	}
 | IF error THEN statement_list elseif_statement_list ELSE statement_list END_IF
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid test expression defined for ST 'IF' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid test expression defined for ST 'IF' statement.");
 	 yyerrok;
 	}
 | IF expression error statement_list elseif_statement_list END_IF
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "expecting 'THEN' after test expression in ST 'IF' statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting 'THEN' after test expression in ST 'IF' statement.");
 	 yyerrok;
 	}
 | IF expression error statement_list elseif_statement_list ELSE statement_list END_IF
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "expecting 'THEN' after test expression in ST 'IF' statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting 'THEN' after test expression in ST 'IF' statement.");
 	 yyerrok;
 	}
 | IF expression THEN elseif_statement_list END_IF
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no statement defined after 'THEN' in ST 'IF' statement.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no statement defined after 'THEN' in ST 'IF' statement.");
 	}
 | IF expression THEN elseif_statement_list ELSE statement_list END_IF
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no statement defined after 'THEN' in ST 'IF' statement.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no statement defined after 'THEN' in ST 'IF' statement.");
 	}
 | IF expression THEN statement_list elseif_statement_list ELSE END_IF
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@6), locl(@7), "no statement defined after 'ELSE' in ST 'IF' statement.");
+	 print_err_msg(current_filename, locl(@6), locf(@7), "no statement defined after 'ELSE' in ST 'IF' statement.");
 	}
 | IF expression THEN statement_list elseif_statement_list ELSE error END_IF
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@6), locl(@8), "invalid statement defined after 'ELSE' in ST 'IF' statement.");
+	 print_err_msg(current_filename, locf(@7), locl(@7), "invalid statement defined after 'ELSE' in ST 'IF' statement.");
 	 yyerrok;
 	}
 | IF error END_IF
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in ST 'IF' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in ST 'IF' statement.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8292,21 +8440,21 @@ elseif_statement:
 | ELSIF THEN statement_list
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no test expression defined for 'ELSEIF' statement in ST 'IF' statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no test expression defined for 'ELSEIF' statement in ST 'IF' statement.");
 	}
 | ELSIF error THEN statement_list
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid test expression defined for 'ELSEIF' statement in ST 'IF' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid test expression defined for 'ELSEIF' statement in ST 'IF' statement.");
 	 yyerrok;
 	}
 | ELSIF expression error statement_list
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "expecting 'THEN' after test expression in 'ELSEIF' statement of ST 'IF' statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting 'THEN' after test expression in 'ELSEIF' statement of ST 'IF' statement.");
 	 yyerrok;
 	}
 | ELSIF expression THEN error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid statement list in 'ELSEIF' statement of ST 'IF' statement.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid statement list in 'ELSEIF' statement of ST 'IF' statement.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8322,66 +8470,66 @@ case_statement:
 | CASE OF case_element_list END_CASE
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no test expression defined in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no test expression defined in ST 'CASE' statement.");
 	}
 | CASE OF case_element_list ELSE statement_list END_CASE
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no test expression defined in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no test expression defined in ST 'CASE' statement.");
 	}
 | CASE error OF case_element_list END_CASE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid test expression defined for ST 'CASE' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid test expression defined for ST 'CASE' statement.");
 	 yyerrok;
 	}
 | CASE error OF case_element_list ELSE statement_list END_CASE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid test expression defined for ST 'CASE' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid test expression defined for ST 'CASE' statement.");
 	 yyerrok;
 	}
 | CASE expression error case_element_list END_CASE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "expecting 'OF' after test expression in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting 'OF' after test expression in ST 'CASE' statement.");
 	 yyerrok;
 	}
 | CASE expression error case_element_list ELSE statement_list END_CASE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "expecting 'OF' after test expression in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting 'OF' after test expression in ST 'CASE' statement.");
 	 yyerrok;
 	}
 | CASE expression OF END_CASE
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no case element(s) defined after 'OF' in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no case element(s) defined after 'OF' in ST 'CASE' statement.");
 	}
 | CASE expression OF ELSE statement_list END_CASE
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no case element(s) defined after 'OF' in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no case element(s) defined after 'OF' in ST 'CASE' statement.");
 	}
 | CASE expression OF error END_CASE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "invalid case element(s) defined after 'OF' in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid case element(s) defined after 'OF' in ST 'CASE' statement.");
 	 yyerrok;
 	}
 | CASE expression OF error ELSE statement_list END_CASE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "invalid case element(s) defined after 'OF' in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid case element(s) defined after 'OF' in ST 'CASE' statement.");
 	 yyerrok;
 	}
 | CASE expression OF case_element_list ELSE END_CASE
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@5), locl(@6), "no statement defined after 'ELSE' in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locl(@5), locf(@6), "no statement defined after 'ELSE' in ST 'CASE' statement.");
 	}
 | CASE expression OF case_element_list ELSE error END_CASE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@5), locl(@7), "invalid statement defined after 'ELSE' in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locf(@6), locl(@6), "invalid statement defined after 'ELSE' in ST 'CASE' statement.");
 	 yyerrok;
 	}
 | CASE error END_CASE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in ST 'CASE' statement.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8404,11 +8552,11 @@ case_element:
 | case_list statement_list
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "':' missing after case list in ST 'CASE' statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "':' missing after case list in ST 'CASE' statement.");
 	}
 | case_list ':' error
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "invalid statement in case element of ST 'CASE' statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid statement in case element of ST 'CASE' statement.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8422,8 +8570,8 @@ case_list:
 	{$$ = $1; $$->add_element($3);}
 /* ERROR_CHECK_BEGIN */
 | case_list ',' error
-  {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid case in case list of ST parameter assignment list.");
+  {$$ = $1;
+	 print_err_msg(current_filename, locf(@3), locl(@3), "invalid case in case list of ST parameter assignment list.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8460,106 +8608,111 @@ for_statement:
 | FOR ASSIGN expression TO expression BY expression DO statement_list END_FOR
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no control variable defined in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no control variable defined in ST 'FOR' statement.");
 	}
 | FOR ASSIGN expression TO expression DO statement_list END_FOR
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no control variable defined in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no control variable defined in ST 'FOR' statement.");
 	}
 | FOR error ASSIGN expression TO expression BY expression DO statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid control variable defined for ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid control variable defined for ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR error ASSIGN expression TO expression DO statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid control variable defined for ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid control variable defined for ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable expression TO expression BY expression DO statement_list END_FOR
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "':=' missing between control variable and start expression in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "':=' missing between control variable and start expression in ST 'FOR' statement.");
 	}
 | FOR control_variable expression TO expression DO statement_list END_FOR
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@2), locl(@3), "':=' missing between control variable and start expression in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locl(@2), locf(@3), "':=' missing between control variable and start expression in ST 'FOR' statement.");
 	}
 | FOR control_variable error expression TO expression BY expression DO statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "expecting ':=' between control variable and start expression in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting ':=' between control variable and start expression in ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable error expression TO expression DO statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "expecting ':=' between control variable and start expression in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting ':=' between control variable and start expression in ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable ASSIGN TO expression BY expression DO statement_list END_FOR
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no start expression defined in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no start expression defined in ST 'FOR' statement.");
 	}
 | FOR control_variable ASSIGN TO expression DO statement_list END_FOR
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no start expression defined in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no start expression defined in ST 'FOR' statement.");
 	}
 | FOR control_variable ASSIGN error TO expression BY expression DO statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "invalid start expression defined in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid start expression defined in ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable ASSIGN error TO expression DO statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "invalid start expression in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid start expression in ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable ASSIGN expression error expression BY expression DO statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@6), "expecting 'TO' between start expression and end expression in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "expecting 'TO' between start expression and end expression in ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable ASSIGN expression error expression DO statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@4), locl(@6), "expecting 'TO' between start expression and end expression in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@5), locl(@5), "expecting 'TO' between start expression and end expression in ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable ASSIGN expression TO expression error expression DO statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@6), locl(@8), "expecting 'BY' between end expression and step expression in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@7), locl(@7), "expecting 'BY' between end expression and step expression in ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable ASSIGN expression TO expression BY expression error statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@8), locl(@10), "expecting 'DO' after step expression in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@9), locl(@9), "expecting 'DO' after step expression in ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable ASSIGN expression TO expression error statement_list END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@6), locl(@8), "expecting 'DO' after end expression in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@7), locl(@7), "expecting 'DO' after end expression in ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable ASSIGN expression TO expression BY expression DO END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@9), locl(@10), "no statement(s) defined after 'DO' in ST 'FOR' statement.");
-	 yyerrok;
+	 yynerrs++;
+	 print_err_msg(current_filename, locl(@9), locf(@10), "no statement(s) defined after 'DO' in ST 'FOR' statement.");
 	}
 | FOR control_variable ASSIGN expression TO expression DO END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@7), locl(@8), "no statement(s) defined after 'DO' in ST 'FOR' statement.");
-	 yyerrok;
+	 yynerrs++;
+	 print_err_msg(current_filename, locl(@7), locf(@8), "no statement(s) defined after 'DO' in ST 'FOR' statement.");
 	}
 | FOR control_variable ASSIGN expression TO expression BY expression DO error END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@9), locl(@11), "invalid statement(s) defined after 'DO' in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@10), locl(@10), "invalid statement(s) defined after 'DO' in ST 'FOR' statement.");
 	 yyerrok;
 	}
 | FOR control_variable ASSIGN expression TO expression DO error END_FOR
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@7), locl(@9), "invalid statement(s) defined after 'DO' in ST 'FOR' statement.");
+	 print_err_msg(current_filename, locf(@8), locl(@8), "invalid statement(s) defined after 'DO' in ST 'FOR' statement.");
+	 yyerrok;
+	}
+| FOR error END_FOR
+  {$$ = NULL;
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in ST 'FOR' statement.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8597,31 +8750,31 @@ while_statement:
 | WHILE DO statement_list END_WHILE
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no test expression defined in ST 'WHILE' statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no test expression defined in ST 'WHILE' statement.");
 	}
 | WHILE error DO statement_list END_WHILE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid test expression defined for ST 'WHILE' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid test expression defined for ST 'WHILE' statement.");
 	 yyerrok;
 	}
 | WHILE expression error statement_list END_WHILE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@2), locl(@4), "expecting 'DO' after test expression in ST 'WHILE' statement.");
+	 print_err_msg(current_filename, locf(@3), locl(@3), "expecting 'DO' after test expression in ST 'WHILE' statement.");
 	 yyerrok;
 	}
 | WHILE expression DO END_WHILE
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no statement(s) defined after 'DO' in ST 'WHILE' statement.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no statement(s) defined after 'DO' in ST 'WHILE' statement.");
 	}
 | WHILE expression DO error END_WHILE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "invalid statement(s) defined after 'DO' in ST 'WHILE' statement.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid statement(s) defined after 'DO' in ST 'WHILE' statement.");
 	 yyerrok;
 	}
 | WHILE error END_WHILE
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in ST 'WHILE' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in ST 'WHILE' statement.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8635,26 +8788,26 @@ repeat_statement:
 | REPEAT UNTIL expression END_REPEAT
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@1), locl(@2), "no statement(s) defined after 'REPEAT' in ST 'REPEAT' statement.");
+	 print_err_msg(current_filename, locl(@1), locf(@2), "no statement(s) defined after 'REPEAT' in ST 'REPEAT' statement.");
 	}
 | REPEAT error UNTIL expression END_REPEAT
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "invalid statement(s) defined after 'REPEAT' for ST 'REPEAT' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "invalid statement(s) defined after 'REPEAT' for ST 'REPEAT' statement.");
 	 yyerrok;
 	}
 | REPEAT statement_list UNTIL END_REPEAT
   {$$ = NULL;
 	 yynerrs++;
-	 print_err_msg(current_filename, locf(@3), locl(@4), "no test expression defined after 'UNTIL' in ST 'REPEAT' statement.");
+	 print_err_msg(current_filename, locl(@3), locf(@4), "no test expression defined after 'UNTIL' in ST 'REPEAT' statement.");
 	}
 | REPEAT statement_list UNTIL error END_REPEAT
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@3), locl(@5), "invalid test expression defined after 'UNTIL' in ST 'REPEAT' statement.");
+	 print_err_msg(current_filename, locf(@4), locl(@4), "invalid test expression defined after 'UNTIL' in ST 'REPEAT' statement.");
 	 yyerrok;
 	}
 | REPEAT error END_REPEAT
   {$$ = NULL;
-	 print_err_msg(current_filename, locf(@1), locl(@3), "unknown error in ST 'REPEAT' statement.");
+	 print_err_msg(current_filename, locf(@2), locl(@2), "unknown error in ST 'REPEAT' statement.");
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
@@ -8922,7 +9075,7 @@ int stage1_2__(const char *filename, const char *includedir, symbol_c **tree_roo
     fprintf (stderr, "\nFound %d error(s). Bailing out!\n", yynerrs /* global variable */);
     exit(EXIT_FAILURE);
   }
-
+  
   if (tree_root_ref != NULL)
     *tree_root_ref = tree_root;
 
