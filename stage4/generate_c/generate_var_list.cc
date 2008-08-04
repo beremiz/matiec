@@ -580,6 +580,16 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       current_name->symbol = symbol->configuration_name;
       current_symbol_list.push_back(*current_name);
       configuration_defined = true;
+      
+      switch (current_declarationtype) {
+        case variables_dt:
+          if (symbol->global_var_declarations != NULL)
+            symbol->global_var_declarations->accept(*this);
+          break;
+        default:
+          break;
+      }
+
       symbol->resource_declarations->accept(*this);
       current_symbol_list.pop_back();
       configuration_defined = false;
@@ -597,9 +607,16 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       current_name = new SYMBOL;
       current_name->symbol = symbol->resource_name;
       current_symbol_list.push_back(*current_name);
+
+      switch (current_declarationtype) {
+        case variables_dt:
+          if (symbol->global_var_declarations != NULL)
+            symbol->global_var_declarations->accept(*this);
+          break;
+        default:
+          break;
+      }
       
-      if (symbol->global_var_declarations != NULL)
-        symbol->global_var_declarations->accept(*this);
       
       symbol->resource_declaration->accept(*this);
       
