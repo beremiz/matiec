@@ -80,13 +80,15 @@ void error_exit(const char *file_name, int line_no) {
 
 
 /* forward declarations... */
-int stage1_2(const char *filename, const char *includedir, symbol_c **tree_root);
+int stage1_2(const char *filename, const char *includedir, symbol_c **tree_root, bool full);
 //int stage3(symbol_c *tree_root);
 int stage4(symbol_c *tree_root, const char *builddir);
 
 
 static void printusage(const char *cmd) {
-  printf("%s [<input_file>] [-I <include_directory>] [<target_directory>]\n", cmd);
+  printf("syntaxe: %s [-fh] <input_file> [-I <include_directory>] [<target_directory>]\n", cmd);
+  printf("  f : full token location on error messages\n");
+  printf("  h : show this help message\n");
 }
 
 
@@ -95,33 +97,49 @@ int main(int argc, char **argv) {
   symbol_c *tree_root;
   char * includedir = NULL;
   char * builddir = NULL;
+  bool full = false;
+  int offset = 0; 
 
-  if (argc == 5) {
-    builddir = argv[4];
-    argc = 4;
-  }
-
-  if (argc == 4) {
-    if (strcmp(argv[2], "-I") != 0) {
-      printusage(argv[0]);
-      return EXIT_FAILURE;
-    }
-    includedir = argv[3];
-    argc = 2;
-  }
-
-  if (argc == 3) {
-    builddir = argv[2];
-    argc = 2;
-  }    
-
-  if (argc != 2) {
+  if (argc < 2 || argc > 6) {
     printusage(argv[0]);
     return EXIT_FAILURE;
   }
 
+  if (strcmp(argv[1], "-h") == 0) {
+    printusage(argv[0]);
+    return 0;
+  }
+
+  if (strcmp(argv[1], "-f") == 0) {
+    if (argc == 2) {
+      printusage(argv[0]);
+      return EXIT_FAILURE;
+    }
+    full = true;
+    offset = 1;
+  }
+    
+  if (argc == (5 + offset)) {
+    builddir = argv[4 + offset];
+    argc = 4 + offset;
+  }
+
+  if (argc == (4 + offset)) {
+    if (strcmp(argv[2 + offset], "-I") != 0) {
+      printusage(argv[0]);
+      return EXIT_FAILURE;
+    }
+    includedir = argv[3 + offset];
+    argc = 2 + offset;
+  }
+
+  if (argc == (3 + offset)) {
+    builddir = argv[2 + offset];
+    argc = 2 + offset;
+  }    
+
   /* 1st Pass */
-  if (stage1_2(argv[1], includedir, &tree_root) < 0)
+  if (stage1_2(argv[1 + offset], includedir, &tree_root, full) < 0)
     return EXIT_FAILURE;
 
   /* 2nd Pass */

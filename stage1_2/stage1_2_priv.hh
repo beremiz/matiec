@@ -67,7 +67,6 @@
 void print_include_stack(void);
 
 
-
 /**************************************/
 /* The name of the file being parsed. */
 /**************************************/
@@ -81,7 +80,20 @@ void print_include_stack(void);
  */
 extern const char *current_filename;
 
+#define MAX_BUFFER_LENGTH 1000
 
+typedef struct {
+    int eof;
+    int lineNumber;
+    int currentChar;
+    int lineLength;
+    int currentTokenStart;
+    char* buffer;
+    FILE *in_file;
+  } tracking_t;
+
+int GetNextChar(char *b, int maxBuffer);
+tracking_t* GetNewTracking(FILE* in_file);
 
 /****************************************************/
 /* Controlling the entry to the body_state in flex. */

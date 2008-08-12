@@ -155,13 +155,22 @@ extern const char *current_filename;
  */
 extern YYLTYPE yylloc;
 
+#define YY_INPUT(buf,result,max_size)  {\
+    result = GetNextChar(buf, max_size);\
+    if (  result <= 0  )\
+      result = YY_NULL;\
+    }
+
 /* Macro that is executed for every action.
  * We use it to pass the location of the token
  * back to the bison parser...
  */
-#define YY_USER_ACTION { 					\
-	yylloc.first_line = yylloc.last_line = yylineno;	\
-	yylloc.first_column = yylloc.last_column = 0;		\
+#define YY_USER_ACTION {\
+	  yylloc.first_line = current_tracking->lineNumber;\
+  	yylloc.first_column = current_tracking->currentTokenStart;\
+  	yylloc.last_line = current_tracking->lineNumber;\
+  	yylloc.last_column = current_tracking->currentChar - 1;\
+  	current_tracking->currentTokenStart = current_tracking->currentChar;\
 	}
 
 
@@ -404,10 +413,11 @@ file_include_pragma			{file_include_pragma_beg}{file_include_pragma_filename}{fi
 
 typedef struct {
 	  YY_BUFFER_STATE buffer_state;
-	  int lineno;
+	  tracking_t* env;
 	  const char *filename;
 	} include_stack_t;
 
+tracking_t* current_tracking;
 include_stack_t include_stack[MAX_INCLUDE_DEPTH];
 int include_stack_ptr = 0;
 
@@ -524,7 +534,7 @@ digit		[0-9]
 octal_digit	[0-7]
 hex_digit	{digit}|[A-F]
 identifier	({letter}|(_({letter}|{digit})))((_?({letter}|{digit}))*)
-
+invalid_identifier ({letter}|{digit}|_)*
 
 /*******************/
 /* B.1.2 Constants */
@@ -710,7 +720,6 @@ incompl_location	%[IQM]\*
 	  rst_pop_state();
 	}
 
-
 	/***************************/
 	/* Handle the pragmas!     */
 	/***************************/
@@ -745,14 +754,10 @@ incompl_location	%[IQM]\*
 			    fprintf(stderr, "Includes nested too deeply\n");
 			    exit( 1 );
 			  }
-
-			  (include_stack[include_stack_ptr]).buffer_state = YY_CURRENT_BUFFER;
-			  (include_stack[include_stack_ptr]).lineno = yylineno;
-			  (include_stack[include_stack_ptr]).filename = current_filename;
-			  include_stack_ptr++;
-			  yylineno = 1;
-			  current_filename = strdup(yytext);
-
+        include_stack[include_stack_ptr].buffer_state = YY_CURRENT_BUFFER;
+        include_stack[include_stack_ptr].env = current_tracking;
+        include_stack[include_stack_ptr].filename = current_filename;
+			  
 			  for (i = 0, yyin = NULL; (INCLUDE_DIRECTORIES[i] != NULL) && (yyin == NULL); i++) {
 			    char *full_name = strdup3(INCLUDE_DIRECTORIES[i], "/", yytext);
 			    if (full_name == NULL) {
@@ -767,6 +772,10 @@ incompl_location	%[IQM]\*
 			    fprintf(stderr, "Error opening included file %s\n", yytext);
 			    exit( 1 );
 			  }
+
+			  current_filename = strdup(yytext);
+			  current_tracking = GetNewTracking(yyin);
+			  include_stack_ptr++;
 
 			  /* switch input buffer to new file... */
 			  yy_switch_to_buffer(yy_create_buffer(yyin, YY_BUF_SIZE));
@@ -784,6 +793,7 @@ incompl_location	%[IQM]\*
 			       *       parser is called once again with a new file.
 			       *       (In fact, we currently do just that!)
 			       */
+			  free(current_tracking);
 			  if (include_stack_ptr == 0) {
 			      /* yyterminate() terminates the scanner and returns a 0 to the 
 			       * scanner's  caller, indicating "all done".
@@ -796,10 +806,10 @@ incompl_location	%[IQM]\*
 			    yyterminate();
 			  }      
  else {
-			    --include_stack_ptr;	
+			    --include_stack_ptr;
 			    yy_delete_buffer(YY_CURRENT_BUFFER);
 			    yy_switch_to_buffer((include_stack[include_stack_ptr]).buffer_state);
-			    yylineno = include_stack[include_stack_ptr].lineno;
+			    current_tracking = include_stack[include_stack_ptr].env;
 			      /* removing constness of char *. This is safe actually,
 			       * since the only real const char * that is stored on the stack is
 			       * the first one (i.e. the one that gets stored in include_stack[0],
@@ -1474,6 +1484,7 @@ EXIT		return EXIT;		/* Keyword */
 	 *
 	 *  e.g.:  ':'  '('  ')'  '+'  '*'  ...
 	 */
+{invalid_identifier} return INVALID_IDENTIFIER;
 .	{return yytext[0];}
 
 
@@ -1491,7 +1502,7 @@ void print_include_stack(void) {
   if ((include_stack_ptr - 1) >= 0)
     fprintf (stderr, "in file "); 
   for (i = include_stack_ptr - 1; i >= 0; i--)
-    fprintf (stderr, "included from file %s:%d\n", include_stack[i].filename, include_stack[i].lineno);
+    fprintf (stderr, "included from file %s:%d\n", include_stack[i].filename, include_stack[i].env->lineNumber);
 }
 
 
@@ -1503,19 +1514,14 @@ void unput_text(unsigned int n) {
    * We therefore determine how many newlines are in the text we are returning,
    * and decrement the line counter acordingly...
    */
-  unsigned int i;
-  unsigned int line_number = 0;
-  int before_yylineno = yylineno;
-
+  /*unsigned int i;
+  
   for (i = n; i < strlen(yytext); i++)
     if (yytext[i] == '\n')
-      line_number++;
+      current_tracking->lineNumber--;*/
 
   /* now return all the text back to the input stream... */
   yyless(n);
-  
-  if (line_number > 0 && before_yylineno == yylineno)
-    yylineno = yylineno - line_number;
 }
 
 
@@ -1564,7 +1570,7 @@ int main(int argc, char **argv) {
 
   FILE *in_file;
   int res;
-
+	
   if (argc == 1) {
     /* Work as an interactive (command line) parser... */
     while((res=yylex()))
@@ -1586,8 +1592,8 @@ int main(int argc, char **argv) {
       fprintf(stderr, "(line %d)token: %d (%s)\n", yylineno, res, yylval.ID);
     }
   }
-
-  return 0;
+	
+	return 0;
 
 }
 #endif
