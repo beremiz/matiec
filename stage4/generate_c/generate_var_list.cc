@@ -350,7 +350,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     // SYM_REF2(global_var_spec_c, global_var_name, location)
     void *visit(global_var_spec_c *symbol) {
       if (symbol->global_var_name != NULL)
-        declare_variable(symbol->global_var_name);
+        declare_variable(symbol->global_var_name, "PT");
       return NULL;
     }
     

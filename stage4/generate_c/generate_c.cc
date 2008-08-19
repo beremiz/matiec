@@ -1209,7 +1209,8 @@ END_RESOURCE
       if (current_global_vars != NULL) {
         vardecl = new generate_c_vardecl_c(&s4o,
                       generate_c_vardecl_c::local_vf,
-                      generate_c_vardecl_c::global_vt);
+                      generate_c_vardecl_c::global_vt,
+                      current_resource_name);
         vardecl->print(current_global_vars);
         delete vardecl;
         s4o.print("\n");
@@ -1282,8 +1283,16 @@ END_RESOURCE
         s4o.print(s4o.indent_spaces);
         symbol->program_type_name->accept(*this);
         s4o.print(" ");
+        current_resource_name->accept(*this);
+        s4o.print("__");
         symbol->program_name->accept(*this);
-        s4o.print(";\n");
+        s4o.print(";\n#define ");
+        symbol->program_name->accept(*this);
+        s4o.print(" ");
+        current_resource_name->accept(*this);
+        s4o.print("__");
+        symbol->program_name->accept(*this);
+        s4o.print("\n");
       }
       if (wanted_declaretype == init_dt) {
         s4o.print(s4o.indent_spaces);

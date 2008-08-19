@@ -430,7 +430,9 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
     /* Used to declare 'void' in case no variables are declared in a function interface... */
     int finterface_var_count;
 
-
+    /* Current parsed resource name, for resource 
+     * specific global variable declaration (with #define...)*/
+    symbol_c *resource_name;
 
     /* Holds the references to the type and initial value
      * of the variables currently being declared.
@@ -554,7 +556,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
 
 
   public:
-    generate_c_vardecl_c(stage4out_c *s4o_ptr, varformat_t varformat, unsigned int vartype)
+    generate_c_vardecl_c(stage4out_c *s4o_ptr, varformat_t varformat, unsigned int vartype, symbol_c* res_name = NULL)
     : generate_c_typedecl_c(s4o_ptr) {
       generate_c_array_initialization = new generate_c_array_initialization_c(s4o_ptr);
       wanted_varformat = varformat;
@@ -564,6 +566,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
       current_var_init_symbol = NULL;
       globalnamespace         = NULL;
       nv = NULL;
+      resource_name = res_name;
     }
 
     ~generate_c_vardecl_c(void) {
@@ -1206,8 +1209,21 @@ void *visit(global_var_spec_c *symbol) {
         s4o.print(";\n");
         this->current_var_type_symbol->accept(*this);
         s4o.print(" *");
+        if (this->resource_name != NULL) {
+            this->resource_name->accept(*this);
+            s4o.print("__");
+        }
         symbol->global_var_name->accept(*this);
         s4o.print(";\n");
+        if (this->resource_name != NULL) {
+            s4o.print("#define ");
+            symbol->global_var_name->accept(*this);
+            s4o.print(" ");
+            this->resource_name->accept(*this);
+            s4o.print("__");
+            symbol->global_var_name->accept(*this);
+            s4o.print("\n");
+        }
       }
       break;
 
@@ -1264,13 +1280,21 @@ void *visit(global_var_list_c *symbol) {
       for(int i = 0; i < list->n; i++) {
         s4o.print(s4o.indent_spaces);
         this->current_var_type_symbol->accept(*this);
-        s4o.print(" __");
+        s4o.print(" ");
+        if(this->resource_name != NULL)
+            this->resource_name->accept(*this);
+        s4o.print("__");
         list->elements[i]->accept(*this);
         s4o.print(";\n");
+        if(this->resource_name != NULL)
+            s4o.print("static ");
         this->current_var_type_symbol->accept(*this);
         s4o.print(" *");
         list->elements[i]->accept(*this);
-        s4o.print(" = &__");
+        s4o.print(" = &");
+        if(this->resource_name != NULL)
+            this->resource_name->accept(*this);
+        s4o.print("__");
         list->elements[i]->accept(*this);
 #if 0
         if (wanted_varformat == localinit_vf) {
@@ -1597,23 +1621,23 @@ END_RESOURCE
 // SYM_REF4(resource_declaration_c, resource_name, resource_type_name, global_var_declarations, resource_declaration)
 void *visit(resource_declaration_c *symbol) {
   TRACE("resource_declaration_c");
-
-  if ((wanted_vartype & resource_vt) != 0) {
-    s4o.print(s4o.indent_spaces + "struct {\n");
-    s4o.indent_right();
-
-    current_vartype = resource_vt;
-    if (NULL != symbol->global_var_declarations)
-      symbol->global_var_declarations->accept(*this); // will contain VAR_GLOBAL declarations!!
-    if (NULL != symbol->resource_declaration)
-      symbol->resource_declaration->accept(*this);    // will contain PROGRAM declarations!!
-    current_vartype = none_vt;
-
-    s4o.indent_left();
-    s4o.print(s4o.indent_spaces + "} ");
-    symbol->resource_name->accept(*this);
-    s4o.print(";\n");
-  }
+//// Not used anymore. Even resource list are processed as single resource
+//  if ((wanted_vartype & resource_vt) != 0) {
+//    s4o.print(s4o.indent_spaces + "struct {\n");
+//    s4o.indent_right();
+//
+//    current_vartype = resource_vt;
+//    if (NULL != symbol->global_var_declarations)
+//      symbol->global_var_declarations->accept(*this); // will contain VAR_GLOBAL declarations!!
+//    if (NULL != symbol->resource_declaration)
+//      symbol->resource_declaration->accept(*this);    // will contain PROGRAM declarations!!
+//    current_vartype = none_vt;
+//
+//    s4o.indent_left();
+//    s4o.print(s4o.indent_spaces + "} ");
+//    symbol->resource_name->accept(*this);
+//    s4o.print(";\n");
+//  }
   return NULL;
 }
 
