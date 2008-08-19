@@ -1,3 +1,6 @@
+#ifndef IEC_TYPES_H
+#define IEC_TYPES_H
+
 #include <limits.h>
 #include <float.h>
 #include <time.h>
@@ -51,3 +54,4 @@ typedef struct {
     uint8_t body[STR_MAX_LEN];
 } IEC_STRING;
 
+#endif /*IEC_TYPES_H*/

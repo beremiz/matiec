@@ -29,8 +29,6 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "iec_std_lib_generated.h"
-
 #ifdef DEBUG_IEC
 #define DBG(...) printf(__VA_ARGS__);
 #define DBG_TYPE(TYPENAME, name) __print_##TYPENAME(name);
@@ -39,47 +37,13 @@
 #define DBG_TYPE(TYPENAME, name)
 #endif
 
-/*********************/
-/*  IEC Types defs   */
-/*********************/
-
-/* Include non windows.h clashing typedefs */
-#include "iec_types.h"
-
-/* Those typdefs clash with windows.h */
-/* i.e. this file cannot be included aside windows.h */
-typedef IEC_BOOL  BOOL;
-
-#define TRUE 1
-#define FALSE 0
-
-typedef IEC_SINT    SINT;
-typedef IEC_INT   INT;
-typedef IEC_DINT   DINT;
-typedef IEC_LINT   LINT;
-
-typedef IEC_USINT    USINT;
-typedef IEC_UINT   UINT;
-typedef IEC_UDINT   UDINT;
-typedef IEC_ULINT   ULINT;
-
-typedef IEC_BYTE    BYTE;
-typedef IEC_WORD   WORD;
-typedef IEC_DWORD   DWORD;
-typedef IEC_LWORD   LWORD;
-
-typedef IEC_REAL    REAL;
-typedef IEC_LREAL   LREAL;
-
-typedef IEC_TIME TIME;
-typedef IEC_DATE DATE;
-typedef IEC_DT DT;
-typedef IEC_TOD TOD;
+/*
+ * Include type defs.
+ */
+#include "iec_types_all.h"
 
 #define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t1.tv_nsec - t2.tv_nsec : t1.tv_sec - t2.tv_sec) 
 extern TIME __CURRENT_TIME;
-
-typedef IEC_STRING STRING;
 
 #define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
 
@@ -173,21 +137,6 @@ typedef union __IL_DEFVAR_T {
     DT  DTvar;
     DATE    DATEvar;
 } __IL_DEFVAR_T;
-
-typedef struct {
-  BOOL state;     // current step state. 0 : inative, 1: active
-  BOOL prev_state;  // previous step state. 0 : inative, 1: active
-  TIME elapsed_time;  // time since step is active
-} STEP;
-
-typedef struct {
-  BOOL stored;  // action storing state. 0 : not stored, 1: stored
-  BOOL state; // current action state. 0 : inative, 1: active
-  BOOL set;   // set have been requested (reset each time the body is evaluated)
-  BOOL reset; // reset have been requested (reset each time the body is evaluated)
-  TIME set_remaining_time;    // time before set will be requested
-  TIME reset_remaining_time;  // time before reset will be requested
-} ACTION;
 
 /*****************/
 /* Misc internal */
@@ -1020,44 +969,29 @@ __ne_time(TIME)
 __compare_string(__ne_, != )
 
 
-
-/********************************/
-/*       Type tools             */
-/********************************/
-/* Enumerate native types */
-#define __decl_enum_type(TYPENAME) TYPENAME##_ENUM,
-typedef enum{
-        ANY(__decl_enum_type)
-} __IEC_types_enum;
-
-/* Get size of type from its number */
-#define __decl_size_case(TYPENAME) case TYPENAME##_ENUM: return sizeof(TYPENAME);
-static inline USINT __get_type_enum_size(__IEC_types_enum t){
- switch(t){
-  ANY(__decl_size_case)
- }
-}
-
-/* Get string representation of referenced by void pointer where type is given as its number */
-#define __decl_str_case(cat,TYPENAME) case TYPENAME##_ENUM:return __##cat##_to_string(*(TYPENAME*)p);
-#define __decl_str_case_bit(TYPENAME) __decl_str_case(bit,TYPENAME)
-#define __decl_str_case_real(TYPENAME) __decl_str_case(real,TYPENAME)
-#define __decl_str_case_sint(TYPENAME) __decl_str_case(sint,TYPENAME)
-#define __decl_str_case_uint(TYPENAME) __decl_str_case(uint,TYPENAME)
-static inline STRING __get_type_enum_str(__IEC_types_enum t, void* p){
- switch(t){
-  __decl_str_case(bool,BOOL)
-  ANY_NBIT(__decl_str_case_bit)
-  ANY_REAL(__decl_str_case_real)
-  ANY_SINT(__decl_str_case_sint)
-  ANY_UINT(__decl_str_case_uint)
-  __decl_str_case(time,TIME)
-  __decl_str_case(date,DATE)
-  __decl_str_case(tod,TOD)
-  __decl_str_case(dt, DT)
- }
-}
-
+///* Get string representation of variable referenced by a void pointer
+// * where type is given as its number */
+//#define __decl_str_case(cat,TYPENAME) \
+//    case TYPENAME##_ENUM:\
+//        return __##cat##_to_string(*(TYPENAME*)p);
+//#define __decl_str_case_bit(TYPENAME) __decl_str_case(bit,TYPENAME)
+//#define __decl_str_case_real(TYPENAME) __decl_str_case(real,TYPENAME)
+//#define __decl_str_case_sint(TYPENAME) __decl_str_case(sint,TYPENAME)
+//#define __decl_str_case_uint(TYPENAME) __decl_str_case(uint,TYPENAME)
+//static inline STRING __get_type_enum_str(__IEC_types_enum t, void* p){
+// switch(t){
+//  __decl_str_case(bool,BOOL)
+//  ANY_NBIT(__decl_str_case_bit)
+//  ANY_REAL(__decl_str_case_real)
+//  ANY_SINT(__decl_str_case_sint)
+//  ANY_UINT(__decl_str_case_uint)
+//  __decl_str_case(time,TIME)
+//  __decl_str_case(date,DATE)
+//  __decl_str_case(tod,TOD)
+//  __decl_str_case(dt, DT)
+// }
+//}
+//
 
 
 
