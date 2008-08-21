@@ -28,6 +28,8 @@
  * and stage 2 (syntax parser) during the first pass.
  */
 
+#include <string.h>
+#include <stdlib.h>
 
 /* file with declaration of absyntax classes... */
 #include "../absyntax/absyntax.hh"

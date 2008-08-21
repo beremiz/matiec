@@ -43,7 +43,7 @@
 //#include "../../util/symtable.hh"
 
 
-
+#include <stdlib.h>
 
 
 class generate_c_typedecl_c: public generate_c_base_c {

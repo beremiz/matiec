@@ -37,7 +37,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
+#include <stdlib.h>
 
 #include "stage4.hh"
 

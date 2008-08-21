@@ -41,6 +41,7 @@
 #include <sstream>
 #include <typeinfo>
 #include <list>
+#include <strings.h>
 
 #include "../../util/symtable.hh"
 #include "../../util/dsymtable.hh"

@@ -44,7 +44,7 @@
 
 //#include "generate_c.hh"
 
-
+#include <string.h>
 
 
 
