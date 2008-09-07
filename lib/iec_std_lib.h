@@ -44,6 +44,7 @@
 
 #define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t1.tv_nsec - t2.tv_nsec : t1.tv_sec - t2.tv_sec) 
 extern TIME __CURRENT_TIME;
+extern BOOL __DEBUG;
 
 #define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
 
