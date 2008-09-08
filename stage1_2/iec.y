@@ -4961,12 +4961,12 @@ transition_priority:
   {$$ = NULL;}
 | '(' {cmd_goto_sfc_priority_state();} PRIORITY {cmd_pop_state();} ASSIGN integer ')'
 	{$$ = $6;}
-/* ERROR_CHECK_BEGIN */
+/* ERROR_CHECK_BEGIN 
 | '(' ASSIGN integer ')'
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'PRIORITY' missing between '(' and ':=' in transition declaration with priority."); yynerrs++;}
 | '(' error ASSIGN integer ')'
 	{$$ = NULL; print_err_msg(locf(@2), locl(@2), "expecting 'PRIORITY' between '(' and ':=' in transition declaration with priority."); yyerrok;}
-/* ERROR_CHECK_END */
+ ERROR_CHECK_END */
 ;
 
 
