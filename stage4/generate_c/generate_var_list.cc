@@ -439,7 +439,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       symbol->step_name->accept(*this);
       s4o.print(".X;");
       print_symbol_list();
-      s4o.print("step_list[");
+      s4o.print("__step_list[");
       print_step_number();
       s4o.print("].state;STEP;\n");
       step_number++;
@@ -455,7 +455,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       symbol->step_name->accept(*this);
       s4o.print(".X;");
       print_symbol_list();
-      s4o.print("step_list[");
+      s4o.print("__step_list[");
       print_step_number();
       s4o.print("].state;STEP;\n");
       step_number++;
@@ -479,7 +479,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       symbol->to_steps->accept(*this);
       s4o.print(";");
       print_symbol_list();
-      s4o.print("transition_list[");
+      s4o.print("__debug_transition_list[");
       print_transition_number();
       s4o.print("];TRANSITION;\n");
       transition_number++;
@@ -518,7 +518,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       symbol->action_name->accept(*this);
       s4o.print(".Q;");
       print_symbol_list();
-      s4o.print("action_list[");
+      s4o.print("__action_list[");
       print_action_number();
       s4o.print("].state;ACTION;\n");
       action_number++;

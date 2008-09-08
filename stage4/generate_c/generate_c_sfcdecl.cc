@@ -87,24 +87,29 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
             symbol->elements[i]->accept(*this);
           
           /* steps table declaration */
-          s4o.print(s4o.indent_spaces + "STEP step_list[");
+          s4o.print(s4o.indent_spaces + "STEP __step_list[");
           s4o.print_integer(step_number);
           s4o.print("];\n");
-          s4o.print(s4o.indent_spaces + "UINT nb_steps;\n");
+          s4o.print(s4o.indent_spaces + "UINT __nb_steps;\n");
           
           /* actions table declaration */
-          s4o.print(s4o.indent_spaces + "ACTION action_list[");
+          s4o.print(s4o.indent_spaces + "ACTION __action_list[");
           s4o.print_integer(action_number);
           s4o.print("];\n");
-          s4o.print(s4o.indent_spaces + "UINT nb_actions;\n");
+          s4o.print(s4o.indent_spaces + "UINT __nb_actions;\n");
           
           /* transitions table declaration */
-          s4o.print(s4o.indent_spaces + "BOOL transition_list[");
+          s4o.print(s4o.indent_spaces + "BOOL __transition_list[");
+          s4o.print_integer(transition_number);
+          s4o.print("];\n");
+          
+          /* transitions debug table declaration */
+          s4o.print(s4o.indent_spaces + "BOOL __debug_transition_list[");
           s4o.print_integer(transition_number);
           s4o.print("];\n");
           
           /* last_ticktime declaration */
-          s4o.print(s4o.indent_spaces + "TIME lasttick_time;\n");
+          s4o.print(s4o.indent_spaces + "TIME __lasttick_time;\n");
           break;
         case sfcinit_sd:
           s4o.print(s4o.indent_spaces);
@@ -116,7 +121,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
             symbol->elements[i]->accept(*this);
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
-          s4o.print("nb_steps = ");
+          s4o.print("__nb_steps = ");
           s4o.print_integer(step_number);
           s4o.print(";\n");
           step_number = 0;
@@ -126,11 +131,11 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(s4o.indent_spaces + "STEP temp_step = {0, 0, 0};\n");
           s4o.print(s4o.indent_spaces + "for(i = 0; i < ");
           print_variable_prefix();
-          s4o.print("nb_steps; i++) {\n");
+          s4o.print("__nb_steps; i++) {\n");
           s4o.indent_right();
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
-          s4o.print("step_list[i] = temp_step;\n");
+          s4o.print("__step_list[i] = temp_step;\n");
           s4o.indent_left();
           s4o.print(s4o.indent_spaces + "}\n");
           for(int i = 0; i < symbol->n; i++)
@@ -142,7 +147,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
             symbol->elements[i]->accept(*this);
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
-          s4o.print("nb_actions = ");
+          s4o.print("__nb_actions = ");
           s4o.print_integer(action_number);
           s4o.print(";\n");
           action_number = 0;
@@ -152,17 +157,17 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(s4o.indent_spaces + "ACTION temp_action = {0, 0, 0, 0, 0, 0};\n");
           s4o.print(s4o.indent_spaces + "for(i = 0; i < ");
           print_variable_prefix();
-          s4o.print("nb_actions; i++) {\n");
+          s4o.print("__nb_actions; i++) {\n");
           s4o.indent_right();
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
-          s4o.print("action_list[i] = temp_action;\n");
+          s4o.print("__action_list[i] = temp_action;\n");
           s4o.indent_left();
           s4o.print(s4o.indent_spaces + "}\n");
           
           /* last_ticktime initialisation */
           print_variable_prefix();
-          s4o.print("lasttick_time = __CURRENT_TIME;\n");
+          s4o.print("__lasttick_time = __CURRENT_TIME;\n");
           break;
         case stepdef_sd:
           s4o.print("// Steps definitions\n");
@@ -203,7 +208,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
         case sfcinit_sd:
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
-          s4o.print("step_list[");
+          s4o.print("__step_list[");
           s4o.print_integer(step_number);
           s4o.print("].state = 1;\n");
           step_number++;

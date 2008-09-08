@@ -53,6 +53,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
     typedef enum {
       transitionlist_sg,
       transitiontest_sg,
+      transitiontestdebug_sg,
       stepset_sg,
       stepreset_sg,
       actionassociation_sg,
@@ -112,7 +113,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
 
     void print_step_argument(symbol_c *step_name, const char* argument) {
       print_variable_prefix();
-      s4o.print("step_list[");
+      s4o.print("__step_list[");
       s4o.print(SFC_STEP_ACTION_PREFIX);
       step_name->accept(*this);
       s4o.print("].");
@@ -121,7 +122,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
 
     void print_action_argument(symbol_c *action_name, const char* argument) {
       print_variable_prefix();
-      s4o.print("action_list[");
+      s4o.print("__action_list[");
       s4o.print(SFC_STEP_ACTION_PREFIX);
       action_name->accept(*this);
       s4o.print("].");
@@ -262,7 +263,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
           if (symbol->integer != NULL) {
             s4o.print(s4o.indent_spaces + "if (");
             print_variable_prefix();
-            s4o.print("transition_list[");
+            s4o.print("__transition_list[");
             print_transition_number();
             s4o.print("]) {\n");
             s4o.indent_right();
@@ -273,11 +274,20 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print(s4o.indent_spaces + "}\n");
           }
           s4o.indent_left();
-          s4o.print(s4o.indent_spaces + "}\n" + s4o.indent_spaces + "else {\n");
+          s4o.print(s4o.indent_spaces + "}\n");
+          s4o.print(s4o.indent_spaces + "else {\n");
           s4o.indent_right();
+          // Calculate transition value for debug
+          s4o.print(s4o.indent_spaces + "if (__DEBUG) {\n");
+          s4o.indent_right();
+          wanted_sfcgeneration = transitiontestdebug_sg;
+          symbol->transition_condition->accept(*this);
+          wanted_sfcgeneration = transitiontest_sg;
+          s4o.indent_left();
+          s4o.print(s4o.indent_spaces + "}\n");
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
-          s4o.print("transition_list[");
+          s4o.print("__transition_list[");
           print_transition_number();
           s4o.print("] = 0;\n");
           s4o.indent_left();
@@ -286,7 +296,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
         case stepset_sg:
           s4o.print(s4o.indent_spaces + "if (");
           print_variable_prefix();
-          s4o.print("transition_list[");
+          s4o.print("__transition_list[");
           print_transition_number();
           s4o.print("]) {\n");
           s4o.indent_right();
@@ -299,7 +309,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
           if (symbol->integer == NULL) {
             s4o.print(s4o.indent_spaces + "if (");
             print_variable_prefix();
-            s4o.print("transition_list[");
+            s4o.print("__transition_list[");
             print_transition_number();
             s4o.print("]) {\n");
             s4o.indent_right();
@@ -318,12 +328,17 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
     void *visit(transition_condition_c *symbol) {
       switch (wanted_sfcgeneration) {
         case transitiontest_sg:
+        case transitiontestdebug_sg:
           // Transition condition is in IL
           if (symbol->transition_condition_il != NULL) {
             generate_c_il->declare_backup_variable();
             s4o.print(s4o.indent_spaces);
             symbol->transition_condition_il->accept(*generate_c_il);
             print_variable_prefix();
+            if (wanted_sfcgeneration == transitiontestdebug_sg)
+              s4o.print("__debug_");
+            else
+              s4o.print("__");
             s4o.print("transition_list[");
             print_transition_number();
             s4o.print("] = ");
@@ -334,11 +349,30 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
           if (symbol->transition_condition_st != NULL) {
             s4o.print(s4o.indent_spaces);
             print_variable_prefix();
+            if (wanted_sfcgeneration == transitiontestdebug_sg)
+              s4o.print("__debug_");
+            else
+              s4o.print("__");
             s4o.print("transition_list[");
             print_transition_number();
             s4o.print("] = ");
             symbol->transition_condition_st->accept(*generate_c_st);
             s4o.print(";\n");
+          }
+          if (wanted_sfcgeneration == transitiontest_sg) {
+            s4o.print(s4o.indent_spaces + "if (__DEBUG) {\n");
+            s4o.indent_right();
+            s4o.print(s4o.indent_spaces);
+            print_variable_prefix();
+            s4o.print("__debug_transition_list[");
+            print_transition_number();
+            s4o.print("] = ");
+            print_variable_prefix();
+            s4o.print("__transition_list[");
+            print_transition_number();
+            s4o.print("];\n");
+            s4o.indent_left();
+            s4o.print(s4o.indent_spaces + "}\n");
           }
           break;
         default:
@@ -352,7 +386,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
         case actionbody_sg:
           s4o.print(s4o.indent_spaces + "if(");
           print_variable_prefix();
-          s4o.print("action_list[");
+          s4o.print("__action_list[");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->action_name->accept(*this);
           s4o.print("].state) {\n");
@@ -591,31 +625,31 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       s4o.print(s4o.indent_spaces +"current_time = __CURRENT_TIME;\n");
       s4o.print(s4o.indent_spaces +"elapsed_time = __time_sub(current_time, ");
       print_variable_prefix();
-      s4o.print("lasttick_time);\n");
+      s4o.print("__lasttick_time);\n");
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("lasttick_time = current_time;\n");
+      s4o.print("__lasttick_time = current_time;\n");
       
       /* generate step initialisations */
       s4o.print(s4o.indent_spaces + "// Steps initialisation\n");
       s4o.print(s4o.indent_spaces + "for (i = 0; i < ");
       print_variable_prefix();
-      s4o.print("nb_steps; i++) {\n");
+      s4o.print("__nb_steps; i++) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("step_list[i].prev_state = ");
+      s4o.print("__step_list[i].prev_state = ");
       print_variable_prefix();
-      s4o.print("step_list[i].state;\n");
+      s4o.print("__step_list[i].state;\n");
       s4o.print(s4o.indent_spaces + "if (");
       print_variable_prefix();
-      s4o.print("step_list[i].state) {\n");
+      s4o.print("__step_list[i].state) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("step_list[i].elapsed_time = __time_add(");
+      s4o.print("__step_list[i].elapsed_time = __time_add(");
       print_variable_prefix();
-      s4o.print("step_list[i].elapsed_time, elapsed_time);\n");
+      s4o.print("__step_list[i].elapsed_time, elapsed_time);\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
       s4o.indent_left();
@@ -625,38 +659,38 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       s4o.print(s4o.indent_spaces + "// Actions initialisation\n");
       s4o.print(s4o.indent_spaces + "for (i = 0; i < ");
       print_variable_prefix();
-      s4o.print("nb_actions; i++) {\n");
+      s4o.print("__nb_actions; i++) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].state = 0;\n");
+      s4o.print("__action_list[i].state = 0;\n");
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].set = 0;\n");
+      s4o.print("__action_list[i].set = 0;\n");
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].reset = 0;\n");
+      s4o.print("__action_list[i].reset = 0;\n");
       s4o.print(s4o.indent_spaces + "if (");
       s4o.print("__gt_TIME(2, ");
       print_variable_prefix();
-      s4o.print("action_list[i].set_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
+      s4o.print("__action_list[i].set_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].set_remaining_time = __time_sub(");
+      s4o.print("__action_list[i].set_remaining_time = __time_sub(");
       print_variable_prefix();
-      s4o.print("action_list[i].set_remaining_time, elapsed_time);\n");
+      s4o.print("__action_list[i].set_remaining_time, elapsed_time);\n");
       s4o.print(s4o.indent_spaces + "if (");
       s4o.print("__le_TIME(2, ");
       print_variable_prefix();
-      s4o.print("action_list[i].set_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
+      s4o.print("__action_list[i].set_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].set_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
+      s4o.print("__action_list[i].set_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].set = 1;\n");
+      s4o.print("__action_list[i].set = 1;\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
       s4o.indent_left();
@@ -664,24 +698,24 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       s4o.print(s4o.indent_spaces + "if (");
       s4o.print("__gt_TIME(2, ");
       print_variable_prefix();
-      s4o.print("action_list[i].reset_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
+      s4o.print("__action_list[i].reset_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].reset_remaining_time = __time_sub(");
+      s4o.print("__action_list[i].reset_remaining_time = __time_sub(");
       print_variable_prefix();
-      s4o.print("action_list[i].reset_remaining_time, elapsed_time);\n");
+      s4o.print("__action_list[i].reset_remaining_time, elapsed_time);\n");
       s4o.print(s4o.indent_spaces + "if (");
       s4o.print("__le_TIME(2, ");
       print_variable_prefix();
-      s4o.print("action_list[i].reset_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
+      s4o.print("__action_list[i].reset_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0))) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].reset_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
+      s4o.print("__action_list[i].reset_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].reset = 1;\n");
+      s4o.print("__action_list[i].reset = 1;\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
       s4o.indent_left();
@@ -721,33 +755,33 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       s4o.print(s4o.indent_spaces + "// Actions state evaluation\n");
       s4o.print(s4o.indent_spaces + "for (i = 0; i < ");
       print_variable_prefix();
-      s4o.print("nb_actions; i++) {\n");
+      s4o.print("__nb_actions; i++) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces + "if (");
       print_variable_prefix();
-      s4o.print("action_list[i].set) {\n");
+      s4o.print("__action_list[i].set) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].stored = 1;\n");
+      s4o.print("__action_list[i].stored = 1;\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n" + s4o.indent_spaces + "if (");
       print_variable_prefix();
-      s4o.print("action_list[i].reset) {\n");
+      s4o.print("__action_list[i].reset) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].set_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n" + s4o.indent_spaces);
+      s4o.print("__action_list[i].set_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n" + s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].reset_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n" + s4o.indent_spaces);
+      s4o.print("__action_list[i].reset_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n" + s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].stored = 0;\n");
+      s4o.print("__action_list[i].stored = 0;\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n" + s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("action_list[i].state |= ");
+      s4o.print("__action_list[i].state |= ");
       print_variable_prefix();
-      s4o.print("action_list[i].stored;\n");
+      s4o.print("__action_list[i].stored;\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n\n");
       
