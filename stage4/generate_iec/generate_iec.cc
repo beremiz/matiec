@@ -120,6 +120,18 @@ void *print_unary_expression(symbol_c *exp,
 
 
   public:
+
+/*  EN/ENO */
+void *visit(en_param_c *symbol) {
+  s4o.print("EN");
+  return NULL;
+}
+
+void *visit(eno_param_c *symbol) {
+  s4o.print("ENO");
+  return NULL;
+}
+
 /***************************/
 /* 2.1.6 Pragmas */
 /***************************/
@@ -1617,6 +1629,13 @@ void *visit(JMP_operator_c *symbol) {s4o.print("JMP "); return NULL;}
 void *visit(JMPC_operator_c *symbol) {s4o.print("JMPC "); return NULL;}
 void *visit(JMPCN_operator_c *symbol) {s4o.print("JMPCN "); return NULL;}
 
+/*| any_identifier ASSIGN */
+void *visit(il_assign_operator_c *symbol) {
+  symbol->variable_name->accept(*this);
+  s4o.print(" := ");
+  return NULL;
+}
+
 /*| [NOT] any_identifier SENDTO */
 void *visit(il_assign_out_operator_c *symbol) {
   if (symbol->option != NULL)
@@ -1676,6 +1695,7 @@ void *visit( assignment_statement_c *symbol) {
 /*****************************************/
 /* B 3.2.2 Subprogram Control Statements */
 /*****************************************/
+
 /*  RETURN */
 void *visit(return_statement_c *symbol) {
   s4o.print("RETURN");

@@ -272,6 +272,8 @@ void print_err_msg(int first_line,
 /* TODO: get the syntax parser to handle these tokens... */
 %token	EN
 %token	ENO
+%type <leaf>	en_param
+%type <leaf>	eno_param
 
 
 
@@ -1304,6 +1306,15 @@ start:
 /* the pragmas... */
 pragma:
   pragma_token	{$$ = new pragma_c($1, locloc(@$));}
+
+/* EN/ENO */
+en_param:
+  EN	{$$ = new en_param_c(locloc(@$));}
+;
+
+eno_param:
+  ENO	{$$ = new eno_param_c(locloc(@$));}
+;
 
 
 
@@ -6386,6 +6397,9 @@ il_expr_operator_noclash:
 il_assign_operator:
 /*  variable_name ASSIGN */
   any_identifier ASSIGN
+	{$$ = new il_assign_operator_c($1, locloc(@$));}
+| en_param ASSIGN
+	{$$ = new il_assign_operator_c($1, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | error ASSIGN
   {$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid parameter defined in parameter assignment."); yyerrok;}
@@ -6398,8 +6412,12 @@ il_assign_out_operator:
 /*  any_identifier SENDTO */
   sendto_identifier SENDTO
 	{$$ = new il_assign_out_operator_c(NULL, $1, locloc(@$));}
+| eno_param SENDTO
+	{$$ = new il_assign_out_operator_c(NULL, $1, locloc(@$));}
 /*| NOT variable_name SENDTO */
 | NOT sendto_identifier SENDTO
+	{$$ = new il_assign_out_operator_c(new not_paramassign_c(locloc(@1)), $2, locloc(@$));}
+| NOT eno_param SENDTO
 	{$$ = new il_assign_out_operator_c(new not_paramassign_c(locloc(@1)), $2, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | error SENDTO
@@ -6815,7 +6833,6 @@ subprogram_control_statement:
 | return_statement
 ;
 
-
 return_statement:
   RETURN	{$$ = new return_statement_c(locloc(@$));}
 ;
@@ -6920,16 +6937,28 @@ param_assignment_nonformal:
 param_assignment_formal:
   any_identifier ASSIGN expression
 	{$$ = new input_variable_param_assignment_c($1, $3, locloc(@$));}
+| en_param ASSIGN expression
+	{$$ = new input_variable_param_assignment_c($1, $3, locloc(@$));}
 /*| variable_name SENDTO variable */
 /*| any_identifier SENDTO variable */
 | sendto_identifier SENDTO variable
-	{$$ = new output_variable_param_assignment_c(NULL,$1, $3, locloc(@$));}
+	{$$ = new output_variable_param_assignment_c(NULL, $1, $3, locloc(@$));}
+| eno_param SENDTO variable
+	{$$ = new output_variable_param_assignment_c(NULL, $1, $3, locloc(@$));}
 /*| NOT variable_name SENDTO variable */
 /*| NOT any_identifier SENDTO variable*/
 | NOT sendto_identifier SENDTO variable
-	{$$ = new output_variable_param_assignment_c(new not_paramassign_c(locloc(@$)),$2, $4, locloc(@$));}
+	{$$ = new output_variable_param_assignment_c(new not_paramassign_c(locloc(@$)), $2, $4, locloc(@$));}
+| NOT eno_param SENDTO variable
+	{$$ = new output_variable_param_assignment_c(new not_paramassign_c(locloc(@$)), $2, $4, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | any_identifier ASSIGN error
+  {$$ = NULL;
+	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no expression defined in ST formal parameter assignment.");}
+	 else {print_err_msg(locf(@3), locl(@3), "invalid expression in ST formal parameter assignment."); yyclearin;}
+	 yyerrok;
+	}
+| en_param ASSIGN error
   {$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no expression defined in ST formal parameter assignment.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid expression in ST formal parameter assignment."); yyclearin;}
@@ -6941,11 +6970,23 @@ param_assignment_formal:
 	 else {print_err_msg(locf(@3), locl(@3), "invalid expression in ST formal parameter out assignment."); yyclearin;}
 	 yyerrok;
 	}
+| eno_param SENDTO error
+  {$$ = NULL;
+	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no expression defined in ST formal parameter out assignment.");}
+	 else {print_err_msg(locf(@3), locl(@3), "invalid expression in ST formal parameter out assignment."); yyclearin;}
+	 yyerrok;
+	}
 | NOT SENDTO variable
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "no parameter name defined in ST formal parameter out negated assignment."); yynerrs++;}
 | NOT error SENDTO variable
   {$$ = NULL; print_err_msg(locf(@2), locl(@2), "invalid parameter name defined in ST formal parameter out negated assignment."); yyerrok;}
 | NOT sendto_identifier SENDTO error
+  {$$ = NULL;
+	 if (is_current_syntax_token()) {print_err_msg(locl(@3), locf(@4), "no expression defined in ST formal parameter out negated assignment.");}
+	 else {print_err_msg(locf(@4), locl(@4), "invalid expression in ST formal parameter out negated assignment."); yyclearin;}
+	 yyerrok;
+	}
+| NOT eno_param SENDTO error
   {$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@3), locf(@4), "no expression defined in ST formal parameter out negated assignment.");}
 	 else {print_err_msg(locf(@4), locl(@4), "invalid expression in ST formal parameter out negated assignment."); yyclearin;}

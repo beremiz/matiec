@@ -37,11 +37,14 @@
  */
 
 
+/* EN/ENO */
+SYM_REF0(en_param_c)
+SYM_REF0(eno_param_c)
+
 /***************************/
 /* 2.1.6 - Pragmas */
 /***************************/
 SYM_TOKEN(pragma_c)
-
 
 /***************************/
 /* B 0 - Programming Model */
@@ -800,6 +803,9 @@ SYM_REF0(JMP_operator_c)
 SYM_REF0(JMPC_operator_c)
 SYM_REF0(JMPCN_operator_c)
 
+/*  any_identifier ASSIGN */
+SYM_REF1(il_assign_operator_c, variable_name)
+
 /*| [NOT] any_identifier SENDTO */
 SYM_REF2(il_assign_out_operator_c, option, variable_name)
 
@@ -847,6 +853,7 @@ SYM_REF2(assignment_statement_c, l_exp, r_exp)
 /*****************************************/
 /* B 3.2.2 Subprogram Control Statements */
 /*****************************************/
+
 /*  RETURN */
 SYM_REF0(return_statement_c)
 
