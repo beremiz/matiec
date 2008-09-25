@@ -569,8 +569,8 @@ void *visit(function_declaration_c *symbol) {
   vardecl = new generate_c_vardecl_c(&s4o,
   				      generate_c_vardecl_c::finterface_vf,
   				      generate_c_vardecl_c::input_vt |
-				      generate_c_vardecl_c::output_vt |
-				      generate_c_vardecl_c::inoutput_vt);
+				        generate_c_vardecl_c::output_vt |
+				        generate_c_vardecl_c::inoutput_vt);
   vardecl->print(symbol->var_declarations_list);
   delete vardecl;
   s4o.indent_left();
@@ -580,6 +580,13 @@ void *visit(function_declaration_c *symbol) {
   /* (B) Function local variable declaration */
     /* (B.1) Variables declared in ST source code */
   s4o.indent_right();
+  vardecl = new generate_c_vardecl_c(&s4o,
+                generate_c_vardecl_c::foutputdecl_vf,
+                generate_c_vardecl_c::output_vt |
+                generate_c_vardecl_c::inoutput_vt);
+  vardecl->print(symbol->var_declarations_list);
+  delete vardecl;
+  
   vardecl = new generate_c_vardecl_c(&s4o, generate_c_vardecl_c::localinit_vf, generate_c_vardecl_c::private_vt);
   vardecl->print(symbol->var_declarations_list);
   delete vardecl;
@@ -602,6 +609,14 @@ void *visit(function_declaration_c *symbol) {
   /* (C) Function body */
   generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol);
   symbol->function_body->accept(generate_c_code);
+  
+  vardecl = new generate_c_vardecl_c(&s4o,
+                generate_c_vardecl_c::foutputassign_vf,
+                generate_c_vardecl_c::output_vt |
+                generate_c_vardecl_c::inoutput_vt);
+  vardecl->print(symbol->var_declarations_list);
+  delete vardecl;
+  
   s4o.print(s4o.indent_spaces + "return ");
   symbol->derived_function_name->accept(*this);
   s4o.print(";\n");

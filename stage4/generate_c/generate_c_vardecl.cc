@@ -401,12 +401,14 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
      *                __plc_pt_c<INT, 8*sizeof(INT)> START_P::loc = __plc_pt_c<INT, 8*sizeof(INT)>("I2");
      */
     typedef enum {finterface_vf,
-                    local_vf,
-		    localinit_vf,
-		    init_vf,
-		    constructorinit_vf,
-		    globalinit_vf
-		   } varformat_t;
+                  foutputdecl_vf,
+                  foutputassign_vf,
+                  local_vf,
+		              localinit_vf,
+		              init_vf,
+		              constructorinit_vf,
+		              globalinit_vf
+		             } varformat_t;
 
 
   private:
@@ -513,7 +515,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
           s4o.print("\n" + s4o.indent_spaces);
           this->current_var_type_symbol->accept(*this);
           if ((current_vartype & (output_vt | inoutput_vt)) != 0)
-            s4o.print(" &");
+            s4o.print(" *__");
           else
             s4o.print(" ");
           list->elements[i]->accept(*this);
@@ -524,6 +526,36 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
           /* if (this->current_var_init_symbol != NULL) {
                s4o.print(" = "); this->current_var_init_symbol->accept(*this);}
            */
+        }
+      }
+
+      if (wanted_varformat == foutputdecl_vf) {
+        for(int i = 0; i < list->n; i++) {
+          if ((current_vartype & (output_vt | inoutput_vt)) != 0) {
+            s4o.print(s4o.indent_spaces);
+            this->current_var_type_symbol->accept(*this);
+            s4o.print(" ");
+            list->elements[i]->accept(*this);
+            s4o.print(";\n");
+          }
+        }
+      }
+
+      if (wanted_varformat == foutputassign_vf) {
+        for(int i = 0; i < list->n; i++) {
+          if ((current_vartype & (output_vt | inoutput_vt)) != 0) {
+            s4o.print(s4o.indent_spaces + "if (__");
+            list->elements[i]->accept(*this);
+            s4o.print(" != NULL) {\n");
+            s4o.indent_right();
+            s4o.print(s4o.indent_spaces + "*__");
+            list->elements[i]->accept(*this);
+            s4o.print(" = ");
+            list->elements[i]->accept(*this);
+            s4o.print(";\n");
+            s4o.indent_left();
+            s4o.print(s4o.indent_spaces + "}\n");
+          }
         }
       }
 

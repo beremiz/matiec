@@ -72,6 +72,8 @@ class generate_c_st_c: public generate_c_typedecl_c {
 
     symbol_c* current_array_type;
 
+    bool current_param_is_pointer;
+
   public:
     generate_c_st_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_c_typedecl_c(s4o_ptr) {
@@ -80,6 +82,7 @@ class generate_c_st_c: public generate_c_typedecl_c {
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
       this->set_variable_prefix(variable_prefix);
       current_array_type = NULL;
+      current_param_is_pointer = false;
     }
 
     virtual ~generate_c_st_c(void) {
@@ -136,8 +139,13 @@ class generate_c_st_c: public generate_c_typedecl_c {
 /*********************/
 void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-  if (vartype == search_var_instance_decl_c::external_vt || vartype == search_var_instance_decl_c::located_vt) {
+  if (!current_param_is_pointer && (vartype == search_var_instance_decl_c::external_vt || vartype == search_var_instance_decl_c::located_vt)) {
     s4o.print("*(");
+    generate_c_base_c::visit(symbol);
+    s4o.print(")");
+  }
+  else if (current_param_is_pointer && vartype != search_var_instance_decl_c::external_vt && vartype != search_var_instance_decl_c::located_vt) {
+    s4o.print("&(");
     generate_c_base_c::visit(symbol);
     s4o.print(")");
   }
@@ -155,10 +163,14 @@ void *visit(direct_variable_c *symbol) {
   TRACE("direct_variable_c");
   /* Do not use print_token() as it will change everything into uppercase */
   if (strlen(symbol->value) == 0) ERROR;
-  s4o.print("*(");
+  if (!current_param_is_pointer) {
+    s4o.print("*(");
+  }
   this->print_variable_prefix();
   s4o.printlocation(symbol->value + 1);
-  s4o.print(")");
+  if (!current_param_is_pointer) {
+    s4o.print(")");
+  }
   return NULL;
 }
 
@@ -595,6 +607,7 @@ void *visit(function_invocation_c *symbol) {
           break;
         case function_param_iterator_c::direction_out:
         case function_param_iterator_c::direction_inout:
+          current_param_is_pointer = true;
           if (param_value == NULL) {
             /* no parameter value given, so we pass a previously declared temporary variable. */
             std::string *temp_var_name = temp_var_name_factory.new_name();
@@ -603,6 +616,7 @@ void *visit(function_invocation_c *symbol) {
           } else {
             param_value->accept(*this);
           }
+          current_param_is_pointer = false;
           break;
         case function_param_iterator_c::direction_extref:
           /* TODO! */
