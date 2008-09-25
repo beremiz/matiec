@@ -410,8 +410,10 @@ void *visit(enumerated_value_list_c *symbol) {print_list(symbol, "(", ", ", ")")
 
 /* enumerated_type_name '#' identifier */
 void *visit(enumerated_value_c *symbol) {
-  symbol->type->accept(*this);
-  s4o.print("#");
+  if (symbol->type != NULL) {
+    symbol->type->accept(*this);
+    s4o.print("#");
+  }
   symbol->value->accept(*this);
   return NULL;
 }
