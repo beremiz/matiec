@@ -365,6 +365,8 @@ SYM_LIST(input_declaration_list_c)
 /* edge -> The F_EDGE or R_EDGE directive */
 SYM_REF2(edge_declaration_c, edge, var1_list)
 
+SYM_REF0(en_param_declaration_c)
+
 SYM_REF0(raising_edge_option_c)
 SYM_REF0(falling_edge_option_c)
 
@@ -394,6 +396,8 @@ SYM_LIST(fb_name_list_c)
 /* VAR_OUTPUT [RETAIN | NON_RETAIN] var_init_decl_list END_VAR */
 /* option -> may be NULL ! */
 SYM_REF2(output_declarations_c, option, var_init_decl_list)
+
+SYM_REF0(eno_param_declaration_c)
 
 /*  VAR_IN_OUT var_declaration_list END_VAR */
 SYM_REF1(input_output_declarations_c, var_declaration_list)

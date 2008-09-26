@@ -656,6 +656,7 @@ void print_err_msg(int first_line,
 %type  <list>	input_declaration_list
 %type  <leaf>	input_declaration
 %type  <leaf>	edge_declaration
+%type  <leaf>	en_param_declaration
 %type  <leaf>	var_init_decl
 %type  <leaf>	var1_init_decl
 %type  <list>	var1_list
@@ -669,6 +670,9 @@ void print_err_msg(int first_line,
 // %type  <list>	fb_name_list
 // %type  <leaf>	fb_name
 %type  <leaf>	output_declarations
+%type  <leaf>	var_output_init_decl
+%type  <list>	var_output_init_decl_list
+%type  <leaf>	en_param_declaration
 %type  <leaf>	input_output_declarations
 /* helper symbol for input_output_declarations */
 %type  <list>	var_declaration_list
@@ -711,7 +715,7 @@ void print_err_msg(int first_line,
 %type  <leaf>	string_spec
 /* intermediate helper symbol for:
  *  - non_retentive_var_decls
- *  - output_declarations
+ *  - var_declarations
  */
 %type  <list>	var_init_decl_list
 
@@ -2964,6 +2968,7 @@ string_type_declaration_init:
 variable:
   symbolic_variable
 | direct_variable
+| eno_param
 ;
 
 
@@ -3160,6 +3165,7 @@ input_declaration_list:
 input_declaration:
   var_init_decl
 | edge_declaration
+| en_param_declaration
 ;
 
 
@@ -3170,9 +3176,9 @@ edge_declaration:
 	{$$ = new edge_declaration_c(new falling_edge_option_c(locloc(@3)), $1, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | var1_list BOOL R_EDGE
-	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification."); yynerrs++;}
+	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in edge declaration."); yynerrs++;}
 | var1_list BOOL F_EDGE
-	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification."); yynerrs++;}
+	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in edge declaration."); yynerrs++;}
 | var1_list ':' BOOL R_EDGE F_EDGE
 	{$$ = NULL; print_err_msg(locf(@5), locl(@5), "'R_EDGE' and 'F_EDGE' can't be present at the same time in edge declaration."); yynerrs++;}
 | var1_list ':' R_EDGE
@@ -3182,6 +3188,28 @@ edge_declaration:
 /* ERROR_CHECK_END */
 ;
 
+en_param_declaration:
+  en_param ':' BOOL ASSIGN boolean_literal
+  {$$ = new en_param_declaration_c(locloc(@$));}
+| en_param ':' BOOL ASSIGN integer
+  {$$ = new en_param_declaration_c(locloc(@$));}
+/* ERROR_CHECK_BEGIN */
+| en_param BOOL ASSIGN boolean_literal
+	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in EN declaration."); yynerrs++;}
+| en_param BOOL ASSIGN integer
+	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in EN declaration."); yynerrs++;}
+| en_param ':' ASSIGN boolean_literal
+  {$$ = NULL; print_err_msg(locl(@2), locf(@3), "'BOOL' missing in EN declaration."); yynerrs++;}
+| en_param ':' ASSIGN integer
+	{$$ = NULL; print_err_msg(locl(@2), locf(@3), "'BOOL' missing in EN declaration."); yynerrs++;}
+| en_param ':' BOOL ASSIGN error
+	{$$ = NULL;
+	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no specification defined in EN declaration.");}
+	 else {print_err_msg(locf(@3), locl(@3), "invalid specification in EN declaration."); yyclearin;}
+	 yyerrok;
+	}
+/* ERROR_CHECK_END */
+;
 
 var_init_decl:
   var1_init_decl
@@ -3341,11 +3369,11 @@ var1_list_with_colon:
 
 
 output_declarations:
-  VAR_OUTPUT var_init_decl_list END_VAR
+  VAR_OUTPUT var_output_init_decl_list END_VAR
 	{$$ = new output_declarations_c(NULL, $2, locloc(@$));}
-| VAR_OUTPUT RETAIN var_init_decl_list END_VAR
+| VAR_OUTPUT RETAIN var_output_init_decl_list END_VAR
 	{$$ = new output_declarations_c(new retain_option_c(locloc(@2)), $3, locloc(@$));}
-| VAR_OUTPUT NON_RETAIN var_init_decl_list END_VAR
+| VAR_OUTPUT NON_RETAIN var_output_init_decl_list END_VAR
 	{$$ = new output_declarations_c(new non_retain_option_c(locloc(@2)), $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | VAR_OUTPUT END_VAR
@@ -3354,17 +3382,17 @@ output_declarations:
 	{$$ = NULL; print_err_msg(locl(@2), locf(@3), "no variable declared in retentive output variable(s) declaration."); yynerrs++;}
 | VAR_OUTPUT NON_RETAIN END_VAR
 	{$$ = NULL; print_err_msg(locl(@2), locf(@3), "no variable declared in non-retentive output variable(s) declaration."); yynerrs++;}
-| VAR_OUTPUT error var_init_decl_list END_VAR
+| VAR_OUTPUT error var_output_init_decl_list END_VAR
 	{$$ = NULL; print_err_msg(locf(@2), locl(@2), "unexpected token after 'VAR_OUPUT' in output variable(s) declaration."); yyerrok;}
-| VAR_OUTPUT RETAIN error var_init_decl_list END_VAR
+| VAR_OUTPUT RETAIN error var_output_init_decl_list END_VAR
 	{$$ = NULL; print_err_msg(locf(@3), locl(@3), "unexpected token after 'RETAIN' in retentive output variable(s) declaration."); yyerrok;}
-| VAR_OUTPUT NON_RETAIN error var_init_decl_list END_VAR
+| VAR_OUTPUT NON_RETAIN error var_output_init_decl_list END_VAR
 	{$$ = NULL; print_err_msg(locf(@3), locl(@3), "unexpected token after 'NON_RETAIN' in non-retentive output variable(s) declaration."); yyerrok;}
-| VAR_OUTPUT var_init_decl_list error END_OF_INPUT
+| VAR_OUTPUT var_output_init_decl_list error END_OF_INPUT
 	{$$ = NULL; print_err_msg(locf(@1), locl(@1), "unclosed output variable(s) declaration."); yyerrok;}
-| VAR_OUTPUT RETAIN var_init_decl_list error END_OF_INPUT
+| VAR_OUTPUT RETAIN var_output_init_decl_list error END_OF_INPUT
 	{$$ = NULL; print_err_msg(locf(@1), locl(@2), "unclosed retentive output variable(s) declaration."); yyerrok;}
-| VAR_OUTPUT NON_RETAIN var_init_decl_list error END_OF_INPUT
+| VAR_OUTPUT NON_RETAIN var_output_init_decl_list error END_OF_INPUT
 	{$$ = NULL; print_err_msg(locf(@1), locl(@2), "unclosed non-retentive output variable(s) declaration."); yyerrok;}
 | VAR_OUTPUT error END_VAR
 	{$$ = NULL; print_err_msg(locf(@2), locl(@2), "unknown error in output variable(s) declaration."); yyerrok;}
@@ -3375,6 +3403,38 @@ output_declarations:
 /* ERROR_CHECK_END */
 ;
 
+var_output_init_decl:
+  var_init_decl
+| eno_param_declaration
+;
+
+var_output_init_decl_list:
+  var_output_init_decl ';'
+	{$$ = new var_init_decl_list_c(locloc(@$)); $$->add_element($1);}
+| var_output_init_decl_list var_output_init_decl ';'
+	{$$ = $1; $$->add_element($2);}
+/* ERROR_CHECK_BEGIN */
+| var_output_init_decl_list var_output_init_decl error
+	{$$ = $1; print_err_msg(locl(@2), locf(@3), "';' missing at end of variable(s) declaration."); yyerrok;}
+| var_output_init_decl_list error ';'
+	{$$ = $1; print_err_msg(locf(@2), locl(@2), "invalid variable(s) declaration."); yyerrok;}
+/* ERROR_CHECK_END */
+;
+
+eno_param_declaration:
+  eno_param ':' BOOL
+  {$$ = new eno_param_declaration_c(locloc(@$));}
+/* ERROR_CHECK_BEGIN */
+| en_param BOOL
+	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in EN0 declaration."); yynerrs++;}
+| en_param ':' error
+	{$$ = NULL;
+	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no specification defined in ENO declaration.");}
+	 else {print_err_msg(locf(@3), locl(@3), "invalid specification in ENO declaration."); yyclearin;}
+	 yyerrok;
+	}
+/* ERROR_CHECK_END */
+;
 
 
 input_output_declarations:
@@ -4063,7 +4123,6 @@ string_spec:
 
 /* intermediate helper symbol for:
  *  - non_retentive_var_decls
- *  - output_declarations
  *  - var_declarations
  */
 var_init_decl_list:

@@ -127,7 +127,21 @@ class function_call_param_iterator_c : public null_visitor_c {
 
         case search_op:
           identifier_c *variable_name2 = dynamic_cast<identifier_c *>(variable_name);
+          
+          if (variable_name2 == NULL) {
+            en_param_c *en_param = dynamic_cast<en_param_c *>(variable_name);
+            if (en_param != NULL)
+              variable_name2 = new identifier_c("EN");
+          }
+          
+          if (variable_name2 == NULL) {
+            eno_param_c *eno_param = dynamic_cast<eno_param_c *>(variable_name);
+            if (eno_param != NULL)
+              variable_name2 = new identifier_c("ENO");
+          }
+          
           if (variable_name2 == NULL) ERROR;
+          
           if (strcasecmp(search_param_name->value, variable_name2->value) == 0)
             /* FOUND! This is the same parameter!! */
             return (void *)expression;

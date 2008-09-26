@@ -345,6 +345,8 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
 						     //    Programs declared inside a resource will not be declared
 						     //    unless program_vt is acompanied by resource_vt
 
+    static const unsigned int eneno_vt  = 0x0200;  // EN/ENO declaration
+    
     static const unsigned int resource_vt = 0x8000;  // RESOURCE (inside a configuration!)
                                                      //    This, just of itself, will not print out any declarations!!
 						     //    It must be acompanied by either program_vt and/or global_vt
@@ -401,7 +403,6 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
      *                __plc_pt_c<INT, 8*sizeof(INT)> START_P::loc = __plc_pt_c<INT, 8*sizeof(INT)>("I2");
      */
     typedef enum {finterface_vf,
-                  foutputdecl_vf,
                   foutputassign_vf,
                   local_vf,
 		              localinit_vf,
@@ -435,6 +436,10 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
     /* Current parsed resource name, for resource 
      * specific global variable declaration (with #define...)*/
     symbol_c *resource_name;
+
+    /* Store if En and ENO parameters have been defined by user */
+    bool en_declared;
+    bool eno_declared;
 
     /* Holds the references to the type and initial value
      * of the variables currently being declared.
@@ -529,18 +534,6 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
         }
       }
 
-      if (wanted_varformat == foutputdecl_vf) {
-        for(int i = 0; i < list->n; i++) {
-          if ((current_vartype & (output_vt | inoutput_vt)) != 0) {
-            s4o.print(s4o.indent_spaces);
-            this->current_var_type_symbol->accept(*this);
-            s4o.print(" ");
-            list->elements[i]->accept(*this);
-            s4o.print(";\n");
-          }
-        }
-      }
-
       if (wanted_varformat == foutputassign_vf) {
         for(int i = 0; i < list->n; i++) {
           if ((current_vartype & (output_vt | inoutput_vt)) != 0) {
@@ -599,12 +592,21 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
       globalnamespace         = NULL;
       nv = NULL;
       resource_name = res_name;
+      en_declared = false;
+      eno_declared = false;
     }
 
     ~generate_c_vardecl_c(void) {
       delete generate_c_array_initialization;
     }
 
+    bool is_en_declared(void) {
+      return en_declared;
+    }
+    
+    bool is_eno_declared(void) {
+      return eno_declared;
+    }
 
     void print(symbol_c *symbol, symbol_c *scope = NULL, const char *variable_prefix = NULL) {
       this->set_variable_prefix(variable_prefix);
@@ -750,6 +752,27 @@ void *visit(edge_declaration_c *symbol) {
   return NULL;
 }
 
+void *visit(en_param_declaration_c *symbol) {
+  TRACE("en_declaration_c");
+  if (en_declared) ERROR;
+  if (wanted_varformat == finterface_vf) {
+    finterface_var_count++;
+  }  
+  if ((current_vartype & eneno_vt) != 0) {
+    if (wanted_varformat == finterface_vf) {
+      s4o.print(nv->get());
+      s4o.print("\n" + s4o.indent_spaces + "BOOL EN");
+    }
+    if (wanted_varformat == constructorinit_vf) {
+      s4o.print(nv->get());
+      this->print_variable_prefix();
+      s4o.print("ENO = __BOOL_LITERAL(TRUE);");
+    }
+  }
+  en_declared = true;
+  return NULL;
+}
+
 void *visit(raising_edge_option_c *symbol) {
   // TO DO ...
   s4o.print("R_EDGE");
@@ -858,6 +881,27 @@ void *visit(output_declarations_c *symbol) {
     current_vartype = none_vt;
     //s4o.indent_left();
   }
+  return NULL;
+}
+
+void *visit(eno_param_declaration_c *symbol) {
+  TRACE("eno_declaration_c");
+  if (eno_declared) ERROR;
+  if (wanted_varformat == finterface_vf) {
+    finterface_var_count++;
+  }
+  if ((current_vartype & eneno_vt) != 0) {
+    if (wanted_varformat == finterface_vf) {
+      s4o.print(nv->get());
+      s4o.print("\n" + s4o.indent_spaces + "BOOL *EN0");
+    }
+    if (wanted_varformat == constructorinit_vf) {
+      s4o.print(nv->get());
+      this->print_variable_prefix();
+      s4o.print("ENO = __BOOL_LITERAL(TRUE);");
+    }
+  }
+  eno_declared = true;
   return NULL;
 }
 

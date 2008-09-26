@@ -606,6 +606,10 @@ void *visit(edge_declaration_c *symbol) {
   return NULL;
 }
 
+void *visit(en_param_declaration_c *symbol) {
+  s4o.print("EN : BOOL := 1");
+  return NULL;
+}
 
 void *visit(raising_edge_option_c *symbol) {
   s4o.print("R_EDGE");
@@ -678,6 +682,11 @@ void *visit(output_declarations_c *symbol) {
   symbol->var_init_decl_list->accept(*this);
   s4o.indent_left();
   s4o.print(s4o.indent_spaces); s4o.print("END_VAR\n");
+  return NULL;
+}
+
+void *visit(eno_param_declaration_c *symbol) {
+  s4o.print("EN0 : BOOL");
   return NULL;
 }
 

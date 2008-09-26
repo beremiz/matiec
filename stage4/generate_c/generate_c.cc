@@ -570,28 +570,34 @@ void *visit(function_declaration_c *symbol) {
   				      generate_c_vardecl_c::finterface_vf,
   				      generate_c_vardecl_c::input_vt |
 				        generate_c_vardecl_c::output_vt |
-				        generate_c_vardecl_c::inoutput_vt);
+				        generate_c_vardecl_c::inoutput_vt |
+                generate_c_vardecl_c::eneno_vt);
   vardecl->print(symbol->var_declarations_list);
+  if (!vardecl->is_en_declared()) {
+    s4o.print(",\n" + s4o.indent_spaces + "BOOL EN");
+  }
+  if (!vardecl->is_eno_declared()) {
+    s4o.print(",\n" + s4o.indent_spaces + "BOOL *ENO");
+  }
   delete vardecl;
+  
   s4o.indent_left();
-
+  
   s4o.print(")\n" + s4o.indent_spaces + "{\n");
 
   /* (B) Function local variable declaration */
-    /* (B.1) Variables declared in ST source code */
+  /* (B.1) Variables declared in ST source code */
   s4o.indent_right();
-  vardecl = new generate_c_vardecl_c(&s4o,
-                generate_c_vardecl_c::foutputdecl_vf,
-                generate_c_vardecl_c::output_vt |
-                generate_c_vardecl_c::inoutput_vt);
-  vardecl->print(symbol->var_declarations_list);
-  delete vardecl;
   
-  vardecl = new generate_c_vardecl_c(&s4o, generate_c_vardecl_c::localinit_vf, generate_c_vardecl_c::private_vt);
+  vardecl = new generate_c_vardecl_c(&s4o, 
+                generate_c_vardecl_c::localinit_vf, 
+                generate_c_vardecl_c::output_vt |
+                generate_c_vardecl_c::inoutput_vt |
+                generate_c_vardecl_c::private_vt);
   vardecl->print(symbol->var_declarations_list);
   delete vardecl;
 
-    /* (B.2) Temporary variable for function's return value */
+  /* (B.2) Temporary variable for function's return value */
   /* It will have the same name as the function itself! */
   s4o.print(s4o.indent_spaces);
   symbol->type_name->accept(*this); /* return type */
@@ -605,7 +611,30 @@ void *visit(function_declaration_c *symbol) {
     default_value->accept(*this);
   }
   s4o.print(";\n\n");
-
+  
+  s4o.print(s4o.indent_spaces + "// Control execution\n");
+  s4o.print(s4o.indent_spaces + "if (!EN) {\n");
+  s4o.indent_right();
+  s4o.print(s4o.indent_spaces + "if (ENO != NULL) {\n");
+  s4o.indent_right();
+  s4o.print(s4o.indent_spaces + "*ENO = __BOOL_LITERAL(FALSE);\n");
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "}\n");
+  s4o.print(s4o.indent_spaces + "return ");
+  symbol->derived_function_name->accept(*this);
+  s4o.print(";\n");
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "}\n");
+  s4o.print(s4o.indent_spaces + "else {\n");
+  s4o.indent_right();
+  s4o.print(s4o.indent_spaces + "if (ENO != NULL) {\n");
+  s4o.indent_right();
+  s4o.print(s4o.indent_spaces + "*ENO = __BOOL_LITERAL(TRUE);\n");
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "}\n");
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "}\n");
+  
   /* (C) Function body */
   generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol);
   symbol->function_body->accept(generate_c_code);
@@ -663,8 +692,15 @@ void *visit(function_block_declaration_c *symbol) {
   				      generate_c_vardecl_c::local_vf,
   				      generate_c_vardecl_c::input_vt |
   				      generate_c_vardecl_c::output_vt |
-  				      generate_c_vardecl_c::inoutput_vt);
+  				      generate_c_vardecl_c::inoutput_vt |
+                generate_c_vardecl_c::eneno_vt);
   vardecl->print(symbol->var_declarations);
+  if (!vardecl->is_en_declared()) {
+    s4o_incl.print(s4o_incl.indent_spaces + "BOOL EN;\n");
+  }
+  if (!vardecl->is_eno_declared()) {
+    s4o_incl.print(s4o_incl.indent_spaces + "BOOL ENO;\n");
+  }
   delete vardecl;
   s4o_incl.print("\n");
   /* (A.3) Private internal variables */
@@ -677,6 +713,7 @@ void *visit(function_block_declaration_c *symbol) {
   				      generate_c_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
+  
   /* (A.4) Generate private internal variables for SFC */
   sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, generate_c_sfcdecl_c::sfcdecl_sd);
   sfcdecl->print(symbol->fblock_body);
@@ -713,8 +750,19 @@ void *visit(function_block_declaration_c *symbol) {
   				      generate_c_vardecl_c::inoutput_vt |
   				      generate_c_vardecl_c::private_vt |
 				        generate_c_vardecl_c::located_vt |
-				        generate_c_vardecl_c::external_vt);
+				        generate_c_vardecl_c::external_vt |
+                generate_c_vardecl_c::eneno_vt);
   vardecl->print(symbol->var_declarations, NULL, FB_FUNCTION_PARAM"->");
+  if (!vardecl->is_en_declared()) {
+    s4o.print("\n" + s4o.indent_spaces);
+    s4o.print(FB_FUNCTION_PARAM);
+    s4o.print("->EN = __BOOL_LITERAL(TRUE);");
+  }
+  if (!vardecl->is_eno_declared()) {
+    s4o.print("\n" + s4o.indent_spaces);
+    s4o.print(FB_FUNCTION_PARAM);
+    s4o.print("->ENO = __BOOL_LITERAL(TRUE);");
+  }
   delete vardecl;
   s4o.print("\n");
   /* (B.3) Generate private internal variables for SFC */
@@ -749,6 +797,25 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print(FB_FUNCTION_PARAM);
   s4o.print(") {\n");
   s4o.indent_right();
+
+  s4o.print(s4o.indent_spaces + "// Control execution\n");
+  s4o.print(s4o.indent_spaces + "if (!");
+  s4o.print(FB_FUNCTION_PARAM);
+  s4o.print("->EN) {\n");
+  s4o.indent_right();
+  s4o.print(s4o.indent_spaces);
+  s4o.print(FB_FUNCTION_PARAM);
+  s4o.print("->ENO = __BOOL_LITERAL(FALSE);\n");
+  s4o.print(s4o.indent_spaces + "return;\n");
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "}\n");
+  s4o.print(s4o.indent_spaces + "else {\n");
+  s4o.indent_right();
+  s4o.print(s4o.indent_spaces);
+  s4o.print(FB_FUNCTION_PARAM);
+  s4o.print("->ENO = __BOOL_LITERAL(TRUE);\n");
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "}\n");
 
   /* (C.4) Initialize TEMP variables */
   /* function body */

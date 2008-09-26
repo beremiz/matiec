@@ -90,6 +90,8 @@ class function_param_iterator_c : public null_visitor_c {
     symbol_c *current_param_type;
     symbol_c *current_param_default_value;
     param_direction_t current_param_direction;
+    bool en_declared;
+    bool eno_declared;
 
   private:
     void* handle_param_list(list_c *list) {
@@ -114,8 +116,8 @@ class function_param_iterator_c : public null_visitor_c {
       void *res;
       for (int i = 0; i < list->n; i++) {
         res = list->elements[i]->accept(*this);
-	if (res != NULL)
-	  return res;
+        if (res != NULL)
+	        return res;
       }
       return NULL;
    }
@@ -127,6 +129,8 @@ class function_param_iterator_c : public null_visitor_c {
       next_param = param_count = 0;
       current_param_name = NULL;
       current_param_type = current_param_default_value = NULL;
+      en_declared = false;
+      eno_declared = false;
     }
 
     /* initialise the iterator object.
@@ -165,19 +169,45 @@ class function_param_iterator_c : public null_visitor_c {
      */
     identifier_c *next(void) {
       void *res;
+      identifier_c *identifier;
       param_count = 0;
       next_param++;
       res = f_decl->accept(*this);
-      if (res == NULL)
+      if (res != NULL) {
+        symbol_c *sym = (symbol_c *)res;
+        identifier = dynamic_cast<identifier_c *>(sym);
+        if (identifier == NULL)
+          ERROR;
+      }
+      else if (!en_declared) {
+        current_param_direction = direction_in;
+        identifier = declare_en_param();
+      }
+      else if (!eno_declared) {
+        current_param_direction = direction_out;
+        identifier = declare_eno_param();
+      }
+      else
         return NULL;
-
-      symbol_c *sym = (symbol_c *)res;
-      identifier_c *identifier = dynamic_cast<identifier_c *>(sym);
-      if (identifier == NULL)
-        ERROR;
-
+      
       current_param_name = identifier;
       return current_param_name;
+    }
+
+    identifier_c *declare_en_param(void) {
+      en_declared = true;
+      identifier_c *identifier = new identifier_c("EN");
+      current_param_type = (symbol_c*)(new bool_type_name_c());
+      current_param_default_value = (symbol_c*)(new boolean_literal_c(current_param_type, new boolean_true_c()));
+      return identifier;
+    }
+
+    identifier_c *declare_eno_param(void) {
+      eno_declared = true;
+      identifier_c *identifier = new identifier_c("ENO");
+      current_param_type = (symbol_c*)(new bool_type_name_c());
+      current_param_default_value = NULL;
+      return identifier;
     }
 
     /* Returns the currently referenced parameter's default value,
@@ -209,7 +239,11 @@ class function_param_iterator_c : public null_visitor_c {
     }
     void *visit(input_declaration_list_c *symbol) {TRACE("input_declaration_list_c"); return iterate_list(symbol);}
     void *visit(edge_declaration_c *symbol) {TRACE("edge_declaration_c"); return symbol->var1_list->accept(*this);}
-
+    void *visit(en_param_declaration_c *symbol) {
+      TRACE("en_param_declaration_c");
+      if (en_declared) ERROR;
+      return (void *)declare_en_param();
+    }
 #if 0
 /* var1_list ':' array_spec_init */
 SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
@@ -229,6 +263,11 @@ SYM_LIST(fb_name_list_c)
       TRACE("output_declarations_c");
       current_param_direction = direction_out;
       return symbol->var_init_decl_list->accept(*this);
+    }
+    void *visit(eno_param_declaration_c *symbol) {
+      TRACE("eno_param_declaration_c");
+      if (eno_declared) ERROR;
+      return (void *)declare_eno_param();
     }
     void *visit(input_output_declarations_c *symbol) {
       TRACE("input_output_declarations_c");

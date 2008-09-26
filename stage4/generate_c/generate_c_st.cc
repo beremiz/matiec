@@ -134,6 +134,17 @@ class generate_c_st_c: public generate_c_typedecl_c {
 
   private:
 
+void *visit(eno_param_c *symbol) {
+  if (this->is_variable_prefix_null()) {
+    s4o.print("*");
+  }
+  else {
+    this->print_variable_prefix();
+  }
+  s4o.print("ENO");
+  return NULL;
+}
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
@@ -447,114 +458,8 @@ void *visit(function_invocation_c *symbol) {
     
     int nb_param = ((list_c *)symbol->parameter_assignment_list)->n;
 
-#include "st_code_gen.c"
+    #include "st_code_gen.c"
 
-#if 0
-    for(int current_param = 0; current_param < nb_param; current_param++) {
-      symbol_c *param_name = NULL;
-      switch (current_function_type) {
-        case function_add:
-        case function_and:
-        case function_or:
-          param_name = generate_param_name("IN%d", current_param + 1);
-          break;
-        case function_sub:
-          if (current_param < 2)
-            param_name = generate_param_name("IN%d", current_param + 1);
-          else
-            ERROR;
-          break;
-        default: ERROR;
-      }
-      
-      /* Get the value from a foo(<param_name> = <param_value>) style call */
-      symbol_c *param_value = function_call_param_iterator.search(param_name);
-      delete param_name;
-      
-      /* Get the value from a foo(<param_value>) style call */
-      if (param_value == NULL)
-        param_value = function_call_param_iterator.next();
-      
-      if (param_value == NULL) ERROR;
-      
-      switch (current_function_type) {
-        case function_add:
-          if (search_expression_type->is_time_type(function_return_type)) {
-            if (current_param == 0) {
-              s4o.print("__time_add(");
-              param_value->accept(*this);
-            }
-            else if (current_param == 1) {
-              s4o.print(", ");
-              param_value->accept(*this);
-              s4o.print(")");
-            }
-            else ERROR;
-          }
-          else {
-            if (current_param == 0)
-              s4o.print("(");
-            else
-              s4o.print(" + ");
-            param_value->accept(*this);
-            if (current_param == nb_param - 1)
-              s4o.print(")");
-          }
-          break;
-        case function_sub:
-          if (search_expression_type->is_time_type(function_return_type)) {
-            if (current_param == 0) {
-              s4o.print("__time_sub(");
-              param_value->accept(*this);
-            }
-            else if (current_param == 1) {
-              s4o.print(", ");
-              param_value->accept(*this);
-              s4o.print(")");
-            }
-            else ERROR;
-          }
-          else {
-            if (current_param == 0) {
-              s4o.print("(");
-              param_value->accept(*this);
-            }
-            else if (current_param == 1) {
-              s4o.print(" - ");
-              param_value->accept(*this);
-              s4o.print(")");
-            }
-            else ERROR;
-          }
-          break;
-        case function_and:
-          if (current_param == 0)
-            s4o.print("(");
-          else
-            if (search_expression_type->is_bool_type(function_return_type))
-              s4o.print(" && ");
-            else
-              s4o.print(" & ");
-          param_value->accept(*this);
-          if (current_param == nb_param - 1)
-            s4o.print(")");
-          break;
-        case function_or:
-          if (current_param == 0)
-            s4o.print("(");
-          else
-            if (search_expression_type->is_bool_type(function_return_type))
-              s4o.print(" || ");
-            else
-              s4o.print(" | ");
-          param_value->accept(*this);
-          if (current_param == nb_param - 1)
-            s4o.print(")");
-          break;
-        default: ERROR;
-      }
-    } /* for(...) */
-#endif
   }
   else {
     /* loop through each function parameter, find the value we should pass
@@ -609,10 +514,7 @@ void *visit(function_invocation_c *symbol) {
         case function_param_iterator_c::direction_inout:
           current_param_is_pointer = true;
           if (param_value == NULL) {
-            /* no parameter value given, so we pass a previously declared temporary variable. */
-            std::string *temp_var_name = temp_var_name_factory.new_name();
-            s4o.print(*temp_var_name);
-            delete temp_var_name;
+            s4o.print("NULL");
           } else {
             param_value->accept(*this);
           }

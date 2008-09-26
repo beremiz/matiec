@@ -295,6 +295,8 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
 
     search_base_type_c search_base_type;
 
+    bool current_param_is_pointer;
+
   public:
     generate_c_il_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_c_typedecl_c(s4o_ptr),
@@ -308,6 +310,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       current_operand = NULL;
       current_operand_type = NULL;
       il_default_variable_init_value = NULL;
+      current_param_is_pointer = false;
       this->set_variable_prefix(variable_prefix);
     }
 
@@ -458,6 +461,38 @@ void *visit(il_default_variable_c *symbol) {
 
 private:
 
+void *visit(eno_param_c *symbol) {
+  if (this->is_variable_prefix_null()) {
+    s4o.print("*");
+  }
+  else {
+    this->print_variable_prefix();
+  }
+  s4o.print("ENO");
+  return NULL;
+}
+
+/*********************/
+/* B 1.4 - Variables */
+/*********************/
+void *visit(symbolic_variable_c *symbol) {
+  unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+  if (!current_param_is_pointer && (vartype == search_var_instance_decl_c::external_vt || vartype == search_var_instance_decl_c::located_vt)) {
+    s4o.print("*(");
+    generate_c_base_c::visit(symbol);
+    s4o.print(")");
+  }
+  else if (current_param_is_pointer && vartype != search_var_instance_decl_c::external_vt && vartype != search_var_instance_decl_c::located_vt) {
+    s4o.print("&(");
+    generate_c_base_c::visit(symbol);
+    s4o.print(")");
+  }
+  else {
+    generate_c_base_c::visit(symbol);
+  }
+  return NULL;
+}
+
 /********************************************/
 /* B.1.4.1   Directly Represented Variables */
 /********************************************/
@@ -466,10 +501,14 @@ void *visit(direct_variable_c *symbol) {
   TRACE("direct_variable_c");
   /* Do not use print_token() as it will change everything into uppercase */
   if (strlen(symbol->value) == 0) ERROR;
-  s4o.print("*(");
+  if (!current_param_is_pointer) {
+    s4o.print("*(");
+  }
   this->print_variable_prefix();
   s4o.printlocation(symbol->value + 1);
-  s4o.print(")");
+  if (!current_param_is_pointer) {
+    s4o.print(")");
+  }
   return NULL;
 }
 
@@ -583,44 +622,7 @@ void *visit(il_function_call_c *symbol) {
     if (symbol->il_operand_list != NULL)
       nb_param += ((list_c *)symbol->il_operand_list)->n;
 
-#include "il_code_gen.c"
-
-#if 0
-    for(int current_param = 0; current_param < nb_param; current_param++) {
-      symbol_c *param_value;
-      if (current_param == 0)
-        param_value = &this->default_variable_name;
-      else {
-        symbol_c *param_name = NULL;
-        switch (current_function_type) {
-          default: ERROR;
-        }
-        
-         
-        /* Get the value from a foo(<param_name> = <param_value>) style call */
-        param_value = function_call_param_iterator.search(param_name);
-        delete param_name;
-        
-        /* Get the value from a foo(<param_value>) style call */
-        if (param_value == NULL)
-          param_value = function_call_param_iterator.next();
-        
-        if (param_value == NULL) ERROR;
-      }
-      
-      switch (current_function_type) {
-        case (function_sqrt):
-          if (current_param == 0) {
-            s4o.print("sqrt(");
-            param_value->accept(*this);
-            s4o.print(")");
-          }
-          else ERROR;
-          break;
-        default: ERROR;
-      }
-    } /* for(...) */
-#endif
+    #include "il_code_gen.c"
 
     /* the data type returned by the function, and stored in the il default variable... */
     default_variable_name.current_type = return_data_type;
@@ -696,14 +698,13 @@ void *visit(il_function_call_c *symbol) {
           break;
         case function_param_iterator_c::direction_out:
         case function_param_iterator_c::direction_inout:
+          current_param_is_pointer = true;
           if (param_value == NULL) {
-  	  /* no parameter value given, so we pass a previously declared temporary variable. */
-            std::string *temp_var_name = temp_var_name_factory.new_name();
-            s4o.print(*temp_var_name);
-            delete temp_var_name;
+            s4o.print("NULL");
           } else {
             param_value->accept(*this);
           }
+          current_param_is_pointer = false;
           break;
         case function_param_iterator_c::direction_extref:
           /* TODO! */
