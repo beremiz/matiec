@@ -672,7 +672,7 @@ void print_err_msg(int first_line,
 %type  <leaf>	output_declarations
 %type  <leaf>	var_output_init_decl
 %type  <list>	var_output_init_decl_list
-%type  <leaf>	en_param_declaration
+%type  <leaf>	eno_param_declaration
 %type  <leaf>	input_output_declarations
 /* helper symbol for input_output_declarations */
 %type  <list>	var_declaration_list
