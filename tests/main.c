@@ -10,10 +10,14 @@
 #include <signal.h>
 #endif
 
+#include "iec_types.h"
+
 /*
  * Functions and variables provied by generated C softPLC
  **/ 
 extern int common_ticktime__;
+
+IEC_BOOL __DEBUG;
 
 /*
  * Functions and variables provied by plc.c
