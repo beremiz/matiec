@@ -355,7 +355,7 @@ void *visit(add_expression_c *symbol) {
 	if ((typeid(*left_type) == typeid(time_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
       (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
       (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)))
-    return print_binary_function("__time_add", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__TIME_ADD", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -373,7 +373,7 @@ void *visit(sub_expression_c *symbol) {
       (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(tod_type_name_c)) ||
       (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
       (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(dt_type_name_c)))
-    return print_binary_function("__time_sub", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__TIME_SUB", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -387,7 +387,7 @@ void *visit(mul_expression_c *symbol) {
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
   if ((typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_integer_type(right_type)) ||
       (typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_real_type(right_type)))
-    return print_binary_function("__time_mul", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__TIME_MUL", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -399,6 +399,9 @@ void *visit(mul_expression_c *symbol) {
 void *visit(div_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if ((typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_integer_type(right_type)) ||
+      (typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_real_type(right_type)))
+    return print_binary_function("__TIME_DIV", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -445,6 +448,12 @@ void *visit(not_expression_c *symbol) {
 void *visit(function_invocation_c *symbol) {
   function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
   
+  symbol_c* function_type_prefix = NULL;
+  symbol_c* function_name = NULL;
+  symbol_c* function_type_suffix = NULL;
+  std::list<FUNCTION_PARAM> param_list;
+  FUNCTION_PARAM *param;
+  
   if (f_decl == function_symtable.end_value()) {
     /* The function called is not in the symtable, so we test if it is a
      * standard function defined in standard */
@@ -455,6 +464,18 @@ void *visit(function_invocation_c *symbol) {
     symbol_c *function_return_type = search_expression_type->get_type(symbol);
     
     function_call_param_iterator_c function_call_param_iterator(symbol);
+    
+    identifier_c en_param_name("EN");
+    /* Get the value from EN param */
+    symbol_c *EN_param_value = function_call_param_iterator.search(&en_param_name);
+    if (EN_param_value == NULL)
+      EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
+    ADD_PARAM_LIST(EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
+    
+    identifier_c eno_param_name("EN0");
+    /* Get the value from ENO param */
+    symbol_c *ENO_param_value = function_call_param_iterator.search(&eno_param_name);
+    ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
     
     int nb_param = ((list_c *)symbol->parameter_assignment_list)->n;
 
@@ -467,69 +488,89 @@ void *visit(function_invocation_c *symbol) {
      */
     function_param_iterator_c fp_iterator(f_decl);
   
-    symbol->function_name->accept(*this);
-    s4o.print("(");
-    s4o.indent_right();
+    function_name = symbol->function_name;
   
     identifier_c *param_name;
     function_call_param_iterator_c function_call_param_iterator(symbol);
     for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
-      if (i != 1)
-        s4o.print(",\n"+s4o.indent_spaces);
-  
+      
       function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
-  
+      
       /* Get the value from a foo(<param_name> = <param_value>) style call */
       symbol_c *param_value = function_call_param_iterator.search(param_name);
   
       /* Get the value from a foo(<param_value>) style call */
       if (param_value == NULL)
         param_value = function_call_param_iterator.next();
-  
+      
+      if (param_value == NULL && param_direction == function_param_iterator_c::direction_in) {
+        /* No value given for parameter, so we must use the default... */
+        /* First check whether default value specified in function declaration...*/
+        param_value = fp_iterator.default_value();
+      }
+      
       symbol_c *param_type = fp_iterator.param_type();
       if (param_type == NULL) ERROR;
-        
-      switch (param_direction) {
-        case function_param_iterator_c::direction_in:
-          if (param_value == NULL) {
-            /* No value given for parameter, so we must use the default... */
-            /* First check whether default value specified in function declaration...*/
-            param_value = fp_iterator.default_value();
-          }
-          if (param_value == NULL) {
-            /* If not, get the default value of this variable's type */
-            param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
-          }
-          if (param_value == NULL) ERROR;
-          if (search_base_type.type_is_subrange(param_type)) {
-            s4o.print("__CHECK_");
-            param_type->accept(*this);
-            s4o.print("(");
-          }
-          param_value->accept(*this);
-          if (search_base_type.type_is_subrange(param_type))
-            s4o.print(")");
-          break;
-        case function_param_iterator_c::direction_out:
-        case function_param_iterator_c::direction_inout:
-          current_param_is_pointer = true;
-          if (param_value == NULL) {
-            s4o.print("NULL");
-          } else {
-            param_value->accept(*this);
-          }
-          current_param_is_pointer = false;
-          break;
-        case function_param_iterator_c::direction_extref:
-          /* TODO! */
-          ERROR;
-          break;
-      } /* switch */
+      
+      ADD_PARAM_LIST(param_value, param_type, param_direction)
     } /* for(...) */
     // symbol->parameter_assignment->accept(*this);
-    s4o.print(")");
-    s4o.indent_left();
   }
+  
+  if (function_type_prefix != NULL) {
+    s4o.print("(");
+    function_type_prefix->accept(*this);
+    s4o.print(")");
+  }
+  if (function_name != NULL)
+    function_name->accept(*this);
+  if (function_type_suffix != NULL)
+    function_type_suffix->accept(*this);
+  s4o.print("(");
+  s4o.indent_right();
+  
+  std::list<FUNCTION_PARAM>::iterator pt;
+  for(pt = param_list.begin(); pt != param_list.end(); pt++) {
+    if (pt != param_list.begin())
+      s4o.print(",\n"+s4o.indent_spaces);
+    symbol_c *param_value = pt->param_value;
+    symbol_c *param_type = pt->param_type;
+          
+    switch (pt->param_direction) {
+      case function_param_iterator_c::direction_in:
+        if (param_value == NULL) {
+          /* If not, get the default value of this variable's type */
+          param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
+        }
+        if (param_value == NULL) ERROR;
+        if (search_base_type.type_is_subrange(param_type)) {
+          s4o.print("__CHECK_");
+          param_type->accept(*this);
+          s4o.print("(");
+        }
+        param_value->accept(*this);
+        if (search_base_type.type_is_subrange(param_type))
+          s4o.print(")");
+        break;
+      case function_param_iterator_c::direction_out:
+      case function_param_iterator_c::direction_inout:
+        current_param_is_pointer = true;
+        if (param_value == NULL) {
+          s4o.print("NULL");
+        } else {
+          param_value->accept(*this);
+        }
+        current_param_is_pointer = false;
+        break;
+      case function_param_iterator_c::direction_extref:
+        /* TODO! */
+        ERROR;
+        break;
+    } /* switch */
+  }  
+
+  s4o.print(")");
+  s4o.indent_left();
 
   return NULL;
 }

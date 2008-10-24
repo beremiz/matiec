@@ -1,5 +1,5 @@
 /*
- * (c) 2003 Mario de Sousa
+ * (c) 2008 Edouard TISSERANT
  *
  * Offered to the public under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2 of the
@@ -21,5562 +21,14 @@
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
  *
  */
- 
- 
+
 /****
- * IEC 61131-3 standard function lib
+ * IEC 61131-3 standard function library
  * generated code, do not edit by hand
  */
+ 
+ 
 switch(current_function_type){
-
-/****
- *BOOL_TO_SINT
- */
-    case function_bool_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_sint*/
-    break;
-
-/****
- *BOOL_TO_INT
- */
-    case function_bool_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_int*/
-    break;
-
-/****
- *BOOL_TO_DINT
- */
-    case function_bool_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_dint*/
-    break;
-
-/****
- *BOOL_TO_LINT
- */
-    case function_bool_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_lint*/
-    break;
-
-/****
- *BOOL_TO_USINT
- */
-    case function_bool_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_usint*/
-    break;
-
-/****
- *BOOL_TO_UINT
- */
-    case function_bool_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_uint*/
-    break;
-
-/****
- *BOOL_TO_UDINT
- */
-    case function_bool_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_udint*/
-    break;
-
-/****
- *BOOL_TO_ULINT
- */
-    case function_bool_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_ulint*/
-    break;
-
-/****
- *BOOL_TO_REAL
- */
-    case function_bool_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_real*/
-    break;
-
-/****
- *BOOL_TO_LREAL
- */
-    case function_bool_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_lreal*/
-    break;
-
-/****
- *BOOL_TO_TIME
- */
-    case function_bool_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_time*/
-    break;
-
-/****
- *BOOL_TO_DATE
- */
-    case function_bool_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_date*/
-    break;
-
-/****
- *BOOL_TO_TOD
- */
-    case function_bool_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_tod*/
-    break;
-
-/****
- *BOOL_TO_DT
- */
-    case function_bool_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_dt*/
-    break;
-
-/****
- *BOOL_TO_STRING
- */
-    case function_bool_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__bool_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_string*/
-    break;
-
-/****
- *BOOL_TO_BYTE
- */
-    case function_bool_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_byte*/
-    break;
-
-/****
- *BOOL_TO_WORD
- */
-    case function_bool_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_word*/
-    break;
-
-/****
- *BOOL_TO_DWORD
- */
-    case function_bool_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_dword*/
-    break;
-
-/****
- *BOOL_TO_LWORD
- */
-    case function_bool_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bool_to_lword*/
-    break;
-
-/****
- *SINT_TO_BOOL
- */
-    case function_sint_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_bool*/
-    break;
-
-/****
- *SINT_TO_INT
- */
-    case function_sint_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_int*/
-    break;
-
-/****
- *SINT_TO_DINT
- */
-    case function_sint_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_dint*/
-    break;
-
-/****
- *SINT_TO_LINT
- */
-    case function_sint_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_lint*/
-    break;
-
-/****
- *SINT_TO_USINT
- */
-    case function_sint_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_usint*/
-    break;
-
-/****
- *SINT_TO_UINT
- */
-    case function_sint_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_uint*/
-    break;
-
-/****
- *SINT_TO_UDINT
- */
-    case function_sint_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_udint*/
-    break;
-
-/****
- *SINT_TO_ULINT
- */
-    case function_sint_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_ulint*/
-    break;
-
-/****
- *SINT_TO_REAL
- */
-    case function_sint_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_real*/
-    break;
-
-/****
- *SINT_TO_LREAL
- */
-    case function_sint_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_lreal*/
-    break;
-
-/****
- *SINT_TO_TIME
- */
-    case function_sint_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_time*/
-    break;
-
-/****
- *SINT_TO_DATE
- */
-    case function_sint_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_date*/
-    break;
-
-/****
- *SINT_TO_TOD
- */
-    case function_sint_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_tod*/
-    break;
-
-/****
- *SINT_TO_DT
- */
-    case function_sint_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_dt*/
-    break;
-
-/****
- *SINT_TO_STRING
- */
-    case function_sint_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__sint_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_string*/
-    break;
-
-/****
- *SINT_TO_BYTE
- */
-    case function_sint_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_byte*/
-    break;
-
-/****
- *SINT_TO_WORD
- */
-    case function_sint_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_word*/
-    break;
-
-/****
- *SINT_TO_DWORD
- */
-    case function_sint_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_dword*/
-    break;
-
-/****
- *SINT_TO_LWORD
- */
-    case function_sint_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_sint_to_lword*/
-    break;
-
-/****
- *INT_TO_BOOL
- */
-    case function_int_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_bool*/
-    break;
-
-/****
- *INT_TO_SINT
- */
-    case function_int_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_sint*/
-    break;
-
-/****
- *INT_TO_DINT
- */
-    case function_int_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_dint*/
-    break;
-
-/****
- *INT_TO_LINT
- */
-    case function_int_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_lint*/
-    break;
-
-/****
- *INT_TO_USINT
- */
-    case function_int_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_usint*/
-    break;
-
-/****
- *INT_TO_UINT
- */
-    case function_int_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_uint*/
-    break;
-
-/****
- *INT_TO_UDINT
- */
-    case function_int_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_udint*/
-    break;
-
-/****
- *INT_TO_ULINT
- */
-    case function_int_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_ulint*/
-    break;
-
-/****
- *INT_TO_REAL
- */
-    case function_int_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_real*/
-    break;
-
-/****
- *INT_TO_LREAL
- */
-    case function_int_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_lreal*/
-    break;
-
-/****
- *INT_TO_TIME
- */
-    case function_int_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_time*/
-    break;
-
-/****
- *INT_TO_DATE
- */
-    case function_int_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_date*/
-    break;
-
-/****
- *INT_TO_TOD
- */
-    case function_int_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_tod*/
-    break;
-
-/****
- *INT_TO_DT
- */
-    case function_int_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_dt*/
-    break;
-
-/****
- *INT_TO_STRING
- */
-    case function_int_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__sint_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_string*/
-    break;
-
-/****
- *INT_TO_BYTE
- */
-    case function_int_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_byte*/
-    break;
-
-/****
- *INT_TO_WORD
- */
-    case function_int_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_word*/
-    break;
-
-/****
- *INT_TO_DWORD
- */
-    case function_int_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_dword*/
-    break;
-
-/****
- *INT_TO_LWORD
- */
-    case function_int_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_int_to_lword*/
-    break;
-
-/****
- *DINT_TO_BOOL
- */
-    case function_dint_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_bool*/
-    break;
-
-/****
- *DINT_TO_SINT
- */
-    case function_dint_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_sint*/
-    break;
-
-/****
- *DINT_TO_INT
- */
-    case function_dint_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_int*/
-    break;
-
-/****
- *DINT_TO_LINT
- */
-    case function_dint_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_lint*/
-    break;
-
-/****
- *DINT_TO_USINT
- */
-    case function_dint_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_usint*/
-    break;
-
-/****
- *DINT_TO_UINT
- */
-    case function_dint_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_uint*/
-    break;
-
-/****
- *DINT_TO_UDINT
- */
-    case function_dint_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_udint*/
-    break;
-
-/****
- *DINT_TO_ULINT
- */
-    case function_dint_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_ulint*/
-    break;
-
-/****
- *DINT_TO_REAL
- */
-    case function_dint_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_real*/
-    break;
-
-/****
- *DINT_TO_LREAL
- */
-    case function_dint_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_lreal*/
-    break;
-
-/****
- *DINT_TO_TIME
- */
-    case function_dint_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_time*/
-    break;
-
-/****
- *DINT_TO_DATE
- */
-    case function_dint_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_date*/
-    break;
-
-/****
- *DINT_TO_TOD
- */
-    case function_dint_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_tod*/
-    break;
-
-/****
- *DINT_TO_DT
- */
-    case function_dint_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_dt*/
-    break;
-
-/****
- *DINT_TO_STRING
- */
-    case function_dint_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__sint_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_string*/
-    break;
-
-/****
- *DINT_TO_BYTE
- */
-    case function_dint_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_byte*/
-    break;
-
-/****
- *DINT_TO_WORD
- */
-    case function_dint_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_word*/
-    break;
-
-/****
- *DINT_TO_DWORD
- */
-    case function_dint_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_dword*/
-    break;
-
-/****
- *DINT_TO_LWORD
- */
-    case function_dint_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dint_to_lword*/
-    break;
-
-/****
- *LINT_TO_BOOL
- */
-    case function_lint_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_bool*/
-    break;
-
-/****
- *LINT_TO_SINT
- */
-    case function_lint_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_sint*/
-    break;
-
-/****
- *LINT_TO_INT
- */
-    case function_lint_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_int*/
-    break;
-
-/****
- *LINT_TO_DINT
- */
-    case function_lint_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_dint*/
-    break;
-
-/****
- *LINT_TO_USINT
- */
-    case function_lint_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_usint*/
-    break;
-
-/****
- *LINT_TO_UINT
- */
-    case function_lint_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_uint*/
-    break;
-
-/****
- *LINT_TO_UDINT
- */
-    case function_lint_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_udint*/
-    break;
-
-/****
- *LINT_TO_ULINT
- */
-    case function_lint_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_ulint*/
-    break;
-
-/****
- *LINT_TO_REAL
- */
-    case function_lint_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_real*/
-    break;
-
-/****
- *LINT_TO_LREAL
- */
-    case function_lint_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_lreal*/
-    break;
-
-/****
- *LINT_TO_TIME
- */
-    case function_lint_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_time*/
-    break;
-
-/****
- *LINT_TO_DATE
- */
-    case function_lint_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_date*/
-    break;
-
-/****
- *LINT_TO_TOD
- */
-    case function_lint_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_tod*/
-    break;
-
-/****
- *LINT_TO_DT
- */
-    case function_lint_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_dt*/
-    break;
-
-/****
- *LINT_TO_STRING
- */
-    case function_lint_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__sint_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_string*/
-    break;
-
-/****
- *LINT_TO_BYTE
- */
-    case function_lint_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_byte*/
-    break;
-
-/****
- *LINT_TO_WORD
- */
-    case function_lint_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_word*/
-    break;
-
-/****
- *LINT_TO_DWORD
- */
-    case function_lint_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_dword*/
-    break;
-
-/****
- *LINT_TO_LWORD
- */
-    case function_lint_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lint_to_lword*/
-    break;
-
-/****
- *USINT_TO_BOOL
- */
-    case function_usint_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_bool*/
-    break;
-
-/****
- *USINT_TO_SINT
- */
-    case function_usint_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_sint*/
-    break;
-
-/****
- *USINT_TO_INT
- */
-    case function_usint_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_int*/
-    break;
-
-/****
- *USINT_TO_DINT
- */
-    case function_usint_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_dint*/
-    break;
-
-/****
- *USINT_TO_LINT
- */
-    case function_usint_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_lint*/
-    break;
-
-/****
- *USINT_TO_UINT
- */
-    case function_usint_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_uint*/
-    break;
-
-/****
- *USINT_TO_UDINT
- */
-    case function_usint_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_udint*/
-    break;
-
-/****
- *USINT_TO_ULINT
- */
-    case function_usint_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_ulint*/
-    break;
-
-/****
- *USINT_TO_REAL
- */
-    case function_usint_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_real*/
-    break;
-
-/****
- *USINT_TO_LREAL
- */
-    case function_usint_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_lreal*/
-    break;
-
-/****
- *USINT_TO_TIME
- */
-    case function_usint_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_time*/
-    break;
-
-/****
- *USINT_TO_DATE
- */
-    case function_usint_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_date*/
-    break;
-
-/****
- *USINT_TO_TOD
- */
-    case function_usint_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_tod*/
-    break;
-
-/****
- *USINT_TO_DT
- */
-    case function_usint_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_dt*/
-    break;
-
-/****
- *USINT_TO_STRING
- */
-    case function_usint_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__uint_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_string*/
-    break;
-
-/****
- *USINT_TO_BYTE
- */
-    case function_usint_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_byte*/
-    break;
-
-/****
- *USINT_TO_WORD
- */
-    case function_usint_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_word*/
-    break;
-
-/****
- *USINT_TO_DWORD
- */
-    case function_usint_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_dword*/
-    break;
-
-/****
- *USINT_TO_LWORD
- */
-    case function_usint_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_usint_to_lword*/
-    break;
-
-/****
- *UINT_TO_BOOL
- */
-    case function_uint_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_bool*/
-    break;
-
-/****
- *UINT_TO_SINT
- */
-    case function_uint_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_sint*/
-    break;
-
-/****
- *UINT_TO_INT
- */
-    case function_uint_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_int*/
-    break;
-
-/****
- *UINT_TO_DINT
- */
-    case function_uint_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_dint*/
-    break;
-
-/****
- *UINT_TO_LINT
- */
-    case function_uint_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_lint*/
-    break;
-
-/****
- *UINT_TO_USINT
- */
-    case function_uint_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_usint*/
-    break;
-
-/****
- *UINT_TO_UDINT
- */
-    case function_uint_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_udint*/
-    break;
-
-/****
- *UINT_TO_ULINT
- */
-    case function_uint_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_ulint*/
-    break;
-
-/****
- *UINT_TO_REAL
- */
-    case function_uint_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_real*/
-    break;
-
-/****
- *UINT_TO_LREAL
- */
-    case function_uint_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_lreal*/
-    break;
-
-/****
- *UINT_TO_TIME
- */
-    case function_uint_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_time*/
-    break;
-
-/****
- *UINT_TO_DATE
- */
-    case function_uint_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_date*/
-    break;
-
-/****
- *UINT_TO_TOD
- */
-    case function_uint_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_tod*/
-    break;
-
-/****
- *UINT_TO_DT
- */
-    case function_uint_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_dt*/
-    break;
-
-/****
- *UINT_TO_STRING
- */
-    case function_uint_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__uint_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_string*/
-    break;
-
-/****
- *UINT_TO_BYTE
- */
-    case function_uint_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_byte*/
-    break;
-
-/****
- *UINT_TO_WORD
- */
-    case function_uint_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_word*/
-    break;
-
-/****
- *UINT_TO_DWORD
- */
-    case function_uint_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_dword*/
-    break;
-
-/****
- *UINT_TO_LWORD
- */
-    case function_uint_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_lword*/
-    break;
-
-/****
- *UDINT_TO_BOOL
- */
-    case function_udint_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_bool*/
-    break;
-
-/****
- *UDINT_TO_SINT
- */
-    case function_udint_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_sint*/
-    break;
-
-/****
- *UDINT_TO_INT
- */
-    case function_udint_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_int*/
-    break;
-
-/****
- *UDINT_TO_DINT
- */
-    case function_udint_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_dint*/
-    break;
-
-/****
- *UDINT_TO_LINT
- */
-    case function_udint_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_lint*/
-    break;
-
-/****
- *UDINT_TO_USINT
- */
-    case function_udint_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_usint*/
-    break;
-
-/****
- *UDINT_TO_UINT
- */
-    case function_udint_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_uint*/
-    break;
-
-/****
- *UDINT_TO_ULINT
- */
-    case function_udint_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_ulint*/
-    break;
-
-/****
- *UDINT_TO_REAL
- */
-    case function_udint_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_real*/
-    break;
-
-/****
- *UDINT_TO_LREAL
- */
-    case function_udint_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_lreal*/
-    break;
-
-/****
- *UDINT_TO_TIME
- */
-    case function_udint_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_time*/
-    break;
-
-/****
- *UDINT_TO_DATE
- */
-    case function_udint_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_date*/
-    break;
-
-/****
- *UDINT_TO_TOD
- */
-    case function_udint_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_tod*/
-    break;
-
-/****
- *UDINT_TO_DT
- */
-    case function_udint_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_dt*/
-    break;
-
-/****
- *UDINT_TO_STRING
- */
-    case function_udint_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__uint_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_string*/
-    break;
-
-/****
- *UDINT_TO_BYTE
- */
-    case function_udint_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_byte*/
-    break;
-
-/****
- *UDINT_TO_WORD
- */
-    case function_udint_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_word*/
-    break;
-
-/****
- *UDINT_TO_DWORD
- */
-    case function_udint_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_dword*/
-    break;
-
-/****
- *UDINT_TO_LWORD
- */
-    case function_udint_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_udint_to_lword*/
-    break;
-
-/****
- *ULINT_TO_BOOL
- */
-    case function_ulint_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_bool*/
-    break;
-
-/****
- *ULINT_TO_SINT
- */
-    case function_ulint_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_sint*/
-    break;
-
-/****
- *ULINT_TO_INT
- */
-    case function_ulint_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_int*/
-    break;
-
-/****
- *ULINT_TO_DINT
- */
-    case function_ulint_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_dint*/
-    break;
-
-/****
- *ULINT_TO_LINT
- */
-    case function_ulint_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_lint*/
-    break;
-
-/****
- *ULINT_TO_USINT
- */
-    case function_ulint_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_usint*/
-    break;
-
-/****
- *ULINT_TO_UINT
- */
-    case function_ulint_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_uint*/
-    break;
-
-/****
- *ULINT_TO_UDINT
- */
-    case function_ulint_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_udint*/
-    break;
-
-/****
- *ULINT_TO_REAL
- */
-    case function_ulint_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_real*/
-    break;
-
-/****
- *ULINT_TO_LREAL
- */
-    case function_ulint_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_lreal*/
-    break;
-
-/****
- *ULINT_TO_TIME
- */
-    case function_ulint_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_time*/
-    break;
-
-/****
- *ULINT_TO_DATE
- */
-    case function_ulint_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_date*/
-    break;
-
-/****
- *ULINT_TO_TOD
- */
-    case function_ulint_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_tod*/
-    break;
-
-/****
- *ULINT_TO_DT
- */
-    case function_ulint_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_dt*/
-    break;
-
-/****
- *ULINT_TO_STRING
- */
-    case function_ulint_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__uint_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_string*/
-    break;
-
-/****
- *ULINT_TO_BYTE
- */
-    case function_ulint_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_byte*/
-    break;
-
-/****
- *ULINT_TO_WORD
- */
-    case function_ulint_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_word*/
-    break;
-
-/****
- *ULINT_TO_DWORD
- */
-    case function_ulint_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_dword*/
-    break;
-
-/****
- *ULINT_TO_LWORD
- */
-    case function_ulint_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_ulint_to_lword*/
-    break;
-
-/****
- *REAL_TO_BOOL
- */
-    case function_real_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_bool*/
-    break;
 
 /****
  *REAL_TO_SINT
@@ -5595,83 +47,18 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_real_to_sint*/
-    break;
-
-/****
- *REAL_TO_INT
- */
-    case function_real_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_int*/
-    break;
-
-/****
- *REAL_TO_DINT
- */
-    case function_real_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_dint*/
     break;
 
 /****
@@ -5691,14 +78,13 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -5707,9 +93,9 @@ switch(current_function_type){
     break;
 
 /****
- *REAL_TO_USINT
+ *REAL_TO_DINT
  */
-    case function_real_to_usint :
+    case function_real_to_dint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -5723,180 +109,18 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_real_to_usint*/
-    break;
-
-/****
- *REAL_TO_UINT
- */
-    case function_real_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_uint*/
-    break;
-
-/****
- *REAL_TO_UDINT
- */
-    case function_real_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_udint*/
-    break;
-
-/****
- *REAL_TO_ULINT
- */
-    case function_real_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_ulint*/
-    break;
-
-/****
- *REAL_TO_LREAL
- */
-    case function_real_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_lreal*/
-    break;
-
-/****
- *REAL_TO_TIME
- */
-    case function_real_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__real_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_time*/
+    }/*function_real_to_dint*/
     break;
 
 /****
@@ -5916,183 +140,19 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__real_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__real_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_real_to_date*/
-    break;
-
-/****
- *REAL_TO_TOD
- */
-    case function_real_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__real_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_tod*/
-    break;
-
-/****
- *REAL_TO_DT
- */
-    case function_real_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__real_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_dt*/
-    break;
-
-/****
- *REAL_TO_STRING
- */
-    case function_real_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__real_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_string*/
-    break;
-
-/****
- *REAL_TO_BYTE
- */
-    case function_real_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_byte*/
-    break;
-
-/****
- *REAL_TO_WORD
- */
-    case function_real_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_real_to_word*/
     break;
 
 /****
@@ -6112,19 +172,176 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_real_to_dword*/
+    break;
+
+/****
+ *REAL_TO_DT
+ */
+    case function_real_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__real_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_real_to_dt*/
+    break;
+
+/****
+ *REAL_TO_TOD
+ */
+    case function_real_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__real_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_real_to_tod*/
+    break;
+
+/****
+ *REAL_TO_UDINT
+ */
+    case function_real_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_real_to_udint*/
+    break;
+
+/****
+ *REAL_TO_WORD
+ */
+    case function_real_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_real_to_word*/
+    break;
+
+/****
+ *REAL_TO_STRING
+ */
+    case function_real_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__real_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_real_to_string*/
     break;
 
 /****
@@ -6144,14 +361,13 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -6160,9 +376,9 @@ switch(current_function_type){
     break;
 
 /****
- *LREAL_TO_BOOL
+ *REAL_TO_UINT
  */
-    case function_lreal_to_bool :
+    case function_real_to_uint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -6173,220 +389,27 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_bool*/
-    break;
-
-/****
- *LREAL_TO_SINT
- */
-    case function_lreal_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_sint*/
-    break;
-
-/****
- *LREAL_TO_INT
- */
-    case function_lreal_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_int*/
-    break;
-
-/****
- *LREAL_TO_DINT
- */
-    case function_lreal_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_dint*/
-    break;
-
-/****
- *LREAL_TO_LINT
- */
-    case function_lreal_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_lint*/
-    break;
-
-/****
- *LREAL_TO_USINT
- */
-    case function_lreal_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_usint*/
-    break;
-
-/****
- *LREAL_TO_UINT
- */
-    case function_lreal_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_lreal_to_uint*/
+    }/*function_real_to_uint*/
     break;
 
 /****
- *LREAL_TO_UDINT
+ *REAL_TO_LREAL
  */
-    case function_lreal_to_udint :
+    case function_real_to_lreal :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -6397,715 +420,27 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_udint*/
-    break;
-
-/****
- *LREAL_TO_ULINT
- */
-    case function_lreal_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_ulint*/
-    break;
-
-/****
- *LREAL_TO_REAL
- */
-    case function_lreal_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_real*/
-    break;
-
-/****
- *LREAL_TO_TIME
- */
-    case function_lreal_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__real_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_time*/
-    break;
-
-/****
- *LREAL_TO_DATE
- */
-    case function_lreal_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__real_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_date*/
-    break;
-
-/****
- *LREAL_TO_TOD
- */
-    case function_lreal_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__real_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_tod*/
-    break;
-
-/****
- *LREAL_TO_DT
- */
-    case function_lreal_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__real_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_dt*/
-    break;
-
-/****
- *LREAL_TO_STRING
- */
-    case function_lreal_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__real_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_string*/
-    break;
-
-/****
- *LREAL_TO_BYTE
- */
-    case function_lreal_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_byte*/
-    break;
-
-/****
- *LREAL_TO_WORD
- */
-    case function_lreal_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_word*/
-    break;
-
-/****
- *LREAL_TO_DWORD
- */
-    case function_lreal_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_dword*/
-    break;
-
-/****
- *LREAL_TO_LWORD
- */
-    case function_lreal_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lreal_to_lword*/
-    break;
-
-/****
- *TIME_TO_SINT
- */
-    case function_time_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_sint*/
-    break;
-
-/****
- *TIME_TO_INT
- */
-    case function_time_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_int*/
-    break;
-
-/****
- *TIME_TO_DINT
- */
-    case function_time_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_dint*/
-    break;
-
-/****
- *TIME_TO_LINT
- */
-    case function_time_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_lint*/
-    break;
-
-/****
- *TIME_TO_USINT
- */
-    case function_time_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_usint*/
-    break;
-
-/****
- *TIME_TO_UINT
- */
-    case function_time_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_uint*/
-    break;
-
-/****
- *TIME_TO_UDINT
- */
-    case function_time_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_udint*/
-    break;
-
-/****
- *TIME_TO_ULINT
- */
-    case function_time_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_ulint*/
-    break;
-
-/****
- *TIME_TO_REAL
- */
-    case function_time_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_real(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_real*/
-    break;
-
-/****
- *TIME_TO_LREAL
- */
-    case function_time_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_real(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_time_to_lreal*/
+    }/*function_real_to_lreal*/
     break;
 
 /****
- *TIME_TO_STRING
+ *REAL_TO_BYTE
  */
-    case function_time_to_string :
+    case function_real_to_byte :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -7116,62 +451,27 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_string*/
-    break;
-
-/****
- *TIME_TO_BYTE
- */
-    case function_time_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_time_to_byte*/
+    }/*function_real_to_byte*/
     break;
 
 /****
- *TIME_TO_WORD
+ *REAL_TO_USINT
  */
-    case function_time_to_word :
+    case function_real_to_usint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -7182,260 +482,27 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_word*/
-    break;
-
-/****
- *TIME_TO_DWORD
- */
-    case function_time_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_dword*/
-    break;
-
-/****
- *TIME_TO_LWORD
- */
-    case function_time_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_time_to_lword*/
-    break;
-
-/****
- *DATE_TO_SINT
- */
-    case function_date_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_sint*/
-    break;
-
-/****
- *DATE_TO_INT
- */
-    case function_date_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_int*/
-    break;
-
-/****
- *DATE_TO_DINT
- */
-    case function_date_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_dint*/
-    break;
-
-/****
- *DATE_TO_LINT
- */
-    case function_date_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_lint*/
-    break;
-
-/****
- *DATE_TO_USINT
- */
-    case function_date_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
-            {
-        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_date_to_usint*/
+    }/*function_real_to_usint*/
     break;
 
 /****
- *DATE_TO_UINT
+ *REAL_TO_ULINT
  */
-    case function_date_to_uint :
+    case function_real_to_ulint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -7446,89 +513,1897 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_uint*/
-    break;
-
-/****
- *DATE_TO_UDINT
- */
-    case function_date_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_udint*/
-    break;
-
-/****
- *DATE_TO_ULINT
- */
-    case function_date_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
-            {
-        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_date_to_ulint*/
+    }/*function_real_to_ulint*/
+    break;
+
+/****
+ *REAL_TO_BOOL
+ */
+    case function_real_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_real_to_bool*/
+    break;
+
+/****
+ *REAL_TO_TIME
+ */
+    case function_real_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__real_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_real_to_time*/
+    break;
+
+/****
+ *REAL_TO_INT
+ */
+    case function_real_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_real_to_int*/
+    break;
+
+/****
+ *SINT_TO_REAL
+ */
+    case function_sint_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_real*/
+    break;
+
+/****
+ *SINT_TO_LINT
+ */
+    case function_sint_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_lint*/
+    break;
+
+/****
+ *SINT_TO_DINT
+ */
+    case function_sint_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_dint*/
+    break;
+
+/****
+ *SINT_TO_DATE
+ */
+    case function_sint_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_date*/
+    break;
+
+/****
+ *SINT_TO_DWORD
+ */
+    case function_sint_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_dword*/
+    break;
+
+/****
+ *SINT_TO_DT
+ */
+    case function_sint_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_dt*/
+    break;
+
+/****
+ *SINT_TO_TOD
+ */
+    case function_sint_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_tod*/
+    break;
+
+/****
+ *SINT_TO_UDINT
+ */
+    case function_sint_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_udint*/
+    break;
+
+/****
+ *SINT_TO_WORD
+ */
+    case function_sint_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_word*/
+    break;
+
+/****
+ *SINT_TO_STRING
+ */
+    case function_sint_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__sint_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_string*/
+    break;
+
+/****
+ *SINT_TO_LWORD
+ */
+    case function_sint_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_lword*/
+    break;
+
+/****
+ *SINT_TO_UINT
+ */
+    case function_sint_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_uint*/
+    break;
+
+/****
+ *SINT_TO_LREAL
+ */
+    case function_sint_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_lreal*/
+    break;
+
+/****
+ *SINT_TO_BYTE
+ */
+    case function_sint_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_byte*/
+    break;
+
+/****
+ *SINT_TO_USINT
+ */
+    case function_sint_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_usint*/
+    break;
+
+/****
+ *SINT_TO_ULINT
+ */
+    case function_sint_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_ulint*/
+    break;
+
+/****
+ *SINT_TO_BOOL
+ */
+    case function_sint_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_bool*/
+    break;
+
+/****
+ *SINT_TO_TIME
+ */
+    case function_sint_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_time*/
+    break;
+
+/****
+ *SINT_TO_INT
+ */
+    case function_sint_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_sint_to_int*/
+    break;
+
+/****
+ *LINT_TO_REAL
+ */
+    case function_lint_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_real*/
+    break;
+
+/****
+ *LINT_TO_SINT
+ */
+    case function_lint_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_sint*/
+    break;
+
+/****
+ *LINT_TO_DINT
+ */
+    case function_lint_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_dint*/
+    break;
+
+/****
+ *LINT_TO_DATE
+ */
+    case function_lint_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_date*/
+    break;
+
+/****
+ *LINT_TO_DWORD
+ */
+    case function_lint_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_dword*/
+    break;
+
+/****
+ *LINT_TO_DT
+ */
+    case function_lint_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_dt*/
+    break;
+
+/****
+ *LINT_TO_TOD
+ */
+    case function_lint_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_tod*/
+    break;
+
+/****
+ *LINT_TO_UDINT
+ */
+    case function_lint_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_udint*/
+    break;
+
+/****
+ *LINT_TO_WORD
+ */
+    case function_lint_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_word*/
+    break;
+
+/****
+ *LINT_TO_STRING
+ */
+    case function_lint_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__sint_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_string*/
+    break;
+
+/****
+ *LINT_TO_LWORD
+ */
+    case function_lint_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_lword*/
+    break;
+
+/****
+ *LINT_TO_UINT
+ */
+    case function_lint_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_uint*/
+    break;
+
+/****
+ *LINT_TO_LREAL
+ */
+    case function_lint_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_lreal*/
+    break;
+
+/****
+ *LINT_TO_BYTE
+ */
+    case function_lint_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_byte*/
+    break;
+
+/****
+ *LINT_TO_USINT
+ */
+    case function_lint_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_usint*/
+    break;
+
+/****
+ *LINT_TO_ULINT
+ */
+    case function_lint_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_ulint*/
+    break;
+
+/****
+ *LINT_TO_BOOL
+ */
+    case function_lint_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_bool*/
+    break;
+
+/****
+ *LINT_TO_TIME
+ */
+    case function_lint_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_time*/
+    break;
+
+/****
+ *LINT_TO_INT
+ */
+    case function_lint_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lint_to_int*/
+    break;
+
+/****
+ *DINT_TO_REAL
+ */
+    case function_dint_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_real*/
+    break;
+
+/****
+ *DINT_TO_SINT
+ */
+    case function_dint_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_sint*/
+    break;
+
+/****
+ *DINT_TO_LINT
+ */
+    case function_dint_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_lint*/
+    break;
+
+/****
+ *DINT_TO_DATE
+ */
+    case function_dint_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_date*/
+    break;
+
+/****
+ *DINT_TO_DWORD
+ */
+    case function_dint_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_dword*/
+    break;
+
+/****
+ *DINT_TO_DT
+ */
+    case function_dint_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_dt*/
+    break;
+
+/****
+ *DINT_TO_TOD
+ */
+    case function_dint_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_tod*/
+    break;
+
+/****
+ *DINT_TO_UDINT
+ */
+    case function_dint_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_udint*/
+    break;
+
+/****
+ *DINT_TO_WORD
+ */
+    case function_dint_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_word*/
+    break;
+
+/****
+ *DINT_TO_STRING
+ */
+    case function_dint_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__sint_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_string*/
+    break;
+
+/****
+ *DINT_TO_LWORD
+ */
+    case function_dint_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_lword*/
+    break;
+
+/****
+ *DINT_TO_UINT
+ */
+    case function_dint_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_uint*/
+    break;
+
+/****
+ *DINT_TO_LREAL
+ */
+    case function_dint_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_lreal*/
+    break;
+
+/****
+ *DINT_TO_BYTE
+ */
+    case function_dint_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_byte*/
+    break;
+
+/****
+ *DINT_TO_USINT
+ */
+    case function_dint_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_usint*/
+    break;
+
+/****
+ *DINT_TO_ULINT
+ */
+    case function_dint_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_ulint*/
+    break;
+
+/****
+ *DINT_TO_BOOL
+ */
+    case function_dint_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_bool*/
+    break;
+
+/****
+ *DINT_TO_TIME
+ */
+    case function_dint_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_time*/
+    break;
+
+/****
+ *DINT_TO_INT
+ */
+    case function_dint_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dint_to_int*/
     break;
 
 /****
@@ -7548,15 +2423,14 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__time_to_real"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_real(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -7565,9 +2439,9 @@ switch(current_function_type){
     break;
 
 /****
- *DATE_TO_LREAL
+ *DATE_TO_SINT
  */
-    case function_date_to_lreal :
+    case function_date_to_sint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -7581,26 +2455,25 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_real(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_date_to_lreal*/
+    }/*function_date_to_sint*/
     break;
 
 /****
- *DATE_TO_STRING
+ *DATE_TO_LINT
  */
-    case function_date_to_string :
+    case function_date_to_lint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -7614,26 +2487,25 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__date_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_date_to_string*/
+    }/*function_date_to_lint*/
     break;
 
 /****
- *DATE_TO_BYTE
+ *DATE_TO_DINT
  */
-    case function_date_to_byte :
+    case function_date_to_dint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -7647,53 +2519,19 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_date_to_byte*/
-    break;
-
-/****
- *DATE_TO_WORD
- */
-    case function_date_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_date_to_word*/
+    }/*function_date_to_dint*/
     break;
 
 /****
@@ -7713,20 +2551,115 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_date_to_dword*/
+    break;
+
+/****
+ *DATE_TO_UDINT
+ */
+    case function_date_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_date_to_udint*/
+    break;
+
+/****
+ *DATE_TO_WORD
+ */
+    case function_date_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_date_to_word*/
+    break;
+
+/****
+ *DATE_TO_STRING
+ */
+    case function_date_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__date_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_date_to_string*/
     break;
 
 /****
@@ -7746,15 +2679,14 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -7763,9 +2695,9 @@ switch(current_function_type){
     break;
 
 /****
- *TOD_TO_SINT
+ *DATE_TO_UINT
  */
-    case function_tod_to_sint :
+    case function_date_to_uint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -7776,194 +2708,28 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_sint*/
-    break;
-
-/****
- *TOD_TO_INT
- */
-    case function_tod_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_int*/
-    break;
-
-/****
- *TOD_TO_DINT
- */
-    case function_tod_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_dint*/
-    break;
-
-/****
- *TOD_TO_LINT
- */
-    case function_tod_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_lint*/
-    break;
-
-/****
- *TOD_TO_USINT
- */
-    case function_tod_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_usint*/
-    break;
-
-/****
- *TOD_TO_UINT
- */
-    case function_tod_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_tod_to_uint*/
+    }/*function_date_to_uint*/
     break;
 
 /****
- *TOD_TO_UDINT
+ *DATE_TO_LREAL
  */
-    case function_tod_to_udint :
+    case function_date_to_lreal :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -7974,128 +2740,28 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_udint*/
-    break;
-
-/****
- *TOD_TO_ULINT
- */
-    case function_tod_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_ulint*/
-    break;
-
-/****
- *TOD_TO_REAL
- */
-    case function_tod_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_real(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_real*/
-    break;
-
-/****
- *TOD_TO_LREAL
- */
-    case function_tod_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
+                function_name = (symbol_c*)(new pragma_c("__time_to_real"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_real(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_tod_to_lreal*/
+    }/*function_date_to_lreal*/
     break;
 
 /****
- *TOD_TO_STRING
+ *DATE_TO_BYTE
  */
-    case function_tod_to_string :
+    case function_date_to_byte :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -8106,62 +2772,28 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__tod_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_string*/
-    break;
-
-/****
- *TOD_TO_BYTE
- */
-    case function_tod_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_tod_to_byte*/
+    }/*function_date_to_byte*/
     break;
 
 /****
- *TOD_TO_WORD
+ *DATE_TO_USINT
  */
-    case function_tod_to_word :
+    case function_date_to_usint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -8172,260 +2804,28 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_word*/
-    break;
-
-/****
- *TOD_TO_DWORD
- */
-    case function_tod_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_dword*/
-    break;
-
-/****
- *TOD_TO_LWORD
- */
-    case function_tod_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_tod_to_lword*/
-    break;
-
-/****
- *DT_TO_SINT
- */
-    case function_dt_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_sint*/
-    break;
-
-/****
- *DT_TO_INT
- */
-    case function_dt_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_int*/
-    break;
-
-/****
- *DT_TO_DINT
- */
-    case function_dt_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_dint*/
-    break;
-
-/****
- *DT_TO_LINT
- */
-    case function_dt_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_lint*/
-    break;
-
-/****
- *DT_TO_USINT
- */
-    case function_dt_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_dt_to_usint*/
+    }/*function_date_to_usint*/
     break;
 
 /****
- *DT_TO_UINT
+ *DATE_TO_ULINT
  */
-    case function_dt_to_uint :
+    case function_date_to_ulint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -8436,95 +2836,28 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_uint*/
-    break;
-
-/****
- *DT_TO_UDINT
- */
-    case function_dt_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_udint*/
-    break;
-
-/****
- *DT_TO_ULINT
- */
-    case function_dt_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_dt_to_ulint*/
+    }/*function_date_to_ulint*/
     break;
 
 /****
- *DT_TO_REAL
+ *DATE_TO_INT
  */
-    case function_dt_to_real :
+    case function_date_to_int :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -8535,2362 +2868,22 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_real(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_real*/
-    break;
-
-/****
- *DT_TO_LREAL
- */
-    case function_dt_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_real(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_lreal*/
-    break;
-
-/****
- *DT_TO_STRING
- */
-    case function_dt_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__dt_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_string*/
-    break;
-
-/****
- *DT_TO_BYTE
- */
-    case function_dt_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_byte*/
-    break;
-
-/****
- *DT_TO_WORD
- */
-    case function_dt_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_word*/
-    break;
-
-/****
- *DT_TO_DWORD
- */
-    case function_dt_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_dword*/
-    break;
-
-/****
- *DT_TO_LWORD
- */
-    case function_dt_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__time_to_int(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dt_to_lword*/
-    break;
-
-/****
- *STRING_TO_BOOL
- */
-    case function_string_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_bool(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_bool*/
-    break;
-
-/****
- *STRING_TO_SINT
- */
-    case function_string_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_sint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_sint*/
-    break;
-
-/****
- *STRING_TO_INT
- */
-    case function_string_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_sint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
             
-            ERROR;
-        }
-        
-    }/*function_string_to_int*/
-    break;
-
-/****
- *STRING_TO_DINT
- */
-    case function_string_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_sint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_dint*/
-    break;
-
-/****
- *STRING_TO_LINT
- */
-    case function_string_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_sint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_lint*/
-    break;
-
-/****
- *STRING_TO_USINT
- */
-    case function_string_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_uint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_usint*/
-    break;
-
-/****
- *STRING_TO_UINT
- */
-    case function_string_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_uint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_uint*/
-    break;
-
-/****
- *STRING_TO_UDINT
- */
-    case function_string_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_uint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_udint*/
-    break;
-
-/****
- *STRING_TO_ULINT
- */
-    case function_string_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_uint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_ulint*/
-    break;
-
-/****
- *STRING_TO_REAL
- */
-    case function_string_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_real(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_real*/
-    break;
-
-/****
- *STRING_TO_LREAL
- */
-    case function_string_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_real(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_lreal*/
-    break;
-
-/****
- *STRING_TO_TIME
- */
-    case function_string_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_time*/
-    break;
-
-/****
- *STRING_TO_DATE
- */
-    case function_string_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_date*/
-    break;
-
-/****
- *STRING_TO_TOD
- */
-    case function_string_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_tod*/
-    break;
-
-/****
- *STRING_TO_DT
- */
-    case function_string_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_dt*/
-    break;
-
-/****
- *STRING_TO_BYTE
- */
-    case function_string_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_bit(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_byte*/
-    break;
-
-/****
- *STRING_TO_WORD
- */
-    case function_string_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_bit(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_word*/
-    break;
-
-/****
- *STRING_TO_DWORD
- */
-    case function_string_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_bit(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_dword*/
-    break;
-
-/****
- *STRING_TO_LWORD
- */
-    case function_string_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__string_to_bit(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_string_to_lword*/
-    break;
-
-/****
- *BYTE_TO_BOOL
- */
-    case function_byte_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_bool*/
-    break;
-
-/****
- *BYTE_TO_SINT
- */
-    case function_byte_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_sint*/
-    break;
-
-/****
- *BYTE_TO_INT
- */
-    case function_byte_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_int*/
-    break;
-
-/****
- *BYTE_TO_DINT
- */
-    case function_byte_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_dint*/
-    break;
-
-/****
- *BYTE_TO_LINT
- */
-    case function_byte_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_lint*/
-    break;
-
-/****
- *BYTE_TO_USINT
- */
-    case function_byte_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_usint*/
-    break;
-
-/****
- *BYTE_TO_UINT
- */
-    case function_byte_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_uint*/
-    break;
-
-/****
- *BYTE_TO_UDINT
- */
-    case function_byte_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_udint*/
-    break;
-
-/****
- *BYTE_TO_ULINT
- */
-    case function_byte_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_ulint*/
-    break;
-
-/****
- *BYTE_TO_REAL
- */
-    case function_byte_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_real*/
-    break;
-
-/****
- *BYTE_TO_LREAL
- */
-    case function_byte_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_lreal*/
-    break;
-
-/****
- *BYTE_TO_TIME
- */
-    case function_byte_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_time*/
-    break;
-
-/****
- *BYTE_TO_DATE
- */
-    case function_byte_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_date*/
-    break;
-
-/****
- *BYTE_TO_TOD
- */
-    case function_byte_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_tod*/
-    break;
-
-/****
- *BYTE_TO_DT
- */
-    case function_byte_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_dt*/
-    break;
-
-/****
- *BYTE_TO_STRING
- */
-    case function_byte_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__bit_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_string*/
-    break;
-
-/****
- *BYTE_TO_WORD
- */
-    case function_byte_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_word*/
-    break;
-
-/****
- *BYTE_TO_DWORD
- */
-    case function_byte_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_dword*/
-    break;
-
-/****
- *BYTE_TO_LWORD
- */
-    case function_byte_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_byte_to_lword*/
-    break;
-
-/****
- *WORD_TO_BOOL
- */
-    case function_word_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_bool*/
-    break;
-
-/****
- *WORD_TO_SINT
- */
-    case function_word_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_sint*/
-    break;
-
-/****
- *WORD_TO_INT
- */
-    case function_word_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_int*/
-    break;
-
-/****
- *WORD_TO_DINT
- */
-    case function_word_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_dint*/
-    break;
-
-/****
- *WORD_TO_LINT
- */
-    case function_word_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_lint*/
-    break;
-
-/****
- *WORD_TO_USINT
- */
-    case function_word_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_usint*/
-    break;
-
-/****
- *WORD_TO_UINT
- */
-    case function_word_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_uint*/
-    break;
-
-/****
- *WORD_TO_UDINT
- */
-    case function_word_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_udint*/
-    break;
-
-/****
- *WORD_TO_ULINT
- */
-    case function_word_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_ulint*/
-    break;
-
-/****
- *WORD_TO_REAL
- */
-    case function_word_to_real :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_real*/
-    break;
-
-/****
- *WORD_TO_LREAL
- */
-    case function_word_to_lreal :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_lreal*/
-    break;
-
-/****
- *WORD_TO_TIME
- */
-    case function_word_to_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_time*/
-    break;
-
-/****
- *WORD_TO_DATE
- */
-    case function_word_to_date :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_date*/
-    break;
-
-/****
- *WORD_TO_TOD
- */
-    case function_word_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_tod*/
-    break;
-
-/****
- *WORD_TO_DT
- */
-    case function_word_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_dt*/
-    break;
-
-/****
- *WORD_TO_STRING
- */
-    case function_word_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__bit_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_string*/
-    break;
-
-/****
- *WORD_TO_BYTE
- */
-    case function_word_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_byte*/
-    break;
-
-/****
- *WORD_TO_DWORD
- */
-    case function_word_to_dword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_dword*/
-    break;
-
-/****
- *WORD_TO_LWORD
- */
-    case function_word_to_lword :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_word_to_lword*/
-    break;
-
-/****
- *DWORD_TO_BOOL
- */
-    case function_dword_to_bool :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_bool*/
-    break;
-
-/****
- *DWORD_TO_SINT
- */
-    case function_dword_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_sint*/
-    break;
-
-/****
- *DWORD_TO_INT
- */
-    case function_dword_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_int*/
-    break;
-
-/****
- *DWORD_TO_DINT
- */
-    case function_dword_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_dint*/
-    break;
-
-/****
- *DWORD_TO_LINT
- */
-    case function_dword_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_lint*/
-    break;
-
-/****
- *DWORD_TO_USINT
- */
-    case function_dword_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_usint*/
-    break;
-
-/****
- *DWORD_TO_UINT
- */
-    case function_dword_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_uint*/
-    break;
-
-/****
- *DWORD_TO_UDINT
- */
-    case function_dword_to_udint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_udint*/
-    break;
-
-/****
- *DWORD_TO_ULINT
- */
-    case function_dword_to_ulint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
             
             ERROR;
         }
         
-    }/*function_dword_to_ulint*/
+    }/*function_date_to_int*/
     break;
 
 /****
@@ -10910,14 +2903,13 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -10926,9 +2918,9 @@ switch(current_function_type){
     break;
 
 /****
- *DWORD_TO_LREAL
+ *DWORD_TO_SINT
  */
-    case function_dword_to_lreal :
+    case function_dword_to_sint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -10942,25 +2934,24 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_dword_to_lreal*/
+    }/*function_dword_to_sint*/
     break;
 
 /****
- *DWORD_TO_TIME
+ *DWORD_TO_LINT
  */
-    case function_dword_to_time :
+    case function_dword_to_lint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -10974,20 +2965,49 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_dword_to_time*/
+    }/*function_dword_to_lint*/
+    break;
+
+/****
+ *DWORD_TO_DINT
+ */
+    case function_dword_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dword_to_dint*/
     break;
 
 /****
@@ -11007,53 +3027,19 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_dword_to_date*/
-    break;
-
-/****
- *DWORD_TO_TOD
- */
-    case function_dword_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_dword_to_tod*/
     break;
 
 /****
@@ -11073,15 +3059,14 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -11090,9 +3075,9 @@ switch(current_function_type){
     break;
 
 /****
- *DWORD_TO_STRING
+ *DWORD_TO_TOD
  */
-    case function_dword_to_string :
+    case function_dword_to_tod :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -11106,26 +3091,25 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__bit_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_dword_to_string*/
+    }/*function_dword_to_tod*/
     break;
 
 /****
- *DWORD_TO_BYTE
+ *DWORD_TO_UDINT
  */
-    case function_dword_to_byte :
+    case function_dword_to_udint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -11139,19 +3123,18 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_dword_to_byte*/
+    }/*function_dword_to_udint*/
     break;
 
 /****
@@ -11171,19 +3154,50 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_dword_to_word*/
+    break;
+
+/****
+ *DWORD_TO_STRING
+ */
+    case function_dword_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__bit_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dword_to_string*/
     break;
 
 /****
@@ -11203,14 +3217,13 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -11219,9 +3232,9 @@ switch(current_function_type){
     break;
 
 /****
- *LWORD_TO_BOOL
+ *DWORD_TO_UINT
  */
-    case function_lword_to_bool :
+    case function_dword_to_uint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -11232,220 +3245,27 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_bool*/
-    break;
-
-/****
- *LWORD_TO_SINT
- */
-    case function_lword_to_sint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_sint*/
-    break;
-
-/****
- *LWORD_TO_INT
- */
-    case function_lword_to_int :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_int*/
-    break;
-
-/****
- *LWORD_TO_DINT
- */
-    case function_lword_to_dint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_dint*/
-    break;
-
-/****
- *LWORD_TO_LINT
- */
-    case function_lword_to_lint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_lint*/
-    break;
-
-/****
- *LWORD_TO_USINT
- */
-    case function_lword_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_usint*/
-    break;
-
-/****
- *LWORD_TO_UINT
- */
-    case function_lword_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_lword_to_uint*/
+    }/*function_dword_to_uint*/
     break;
 
 /****
- *LWORD_TO_UDINT
+ *DWORD_TO_LREAL
  */
-    case function_lword_to_udint :
+    case function_dword_to_lreal :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -11456,28 +3276,27 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_lword_to_udint*/
+    }/*function_dword_to_lreal*/
     break;
 
 /****
- *LWORD_TO_ULINT
+ *DWORD_TO_BYTE
  */
-    case function_lword_to_ulint :
+    case function_dword_to_byte :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -11488,22 +3307,2933 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dword_to_byte*/
+    break;
+
+/****
+ *DWORD_TO_USINT
+ */
+    case function_dword_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dword_to_usint*/
+    break;
+
+/****
+ *DWORD_TO_ULINT
+ */
+    case function_dword_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_lword_to_ulint*/
+    }/*function_dword_to_ulint*/
+    break;
+
+/****
+ *DWORD_TO_BOOL
+ */
+    case function_dword_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dword_to_bool*/
+    break;
+
+/****
+ *DWORD_TO_TIME
+ */
+    case function_dword_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dword_to_time*/
+    break;
+
+/****
+ *DWORD_TO_INT
+ */
+    case function_dword_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dword_to_int*/
+    break;
+
+/****
+ *DT_TO_REAL
+ */
+    case function_dt_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_real"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_real*/
+    break;
+
+/****
+ *DT_TO_SINT
+ */
+    case function_dt_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_sint*/
+    break;
+
+/****
+ *DT_TO_LINT
+ */
+    case function_dt_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_lint*/
+    break;
+
+/****
+ *DT_TO_DINT
+ */
+    case function_dt_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_dint*/
+    break;
+
+/****
+ *DT_TO_DWORD
+ */
+    case function_dt_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_dword*/
+    break;
+
+/****
+ *DT_TO_UDINT
+ */
+    case function_dt_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_udint*/
+    break;
+
+/****
+ *DT_TO_WORD
+ */
+    case function_dt_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_word*/
+    break;
+
+/****
+ *DT_TO_STRING
+ */
+    case function_dt_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__dt_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_string*/
+    break;
+
+/****
+ *DT_TO_LWORD
+ */
+    case function_dt_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_lword*/
+    break;
+
+/****
+ *DT_TO_UINT
+ */
+    case function_dt_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_uint*/
+    break;
+
+/****
+ *DT_TO_LREAL
+ */
+    case function_dt_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_real"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_lreal*/
+    break;
+
+/****
+ *DT_TO_BYTE
+ */
+    case function_dt_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_byte*/
+    break;
+
+/****
+ *DT_TO_USINT
+ */
+    case function_dt_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_usint*/
+    break;
+
+/****
+ *DT_TO_ULINT
+ */
+    case function_dt_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_ulint*/
+    break;
+
+/****
+ *DT_TO_INT
+ */
+    case function_dt_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_dt_to_int*/
+    break;
+
+/****
+ *TOD_TO_REAL
+ */
+    case function_tod_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_real"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_real*/
+    break;
+
+/****
+ *TOD_TO_SINT
+ */
+    case function_tod_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_sint*/
+    break;
+
+/****
+ *TOD_TO_LINT
+ */
+    case function_tod_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_lint*/
+    break;
+
+/****
+ *TOD_TO_DINT
+ */
+    case function_tod_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_dint*/
+    break;
+
+/****
+ *TOD_TO_DWORD
+ */
+    case function_tod_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_dword*/
+    break;
+
+/****
+ *TOD_TO_UDINT
+ */
+    case function_tod_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_udint*/
+    break;
+
+/****
+ *TOD_TO_WORD
+ */
+    case function_tod_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_word*/
+    break;
+
+/****
+ *TOD_TO_STRING
+ */
+    case function_tod_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__tod_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_string*/
+    break;
+
+/****
+ *TOD_TO_LWORD
+ */
+    case function_tod_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_lword*/
+    break;
+
+/****
+ *TOD_TO_UINT
+ */
+    case function_tod_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_uint*/
+    break;
+
+/****
+ *TOD_TO_LREAL
+ */
+    case function_tod_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_real"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_lreal*/
+    break;
+
+/****
+ *TOD_TO_BYTE
+ */
+    case function_tod_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_byte*/
+    break;
+
+/****
+ *TOD_TO_USINT
+ */
+    case function_tod_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_usint*/
+    break;
+
+/****
+ *TOD_TO_ULINT
+ */
+    case function_tod_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_ulint*/
+    break;
+
+/****
+ *TOD_TO_INT
+ */
+    case function_tod_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_tod_to_int*/
+    break;
+
+/****
+ *UDINT_TO_REAL
+ */
+    case function_udint_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_real*/
+    break;
+
+/****
+ *UDINT_TO_SINT
+ */
+    case function_udint_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_sint*/
+    break;
+
+/****
+ *UDINT_TO_LINT
+ */
+    case function_udint_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_lint*/
+    break;
+
+/****
+ *UDINT_TO_DINT
+ */
+    case function_udint_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_dint*/
+    break;
+
+/****
+ *UDINT_TO_DATE
+ */
+    case function_udint_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_date*/
+    break;
+
+/****
+ *UDINT_TO_DWORD
+ */
+    case function_udint_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_dword*/
+    break;
+
+/****
+ *UDINT_TO_DT
+ */
+    case function_udint_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_dt*/
+    break;
+
+/****
+ *UDINT_TO_TOD
+ */
+    case function_udint_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_tod*/
+    break;
+
+/****
+ *UDINT_TO_WORD
+ */
+    case function_udint_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_word*/
+    break;
+
+/****
+ *UDINT_TO_STRING
+ */
+    case function_udint_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__uint_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_string*/
+    break;
+
+/****
+ *UDINT_TO_LWORD
+ */
+    case function_udint_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_lword*/
+    break;
+
+/****
+ *UDINT_TO_UINT
+ */
+    case function_udint_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_uint*/
+    break;
+
+/****
+ *UDINT_TO_LREAL
+ */
+    case function_udint_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_lreal*/
+    break;
+
+/****
+ *UDINT_TO_BYTE
+ */
+    case function_udint_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_byte*/
+    break;
+
+/****
+ *UDINT_TO_USINT
+ */
+    case function_udint_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_usint*/
+    break;
+
+/****
+ *UDINT_TO_ULINT
+ */
+    case function_udint_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_ulint*/
+    break;
+
+/****
+ *UDINT_TO_BOOL
+ */
+    case function_udint_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_bool*/
+    break;
+
+/****
+ *UDINT_TO_TIME
+ */
+    case function_udint_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_time*/
+    break;
+
+/****
+ *UDINT_TO_INT
+ */
+    case function_udint_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_udint_to_int*/
+    break;
+
+/****
+ *WORD_TO_REAL
+ */
+    case function_word_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_real*/
+    break;
+
+/****
+ *WORD_TO_SINT
+ */
+    case function_word_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_sint*/
+    break;
+
+/****
+ *WORD_TO_LINT
+ */
+    case function_word_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_lint*/
+    break;
+
+/****
+ *WORD_TO_DINT
+ */
+    case function_word_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_dint*/
+    break;
+
+/****
+ *WORD_TO_DATE
+ */
+    case function_word_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_date*/
+    break;
+
+/****
+ *WORD_TO_DWORD
+ */
+    case function_word_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_dword*/
+    break;
+
+/****
+ *WORD_TO_DT
+ */
+    case function_word_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_dt*/
+    break;
+
+/****
+ *WORD_TO_TOD
+ */
+    case function_word_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_tod*/
+    break;
+
+/****
+ *WORD_TO_UDINT
+ */
+    case function_word_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_udint*/
+    break;
+
+/****
+ *WORD_TO_STRING
+ */
+    case function_word_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__bit_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_string*/
+    break;
+
+/****
+ *WORD_TO_LWORD
+ */
+    case function_word_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_lword*/
+    break;
+
+/****
+ *WORD_TO_UINT
+ */
+    case function_word_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_uint*/
+    break;
+
+/****
+ *WORD_TO_LREAL
+ */
+    case function_word_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_lreal*/
+    break;
+
+/****
+ *WORD_TO_BYTE
+ */
+    case function_word_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_byte*/
+    break;
+
+/****
+ *WORD_TO_USINT
+ */
+    case function_word_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_usint*/
+    break;
+
+/****
+ *WORD_TO_ULINT
+ */
+    case function_word_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_ulint*/
+    break;
+
+/****
+ *WORD_TO_BOOL
+ */
+    case function_word_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_bool*/
+    break;
+
+/****
+ *WORD_TO_TIME
+ */
+    case function_word_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_time*/
+    break;
+
+/****
+ *WORD_TO_INT
+ */
+    case function_word_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_word_to_int*/
+    break;
+
+/****
+ *STRING_TO_REAL
+ */
+    case function_string_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_real"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_real*/
+    break;
+
+/****
+ *STRING_TO_SINT
+ */
+    case function_string_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_sint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_sint*/
+    break;
+
+/****
+ *STRING_TO_LINT
+ */
+    case function_string_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_sint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_lint*/
+    break;
+
+/****
+ *STRING_TO_DINT
+ */
+    case function_string_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_sint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_dint*/
+    break;
+
+/****
+ *STRING_TO_DATE
+ */
+    case function_string_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_date*/
+    break;
+
+/****
+ *STRING_TO_DWORD
+ */
+    case function_string_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_bit"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_dword*/
+    break;
+
+/****
+ *STRING_TO_DT
+ */
+    case function_string_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_dt*/
+    break;
+
+/****
+ *STRING_TO_TOD
+ */
+    case function_string_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_tod*/
+    break;
+
+/****
+ *STRING_TO_UDINT
+ */
+    case function_string_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_uint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_udint*/
+    break;
+
+/****
+ *STRING_TO_WORD
+ */
+    case function_string_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_bit"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_word*/
+    break;
+
+/****
+ *STRING_TO_LWORD
+ */
+    case function_string_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_bit"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_lword*/
+    break;
+
+/****
+ *STRING_TO_UINT
+ */
+    case function_string_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_uint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_uint*/
+    break;
+
+/****
+ *STRING_TO_LREAL
+ */
+    case function_string_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_real"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_lreal*/
+    break;
+
+/****
+ *STRING_TO_BYTE
+ */
+    case function_string_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_bit"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_byte*/
+    break;
+
+/****
+ *STRING_TO_USINT
+ */
+    case function_string_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_uint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_usint*/
+    break;
+
+/****
+ *STRING_TO_ULINT
+ */
+    case function_string_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_uint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_ulint*/
+    break;
+
+/****
+ *STRING_TO_BOOL
+ */
+    case function_string_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_bool"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_bool*/
+    break;
+
+/****
+ *STRING_TO_TIME
+ */
+    case function_string_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_time*/
+    break;
+
+/****
+ *STRING_TO_INT
+ */
+    case function_string_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__string_to_sint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_string_to_int*/
     break;
 
 /****
@@ -11523,14 +6253,13 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -11539,9 +6268,9 @@ switch(current_function_type){
     break;
 
 /****
- *LWORD_TO_LREAL
+ *LWORD_TO_SINT
  */
-    case function_lword_to_lreal :
+    case function_lword_to_sint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -11555,25 +6284,24 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_lword_to_lreal*/
+    }/*function_lword_to_sint*/
     break;
 
 /****
- *LWORD_TO_TIME
+ *LWORD_TO_LINT
  */
-    case function_lword_to_time :
+    case function_lword_to_lint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -11587,20 +6315,49 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_lword_to_time*/
+    }/*function_lword_to_lint*/
+    break;
+
+/****
+ *LWORD_TO_DINT
+ */
+    case function_lword_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_dint*/
     break;
 
 /****
@@ -11620,183 +6377,19 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_lword_to_date*/
-    break;
-
-/****
- *LWORD_TO_TOD
- */
-    case function_lword_to_tod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_tod*/
-    break;
-
-/****
- *LWORD_TO_DT
- */
-    case function_lword_to_dt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__int_to_time(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_dt*/
-    break;
-
-/****
- *LWORD_TO_STRING
- */
-    case function_lword_to_string :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__bit_to_string(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_string*/
-    break;
-
-/****
- *LWORD_TO_BYTE
- */
-    case function_lword_to_byte :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_byte*/
-    break;
-
-/****
- *LWORD_TO_WORD
- */
-    case function_lword_to_word :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_lword_to_word*/
     break;
 
 /****
@@ -11816,19 +6409,5063 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_lword_to_dword*/
+    break;
+
+/****
+ *LWORD_TO_DT
+ */
+    case function_lword_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_dt*/
+    break;
+
+/****
+ *LWORD_TO_TOD
+ */
+    case function_lword_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_tod*/
+    break;
+
+/****
+ *LWORD_TO_UDINT
+ */
+    case function_lword_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_udint*/
+    break;
+
+/****
+ *LWORD_TO_WORD
+ */
+    case function_lword_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_word*/
+    break;
+
+/****
+ *LWORD_TO_STRING
+ */
+    case function_lword_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__bit_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_string*/
+    break;
+
+/****
+ *LWORD_TO_UINT
+ */
+    case function_lword_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_uint*/
+    break;
+
+/****
+ *LWORD_TO_LREAL
+ */
+    case function_lword_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_lreal*/
+    break;
+
+/****
+ *LWORD_TO_BYTE
+ */
+    case function_lword_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_byte*/
+    break;
+
+/****
+ *LWORD_TO_USINT
+ */
+    case function_lword_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_usint*/
+    break;
+
+/****
+ *LWORD_TO_ULINT
+ */
+    case function_lword_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_ulint*/
+    break;
+
+/****
+ *LWORD_TO_BOOL
+ */
+    case function_lword_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_bool*/
+    break;
+
+/****
+ *LWORD_TO_TIME
+ */
+    case function_lword_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_time*/
+    break;
+
+/****
+ *LWORD_TO_INT
+ */
+    case function_lword_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lword_to_int*/
+    break;
+
+/****
+ *UINT_TO_REAL
+ */
+    case function_uint_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_real*/
+    break;
+
+/****
+ *UINT_TO_SINT
+ */
+    case function_uint_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_sint*/
+    break;
+
+/****
+ *UINT_TO_LINT
+ */
+    case function_uint_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_lint*/
+    break;
+
+/****
+ *UINT_TO_DINT
+ */
+    case function_uint_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_dint*/
+    break;
+
+/****
+ *UINT_TO_DATE
+ */
+    case function_uint_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_date*/
+    break;
+
+/****
+ *UINT_TO_DWORD
+ */
+    case function_uint_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_dword*/
+    break;
+
+/****
+ *UINT_TO_DT
+ */
+    case function_uint_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_dt*/
+    break;
+
+/****
+ *UINT_TO_TOD
+ */
+    case function_uint_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_tod*/
+    break;
+
+/****
+ *UINT_TO_UDINT
+ */
+    case function_uint_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_udint*/
+    break;
+
+/****
+ *UINT_TO_WORD
+ */
+    case function_uint_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_word*/
+    break;
+
+/****
+ *UINT_TO_STRING
+ */
+    case function_uint_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__uint_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_string*/
+    break;
+
+/****
+ *UINT_TO_LWORD
+ */
+    case function_uint_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_lword*/
+    break;
+
+/****
+ *UINT_TO_LREAL
+ */
+    case function_uint_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_lreal*/
+    break;
+
+/****
+ *UINT_TO_BYTE
+ */
+    case function_uint_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_byte*/
+    break;
+
+/****
+ *UINT_TO_USINT
+ */
+    case function_uint_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_usint*/
+    break;
+
+/****
+ *UINT_TO_ULINT
+ */
+    case function_uint_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_ulint*/
+    break;
+
+/****
+ *UINT_TO_BOOL
+ */
+    case function_uint_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_bool*/
+    break;
+
+/****
+ *UINT_TO_TIME
+ */
+    case function_uint_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_time*/
+    break;
+
+/****
+ *UINT_TO_INT
+ */
+    case function_uint_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_int*/
+    break;
+
+/****
+ *LREAL_TO_REAL
+ */
+    case function_lreal_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_real*/
+    break;
+
+/****
+ *LREAL_TO_SINT
+ */
+    case function_lreal_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_sint*/
+    break;
+
+/****
+ *LREAL_TO_LINT
+ */
+    case function_lreal_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_lint*/
+    break;
+
+/****
+ *LREAL_TO_DINT
+ */
+    case function_lreal_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_dint*/
+    break;
+
+/****
+ *LREAL_TO_DATE
+ */
+    case function_lreal_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__real_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_date*/
+    break;
+
+/****
+ *LREAL_TO_DWORD
+ */
+    case function_lreal_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_dword*/
+    break;
+
+/****
+ *LREAL_TO_DT
+ */
+    case function_lreal_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__real_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_dt*/
+    break;
+
+/****
+ *LREAL_TO_TOD
+ */
+    case function_lreal_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__real_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_tod*/
+    break;
+
+/****
+ *LREAL_TO_UDINT
+ */
+    case function_lreal_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_udint*/
+    break;
+
+/****
+ *LREAL_TO_WORD
+ */
+    case function_lreal_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_word*/
+    break;
+
+/****
+ *LREAL_TO_STRING
+ */
+    case function_lreal_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__real_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_string*/
+    break;
+
+/****
+ *LREAL_TO_LWORD
+ */
+    case function_lreal_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_lword*/
+    break;
+
+/****
+ *LREAL_TO_UINT
+ */
+    case function_lreal_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_uint*/
+    break;
+
+/****
+ *LREAL_TO_BYTE
+ */
+    case function_lreal_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_byte*/
+    break;
+
+/****
+ *LREAL_TO_USINT
+ */
+    case function_lreal_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_usint*/
+    break;
+
+/****
+ *LREAL_TO_ULINT
+ */
+    case function_lreal_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_ulint*/
+    break;
+
+/****
+ *LREAL_TO_BOOL
+ */
+    case function_lreal_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_bool*/
+    break;
+
+/****
+ *LREAL_TO_TIME
+ */
+    case function_lreal_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__real_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_time*/
+    break;
+
+/****
+ *LREAL_TO_INT
+ */
+    case function_lreal_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_lreal_to_int*/
+    break;
+
+/****
+ *BYTE_TO_REAL
+ */
+    case function_byte_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_real*/
+    break;
+
+/****
+ *BYTE_TO_SINT
+ */
+    case function_byte_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_sint*/
+    break;
+
+/****
+ *BYTE_TO_LINT
+ */
+    case function_byte_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_lint*/
+    break;
+
+/****
+ *BYTE_TO_DINT
+ */
+    case function_byte_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_dint*/
+    break;
+
+/****
+ *BYTE_TO_DATE
+ */
+    case function_byte_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_date*/
+    break;
+
+/****
+ *BYTE_TO_DWORD
+ */
+    case function_byte_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_dword*/
+    break;
+
+/****
+ *BYTE_TO_DT
+ */
+    case function_byte_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_dt*/
+    break;
+
+/****
+ *BYTE_TO_TOD
+ */
+    case function_byte_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_tod*/
+    break;
+
+/****
+ *BYTE_TO_UDINT
+ */
+    case function_byte_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_udint*/
+    break;
+
+/****
+ *BYTE_TO_WORD
+ */
+    case function_byte_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_word*/
+    break;
+
+/****
+ *BYTE_TO_STRING
+ */
+    case function_byte_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__bit_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_string*/
+    break;
+
+/****
+ *BYTE_TO_LWORD
+ */
+    case function_byte_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_lword*/
+    break;
+
+/****
+ *BYTE_TO_UINT
+ */
+    case function_byte_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_uint*/
+    break;
+
+/****
+ *BYTE_TO_LREAL
+ */
+    case function_byte_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_lreal*/
+    break;
+
+/****
+ *BYTE_TO_USINT
+ */
+    case function_byte_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_usint*/
+    break;
+
+/****
+ *BYTE_TO_ULINT
+ */
+    case function_byte_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_ulint*/
+    break;
+
+/****
+ *BYTE_TO_BOOL
+ */
+    case function_byte_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_bool*/
+    break;
+
+/****
+ *BYTE_TO_TIME
+ */
+    case function_byte_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_time*/
+    break;
+
+/****
+ *BYTE_TO_INT
+ */
+    case function_byte_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_byte_to_int*/
+    break;
+
+/****
+ *USINT_TO_REAL
+ */
+    case function_usint_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_real*/
+    break;
+
+/****
+ *USINT_TO_SINT
+ */
+    case function_usint_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_sint*/
+    break;
+
+/****
+ *USINT_TO_LINT
+ */
+    case function_usint_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_lint*/
+    break;
+
+/****
+ *USINT_TO_DINT
+ */
+    case function_usint_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_dint*/
+    break;
+
+/****
+ *USINT_TO_DATE
+ */
+    case function_usint_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_date*/
+    break;
+
+/****
+ *USINT_TO_DWORD
+ */
+    case function_usint_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_dword*/
+    break;
+
+/****
+ *USINT_TO_DT
+ */
+    case function_usint_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_dt*/
+    break;
+
+/****
+ *USINT_TO_TOD
+ */
+    case function_usint_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_tod*/
+    break;
+
+/****
+ *USINT_TO_UDINT
+ */
+    case function_usint_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_udint*/
+    break;
+
+/****
+ *USINT_TO_WORD
+ */
+    case function_usint_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_word*/
+    break;
+
+/****
+ *USINT_TO_STRING
+ */
+    case function_usint_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__uint_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_string*/
+    break;
+
+/****
+ *USINT_TO_LWORD
+ */
+    case function_usint_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_lword*/
+    break;
+
+/****
+ *USINT_TO_UINT
+ */
+    case function_usint_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_uint*/
+    break;
+
+/****
+ *USINT_TO_LREAL
+ */
+    case function_usint_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_lreal*/
+    break;
+
+/****
+ *USINT_TO_BYTE
+ */
+    case function_usint_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_byte*/
+    break;
+
+/****
+ *USINT_TO_ULINT
+ */
+    case function_usint_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_ulint*/
+    break;
+
+/****
+ *USINT_TO_BOOL
+ */
+    case function_usint_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_bool*/
+    break;
+
+/****
+ *USINT_TO_TIME
+ */
+    case function_usint_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_time*/
+    break;
+
+/****
+ *USINT_TO_INT
+ */
+    case function_usint_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_int*/
+    break;
+
+/****
+ *ULINT_TO_REAL
+ */
+    case function_ulint_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_real*/
+    break;
+
+/****
+ *ULINT_TO_SINT
+ */
+    case function_ulint_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_sint*/
+    break;
+
+/****
+ *ULINT_TO_LINT
+ */
+    case function_ulint_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_lint*/
+    break;
+
+/****
+ *ULINT_TO_DINT
+ */
+    case function_ulint_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_dint*/
+    break;
+
+/****
+ *ULINT_TO_DATE
+ */
+    case function_ulint_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_date*/
+    break;
+
+/****
+ *ULINT_TO_DWORD
+ */
+    case function_ulint_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_dword*/
+    break;
+
+/****
+ *ULINT_TO_DT
+ */
+    case function_ulint_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_dt*/
+    break;
+
+/****
+ *ULINT_TO_TOD
+ */
+    case function_ulint_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_tod*/
+    break;
+
+/****
+ *ULINT_TO_UDINT
+ */
+    case function_ulint_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_udint*/
+    break;
+
+/****
+ *ULINT_TO_WORD
+ */
+    case function_ulint_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_word*/
+    break;
+
+/****
+ *ULINT_TO_STRING
+ */
+    case function_ulint_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__uint_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_string*/
+    break;
+
+/****
+ *ULINT_TO_LWORD
+ */
+    case function_ulint_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_lword*/
+    break;
+
+/****
+ *ULINT_TO_UINT
+ */
+    case function_ulint_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_uint*/
+    break;
+
+/****
+ *ULINT_TO_LREAL
+ */
+    case function_ulint_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_lreal*/
+    break;
+
+/****
+ *ULINT_TO_BYTE
+ */
+    case function_ulint_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_byte*/
+    break;
+
+/****
+ *ULINT_TO_USINT
+ */
+    case function_ulint_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_usint*/
+    break;
+
+/****
+ *ULINT_TO_BOOL
+ */
+    case function_ulint_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_bool*/
+    break;
+
+/****
+ *ULINT_TO_TIME
+ */
+    case function_ulint_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_time*/
+    break;
+
+/****
+ *ULINT_TO_INT
+ */
+    case function_ulint_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_ulint_to_int*/
+    break;
+
+/****
+ *BOOL_TO_REAL
+ */
+    case function_bool_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_real*/
+    break;
+
+/****
+ *BOOL_TO_SINT
+ */
+    case function_bool_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_sint*/
+    break;
+
+/****
+ *BOOL_TO_LINT
+ */
+    case function_bool_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_lint*/
+    break;
+
+/****
+ *BOOL_TO_DINT
+ */
+    case function_bool_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_dint*/
+    break;
+
+/****
+ *BOOL_TO_DATE
+ */
+    case function_bool_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_date*/
+    break;
+
+/****
+ *BOOL_TO_DWORD
+ */
+    case function_bool_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_dword*/
+    break;
+
+/****
+ *BOOL_TO_DT
+ */
+    case function_bool_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_dt*/
+    break;
+
+/****
+ *BOOL_TO_TOD
+ */
+    case function_bool_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_tod*/
+    break;
+
+/****
+ *BOOL_TO_UDINT
+ */
+    case function_bool_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_udint*/
+    break;
+
+/****
+ *BOOL_TO_WORD
+ */
+    case function_bool_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_word*/
+    break;
+
+/****
+ *BOOL_TO_STRING
+ */
+    case function_bool_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__bool_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_string*/
+    break;
+
+/****
+ *BOOL_TO_LWORD
+ */
+    case function_bool_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_lword*/
+    break;
+
+/****
+ *BOOL_TO_UINT
+ */
+    case function_bool_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_uint*/
+    break;
+
+/****
+ *BOOL_TO_LREAL
+ */
+    case function_bool_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_lreal*/
+    break;
+
+/****
+ *BOOL_TO_BYTE
+ */
+    case function_bool_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_byte*/
+    break;
+
+/****
+ *BOOL_TO_USINT
+ */
+    case function_bool_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_usint*/
+    break;
+
+/****
+ *BOOL_TO_ULINT
+ */
+    case function_bool_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_ulint*/
+    break;
+
+/****
+ *BOOL_TO_TIME
+ */
+    case function_bool_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_time*/
+    break;
+
+/****
+ *BOOL_TO_INT
+ */
+    case function_bool_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bool_to_int*/
+    break;
+
+/****
+ *TIME_TO_REAL
+ */
+    case function_time_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_real"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_real*/
+    break;
+
+/****
+ *TIME_TO_SINT
+ */
+    case function_time_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_sint*/
+    break;
+
+/****
+ *TIME_TO_LINT
+ */
+    case function_time_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_lint*/
+    break;
+
+/****
+ *TIME_TO_DINT
+ */
+    case function_time_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_dint*/
+    break;
+
+/****
+ *TIME_TO_DWORD
+ */
+    case function_time_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_dword*/
+    break;
+
+/****
+ *TIME_TO_UDINT
+ */
+    case function_time_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_udint*/
+    break;
+
+/****
+ *TIME_TO_WORD
+ */
+    case function_time_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_word*/
+    break;
+
+/****
+ *TIME_TO_STRING
+ */
+    case function_time_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_string*/
+    break;
+
+/****
+ *TIME_TO_LWORD
+ */
+    case function_time_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_lword*/
+    break;
+
+/****
+ *TIME_TO_UINT
+ */
+    case function_time_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_uint*/
+    break;
+
+/****
+ *TIME_TO_LREAL
+ */
+    case function_time_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_real"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_lreal*/
+    break;
+
+/****
+ *TIME_TO_BYTE
+ */
+    case function_time_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_byte*/
+    break;
+
+/****
+ *TIME_TO_USINT
+ */
+    case function_time_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_usint*/
+    break;
+
+/****
+ *TIME_TO_ULINT
+ */
+    case function_time_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_ulint*/
+    break;
+
+/****
+ *TIME_TO_INT
+ */
+    case function_time_to_int :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__time_to_int"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_time_to_int*/
+    break;
+
+/****
+ *INT_TO_REAL
+ */
+    case function_int_to_real :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_real*/
+    break;
+
+/****
+ *INT_TO_SINT
+ */
+    case function_int_to_sint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_sint*/
+    break;
+
+/****
+ *INT_TO_LINT
+ */
+    case function_int_to_lint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_lint*/
+    break;
+
+/****
+ *INT_TO_DINT
+ */
+    case function_int_to_dint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_dint*/
+    break;
+
+/****
+ *INT_TO_DATE
+ */
+    case function_int_to_date :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_date*/
+    break;
+
+/****
+ *INT_TO_DWORD
+ */
+    case function_int_to_dword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_dword*/
+    break;
+
+/****
+ *INT_TO_DT
+ */
+    case function_int_to_dt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_dt*/
+    break;
+
+/****
+ *INT_TO_TOD
+ */
+    case function_int_to_tod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_tod*/
+    break;
+
+/****
+ *INT_TO_UDINT
+ */
+    case function_int_to_udint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_udint*/
+    break;
+
+/****
+ *INT_TO_WORD
+ */
+    case function_int_to_word :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_word*/
+    break;
+
+/****
+ *INT_TO_STRING
+ */
+    case function_int_to_string :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__sint_to_string"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_string*/
+    break;
+
+/****
+ *INT_TO_LWORD
+ */
+    case function_int_to_lword :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_lword*/
+    break;
+
+/****
+ *INT_TO_UINT
+ */
+    case function_int_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_uint*/
+    break;
+
+/****
+ *INT_TO_LREAL
+ */
+    case function_int_to_lreal :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_lreal*/
+    break;
+
+/****
+ *INT_TO_BYTE
+ */
+    case function_int_to_byte :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_byte*/
+    break;
+
+/****
+ *INT_TO_USINT
+ */
+    case function_int_to_usint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_usint*/
+    break;
+
+/****
+ *INT_TO_ULINT
+ */
+    case function_int_to_ulint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_ulint*/
+    break;
+
+/****
+ *INT_TO_BOOL
+ */
+    case function_int_to_bool :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_bool*/
+    break;
+
+/****
+ *INT_TO_TIME
+ */
+    case function_int_to_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__int_to_time"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_int_to_time*/
     break;
 
 /****
@@ -11848,83 +11485,18 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("(int)");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_prefix = (symbol_c*)(new pragma_c("int"));
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_trunc*/
-    break;
-
-/****
- *BCD_TO_USINT
- */
-    case function_bcd_to_usint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__bcd_to_uint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_usint*/
-    break;
-
-/****
- *BCD_TO_UINT
- */
-    case function_bcd_to_uint :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__bcd_to_uint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_bcd_to_uint*/
     break;
 
 /****
@@ -11944,20 +11516,51 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__bcd_to_uint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__bcd_to_uint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_bcd_to_udint*/
+    break;
+
+/****
+ *BCD_TO_UINT
+ */
+    case function_bcd_to_uint :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__bcd_to_uint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_bcd_to_uint*/
     break;
 
 /****
@@ -11977,15 +11580,14 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__bcd_to_uint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__bcd_to_uint(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -11994,9 +11596,9 @@ switch(current_function_type){
     break;
 
 /****
- *USINT_TO_BCD
+ *BCD_TO_USINT
  */
-    case function_usint_to_bcd :
+    case function_bcd_to_usint :
     {
         symbol_c *last_type_symbol = NULL;
 
@@ -12007,56 +11609,22 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            if(search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__uint_to_bcd(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_name = (symbol_c*)(new pragma_c("__bcd_to_uint"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
-    }/*function_usint_to_bcd*/
-    break;
-
-/****
- *UINT_TO_BCD
- */
-    case function_uint_to_bcd :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = &this->default_variable_name;
-        
-            symbol_c *IN_type_symbol = param_data_type;
-            last_type_symbol = param_data_type;
-            
-            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
-            {
-        
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__uint_to_bcd(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
-                
-            }
-            
-            ERROR;
-        }
-        
-    }/*function_uint_to_bcd*/
+    }/*function_bcd_to_usint*/
     break;
 
 /****
@@ -12076,20 +11644,83 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__uint_to_bcd"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__uint_to_bcd(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
         
     }/*function_udint_to_bcd*/
+    break;
+
+/****
+ *UINT_TO_BCD
+ */
+    case function_uint_to_bcd :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__uint_to_bcd"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_uint_to_bcd*/
+    break;
+
+/****
+ *USINT_TO_BCD
+ */
+    case function_usint_to_bcd :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = &this->default_variable_name;
+        
+            symbol_c *IN_type_symbol = param_data_type;
+            last_type_symbol = param_data_type;
+            
+            if(search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__uint_to_bcd"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                function_type_prefix = return_type_symbol;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_usint_to_bcd*/
     break;
 
 /****
@@ -12109,15 +11740,14 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__uint_to_bcd"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
-                s4o.print("(");
-                return_type_symbol->accept(*this);
-                s4o.print(")__uint_to_bcd(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_prefix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12142,13 +11772,13 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__date_and_time_to_time_of_day"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                s4o.print("__date_and_time_to_time_of_day(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12173,13 +11803,13 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__date_and_time_to_date"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
-                s4o.print("__date_and_time_to_date(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12204,15 +11834,14 @@ switch(current_function_type){
             if(search_expression_type->is_num_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__abs_"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("__abs_");
-                IN_type_symbol->accept(*this);
-                s4o.print("(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                function_type_suffix = IN_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12237,13 +11866,13 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("sqrt"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("sqrt(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12268,13 +11897,13 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("ln"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("ln(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12299,13 +11928,13 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("log"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("log(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12330,13 +11959,13 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("exp"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("exp(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12361,13 +11990,13 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("sin"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("sin(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12392,13 +12021,13 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("cos"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("cos(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12423,13 +12052,13 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("tan"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("tan(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12454,13 +12083,13 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("asin"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("asin(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12485,13 +12114,13 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("acos"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("acos(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12516,13 +12145,13 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("atan"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("atan(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -12561,12 +12190,13 @@ switch(current_function_type){
                     if(search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.indent_right();
-                        s4o.print("(\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print("+\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__add_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -12586,18 +12216,16 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print("+\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = return_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
@@ -12621,15 +12249,14 @@ switch(current_function_type){
                     if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_add"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                        s4o.print("__time_add(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
@@ -12653,15 +12280,14 @@ switch(current_function_type){
                     if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_add"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                        s4o.print("__time_add(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
@@ -12685,20 +12311,20 @@ switch(current_function_type){
                     if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_add"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_add(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -12737,12 +12363,13 @@ switch(current_function_type){
                     if(search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.indent_right();
-                        s4o.print("(\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print("*\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__mul_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -12762,18 +12389,16 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print("*\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = return_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
@@ -12797,20 +12422,20 @@ switch(current_function_type){
                     if(search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_mul"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_mul(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -12849,17 +12474,15 @@ switch(current_function_type){
                     if(search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__sub_"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.indent_right();
-                        s4o.print("(\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print("-\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
+                        function_type_suffix = return_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
@@ -12883,15 +12506,14 @@ switch(current_function_type){
                     if(search_expression_type->is_same_type(&search_constant_type_c::date_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_sub"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_sub(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
@@ -12915,28 +12537,25 @@ switch(current_function_type){
                     if(search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_sub"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_sub(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
                     
                     if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_sub"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                        s4o.print("__time_sub(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
@@ -12960,28 +12579,25 @@ switch(current_function_type){
                     if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_sub"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_sub(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
                     
                     if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_sub"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                        s4o.print("__time_sub(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
@@ -13005,20 +12621,20 @@ switch(current_function_type){
                     if(search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_sub"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_sub(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13057,17 +12673,15 @@ switch(current_function_type){
                     if(search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__div_"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.indent_right();
-                        s4o.print("(\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print("/\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
+                        function_type_suffix = return_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
@@ -13091,20 +12705,20 @@ switch(current_function_type){
                     if(search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_div"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        s4o.print("__time_div(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13143,22 +12757,21 @@ switch(current_function_type){
                     if(search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__mod_"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.indent_right();
-                        s4o.print("(\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print("%\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
+                        function_type_suffix = return_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13197,20 +12810,20 @@ switch(current_function_type){
                     if(search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("pow"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.print("pow(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13235,11 +12848,14 @@ switch(current_function_type){
             if(search_expression_type->is_num_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = last_type_symbol;
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_suffix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -13278,18 +12894,21 @@ switch(current_function_type){
                     if(search_expression_type->is_integer_type(N_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__shl_"));
+                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = IN_type_symbol;
-                        IN_param_value->accept(*this);
-                        s4o.print("<<");
-                        N_param_value->accept(*this);
-                        return NULL;
+                        function_type_suffix = IN_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13328,18 +12947,21 @@ switch(current_function_type){
                     if(search_expression_type->is_integer_type(N_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__shr_"));
+                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = IN_type_symbol;
-                        IN_param_value->accept(*this);
-                        s4o.print(">>");
-                        N_param_value->accept(*this);
-                        return NULL;
+                        function_type_suffix = IN_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13378,22 +13000,21 @@ switch(current_function_type){
                     if(search_expression_type->is_integer_type(N_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__ror_"));
+                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = IN_type_symbol;
-                        s4o.print("__ror_");
-                        IN_type_symbol->accept(*this);
-                        s4o.print("(");
-                        IN_param_value->accept(*this);
-                        s4o.print(", ");
-                        N_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        function_type_suffix = IN_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13432,22 +13053,21 @@ switch(current_function_type){
                     if(search_expression_type->is_integer_type(N_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__rol_"));
+                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = IN_type_symbol;
-                        s4o.print("__rol_");
-                        IN_type_symbol->accept(*this);
-                        s4o.print("(");
-                        IN_param_value->accept(*this);
-                        s4o.print(", ");
-                        N_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        function_type_suffix = IN_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13486,14 +13106,13 @@ switch(current_function_type){
                     if(search_expression_type->is_binary_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.indent_right();
-                        s4o.print("(");
-                        if (search_expression_type->is_bool_type(last_type_symbol))
-                          s4o.print("(\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print("&\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__and_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -13513,28 +13132,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print("&\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        if (search_expression_type->is_bool_type(last_type_symbol)) {
-                          s4o.print("&1");
-                          s4o.print(")");
-                        }
-                        s4o.print("");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = return_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13573,14 +13186,13 @@ switch(current_function_type){
                     if(search_expression_type->is_binary_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.indent_right();
-                        s4o.print("(");
-                        if (search_expression_type->is_bool_type(last_type_symbol))
-                          s4o.print("(\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print("|\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__or_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -13600,28 +13212,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print("|\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        if (search_expression_type->is_bool_type(last_type_symbol)) {
-                          s4o.print("&1");
-                          s4o.print(")");
-                        }
-                        s4o.print("");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = return_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13660,14 +13266,13 @@ switch(current_function_type){
                     if(search_expression_type->is_binary_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.indent_right();
-                        s4o.print("(");
-                        if (search_expression_type->is_bool_type(last_type_symbol))
-                          s4o.print("(\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print("^\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__xor_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -13687,28 +13292,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print("^\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        if (search_expression_type->is_bool_type(last_type_symbol)) {
-                          s4o.print("&1");
-                          s4o.print(")");
-                        }
-                        s4o.print("");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = return_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13733,12 +13332,14 @@ switch(current_function_type){
             if(search_expression_type->is_binary_type(IN_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__not_"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
-                s4o.print("~");
-                IN_param_value->accept(*this);
-                return NULL;
+                function_type_suffix = return_type_symbol;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -13791,25 +13392,28 @@ switch(current_function_type){
                             
                             {
                         
+                                function_name = (symbol_c*)(new pragma_c("__sel_"));
+                                ADD_PARAM_LIST(G_param_value, G_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(IN0_param_value, IN0_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                                 symbol_c * return_type_symbol = last_type_symbol;
-                                G_param_value->accept(*this);
-                                s4o.print(" ? ");
-                                IN1_param_value->accept(*this);
-                                s4o.print(" :  ");
-                                IN0_param_value->accept(*this);
-                                return NULL;
+                                function_type_suffix = IN0_type_symbol;
+                                break;
                                 
                             }
+                            
                             
                             ERROR;
                         }
                         
                     }
                     
+                    
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13848,16 +13452,13 @@ switch(current_function_type){
                     
                     {
                 
-                        symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.indent_right();
-                        s4o.print("__max_");
-                        return_type_symbol->accept(*this);
-                        s4o.print("(");
-                        s4o.print_integer(nb_param);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__max_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -13877,23 +13478,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = return_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -13932,16 +13532,13 @@ switch(current_function_type){
                     
                     {
                 
-                        symbol_c * return_type_symbol = last_type_symbol;
-                        s4o.indent_right();
-                        s4o.print("__min_");
-                        return_type_symbol->accept(*this);
-                        s4o.print("(");
-                        s4o.print_integer(nb_param);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__min_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -13961,23 +13558,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = return_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14030,29 +13626,28 @@ switch(current_function_type){
                             
                             {
                         
+                                function_name = (symbol_c*)(new pragma_c("__limit_"));
+                                ADD_PARAM_LIST(MN_param_value, MN_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(MX_param_value, MX_type_symbol, function_param_iterator_c::direction_in)
                                 symbol_c * return_type_symbol = IN_type_symbol;
-                                s4o.print("__limit_");
-                                IN_type_symbol->accept(*this);
-                                s4o.print("(");
-                                MN_param_value->accept(*this);
-                                s4o.print(", ");
-                                IN_param_value->accept(*this);
-                                s4o.print(", ");
-                                MX_param_value->accept(*this);
-                                s4o.print(")");
-                                return NULL;
+                                function_type_suffix = IN_type_symbol;
+                                break;
                                 
                             }
+                            
                             
                             ERROR;
                         }
                         
                     }
                     
+                    
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14105,18 +13700,14 @@ switch(current_function_type){
                             
                             {
                         
-                                symbol_c * return_type_symbol = last_type_symbol;
-                                s4o.indent_right();
-                                s4o.print("__mux_");
-                                return_type_symbol->accept(*this);
-                                s4o.print("(");
-                                s4o.print_integer(nb_param);
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                K_param_value->accept(*this);
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                IN0_param_value->accept(*this);
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                IN1_param_value->accept(*this);
+                                function_name = (symbol_c*)(new pragma_c("__mux_"));
+                                
+                                char nb_param_str[10];
+                                sprintf(nb_param_str, "%d", nb_param);
+                                ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(K_param_value, K_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(IN0_param_value, IN0_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 int base_num = 2;
                                 symbol_c *param_value = NULL;
@@ -14136,28 +13727,28 @@ switch(current_function_type){
                                         last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                                     
                                         /*Function specific CODE */
-                                        s4o.print(",\n" + s4o.indent_spaces);
-                                        param_value->accept(*this);
-                                        
+                                        ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                                     }
                                     
                                 }while(param_value != NULL);
-                                s4o.print(")");
-                                s4o.indent_left();
-                                return NULL;
-                                
+                                symbol_c * return_type_symbol = last_type_symbol;
+                                function_type_suffix = return_type_symbol;
+                                break;
                                 
                             }
+                            
                             
                             ERROR;
                         }
                         
                     }
                     
+                    
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14196,16 +13787,13 @@ switch(current_function_type){
                     
                     {
                 
-                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                        s4o.indent_right();
-                        s4o.print("__gt_");
-                        last_type_symbol->accept(*this);
-                        s4o.print("(");
-                        s4o.print_integer(nb_param);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__gt_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -14225,23 +13813,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        function_type_suffix = last_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14280,16 +13867,13 @@ switch(current_function_type){
                     
                     {
                 
-                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                        s4o.indent_right();
-                        s4o.print("__ge_");
-                        last_type_symbol->accept(*this);
-                        s4o.print("(");
-                        s4o.print_integer(nb_param);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__ge_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -14309,23 +13893,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        function_type_suffix = last_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14364,16 +13947,13 @@ switch(current_function_type){
                     
                     {
                 
-                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                        s4o.indent_right();
-                        s4o.print("__eq_");
-                        last_type_symbol->accept(*this);
-                        s4o.print("(");
-                        s4o.print_integer(nb_param);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__eq_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -14393,23 +13973,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        function_type_suffix = last_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14448,16 +14027,13 @@ switch(current_function_type){
                     
                     {
                 
-                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                        s4o.indent_right();
-                        s4o.print("__lt_");
-                        last_type_symbol->accept(*this);
-                        s4o.print("(");
-                        s4o.print_integer(nb_param);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__lt_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -14477,23 +14053,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        function_type_suffix = last_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14532,16 +14107,13 @@ switch(current_function_type){
                     
                     {
                 
-                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                        s4o.indent_right();
-                        s4o.print("__le_");
-                        last_type_symbol->accept(*this);
-                        s4o.print("(");
-                        s4o.print_integer(nb_param);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__le_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -14561,23 +14133,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        function_type_suffix = last_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14616,16 +14187,13 @@ switch(current_function_type){
                     
                     {
                 
-                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
-                        s4o.indent_right();
-                        s4o.print("__ne_");
-                        last_type_symbol->accept(*this);
-                        s4o.print("(");
-                        s4o.print_integer(nb_param);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__ne_"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -14645,23 +14213,22 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
+                        function_type_suffix = last_type_symbol;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14686,13 +14253,13 @@ switch(current_function_type){
             if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__len"));
+                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                s4o.print("__len(");
-                IN_param_value->accept(*this);
-                s4o.print(")");
-                return NULL;
+                break;
                 
             }
+            
             
             ERROR;
         }
@@ -14731,20 +14298,20 @@ switch(current_function_type){
                     if(search_expression_type->is_integer_type(L_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__left"));
+                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                        s4o.print("__left(");
-                        IN_param_value->accept(*this);
-                        s4o.print(", ");
-                        L_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14783,20 +14350,20 @@ switch(current_function_type){
                     if(search_expression_type->is_integer_type(L_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__right"));
+                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                        s4o.print("__right(");
-                        IN_param_value->accept(*this);
-                        s4o.print(", ");
-                        L_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14849,27 +14416,27 @@ switch(current_function_type){
                             if(search_expression_type->is_integer_type(P_type_symbol))
                             {
                         
+                                function_name = (symbol_c*)(new pragma_c("__mid"));
+                                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
                                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                                s4o.print("__mid(");
-                                IN_param_value->accept(*this);
-                                s4o.print(", ");
-                                L_param_value->accept(*this);
-                                s4o.print(", ");
-                                P_param_value->accept(*this);
-                                s4o.print(")");
-                                return NULL;
+                                break;
                                 
                             }
+                            
                             
                             ERROR;
                         }
                         
                     }
                     
+                    
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -14908,15 +14475,14 @@ switch(current_function_type){
                     if(search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__time_add"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                        s4o.print("__time_add(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
@@ -14940,14 +14506,13 @@ switch(current_function_type){
                     if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                        s4o.indent_right();
-                        s4o.print("__concat(");
-                        s4o.print_integer(nb_param);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN1_param_value->accept(*this);
-                        s4o.print(",\n" + s4o.indent_spaces);
-                        IN2_param_value->accept(*this);
+                        function_name = (symbol_c*)(new pragma_c("__concat"));
+                        
+                        char nb_param_str[10];
+                        sprintf(nb_param_str, "%d", nb_param);
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -14967,23 +14532,21 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                s4o.print(",\n" + s4o.indent_spaces);
-                                param_value->accept(*this);
-                                
+                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
-                        s4o.print(")");
-                        s4o.indent_left();
-                        return NULL;
-                        
+                        symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -15036,27 +14599,27 @@ switch(current_function_type){
                             if(search_expression_type->is_integer_type(P_type_symbol))
                             {
                         
+                                function_name = (symbol_c*)(new pragma_c("__insert"));
+                                ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
                                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                                s4o.print("__insert(");
-                                IN1_param_value->accept(*this);
-                                s4o.print(", ");
-                                IN2_param_value->accept(*this);
-                                s4o.print(", ");
-                                P_param_value->accept(*this);
-                                s4o.print(")");
-                                return NULL;
+                                break;
                                 
                             }
+                            
                             
                             ERROR;
                         }
                         
                     }
                     
+                    
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -15109,27 +14672,27 @@ switch(current_function_type){
                             if(search_expression_type->is_integer_type(P_type_symbol))
                             {
                         
+                                function_name = (symbol_c*)(new pragma_c("__delete"));
+                                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
                                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                                s4o.print("__delete(");
-                                IN_param_value->accept(*this);
-                                s4o.print(", ");
-                                L_param_value->accept(*this);
-                                s4o.print(", ");
-                                P_param_value->accept(*this);
-                                s4o.print(")");
-                                return NULL;
+                                break;
                                 
                             }
+                            
                             
                             ERROR;
                         }
                         
                     }
                     
+                    
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -15196,34 +14759,34 @@ switch(current_function_type){
                                     if(search_expression_type->is_integer_type(P_type_symbol))
                                     {
                                 
+                                        function_name = (symbol_c*)(new pragma_c("__replace"));
+                                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                                        ADD_PARAM_LIST(L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
+                                        ADD_PARAM_LIST(P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
                                         symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
-                                        s4o.print("__replace(");
-                                        IN1_param_value->accept(*this);
-                                        s4o.print(", ");
-                                        IN2_param_value->accept(*this);
-                                        s4o.print(", ");
-                                        L_param_value->accept(*this);
-                                        s4o.print(", ");
-                                        P_param_value->accept(*this);
-                                        s4o.print(")");
-                                        return NULL;
+                                        break;
                                         
                                     }
+                                    
                                     
                                     ERROR;
                                 }
                                 
                             }
                             
+                            
                             ERROR;
                         }
                         
                     }
                     
+                    
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -15262,20 +14825,20 @@ switch(current_function_type){
                     if(search_expression_type->is_same_type(&search_constant_type_c::string_type_name, last_type_symbol))
                     {
                 
+                        function_name = (symbol_c*)(new pragma_c("__find"));
+                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
-                        s4o.print("__find(");
-                        IN1_param_value->accept(*this);
-                        s4o.print(", ");
-                        IN2_param_value->accept(*this);
-                        s4o.print(")");
-                        return NULL;
+                        break;
                         
                     }
+                    
                     
                     ERROR;
                 }
                 
             }
+            
             
             ERROR;
         }
@@ -15286,4 +14849,3 @@ switch(current_function_type){
     case function_none :
     ERROR;
 }
-return NULL;

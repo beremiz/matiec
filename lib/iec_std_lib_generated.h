@@ -15,9 +15,11 @@
  */
 
 /****
- * IEC 61131-3 standard function lib
+ * IEC 61131-3 standard function library
  * generated code, do not edit by hand
  */
+
+ 
 
 /* Macro that expand to subtypes */
 #define ANY(DO) ANY_DERIVED(DO) ANY_ELEMENTARY(DO)

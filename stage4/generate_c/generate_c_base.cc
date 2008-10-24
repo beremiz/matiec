@@ -49,10 +49,19 @@
 
 
 
+typedef struct
+{
+  symbol_c *param_value;
+  symbol_c *param_type;
+  function_param_iterator_c::param_direction_t param_direction;
+} FUNCTION_PARAM;
 
-
-
-
+#define ADD_PARAM_LIST(value, type, direction)\
+  param = new FUNCTION_PARAM;\
+  param->param_value = value;\
+  param->param_type = type;\
+  param->param_direction = direction;\
+  param_list.push_back(*param);
 
 
 
@@ -201,7 +210,7 @@ class generate_c_base_c: public iterator_visitor_c {
           symbol_c *r_exp) {
       s4o.print(function);
       compare_type->accept(*this);
-      s4o.print("(2, ");
+      s4o.print("(__BOOL_LITERAL(TRUE), NULL, 2, ");
       l_exp->accept(*this);
       s4o.print(", ");
       r_exp->accept(*this);

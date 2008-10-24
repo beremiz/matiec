@@ -42,11 +42,8 @@
  */
 #include "iec_types_all.h"
 
-#define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t1.tv_nsec - t2.tv_nsec : t1.tv_sec - t2.tv_sec) 
 extern TIME __CURRENT_TIME;
 extern BOOL __DEBUG;
-
-#define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
 
 /* TODO
 typedef struct {
@@ -234,28 +231,46 @@ static inline struct timespec __dt_to_timespec(double seconds,  double minutes, 
   return ts;
 }
 
+/********************/
+/*   EN/ENO PARAMS  */
+/********************/
+
+#define EN_ENO_PARAMS BOOL EN, BOOL *ENO
+#define TEST_EN(TYPENAME)\
+  if (!EN) {\
+    if (ENO != NULL)\
+      *ENO = __BOOL_LITERAL(FALSE);\
+    return __INIT_##TYPENAME;\
+  }\
+  else if (ENO != NULL)\
+    *ENO = __BOOL_LITERAL(TRUE);
+#define TEST_EN_COND(TYPENAME, COND)\
+  if (!EN || (COND)) {\
+    if (ENO != NULL)\
+      *ENO = __BOOL_LITERAL(FALSE);\
+    return __INIT_##TYPENAME;\
+  }\
+  else if (ENO != NULL)\
+    *ENO = __BOOL_LITERAL(TRUE);
+
 /***************/
 /*   Time ops  */
 /***************/
-static inline TIME __date_and_time_to_time_of_day(TIME IN){
-  return (TIME){IN.tv_sec % 86400, IN.tv_nsec};
-}
-static inline TIME __date_and_time_to_date(TIME IN){
-  return (TIME){IN.tv_sec - (IN.tv_sec % (24*60*60)), 0};
-}
-static inline TIME __time_add(TIME IN1, TIME IN2){
+#define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t1.tv_nsec - t2.tv_nsec : t1.tv_sec - t2.tv_sec) 
+
+static inline TIME __TIME_ADD(TIME IN1, TIME IN2){
   TIME res ={IN1.tv_sec + IN2.tv_sec,
              IN1.tv_nsec + IN2.tv_nsec };
   __normalize_timespec(&res);
   return res;
 }
-static inline TIME __time_sub(TIME IN1, TIME IN2){
+static inline TIME __TIME_SUB(TIME IN1, TIME IN2){
   TIME res ={IN1.tv_sec - IN2.tv_sec,
              IN1.tv_nsec - IN2.tv_nsec };
   __normalize_timespec(&res);
   return res;
 }
-static inline TIME __time_mul(TIME IN1, LREAL IN2){
+static inline TIME __TIME_MUL(TIME IN1, LREAL IN2){
   LREAL s_f = IN1.tv_sec * IN2;
   time_t s = s_f;
   div_t ns = div((LREAL)IN1.tv_nsec * IN2, 1000000000);
@@ -264,7 +279,7 @@ static inline TIME __time_mul(TIME IN1, LREAL IN2){
   __normalize_timespec(&res);
   return res;
 }
-static inline TIME __time_div(TIME IN1, LREAL IN2){
+static inline TIME __TIME_DIV(TIME IN1, LREAL IN2){
   LREAL s_f = IN1.tv_sec / IN2;
   time_t s = s_f;
   TIME res = {s,
@@ -273,27 +288,58 @@ static inline TIME __time_div(TIME IN1, LREAL IN2){
   return res;
 }
 
+static inline TIME __date_and_time_to_time_of_day(EN_ENO_PARAMS, TIME IN){
+  TEST_EN(TIME)
+  return (TIME){IN.tv_sec % 86400, IN.tv_nsec};
+}
+static inline TIME __date_and_time_to_date(EN_ENO_PARAMS, TIME IN){
+  TEST_EN(TIME)
+  return (TIME){IN.tv_sec - (IN.tv_sec % (24*60*60)), 0};
+}
+static inline TIME __time_add(EN_ENO_PARAMS, TIME IN1, TIME IN2){
+  TEST_EN(TIME)
+  return __TIME_ADD(IN1, IN2);
+}
+static inline TIME __time_sub(EN_ENO_PARAMS, TIME IN1, TIME IN2){
+  TEST_EN(TIME)
+  return __TIME_SUB(IN1, IN2);
+}
+static inline TIME __time_mul(EN_ENO_PARAMS, TIME IN1, LREAL IN2){
+  TEST_EN(TIME)
+  return __TIME_MUL(IN1, IN2);
+}
+static inline TIME __time_div(EN_ENO_PARAMS, TIME IN1, LREAL IN2){
+  TEST_EN(TIME)
+  return __TIME_DIV(IN1, IN2);
+}
+
 /***************/
 /* String ops  */
 /***************/
-static inline UINT __len(STRING IN){
+#define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
+
+static inline UINT __len(EN_ENO_PARAMS, STRING IN){
+    TEST_EN(UINT)
     return IN.len;
 }
-static inline STRING __left(STRING IN, SINT L){
+static inline STRING __left(EN_ENO_PARAMS, STRING IN, SINT L){
+    TEST_EN_COND(STRING, L < 0)
     STRING res = __INIT_STRING;
     L = L < IN.len ? L : IN.len;
     memcpy(&res.body, &IN.body, L);
     res.len = L;
     return res;
 }
-static inline STRING __right(STRING IN, SINT L){
+static inline STRING __right(EN_ENO_PARAMS, STRING IN, SINT L){
+    TEST_EN_COND(STRING, L < 0)
     STRING res = __INIT_STRING;
     L = L < IN.len ? L : IN.len;
     memcpy(&res.body, &IN.body[IN.len - L], L);
     res.len = L;
     return res;
 }
-static inline STRING __mid(STRING IN, SINT L, SINT P){
+static inline STRING __mid(EN_ENO_PARAMS, STRING IN, SINT L, SINT P){
+    TEST_EN_COND(STRING, L < 0 || P < 0)
     STRING res = __INIT_STRING;
     if(P <= IN.len){
 	    P -= 1; /* now can be used as [index]*/
@@ -303,7 +349,8 @@ static inline STRING __mid(STRING IN, SINT L, SINT P){
     }
     return res;
 }
-static inline STRING __concat(SINT param_count, ...){
+static inline STRING __concat(EN_ENO_PARAMS, SINT param_count, ...){
+  TEST_EN(STRING)
   va_list ap;
   UINT i;
   __strlen_t charcount = 0;
@@ -325,7 +372,8 @@ static inline STRING __concat(SINT param_count, ...){
   va_end (ap);                  /* Clean up.  */
   return res;
 }
-static inline STRING __insert(STRING IN1, STRING IN2, SINT P){
+static inline STRING __insert(EN_ENO_PARAMS, STRING IN1, STRING IN2, SINT P){
+    TEST_EN_COND(STRING, P < 0)
     STRING res = __INIT_STRING;
     __strlen_t to_copy;
     
@@ -343,7 +391,8 @@ static inline STRING __insert(STRING IN1, STRING IN2, SINT P){
 
     return res;
 }
-static inline STRING __delete(STRING IN, SINT L, SINT P){
+static inline STRING __delete(EN_ENO_PARAMS, STRING IN, SINT L, SINT P){
+    TEST_EN_COND(STRING, L < 0 || P < 0)
     STRING res = __INIT_STRING;
     __strlen_t to_copy;
     
@@ -359,7 +408,8 @@ static inline STRING __delete(STRING IN, SINT L, SINT P){
 
     return res;
 }
-static inline STRING __replace(STRING IN1, STRING IN2, SINT L, SINT P){
+static inline STRING __replace(EN_ENO_PARAMS, STRING IN1, STRING IN2, SINT L, SINT P){
+    TEST_EN_COND(STRING, L < 0 || P < 0)
     STRING res = __INIT_STRING;
     __strlen_t to_copy;
     
@@ -400,7 +450,8 @@ static inline UINT __pfind(STRING* IN1, STRING* IN2){
     }
     return count2 == IN2->len -1 ? 0 : count1 + 1;
 }
-static inline UINT __find(STRING IN1, STRING IN2){
+static inline UINT __find(EN_ENO_PARAMS, STRING IN1, STRING IN2){
+    TEST_EN(UINT)
     return __pfind(&IN1, &IN2);
 }
 
@@ -410,31 +461,36 @@ static inline UINT __find(STRING IN1, STRING IN2){
     /***************/
     /*  TO_STRING  */
     /***************/
-static inline STRING __bool_to_string(BOOL IN)
+static inline STRING __bool_to_string(EN_ENO_PARAMS, BOOL IN)
 {
+    TEST_EN(STRING)
     if(IN)
         return (STRING){4, "TRUE"};
     return (STRING){5,"FALSE"};
 }
-static inline STRING __bit_to_string(LWORD IN){
+static inline STRING __bit_to_string(EN_ENO_PARAMS, LWORD IN){
+    TEST_EN(STRING)
     STRING res = __INIT_STRING;
     res.len = snprintf((char*)res.body, STR_MAX_LEN, "16#%llx", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-static inline STRING __real_to_string(LREAL IN){
+static inline STRING __real_to_string(EN_ENO_PARAMS, LREAL IN){
+    TEST_EN(STRING)
     STRING res = __INIT_STRING;
     res.len = snprintf((char*)res.body, STR_MAX_LEN, "%.10g", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-static inline STRING __sint_to_string(LINT IN){
+static inline STRING __sint_to_string(EN_ENO_PARAMS, LINT IN){
+    TEST_EN(STRING)
     STRING res = __INIT_STRING;
     res.len = snprintf((char*)res.body, STR_MAX_LEN, "%lld", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-static inline STRING __uint_to_string(ULINT IN){
+static inline STRING __uint_to_string(EN_ENO_PARAMS, ULINT IN){
+    TEST_EN(STRING)
     STRING res = __INIT_STRING;
     res.len = snprintf((char*)res.body, STR_MAX_LEN, "%llu", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
@@ -443,7 +499,8 @@ static inline STRING __uint_to_string(ULINT IN){
     /***************/
     /* FROM_STRING */
     /***************/
-static inline BOOL __string_to_bool(STRING IN){
+static inline BOOL __string_to_bool(EN_ENO_PARAMS, STRING IN){
+    TEST_EN(BOOL)
     return IN.len == 5 ? !memcmp(&IN.body,"TRUE", IN.len) : 0;
 }
 
@@ -510,16 +567,20 @@ static inline LINT __pstring_to_sint(STRING* IN){
     return res;
 }
 
-static inline LINT __string_to_sint(STRING IN){
+static inline LINT __string_to_sint(EN_ENO_PARAMS, STRING IN){
+    TEST_EN(LINT)
     return (LWORD)__pstring_to_sint(&IN);
 }
-static inline LWORD __string_to_bit(STRING IN){
+static inline LWORD __string_to_bit(EN_ENO_PARAMS, STRING IN){
+    TEST_EN(LWORD)
     return (LWORD)__pstring_to_sint(&IN);
 }
-static inline ULINT __string_to_uint(STRING IN){
+static inline ULINT __string_to_uint(EN_ENO_PARAMS, STRING IN){
+    TEST_EN(ULINT)
     return (ULINT)__pstring_to_sint(&IN);
 }
-static inline LREAL __string_to_real(STRING IN){
+static inline LREAL __string_to_real(EN_ENO_PARAMS, STRING IN){
+    TEST_EN(LREAL)
     /* search the dot */
     __strlen_t l = IN.len;
     while(--l > 0 && IN.body[l] != '.');
@@ -533,14 +594,17 @@ static inline LREAL __string_to_real(STRING IN){
     /***************/
     /*   TO_TIME   */
     /***************/
-static inline TIME __int_to_time(LINT IN){
+static inline TIME __int_to_time(EN_ENO_PARAMS, LINT IN){
+    TEST_EN(TIME)
     return (TIME){IN, 0};
 }
 
-static inline TIME __real_to_time(LREAL IN){
+static inline TIME __real_to_time(EN_ENO_PARAMS, LREAL IN){
+    TEST_EN(TIME)
     return (TIME){IN, (IN - (LINT)IN) * 1000000000};
 }
-static inline TIME __string_to_time(STRING IN){
+static inline TIME __string_to_time(EN_ENO_PARAMS, STRING IN){
+    TEST_EN(TIME)
     /* TODO :
      *
      *  Duration literals without underlines: T#14ms    T#-14ms   T#14.7s   T#14.7m
@@ -576,13 +640,16 @@ static inline TIME __string_to_time(STRING IN){
     /***************/
     /*  FROM_TIME  */
     /***************/
-static inline LREAL __time_to_real(TIME IN){
+static inline LREAL __time_to_real(EN_ENO_PARAMS, TIME IN){
+    TEST_EN(LREAL)
     return (LREAL)IN.tv_sec + ((LREAL)IN.tv_nsec/1000000000);
 }
-static inline LINT __time_to_int(TIME IN){
+static inline LINT __time_to_int(EN_ENO_PARAMS, TIME IN){
+    TEST_EN(LINT)
     return IN.tv_sec;
 }
-static inline STRING __time_to_string(TIME IN){
+static inline STRING __time_to_string(EN_ENO_PARAMS, TIME IN){
+    TEST_EN(STRING)
     /*t#5d14h12m18s3.5ms*/
     STRING res = __INIT_STRING;
     div_t days = div(IN.tv_sec ,86400);
@@ -608,7 +675,8 @@ static inline STRING __time_to_string(TIME IN){
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-static inline STRING __date_to_string(DATE IN){
+static inline STRING __date_to_string(EN_ENO_PARAMS, DATE IN){
+    TEST_EN(STRING)
     /* D#1984-06-25 */
     STRING res = __INIT_STRING;
     struct tm* broken_down_time;
@@ -621,7 +689,8 @@ static inline STRING __date_to_string(DATE IN){
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-static inline STRING __tod_to_string(TOD IN){
+static inline STRING __tod_to_string(EN_ENO_PARAMS, TOD IN){
+    TEST_EN(STRING)
     /* TOD#15:36:55.36 */
     STRING res = __INIT_STRING;
     struct tm* broken_down_time;
@@ -638,7 +707,8 @@ static inline STRING __tod_to_string(TOD IN){
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-static inline STRING __dt_to_string(DT IN){
+static inline STRING __dt_to_string(EN_ENO_PARAMS, DT IN){
+    TEST_EN(STRING)
     /* DT#1984-06-25-15:36:55.36 */
     STRING res;
     struct tm* broken_down_time;
@@ -669,7 +739,8 @@ static inline STRING __dt_to_string(DT IN){
 }
     /* BCD */
 #define __bcd_digit(fac) 
-static inline ULINT __bcd_to_uint(LWORD IN){
+static inline ULINT __bcd_to_uint(EN_ENO_PARAMS, LWORD IN){
+    TEST_EN(ULINT)
     return IN & 0xf +
            !(IN >>= 4) ? 0 : IN & 0xf * 10ULL + 
            !(IN >>= 4) ? 0 : IN & 0xf * 100ULL + 
@@ -688,7 +759,8 @@ static inline ULINT __bcd_to_uint(LWORD IN){
            !(IN >>= 4) ? 0 : IN & 0xf * 1000000000000000ULL;
            
 }
-static inline LWORD __uint_to_bcd(ULINT IN){
+static inline LWORD __uint_to_bcd(EN_ENO_PARAMS, ULINT IN){
+    TEST_EN(LWORD)
     return (IN - (IN /= 10))|
            (IN - (IN /= 10)) << 4 |
            (IN - (IN /= 10)) << 8 |
@@ -707,60 +779,6 @@ static inline LWORD __uint_to_bcd(ULINT IN){
            (IN - (IN /= 10)) << 60;
 }
 
-/**************/
-/* Binary ops */
-/**************/
-#define __ror_(TYPENAME)\
-static inline TYPENAME __ror_##TYPENAME( TYPENAME IN, USINT N){\
- N %= 8*sizeof(TYPENAME);\
- return (IN >> N) | (IN << 8*sizeof(TYPENAME)-N);\
-}
-/* Call previously defined macro for each ANY_NBIT */
-ANY_NBIT(__ror_)
-
-#define __rol_(TYPENAME)\
-static inline TYPENAME __rol_##TYPENAME( TYPENAME IN, USINT N){\
- N %= 8*sizeof(TYPENAME);\
- return (IN << N) | (IN >> 8*sizeof(TYPENAME)-N);\
-}
-/* Call previously defined macro for each ANY_NBIT */
-ANY_NBIT(__rol_)
-
-/**************/
-/* Selection  */
-/**************/
-	/**************/
-	/*   limit    */
-	/**************/
-
-#define __limit_(TYPENAME)\
-static inline TYPENAME __limit_##TYPENAME( TYPENAME MN, TYPENAME IN, TYPENAME MX){\
- return IN > MN ? IN < MX ? IN : MX : MN;\
-}
-
-/* Call previously defined macro for each concerned type */
-ANY_NBIT(__limit_)
-ANY_NUM(__limit_)
-
-#define __limit_time(TYPENAME)\
-static inline TIME __limit_##TYPENAME( TYPENAME MN, TYPENAME IN, TYPENAME MX){\
-    return __TIME_CMP(IN, MN) > 0 ? /* IN>MN ?*/\
-           __TIME_CMP(IN, MX) < 0 ? /* IN<MX ?*/\
-           IN : MX : MN;\
-}
-
-/* Call previously defined macro for each concerned type */
-ANY_DATE(__limit_time)
-__limit_time(TIME)
-
-static inline STRING __limit_STRING( STRING MN, STRING IN, STRING MX){
-    return __STR_CMP(IN, MN) > 0 ? __STR_CMP(IN, MX) < 0 ? IN : MX : MN;
-}
-
-    /**************/
-    /*     MAX    */
-    /**************/
-    
 /* workaround for va-atgs limitation on shorter that int params */    
 #define VA_ARGS_REAL LREAL
 #define VA_ARGS_LREAL LREAL
@@ -784,8 +802,213 @@ static inline STRING __limit_STRING( STRING MN, STRING IN, STRING MX){
 #define VA_ARGS_TOD TOD
 #define VA_ARGS_DT DT
 
+/*******************************************/
+/*     Arithmetic and bitwise functions    */
+/*******************************************/
+#define __arith_expand(fname,TYPENAME, OP) \
+static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, UINT param_count, TYPENAME op1, ...){\
+  TEST_EN(TYPENAME)\
+  va_list ap;\
+  UINT i;\
+  \
+  va_start (ap, op1);         /* Initialize the argument list.  */\
+  \
+  for (i = 0; i < param_count - 1; i++){\
+    op1 = op1 OP va_arg (ap, VA_ARGS_##TYPENAME);\
+  }\
+  \
+  va_end (ap);                  /* Clean up.  */\
+  return op1;\
+}
+
+#define __arith_static(fname,TYPENAME, OP) \
+static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
+  TEST_EN(TYPENAME)\
+  return op1 OP op2;\
+}
+
+/**************/
+/*     ADD    */
+/**************/
+#define __add_(TYPENAME) __arith_expand(__add_, TYPENAME, + )
+ANY_NUM(__add_)
+
+/**************/
+/*     MUL    */
+/**************/
+#define __mul_(TYPENAME) __arith_expand(__mul_, TYPENAME, * )
+ANY_NUM(__mul_)
+
+/**************/
+/*     SUB    */
+/**************/
+#define __sub_(TYPENAME) __arith_static(__sub_, TYPENAME, - )
+ANY_NUM(__sub_)
+
+/**************/
+/*     DIV    */
+/**************/
+#define __div_(TYPENAME)\
+static inline TYPENAME __div_##TYPENAME(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
+  TEST_EN_COND(TYPENAME, op2 == 0)\
+  return op1 / op2;\
+}
+ANY_NUM(__div_)
+
+/**************/
+/*     MOD    */
+/**************/
+#define __mod_(TYPENAME) __arith_static(__mod_, TYPENAME, % )
+ANY_INT(__mod_)
+
+/**************/
+/*     AND    */
+/**************/
+__arith_expand(__and_, BOOL, && )
+#define __and_(TYPENAME) __arith_expand(__and_, TYPENAME, & )
+ANY_NBIT(__and_)
+
+/*************/
+/*     OR    */
+/*************/
+__arith_expand(__or_, BOOL, || )
+#define __or_(TYPENAME) __arith_expand(__or_, TYPENAME, |)
+ANY_NBIT(__or_)
+
+/**************/
+/*     XOR    */
+/**************/
+static inline BOOL __xor_BOOL(EN_ENO_PARAMS, UINT param_count, BOOL op1, ...){
+  TEST_EN(BOOL)
+  va_list ap;
+  UINT i;
+  
+  va_start (ap, op1);         /* Initialize the argument list.  */
+  
+  for (i = 0; i < param_count - 1; i++){
+    BOOL tmp = va_arg (ap, VA_ARGS_BOOL);
+    op1 = (op1 && !tmp) || (!op1 && tmp);
+  }
+  
+  va_end (ap);                  /* Clean up.  */
+  return op1;
+}
+#define __xor_(TYPENAME) __arith_expand(__xor_, TYPENAME, ^)
+ANY_NBIT(__xor_)
+
+/**************/
+/*     NOT    */
+/**************/
+static inline BOOL __not_BOOL(EN_ENO_PARAMS, BOOL op1){
+  TEST_EN(BOOL)
+  return !op1;
+}
+
+#define __not_(TYPENAME)\
+static inline TYPENAME __not_##TYPENAME(EN_ENO_PARAMS, TYPENAME op1){\
+  TEST_EN(TYPENAME)\
+  return ~op1;\
+}
+ANY_NBIT(__not_)
+
+/***************/
+/*     MOVE    */
+/***************/
+#define __move_(TYPENAME)\
+static inline TYPENAME __move_##TYPENAME(EN_ENO_PARAMS, TYPENAME op1){\
+  TEST_EN(TYPENAME)\
+  return op1;\
+}
+ANY(__move_)
+
+/**************/
+/* Binary ops */
+/**************/
+#define __shift_(fname, TYPENAME, OP)\
+static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, TYPENAME IN, USINT N) {\
+  TEST_EN_COND(TYPENAME, N < 0)\
+  return IN OP N;\
+}
+
+#define __shl_(TYPENAME) __shift_(__shl_, TYPENAME, << )
+/* Call previously defined macro for each ANY_NBIT */
+ANY_NBIT(__shl_)
+
+#define __shr_(TYPENAME) __shift_(__shr_, TYPENAME, >> )
+/* Call previously defined macro for each ANY_NBIT */
+ANY_NBIT(__shr_)
+
+#define __ror_(TYPENAME)\
+static inline TYPENAME __ror_##TYPENAME(EN_ENO_PARAMS, TYPENAME IN, USINT N){\
+  TEST_EN_COND(TYPENAME, N < 0)\
+  N %= 8*sizeof(TYPENAME);\
+  return (IN >> N) | (IN << 8*sizeof(TYPENAME)-N);\
+}
+/* Call previously defined macro for each ANY_NBIT */
+ANY_NBIT(__ror_)
+
+#define __rol_(TYPENAME)\
+static inline TYPENAME __rol_##TYPENAME(EN_ENO_PARAMS, TYPENAME IN, USINT N){\
+  TEST_EN_COND(TYPENAME, N < 0)\
+  N %= 8*sizeof(TYPENAME);\
+  return (IN << N) | (IN >> 8*sizeof(TYPENAME)-N);\
+}
+/* Call previously defined macro for each ANY_NBIT */
+ANY_NBIT(__rol_)
+
+/**************/
+/* Selection  */
+/**************/
+
+  /**************/
+  /*    SEL     */
+  /**************/
+
+#define __sel_(TYPENAME)\
+static inline TYPENAME __sel_##TYPENAME(EN_ENO_PARAMS, BOOL G, TYPENAME op0, TYPENAME op1){\
+  TEST_EN(TYPENAME)\
+  return G ? op1 : op0;\
+}
+ANY(__sel_)
+
+	/**************/
+	/*   limit    */
+	/**************/
+
+#define __limit_(TYPENAME)\
+static inline TYPENAME __limit_##TYPENAME(EN_ENO_PARAMS, TYPENAME MN, TYPENAME IN, TYPENAME MX){\
+  TEST_EN(TYPENAME)\
+  return IN > MN ? IN < MX ? IN : MX : MN;\
+}
+
+/* Call previously defined macro for each concerned type */
+ANY_NBIT(__limit_)
+ANY_NUM(__limit_)
+
+#define __limit_time(TYPENAME)\
+static inline TYPENAME __limit_##TYPENAME(EN_ENO_PARAMS, TYPENAME MN, TYPENAME IN, TYPENAME MX){\
+    TEST_EN(TYPENAME)\
+    return __TIME_CMP(IN, MN) > 0 ? /* IN>MN ?*/\
+           __TIME_CMP(IN, MX) < 0 ? /* IN<MX ?*/\
+           IN : MX : MN;\
+}
+
+/* Call previously defined macro for each concerned type */
+ANY_DATE(__limit_time)
+__limit_time(TIME)
+
+static inline STRING __limit_STRING(EN_ENO_PARAMS, STRING MN, STRING IN, STRING MX){
+    TEST_EN(STRING)
+    return __STR_CMP(IN, MN) > 0 ? __STR_CMP(IN, MX) < 0 ? IN : MX : MN;
+}
+
+    /**************/
+    /*     MAX    */
+    /**************/
+
 #define __extrem_(fname,TYPENAME, COND) \
-static inline TYPENAME fname##TYPENAME( UINT param_count, TYPENAME op1, ...){\
+static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, UINT param_count, TYPENAME op1, ...){\
+  TEST_EN(TYPENAME)\
   va_list ap;\
   UINT i;\
   \
@@ -830,7 +1053,8 @@ __min_time(TIME)
     /*     MUX    */
     /**************/
 #define __mux_(TYPENAME) \
-static inline TYPENAME __mux_##TYPENAME( UINT param_count, UINT K, ...){\
+static inline TYPENAME __mux_##TYPENAME(EN_ENO_PARAMS, UINT param_count, UINT K, ...){\
+  TEST_EN_COND(TYPENAME, K < 0 || K >= param_count)\
   va_list ap;\
   UINT i;\
   TYPENAME tmp = __INIT_##TYPENAME;\
@@ -858,7 +1082,8 @@ ANY(__mux_)
 /**************/
 
 #define __compare_(fname,TYPENAME, COND) \
-static inline BOOL fname##TYPENAME( UINT param_count, TYPENAME op1, ...){\
+static inline BOOL fname##TYPENAME(EN_ENO_PARAMS, UINT param_count, TYPENAME op1, ...){\
+  TEST_EN(BOOL)\
   va_list ap;\
   UINT i;\
   \
@@ -884,6 +1109,7 @@ static inline BOOL fname##TYPENAME( UINT param_count, TYPENAME op1, ...){\
 #define __compare_num(fname, TYPENAME, TEST) __compare_(fname, TYPENAME, op1 TEST tmp )
 #define __compare_time(fname, TYPENAME, TEST) __compare_(fname, TYPENAME, __TIME_CMP(op1, tmp) TEST 0)
 #define __compare_string(fname, TEST) __compare_(fname, STRING, __STR_CMP(op1, tmp) TEST 0 )
+
 
     /**************/
     /*     GT     */

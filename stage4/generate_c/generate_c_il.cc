@@ -413,7 +413,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       s4o.print(" = ");
       s4o.print(operation);
       this->default_variable_name.current_type->accept(*this);
-      s4o.print("(2, ");
+      s4o.print("(__BOOL_LITERAL(TRUE), NULL, 2, ");
       this->default_variable_name.accept(*this);
       s4o.print(", ");
       o->accept(*this);
@@ -602,21 +602,31 @@ void *visit(il_simple_operation_c *symbol) {
 void *visit(il_function_call_c *symbol) {
   function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
 
+  symbol_c* function_type_prefix = NULL;
+  symbol_c* function_name = NULL;
+  symbol_c* function_type_suffix = NULL;
+  std::list<FUNCTION_PARAM> param_list;
+  FUNCTION_PARAM *param;
+  
+  symbol_c *param_data_type = default_variable_name.current_type;
+  symbol_c *return_data_type = NULL;
+  
   if (f_decl == function_symtable.end_value()) {
-    /* should never occur. The function being called MUST be in the symtable... */
     function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
     if (current_function_type == function_none) ERROR;
     
-    symbol_c *param_data_type = default_variable_name.current_type;
-    symbol_c *return_data_type = (symbol_c *)search_expression_type->compute_standard_function_il(symbol, param_data_type);
+    return_data_type = (symbol_c *)search_expression_type->compute_standard_function_il(symbol, param_data_type);
     if (NULL == return_data_type) ERROR;
     
-    default_variable_name.current_type = return_data_type;
-    this->default_variable_name.accept(*this);
-    default_variable_name.current_type = param_data_type;
-    s4o.print(" = ");
-    
     function_call_param_iterator_c function_call_param_iterator(symbol);
+    
+    /* Add the value from EN param */
+    ADD_PARAM_LIST((symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c())), 
+                   (symbol_c*)(new bool_type_name_c()), 
+                   function_param_iterator_c::direction_in)
+    
+    /* Add the value from ENO param */
+    ADD_PARAM_LIST(NULL, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
     
     int nb_param = 1;
     if (symbol->il_operand_list != NULL)
@@ -624,24 +634,15 @@ void *visit(il_function_call_c *symbol) {
 
     #include "il_code_gen.c"
 
-    /* the data type returned by the function, and stored in the il default variable... */
-    default_variable_name.current_type = return_data_type;
   }
   else {
     /* determine the base data type returned by the function being called... */
     search_base_type_c search_base_type;
-    symbol_c *return_data_type = (symbol_c *)f_decl->type_name->accept(search_base_type);
-    symbol_c *param_data_type = default_variable_name.current_type;
+    return_data_type = (symbol_c *)f_decl->type_name->accept(search_base_type);
     if (NULL == return_data_type) ERROR;
   
-    default_variable_name.current_type = return_data_type;
-    this->default_variable_name.accept(*this);
-    default_variable_name.current_type = param_data_type;
-    s4o.print(" = ");
-  
-    symbol->function_name->accept(*this);
-    s4o.print("(");
-  
+    function_name = symbol->function_name;
+    
     /* loop through each function parameter, find the value we should pass
      * to it, and then output the c equivalent...
      */
@@ -650,15 +651,11 @@ void *visit(il_function_call_c *symbol) {
     identifier_c *param_name;
     function_call_param_iterator_c function_call_param_iterator(symbol);
     for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
-      if (i != 1)
-        s4o.print(", ");
-  
       symbol_c *param_type = fp_iterator.param_type();
       if (param_type == NULL) ERROR;
-  
+      
       function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
-  
-  
+      
       symbol_c *param_value = NULL;
   
       /* if it is the first parameter, semantics specifies that we should
@@ -681,43 +678,77 @@ void *visit(il_function_call_c *symbol) {
       /* Get the value from a foo(<param_value>) style call */
       if (param_value == NULL)
         param_value = function_call_param_iterator.next();
-  
-      switch (param_direction) {
-        case function_param_iterator_c::direction_in:
-          if (param_value == NULL) {
-            /* No value given for parameter, so we must use the default... */
-            /* First check whether default value specified in function declaration...*/
-            param_value = fp_iterator.default_value();
-          }
-          if (param_value == NULL) {
-            /* If not, get the default value of this variable's type */
-            param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
-          }
-          if (param_value == NULL) ERROR;
-          param_value->accept(*this);
-          break;
-        case function_param_iterator_c::direction_out:
-        case function_param_iterator_c::direction_inout:
-          current_param_is_pointer = true;
-          if (param_value == NULL) {
-            s4o.print("NULL");
-          } else {
-            param_value->accept(*this);
-          }
-          current_param_is_pointer = false;
-          break;
-        case function_param_iterator_c::direction_extref:
-          /* TODO! */
-          ERROR;
-          break;
-      } /* switch */
+      
+      if (param_value == NULL && param_direction == function_param_iterator_c::direction_in) {
+        /* No value given for parameter, so we must use the default... */
+        /* First check whether default value specified in function declaration...*/
+        param_value = fp_iterator.default_value();
+      }
+      
+      ADD_PARAM_LIST(param_value, param_type, fp_iterator.param_direction())
     } /* for(...) */
-  
-    s4o.print(")");
-    /* the data type returned by the function, and stored in the il default variable... */
-    default_variable_name.current_type = return_data_type;
   }
   
+  default_variable_name.current_type = return_data_type;
+  this->default_variable_name.accept(*this);
+  default_variable_name.current_type = param_data_type;
+  s4o.print(" = ");
+    
+  if (function_type_prefix != NULL) {
+    s4o.print("(");
+    function_type_prefix->accept(*this);
+    s4o.print(")");
+  }
+  if (function_name != NULL)
+    function_name->accept(*this);
+  if (function_type_suffix != NULL)
+    function_type_suffix->accept(*this);
+  s4o.print("(");
+  s4o.indent_right();
+  
+  std::list<FUNCTION_PARAM>::iterator pt;
+  for(pt = param_list.begin(); pt != param_list.end(); pt++) {
+    if (pt != param_list.begin())
+      s4o.print(",\n"+s4o.indent_spaces);
+    symbol_c *param_value = pt->param_value;
+    symbol_c *param_type = pt->param_type;
+    
+    switch (pt->param_direction) {
+      case function_param_iterator_c::direction_in:
+        if (param_value == NULL) {
+          /* If not, get the default value of this variable's type */
+          param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
+        }
+        if (param_value == NULL) ERROR;
+        if (search_base_type.type_is_subrange(param_type)) {
+          s4o.print("__CHECK_");
+          param_type->accept(*this);
+          s4o.print("(");
+        }
+        param_value->accept(*this);
+        if (search_base_type.type_is_subrange(param_type))
+          s4o.print(")");
+        break;
+      case function_param_iterator_c::direction_out:
+      case function_param_iterator_c::direction_inout:
+        current_param_is_pointer = true;
+        if (param_value == NULL) {
+          s4o.print("NULL");
+        } else {
+          param_value->accept(*this);
+        }
+        current_param_is_pointer = false;
+        break;
+      case function_param_iterator_c::direction_extref:
+        /* TODO! */
+        ERROR;
+        break;
+    } /* switch */
+  }
+  
+  s4o.print(")");
+  /* the data type returned by the function, and stored in the il default variable... */
+  default_variable_name.current_type = return_data_type;
   return NULL;
 }
 
@@ -901,54 +932,116 @@ void *visit(il_fb_call_c *symbol) {
 void *visit(il_formal_funct_call_c *symbol) {
   function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
 
-  if (f_decl == function_symtable.end_value())
-    /* should never occur. The function being called MUST be in the symtable... */
-    ERROR;
+  symbol_c* function_type_prefix = NULL;
+  symbol_c* function_name = NULL;
+  symbol_c* function_type_suffix = NULL;
+  std::list<FUNCTION_PARAM> param_list;
+  FUNCTION_PARAM *param;
 
-  symbol->function_name->accept(*this);
-  s4o.print("(");
+  symbol_c *return_data_type = NULL;
 
-  /* loop through each function parameter, find the value we should pass
-   * to it, and then output the c equivalent...
-   */
+  if (f_decl == function_symtable.end_value()) {
+    function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
+    if (current_function_type == function_none) ERROR;
+    
+    return_data_type = (symbol_c *)search_expression_type->compute_standard_function_default(NULL, symbol);
+    if (NULL == return_data_type) ERROR;
+    
+    function_call_param_iterator_c function_call_param_iterator(symbol);
+    
+    identifier_c en_param_name("EN");
+    /* Get the value from EN param */
+    symbol_c *EN_param_value = function_call_param_iterator.search(&en_param_name);
+    if (EN_param_value == NULL)
+      EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
+    ADD_PARAM_LIST(EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
+    
+    identifier_c eno_param_name("EN0");
+    /* Get the value from ENO param */
+    symbol_c *ENO_param_value = function_call_param_iterator.search(&eno_param_name);
+    ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
+    
+    int nb_param = 0;
+    if (symbol->il_param_list != NULL)
+      nb_param += ((list_c *)symbol->il_param_list)->n;
 
-  function_param_iterator_c fp_iterator(f_decl);
-  identifier_c *param_name;
-  function_call_param_iterator_c function_call_param_iterator(symbol);
-  for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
-    if (i != 1)
-      s4o.print(", ");
-
-    symbol_c *param_type = fp_iterator.param_type();
-    if (param_type == NULL) ERROR;
-
-    function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
-
-
-    symbol_c *param_value = NULL;
-
-    /* Get the value from a foo(<param_name> = <param_value>) style call */
-    if (param_value == NULL)
-      param_value = function_call_param_iterator.search(param_name);
-
-    /* Get the value from a foo(<param_value>) style call */
-    /* NOTE: the following line of code is not required in this case, but it doesn't
-     * harm to leave it in, as in the case of a formal syntax function call,
-     * it will always return NULL.
-     * We leave it in in case we later decide to merge this part of the code together
-     * with the function calling code in generate_c_st_c, which does require
-     * the following line...
+    #include "st_code_gen.c"
+    
+  }
+  else {
+    /* determine the base data type returned by the function being called... */
+    search_base_type_c search_base_type;
+    return_data_type = (symbol_c *)f_decl->type_name->accept(search_base_type);
+    if (NULL == return_data_type) ERROR;
+    
+    function_name = symbol->function_name;
+  
+    /* loop through each function parameter, find the value we should pass
+     * to it, and then output the c equivalent...
      */
-    if (param_value == NULL)
-      param_value = function_call_param_iterator.next();
-
-    switch (param_direction) {
+  
+    function_param_iterator_c fp_iterator(f_decl);
+    identifier_c *param_name;
+    function_call_param_iterator_c function_call_param_iterator(symbol);
+    for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
+      symbol_c *param_type = fp_iterator.param_type();
+      if (param_type == NULL) ERROR;
+  
+      function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
+  
+  
+      symbol_c *param_value = NULL;
+  
+      /* Get the value from a foo(<param_name> = <param_value>) style call */
+      if (param_value == NULL)
+        param_value = function_call_param_iterator.search(param_name);
+  
+      /* Get the value from a foo(<param_value>) style call */
+      /* NOTE: the following line of code is not required in this case, but it doesn't
+       * harm to leave it in, as in the case of a formal syntax function call,
+       * it will always return NULL.
+       * We leave it in in case we later decide to merge this part of the code together
+       * with the function calling code in generate_c_st_c, which does require
+       * the following line...
+       */
+      if (param_value == NULL)
+        param_value = function_call_param_iterator.next();
+      
+      if (param_value == NULL) {
+        /* No value given for parameter, so we must use the default... */
+        /* First check whether default value specified in function declaration...*/
+        param_value = fp_iterator.default_value();
+      }
+      
+      ADD_PARAM_LIST(param_value, param_type, fp_iterator.param_direction())
+    }
+  }
+  
+  default_variable_name.current_type = return_data_type;
+  this->default_variable_name.accept(*this);
+  s4o.print(" = ");
+  
+  if (function_type_prefix != NULL) {
+    s4o.print("(");
+    function_type_prefix->accept(*this);
+    s4o.print(")");
+  }
+  if (function_name != NULL)
+    function_name->accept(*this);
+  if (function_type_suffix != NULL)
+    function_type_suffix->accept(*this);
+  s4o.print("(");
+  s4o.indent_right();
+  
+  std::list<FUNCTION_PARAM>::iterator pt;
+  for(pt = param_list.begin(); pt != param_list.end(); pt++) {
+    if (pt != param_list.begin())
+      s4o.print(",\n"+s4o.indent_spaces);
+    symbol_c *param_value = pt->param_value;
+    symbol_c *param_type = pt->param_type;
+    
+    switch (pt->param_direction) {
       case function_param_iterator_c::direction_in:
-        if (param_value == NULL) {
-          /* No value given for parameter, so we must use the default... */
-          /* First check whether default value specified in function declaration...*/
-          param_value = fp_iterator.default_value();
-        }
         if (param_value == NULL) {
           /* If not, get the default value of this variable's type */
           param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
@@ -962,27 +1055,27 @@ void *visit(il_formal_funct_call_c *symbol) {
         param_value->accept(*this);
         if (search_base_type.type_is_subrange(param_type))
           s4o.print(")");
-	break;
+	      break;
       case function_param_iterator_c::direction_out:
       case function_param_iterator_c::direction_inout:
+        current_param_is_pointer = true;
         if (param_value == NULL) {
-	  /* no parameter value given, so we pass a previously declared temporary variable. */
-          std::string *temp_var_name = temp_var_name_factory.new_name();
-          s4o.print(*temp_var_name);
-          delete temp_var_name;
-	} else {
+          s4o.print("NULL");
+        } else {
           param_value->accept(*this);
-	}
-	break;
+        }
+        current_param_is_pointer = false;
+	      break;
       case function_param_iterator_c::direction_extref:
         /* TODO! */
         ERROR;
-	break;
+	      break;
     } /* switch */
   } /* for(...) */
 
   // symbol->parameter_assignment->accept(*this);
   s4o.print(")");
+  /* the data type returned by the function, and stored in the il default variable... */
   return NULL;
 }
 
@@ -1279,7 +1372,7 @@ void *visit(XORN_operator_c *symbol)	{
 void *visit(ADD_operator_c *symbol)	{
   if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
       search_expression_type->is_time_type(this->current_operand_type)) {
-    XXX_function("__time_add", &(this->default_variable_name), this->current_operand);
+    XXX_function("__TIME_ADD", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
@@ -1298,7 +1391,7 @@ void *visit(ADD_operator_c *symbol)	{
 void *visit(SUB_operator_c *symbol)	{
   if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
       search_expression_type->is_time_type(this->current_operand_type)) {
-    XXX_function("__time_sub", &(this->default_variable_name), this->current_operand);
+    XXX_function("__TIME_SUB", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
@@ -1317,9 +1410,8 @@ void *visit(SUB_operator_c *symbol)	{
 void *visit(MUL_operator_c *symbol)	{
   if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
       search_expression_type->is_integer_type(this->current_operand_type)) {
-    XXX_function("__time_mul", &(this->default_variable_name), this->current_operand);
+    XXX_function("__TIME_MUL", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
-    this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
   }
   if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
@@ -1334,13 +1426,19 @@ void *visit(MUL_operator_c *symbol)	{
 }
 
 void *visit(DIV_operator_c *symbol)	{
+  if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
+      search_expression_type->is_integer_type(this->current_operand_type)) {
+    XXX_function("__TIME_DIV", &(this->default_variable_name), this->current_operand);
+    /* the data type resulting from this operation... */
+    return NULL;
+  }
   if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
     XXX_operator(&(this->default_variable_name), " /= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
   }
-  else {ERROR;}
+  ERROR;
   return NULL;
 }
 
@@ -1351,7 +1449,7 @@ void *visit(MOD_operator_c *symbol)	{
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
   }
-  else {ERROR;}
+  ERROR;
   return NULL;
 }
 
