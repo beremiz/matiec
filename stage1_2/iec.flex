@@ -534,7 +534,6 @@ digit		[0-9]
 octal_digit	[0-7]
 hex_digit	{digit}|[A-F]
 identifier	({letter}|(_({letter}|{digit})))((_?({letter}|{digit}))*)
-invalid_identifier ({letter}|{digit}|_)*
 
 /*******************/
 /* B.1.2 Constants */
@@ -885,18 +884,19 @@ END_VAR{st_whitespace}			{unput_text(strlen("END_VAR"));
 	/* body_state -> (il_state | st_state) */
 <body_state>{
 {st_whitespace_no_pragma}			/* Eat any whitespace */
-{qualified_identifier}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
+{qualified_identifier}{st_whitespace}":="	  unput_text(0); BEGIN(st_state);
 {qualified_identifier}"["			unput_text(0); BEGIN(st_state);
 
-RETURN						unput_text(0); BEGIN(st_state);
-IF						unput_text(0); BEGIN(st_state);
+RETURN					unput_text(0); BEGIN(st_state);
+IF							unput_text(0); BEGIN(st_state);
 CASE						unput_text(0); BEGIN(st_state);
-FOR						unput_text(0); BEGIN(st_state);
+FOR							unput_text(0); BEGIN(st_state);
 WHILE						unput_text(0); BEGIN(st_state);
-REPEAT						unput_text(0); BEGIN(st_state);
+REPEAT					unput_text(0); BEGIN(st_state);
 EXIT						unput_text(0); BEGIN(st_state);
+
 	/* ':=' occurs only in transitions, and not Function or FB bodies! */
-:=						unput_text(0); BEGIN(st_state);  
+:=							unput_text(0); BEGIN(st_state);
 
 	/* Hopefully, the above rules (along with the last one),
          * used to distinguish ST from IL, are 
@@ -1484,7 +1484,6 @@ EXIT		return EXIT;		/* Keyword */
 	 *
 	 *  e.g.:  ':'  '('  ')'  '+'  '*'  ...
 	 */
-{invalid_identifier} return INVALID_IDENTIFIER;
 .	{return yytext[0];}
 
 

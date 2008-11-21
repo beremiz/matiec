@@ -295,7 +295,6 @@ void print_err_msg(int first_line,
 */
 %token <ID>	identifier_token
 %type  <leaf>	identifier
-%token INVALID_IDENTIFIER
 
 /*********************/
 /* B 1.2 - Constants */
@@ -839,6 +838,7 @@ void print_err_msg(int first_line,
 %type  <leaf>	transition_priority
 %type  <leaf>	transition_condition
 %type  <leaf>	action
+%type  <leaf>	action_body
 %type  <leaf>	transition_name
 
 
@@ -5067,21 +5067,32 @@ transition_condition:
 
 action:
 //  ACTION identifier ':' ... 
-  ACTION action_name ':' {cmd_goto_body_state();} function_block_body END_ACTION
-	{$$ = new action_c($2, $5, locloc(@$));}
+  ACTION action_name {cmd_goto_body_state();} action_body END_ACTION
+	{$$ = new action_c($2, $4, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
-| ACTION ':' {cmd_goto_body_state();} function_block_body END_ACTION
-  {$$ = NULL; print_err_msg(locl(@1), locf(@2), "no action name defined in action declaration."); yynerrs++;}
-| ACTION error ':' {cmd_goto_body_state();} function_block_body END_ACTION
+| ACTION {cmd_goto_body_state();} action_body END_ACTION
+  {$$ = NULL; print_err_msg(locl(@1), locf(@3), "no action name defined in action declaration."); yynerrs++;}
+| ACTION error {cmd_goto_body_state();} action_body END_ACTION
 	{$$ = NULL; print_err_msg(locf(@2), locl(@2), "invalid action name defined in action declaration."); yyerrok;}
 | ACTION action_name {cmd_goto_body_state();} function_block_body END_ACTION
 	{$$ = NULL; print_err_msg(locl(@2), locf(@4), "':' missing after action name in action declaration."); yynerrs++;}
-| ACTION action_name ':' END_ACTION
-	{$$ = NULL; print_err_msg(locl(@3), locf(@4), "no body defined in action declaration."); yynerrs++;}
-/*| ACTION action_name ':' {cmd_goto_body_state();} function_block_body END_OF_INPUT
-	{$$ = NULL; print_err_msg(locf(@1), locl(@3), "unclosed action declaration."); yyerrok;}*/
+/*| ACTION action_name {cmd_goto_body_state();} action_body END_OF_INPUT
+	{$$ = NULL; print_err_msg(locf(@1), locl(@2), "unclosed action declaration."); yyerrok;}*/
 | ACTION error END_ACTION
 	{$$ = NULL; print_err_msg(locf(@2), locl(@2), "unknown error in action declaration."); yyerrok;}
+/* ERROR_CHECK_END */
+;
+
+action_body:
+  ':' function_block_body
+  {$$ = $2;}
+/* ERROR_CHECK_BEGIN */
+| ':' error
+	{$$ = NULL;
+	 if (is_current_syntax_token()) {print_err_msg(locl(@1), locf(@2), "no body defined in action declaration.");}
+	 else {print_err_msg(locf(@2), locl(@2), "invalid body defined in action declaration."); yyclearin;}
+	 yyerrok;
+	}
 /* ERROR_CHECK_END */
 ;
 
