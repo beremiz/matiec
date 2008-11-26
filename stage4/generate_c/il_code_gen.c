@@ -12845,7 +12845,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_num_type(IN_type_symbol))
+            
             {
         
                 function_name = (symbol_c*)(new pragma_c("__move_"));

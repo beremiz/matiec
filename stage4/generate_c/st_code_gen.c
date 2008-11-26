@@ -14417,7 +14417,7 @@ switch(current_function_type){
             symbol_c *IN_type_symbol = search_expression_type->get_type(IN_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
             
-            if(search_expression_type->is_num_type(IN_type_symbol))
+            
             {
         
                 function_name = (symbol_c*)(new pragma_c("__move_"));
