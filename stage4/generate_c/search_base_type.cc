@@ -94,6 +94,7 @@ class search_base_type_c: public null_visitor_c {
     void *visit(wstring_type_name_c *symbol)	{return (void *)symbol;}
     void *visit(constant_int_type_name_c *symbol)    {return (void *)symbol;}
     void *visit(constant_real_type_name_c *symbol)    {return (void *)symbol;}
+    void *visit(direct_variable_type_name_c *symbol)    {return (void *)symbol;}
 
 /********************************/
 /* B 1.3.3 - Derived data types */

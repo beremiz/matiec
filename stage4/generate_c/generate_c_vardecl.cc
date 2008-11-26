@@ -1060,6 +1060,16 @@ void *visit(located_var_decl_c *symbol) {
         symbol->location->accept(*this);
       s4o.print(" = ");
       symbol->location->accept(*this);
+      if (this->current_var_init_symbol != NULL) {
+        s4o.print("; *");
+        print_variable_prefix();
+        if (symbol->variable_name != NULL)
+          symbol->variable_name->accept(*this);
+        else
+          symbol->location->accept(*this);
+        s4o.print(" = ");
+        this->current_var_init_symbol->accept(*this);
+      }
       s4o.print(";}");
       break;
 

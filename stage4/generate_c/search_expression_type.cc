@@ -120,6 +120,7 @@ class search_expression_type_c: public search_constant_type_c {
       if (typeid(*type_symbol) == typeid(udint_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(ulint_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(constant_int_type_name_c)) {return true;}
+      if (typeid(*type_symbol) == typeid(direct_variable_type_name_c)) {return true;}
       return false;
     }
 
@@ -127,6 +128,7 @@ class search_expression_type_c: public search_constant_type_c {
       if (typeid(*type_symbol) == typeid(real_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(lreal_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(constant_real_type_name_c)) {return true;}
+      if (typeid(*type_symbol) == typeid(direct_variable_type_name_c)) {return true;}
       return false;
     }
 
@@ -140,6 +142,7 @@ class search_expression_type_c: public search_constant_type_c {
       if (typeid(*type_symbol) == typeid(dword_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(lword_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(constant_int_type_name_c)) {return true;}
+      if (typeid(*type_symbol) == typeid(direct_variable_type_name_c)) {return true;}
       return false;
     }
 
@@ -156,17 +159,19 @@ class search_expression_type_c: public search_constant_type_c {
       if ((typeid(*first_type) == typeid(constant_int_type_name_c) && is_binary_type(second_type))) {return true;}
       if (is_real_type(first_type) && (typeid(*second_type) == typeid(constant_real_type_name_c))) {return true;}
       if ((typeid(*first_type) == typeid(constant_real_type_name_c) && is_real_type(second_type))) {return true;}
+      if (typeid(*first_type) == typeid(direct_variable_type_name_c)) {return true;}
+      if (typeid(*second_type) == typeid(direct_variable_type_name_c)) {return true;}
       return false;
     }
 
     symbol_c* common_type(symbol_c *first_type, symbol_c *second_type) {
       if (typeid(*first_type) == typeid(*second_type)) {return first_type;}
-      if (is_integer_type(first_type) && (typeid(*second_type) == typeid(constant_int_type_name_c))) {return first_type;}
-      if ((typeid(*first_type) == typeid(constant_int_type_name_c) && is_integer_type(second_type))) {return second_type;}
-      if (is_binary_type(first_type) && (typeid(*second_type) == typeid(constant_int_type_name_c))) {return first_type;}
-      if ((typeid(*first_type) == typeid(constant_int_type_name_c) && is_binary_type(second_type))) {return second_type;}
-      if (is_real_type(first_type) && (typeid(*second_type) == typeid(constant_real_type_name_c))) {return first_type;}
-      if ((typeid(*first_type) == typeid(constant_real_type_name_c) && is_real_type(second_type))) {return second_type;}
+      if (is_integer_type(first_type) && (typeid(*second_type) == typeid(constant_int_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c))) {return first_type;}
+      if ((typeid(*first_type) == typeid(constant_int_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c)) && is_integer_type(second_type)) {return second_type;}
+      if (is_binary_type(first_type) && (typeid(*second_type) == typeid(constant_int_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c))) {return first_type;}
+      if ((typeid(*first_type) == typeid(constant_int_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c)) && is_binary_type(second_type)) {return second_type;}
+      if (is_real_type(first_type) && (typeid(*second_type) == typeid(constant_real_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c))) {return first_type;}
+      if ((typeid(*first_type) == typeid(constant_real_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c)) && is_real_type(second_type)) {return second_type;}
       return NULL;
     }
 
@@ -213,6 +218,18 @@ class search_expression_type_c: public search_constant_type_c {
     
     return NULL;
   }
+
+/********************************************/
+/* B 1.4.1 - Directly Represented Variables */
+/********************************************/
+	void *visit(direct_variable_c *symbol) {
+	  switch (symbol->value[2]) {
+	  	case 'X': // bit
+	  	  return (void *)&bool_type_name;
+	  	default:
+	  	  return (void *)&direct_variable_type_name;
+	  }
+	}
 
 /*************************************/
 /* B 1.4.2 - Multi-element variables */

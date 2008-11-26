@@ -66,6 +66,7 @@ class search_constant_type_c: public search_visitor_c {
 
   static constant_real_type_name_c     constant_real_type_name;
   static constant_int_type_name_c      constant_int_type_name;
+  static direct_variable_type_name_c   direct_variable_type_name;
 
   public:
     symbol_c *get_type(symbol_c *constant) {
@@ -73,6 +74,7 @@ class search_constant_type_c: public search_visitor_c {
     }
 
   public:
+
 /*********************/
 /* B 1.2 - Constants */
 /*********************/
@@ -128,7 +130,6 @@ class search_constant_type_c: public search_visitor_c {
     void *visit(date_and_time_c *symbol) {return (void *)&dt_type_name;}
 };
 
-
 real_type_name_c     search_constant_type_c::real_type_name;
 sint_type_name_c     search_constant_type_c::sint_type_name;
 lint_type_name_c     search_constant_type_c::lint_type_name;
@@ -153,6 +154,7 @@ int_type_name_c     search_constant_type_c::int_type_name;
 
 constant_real_type_name_c     search_constant_type_c::constant_real_type_name;
 constant_int_type_name_c      search_constant_type_c::constant_int_type_name;
+direct_variable_type_name_c   search_constant_type_c::direct_variable_type_name;
 
 
 

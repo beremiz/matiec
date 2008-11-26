@@ -308,6 +308,7 @@ void *visit(string_type_name_c *symbol) {s4o.print("STRING"); return NULL;}
 void *visit(wstring_type_name_c *symbol) {s4o.print("WSTRING"); return NULL;}
 void *visit(constant_int_type_name_c *symbol) {return NULL;}
 void *visit(constant_real_type_name_c *symbol) {return NULL;}
+void *visit(direct_variable_type_name_c *symbol) {return NULL;}
 
 
 /********************************/

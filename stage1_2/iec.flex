@@ -885,6 +885,7 @@ END_VAR{st_whitespace}			{unput_text(strlen("END_VAR"));
 <body_state>{
 {st_whitespace_no_pragma}			/* Eat any whitespace */
 {qualified_identifier}{st_whitespace}":="	  unput_text(0); BEGIN(st_state);
+{direct_variable_standard}{st_whitespace}":="	  unput_text(0); BEGIN(st_state);
 {qualified_identifier}"["			unput_text(0); BEGIN(st_state);
 
 RETURN					unput_text(0); BEGIN(st_state);
