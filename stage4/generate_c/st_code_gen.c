@@ -13740,9 +13740,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__add_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -13917,9 +13917,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__mul_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -14700,9 +14700,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__and_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -14784,9 +14784,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__or_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -14868,9 +14868,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__xor_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -15066,9 +15066,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__max_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -15150,9 +15150,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__min_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -15326,9 +15326,9 @@ switch(current_function_type){
                         
                                 function_name = (symbol_c*)(new pragma_c("__mux_"));
                                 
-                                char nb_param_str[10];
+                                char* nb_param_str = new char[10];
                                 sprintf(nb_param_str, "%d", nb_param);
-                                ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                                 ADD_PARAM_LIST(K_param_value, K_type_symbol, function_param_iterator_c::direction_in)
                                 ADD_PARAM_LIST(IN0_param_value, IN0_type_symbol, function_param_iterator_c::direction_in)
                                 ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
@@ -15417,9 +15417,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__gt_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -15501,9 +15501,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__ge_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -15585,9 +15585,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__eq_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -15669,9 +15669,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__lt_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -15753,9 +15753,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__le_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -15837,9 +15837,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__ne_"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
@@ -16176,9 +16176,9 @@ switch(current_function_type){
                 
                         function_name = (symbol_c*)(new pragma_c("__concat"));
                         
-                        char nb_param_str[10];
+                        char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c(nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
