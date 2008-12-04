@@ -495,12 +495,12 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
           {
             char *qualifier = (char *)symbol->action_qualifier->accept(*this);
             s4o.print(s4o.indent_spaces + "if (");
-            if (strcmp(qualifier, "N") == 0) {
+            if (strcmp(qualifier, "N") == 0 || strcmp(qualifier, "S") == 0 ||
+                strcmp(qualifier, "R") == 0) {
               s4o.print("active");
             }
             if (strcmp(qualifier, "P") == 0 || strcmp(qualifier, "SD") == 0 || 
-                strcmp(qualifier, "DS") == 0 || strcmp(qualifier, "SL") == 0 || 
-                strcmp(qualifier, "S") == 0 || strcmp(qualifier, "R") == 0) {
+                strcmp(qualifier, "DS") == 0 || strcmp(qualifier, "SL") == 0) {
               s4o.print("activated");
             }
             if (strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
