@@ -926,7 +926,7 @@ ANY(__move_)
 /**************/
 #define __shift_(fname, TYPENAME, OP)\
 static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, TYPENAME IN, USINT N) {\
-  TEST_EN_COND(TYPENAME, N < 0)\
+  TEST_EN(TYPENAME)\
   return IN OP N;\
 }
 
@@ -940,7 +940,7 @@ ANY_NBIT(__shr_)
 
 #define __ror_(TYPENAME)\
 static inline TYPENAME __ror_##TYPENAME(EN_ENO_PARAMS, TYPENAME IN, USINT N){\
-  TEST_EN_COND(TYPENAME, N < 0)\
+  TEST_EN(TYPENAME)\
   N %= 8*sizeof(TYPENAME);\
   return (IN >> N) | (IN << 8*sizeof(TYPENAME)-N);\
 }
@@ -949,7 +949,7 @@ ANY_NBIT(__ror_)
 
 #define __rol_(TYPENAME)\
 static inline TYPENAME __rol_##TYPENAME(EN_ENO_PARAMS, TYPENAME IN, USINT N){\
-  TEST_EN_COND(TYPENAME, N < 0)\
+  TEST_EN(TYPENAME)\
   N %= 8*sizeof(TYPENAME);\
   return (IN << N) | (IN >> 8*sizeof(TYPENAME)-N);\
 }
@@ -1054,7 +1054,7 @@ __min_time(TIME)
     /**************/
 #define __mux_(TYPENAME) \
 static inline TYPENAME __mux_##TYPENAME(EN_ENO_PARAMS, UINT param_count, UINT K, ...){\
-  TEST_EN_COND(TYPENAME, K < 0 || K >= param_count)\
+  TEST_EN_COND(TYPENAME, K >= param_count)\
   va_list ap;\
   UINT i;\
   TYPENAME tmp = __INIT_##TYPENAME;\
