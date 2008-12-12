@@ -139,6 +139,16 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     }
     
     void declare_variable(symbol_c *symbol, const char* type = "VAR") {
+      print_var_number();
+      s4o.print(";");
+      s4o.print(type);
+      s4o.print(";");
+      print_symbol_list();
+      symbol->accept(*this);
+      s4o.print(";");
+      print_symbol_list();
+      symbol->accept(*this);
+      s4o.print(";");
       if (strcmp(type, "FB") == 0) {
         SYMBOL *current_name;
         current_name = new SYMBOL;
@@ -148,16 +158,6 @@ class generate_var_list_c: protected generate_c_typedecl_c {
         current_symbol_list.pop_back();
       }
       else {
-        print_var_number();
-        s4o.print(";");
-        s4o.print(type);
-        s4o.print(";");
-        print_symbol_list();
-        symbol->accept(*this);
-        s4o.print(";");
-        print_symbol_list();
-        symbol->accept(*this);
-        s4o.print(";");
         this->current_var_type_symbol->accept(*this);
         s4o.print(";\n");
       }
@@ -397,6 +397,8 @@ class generate_var_list_c: protected generate_c_typedecl_c {
 /*****************************/
     void *visit(function_block_declaration_c *symbol) {
       if (current_declarationtype == variables_dt && configuration_defined) {
+        symbol->fblock_name->accept(*this);
+        s4o.print(";\n");
         symbol->var_declarations->accept(*this);
         symbol->fblock_body->accept(*this);
       }
