@@ -410,6 +410,8 @@ class generate_var_list_c: protected generate_c_typedecl_c {
 /**********************/
     void *visit(program_declaration_c *symbol) {
       if (current_declarationtype == variables_dt && configuration_defined) {
+        symbol->program_type_name->accept(*this);
+        s4o.print(";\n");
         symbol->var_declarations->accept(*this);
         symbol->function_block_body->accept(*this);
       }
