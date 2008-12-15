@@ -21,7 +21,8 @@ uninstall:
 
 
 clean:
-	-rm -f iec2iec iec2c *.o absyntax/*.o Makefile.depend
+	-rm -f iec2iec iec2c *.o absyntax/*.o
+	echo > Makefile.depend
 # make something everywhere (ie, in all Makefiles that have that target)
 	find . -depth -mindepth 2 -maxdepth 2 -name Makefile -printf %h\\n | xargs -i make -C{} $@
 

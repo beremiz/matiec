@@ -6,7 +6,7 @@ default: all
 all: generate_iec.o
 
 clean:
-	-rm -f Makefile.depend
+	echo > Makefile.depend
 	-rm -f *.o */*.o 
 
 #get warnings, debugging information and optimization

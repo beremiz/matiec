@@ -6,7 +6,8 @@ default: all
 all: generate_c.o
 
 clean:
-	-rm -f *.o */*.o Makefile.depend
+	echo > Makefile.depend
+	-rm -f *.o */*.o
 
 CXXFLAGS += -Wno-unused
 CXXFLAGS += -I. -I../* -I../../absyntax
