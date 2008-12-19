@@ -227,7 +227,7 @@ class type_initial_value_c : public null_visitor_c {
     }
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
     void *visit(array_specification_c *symbol)	{
-      symbol_c *init_value = (symbol_c *)symbol->non_generic_type_name->accept(*this);
+      //symbol_c *init_value = (symbol_c *)symbol->non_generic_type_name->accept(*this);
 
       /* Now build a array_initial_elements_list_c list, and populate it
        * with 1 element of the array_initial_elements_c class
@@ -250,12 +250,12 @@ class type_initial_value_c : public null_visitor_c {
        * in something else...
        */
 	// NOTE: We are leaking memory, as the integer will never get free'd!!
-      integer_c *integer = new integer_c("1");
+      //integer_c *integer = new integer_c("1");
 	// NOTE: We are leaking memory, as the array_initial_elements will never get free'd!!
-      array_initial_elements_c *array_initial_elements = new array_initial_elements_c(integer, init_value);
+      //array_initial_elements_c *array_initial_elements = new array_initial_elements_c(integer, init_value);
 	// NOTE: We are leaking memory, as the array_initial_elements_list will never get free'd!!
       array_initial_elements_list_c *array_initial_elements_list  = new array_initial_elements_list_c();
-      array_initial_elements_list->add_element(array_initial_elements);
+      //array_initial_elements_list->add_element(array_initial_elements);
       return array_initial_elements_list;
     }
 /* helper symbol for array_specification */
@@ -277,11 +277,16 @@ class type_initial_value_c : public null_visitor_c {
     void *visit(structure_type_declaration_c *symbol) {return NULL;}
 /* structure_type_name ASSIGN structure_initialization */
 /* structure_initialization may be NULL ! */
-    void *visit(initialized_structure_c *symbol)	{return NULL;}
+    void *visit(initialized_structure_c *symbol)	{
+      return handle_type_spec(symbol->structure_type_name, symbol->structure_initialization);
+    }
 /* helper symbol for structure_declaration */
 /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
 /* structure_element_declaration_list structure_element_declaration ';' */
-    void *visit(structure_element_declaration_list_c *symbol)	{return NULL;}
+    void *visit(structure_element_declaration_list_c *symbol)	{
+      structure_element_initialization_list_c *structure_element_initialization_list = new structure_element_initialization_list_c();
+      return structure_element_initialization_list;
+    }
 /*  structure_element_name ':' *_spec_init */
     void *visit(structure_element_declaration_c *symbol)	{return NULL;}
 /* helper symbol for structure_initialization */

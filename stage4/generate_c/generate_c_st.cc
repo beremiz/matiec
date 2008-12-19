@@ -628,7 +628,9 @@ void *visit(fb_invocation_c *symbol) {
   function_call_param_iterator_c function_call_param_iterator(symbol);
   for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
     function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
-
+    
+    fprintf(stderr, "param : %s\n", param_name->value);
+    
     /* Get the value from a foo(<param_name> = <param_value>) style call */
     symbol_c *param_value = function_call_param_iterator.search(param_name);
 

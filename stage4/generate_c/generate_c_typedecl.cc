@@ -203,7 +203,7 @@ void *visit(subrange_type_declaration_c *symbol) {
   current_basetypedeclaration = none_bd;
   s4o_incl.print(" ");
   symbol->subrange_type_name->accept(*basedecl);
-  s4o_incl.print(";\n\n");
+  s4o_incl.print(";\n");
   
   current_type_name = symbol->subrange_type_name;
   
@@ -376,13 +376,20 @@ void *visit(array_type_declaration_c *symbol) {
   return NULL;
 }
 
-/* array_specification [ASSIGN array_initialization} */
+/* array_specification [ASSIGN array_initialization] */
 /* array_initialization may be NULL ! */
 void *visit(array_spec_init_c *symbol) {
   TRACE("array_spec_init_c");
-  current_typedefinition = array_td;
-  symbol->array_specification->accept(*this);
-  current_typedefinition = none_td;
+  
+  identifier_c *array_type_name = dynamic_cast<identifier_c *>(symbol->array_specification);
+  
+  if (array_type_name == NULL) {
+    current_typedefinition = array_td;
+    symbol->array_specification->accept(*this);
+    current_typedefinition = none_td;
+  }
+  else
+    symbol->array_specification->accept(*basedecl);
   return NULL;
 }
 
@@ -435,7 +442,7 @@ void *visit(data_type_declaration_c *symbol) {
 /* helper symbol for data_type_declaration */
 void *visit(type_declaration_list_c *symbol) {
   TRACE("type_declaration_list_c");
-  return print_list(symbol, "", "\n");
+  return print_list_incl(symbol, "", "\n", "\n");
 }
 
 /*  simple_type_name ':' simple_spec_init */
@@ -531,6 +538,8 @@ void *visit(structure_type_declaration_c *symbol) {
 //SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
 void *visit(initialized_structure_c *symbol) {
   TRACE("initialized_structure_c");
+  fprintf(stderr, "initialized_structure_c\n");
+  
   symbol->structure_type_name->accept(*this);
   return NULL;
 }
@@ -541,15 +550,15 @@ void *visit(initialized_structure_c *symbol) {
 //SYM_LIST(structure_element_declaration_list_c)
 void *visit(structure_element_declaration_list_c *symbol) {
   TRACE("structure_element_declaration_list_c");
-  s4o.print("struct {\n");
-  s4o.indent_right();
-  s4o.print(s4o.indent_spaces);
+  s4o_incl.print("struct {\n");
+  s4o_incl.indent_right();
+  s4o_incl.print(s4o_incl.indent_spaces);
 
-  print_list(symbol);
+  print_list_incl(symbol, "", s4o_incl.indent_spaces, "");
 
-  s4o.indent_left();
-  s4o.print(s4o.indent_spaces);
-  s4o.print("}");
+  s4o_incl.indent_left();
+  s4o_incl.print(s4o_incl.indent_spaces);
+  s4o_incl.print("}");
   return NULL;
 }
 
@@ -559,10 +568,10 @@ void *visit(structure_element_declaration_c *symbol) {
   TRACE("structure_element_declaration_c");
 
   symbol->spec_init->accept(*this);
-  s4o.print(" ");
-  symbol->structure_element_name->accept(*this);
-  s4o.print(";\n");
-  s4o.print(s4o.indent_spaces);
+  s4o_incl.print(" ");
+  symbol->structure_element_name->accept(*basedecl);
+  s4o_incl.print(";\n");
+  s4o_incl.print(s4o.indent_spaces);
 
   return NULL;
 }
@@ -575,7 +584,7 @@ void *visit(structure_element_initialization_list_c *symbol) {
   TRACE("structure_element_initialization_list_c");
 
   // TODO ???
-  ERROR;
+  //ERROR;
   return NULL;
 }
 
@@ -585,7 +594,7 @@ void *visit(structure_element_initialization_c *symbol) {
   TRACE("structure_element_initialization_c");
 
   // TODO ???
-  ERROR;
+  //ERROR;
   return NULL;
 }
 

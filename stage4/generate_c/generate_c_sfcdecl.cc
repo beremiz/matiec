@@ -166,6 +166,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(s4o.indent_spaces + "}\n");
           
           /* last_ticktime initialisation */
+          s4o.print(s4o.indent_spaces);
           print_variable_prefix();
           s4o.print("__lasttick_time = __CURRENT_TIME;\n");
           break;

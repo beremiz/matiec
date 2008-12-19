@@ -65,9 +65,21 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     } declarationtype_t;
 
     declarationtype_t current_declarationtype;
-  
+    
+    typedef enum {
+      none_vtc,
+      variable_vtc,
+      pointer_vtc,
+      array_vtc,
+      structure_vtc,
+      function_block_vtc
+    } vartypecategory_t;
+    
+    vartypecategory_t current_var_type_category;
+    
   private:
     symbol_c *current_var_type_symbol;
+    symbol_c *current_var_type_name;
     unsigned int current_var_number;
     unsigned int step_number;
     unsigned int transition_number;
@@ -82,24 +94,34 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     : generate_c_typedecl_c(s4o_ptr) {
       search_fb_typedecl = new search_fb_typedecl_c(scope);
       current_var_number = 0;
-      current_var_type_symbol = NULL;
+      current_var_type_symbol = current_var_type_name = NULL;
       current_declarationtype = none_dt;
+      current_var_type_category = none_vtc;
     }
     
     ~generate_var_list_c(void) {
       delete search_fb_typedecl;
     }
     
-    void update_var_type_symbol(symbol_c *symbol, bool is_fb = false) {
+    void update_var_type_symbol(symbol_c *symbol) {
       
-      this->current_var_type_symbol = spec_init_sperator_c::get_spec(symbol);
-      if (this->current_var_type_symbol == NULL)
+      this->current_var_type_name = spec_init_sperator_c::get_spec(symbol);
+      if (this->current_var_type_name == NULL)
         ERROR;
       
-      if (is_fb)
-        this->current_var_type_symbol = search_fb_typedecl->get_decl(this->current_var_type_symbol);
-      else
-        this->current_var_type_symbol = (symbol_c *)(this->current_var_type_symbol->accept(search_base_type));
+      this->current_var_type_symbol = search_fb_typedecl->get_decl(this->current_var_type_name);
+      if (this->current_var_type_symbol != NULL)
+        this->current_var_type_category = function_block_vtc;
+      else {
+        this->current_var_type_symbol = (symbol_c *)(this->current_var_type_name->accept(search_base_type));
+        
+        structure_element_declaration_list_c *structure_symbol = dynamic_cast<structure_element_declaration_list_c *>(this->current_var_type_symbol);
+        if (structure_symbol != NULL)
+          this->current_var_type_category = structure_vtc;
+        else
+          this->current_var_type_category = variable_vtc;
+      }
+      
       if (this->current_var_type_symbol == NULL)
         ERROR;
     }
@@ -128,38 +150,63 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       s4o.print("\n");
     }
     
-    void declare_variables(symbol_c *symbol, const char* type = "VAR") {
+    void declare_variables(symbol_c *symbol) {
       list_c *list = dynamic_cast<list_c *>(symbol);
       /* should NEVER EVER occur!! */
       if (list == NULL) ERROR;
 
       for(int i = 0; i < list->n; i++) {
-        declare_variable(list->elements[i], type);
+        declare_variable(list->elements[i]);
       }
     }
     
-    void declare_variable(symbol_c *symbol, const char* type = "VAR") {
+    void declare_variable(symbol_c *symbol) {
       print_var_number();
       s4o.print(";");
-      s4o.print(type);
-      s4o.print(";");
-      print_symbol_list();
-      symbol->accept(*this);
-      s4o.print(";");
-      print_symbol_list();
-      symbol->accept(*this);
-      s4o.print(";");
-      if (strcmp(type, "FB") == 0) {
-        SYMBOL *current_name;
-        current_name = new SYMBOL;
-        current_name->symbol = symbol;
-        current_symbol_list.push_back(*current_name);
-        this->current_var_type_symbol->accept(*this);
-        current_symbol_list.pop_back();
+      switch (this->current_var_type_category) {
+        case pointer_vtc:
+          s4o.print("PT");
+          break;
+        case array_vtc:
+          s4o.print("ARRAY");
+          break;
+        case structure_vtc:
+          s4o.print("STRUCT");
+          break;
+        case function_block_vtc:
+          s4o.print("FB");
+          break;
+        default:
+          s4o.print("VAR");
+          break;
       }
-      else {
-        this->current_var_type_symbol->accept(*this);
-        s4o.print(";\n");
+      s4o.print(";");
+      print_symbol_list();
+      symbol->accept(*this);
+      s4o.print(";");
+      print_symbol_list();
+      symbol->accept(*this);
+      s4o.print(";");
+      switch (this->current_var_type_category) {
+        case structure_vtc:
+        case function_block_vtc:
+          this->current_var_type_name->accept(*this);
+          s4o.print(";\n");
+          SYMBOL *current_name;
+          current_name = new SYMBOL;
+          current_name->symbol = symbol;
+          current_symbol_list.push_back(*current_name);
+          this->current_var_type_symbol->accept(*this);
+          current_symbol_list.pop_back();
+          break;
+        case array_vtc:
+          this->current_var_type_name->accept(*this);
+          s4o.print(";\n");
+          break;
+        default:
+          this->current_var_type_symbol->accept(*this);
+          s4o.print(";\n");
+          break;
       }
     }
     
@@ -209,8 +256,10 @@ class generate_var_list_c: protected generate_c_typedecl_c {
          */
         update_var_type_symbol(symbol->located_var_spec_init);
         
-        if (symbol->variable_name != NULL)
-          declare_variable(symbol->variable_name, "PT");
+        if (symbol->variable_name != NULL) {
+          this->current_var_type_category = pointer_vtc;
+          declare_variable(symbol->variable_name);
+        }
         
         current_var_type_symbol = NULL;
         return NULL;
@@ -224,7 +273,8 @@ class generate_var_list_c: protected generate_c_typedecl_c {
        * current_var_init_symbol private variables...
        */
       update_var_type_symbol(symbol->array_spec_init);
-    
+      
+      this->current_var_type_category = array_vtc;
       declare_variables(symbol->var1_list);
     
       /* Values no longer in scope, and therefore no longer used.
@@ -272,10 +322,10 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       /* Start off by setting the current_var_type_symbol and
        * current_var_init_symbol private variables...
        */
-      update_var_type_symbol(symbol, true);
+      update_var_type_symbol(symbol);
     
       /* now to produce the c equivalent... */
-      declare_variables(symbol->fb_name_list, "FB");
+      declare_variables(symbol->fb_name_list);
     
       /* Values no longer in scope, and therefore no longer used.
        * Make an effort to keep them set to NULL when not in use
@@ -297,14 +347,12 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       /* Start off by setting the current_var_type_symbol and
        * current_var_init_symbol private variables...
        */
-      this->current_var_type_symbol = (symbol_c *)(symbol->specification->accept(*search_fb_typedecl));
-      if (this->current_var_type_symbol == NULL) {
-        this->current_var_type_symbol = symbol->specification;
+      update_var_type_symbol(symbol);
       
-        declare_variable(symbol->global_var_name, "PT");
-      }
-      else
-        declare_variable(symbol->global_var_name, "FB");
+      /* now to produce the c equivalent... */
+      if (this->current_var_type_category == variable_vtc)
+        this->current_var_type_category = pointer_vtc;
+      declare_variable(symbol->global_var_name);
       
       /* Values no longer in scope, and therefore no longer used.
        * Make an effort to keep them set to NULL when not in use
@@ -350,7 +398,8 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     // SYM_REF2(global_var_spec_c, global_var_name, location)
     void *visit(global_var_spec_c *symbol) {
       if (symbol->global_var_name != NULL)
-        declare_variable(symbol->global_var_name, "PT");
+        this->current_var_type_category = pointer_vtc;
+        declare_variable(symbol->global_var_name);
       return NULL;
     }
     
@@ -381,6 +430,31 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       return NULL;
     }
 
+    void *visit(structure_element_declaration_list_c *symbol) {
+      for(int i = 0; i < symbol->n; i++) {
+        symbol->elements[i]->accept(*this);
+      }
+      return NULL;
+    }
+
+    void *visit(structure_element_declaration_c *symbol) {
+      /* Start off by setting the current_var_type_symbol and
+       * current_var_init_symbol private variables...
+       */
+      update_var_type_symbol(symbol->spec_init);
+      
+      /* now to produce the c equivalent... */
+      declare_variable(symbol->structure_element_name);
+      
+      /* Values no longer in scope, and therefore no longer used.
+       * Make an effort to keep them set to NULL when not in use
+       * in order to catch bugs as soon as possible...
+       */
+      reset_var_type_symbol();
+      
+      return NULL;
+    }
+
 /**************************************/
 /* B.1.5 - Program organization units */
 /**************************************/
@@ -397,8 +471,6 @@ class generate_var_list_c: protected generate_c_typedecl_c {
 /*****************************/
     void *visit(function_block_declaration_c *symbol) {
       if (current_declarationtype == variables_dt && configuration_defined) {
-        symbol->fblock_name->accept(*this);
-        s4o.print(";\n");
         symbol->var_declarations->accept(*this);
         symbol->fblock_body->accept(*this);
       }
@@ -410,8 +482,6 @@ class generate_var_list_c: protected generate_c_typedecl_c {
 /**********************/
     void *visit(program_declaration_c *symbol) {
       if (current_declarationtype == variables_dt && configuration_defined) {
-        symbol->program_type_name->accept(*this);
-        s4o.print(";\n");
         symbol->var_declarations->accept(*this);
         symbol->function_block_body->accept(*this);
       }
@@ -552,9 +622,9 @@ class generate_var_list_c: protected generate_c_typedecl_c {
           /* Start off by setting the current_var_type_symbol and
            * current_var_init_symbol private variables...
            */
-          update_var_type_symbol(symbol->program_type_name, true);
+          update_var_type_symbol(symbol->program_type_name);
           
-          declare_variable(symbol->program_name, "FB");
+          declare_variable(symbol->program_name);
           
           /* Values no longer in scope, and therefore no longer used.
            * Make an effort to keep them set to NULL when not in use

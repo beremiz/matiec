@@ -87,6 +87,7 @@ class generate_c_base_c: public iterator_visitor_c {
     ~generate_c_base_c(void) {}
 
     void set_variable_prefix(const char *variable_prefix) {variable_prefix_ = variable_prefix;}
+    const char *get_variable_prefix(void) {return variable_prefix_;}
     bool is_variable_prefix_null(void) {return variable_prefix_ == NULL;}
     void print_variable_prefix(void) {
       if (variable_prefix_ != NULL)

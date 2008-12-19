@@ -244,13 +244,16 @@ class function_param_iterator_c : public null_visitor_c {
       if (en_declared) ERROR;
       return (void *)declare_en_param();
     }
+
+    /* var1_list ':' array_spec_init */
+    //SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
+    void *visit(array_var_init_decl_c *symbol) {TRACE("array_var_init_decl_c"); return symbol->var1_list->accept(*this);}
+    
+    /*  var1_list ':' initialized_structure */
+    //SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
+    void *visit(structured_var_init_decl_c *symbol) {TRACE("structured_var_init_decl_c"); return symbol->var1_list->accept(*this);}
+    
 #if 0
-/* var1_list ':' array_spec_init */
-SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
-
-/*  var1_list ':' initialized_structure */
-SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
-
 /* name_list ':' function_block_type_name ASSIGN structure_initialization */
 /* structure_initialization -> may be NULL ! */
 SYM_REF4(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization, unused)
@@ -276,15 +279,16 @@ SYM_LIST(fb_name_list_c)
     }
     void *visit(var_declaration_list_c *symbol) {TRACE("var_declaration_list_c"); return iterate_list(symbol);}
 
-#if 0
-/*  var1_list ':' array_specification */
-SYM_REF2(array_var_declaration_c, var1_list, array_specification)
 
-/*  var1_list ':' structure_type_name */
-SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
-#endif
+    /*  var1_list ':' array_specification */
+    //SYM_REF2(array_var_declaration_c, var1_list, array_specification)
+    void *visit(array_var_declaration_c *symbol) {TRACE("array_var_declaration_c"); return symbol->var1_list->accept(*this);}
 
-/* VAR [CONSTANT] var_init_decl_list END_VAR */
+    /*  var1_list ':' structure_type_name */
+    //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
+    void *visit(structured_var_declaration_c *symbol) {TRACE("structured_var_declaration_c"); return symbol->var1_list->accept(*this);}
+
+    /* VAR [CONSTANT] var_init_decl_list END_VAR */
     void *visit(var_declarations_c *symbol) {TRACE("var_declarations_c"); return NULL;}
 
 #if 0

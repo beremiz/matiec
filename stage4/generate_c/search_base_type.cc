@@ -203,7 +203,7 @@ class search_base_type_c: public null_visitor_c {
 /* structure_element_declaration_list structure_element_declaration ';' */
     void *visit(structure_element_declaration_list_c *symbol)	{
       if (NULL == this->current_type_name) ERROR;
-      return (void *)this->current_type_name;
+      return (void *)symbol;
     }
 
 /*  structure_element_name ':' *_spec_init */

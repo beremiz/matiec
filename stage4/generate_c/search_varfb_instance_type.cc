@@ -72,7 +72,7 @@ class search_varfb_instance_type_c: public search_base_type_c {
        */
       symbol_c *var_name_part = decompose_var_instance_name->next_part();
       if (NULL == var_name_part) ERROR;
-
+      
       /* Now we try to find the variable instance declaration, to determine its type... */
       symbol_c *var_decl = search_var_instance_decl.get_decl(var_name_part);
       if (NULL == var_decl) {
@@ -185,11 +185,17 @@ class search_varfb_instance_type_c: public search_base_type_c {
 /* array_specification [ASSIGN array_initialization} */
 /* array_initialization may be NULL ! */
     void *visit(array_spec_init_c *symbol) {
+      symbol_c *var_name = decompose_var_instance_name->next_part();
+      if (NULL != var_name)
+        current_structelement_name = var_name;
       return symbol->array_specification->accept(*this);
     }
     
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
     void *visit(array_specification_c *symbol) {
+      symbol_c *var_name = decompose_var_instance_name->next_part();
+      if (NULL != var_name)
+        current_structelement_name = var_name;
       return symbol->non_generic_type_name->accept(*this);
     }
 
@@ -241,7 +247,9 @@ class search_varfb_instance_type_c: public search_base_type_c {
 /* helper symbol for structure_declaration */
 /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
 /* structure_element_declaration_list structure_element_declaration ';' */
-    void *visit(structure_element_declaration_list_c *symbol)	{return visit_list(symbol);}
+    void *visit(structure_element_declaration_list_c *symbol)	{
+      return visit_list(symbol);
+    }
 
 /*  structure_element_name ':' spec_init */
     void *visit(structure_element_declaration_c *symbol) {

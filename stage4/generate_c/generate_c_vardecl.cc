@@ -56,25 +56,37 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
 
     arrayinitialization_mode_t current_mode;
     
+    symbol_c* array_base_type;
     symbol_c* array_default_value;
+    symbol_c* array_default_initialization;
 
   private:
-    int dimension_number, current_dimension, array_size;
+    int dimension_number;
+    int current_dimension;
+    int array_size;
+    int defined_values_count;
+    int current_initialization_count;
 
   public:
     generate_c_array_initialization_c(stage4out_c *s4o_ptr): generate_c_typedecl_c(s4o_ptr) {}
     ~generate_c_array_initialization_c(void) {}
 
-    void init_array(symbol_c *var1_list, symbol_c *array_specification, symbol_c *array_initialization) {
-      int i;
-      
+    void init_array_dimensions(symbol_c *array_specification) {
       dimension_number = 0;
       current_dimension = 0;
       array_size = 1;
-      array_default_value = NULL;
+      defined_values_count = 0;
+      current_initialization_count = 0;
+      array_base_type = array_default_value = array_default_initialization = NULL;
       
       current_mode = dimensioncount_am;
       array_specification->accept(*this);
+    }
+
+    void init_array(symbol_c *var1_list, symbol_c *array_specification, symbol_c *array_initialization) {
+      int i;
+      
+      init_array_dimensions(array_specification);
       
       current_mode = initializationvalue_am;
       s4o.print("\n");
@@ -86,7 +98,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       s4o.print(s4o.indent_spaces);
       array_specification->accept(*this);
       s4o.print(" temp = ");
-      array_initialization->accept(*this);
+      init_array_values(array_initialization);
       s4o.print(";\n");
       
       current_mode = arrayassignment_am;
@@ -103,7 +115,23 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}");
     }
-
+    
+    void init_array_values(symbol_c *array_initialization) {
+      s4o.print("{");
+      array_initialization->accept(*this);
+      if (array_default_initialization != NULL && defined_values_count < array_size)
+        array_default_initialization->accept(*this);
+      if (defined_values_count < array_size) {
+        for (int i = defined_values_count; i < array_size; i++) {
+          if (defined_values_count > 0)
+            s4o.print(", ");
+          array_default_value->accept(*this);
+          defined_values_count++;
+        }
+      }
+      s4o.print("}");
+    }
+    
     void *visit(identifier_c *type_name) {
       symbol_c *type_decl;
       switch (current_mode) {
@@ -150,15 +178,30 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
 /* B 1.3.3 - Derived data types */
 /********************************/
     
-    /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
-    void *visit(array_specification_c *symbol) {
+    /* array_specification [ASSIGN array_initialization] */
+    /* array_initialization may be NULL ! */
+    void *visit(array_spec_init_c *symbol) {
       switch (current_mode) {
         case dimensioncount_am:
-          symbol->array_subrange_list->accept(*this);
-          array_default_value = (symbol_c *)symbol->non_generic_type_name->accept(*type_initial_value_c::instance());;
+          array_default_initialization = symbol->array_initialization;
           break;
         default:
-          symbol->array_subrange_list->accept(*this);
+          break;
+      }
+      symbol->array_specification->accept(*this);
+      return NULL;
+    }
+    
+    /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+    void *visit(array_specification_c *symbol) {
+      symbol->array_subrange_list->accept(*this);
+      switch (current_mode) {
+        case dimensioncount_am:
+          array_base_type = symbol->non_generic_type_name;
+          array_default_value = (symbol_c *)symbol->non_generic_type_name->accept(*type_initial_value_c::instance());;
+          if (array_default_value == NULL) ERROR;
+          break;
+        default:
           break;
       } 
       return NULL;
@@ -196,25 +239,24 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
     void *visit(array_initial_elements_list_c *symbol) {
       switch (current_mode) {
         case initializationvalue_am:
-          int i;
-      
-          s4o.print("{");
-          for (i = 0; i < symbol->n; i++) {
-            if (i > 0)
-              s4o.print(", ");
-            symbol->elements[i]->accept(*this);
-            array_size--;
-          }
-          if (array_size > 0) {
-            if (symbol->n > 0)
-              s4o.print(", ");
-            for (i = 0; i < array_size; i++) {
-              if (i > 0)
+          current_initialization_count = 0;
+          for (int i = 0; i < symbol->n; i++) {
+            if (current_initialization_count >= defined_values_count) {
+              if (defined_values_count >= array_size)
+                ERROR;
+              if (defined_values_count > 0)
                 s4o.print(", ");
-              array_default_value->accept(*this);
+              symbol->elements[i]->accept(*this);
+              defined_values_count++;
             }
+            else {
+              array_initial_elements_c *array_initial_element = dynamic_cast<array_initial_elements_c *>(symbol->elements[i]);
+            
+              if (array_initial_element != NULL)
+                symbol->elements[i]->accept(*this);
+            }
+            current_initialization_count++;
           }
-          s4o.print("}");
           break;
         default:
           break;
@@ -230,17 +272,32 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       switch (current_mode) {
         case initializationvalue_am:
           initial_element_number = extract_integer(symbol->integer);
-          
+          if (current_initialization_count < defined_values_count) {
+            int temp_element_number = 0;
+            int diff = defined_values_count - current_initialization_count;
+            if (diff <= initial_element_number)
+              temp_element_number = initial_element_number - diff;
+            current_initialization_count += initial_element_number - 1;
+            initial_element_number = temp_element_number;
+            if (initial_element_number > 0) {
+              defined_values_count++;
+              s4o.print(", ");
+            }
+          }
+          else
+            current_initialization_count += initial_element_number - 1;
+          if (defined_values_count + initial_element_number > array_size)
+            ERROR;
           for (int i = 0; i < initial_element_number; i++) {
             if (i > 0)
               s4o.print(", ");
             if (symbol->array_initial_element != NULL)
               symbol->array_initial_element->accept(*this);
-            else if (array_default_value != NULL)
+            else
               array_default_value->accept(*this);
           }
           if (initial_element_number > 1)
-            array_size -= initial_element_number - 1;
+            defined_values_count += initial_element_number - 1;
           break;
         default:
           break;
@@ -248,6 +305,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       return NULL;
     }
 
+    void *visit(structure_element_initialization_list_c *symbol);
 };
 
 /***********************************************************************/
@@ -259,6 +317,334 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
 /***********************************************************************/
 /***********************************************************************/
 
+/* given a structure_element_declaration_list_c, iterate 
+ * through each element, returning the name
+ * of each element...structure_element_iterator_c
+ */
+class structure_element_iterator_c : public null_visitor_c {
+  
+  private:
+    /* a pointer to the structure_element_declaration_list_c
+     * currently being analysed.
+     */
+    symbol_c *type_decl;
+    int next_element, element_count;
+    identifier_c *current_element_name;
+    symbol_c *current_element_type;
+    symbol_c *current_element_default_value;
+    
+    
+  public:
+    /* start off at the first parameter once again... */
+    void reset(void) {
+      next_element = element_count = 0;
+      current_element_name = NULL;
+      current_element_type = current_element_default_value = NULL;
+    }
+    
+    /* initialise the iterator object.
+     * We must be given a reference to the function declaration
+     * that will be analysed...
+     */
+    structure_element_iterator_c(symbol_c *type_decl) {
+      this->type_decl = type_decl;
+      reset();
+    }
+    
+    /* Skip to the next element. After object creation,
+     * the object references on 
+     * element _before_ the first, so
+     * this function must be called once to get the object to
+     * reference the first element...
+     *
+     * Returns the element's name!
+     */
+    identifier_c *next(void) {
+      void *res;
+      identifier_c *identifier;
+      element_count = 0;
+      next_element++;
+      res = type_decl->accept(*this);
+      if (res != NULL) {
+        symbol_c *sym = (symbol_c *)res;
+        identifier = dynamic_cast<identifier_c *>(sym);
+        if (identifier == NULL)
+          ERROR;
+      }
+      else
+        return NULL;
+      
+      current_element_name = identifier;
+      return current_element_name;
+    }
+    
+    /* Returns the currently referenced element's default value,
+     * or NULL if none is specified in the structure declaration itself.
+     */
+    symbol_c *default_value(void) {
+      return current_element_default_value;
+    }
+
+    /* Returns the currently referenced element's type name. */
+    symbol_c *element_type(void) {
+      return current_element_type;
+    }
+
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+
+    /* helper symbol for structure_declaration */
+    /* structure_element_declaration_list structure_element_declaration ';' */
+    void *visit(structure_element_declaration_list_c *symbol) {
+      void *res;
+      for (int i = 0; i < symbol->n; i++) {
+        res = symbol->elements[i]->accept(*this);
+        if (res != NULL)
+          return res;
+      }
+      return NULL;
+    }
+
+    /*  structure_element_name ':' *_spec_init */
+    void *visit(structure_element_declaration_c *symbol) {
+      element_count++;
+      if (next_element == element_count) {
+        current_element_default_value = spec_init_sperator_c::get_init(symbol->spec_init);
+        current_element_type = spec_init_sperator_c::get_spec(symbol->spec_init);
+        return symbol->structure_element_name;
+      }
+      /* not yet the desired element... */
+      return NULL;
+    }
+
+};
+
+/*
+ * Structure init element iterator.
+ * It will search through the elements of a structure initialization
+ */
+class structure_init_element_iterator_c : public null_visitor_c {
+  private:
+    /* a pointer to the structure initialization
+     * currently being analysed.
+     */
+    symbol_c *structure_initialization;
+    identifier_c *search_element_name;
+    
+  public:
+    /* initialise the iterator object.
+     * We must be given a reference to the structure initialization
+     * that will be analysed...
+     */
+    structure_init_element_iterator_c(symbol_c *structure_initialization) {
+      this->structure_initialization = structure_initialization;
+      search_element_name = NULL;
+    }
+    
+    /* Search for the value passed to the element named <element_name>...  */
+    symbol_c *search(symbol_c *element_name) {
+      if (NULL == element_name) ERROR;
+      search_element_name = dynamic_cast<identifier_c *>(element_name);
+      if (NULL == search_element_name) ERROR;
+      void *res = structure_initialization->accept(*this);
+      return (symbol_c *)res;
+    }
+    
+    /* helper symbol for structure_initialization */
+    /* structure_element_initialization_list ',' structure_element_initialization */
+    void *visit(structure_element_initialization_list_c *symbol) {
+      void *res;
+      for (int i = 0; i < symbol->n; i++) {
+        res = symbol->elements[i]->accept(*this);
+        if (res != NULL)
+          return res;
+      }
+      return NULL;
+    }
+    
+    /*  structure_element_name ASSIGN value */
+    void *visit(structure_element_initialization_c *symbol) {
+      identifier_c *element_name = dynamic_cast<identifier_c *>(symbol->structure_element_name);
+      
+      if (element_name == NULL) ERROR;
+      
+      if (strcasecmp(search_element_name->value, element_name->value) == 0)
+        /* FOUND! This is the same element!! */
+        return (void *)symbol->value;
+      return NULL;
+    }
+};
+
+class generate_c_structure_initialization_c: public generate_c_typedecl_c {
+
+  public:
+    typedef enum {
+      none_sm,
+      typedecl_sm,
+      initializationvalue_sm,
+      varlistparse_sm
+    } structureinitialization_mode_t;
+
+    structureinitialization_mode_t current_mode;
+    
+  private:
+    symbol_c* structure_type_decl;
+    symbol_c* current_element_type;
+
+  public:
+    generate_c_structure_initialization_c(stage4out_c *s4o_ptr): generate_c_typedecl_c(s4o_ptr) {}
+    ~generate_c_structure_initialization_c(void) {}
+
+    void init_structure_default(symbol_c *structure_type_name) {
+      structure_type_decl = NULL;
+      current_element_type = NULL;
+      
+      current_mode = typedecl_sm;
+      structure_type_name->accept(*this);
+    }
+
+    void init_structure(symbol_c *var1_list, symbol_c *structure_type_name, symbol_c *structure_initialization) {
+      int i;
+      
+      init_structure_default(structure_type_name);
+      
+      current_mode = initializationvalue_sm;
+      s4o.print("\n");
+      s4o.print(s4o.indent_spaces + "{\n");
+      s4o.indent_right();
+      s4o.print(s4o.indent_spaces);
+      structure_type_name->accept(*this);
+      s4o.print(" temp = ");
+      structure_initialization->accept(*this);
+      s4o.print(";\n");
+      
+      current_mode = varlistparse_sm;
+      var1_list->accept(*this);
+      
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "}");
+    }
+
+    void *visit(identifier_c *type_name) {
+      symbol_c *type_decl;
+      switch (current_mode) {
+        case typedecl_sm:
+          /* look up the type declaration... */
+          type_decl = type_symtable.find_value(type_name);
+          if (type_decl == type_symtable.end_value())
+            /* Type declaration not found!! */
+            ERROR;
+          type_decl->accept(*this);
+          break;
+        default:
+          print_token(type_name);
+          break;
+      }
+      return NULL;
+    }
+    
+    void *visit(var1_list_c *symbol) {
+      int i, j;
+      
+      for (i = 0; i < symbol->n; i++) {
+        s4o.print(s4o.indent_spaces);
+        print_variable_prefix();
+        symbol->elements[i]->accept(*this);
+        s4o.print(" = temp;\n");
+      }
+      return NULL;
+    }
+
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+
+    /* helper symbol for structure_declaration */
+    /* structure_element_declaration_list structure_element_declaration ';' */
+    void *visit(structure_element_declaration_list_c *symbol) {
+      switch (current_mode) {
+        case typedecl_sm:
+          structure_type_decl = (symbol_c *)symbol;
+          break;
+        default:
+          break;
+      } 
+      return NULL;
+    }
+
+    /* helper symbol for structure_initialization */
+    /* structure_element_initialization_list ',' structure_element_initialization */
+    void *visit(structure_element_initialization_list_c *symbol) {
+      s4o.print("{");
+      structure_element_iterator_c structure_iterator(structure_type_decl);
+      
+      identifier_c *element_name;
+      structure_init_element_iterator_c structure_init_element_iterator(symbol);
+      for(int i = 1; (element_name = structure_iterator.next()) != NULL; i++) {
+        if (i > 1)
+          s4o.print(", ");
+        
+        /* Get the value from an initialization */
+        symbol_c *element_value = structure_init_element_iterator.search(element_name);
+        
+        if (element_value == NULL) {
+          /* No value given for parameter, so we must use the default... */
+          /* First check whether default value specified in function declaration...*/
+          element_value = structure_iterator.default_value();
+          current_element_type = structure_iterator.element_type();
+        }
+        
+        if (element_value == NULL) {
+          if (current_element_type == NULL) ERROR;
+          
+          /* If not, get the default value of this variable's type */
+          element_value = (symbol_c *)current_element_type->accept(*type_initial_value_c::instance());
+        }
+        
+        if (element_value == NULL) ERROR;
+        
+        element_value->accept(*this);
+      }
+      s4o.print("}");
+      return NULL;
+    }
+
+    /* helper symbol for array_initialization */
+    /* array_initial_elements_list ',' array_initial_elements */
+    void *visit(array_initial_elements_list_c *symbol) {
+      generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
+      array_initialization->set_variable_prefix(get_variable_prefix());
+      array_initialization->init_array_dimensions(current_element_type);
+      array_initialization->current_mode = generate_c_array_initialization_c::initializationvalue_am;
+      array_initialization->init_array_values(symbol);
+      delete array_initialization;
+      return NULL;
+    }
+
+};
+
+
+/* helper symbol for array_initialization */
+/* structure_element_initialization_list ',' structure_element_initialization */
+void *generate_c_array_initialization_c::visit(structure_element_initialization_list_c *symbol) {
+  generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
+  structure_initialization->set_variable_prefix(get_variable_prefix());
+  structure_initialization->init_structure_default(array_base_type);
+  structure_initialization->current_mode = generate_c_structure_initialization_c::initializationvalue_sm;
+  symbol->accept(*structure_initialization);
+  delete structure_initialization;
+  return NULL;
+}
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
 
 
 
@@ -413,8 +799,6 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
 
 
   private:
-    generate_c_array_initialization_c *generate_c_array_initialization;
-    
     /* variable used to store the types of variables that need to be processed... */
     /* Only set in the constructor...! */
     /* Will contain a set of values of generate_c_vardecl_c::XXXX_vt */
@@ -583,7 +967,6 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
   public:
     generate_c_vardecl_c(stage4out_c *s4o_ptr, varformat_t varformat, unsigned int vartype, symbol_c* res_name = NULL)
     : generate_c_typedecl_c(s4o_ptr) {
-      generate_c_array_initialization = new generate_c_array_initialization_c(s4o_ptr);
       wanted_varformat = varformat;
       wanted_vartype   = vartype;
       current_vartype  = none_vt;
@@ -596,9 +979,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
       eno_declared = false;
     }
 
-    ~generate_c_vardecl_c(void) {
-      delete generate_c_array_initialization;
-    }
+    ~generate_c_vardecl_c(void) {}
 
     bool is_en_declared(void) {
       return en_declared;
@@ -610,7 +991,6 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
 
     void print(symbol_c *symbol, symbol_c *scope = NULL, const char *variable_prefix = NULL) {
       this->set_variable_prefix(variable_prefix);
-      this->generate_c_array_initialization->set_variable_prefix(variable_prefix);
       if (globalinit_vf == wanted_varformat)
         globalnamespace = scope;
 
@@ -793,8 +1173,12 @@ void *visit(array_var_init_decl_c *symbol) {
   update_type_init(symbol->array_spec_init);
 
   /* now to produce the c equivalent... */
-  if (wanted_varformat == constructorinit_vf)
-    generate_c_array_initialization->init_array(symbol->var1_list, this->current_var_type_symbol, this->current_var_init_symbol);
+  if (wanted_varformat == constructorinit_vf) {
+    generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
+    array_initialization->set_variable_prefix(get_variable_prefix());
+    array_initialization->init_array(symbol->var1_list, this->current_var_type_symbol, this->current_var_init_symbol);
+    delete array_initialization;
+  }
   else
     symbol->var1_list->accept(*this);
 
@@ -821,7 +1205,14 @@ void *visit(structured_var_init_decl_c *symbol) {
   update_type_init(symbol->initialized_structure);
 
   /* now to produce the c equivalent... */
-  symbol->var1_list->accept(*this);
+  if (wanted_varformat == constructorinit_vf) {
+    generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
+    structure_initialization->set_variable_prefix(get_variable_prefix());
+    structure_initialization->init_structure(symbol->var1_list, this->current_var_type_symbol, this->current_var_init_symbol);
+    delete structure_initialization;
+  }
+  else
+    symbol->var1_list->accept(*this);
 
   /* Values no longer in scope, and therefore no longer used.
    * Make an effort to keep them set to NULL when not in use
@@ -949,8 +1340,15 @@ void *visit(structured_var_declaration_c *symbol) {
    */
   update_type_init(symbol->structure_type_name);
 
-  /* now to produce the c equivalent... */
-  symbol->var1_list->accept(*this);
+  if (wanted_varformat == constructorinit_vf) {
+    generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
+    structure_initialization->set_variable_prefix(get_variable_prefix());
+    structure_initialization->init_structure(symbol->var1_list, this->current_var_type_symbol, this->current_var_init_symbol);
+    delete structure_initialization;
+  }
+  else
+    /* now to produce the c equivalent... */
+    symbol->var1_list->accept(*this);
 
   /* Values no longer in scope, and therefore no longer used.
    * Make an effort to keep them set to NULL when not in use
