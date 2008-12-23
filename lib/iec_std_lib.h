@@ -318,11 +318,11 @@ static inline TIME __time_div(EN_ENO_PARAMS, TIME IN1, LREAL IN2){
 /***************/
 #define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
 
-static inline UINT __len(EN_ENO_PARAMS, STRING IN){
+static inline __strlen_t __len(EN_ENO_PARAMS, STRING IN){
     TEST_EN(UINT)
     return IN.len;
 }
-static inline STRING __left(EN_ENO_PARAMS, STRING IN, SINT L){
+static inline STRING __left(EN_ENO_PARAMS, STRING IN, __strlen_t L){
     TEST_EN_COND(STRING, L < 0)
     STRING res = __INIT_STRING;
     L = L < IN.len ? L : IN.len;
@@ -330,7 +330,7 @@ static inline STRING __left(EN_ENO_PARAMS, STRING IN, SINT L){
     res.len = L;
     return res;
 }
-static inline STRING __right(EN_ENO_PARAMS, STRING IN, SINT L){
+static inline STRING __right(EN_ENO_PARAMS, STRING IN, __strlen_t L){
     TEST_EN_COND(STRING, L < 0)
     STRING res = __INIT_STRING;
     L = L < IN.len ? L : IN.len;
@@ -338,7 +338,7 @@ static inline STRING __right(EN_ENO_PARAMS, STRING IN, SINT L){
     res.len = L;
     return res;
 }
-static inline STRING __mid(EN_ENO_PARAMS, STRING IN, SINT L, SINT P){
+static inline STRING __mid(EN_ENO_PARAMS, STRING IN, __strlen_t L, __strlen_t P){
     TEST_EN_COND(STRING, L < 0 || P < 0)
     STRING res = __INIT_STRING;
     if(P <= IN.len){
@@ -349,7 +349,7 @@ static inline STRING __mid(EN_ENO_PARAMS, STRING IN, SINT L, SINT P){
     }
     return res;
 }
-static inline STRING __concat(EN_ENO_PARAMS, SINT param_count, ...){
+static inline STRING __concat(EN_ENO_PARAMS, UINT param_count, ...){
   TEST_EN(STRING)
   va_list ap;
   UINT i;
@@ -372,7 +372,7 @@ static inline STRING __concat(EN_ENO_PARAMS, SINT param_count, ...){
   va_end (ap);                  /* Clean up.  */
   return res;
 }
-static inline STRING __insert(EN_ENO_PARAMS, STRING IN1, STRING IN2, SINT P){
+static inline STRING __insert(EN_ENO_PARAMS, STRING IN1, STRING IN2, __strlen_t P){
     TEST_EN_COND(STRING, P < 0)
     STRING res = __INIT_STRING;
     __strlen_t to_copy;
@@ -391,7 +391,7 @@ static inline STRING __insert(EN_ENO_PARAMS, STRING IN1, STRING IN2, SINT P){
 
     return res;
 }
-static inline STRING __delete(EN_ENO_PARAMS, STRING IN, SINT L, SINT P){
+static inline STRING __delete(EN_ENO_PARAMS, STRING IN, __strlen_t L, __strlen_t P){
     TEST_EN_COND(STRING, L < 0 || P < 0)
     STRING res = __INIT_STRING;
     __strlen_t to_copy;
@@ -408,7 +408,7 @@ static inline STRING __delete(EN_ENO_PARAMS, STRING IN, SINT L, SINT P){
 
     return res;
 }
-static inline STRING __replace(EN_ENO_PARAMS, STRING IN1, STRING IN2, SINT L, SINT P){
+static inline STRING __replace(EN_ENO_PARAMS, STRING IN1, STRING IN2, __strlen_t L, __strlen_t P){
     TEST_EN_COND(STRING, L < 0 || P < 0)
     STRING res = __INIT_STRING;
     __strlen_t to_copy;
@@ -438,7 +438,7 @@ static inline STRING __replace(EN_ENO_PARAMS, STRING IN1, STRING IN2, SINT L, SI
 
 
 
-static inline UINT __pfind(STRING* IN1, STRING* IN2){
+static inline __strlen_t __pfind(STRING* IN1, STRING* IN2){
     UINT count1 = 0; /* offset of first matching char in IN1 */
     UINT count2 = 0; /* count of matching char */
     while(count1 + count2 < IN1->len && count2 < IN2->len)
@@ -450,7 +450,7 @@ static inline UINT __pfind(STRING* IN1, STRING* IN2){
     }
     return count2 == IN2->len -1 ? 0 : count1 + 1;
 }
-static inline UINT __find(EN_ENO_PARAMS, STRING IN1, STRING IN2){
+static inline __strlen_t __find(EN_ENO_PARAMS, STRING IN1, STRING IN2){
     TEST_EN(UINT)
     return __pfind(&IN1, &IN2);
 }
