@@ -472,7 +472,7 @@ void *visit(function_invocation_c *symbol) {
       EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
     ADD_PARAM_LIST(EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
     
-    identifier_c eno_param_name("EN0");
+    identifier_c eno_param_name("ENO");
     /* Get the value from ENO param */
     symbol_c *ENO_param_value = function_call_param_iterator.search(&eno_param_name);
     ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
@@ -629,7 +629,7 @@ void *visit(fb_invocation_c *symbol) {
   for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
     function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
     
-    fprintf(stderr, "param : %s\n", param_name->value);
+    /*fprintf(stderr, "param : %s\n", param_name->value);*/
     
     /* Get the value from a foo(<param_name> = <param_value>) style call */
     symbol_c *param_value = function_call_param_iterator.search(param_name);
