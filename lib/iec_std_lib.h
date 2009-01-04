@@ -559,7 +559,7 @@ static inline LINT __pstring_to_sint(STRING* IN){
                 shift += 1;
             }else if( c >= '.' ){ /* reset value */
                 res = 0;
-                fac = 1;
+                fac = IN->body[0] == '-' ? -1 : 1;
                 shift = 0;
             }            
         }
