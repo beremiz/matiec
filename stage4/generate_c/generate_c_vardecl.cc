@@ -604,12 +604,23 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
         
         if (element_value == NULL) ERROR;
         
-        element_value->accept(*this);
+        structure_element_initialization_list_c *structure_element_initialization_list = dynamic_cast<structure_element_initialization_list_c *>(element_value);
+            
+        if (structure_element_initialization_list != NULL) {
+          generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
+          structure_initialization->set_variable_prefix(get_variable_prefix());
+          structure_initialization->init_structure_default(current_element_type);
+          structure_initialization->current_mode = generate_c_structure_initialization_c::initializationvalue_sm;
+          element_value->accept(*structure_initialization);
+          delete structure_initialization;
+        }
+        else
+          element_value->accept(*this);
       }
       s4o.print("}");
       return NULL;
     }
-
+    
     /* helper symbol for array_initialization */
     /* array_initial_elements_list ',' array_initial_elements */
     void *visit(array_initial_elements_list_c *symbol) {

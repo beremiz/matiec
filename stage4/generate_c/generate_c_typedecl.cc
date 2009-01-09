@@ -538,9 +538,9 @@ void *visit(structure_type_declaration_c *symbol) {
 //SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
 void *visit(initialized_structure_c *symbol) {
   TRACE("initialized_structure_c");
-  fprintf(stderr, "initialized_structure_c\n");
   
-  symbol->structure_type_name->accept(*this);
+  symbol->structure_type_name->accept(*basedecl);
+  
   return NULL;
 }
 
