@@ -106,8 +106,13 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     void update_var_type_symbol(symbol_c *symbol) {
       
       this->current_var_type_name = spec_init_sperator_c::get_spec(symbol);
-      if (this->current_var_type_name == NULL)
+      if (this->current_var_type_name == NULL) {
+        std::list<SYMBOL>::iterator pt;
+        for(pt = current_symbol_list.begin(); pt != current_symbol_list.end(); pt++) {
+          fprintf(stderr, "%s.", ((identifier_c*)(pt->symbol))->value);
+        }
         ERROR;
+      }
       
       this->current_var_type_symbol = search_fb_typedecl->get_decl(this->current_var_type_name);
       if (this->current_var_type_symbol != NULL)
@@ -347,7 +352,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       /* Start off by setting the current_var_type_symbol and
        * current_var_init_symbol private variables...
        */
-      update_var_type_symbol(symbol);
+      update_var_type_symbol(symbol->specification);
       
       /* now to produce the c equivalent... */
       if (this->current_var_type_category == variable_vtc)
