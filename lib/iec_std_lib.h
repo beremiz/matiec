@@ -956,6 +956,91 @@ static inline TYPENAME __rol_##TYPENAME(EN_ENO_PARAMS, TYPENAME IN, USINT N){\
 /* Call previously defined macro for each ANY_NBIT */
 ANY_NBIT(__rol_)
 
+/*******************************************/
+/*     Arithmetic and bitwise functions    */
+/*******************************************/
+
+#define __numeric(fname,TYPENAME, FUNC) \
+static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
+  TEST_EN(TYPENAME)\
+  return FUNC(op);\
+}
+
+  /**************/
+  /*    ABS     */
+  /**************/
+#define __abs_(TYPENAME) __numeric(__abs_, TYPENAME, abs)
+ANY_NUM(__abs_)
+
+  /**************/
+  /*    SQRT    */
+  /**************/
+#define __sqrt_(TYPENAME) __numeric(__sqrt_, TYPENAME, sqrt)
+ANY_REAL(__sqrt_)
+
+  /**************/
+  /*     LN     */
+  /**************/
+#define __ln_(TYPENAME) __numeric(__ln_, TYPENAME, ln)
+ANY_REAL(__ln_)
+
+  /**************/
+  /*     LOG    */
+  /**************/
+#define __log_(TYPENAME) __numeric(__log_, TYPENAME, log)
+ANY_REAL(__log_)
+
+  /**************/
+  /*     EXP    */
+  /**************/
+#define __exp_(TYPENAME) __numeric(__exp_, TYPENAME, exp)
+ANY_REAL(__exp_)
+
+  /**************/
+  /*     SIN    */
+  /**************/
+#define __sin_(TYPENAME) __numeric(__sin_, TYPENAME, sin)
+ANY_REAL(__sin_)
+
+  /**************/
+  /*     COS    */
+  /**************/
+#define __cos_(TYPENAME) __numeric(__cos_, TYPENAME, cos)
+ANY_REAL(__cos_)
+
+  /**************/
+  /*     TAN    */
+  /**************/
+#define __tan_(TYPENAME) __numeric(__tan_, TYPENAME, tan)
+ANY_REAL(__tan_)
+
+  /**************/
+  /*    ASIN    */
+  /**************/
+#define __asin_(TYPENAME) __numeric(__asin_, TYPENAME, asin)
+ANY_REAL(__asin_)
+
+  /**************/
+  /*    ACOS    */
+  /**************/
+#define __acos_(TYPENAME) __numeric(__acos_, TYPENAME, acos)
+ANY_REAL(__acos_)
+
+  /**************/
+  /*    ATAN    */
+  /**************/
+#define __atan_(TYPENAME) __numeric(__atan_, TYPENAME, atan)
+ANY_REAL(__atan_)
+
+  /**************/
+  /*    EXPT    */
+  /**************/
+#define __expt_(TYPENAME)\
+static inline TYPENAME __expt_##TYPENAME(EN_ENO_PARAMS, TYPENAME IN1, REAL IN2){\
+  TEST_EN(TYPENAME)\
+  return pow(IN1, IN2);\
+}ANY_REAL(__expt_)
+
 /**************/
 /* Selection  */
 /**************/
@@ -1014,7 +1099,7 @@ static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, UINT param_count, TYPENAME
   \
   va_start (ap, op1);         /* Initialize the argument list.  */\
   \
-  for (i = 0; i < param_count; i++){\
+  for (i = 0; i < param_count - 1; i++){\
     TYPENAME tmp = va_arg (ap, VA_ARGS_##TYPENAME);\
     op1 = COND ? tmp : op1;\
   }\
@@ -1037,11 +1122,11 @@ __max_time(TIME)
     /**************/
     /*     MIN    */
     /**************/
-#define __min_num(TYPENAME) __extrem_(__min, TYPENAME, op1 > tmp)
+#define __min_num(TYPENAME) __extrem_(__min_, TYPENAME, op1 > tmp)
 ANY_NBIT(__min_num)
 ANY_NUM(__min_num)
 
-__extrem_(__min, STRING, __STR_CMP(op1,tmp) > 0)
+__extrem_(__min_, STRING, __STR_CMP(op1,tmp) > 0)
 
 #define __min_time(TYPENAME) __extrem_(__min_, TYPENAME, __TIME_CMP(op1, tmp) > 0)
 

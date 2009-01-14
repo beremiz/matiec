@@ -11866,9 +11866,10 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("sqrt"));
+                function_name = (symbol_c*)(new pragma_c("__sqrt_"));
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11897,9 +11898,10 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("ln"));
+                function_name = (symbol_c*)(new pragma_c("__ln_"));
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11928,9 +11930,10 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("log"));
+                function_name = (symbol_c*)(new pragma_c("__log_"));
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11959,9 +11962,10 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("exp"));
+                function_name = (symbol_c*)(new pragma_c("__exp_"));
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11990,9 +11994,10 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("sin"));
+                function_name = (symbol_c*)(new pragma_c("__sin_"));
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12021,9 +12026,10 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("cos"));
+                function_name = (symbol_c*)(new pragma_c("__cos_"));
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12052,9 +12058,10 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("tan"));
+                function_name = (symbol_c*)(new pragma_c("__tan_"));
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12083,9 +12090,10 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("asin"));
+                function_name = (symbol_c*)(new pragma_c("__asin_"));
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12114,9 +12122,10 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("acos"));
+                function_name = (symbol_c*)(new pragma_c("__acos_"));
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12145,9 +12154,10 @@ switch(current_function_type){
             if(search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("atan"));
+                function_name = (symbol_c*)(new pragma_c("__atan_"));
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12793,7 +12803,7 @@ switch(current_function_type){
             symbol_c *IN1_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_num_type(IN1_type_symbol))
+            if(search_expression_type->is_real_type(IN1_type_symbol))
             {
         
                 {
@@ -12810,10 +12820,11 @@ switch(current_function_type){
                     if(search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        function_name = (symbol_c*)(new pragma_c("pow"));
+                        function_name = (symbol_c*)(new pragma_c("__expt_"));
                         ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = IN1_type_symbol;
                         break;
                         
                     }

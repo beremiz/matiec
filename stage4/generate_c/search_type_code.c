@@ -13336,7 +13336,7 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             symbol_c *IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
             last_type_symbol = last_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
             
-            if(search_expression_type->is_num_type(IN1_type_symbol))
+            if(search_expression_type->is_real_type(IN1_type_symbol))
             {
         
                 {
@@ -25595,7 +25595,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             symbol_c *IN1_type_symbol = param_data_type;
             last_type_symbol = param_data_type;
             
-            if(search_expression_type->is_num_type(IN1_type_symbol))
+            if(search_expression_type->is_real_type(IN1_type_symbol))
             {
         
                 {
