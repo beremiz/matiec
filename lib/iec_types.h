@@ -48,7 +48,7 @@ typedef struct timespec IEC_DT;
 typedef struct timespec IEC_TOD;
 
 #ifndef STR_MAX_LEN
-#define STR_MAX_LEN 40
+#define STR_MAX_LEN 127
 #endif
 
 #ifndef STR_LEN_TYPE
