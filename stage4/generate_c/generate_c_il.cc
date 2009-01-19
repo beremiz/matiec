@@ -949,22 +949,26 @@ void *visit(il_formal_funct_call_c *symbol) {
     
     function_call_param_iterator_c function_call_param_iterator(symbol);
     
+    int nb_param = 0;
+    if (symbol->il_param_list != NULL)
+      nb_param += ((list_c *)symbol->il_param_list)->n;
+    
     identifier_c en_param_name("EN");
     /* Get the value from EN param */
     symbol_c *EN_param_value = function_call_param_iterator.search(&en_param_name);
     if (EN_param_value == NULL)
       EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
+    else
+      nb_param --;
     ADD_PARAM_LIST(EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
     
     identifier_c eno_param_name("EN0");
     /* Get the value from ENO param */
     symbol_c *ENO_param_value = function_call_param_iterator.search(&eno_param_name);
+    if (ENO_param_value != NULL)
+      nb_param --;
     ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
     
-    int nb_param = 0;
-    if (symbol->il_param_list != NULL)
-      nb_param += ((list_c *)symbol->il_param_list)->n;
-
     #include "st_code_gen.c"
     
   }

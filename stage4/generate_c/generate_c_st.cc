@@ -482,9 +482,9 @@ void *visit(function_invocation_c *symbol) {
     if (ENO_param_value != NULL)
       nb_param --;
     ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
-
+    
     #include "st_code_gen.c"
-
+    
   }
   else {
     /* loop through each function parameter, find the value we should pass
@@ -572,7 +572,7 @@ void *visit(function_invocation_c *symbol) {
         break;
     } /* switch */
   }  
-
+  
   s4o.print(")");
   s4o.indent_left();
 
