@@ -17,42 +17,18 @@ else
 	CFLAGS += -O2
 endif
 
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	# Add here commands to configure the package.
-
-	touch configure-stamp
-
-##############
-# And now the simple things for dpatch. Here we only apply/unapply the patches.
-# You can do more things with dpatch, like having patches only applied on
-# a special architecture - see the non-dh version of the sample for this!
-patch: patch-stamp
-patch-stamp:
-	dpatch apply-all
-	dpatch cat-all >patch-stamp
-	touch patch-stamp
-
-unpatch:
-	dpatch deapply-all
-	rm -rf patch-stamp debian/patched
-
 build: build-stamp
 
-build-stamp: configure-stamp patch
+build-stamp:
 	dh_testdir
-
 	# Add here commands to compile the package.
 	$(MAKE)
-	#docbook-to-man debian/matiec.sgml > matiec.1
-
 	touch $@
 
-clean: unpatch
+clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
+	rm -f build-stamp
 
 	# Add here commands to clean up after the build process.
 	-$(MAKE) clean
@@ -66,8 +42,14 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/matiec.
-	$(MAKE) INSTALL_PREDIR=$(CURDIR)/debian/matiec/usr INSTALL_BINDIR=/bin IECLIBDIR=/lib install	
+	#$(MAKE) INSTALL_PREDIR=$(CURDIR)/debian/matiec/usr INSTALL_BINDIR=/bin IECLIBDIR=/lib install	
 	
+	# Add here commands to install the package into debian/beremiz.
+	mkdir -p $(CURDIR)/debian/matiec/usr/share/matiec
+	
+	cp -a lib $(CURDIR)/debian/matiec/usr/share/matiec
+	cp iec2c $(CURDIR)/debian/matiec/usr/share/matiec
+		
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -105,4 +87,4 @@ binary-arch: build install
 	dh_builddeb
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure patch unpatch
+.PHONY: build clean binary-indep binary-arch binary install
