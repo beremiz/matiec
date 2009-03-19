@@ -12,11 +12,17 @@ clean:
 	-rm -f iec.flex.c iec.y.cc iec.y.hh iec.y.output
 	-rm -f iec.noerrorcheck.y
 	-rm -f test_flex
+	-rm -f stage1_2.o
+	-rm -f iec.y.o
+	-rm -f iec.flex.o
+
 
 CFLAGS += -I. -I../* -I../../absyntax
 
 iec.flex.c: iec.flex
 	flex -oiec.flex.c iec.flex
+
+stage1_2.cc: iec.y.hh
 
 iec.flex.o: iec.y.hh iec.flex.c
 	$(CXX) -c iec.flex.c -D DEFAULT_LIBDIR='"$(IECLIBDIR)"' $(CFLAGS)

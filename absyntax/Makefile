@@ -10,7 +10,6 @@ all: absyntax.o visitor.o
 
 clean:
 	rm -f *.o
-	find . -depth -mindepth 2 -maxdepth 2 -name Makefile -printf %h\\n | xargs -i make -C{} $@
 
 
 #get warnings, debugging information and optimization
