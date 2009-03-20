@@ -90,11 +90,13 @@ class search_expression_type_c: public search_constant_type_c {
 
     /* A helper function... */
     bool is_bool_type(symbol_c *type_symbol) {
+      if (type_symbol == NULL) {return true;}
       return (typeid(*type_symbol) == typeid(bool_type_name_c));
     }
 
     /* A helper function... */
     bool is_time_type(symbol_c *type_symbol) {
+      if (type_symbol == NULL) {return true;}
       if (typeid(*type_symbol) == typeid(time_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(date_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(tod_type_name_c)) {return true;}
@@ -104,6 +106,7 @@ class search_expression_type_c: public search_constant_type_c {
 
     /* A helper function... */
     bool is_string_type(symbol_c *type_symbol) {
+      if (type_symbol == NULL) {return true;}
       if (typeid(*type_symbol) == typeid(string_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(wstring_type_name_c)) {return true;}
       return false;
@@ -111,6 +114,7 @@ class search_expression_type_c: public search_constant_type_c {
 
     /* A helper function... */
     bool is_integer_type(symbol_c *type_symbol) {
+      if (type_symbol == NULL) {return true;}
       if (typeid(*type_symbol) == typeid(sint_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(int_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(dint_type_name_c)) {return true;}
@@ -125,6 +129,7 @@ class search_expression_type_c: public search_constant_type_c {
     }
 
     bool is_real_type(symbol_c *type_symbol) {
+      if (type_symbol == NULL) {return true;}
       if (typeid(*type_symbol) == typeid(real_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(lreal_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(constant_real_type_name_c)) {return true;}
@@ -133,10 +138,12 @@ class search_expression_type_c: public search_constant_type_c {
     }
 
     bool is_num_type(symbol_c *type_symbol) {
+      if (type_symbol == NULL) {return true;}
       return is_real_type(type_symbol) || is_integer_type(type_symbol);
     }
 
     bool is_nbinary_type(symbol_c *type_symbol) {
+      if (type_symbol == NULL) {return true;}
       if (typeid(*type_symbol) == typeid(byte_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(word_type_name_c)) {return true;}
       if (typeid(*type_symbol) == typeid(dword_type_name_c)) {return true;}
@@ -147,11 +154,13 @@ class search_expression_type_c: public search_constant_type_c {
     }
 
     bool is_binary_type(symbol_c *type_symbol) {
+      if (type_symbol == NULL) {return true;}
       if (typeid(*type_symbol) == typeid(bool_type_name_c)) {return true;}
       return is_nbinary_type(type_symbol);
     }
     
     bool is_same_type(symbol_c *first_type, symbol_c *second_type) {
+      if (first_type == NULL || second_type == NULL) {return true;}
       if (typeid(*first_type) == typeid(*second_type)) {return true;}
       if (is_integer_type(first_type) && (typeid(*second_type) == typeid(constant_int_type_name_c))) {return true;}
       if ((typeid(*first_type) == typeid(constant_int_type_name_c) && is_integer_type(second_type))) {return true;}
@@ -165,6 +174,9 @@ class search_expression_type_c: public search_constant_type_c {
     }
 
     symbol_c* common_type(symbol_c *first_type, symbol_c *second_type) {
+      if (first_type == NULL && second_type == NULL) {return NULL;}
+      if (first_type == NULL) {return second_type;}
+      if (second_type == NULL) {return first_type;}
       if (typeid(*first_type) == typeid(*second_type)) {return first_type;}
       if (is_integer_type(first_type) && (typeid(*second_type) == typeid(constant_int_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c))) {return first_type;}
       if ((typeid(*first_type) == typeid(constant_int_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c)) && is_integer_type(second_type)) {return second_type;}
