@@ -357,7 +357,7 @@ void *visit(array_type_declaration_c *symbol) {
   current_basetypedeclaration = none_bd;
   s4o_incl.print(";\n");
   
-  if (search_base_type.type_is_subrange(current_type_name)) {
+  if (search_base_type.type_is_subrange(symbol->identifier)) {
     s4o.print("#define __CHECK_");
     symbol->identifier->accept(*this);
     s4o.print(" __CHECK_");
