@@ -134,6 +134,10 @@ void rst_pop_state(void) {pop_state__ = 0;}
  */
 /* static */ symtable_c<int, BOGUS_TOKEN_ID> variable_name_symtable;
 
+/* A symbol table to store the declared direct variables of
+ * the function currently being parsed...
+ */
+/* static */ symtable_c<int, BOGUS_TOKEN_ID> direct_variable_symtable;
 
 /* Function only called from within flex!
  *
@@ -153,6 +157,19 @@ int get_identifier_token(const char *identifier_str) {
   return token_id;
 }
 
+/* Function only called from within flex!
+ *
+ * search for a symbol in direct variables symbol table
+ * declared above, and return the token id of the first
+ * symbol found.
+ */
+int get_direct_variable_token(const char *direct_variable_str) {
+  int token_id;
+
+  if ((token_id = direct_variable_symtable.find_value(direct_variable_str)) == direct_variable_symtable.end_value())
+    return direct_variable_token;
+  return token_id;
+}
 
 /************************/
 /* Utility Functions... */

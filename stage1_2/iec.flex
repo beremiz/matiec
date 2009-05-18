@@ -1408,7 +1408,7 @@ EXIT		return EXIT;		/* Keyword */
 	/********************************************/
 	/* B.1.4.1   Directly Represented Variables */
 	/********************************************/
-{direct_variable}	{yylval.ID=strdup(yytext); return direct_variable_token;}
+{direct_variable}   {yylval.ID=strdup(yytext); return get_direct_variable_token(yytext);}
 
 
 	/******************************************/
@@ -1563,6 +1563,7 @@ const char *current_filename;
 
 
 int get_identifier_token(const char *identifier_str) {return 0;}
+int get_direct_variable_token(const char *direct_variable_str) {return 0;}
 
 
 

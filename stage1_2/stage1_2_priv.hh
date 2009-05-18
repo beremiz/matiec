@@ -165,6 +165,11 @@ extern symtable_c<int, BOGUS_TOKEN_ID> library_element_symtable;
  */
 extern symtable_c<int, BOGUS_TOKEN_ID> variable_name_symtable;
 
+/* A symbol table to store the declared direct variables of
+ * the function currently being parsed...
+ */
+extern symtable_c<int, BOGUS_TOKEN_ID> direct_variable_symtable;
+
 /* Function only called from within flex!
  *
  * search for a symbol in either of the two symbol tables
@@ -175,6 +180,13 @@ extern symtable_c<int, BOGUS_TOKEN_ID> variable_name_symtable;
  */
 int get_identifier_token(const char *identifier_str);
 
+/* Function only called from within flex!
+ *
+ * search for a symbol in direct variables symbol table
+ * declared above, and return the token id of the first
+ * symbol found.
+ */
+int get_direct_variable_token(const char *direct_variable_str);
 
 
 /************************/

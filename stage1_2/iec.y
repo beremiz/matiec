@@ -235,8 +235,10 @@ void print_err_msg(int first_line,
 %type <leaf>	any_identifier
 
 %token <ID>	prev_declared_variable_name_token
+%token <ID>	prev_declared_direct_variable_token
 %token <ID>	prev_declared_fb_name_token
 %type <leaf>	prev_declared_variable_name
+%type <leaf>	prev_declared_direct_variable
 %type <leaf>	prev_declared_fb_name
 
 %token  <ID>	prev_declared_simple_type_name_token
@@ -621,7 +623,7 @@ void print_err_msg(int first_line,
  size_prefix
 */
 %token <ID>	direct_variable_token
-%type  <leaf>	direct_variable
+//%type  <leaf>	direct_variable
 
 
 /*************************************/
@@ -2967,7 +2969,7 @@ string_type_declaration_init:
 /*********************/
 variable:
   symbolic_variable
-| direct_variable
+| prev_declared_direct_variable
 | eno_param
 ;
 
@@ -3017,7 +3019,7 @@ variable_name: identifier;
 /********************************************/
 /* B.1.4.1   Directly Represented Variables */
 /********************************************/
-direct_variable: direct_variable_token	{$$ = new direct_variable_c($1, locloc(@$));};
+prev_declared_direct_variable: prev_declared_direct_variable_token	{$$ = new direct_variable_c($1, locloc(@$));};
 
 
 
@@ -3856,8 +3858,10 @@ located_var_spec_init:
 
 
 location:
-  AT direct_variable
-	{$$ = new location_c($2, locloc(@$));}
+  AT direct_variable_token
+	{$$ = new location_c(new direct_variable_c($2, locloc(@$)), locloc(@$));
+	 direct_variable_symtable.insert($2, prev_declared_direct_variable_token);
+	}
 /* ERROR_CHECK_BEGIN */
 | AT error
 	{$$ = NULL;
@@ -4315,6 +4319,7 @@ function_declaration:
   function_name_declaration ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
 	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
 	 if (allow_function_overloading) {
 	   switch (library_element_symtable.find_value($1)) {
 	     case prev_declared_derived_function_name_token:
@@ -4336,6 +4341,7 @@ function_declaration:
 | function_name_declaration ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
 	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
 	 if (allow_function_overloading) {
 	   switch (library_element_symtable.find_value($1)) {
 	     case prev_declared_derived_function_name_token: /* do nothing, already in map. */ break;
@@ -4551,6 +4557,7 @@ function_block_declaration:
 	  * are no longer valid!
 	  */
 	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
 	}
 /* ERROR_CHECK_BEGIN */
 | FUNCTION_BLOCK io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
@@ -4702,6 +4709,7 @@ program_declaration:
 	  * are no longer valid!
 	  */
 	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
 	}
 /* ERROR_CHECK_BEGIN */
 | PROGRAM program_var_declarations_list function_block_body END_PROGRAM
@@ -5165,13 +5173,15 @@ configuration_declaration:
   CONFIGURATION configuration_name
    optional_global_var_declarations
    single_resource_declaration
-   {variable_name_symtable.pop();}
+   {variable_name_symtable.pop();
+    direct_variable_symtable.pop();}
    optional_access_declarations
    optional_instance_specific_initializations
   END_CONFIGURATION
 	{$$ = new configuration_declaration_c($2, $3, $4, $6, $7, locloc(@$));
 	 library_element_symtable.insert($2, prev_declared_configuration_name_token);
 	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
 	}
 | CONFIGURATION configuration_name
    optional_global_var_declarations
@@ -5182,12 +5192,14 @@ configuration_declaration:
 	{$$ = new configuration_declaration_c($2, $3, $4, $5, $6, locloc(@$));
 	 library_element_symtable.insert($2, prev_declared_configuration_name_token);
 	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
 }
 /* ERROR_CHECK_BEGIN */
 | CONFIGURATION 
    optional_global_var_declarations
    single_resource_declaration
-   {variable_name_symtable.pop();}
+   {variable_name_symtable.pop();
+    direct_variable_symtable.pop();}
    optional_access_declarations
    optional_instance_specific_initializations
   END_CONFIGURATION
@@ -5202,7 +5214,8 @@ configuration_declaration:
 | CONFIGURATION error
    optional_global_var_declarations
    single_resource_declaration
-   {variable_name_symtable.pop();}
+   {variable_name_symtable.pop();
+    direct_variable_symtable.pop();}
    optional_access_declarations
    optional_instance_specific_initializations
   END_CONFIGURATION
@@ -5230,7 +5243,8 @@ configuration_declaration:
 /*| CONFIGURATION configuration_name
    optional_global_var_declarations
    single_resource_declaration
-   {variable_name_symtable.pop();}
+   {variable_name_symtable.pop();
+    direct_variable_symtable.pop();}
    optional_access_declarations
    optional_instance_specific_initializations
   END_OF_INPUT
@@ -5286,21 +5300,22 @@ resource_declaration_list:
 
 
 resource_declaration:
-  RESOURCE {variable_name_symtable.push();} resource_name ON resource_type_name
+  RESOURCE {variable_name_symtable.push();direct_variable_symtable.push();} resource_name ON resource_type_name
    optional_global_var_declarations
    single_resource_declaration
   END_RESOURCE
 	{$$ = new resource_declaration_c($3, $5, $6, $7, locloc(@$));
 	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
 	 variable_name_symtable.insert($3, prev_declared_resource_name_token);
 	}
 /* ERROR_CHECK_BEGIN */
-| RESOURCE {variable_name_symtable.push();} ON resource_type_name
+| RESOURCE {variable_name_symtable.push();direct_variable_symtable.push();} ON resource_type_name
    optional_global_var_declarations
    single_resource_declaration
   END_RESOURCE
   {$$ = NULL; print_err_msg(locl(@1), locf(@3), "no resource name defined in resource declaration."); yynerrs++;}
-/*|	RESOURCE {variable_name_symtable.push();} resource_name ON resource_type_name
+/*|	RESOURCE {variable_name_symtable.push();direct_variable_symtable.push();} resource_name ON resource_type_name
    optional_global_var_declarations
    single_resource_declaration
   END_OF_INPUT
@@ -5397,8 +5412,8 @@ access_declaration:
 
 
 access_path:
-  direct_variable
-| prev_declared_resource_name '.' direct_variable
+  prev_declared_direct_variable
+| prev_declared_resource_name '.' prev_declared_direct_variable
 | any_fb_name_list symbolic_variable
 | prev_declared_resource_name '.' any_fb_name_list symbolic_variable
 | prev_declared_program_name '.'  any_fb_name_list symbolic_variable
@@ -5566,7 +5581,7 @@ data_source:
   constant
 | global_var_reference
 | program_output_reference
-| direct_variable
+| prev_declared_direct_variable
 ;
 
 program_configuration:
@@ -5758,12 +5773,12 @@ prog_data_source:
   constant
 | enumerated_value
 | global_var_reference
-| direct_variable
+| prev_declared_direct_variable
 ;
 
 data_sink:
   global_var_reference
-| direct_variable
+| prev_declared_direct_variable
 ;
 
 instance_specific_initializations:

@@ -77,7 +77,7 @@ class search_varfb_instance_type_c: public search_base_type_c {
       symbol_c *var_decl = search_var_instance_decl.get_decl(var_name_part);
       if (NULL == var_decl) {
         /* variable instance declaration not found! */
- 	      return NULL;
+ 	      ERROR;
       }
 
       /* if it is a struct or function block, we must search the type
