@@ -28,11 +28,8 @@ FUNCTION_BLOCK CTU
     Q : BOOL;
     CV : INT;
   END_VAR
-  VAR RETAIN
-    PVmax : INT;
-  END_VAR
   IF R THEN CV := 0 ;
-  ELSIF CU AND (CV < PVmax)
+  ELSIF CU AND (CV < PV)
        THEN CV := CV+1;
   END_IF ;
   Q := (CV >= PV) ;
@@ -49,11 +46,8 @@ FUNCTION_BLOCK CTD
     Q : BOOL;
     CV : INT;
   END_VAR
-  VAR RETAIN
-    PVmin : INT;
-  END_VAR
   IF LD THEN CV := PV ;
-  ELSIF CD AND (CV > PVmin)
+  ELSIF CD AND (CV > 0)
       THEN CV := CV-1;
   END_IF ;
   Q := (CV <= 0) ;
@@ -73,17 +67,13 @@ FUNCTION_BLOCK CTUD
     QD : BOOL;
     CV : INT;
   END_VAR
-  VAR RETAIN
-    PVmax : INT;
-    PVmin : INT;
-  END_VAR
   IF R THEN CV := 0 ;
   ELSIF LD THEN CV := PV ;
   ELSE
     IF NOT (CU AND CD) THEN
-      IF CU AND (CV < PVmax)
+      IF CU AND (CV < PV)
       THEN CV := CV+1;
-      ELSIF CD AND (CV > PVmin)
+      ELSIF CD AND (CV > 0)
       THEN CV := CV-1;
       END_IF;
     END_IF;
