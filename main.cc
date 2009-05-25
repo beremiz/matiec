@@ -65,9 +65,6 @@
 #include <stdlib.h>  // EXIT_FAILURE
 #include "absyntax/absyntax.hh"  // symbol_c type
 
-
-
-
 /* A macro for printing out internal parser errors... */
 #include <iostream> // required for std::cerr
 #define ERROR error_exit(__FILE__,__LINE__)
@@ -79,67 +76,84 @@ void error_exit(const char *file_name, int line_no) {
 
 
 
-/* forward declarations... */
-int stage1_2(const char *filename, const char *includedir, symbol_c **tree_root, bool full);
+
+#include "stage1_2/stage1_2.hh"
+
 //int stage3(symbol_c *tree_root);
 int stage4(symbol_c *tree_root, const char *builddir);
 
 
 static void printusage(const char *cmd) {
-  printf("syntaxe: %s [-fh] <input_file> [-I <include_directory>] [<target_directory>]\n", cmd);
-  printf("  f : full token location on error messages\n");
+  printf("syntax: %s [-h] [-f] [-s] [-I <include_directory>] [-T <target_directory>] <input_file>\n", cmd);
   printf("  h : show this help message\n");
+  printf("  f : full token location on error messages\n");
+      /******************************************************/
+      /* whether we are suporting safe extensions           */
+      /* as defined in PLCopen - Technical Committee 5      */
+      /* Safety Software Technical Specification,           */
+      /* Part 1: Concepts and Function Blocks,              */
+      /* Version 1.0 – Official Release                     */
+      /******************************************************/
+  printf("  s : allow use of safe extensions\n");
 }
 
 
 
 int main(int argc, char **argv) {
   symbol_c *tree_root;
-  char * includedir = NULL;
   char * builddir = NULL;
-  bool full = false;
-  int offset = 0; 
+  stage1_2_options_t stage1_2_options = {false, false, NULL};
+  int optres, errflg = 0;
+/*
+  extern char *optarg;
+  extern int optind, optopt;
+*/
 
-  if (argc < 2 || argc > 6) {
-    printusage(argv[0]);
-    return EXIT_FAILURE;
+  while ((optres = getopt(argc, argv, ":hfsI:T:")) != -1) {
+    switch(optres) {
+    case 'h':
+      printusage(argv[0]);
+      return 0;
+      break;
+    case 'f':
+      stage1_2_options.full_token_loc = true;
+      break;
+    case 's':
+      stage1_2_options.safe_extensions = true;
+      break;
+    case 'I':
+      stage1_2_options.includedir = optarg;
+      break;
+    case ':':       /* -I or -T without operand */
+      fprintf(stderr, "Option -%c requires an operand\n", optopt);
+      errflg++;
+      break;
+    case '?':
+    default:
+      fprintf(stderr, "Unrecognized option: -%c\n", optopt);
+      errflg++;
+      break;
+    }
   }
 
-  if (strcmp(argv[1], "-h") == 0) {
-    printusage(argv[0]);
-    return 0;
+  if (optind == argc) {
+    fprintf(stderr, "Missing input file\n");
+    errflg++;
   }
 
-  if (strcmp(argv[1], "-f") == 0) {
-    if (argc == 2) {
+  if (optind > argc) {
+    fprintf(stderr, "Too many input files\n");
+    errflg++;
+  }
+
+  if (errflg) {
       printusage(argv[0]);
       return EXIT_FAILURE;
-    }
-    full = true;
-    offset = 1;
-  }
-    
-  if (argc == (5 + offset)) {
-    builddir = argv[4 + offset];
-    argc = 4 + offset;
   }
 
-  if (argc == (4 + offset)) {
-    if (strcmp(argv[2 + offset], "-I") != 0) {
-      printusage(argv[0]);
-      return EXIT_FAILURE;
-    }
-    includedir = argv[3 + offset];
-    argc = 2 + offset;
-  }
-
-  if (argc == (3 + offset)) {
-    builddir = argv[2 + offset];
-    argc = 2 + offset;
-  }    
 
   /* 1st Pass */
-  if (stage1_2(argv[1 + offset], includedir, &tree_root, full) < 0)
+  if (stage1_2(argv[optind], &tree_root, stage1_2_options) < 0)
     return EXIT_FAILURE;
 
   /* 2nd Pass */

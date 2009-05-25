@@ -1122,7 +1122,6 @@ ULINT		return ULINT;		/* Keyword (Data Type) */
 WSTRING		return WSTRING;		/* Keyword (Data Type) */
 STRING		return STRING;		/* Keyword (Data Type) */
 BOOL		return BOOL;		/* Keyword (Data Type) */
-
 TIME		return TIME;		/* Keyword (Data Type) */
 DATE		return DATE;		/* Keyword (Data Type) */
 DT		return DT;		/* Keyword (Data Type) */
@@ -1389,6 +1388,20 @@ END_REPEAT	return END_REPEAT;	/* Keyword */
 EXIT		return EXIT;		/* Keyword */
 
 
+	/*****************************************************************/
+	/* Keywords defined in "Safety Software Technical Specification" */
+	/*****************************************************************/
+        /* 
+         * NOTE: The following keywords are define in 
+         *       "Safety Software Technical Specification,
+         *        Part 1: Concepts and Function Blocks,  
+         *        Version 1.0 – Official Release"
+         *        written by PLCopen - Technical Committee 5
+         *
+         *        We only support these extensions and keywords
+         *        if the apropriate command line option is given.
+         */
+SAFEBOOL	{if (get_opt_safe_extensions()) {return SAFEBOOL;} else{REJECT;}}	/* Keyword (Data Type) */ 
 
 
 
@@ -1564,7 +1577,6 @@ const char *current_filename;
 
 int get_identifier_token(const char *identifier_str) {return 0;}
 int get_direct_variable_token(const char *direct_variable_str) {return 0;}
-
 
 
 int main(int argc, char **argv) {

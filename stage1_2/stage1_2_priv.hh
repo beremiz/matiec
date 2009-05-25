@@ -42,7 +42,7 @@
 
 /* file with the declarations of symbol tables... */
 #include "../util/symtable.hh"
-
+#include "stage1_2.hh"
 
 
 /*
@@ -52,6 +52,9 @@
  * This is mostly through direct access to shared global variables, however some
  * of the global variables will only be accessed through some accessor functions.
  *
+ * This file also includes the interface between the main stage1_2() functions and 
+ * the flex lexical parser.
+ *
  * This file also includes some utility functions (strdupX() ) that are both used
  * in the lexical and syntax analysers.
  */
@@ -59,6 +62,34 @@
 
 
 
+/*************************************************************/
+/*************************************************************/
+/****                                                    *****/
+/****  I n t e r f a c e    B e t w e e n                *****/
+/****           F l e x    a n d     s t a g e 1 _ 2 ()  *****/
+/****                                                    *****/
+/*************************************************************/
+/*************************************************************/
+
+/******************************************************/
+/* whether we are suporting safe extensions           */
+/* as defined in PLCopen - Technical Committee 5      */
+/* Safety Software Technical Specification,           */
+/* Part 1: Concepts and Function Blocks,              */
+/* Version 1.0 – Official Release                     */
+/******************************************************/
+bool get_opt_safe_extensions();
+
+
+
+/*************************************************************/
+/*************************************************************/
+/****                                                    *****/
+/****  I n t e r f a c e    B e t w e e n                *****/
+/****           F l e x    a n d     B i s o n           *****/
+/****                                                    *****/
+/*************************************************************/
+/*************************************************************/
 
 /*********************************************/
 /* print the include file stack to stderr... */
@@ -79,6 +110,7 @@ void print_include_stack(void);
  * file being parsed.
  */
 extern const char *current_filename;
+
 
 #define MAX_BUFFER_LENGTH 1000
 
@@ -141,6 +173,10 @@ void rst_pop_state(void);
 /*********************************/
 /* NOTE: only accessed indirectly by the lexical parser (flex)
  *       through the function get_identifier_token()
+ *
+ *       Bison accesses these data structures directly.
+ *
+ *       In essence, they are a data passing mechanism between Bison and Flex.
  */
 /* NOTE: BOGUS_TOKEN_ID is defined in the bison generated file iec.y.hh.
  *       We need this constant defined before we can declare the symbol tables.
@@ -189,9 +225,14 @@ int get_identifier_token(const char *identifier_str);
 int get_direct_variable_token(const char *direct_variable_str);
 
 
-/************************/
-/* Utility Functions... */
-/************************/
+/*************************************************************/
+/*************************************************************/
+/****                                                    *****/
+/****  U t i l i t y   F u n c t i o n s ...             *****/
+/****                                                    *****/
+/****                                                    *****/
+/*************************************************************/
+/*************************************************************/
 
 /* Join two strings together. Allocate space with malloc(3). */
 char *strdup2(const char *a, const char *b);

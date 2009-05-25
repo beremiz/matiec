@@ -536,6 +536,14 @@ void *visit(date_and_time_c *symbol) {
     void *visit(dword_type_name_c *symbol) {s4o.print("DWORD"); return NULL;}
     void *visit(string_type_name_c *symbol) {s4o.print("STRING"); return NULL;}
     void *visit(wstring_type_name_c *symbol) {s4o.print("WSTRING"); return NULL;}
+    /******************************************************/
+    /* Extensions to the base standard as defined in      */
+    /* "Safety Software Technical Specification,          */
+    /*  Part 1: Concepts and Function Blocks,             */
+    /*  Version 1.0 – Official Release"                   */
+    /* by PLCopen - Technical Committee 5 - 2006-01-31    */
+    /******************************************************/
+    void *visit(safebool_type_name_c *symbol) {s4o.print("SAFEBOOL"); return NULL;}
 
 /********************************/
 /* B.1.3.2 - Generic data types */
@@ -671,6 +679,7 @@ void *visit(structured_variable_c *symbol) {
 /* B 3.2.4 Iteration Statements */
 /********************************/
   /* leave for derived classes... */
+
 
 }; /* class generate_c_basic_c */
 

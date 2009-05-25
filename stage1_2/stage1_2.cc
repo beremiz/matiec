@@ -35,7 +35,7 @@
 #include "../absyntax/absyntax.hh"
 
 
-// #include "stage1_2.hh"
+#include "stage1_2.hh"
 #include "iec.y.hh"
 #include "stage1_2_priv.hh"
 
@@ -57,7 +57,15 @@
 const char *current_filename = NULL;
 
 
-
+/******************************************************/
+/* whether we are suporting safe extensions           */
+/* as defined in PLCopen - Technical Committee 5      */
+/* Safety Software Technical Specification,           */
+/* Part 1: Concepts and Function Blocks,              */
+/* Version 1.0 – Official Release                     */
+/******************************************************/
+bool safe_extensions_ = false;
+bool get_opt_safe_extensions() {return safe_extensions_;}
 
 /****************************************************/
 /* Controlling the entry to the body_state in flex. */
@@ -263,10 +271,26 @@ tracking_t* GetNewTracking(FILE* in_file) {
 /***********************************************************************/
 
 
-int stage1_2__(const char *filename, const char *includedir, symbol_c **tree_root_ref, bool full);
+int stage2__(const char *filename, 
+             const char *includedir,     /* Include directory, where included files will be searched for... */
+             symbol_c **tree_root_ref,
+             bool full_token_loc         /* error messages specify full token location */
+            );
 
 
-int stage1_2(const char *filename, const char *includedir, symbol_c **tree_root_ref, bool full) {
-  return stage1_2__(filename, includedir, tree_root_ref, full);
+int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t options) {
+      /* NOTE: we only call stage2 (bison - syntax analysis) directly, as stage 2 will itself call stage1 (flex - lexical analysis)
+       *       automatically as needed
+       */
+
+      /* NOTE: Since we do not call stage1__ (flex) directly, we cannot directly pass any parameters to that function either.
+       *       In this case, we use callback functions, i.e. stage1__ (i.e. flex) will call functions defined in this file
+       *       whenever it needs info/parameters coming from stage1_2().
+       *       These callback functions will get their data from local (to this file) global variables...
+       *       We now set those variables...
+       */
+  safe_extensions_ = options.safe_extensions;
+  
+  return stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc);
 }
 

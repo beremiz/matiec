@@ -68,6 +68,16 @@ class search_constant_type_c: public search_visitor_c {
   static constant_int_type_name_c      constant_int_type_name;
   static direct_variable_type_name_c   direct_variable_type_name;
 
+  /******************************************************/
+  /* Extensions to the base standard as defined in      */
+  /* "Safety Software Technical Specification,          */
+  /*  Part 1: Concepts and Function Blocks,             */
+  /*  Version 1.0 – Official Release"                   */
+  /* by PLCopen - Technical Committee 5 - 2006-01-31    */
+  /******************************************************/
+  static safebool_type_name_c safebool_type_name;
+
+
   public:
     symbol_c *get_type(symbol_c *constant) {
       return (symbol_c *)constant->accept(*this);

@@ -287,6 +287,14 @@ void *visit(date_and_time_c *symbol) {
 /***********************************/
 void *visit(time_type_name_c *symbol) {s4o.print("TIME"); return NULL;}
 void *visit(bool_type_name_c *symbol) {s4o.print("BOOL"); return NULL;}
+/******************************************************/
+/* whether we are suporting safe extensions           */
+/* as defined in PLCopen - Technical Committee 5      */
+/* Safety Software Technical Specification,           */
+/* Part 1: Concepts and Function Blocks,              */
+/* Version 1.0 – Official Release                     */
+/******************************************************/
+void *visit(safebool_type_name_c *symbol) {s4o.print("SAFEBOOL"); return NULL;}
 void *visit(sint_type_name_c *symbol) {s4o.print("SINT"); return NULL;}
 void *visit(int_type_name_c *symbol) {s4o.print("INT"); return NULL;}
 void *visit(dint_type_name_c *symbol) {s4o.print("DINT"); return NULL;}

@@ -133,11 +133,23 @@ extern void error_exit(const char *file_name, int line_no);
  *       fact be defined towards the end of this same file (i.e. in the prologue)
  */
 
+
+/* NOTE: These variable are really parameters we would like the stage2__ function to pass
+ *       to the yyparse() function. However, the yyparse() function is created automatically
+ *       by bison, so we cannot add parameters to this function. The only other
+ *       option is to use global variables! yuck!
+ */
+
 /* A global flag used to tell the parser if overloaded funtions should be allowed.
  * The IEC 61131-3 standard allows overloaded funtions in the standard library,
  * but disallows them in user code...
  */
 extern bool allow_function_overloading;
+
+/* A global flag used to tell the parser whether to include the full variable location
+ * when printing out error messages...
+ */
+extern bool full_token_loc;
 
 /* A pointer to the root of the parsing tree that will be generated 
  * by bison.
@@ -1247,6 +1259,16 @@ void print_err_msg(int first_line,
 
 %token EXIT
 
+
+/******************************************************/
+/* Symbols defined in                                 */
+/* "Safety Software Technical Specification,          */
+/*  Part 1: Concepts and Function Blocks,             */
+/*  Version 1.0 – Official Release"                   */
+/* by PLCopen - Technical Committee 5 - 2006-01-31    */
+/******************************************************/
+%token SAFEBOOL
+
 %%
 
 
@@ -2218,6 +2240,14 @@ elementary_type_name:
  * and grouping type definition for reason why BOOL
  * was added to this definition.
  */
+    /******************************************************/
+    /* Symbols defined in                                 */
+    /* "Safety Software Technical Specification,          */
+    /*  Part 1: Concepts and Function Blocks,             */
+    /*  Version 1.0 – Official Release"                   */
+    /* by PLCopen - Technical Committee 5 - 2006-01-31    */
+    /******************************************************/
+| SAFEBOOL	{$$ = new safebool_type_name_c(locloc(@$));}
 ;
 
 numeric_type_name:
@@ -7409,11 +7439,28 @@ extern int yylineno;
 extern tracking_t* current_tracking;
 
 
+
+
+/*************************************************************************************************/
+/* NOTE: These variables are really parameters we would like the stage2__ function to pass       */
+/*       to the yyparse() function. However, the yyparse() function is created automatically     */
+/*       by bison, so we cannot add parameters to this function. The only other                  */
+/*       option is to use global variables! yuck!                                                */ 
+/*************************************************************************************************/
+
 /* A global flag used to tell the parser if overloaded funtions should be allowed.
  * The IEC 61131-3 standard allows overloaded funtions in the standard library,
  * but disallows them in user code...
+ *
+ * In essence, a parameter we would like to pass to the yyparse() function but
+ * have to do it using a global variable, as the yyparse() prototype is fixed by bison.
  */
 bool allow_function_overloading = false;
+
+/* A global flag used to tell the parser whether to include the full variable location
+ * when printing out error messages...
+ */
+bool full_token_loc;
 
 /* A pointer to the root of the parsing tree that will be generated 
  * by bison.
@@ -7437,7 +7484,6 @@ void yyerror (const char *error_msg) {
 /*  print_include_stack(); */
 }
 
-bool full_error;
 
 bool is_current_syntax_token() {
 	switch (yychar) {
@@ -7474,7 +7520,7 @@ void print_err_msg(int first_line,
                    int last_line,
                    int last_column,
                    const char *additional_error_msg) {
-  if (full_error)
+  if (full_token_loc)
   	fprintf(stderr, "%s:%d-%d..%d-%d: error : %s\n", current_filename, first_line, first_column, last_line, last_column, additional_error_msg);
   else
   	fprintf(stderr, "%s:%d: error : %s\n", current_filename, first_line, additional_error_msg);
@@ -7603,12 +7649,18 @@ NULL
 
 extern const char *INCLUDE_DIRECTORIES[];
 
-int stage1_2__(const char *filename, const char *includedir, symbol_c **tree_root_ref, bool full) {
+
+
+int stage2__(const char *filename, 
+             const char *includedir,     /* Include directory, where included files will be searched for... */
+             symbol_c **tree_root_ref,
+             bool full_token_loc_        /* error messages specify full token location */
+            ) {
+
   FILE *in_file = NULL, *lib_file = NULL;
   char *libfilename = NULL;
 	
-	full_error = full;
-	
+
   if((in_file = fopen(filename, "r")) == NULL) {
     char *errmsg = strdup2("Error opening main file ", filename);
     perror(errmsg);
@@ -7640,6 +7692,7 @@ int stage1_2__(const char *filename, const char *includedir, symbol_c **tree_roo
   /* first parse the standard library file... */
   yyin = lib_file;
   allow_function_overloading = true;
+  full_token_loc = full_token_loc_;
   current_filename = libfilename;
   current_tracking = GetNewTracking(yyin);
   if (yyparse() != 0)
@@ -7672,6 +7725,7 @@ int stage1_2__(const char *filename, const char *includedir, symbol_c **tree_roo
   /* now parse the input file... */
   yyin = in_file;
   allow_function_overloading = false;
+  full_token_loc = full_token_loc_;
   current_filename = filename;
   current_tracking = GetNewTracking(yyin);
   {int res;

@@ -95,6 +95,14 @@ class search_base_type_c: public null_visitor_c {
     void *visit(constant_int_type_name_c *symbol)    {return (void *)symbol;}
     void *visit(constant_real_type_name_c *symbol)    {return (void *)symbol;}
     void *visit(direct_variable_type_name_c *symbol)    {return (void *)symbol;}
+    /******************************************************/
+    /* Extensions to the base standard as defined in      */
+    /* "Safety Software Technical Specification,          */
+    /*  Part 1: Concepts and Function Blocks,             */
+    /*  Version 1.0 – Official Release"                   */
+    /* by PLCopen - Technical Committee 5 - 2006-01-31    */
+    /******************************************************/
+    void *visit(safebool_type_name_c *symbol)	{return (void *)symbol;}
 
 /********************************/
 /* B 1.3.3 - Derived data types */
@@ -225,6 +233,8 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 					string_type_declaration_init) // may be == NULL!
 */
     void *visit(string_type_declaration_c *symbol)	{return symbol;}
+
+
 };
 
 
