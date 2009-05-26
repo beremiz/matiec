@@ -78,6 +78,7 @@ void error_exit(const char *file_name, int line_no) {
 
 
 #include "stage1_2/stage1_2.hh"
+#include "search_utils/search_utils.hh"
 
 //int stage3(symbol_c *tree_root);
 int stage4(symbol_c *tree_root, const char *builddir);
@@ -157,6 +158,9 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
 
   /* 2nd Pass */
+printf("loading symbol tables...\n");
+  search_utils_init(tree_root);
+printf("loading symbol tables... DONE!\n");
   /* not yet implemented... */
   /*
   if (stage3(tree_root) < 0)

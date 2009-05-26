@@ -73,8 +73,7 @@ extern void error_exit(const char *file_name, int line_no);
 
 
 
-
-
+#if 0
 /* A symbol table with all globally declared functions... */
 function_declaration_c null_symbol1(NULL,NULL,NULL,NULL);
 dsymtable_c<function_declaration_c *, &null_symbol1> function_symtable;
@@ -93,8 +92,11 @@ symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
  */
 symbol_c null_symbol4;
 symtable_c<symbol_c *, &null_symbol4> type_symtable;
+#else
 
+#include "../../search_utils/search_utils.hh"
 
+#endif
 
 /***********************************************************************/
 /***********************************************************************/
@@ -550,11 +552,6 @@ void *visit(function_declaration_c *symbol) {
   generate_c_vardecl_c *vardecl;
   TRACE("function_declaration_c");
 
-  /* start off by adding this declaration to the global
-   * function declaration symbol table...
-   */
-  function_symtable.insert(symbol->derived_function_name, symbol);
-
   /* (A) Function declaration... */
   /* (A.1) Function return type */
   s4o.print("// FUNCTION\n");
@@ -673,11 +670,6 @@ void *visit(function_block_declaration_c *symbol) {
   generate_c_typedecl_c *typedecl;
   TRACE("function_block_declaration_c");
 
-  /* start off by adding this declaration to the global
-   * function block declaration symbol table...
-   */
-  function_block_type_symtable.insert(symbol->fblock_name, symbol);
-  
   /* (A) Function Block data structure declaration... */
   typedecl = new generate_c_typedecl_c(&s4o_incl);
   /* (A.1) Data structure declaration */
@@ -872,11 +864,6 @@ void *visit(program_declaration_c *symbol) {
   generate_c_sfcdecl_c *sfcdecl;
   generate_c_typedecl_c *typedecl;
   TRACE("program_declaration_c");
-
-  /* start off by adding this declaration to the global
-   * program declaration symbol table...
-   */
-  program_type_symtable.insert(symbol->program_type_name, symbol);
 
   /* (A) Program data structure declaration... */
   typedecl = new generate_c_typedecl_c(&s4o_incl);

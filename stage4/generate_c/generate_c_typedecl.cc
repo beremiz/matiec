@@ -194,8 +194,6 @@ class generate_c_typedecl_c: public generate_c_base_c {
 /*  subrange_type_name ':' subrange_spec_init */
 void *visit(subrange_type_declaration_c *symbol) {
   TRACE("subrange_type_declaration_c");  
-  /* add this type declaration to the type symbol table... */
-  type_symtable.insert(symbol->subrange_type_name, symbol->subrange_spec_init);
   
   s4o_incl.print("typedef ");
   current_basetypedeclaration = subrangebasetype_bd;
@@ -308,8 +306,6 @@ void *visit(subrange_c *symbol) {
 /*  enumerated_type_name ':' enumerated_spec_init */
 void *visit(enumerated_type_declaration_c *symbol) {
   TRACE("enumerated_type_declaration_c");
-  /* add this type declaration to the type symbol table... */
-  type_symtable.insert(symbol->enumerated_type_name, symbol->enumerated_spec_init);
   
   s4o_incl.print("typedef enum {\n");
   s4o_incl.indent_right();
@@ -343,8 +339,6 @@ void *visit(enumerated_value_c *symbol) {
 /*  identifier ':' array_spec_init */
 void *visit(array_type_declaration_c *symbol) {
   TRACE("array_type_declaration_c");
-  /* add this type declaration to the type symbol table... */
-  type_symtable.insert(symbol->identifier, symbol->array_spec_init);
   
   s4o_incl.print("typedef ");
   current_basetypedeclaration = arraybasetypeincl_bd;
@@ -448,8 +442,6 @@ void *visit(type_declaration_list_c *symbol) {
 /*  simple_type_name ':' simple_spec_init */
 void *visit(simple_type_declaration_c *symbol) {
   TRACE("simple_type_declaration_c");
-  /* add this type declaration to the type symbol table... */
-  type_symtable.insert(symbol->simple_type_name, symbol->simple_spec_init);
 
   s4o_incl.print("typedef ");
   symbol->simple_spec_init->accept(*this);
@@ -522,8 +514,6 @@ SYM_REF2(array_initial_elements_c, integer, array_initial_element)
 //SYM_REF2(structure_type_declaration_c, structure_type_name, structure_specification)
 void *visit(structure_type_declaration_c *symbol) {
   TRACE("structure_type_declaration_c");
-  /* add this type declaration to the type symbol table... */
-  type_symtable.insert(symbol->structure_type_name, symbol->structure_specification);
 
   s4o_incl.print("typedef ");
   symbol->structure_specification->accept(*this);
