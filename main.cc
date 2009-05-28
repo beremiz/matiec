@@ -125,6 +125,9 @@ int main(int argc, char **argv) {
     case 'I':
       stage1_2_options.includedir = optarg;
       break;
+    case 'T':
+      builddir = optarg;
+      break;
     case ':':       /* -I or -T without operand */
       fprintf(stderr, "Option -%c requires an operand\n", optopt);
       errflg++;
