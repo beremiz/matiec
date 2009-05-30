@@ -57,11 +57,11 @@ typedef struct {
 #define __64b_sufix L
 #else
 #define __32b_sufix L
-#define __64b_sufix LL 
-#endif 
+#define __64b_sufix LL
+#endif
 
 #define __lit(type,value,sfx) (type)value##sfx
-// Keep this macro expention step to let sfx change into L or LL 
+// Keep this macro expention step to let sfx change into L or LL
 #define __literal(type,value,sfx) __lit(type,value,sfx)
 
 #define __BOOL_LITERAL(value) __literal(BOOL,value,)
@@ -161,7 +161,7 @@ static inline void __normalize_timespec (struct timespec *ts) {
 
 static inline struct timespec __time_to_timespec(int sign, double mseconds, double seconds, double minutes, double hours, double days) {
   struct timespec ts;
-  
+
   /* sign is 1 for positive values, -1 for negative time... */
   long double total_sec = ((days*24 + hours)*60 + minutes)*60 + seconds + mseconds/1e3;
   if (sign >= 0) sign = 1; else sign = -1;
@@ -174,11 +174,11 @@ static inline struct timespec __time_to_timespec(int sign, double mseconds, doub
 
 static inline struct timespec __tod_to_timespec(double seconds, double minutes, double hours) {
   struct timespec ts;
-  
+
   long double total_sec = (hours*60 + minutes)*60 + seconds;
   ts.tv_sec = (long int)total_sec;
   ts.tv_nsec = (long int)((total_sec - ts.tv_sec)*1e9);
-  
+
   return ts;
 }
 
@@ -200,13 +200,13 @@ static inline struct timespec __date_to_timespec(int day, int month, int year) {
 
   ts.tv_sec = epoch_seconds;
   ts.tv_nsec = 0;
-  
+
   return ts;
 }
 
 static inline struct timespec __dt_to_timespec(double seconds,  double minutes, double hours, int day, int month, int year) {
   struct timespec ts;
-  
+
   long double total_sec = (hours*60 + minutes)*60 + seconds;
   ts.tv_sec = (long int)total_sec;
   ts.tv_nsec = (long int)((total_sec - ts.tv_sec)*1e9);
@@ -256,7 +256,7 @@ static inline struct timespec __dt_to_timespec(double seconds,  double minutes, 
 /***************/
 /*   Time ops  */
 /***************/
-#define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t1.tv_nsec - t2.tv_nsec : t1.tv_sec - t2.tv_sec) 
+#define __TIME_CMP(t1, t2) (t2.tv_sec == t1.tv_sec ? t1.tv_nsec - t2.tv_nsec : t1.tv_sec - t2.tv_sec)
 
 static inline TIME __TIME_ADD(TIME IN1, TIME IN2){
   TIME res ={IN1.tv_sec + IN2.tv_sec,
@@ -376,11 +376,11 @@ static inline STRING __insert(EN_ENO_PARAMS, STRING IN1, STRING IN2, __strlen_t 
     TEST_EN_COND(STRING, P < 0)
     STRING res = __INIT_STRING;
     __strlen_t to_copy;
-    
+
     to_copy = P > IN1.len ? IN1.len : P - 1;
     memcpy(&res.body, &IN1.body , to_copy);
     P = res.len = to_copy;
-    
+
     to_copy = IN2.len + res.len > STR_MAX_LEN ? STR_MAX_LEN - res.len : IN2.len;
     memcpy(&res.body[res.len], &IN2.body , to_copy);
     res.len += to_copy;
@@ -395,7 +395,7 @@ static inline STRING __delete(EN_ENO_PARAMS, STRING IN, __strlen_t L, __strlen_t
     TEST_EN_COND(STRING, L < 0 || P < 0)
     STRING res = __INIT_STRING;
     __strlen_t to_copy;
-    
+
     to_copy = P > IN.len ? IN.len : P-1;
     memcpy(&res.body, &IN.body , to_copy);
     P = res.len = to_copy;
@@ -412,15 +412,15 @@ static inline STRING __replace(EN_ENO_PARAMS, STRING IN1, STRING IN2, __strlen_t
     TEST_EN_COND(STRING, L < 0 || P < 0)
     STRING res = __INIT_STRING;
     __strlen_t to_copy;
-    
+
     to_copy = P > IN1.len ? IN1.len : P-1;
     memcpy(&res.body, &IN1.body , to_copy);
     P = res.len = to_copy;
-    
+
     to_copy = IN2.len < L ? IN2.len : L;
 
-    if( to_copy + res.len > STR_MAX_LEN ) 
-       to_copy = STR_MAX_LEN - res.len;   
+    if( to_copy + res.len > STR_MAX_LEN )
+       to_copy = STR_MAX_LEN - res.len;
 
     memcpy(&res.body[res.len], &IN2.body , to_copy);
     res.len += to_copy;
@@ -446,7 +446,7 @@ static inline __strlen_t __pfind(STRING* IN1, STRING* IN2){
         if(IN1->body[count1 + count2] != IN2->body[count2++]){
             count1 += count2;
             count2 = 0;
-        }        
+        }
     }
     return count2 == IN2->len -1 ? 0 : count1 + 1;
 }
@@ -510,7 +510,7 @@ static inline LINT __pstring_to_sint(STRING* IN){
     char tmp2[STR_MAX_LEN];
     __strlen_t l;
     unsigned int shift = 0;
-    
+
     if(IN->body[0]=='2' && IN->body[1]=='#'){
         /* 2#0101_1010_1011_1111 */
         for(l = IN->len - 1; l >= 2 && shift < 64; l--)
@@ -561,7 +561,7 @@ static inline LINT __pstring_to_sint(STRING* IN){
                 res = 0;
                 fac = IN->body[0] == '-' ? -1 : 1;
                 shift = 0;
-            }            
+            }
         }
     }
     return res;
@@ -588,7 +588,7 @@ static inline LREAL __string_to_real(EN_ENO_PARAMS, STRING IN){
         return atof((const char *)&IN.body);
     }else{
         return (LREAL)__pstring_to_sint(&IN);
-    }    
+    }
 }
 
     /***************/
@@ -738,26 +738,26 @@ static inline STRING __dt_to_string(EN_ENO_PARAMS, DT IN){
     return res;
 }
     /* BCD */
-#define __bcd_digit(fac) 
+#define __bcd_digit(fac)
 static inline ULINT __bcd_to_uint(EN_ENO_PARAMS, LWORD IN){
     TEST_EN(ULINT)
     return IN & 0xf +
-           !(IN >>= 4) ? 0 : IN & 0xf * 10ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 100ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 1000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 10000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 100000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 1000000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 10000000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 100000000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 1000000000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 10000000000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 100000000000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 1000000000000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 10000000000000ULL + 
-           !(IN >>= 4) ? 0 : IN & 0xf * 100000000000000ULL + 
+           !(IN >>= 4) ? 0 : IN & 0xf * 10ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 100ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 1000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 10000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 100000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 1000000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 10000000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 100000000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 1000000000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 10000000000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 100000000000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 1000000000000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 10000000000000ULL +
+           !(IN >>= 4) ? 0 : IN & 0xf * 100000000000000ULL +
            !(IN >>= 4) ? 0 : IN & 0xf * 1000000000000000ULL;
-           
+
 }
 static inline LWORD __uint_to_bcd(EN_ENO_PARAMS, ULINT IN){
     TEST_EN(LWORD)
@@ -779,7 +779,7 @@ static inline LWORD __uint_to_bcd(EN_ENO_PARAMS, ULINT IN){
            (IN - (IN /= 10)) << 60;
 }
 
-/* workaround for va-atgs limitation on shorter that int params */    
+/* workaround for va-atgs limitation on shorter that int params */
 #define VA_ARGS_REAL LREAL
 #define VA_ARGS_LREAL LREAL
 #define VA_ARGS_SINT DINT
@@ -882,14 +882,14 @@ static inline BOOL __xor_BOOL(EN_ENO_PARAMS, UINT param_count, BOOL op1, ...){
   TEST_EN(BOOL)
   va_list ap;
   UINT i;
-  
+
   va_start (ap, op1);         /* Initialize the argument list.  */
-  
+
   for (i = 0; i < param_count - 1; i++){
     BOOL tmp = va_arg (ap, VA_ARGS_BOOL);
     op1 = (op1 && !tmp) || (!op1 && tmp);
   }
-  
+
   va_end (ap);                  /* Clean up.  */
   return op1;
 }
@@ -969,7 +969,13 @@ static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
   /**************/
   /*    ABS     */
   /**************/
-#define __abs_(TYPENAME) __numeric(__abs_, TYPENAME, abs)
+#define __abs_(TYPENAME) \
+static inline TYPENAME __abs_##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
+  TEST_EN(TYPENAME)\
+  if (op < 0)\
+    return -op;\
+  return op;\
+}
 ANY_NUM(__abs_)
 
   /**************/
