@@ -22,6 +22,8 @@
  *
  */
 
+#include "absyntax_utils.hh"
+
 
 /* Returns the function block type declaration
  * of a specific function block instance.
@@ -50,35 +52,25 @@
  * that searches the tree itself for the relevant info. This
  * class is exactly that...!
  */
-class search_fb_instance_decl_c: public search_visitor_c {
+search_fb_instance_decl_c::search_fb_instance_decl_c(symbol_c *search_scope) {
+  this->search_scope = search_scope;
+  this->current_fb_type_name = NULL;
+}
 
-  private:
-    symbol_c *search_scope;
+symbol_c *search_fb_instance_decl_c::get_type_name(symbol_c *fb_instance_name) {
+  this->search_name = fb_instance_name;
+  return (symbol_c *)search_scope->accept(*this);
+}
 
-    symbol_c *search_name;
-    symbol_c *current_fb_type_name;
-
-  public:
-    search_fb_instance_decl_c(symbol_c *search_scope) {
-      this->search_scope = search_scope;
-      this->current_fb_type_name = NULL;
-    }
-
-    symbol_c *get_type_name(symbol_c *fb_instance_name) {
-      this->search_name = fb_instance_name;
-      return (symbol_c *)search_scope->accept(*this);
-    }
-
-  public:
 /***************************/
 /* B 0 - Programming Model */
 /***************************/
-    void *visit(library_c *symbol) {
-      /* we do not want to search multiple declaration scopes,
-       * so we do not visit all the functions, fucntion blocks, etc...
-       */
-      return NULL;
-    }
+void *search_fb_instance_decl_c::visit(library_c *symbol) {
+  /* we do not want to search multiple declaration scopes,
+   * so we do not visit all the functions, fucntion blocks, etc...
+   */
+  return NULL;
+}
 
 /******************************************/
 /* B 1.4.3 - Declaration & Initialisation */
@@ -86,21 +78,21 @@ class search_fb_instance_decl_c: public search_visitor_c {
 
 /* name_list ':' function_block_type_name ASSIGN structure_initialization */
 /* structure_initialization -> may be NULL ! */
-    void *visit(fb_name_decl_c *symbol) {
-      current_fb_type_name = symbol->function_block_type_name;
-      return symbol->fb_name_list->accept(*this);
-    }
+void *search_fb_instance_decl_c::visit(fb_name_decl_c *symbol) {
+  current_fb_type_name = symbol->function_block_type_name;
+  return symbol->fb_name_list->accept(*this);
+}
 
 /* name_list ',' fb_name */
-    void *visit(fb_name_list_c *symbol) {
-      list_c *list = symbol;
-      for(int i = 0; i < list->n; i++) {
-        if (compare_identifiers(list->elements[i], search_name) == 0)
-	  /* by now, current_fb_declaration should be != NULL */
-          return current_fb_type_name;
-      }
-      return NULL;
-    }
+void *search_fb_instance_decl_c::visit(fb_name_list_c *symbol) {
+  list_c *list = symbol;
+  for(int i = 0; i < list->n; i++) {
+    if (compare_identifiers(list->elements[i], search_name) == 0)
+  /* by now, current_fb_declaration should be != NULL */
+      return current_fb_type_name;
+  }
+  return NULL;
+}
 
 /**************************************/
 /* B.1.5 - Program organization units */
@@ -108,34 +100,29 @@ class search_fb_instance_decl_c: public search_visitor_c {
 /***********************/
 /* B 1.5.1 - Functions */
 /***********************/
-    void *visit(function_declaration_c *symbol) {
-      /* no need to search through all the body, so we only
-       * visit the variable declarations...!
-       */
-      return symbol->var_declarations_list->accept(*this);
-    }
+void *search_fb_instance_decl_c::visit(function_declaration_c *symbol) {
+  /* no need to search through all the body, so we only
+   * visit the variable declarations...!
+   */
+  return symbol->var_declarations_list->accept(*this);
+}
 
 /*****************************/
 /* B 1.5.2 - Function Blocks */
 /*****************************/
-    void *visit(function_block_declaration_c *symbol) {
-      /* no need to search through all the body, so we only
-       * visit the variable declarations...!
-       */
-      return symbol->var_declarations->accept(*this);
-    }
+void *search_fb_instance_decl_c::visit(function_block_declaration_c *symbol) {
+  /* no need to search through all the body, so we only
+   * visit the variable declarations...!
+   */
+  return symbol->var_declarations->accept(*this);
+}
 
 /**********************/
 /* B 1.5.3 - Programs */
 /**********************/
-    void *visit(program_declaration_c *symbol) {
-      /* no need to search through all the body, so we only
-       * visit the variable declarations...!
-       */
-      return symbol->var_declarations->accept(*this);
-    }
-};
-
-
-
-
+void *search_fb_instance_decl_c::visit(program_declaration_c *symbol) {
+  /* no need to search through all the body, so we only
+   * visit the variable declarations...!
+   */
+  return symbol->var_declarations->accept(*this);
+}

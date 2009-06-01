@@ -46,9 +46,9 @@
 #include "../../util/symtable.hh"
 #include "../../util/dsymtable.hh"
 #include "../../absyntax/visitor.hh"
+#include "../../absyntax_utils/absyntax_utils.hh"
 
 #include "../stage4.hh"
-
 
 
 
@@ -70,57 +70,6 @@
 extern void error_exit(const char *file_name, int line_no);
 
 
-
-
-
-#if 0
-/* A symbol table with all globally declared functions... */
-function_declaration_c null_symbol1(NULL,NULL,NULL,NULL);
-dsymtable_c<function_declaration_c *, &null_symbol1> function_symtable;
-
-/* A symbol table with all globally declared functions block types... */
-function_block_declaration_c null_symbol2(NULL,NULL,NULL);
-symtable_c<function_block_declaration_c *, &null_symbol2> function_block_type_symtable;
-
-/* A symbol table with all globally declared program types... */
-program_declaration_c null_symbol3(NULL,NULL,NULL);
-symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
-
-/* A symbol table with all user declared type definitions... */
-/* Note that function block types and program types have their
- * own symbol tables, so do not get placed in this symbol table!
- */
-symbol_c null_symbol4;
-symtable_c<symbol_c *, &null_symbol4> type_symtable;
-#else
-
-#include "../../search_utils/search_utils.hh"
-
-#endif
-
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-
-
-/* returns 0 if the names are equal!! */
-/* NOTE: it must ignore case!! */
-static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
-
-  token_c *name1 = dynamic_cast<token_c *>(ident1);
-  token_c *name2 = dynamic_cast<token_c *>(ident2);
-  
-  if ((name1 == NULL) || (name2 == NULL))
-    /* invalid identifiers... */
-    return -1;
-
-  if (strcasecmp(name1->value, name2->value) == 0)
-    return 0;
-
-  /* identifiers do not match! */
-  return 1;
-}
 
 
 /***********************************************************************/
@@ -177,21 +126,6 @@ static int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
-
-
-#include "spec_init_separator.cc"
-#include "function_param_iterator.cc"
-#include "function_call_iterator.cc"
-#include "function_call_param_iterator.cc"
-#include "type_initial_value.cc"
-#include "search_fb_instance_decl.cc"
-#include "search_fb_typedecl.cc"
-#include "search_base_type.cc"
-#include "search_var_instance_decl.cc"
-#include "decompose_var_instance_name.cc"
-#include "search_varfb_instance_type.cc"
-#include "search_constant_type.cc"
-#include "search_expression_type.cc"
 
 #include "generate_c_base.cc"
 #include "generate_c_typedecl.cc"

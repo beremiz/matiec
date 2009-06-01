@@ -22,67 +22,52 @@
  *
  */
 
-
 /*
  * Seperation of type specification and default value constructs
  * (for e.g. simple_spec_init_c), into a type specificiation part,
  * and a default value part.
  */
 
+#include "spec_init_separator.hh"
+
+//#define DEBUG
+#ifdef DEBUG
+#define TRACE(classname) printf("\n____%s____\n",classname);
+#else
+#define TRACE(classname)
+#endif
+
+#define ERROR error_exit(__FILE__,__LINE__)
+/* function defined in main.cc */
+extern void error_exit(const char *file_name, int line_no);
 
 
+spec_init_sperator_c *spec_init_sperator_c::get_class_instance(void) {
+  if (NULL == class_instance)
+    class_instance = new spec_init_sperator_c();
 
-//#include <stdio.h>  /* required for NULL */
-//#include <string>
-//#include <iostream>
+  if (NULL == class_instance)
+    ERROR;
 
-//#include "../../util/symtable.hh"
+  return class_instance;
+}
 
+ /* the only two public functions... */
+symbol_c *spec_init_sperator_c::get_spec(symbol_c *spec_init) {
+   search_what = search_spec;
+   return (symbol_c *)spec_init->accept(*get_class_instance());
+}
 
-
-
-
-
-
-class spec_init_sperator_c: public null_visitor_c {
-  private:
-    /* this is a singleton class... */
-    static spec_init_sperator_c *class_instance;
-    static spec_init_sperator_c *get_class_instance(void) {
-      if (NULL == class_instance)
-        class_instance = new spec_init_sperator_c();
-
-      if (NULL == class_instance)
-        ERROR;
-
-      return class_instance;
-    }
-
-  private:
-    typedef enum {search_spec, search_init} search_what_t;
-    static search_what_t search_what;
-
-  public:
-    /* the only two public functions... */
-    static symbol_c *get_spec(symbol_c *spec_init) {
-      search_what = search_spec;
-      return (symbol_c *)spec_init->accept(*get_class_instance());
-    }
-
-    static symbol_c *get_init(symbol_c *spec_init) {
-      search_what = search_init;
-      return (symbol_c *)spec_init->accept(*get_class_instance());
-    }
-
-//  private:
-  public:  /* probably needs to be public so it may be visited... !! */
-
+symbol_c *spec_init_sperator_c::get_init(symbol_c *spec_init) {
+   search_what = search_init;
+   return (symbol_c *)spec_init->accept(*get_class_instance());
+}
 
 /*******************************************/
 /* B 1.1 - Letters, digits and identifiers */
 /*******************************************/
 // SYM_TOKEN(identifier_c)
-void *visit(identifier_c *symbol) {
+void *spec_init_sperator_c::visit(identifier_c *symbol) {
   TRACE("spec_init_sperator_c::identifier_c");
   switch (search_what) {
     /* if we ever get called sith a simple identifier_c, then it must be a previously declared type... */
@@ -99,7 +84,7 @@ void *visit(identifier_c *symbol) {
 /********************************/
 
 /* simple_specification ASSIGN constant */
-void *visit(simple_spec_init_c *symbol) {
+void *spec_init_sperator_c::visit(simple_spec_init_c *symbol) {
   TRACE("spec_init_sperator_c::simple_spec_init_c");
   switch (search_what) {
     case search_spec: return symbol->simple_specification;
@@ -110,7 +95,7 @@ void *visit(simple_spec_init_c *symbol) {
 }
 
 /* subrange_specification ASSIGN signed_integer */
-void *visit(subrange_spec_init_c *symbol) {
+void *spec_init_sperator_c::visit(subrange_spec_init_c *symbol) {
   TRACE("spec_init_sperator_c::subrange_spec_init_c");
   switch (search_what) {
     case search_spec: return symbol->subrange_specification->accept(*this);
@@ -121,7 +106,7 @@ void *visit(subrange_spec_init_c *symbol) {
 }
 
 /*  integer_type_name '(' subrange')' */
-void *visit(subrange_specification_c *symbol) {
+void *spec_init_sperator_c::visit(subrange_specification_c *symbol) {
   TRACE("spec_init_sperator_c::subrange_specification_c");
   switch (search_what) {
     case search_spec: return symbol->integer_type_name;
@@ -133,7 +118,7 @@ void *visit(subrange_specification_c *symbol) {
 
 /* array_specification [ASSIGN array_initialization} */
 /* array_initialization may be NULL ! */
-void *visit(array_spec_init_c *symbol) {
+void *spec_init_sperator_c::visit(array_spec_init_c *symbol) {
   TRACE("spec_init_sperator_c::array_spec_init_c");
   switch (search_what) {
     case search_spec: return symbol->array_specification;
@@ -143,7 +128,7 @@ void *visit(array_spec_init_c *symbol) {
 }
 
 /* enumerated_specification ASSIGN enumerated_value */
-void *visit(enumerated_spec_init_c *symbol) {
+void *spec_init_sperator_c::visit(enumerated_spec_init_c *symbol) {
   TRACE("spec_init_sperator_c::enumerated_spec_init_c");
   switch (search_what) {
     case search_spec: return symbol->enumerated_specification;
@@ -156,7 +141,7 @@ void *visit(enumerated_spec_init_c *symbol) {
 /* structure_type_name ASSIGN structure_initialization */
 /* structure_initialization may be NULL ! */
 //SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
-void *visit(initialized_structure_c *symbol) {
+void *spec_init_sperator_c::visit(initialized_structure_c *symbol) {
   TRACE("spec_init_sperator_c::initialized_structure_c");
   switch (search_what) {
     case search_spec: return symbol->structure_type_name;
@@ -173,7 +158,7 @@ void *visit(initialized_structure_c *symbol) {
 
 /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
 /* structure_initialization -> may be NULL ! */
-void *visit(fb_name_decl_c *symbol) {
+void *spec_init_sperator_c::visit(fb_name_decl_c *symbol) {
   TRACE("spec_init_sperator_c::fb_name_decl_c");
   switch (search_what) {
     case search_spec: return symbol->function_block_type_name;
@@ -182,10 +167,6 @@ void *visit(fb_name_decl_c *symbol) {
   ERROR; /* should never occur */
   return NULL;
 }
-
-};   /* class spec_init_sperator_c */
-
-
 
 spec_init_sperator_c *spec_init_sperator_c ::class_instance = NULL;
 spec_init_sperator_c::search_what_t spec_init_sperator_c::search_what;

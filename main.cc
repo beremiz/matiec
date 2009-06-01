@@ -78,7 +78,7 @@ void error_exit(const char *file_name, int line_no) {
 
 
 #include "stage1_2/stage1_2.hh"
-#include "search_utils/search_utils.hh"
+#include "absyntax_utils/absyntax_utils.hh"
 
 //int stage3(symbol_c *tree_root);
 int stage4(symbol_c *tree_root, const char *builddir);
@@ -110,6 +110,9 @@ int main(int argc, char **argv) {
   extern int optind, optopt;
 */
 
+  /******************************************/
+  /*   Parse command line options...        */
+  /******************************************/
   while ((optres = getopt(argc, argv, ":hfsI:T:")) != -1) {
     switch(optres) {
     case 'h':
@@ -133,8 +136,11 @@ int main(int argc, char **argv) {
       errflg++;
       break;
     case '?':
-    default:
       fprintf(stderr, "Unrecognized option: -%c\n", optopt);
+      errflg++;
+      break;
+    default:
+      fprintf(stderr, "Unknown error while parsing command line options.");
       errflg++;
       break;
     }
@@ -156,14 +162,15 @@ int main(int argc, char **argv) {
   }
 
 
+  /***************************/
+  /*   Run the compiler...   */
+  /***************************/
   /* 1st Pass */
   if (stage1_2(argv[optind], &tree_root, stage1_2_options) < 0)
     return EXIT_FAILURE;
 
   /* 2nd Pass */
-printf("loading symbol tables...\n");
-  search_utils_init(tree_root);
-printf("loading symbol tables... DONE!\n");
+  absyntax_utils_init(tree_root);
   /* not yet implemented... */
   /*
   if (stage3(tree_root) < 0)
