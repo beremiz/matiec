@@ -52,7 +52,7 @@
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_location_list_c: protected iterator_visitor_c {
+class generate_location_list_c: public iterator_visitor_c {
 
   protected:
     stage4out_c &s4o;
