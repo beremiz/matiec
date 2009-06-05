@@ -969,14 +969,22 @@ static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
   /**************/
   /*    ABS     */
   /**************/
-#define __abs_(TYPENAME) \
+#define __abs_signed(TYPENAME) \
 static inline TYPENAME __abs_##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
   TEST_EN(TYPENAME)\
   if (op < 0)\
     return -op;\
   return op;\
 }
-ANY_NUM(__abs_)
+ANY_REAL(__abs_signed)
+ANY_SINT(__abs_signed)
+
+#define __abs_unsigned(TYPENAME) \
+static inline TYPENAME __abs_##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
+  TEST_EN(TYPENAME)\
+  return op;\
+}
+ANY_UINT(__abs_unsigned)
 
   /**************/
   /*    SQRT    */
