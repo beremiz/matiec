@@ -61,6 +61,7 @@
 
 
 //#include <stdio.h>   // printf()
+#include <getopt.h>
 #include <string.h>
 #include <stdlib.h>  // EXIT_FAILURE
 #include "absyntax/absyntax.hh"  // symbol_c type
