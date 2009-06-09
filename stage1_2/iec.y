@@ -5907,10 +5907,6 @@ instruction_list:
 	{$$ = $1; $$->add_element($2);}
 | instruction_list pragma
 	{$$ = $1; $$->add_element($2);}
-/* ERROR_CHECK_BEGIN */
-| instruction_list error
-  {$$ = $1; print_err_msg(locf(@2), locl(@2), "invalid IL instruction."); yyerrok;}
-/* ERROR_CHECK_END */
 ;
 
 
