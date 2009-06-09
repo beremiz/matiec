@@ -504,12 +504,7 @@ void *visit(function_declaration_c *symbol) {
 				        generate_c_vardecl_c::inoutput_vt |
                 generate_c_vardecl_c::eneno_vt);
   vardecl->print(symbol->var_declarations_list);
-  if (!vardecl->is_en_declared()) {
-    s4o.print(",\n" + s4o.indent_spaces + "BOOL EN");
-  }
-  if (!vardecl->is_eno_declared()) {
-    s4o.print(",\n" + s4o.indent_spaces + "BOOL *ENO");
-  }
+  vardecl->print_eneno();
   delete vardecl;
   
   s4o.indent_left();
@@ -621,12 +616,7 @@ void *visit(function_block_declaration_c *symbol) {
   				      generate_c_vardecl_c::inoutput_vt |
                 generate_c_vardecl_c::eneno_vt);
   vardecl->print(symbol->var_declarations);
-  if (!vardecl->is_en_declared()) {
-    s4o_incl.print(s4o_incl.indent_spaces + "BOOL EN;\n");
-  }
-  if (!vardecl->is_eno_declared()) {
-    s4o_incl.print(s4o_incl.indent_spaces + "BOOL ENO;\n");
-  }
+  vardecl->print_eneno();
   delete vardecl;
   s4o_incl.print("\n");
   /* (A.3) Private internal variables */

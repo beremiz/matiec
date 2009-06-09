@@ -1016,17 +1016,29 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
       } /* switch() */
 
       symbol->accept(*this);
-
-      /* special case... */
-      if (wanted_varformat == finterface_vf)
-        if (finterface_var_count == 0)
-          s4o.print("void");
-
+      
       delete nv;
       nv = NULL;
       globalnamespace = NULL;
     }
 
+    void print_eneno(void) {
+      if (!en_declared) {
+        if (wanted_varformat == finterface_vf) {
+          if (finterface_var_count > 0)
+            s4o.print(",\n" + s4o.indent_spaces);
+          s4o.print("BOOL EN");
+        }
+        else
+          s4o.print(s4o.indent_spaces + "BOOL EN;\n");
+      }
+      if (!eno_declared) {
+        if (wanted_varformat == finterface_vf)
+          s4o.print(",\n" + s4o.indent_spaces + "BOOL *ENO");
+        else
+          s4o.print(s4o.indent_spaces + "BOOL ENO;\n");
+      }
+    }
 
   protected:
 /***************************/
