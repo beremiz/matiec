@@ -7656,6 +7656,10 @@ int stage2__(const char *filename,
   FILE *in_file = NULL, *lib_file = NULL;
   char *libfilename = NULL;
 	
+	for(int i = 0; standard_function_names[i] != NULL; i++)
+    if (library_element_symtable.find_value(standard_function_names[i]) ==
+        library_element_symtable.end_value())
+      library_element_symtable.insert(standard_function_names[i], standard_function_name_token);
 
   if((in_file = fopen(filename, "r")) == NULL) {
     char *errmsg = strdup2("Error opening main file ", filename);
@@ -7704,11 +7708,6 @@ int stage2__(const char *filename,
   /* if by any chance the library is not complete, we
    * now add the missing reserved keywords to the list!!!
    */
-  for(int i = 0; standard_function_names[i] != NULL; i++)
-    if (library_element_symtable.find_value(standard_function_names[i]) ==
-        library_element_symtable.end_value())
-      library_element_symtable.insert(standard_function_names[i], standard_function_name_token);
-
   for(int i = 0; standard_function_block_names[i] != NULL; i++)
     if (library_element_symtable.find_value(standard_function_block_names[i]) ==
         library_element_symtable.end_value())
