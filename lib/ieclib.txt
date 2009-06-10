@@ -31,3 +31,8 @@
 {#include "bistable.txt" }
 {#include "counter.txt" }
 {#include "timer.txt" }
+{#include "../AnnexF/derivative_st.txt"}
+{#include "../AnnexF/hysteresis_st.txt"}
+{#include "../AnnexF/integral_st.txt"}
+{#include "../AnnexF/pid_st.txt"}
+{#include "../AnnexF/ramp_st.txt"}
