@@ -122,4 +122,3 @@ int_type_name_c     search_constant_type_c::int_type_name;
 
 constant_real_type_name_c     search_constant_type_c::constant_real_type_name;
 constant_int_type_name_c      search_constant_type_c::constant_int_type_name;
-direct_variable_type_name_c   search_constant_type_c::direct_variable_type_name;

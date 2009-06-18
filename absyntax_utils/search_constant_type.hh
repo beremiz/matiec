@@ -69,7 +69,6 @@ class search_constant_type_c: public search_visitor_c {
 
   static constant_real_type_name_c     constant_real_type_name;
   static constant_int_type_name_c      constant_int_type_name;
-  static direct_variable_type_name_c   direct_variable_type_name;
 
   /******************************************************/
   /* Extensions to the base standard as defined in      */

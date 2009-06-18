@@ -82,7 +82,6 @@ bool search_expression_type_c::is_integer_type(symbol_c *type_symbol) {
   if (typeid(*type_symbol) == typeid(udint_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(ulint_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(constant_int_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(direct_variable_type_name_c)) {return true;}
   return false;
 }
 
@@ -91,7 +90,6 @@ bool search_expression_type_c::is_real_type(symbol_c *type_symbol) {
   if (typeid(*type_symbol) == typeid(real_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(lreal_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(constant_real_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(direct_variable_type_name_c)) {return true;}
   return false;
 }
 
@@ -107,7 +105,6 @@ bool search_expression_type_c::is_nbinary_type(symbol_c *type_symbol) {
   if (typeid(*type_symbol) == typeid(dword_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(lword_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(constant_int_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(direct_variable_type_name_c)) {return true;}
   return false;
 }
 
@@ -126,8 +123,6 @@ bool search_expression_type_c::is_same_type(symbol_c *first_type, symbol_c *seco
   if ((typeid(*first_type) == typeid(constant_int_type_name_c) && is_binary_type(second_type))) {return true;}
   if (is_real_type(first_type) && (typeid(*second_type) == typeid(constant_real_type_name_c))) {return true;}
   if ((typeid(*first_type) == typeid(constant_real_type_name_c) && is_real_type(second_type))) {return true;}
-  if (typeid(*first_type) == typeid(direct_variable_type_name_c)) {return true;}
-  if (typeid(*second_type) == typeid(direct_variable_type_name_c)) {return true;}
   return false;
 }
 
@@ -136,12 +131,12 @@ symbol_c* search_expression_type_c::common_type(symbol_c *first_type, symbol_c *
   if (first_type == NULL) {return second_type;}
   if (second_type == NULL) {return first_type;}
   if (typeid(*first_type) == typeid(*second_type)) {return first_type;}
-  if (is_integer_type(first_type) && (typeid(*second_type) == typeid(constant_int_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c))) {return first_type;}
-  if ((typeid(*first_type) == typeid(constant_int_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c)) && is_integer_type(second_type)) {return second_type;}
-  if (is_binary_type(first_type) && (typeid(*second_type) == typeid(constant_int_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c))) {return first_type;}
-  if ((typeid(*first_type) == typeid(constant_int_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c)) && is_binary_type(second_type)) {return second_type;}
-  if (is_real_type(first_type) && (typeid(*second_type) == typeid(constant_real_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c))) {return first_type;}
-  if ((typeid(*first_type) == typeid(constant_real_type_name_c) || typeid(*second_type) == typeid(direct_variable_type_name_c)) && is_real_type(second_type)) {return second_type;}
+  if (is_integer_type(first_type) && (typeid(*second_type) == typeid(constant_int_type_name_c))) {return first_type;}
+  if ((typeid(*first_type) == typeid(constant_int_type_name_c)) && is_integer_type(second_type)) {return second_type;}
+  if (is_binary_type(first_type) && (typeid(*second_type) == typeid(constant_int_type_name_c)))  {return first_type;}
+  if ((typeid(*first_type) == typeid(constant_int_type_name_c)) && is_binary_type(second_type)) {return second_type;}
+  if (is_real_type(first_type) && (typeid(*second_type) == typeid(constant_real_type_name_c))) {return first_type;}
+  if ((typeid(*first_type) == typeid(constant_real_type_name_c)) && is_real_type(second_type)) {return second_type;}
   return NULL;
 }
 
@@ -198,11 +193,19 @@ void *search_expression_type_c::visit(symbolic_variable_c *symbol) {
 /********************************************/
 void *search_expression_type_c::visit(direct_variable_c *symbol) {
   switch (symbol->value[2]) {
-    case 'X': // bit
+    case 'X': // bit - 1 bit
       return (void *)&bool_type_name;
-    default:
-      return (void *)&direct_variable_type_name;
-   }
+    case 'B': // byte - 8 bits
+      return (void *)&byte_type_name;
+    case 'W': // word - 16 bits
+      return (void *)&word_type_name;
+    case 'D': // double word - 32 bits
+      return (void *)&dword_type_name;
+    case 'L': // long word - 64 bits
+      return (void *)&lword_type_name;
+    default:  // if none of the above, then the empty string was used <=> boolean 
+      return (void *)&bool_type_name;
+  }
 }
 
 /*************************************/

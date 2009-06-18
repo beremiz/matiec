@@ -93,7 +93,6 @@ void *search_base_type_c::visit(string_type_name_c *symbol)	{return (void *)symb
 void *search_base_type_c::visit(wstring_type_name_c *symbol)	{return (void *)symbol;}
 void *search_base_type_c::visit(constant_int_type_name_c *symbol)    {return (void *)symbol;}
 void *search_base_type_c::visit(constant_real_type_name_c *symbol)    {return (void *)symbol;}
-void *search_base_type_c::visit(direct_variable_type_name_c *symbol)    {return (void *)symbol;}
 /******************************************************/
 /* Extensions to the base standard as defined in      */
 /* "Safety Software Technical Specification,          */
