@@ -7656,7 +7656,7 @@ int stage2__(const char *filename,
   FILE *in_file = NULL, *lib_file = NULL;
   char *libfilename = NULL;
 	
-	for(int i = 0; standard_function_names[i] != NULL; i++)
+  for(int i = 0; standard_function_names[i] != NULL; i++)
     if (library_element_symtable.find_value(standard_function_names[i]) ==
         library_element_symtable.end_value())
       library_element_symtable.insert(standard_function_names[i], standard_function_name_token);
