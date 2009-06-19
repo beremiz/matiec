@@ -192,20 +192,13 @@ void *search_expression_type_c::visit(symbolic_variable_c *symbol) {
 /* B 1.4.1 - Directly Represented Variables */
 /********************************************/
 void *search_expression_type_c::visit(direct_variable_c *symbol) {
-  switch (symbol->value[2]) {
-    case 'X': // bit - 1 bit
-      return (void *)&bool_type_name;
-    case 'B': // byte - 8 bits
-      return (void *)&byte_type_name;
-    case 'W': // word - 16 bits
-      return (void *)&word_type_name;
-    case 'D': // double word - 32 bits
-      return (void *)&dword_type_name;
-    case 'L': // long word - 64 bits
-      return (void *)&lword_type_name;
-    default:  // if none of the above, then the empty string was used <=> boolean 
-      return (void *)&bool_type_name;
-  }
+  symbol_c *res;
+  
+  /* Nope, now we assume it is a variable, and determine its type... */
+  res = search_varfb_instance_type->get_type(symbol);
+  if (NULL != res) return res;
+  
+  return NULL;
 }
 
 /*************************************/
