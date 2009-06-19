@@ -1703,17 +1703,16 @@ void *visit(global_var_decl_c *symbol) {
 // SYM_REF2(global_var_spec_c, global_var_name, location)
 void *visit(global_var_spec_c *symbol) {
   TRACE("global_var_spec_c");
-
   /* now to produce the c equivalent... */
   switch(wanted_varformat) {
     case local_vf:
-      s4o.print(s4o.indent_spaces);
+      s4o.print("extern ");
+      this->current_var_type_symbol->accept(*this);
+      s4o.print("* ");
+      symbol->location->accept(*this);
+      s4o.print(";\n");
       if (symbol->global_var_name != NULL) {
-        s4o.print("extern ");
-        this->current_var_type_symbol->accept(*this);
-        s4o.print("* ");
-        symbol->location->accept(*this);
-        s4o.print(";\n");
+        s4o.print(s4o.indent_spaces);
         this->current_var_type_symbol->accept(*this);
         s4o.print(" *");
         if (this->resource_name != NULL) {
@@ -1723,6 +1722,7 @@ void *visit(global_var_spec_c *symbol) {
         symbol->global_var_name->accept(*this);
         s4o.print(";\n");
         if (this->resource_name != NULL) {
+            s4o.print(s4o.indent_spaces);
             s4o.print("#define ");
             symbol->global_var_name->accept(*this);
             s4o.print(" ");

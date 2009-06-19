@@ -402,9 +402,10 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     /*| global_var_name location */
     // SYM_REF2(global_var_spec_c, global_var_name, location)
     void *visit(global_var_spec_c *symbol) {
-      if (symbol->global_var_name != NULL)
+      if (symbol->global_var_name != NULL) {
         this->current_var_type_category = pointer_vtc;
         declare_variable(symbol->global_var_name);
+      }
       return NULL;
     }
     
