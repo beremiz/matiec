@@ -54,31 +54,7 @@
  * the possible il_operand variable instance was declared).
  */
 
-class search_il_operand_type_c {
-
-  private:
-    search_varfb_instance_type_c search_varfb_instance_type;
-    search_constant_type_c search_constant_type;
-
-  public:
-    search_il_operand_type_c(symbol_c *search_scope): search_varfb_instance_type(search_scope) {}
-
-  public:
-    symbol_c *get_type(symbol_c *il_operand) {
-      symbol_c *res;
-
-      /* We first assume that it is a constant... */
-      res = search_constant_type.get_type(il_operand);
-      if (res != NULL) return res;
-
-      /* Nope, now we assume it is a variable, and determine its type... */
-      res = search_varfb_instance_type.get_type(il_operand);
-      if (NULL != res) return res;
-
-      /* not found */
-      return NULL;
-    }
-};
+#include "../../absyntax_utils/search_il_operand_type.hh"
 
 
 

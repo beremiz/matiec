@@ -14,6 +14,7 @@ SEARCH_UTIL_FILES += search_base_type.o
 SEARCH_UTIL_FILES += search_constant_type.o
 SEARCH_UTIL_FILES += search_fb_instance_decl.o
 SEARCH_UTIL_FILES += search_fb_typedecl.o
+SEARCH_UTIL_FILES += search_il_operand_type.o
 SEARCH_UTIL_FILES += search_varfb_instance_type.o
 SEARCH_UTIL_FILES += search_var_instance_decl.o
 SEARCH_UTIL_FILES += spec_init_separator.o
