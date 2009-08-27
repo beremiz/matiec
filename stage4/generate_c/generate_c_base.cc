@@ -255,7 +255,6 @@ class generate_c_base_c: public iterator_visitor_c {
     void *visit(octal_integer_c *symbol) {s4o.print("0"); return print_striped_token(symbol, 2);}
     void *visit(hex_integer_c *symbol) {s4o.print("0x"); return print_striped_token(symbol, 3);}
 
-    void *visit(numeric_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
     void *visit(integer_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
     void *visit(real_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
     void *visit(bit_string_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}

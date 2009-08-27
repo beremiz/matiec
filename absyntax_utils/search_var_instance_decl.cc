@@ -121,6 +121,14 @@ void *search_var_instance_decl_c::visit(input_output_declarations_c *symbol) {
   return res;
 }
 
+/* ENO : BOOL */
+void *search_var_instance_decl_c::visit(eno_param_declaration_c *symbol) {
+  if (compare_identifiers(symbol->name, search_name) == 0)
+    return symbol->type;
+  return NULL;
+}
+
+
 /* VAR [CONSTANT] var_init_decl_list END_VAR */
 /* option -> may be NULL ! */
 /* helper symbol for input_declarations */

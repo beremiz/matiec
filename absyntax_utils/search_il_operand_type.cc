@@ -40,7 +40,7 @@
  * the possible il_operand variable instance was declared).
  */
 
-
+#include "absyntax_utils.hh"
 
 symbol_c *search_il_operand_type_c::get_type(symbol_c *il_operand) {
   symbol_c *res;

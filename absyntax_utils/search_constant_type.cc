@@ -51,14 +51,19 @@ symbol_c *search_constant_type_c::get_type(symbol_c *constant) {
 /******************************/
 /* B 1.2.1 - Numeric Literals */
 /******************************/
-void *search_constant_type_c::visit(real_c *symbol) {return (void *)&constant_real_type_name;}
-void *search_constant_type_c::visit(integer_c *symbol) {return (void *)&constant_int_type_name;}
-void *search_constant_type_c::visit(binary_integer_c *symbol) {return (void *)&constant_int_type_name;}
-void *search_constant_type_c::visit(octal_integer_c *symbol) {return (void *)&constant_int_type_name;}
-void *search_constant_type_c::visit(hex_integer_c *symbol) {return (void *)&constant_int_type_name;}
+/* Numeric literals without any explicit type cast have unknown data type, 
+  * so we continue considering them as their own basic data types until
+  * they can be resolved (for example, when using '30+x' where 'x' is a LINT variable, the
+  * numeric literal '30' must then be considered a LINT so the ADD function may be called
+  * with all inputs of the same data type.
+  * If 'x' were a SINT, then the '30' would have to be a SINT too!
+  */
+void *search_constant_type_c::visit(real_c *symbol)           {return (void *)symbol;}
+void *search_constant_type_c::visit(integer_c *symbol)        {return (void *)symbol;}
+void *search_constant_type_c::visit(binary_integer_c *symbol) {return (void *)symbol;}
+void *search_constant_type_c::visit(octal_integer_c *symbol)  {return (void *)symbol;}
+void *search_constant_type_c::visit(hex_integer_c *symbol)    {return (void *)symbol;}
 
-void *search_constant_type_c::visit(numeric_literal_c *symbol)
-  {return (void *)((symbol->type!=NULL)?symbol->type:symbol->value->accept(*this));}
 void *search_constant_type_c::visit(integer_literal_c *symbol)
   {return (void *)((symbol->type!=NULL)?symbol->type:symbol->value->accept(*this));}
 void *search_constant_type_c::visit(real_literal_c *symbol)
@@ -67,6 +72,10 @@ void *search_constant_type_c::visit(bit_string_literal_c *symbol)
   {return (void *)((symbol->type!=NULL)?symbol->type:symbol->value->accept(*this));}
 void *search_constant_type_c::visit(boolean_literal_c *symbol)
   {return (void *)((symbol->type!=NULL)?symbol->type:symbol->value->accept(*this));}
+
+void *search_constant_type_c::visit(boolean_true_c *symbol)   {return (void *)symbol;}
+void *search_constant_type_c::visit(boolean_false_c *symbol)  {return (void *)symbol;}
+
 
 /*******************************/
 /* B.1.2.2   Character Strings */
@@ -103,22 +112,27 @@ sint_type_name_c     search_constant_type_c::sint_type_name;
 lint_type_name_c     search_constant_type_c::lint_type_name;
 dint_type_name_c     search_constant_type_c::dint_type_name;
 date_type_name_c     search_constant_type_c::date_type_name;
-dword_type_name_c     search_constant_type_c::dword_type_name;
-dt_type_name_c     search_constant_type_c::dt_type_name;
-tod_type_name_c     search_constant_type_c::tod_type_name;
-udint_type_name_c     search_constant_type_c::udint_type_name;
+dword_type_name_c    search_constant_type_c::dword_type_name;
+dt_type_name_c       search_constant_type_c::dt_type_name;
+tod_type_name_c      search_constant_type_c::tod_type_name;
+udint_type_name_c    search_constant_type_c::udint_type_name;
 word_type_name_c     search_constant_type_c::word_type_name;
-wstring_type_name_c     search_constant_type_c::wstring_type_name;
-string_type_name_c     search_constant_type_c::string_type_name;
-lword_type_name_c     search_constant_type_c::lword_type_name;
+wstring_type_name_c  search_constant_type_c::wstring_type_name;
+string_type_name_c   search_constant_type_c::string_type_name;
+lword_type_name_c    search_constant_type_c::lword_type_name;
 uint_type_name_c     search_constant_type_c::uint_type_name;
-lreal_type_name_c     search_constant_type_c::lreal_type_name;
+lreal_type_name_c    search_constant_type_c::lreal_type_name;
 byte_type_name_c     search_constant_type_c::byte_type_name;
-usint_type_name_c     search_constant_type_c::usint_type_name;
-ulint_type_name_c     search_constant_type_c::ulint_type_name;
+usint_type_name_c    search_constant_type_c::usint_type_name;
+ulint_type_name_c    search_constant_type_c::ulint_type_name;
 bool_type_name_c     search_constant_type_c::bool_type_name;
 time_type_name_c     search_constant_type_c::time_type_name;
-int_type_name_c     search_constant_type_c::int_type_name;
+int_type_name_c      search_constant_type_c::int_type_name;
 
+/*
 constant_real_type_name_c     search_constant_type_c::constant_real_type_name;
 constant_int_type_name_c      search_constant_type_c::constant_int_type_name;
+*/
+/* temporarily here until we remove the st_code_gen.c and il_code_gen.c files... */
+/* It should then move to search_expression_type_c                               */
+integer_c search_constant_type_c::integer("1");

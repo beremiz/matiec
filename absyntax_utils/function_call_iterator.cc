@@ -32,8 +32,7 @@
  */
 
 /* given a function_body_c, iterate through each
- * function in/out/inout parameter, returning the name
- * of each parameter...
+ * function/FB call in that code.
  */
 
 

@@ -33,6 +33,9 @@
  *    new_int_t is really an INT!!
  *    new_int2_t is also really an INT!!
  *    new_subr_t is also really an INT!!
+ *
+ * Note that a FB declaration is also considered a base type, as
+ * we may have FB instances declared of a specific FB type.
  */
 #include "absyntax_utils.hh"
 
@@ -67,6 +70,27 @@ bool search_base_type_c::type_is_enumerated(symbol_c* type_decl) {
   return this->is_enumerated;
 }
 
+/*********************/
+/* B 1.2 - Constants */
+/*********************/
+
+/******************************/
+/* B 1.2.1 - Numeric Literals */
+/******************************/
+ /* Numeric literals without any explicit type cast have unknown data type, 
+  * so we continue considering them as their own basic data types until
+  * they can be resolved (for example, when using '30+x' where 'x' is a LINT variable, the
+  * numeric literal '30' must then be considered a LINT so the ADD function may be called
+  * with all inputs of the same data type.
+  * If 'x' were a SINT, then the '30' would have to be a SINT too!
+  */
+void *search_base_type_c::visit(real_c *symbol)          	{return (void *)symbol;}
+void *search_base_type_c::visit(integer_c *symbol)       	{return (void *)symbol;}
+void *search_base_type_c::visit(binary_integer_c *symbol)	{return (void *)symbol;}
+void *search_base_type_c::visit(octal_integer_c *symbol) 	{return (void *)symbol;}
+void *search_base_type_c::visit(hex_integer_c *symbol)   	{return (void *)symbol;}
+
+
 /***********************************/
 /* B 1.3.1 - Elementary Data Types */
 /***********************************/
@@ -91,8 +115,10 @@ void *search_base_type_c::visit(dword_type_name_c *symbol)	{return (void *)symbo
 void *search_base_type_c::visit(lword_type_name_c *symbol)	{return (void *)symbol;}
 void *search_base_type_c::visit(string_type_name_c *symbol)	{return (void *)symbol;}
 void *search_base_type_c::visit(wstring_type_name_c *symbol)	{return (void *)symbol;}
-void *search_base_type_c::visit(constant_int_type_name_c *symbol)    {return (void *)symbol;}
-void *search_base_type_c::visit(constant_real_type_name_c *symbol)    {return (void *)symbol;}
+/*
+void *search_base_type_c::visit(constant_int_type_name_c *symbol)	{return (void *)symbol;}
+void *search_base_type_c::visit(constant_real_type_name_c *symbol)	{return (void *)symbol;}
+*/
 /******************************************************/
 /* Extensions to the base standard as defined in      */
 /* "Safety Software Technical Specification,          */
@@ -231,4 +257,15 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 					string_type_declaration_init) // may be == NULL!
 */
 void *search_base_type_c::visit(string_type_declaration_c *symbol)	{return symbol;}
+
+  
+
+/*****************************/
+/* B 1.5.2 - Function Blocks */
+/*****************************/
+/*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
+// SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
+void *search_base_type_c::visit(function_block_declaration_c *symbol) {
+  return symbol;
+}
 

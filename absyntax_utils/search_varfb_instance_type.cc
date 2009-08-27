@@ -46,6 +46,10 @@
  */
 
 
+/*
+ * TODO: this code has a memory leak...
+ *       We call 'new' in several locations, but bever get to 'delete' the object instances...
+ */
 #include "absyntax_utils.hh"
 
 
@@ -67,7 +71,7 @@ symbol_c *search_varfb_instance_type_c::get_type(symbol_c *variable_name, bool b
    */
   symbol_c *var_name_part = decompose_var_instance_name->next_part();
   if (NULL == var_name_part) ERROR;
-  
+
   /* Now we try to find the variable instance declaration, to determine its type... */
   symbol_c *var_decl = search_var_instance_decl.get_decl(var_name_part);
   if (NULL == var_decl) {

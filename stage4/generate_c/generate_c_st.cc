@@ -92,58 +92,13 @@ class generate_c_st_c: public generate_c_typedecl_c {
     }
 
 
-  private:
-    /* Some function calls in the body of functions or function blocks
-     * may leave some parameters to their default values, and
-     * ignore some output parameters of the function being called.
-     * Our conversion of ST functions to C++ does not contemplate that,
-     * i.e. each called function must get all it's input and output
-     * parameters set correctly.
-     * For input parameters we merely need to call the function with
-     * the apropriate default value, but for output parameters
-     * we must create temporary variables to hold the output value.
-     *
-     * We declare all the temporary output variables at the begining of
-     * the body of each function or function block, and use them as
-     * in function calls later on as they become necessary...
-     * Note that we cannot create these variables just before a function
-     * call, as the function call itself may be integrated within an
-     * expression, or another function call!
-     *
-     * The variables are declared in the exact same order in which they
-     * will be used later on during the function calls, which allows us
-     * to simply re-create the name that was used for the temporary variable
-     * instead of keeping it in some list.
-     * The names are recreated by the temp_var_name_factory, after reset()
-     * has been called!
-     *
-     * This function will genertae code similar to...
-     *
-     *     INT __TMP_0 = 23;
-     *     REAL __TMP_1 = 45.5;
-     *     ...
-     */
-    temp_var_name_c temp_var_name_factory;
-
   public:
     void generate(statement_list_c *stl) {
-      generate_c_tempvardecl_c generate_c_tempvardecl(&s4o);
-      generate_c_tempvardecl.generate(stl, &temp_var_name_factory);
       stl->accept(*this);
     }
 
   private:
 
-void *visit(eno_param_c *symbol) {
-  if (this->is_variable_prefix_null()) {
-    s4o.print("*");
-  }
-  else {
-    this->print_variable_prefix();
-  }
-  s4o.print("ENO");
-  return NULL;
-}
 
 /*********************/
 /* B 1.4 - Variables */
@@ -446,45 +401,57 @@ void *visit(not_expression_c *symbol) {
 }
 
 void *visit(function_invocation_c *symbol) {
-  function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
-  
   symbol_c* function_type_prefix = NULL;
   symbol_c* function_name = NULL;
   symbol_c* function_type_suffix = NULL;
   std::list<FUNCTION_PARAM> param_list;
   FUNCTION_PARAM *param;
-  
+
+  symbol_c *parameter_assignment_list = NULL;
+  if (NULL != symbol->   formal_param_list) parameter_assignment_list = symbol->   formal_param_list;
+  if (NULL != symbol->nonformal_param_list) parameter_assignment_list = symbol->nonformal_param_list;
+  if (NULL == parameter_assignment_list) ERROR;
+
+  function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
   if (f_decl == function_symtable.end_value()) {
     /* The function called is not in the symtable, so we test if it is a
      * standard function defined in standard */
-    
+
     function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
     if (current_function_type == function_none) ERROR;
-    
+
     symbol_c *function_return_type = search_expression_type->get_type(symbol);
-    
+
     function_call_param_iterator_c function_call_param_iterator(symbol);
 
-    int nb_param = ((list_c *)symbol->parameter_assignment_list)->n;
-    
+    int nb_param = ((list_c *)parameter_assignment_list)->n;
+
     identifier_c en_param_name("EN");
     /* Get the value from EN param */
-    symbol_c *EN_param_value = function_call_param_iterator.search(&en_param_name);
+    symbol_c *EN_param_value = function_call_param_iterator.search_f(&en_param_name);
     if (EN_param_value == NULL)
       EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
     else
       nb_param --;
     ADD_PARAM_LIST(EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
-    
+
     identifier_c eno_param_name("ENO");
     /* Get the value from ENO param */
-    symbol_c *ENO_param_value = function_call_param_iterator.search(&eno_param_name);
+    symbol_c *ENO_param_value = function_call_param_iterator.search_f(&eno_param_name);
     if (ENO_param_value != NULL)
       nb_param --;
     ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
-    
+
+    #define search(x) search_f(x)
+    #define next() next_nf()
+//     #define search_constant_type_c::constant_int_type_name  search_expression_type_c::integer
+    #define constant_int_type_name  integer
     #include "st_code_gen.c"
-    
+    #undef constant_int_type_name
+//     #undef search_constant_type_c::constant_int_type_name
+    #undef next
+    #undef  search
+
   }
   else {
     /* loop through each function parameter, find the value we should pass
@@ -501,11 +468,11 @@ void *visit(function_invocation_c *symbol) {
       function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
       
       /* Get the value from a foo(<param_name> = <param_value>) style call */
-      symbol_c *param_value = function_call_param_iterator.search(param_name);
+      symbol_c *param_value = function_call_param_iterator.search_f(param_name);
   
       /* Get the value from a foo(<param_value>) style call */
       if (param_value == NULL)
-        param_value = function_call_param_iterator.next();
+        param_value = function_call_param_iterator.next_nf();
       
       if (param_value == NULL && param_direction == function_param_iterator_c::direction_in) {
         /* No value given for parameter, so we must use the default... */
@@ -636,11 +603,11 @@ void *visit(fb_invocation_c *symbol) {
     /*fprintf(stderr, "param : %s\n", param_name->value);*/
     
     /* Get the value from a foo(<param_name> = <param_value>) style call */
-    symbol_c *param_value = function_call_param_iterator.search(param_name);
+    symbol_c *param_value = function_call_param_iterator.search_f(param_name);
 
     /* Get the value from a foo(<param_value>) style call */
     if (param_value == NULL)
-      param_value = function_call_param_iterator.next();
+      param_value = function_call_param_iterator.next_nf();
 
     symbol_c *param_type = fp_iterator.param_type();
     if (param_type == NULL) ERROR;
@@ -683,11 +650,11 @@ void *visit(fb_invocation_c *symbol) {
     function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
 
     /* Get the value from a foo(<param_name> = <param_value>) style call */
-    symbol_c *param_value = function_call_param_iterator.search(param_name);
+    symbol_c *param_value = function_call_param_iterator.search_f(param_name);
 
     /* Get the value from a foo(<param_value>) style call */
     if (param_value == NULL)
-      param_value = function_call_param_iterator.next();
+      param_value = function_call_param_iterator.next_nf();
 
     /* now output the value assignment */
     if (param_value != NULL)

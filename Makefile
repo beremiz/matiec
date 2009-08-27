@@ -30,7 +30,8 @@ CXXFLAGS += -I.
 
 LIBS  = absyntax/absyntax.o absyntax/visitor.o
 LIBS += stage1_2/stage1_2.o stage1_2/iec.y.o stage1_2/iec.flex.o
-
+LIBS += stage3/stage3.o
+LIBS += stage3/visit_expression_type.o
 LIBS += absyntax_utils/absyntax_utils.o
 LIBS += absyntax_utils/search_expression_type.o
 LIBS += absyntax_utils/decompose_var_instance_name.o
@@ -45,6 +46,8 @@ LIBS += absyntax_utils/search_varfb_instance_type.o
 LIBS += absyntax_utils/search_var_instance_decl.o
 LIBS += absyntax_utils/spec_init_separator.o
 LIBS += absyntax_utils/type_initial_value.o
+LIBS += absyntax_utils/add_en_eno_param_decl.o
+LIBS += absyntax_utils/get_sizeof_datatype.o
 LIBS += absyntax_utils/get_function_type.o
 
 
@@ -66,7 +69,6 @@ Makefile.depend depend:
 	  | perl -pe 's/:/ Makefile.depend:/' > Makefile.depend
 
 include Makefile.depend
-
 
 
 

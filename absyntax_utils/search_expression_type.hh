@@ -46,7 +46,9 @@ class search_expression_type_c: public search_constant_type_c {
     bool is_bool_type(symbol_c *type_symbol);
     bool is_time_type(symbol_c *type_symbol);
     bool is_string_type(symbol_c *type_symbol);
+    bool is_literal_integer_type(symbol_c *type_symbol);
     bool is_integer_type(symbol_c *type_symbol);
+    bool is_literal_real_type(symbol_c *type_symbol);
     bool is_real_type(symbol_c *type_symbol);
     bool is_num_type(symbol_c *type_symbol);
     bool is_nbinary_type(symbol_c *type_symbol);
@@ -59,9 +61,6 @@ class search_expression_type_c: public search_constant_type_c {
     #include "search_type_code.c"
     */
     void *compute_standard_function_default(function_invocation_c *st_symbol, il_formal_funct_call_c *il_symbol);
-    /*
-    void *compute_standard_function_default(function_invocation_c *st_symbol = NULL, il_formal_funct_call_c *il_symbol = NULL);
-    */
     void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_data_type);
 
 
@@ -120,7 +119,11 @@ class search_expression_type_c: public search_constant_type_c {
     void *visit(neg_expression_c *symbol);
     void *visit(not_expression_c *symbol);
     void *visit(function_invocation_c *symbol);
+
+
+    static integer_c integer;
+
 }; // search_expression_type_c
 
-/*bool_type_name_c     search_expression_type_c::bool_type_name;*/
+
 

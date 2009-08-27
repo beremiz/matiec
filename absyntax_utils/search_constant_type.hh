@@ -67,8 +67,12 @@ class search_constant_type_c: public search_visitor_c {
   static time_type_name_c     time_type_name;
   static int_type_name_c      int_type_name;
 
+/*
   static constant_real_type_name_c     constant_real_type_name;
   static constant_int_type_name_c      constant_int_type_name;
+*/
+/* temporarily here until we remove the st_code_gen.c and il_code_gen.c files... */
+  static integer_c      integer;
 
   /******************************************************/
   /* Extensions to the base standard as defined in      */
@@ -98,11 +102,13 @@ class search_constant_type_c: public search_visitor_c {
     void *visit(octal_integer_c *symbol);
     void *visit(hex_integer_c *symbol);
 
-    void *visit(numeric_literal_c *symbol);
     void *visit(integer_literal_c *symbol);
     void *visit(real_literal_c *symbol);
     void *visit(bit_string_literal_c *symbol);
     void *visit(boolean_literal_c *symbol);
+
+    void *visit(boolean_true_c *symbol);
+    void *visit(boolean_false_c *symbol);
 
     /*******************************/
     /* B.1.2.2   Character Strings */

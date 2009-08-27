@@ -69,17 +69,23 @@ class function_param_iterator_c : public null_visitor_c {
 
 
   private:
-      /* a pointer to the function_block_declaration_c
-       * or function_declaration_c currently being analysed.
-       */
+    /* a pointer to the function_block_declaration_c
+    * or function_declaration_c currently being analysed.
+    */
     symbol_c *f_decl;
     int next_param, param_count;
+    /* used when called to search() for a parameter by name */
+    identifier_c *search_param_name;
+    /* used when called to iterate() for a parameter */
     identifier_c *current_param_name;
     symbol_c *current_param_type;
     symbol_c *current_param_default_value;
     param_direction_t current_param_direction;
-    bool en_declared;
-    bool eno_declared;
+    /* Which operation of the class was called...
+     * Search a parameter, or iterate to the next parameter.
+     */
+    typedef enum {iterate_op, search_op} operation_t;
+    operation_t current_operation;
 
   private:
     void* handle_param_list(list_c *list);
@@ -92,22 +98,13 @@ class function_param_iterator_c : public null_visitor_c {
     void reset(void);
 
     /* initialise the iterator object.
-     * We must be given a reference to the function declaration
+     * We must be given a reference to one of the following
+     *     - function_declaration_c
+     *     - function_block_declaration_c
+     *     - program_declaration_c
      * that will be analysed...
      */
-    function_param_iterator_c(function_declaration_c *f_decl);
-
-    /* initialise the iterator object.
-     * We must be given a reference to the function block declaration
-     * that will be analysed...
-     */
-    function_param_iterator_c(function_block_declaration_c *fb_decl);
-
-    /* initialise the iterator object.
-     * We must be given a reference to the program declaration
-     * that will be analysed...
-     */
-    function_param_iterator_c(program_declaration_c *p_decl);
+    function_param_iterator_c(symbol_c *pou_decl);
 
     /* Skip to the next parameter. After object creation,
      * the object references on parameter _before_ the first, so
@@ -118,9 +115,13 @@ class function_param_iterator_c : public null_visitor_c {
      */
     identifier_c *next(void);
 
-    identifier_c *declare_en_param(void);
-
-    identifier_c *declare_eno_param(void);
+    /* Search for the parameter named <param_name>...  */
+    /* The seach() function does not in any way affect the internal state related 
+     * to the iterate() function.
+     * It will, however, affect the internal state necessary to correctly
+     * return the param_type() and default_value() of the found parameter.
+     */
+    identifier_c *search(symbol_c *param_name);
 
     /* Returns the currently referenced parameter's default value,
      * or NULL if none is specified in the function declrataion itself.

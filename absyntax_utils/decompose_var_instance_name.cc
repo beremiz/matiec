@@ -60,6 +60,16 @@ symbol_c *decompose_var_instance_name_c::next_part(void) {
   return res;
 }
 
+
+/*************************/
+/* B.1 - Common elements */
+/*************************/
+/*******************************************/
+/* B 1.1 - Letters, digits and identifiers */
+/*******************************************/
+/* sometimes (e.g. FB calls) the name of the variable is stored directly in an identifier_c object */
+void *decompose_var_instance_name_c::visit(identifier_c *symbol) {return (void *)symbol;}
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/

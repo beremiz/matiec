@@ -85,7 +85,10 @@ extern symtable_c<symbol_c *, &null_symbol4> type_symtable;
 #include "decompose_var_instance_name.hh"
 #include "search_varfb_instance_type.hh"
 #include "search_constant_type.hh"
+#include "search_il_operand_type.hh"
 #include "search_expression_type.hh"
+#include "add_en_eno_param_decl.hh"
+#include "get_sizeof_datatype.hh"
 #include "get_function_type.h"
 
 

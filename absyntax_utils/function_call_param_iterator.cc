@@ -24,15 +24,16 @@
 
 /*
  * Function call parameter iterator.
- * It will iterate through the formal parameters of a function call
+ * It will iterate through the non-formal parameters of a function call
  * (i.e. function calls using the foo(<param1>, <param2>, ...) syntax).
- * and/or search through the non-formal parameters of a function call
+ * and/or search through the formal parameters of a function call
  * (i.e. function calls using the foo(<name1> = <param1>, <name2> = <param2>, ...) syntax).
  *
  * Calls to function blocks and programs are also supported.
  *
- * Note that calls to next() will only iterate through formal parameters,
- * and calls to search()  will only serach through non-formal parameters.
+ * Note that calls to next_nf() will only iterate through non-formal parameters,
+ * calls to next_f() will only iterate through formal parameters,
+ * and calls to search_f() will only serach through formal parameters.
  */
 
 
@@ -58,7 +59,7 @@ extern void error_exit(const char *file_name, int line_no);
 
 void *function_call_param_iterator_c::search_list(list_c *list) {
   switch (current_operation) {
-    case iterate_op:
+    case iterate_nf_op:
       for(int i = 0; i < list->n; i++) {
         void *res = list->elements[i]->accept(*this);
         if (NULL != res) {
@@ -69,7 +70,7 @@ void *function_call_param_iterator_c::search_list(list_c *list) {
           /* we do nothing... */
         } else {
           param_count++;
-          if (param_count == next_param) {
+          if (param_count == iterate_nf_next_param) {
             return list->elements[i];
           }
         }
@@ -77,7 +78,26 @@ void *function_call_param_iterator_c::search_list(list_c *list) {
       return NULL;
       break;
 
-    case search_op:
+    case iterate_f_op:
+      for(int i = 0; i < list->n; i++) {
+        void *res = list->elements[i]->accept(*this);
+        if (NULL != res) {
+          /* It went through the handle_parameter_assignment() function,
+           * and is therefore a parameter assignment (<param> = <value>),
+           * and not a simple expression (<value>).
+           */
+          param_count++;
+          if (param_count == iterate_f_next_param) {
+            return res;
+          }
+        } else {
+          /* we do nothing... */
+        }
+      }
+      return NULL;
+      break;
+
+    case search_f_op:
       for(int i = 0; i < list->n; i++) {
         void *res = list->elements[i]->accept(*this);
         if (res != NULL)
@@ -93,28 +113,21 @@ void *function_call_param_iterator_c::search_list(list_c *list) {
 
 void *function_call_param_iterator_c::handle_parameter_assignment(symbol_c *variable_name, symbol_c *expression) {
   switch (current_operation) {
-    case iterate_op:
+    case iterate_nf_op:
           /* UGLY HACK -> this will be detected in the search_list() function */
-      return (void *)this; /* anything, as long as it is not NULL!! */
+      return (void *)variable_name; /* anything, as long as it is not NULL!! */
       break;
 
-    case search_op:
+    case iterate_f_op:
+      current_value = expression;
+      return (void *)variable_name;
+      break;
+
+    case search_f_op:
       identifier_c *variable_name2 = dynamic_cast<identifier_c *>(variable_name);
-      
-      if (variable_name2 == NULL) {
-        en_param_c *en_param = dynamic_cast<en_param_c *>(variable_name);
-        if (en_param != NULL)
-          variable_name2 = new identifier_c("EN");
-      }
-      
-      if (variable_name2 == NULL) {
-        eno_param_c *eno_param = dynamic_cast<eno_param_c *>(variable_name);
-        if (eno_param != NULL)
-          variable_name2 = new identifier_c("ENO");
-      }
-      
+
       if (variable_name2 == NULL) ERROR;
-      
+
       if (strcasecmp(search_param_name->value, variable_name2->value) == 0)
         /* FOUND! This is the same parameter!! */
         return (void *)expression;
@@ -129,7 +142,9 @@ void *function_call_param_iterator_c::handle_parameter_assignment(symbol_c *vari
 
 /* start off at the first parameter once again... */
 void function_call_param_iterator_c::reset(void) {
-  next_param = param_count = 0;
+  iterate_nf_next_param = 0;
+  iterate_f_next_param  = 0;
+  param_count = 0;
 }
 
 /* initialise the iterator object.
@@ -150,32 +165,58 @@ function_call_param_iterator_c::function_call_param_iterator_c(symbol_c *f_call)
   reset();
 }
 
-/* Skip to the next parameter. After object creation,
+/* Skip to the next formal parameter. After object creation,
+ * the object references on parameter _before_ the first, so
+ * this function must be called once to get the object to
+ * reference the first parameter...
+ *
+ * Returns the paramater name to which a value is being passed!
+ * You can determine the value being passed by calling 
+ * function_call_param_iterator_c::search_f()
+ */
+symbol_c *function_call_param_iterator_c::next_f(void) {
+  current_value = NULL;
+  param_count = 0;
+  iterate_f_next_param++;
+  current_operation = function_call_param_iterator_c::iterate_f_op;
+  void *res = f_call->accept(*this);
+  return (symbol_c *)res;
+}
+
+
+/* Skip to the next non-formal parameter. After object creation,
  * the object references on parameter _before_ the first, so
  * this function must be called once to get the object to
  * reference the first parameter...
  *
  * Returns whatever is being passed to the parameter!
  */
-symbol_c *function_call_param_iterator_c::next(void) {
+symbol_c *function_call_param_iterator_c::next_nf(void) {
+  current_value = NULL;
   param_count = 0;
-  next_param++;
-  current_operation = function_call_param_iterator_c::iterate_op;
+  iterate_nf_next_param++;
+  current_operation = function_call_param_iterator_c::iterate_nf_op;
   void *res = f_call->accept(*this);
+  current_value = (symbol_c *)res;
   return (symbol_c *)res;
 }
 
 /* Search for the value passed to the parameter named <param_name>...  */
-symbol_c *function_call_param_iterator_c::search(symbol_c *param_name) {
+symbol_c *function_call_param_iterator_c::search_f(symbol_c *param_name) {
+  current_value = NULL;
   if (NULL == param_name) ERROR;
   search_param_name = dynamic_cast<identifier_c *>(param_name);
   if (NULL == search_param_name) ERROR;
-  current_operation = function_call_param_iterator_c::search_op;
+  current_operation = function_call_param_iterator_c::search_f_op;
   void *res = f_call->accept(*this);
+  current_value = (symbol_c *)res;
   return (symbol_c *)res;
 }
 
-
+/* Returns the value being passed to the current parameter. */
+symbol_c *function_call_param_iterator_c::get_current_value(void) {
+  return current_value;
+}
 
 /********************************/
 /* B 1.7 Configuration elements */
@@ -403,7 +444,7 @@ void *function_call_param_iterator_c::visit(il_param_assignment_c *symbol) {
   // since we do not yet support it, it is best to simply stop than to fail silently...
   if (NULL != symbol->simple_instr_list) ERROR;
 
-  return handle_parameter_assignment(symbol->il_assign_operator, symbol->il_operand);
+  return handle_parameter_assignment((symbol_c *)symbol->il_assign_operator->accept(*this), symbol->il_operand);
 }
 
 /*  il_assign_out_operator variable */
@@ -417,6 +458,13 @@ void *function_call_param_iterator_c::visit(il_param_out_assignment_c *symbol) {
 /*******************/
 /* B 2.2 Operators */
 /*******************/
+/*  any_identifier ASSIGN */
+// SYM_REF1(il_assign_operator_c, variable_name)
+void *function_call_param_iterator_c::visit(il_assign_operator_c *symbol) {
+  TRACE("il_assign_operator_c");
+  return (void *)symbol->variable_name;
+}
+
 /*| [NOT] any_identifier SENDTO */
 // SYM_REF2(il_assign_out_operator_c, option, variable_name)
 void *function_call_param_iterator_c::visit(il_assign_out_operator_c *symbol) {
@@ -424,7 +472,7 @@ void *function_call_param_iterator_c::visit(il_assign_out_operator_c *symbol) {
 
   // TODO : Handle not_param !!!
   // we do not yet support it, so it is best to simply stop than to fail silently...
-  if (NULL != symbol->option) ERROR;
+  // if (NULL != symbol->option) ERROR;
 
   return (void *)symbol->variable_name;
 }
@@ -444,10 +492,13 @@ SYM_REF2(function_invocation_c, function_name, parameter_assignment_list)
 */
 void *function_call_param_iterator_c::visit(function_invocation_c *symbol) {
   TRACE("function_invocation_c");
-  if ((symbol_c *)symbol == f_call && symbol->parameter_assignment_list != NULL)
-    return symbol->parameter_assignment_list->accept(*this);
-  else
-    return NULL;
+  /* If the syntax parser is working correctly, exactly one of the 
+   * following two symbols will be NULL, while the other is != NULL.
+   */
+  if (symbol->   formal_param_list != NULL) return symbol->   formal_param_list->accept(*this);
+  if (symbol->nonformal_param_list != NULL) return symbol->nonformal_param_list->accept(*this);
+
+  return NULL;
 }
 
 
@@ -474,10 +525,14 @@ SYM_REF2(assignment_statement_c, l_exp, r_exp)
 // SYM_REF2(fb_invocation_c, fb_name, param_assignment_list)
 void *function_call_param_iterator_c::visit(fb_invocation_c *symbol) {
   TRACE("fb_invocation_c");
-  if (symbol->param_assignment_list != NULL)
-    return symbol->param_assignment_list->accept(*this);
-  else
-    return NULL;
+  /* If the syntax parser is working correctly, only one of the 
+   * following two symbols will be != NULL.
+   * However, both may be NULL simultaneously!
+   */
+  if (symbol->   formal_param_list != NULL) return symbol->   formal_param_list->accept(*this);
+  if (symbol->nonformal_param_list != NULL) return symbol->nonformal_param_list->accept(*this);
+
+  return NULL;
 }
 
 /* helper symbol for fb_invocation */

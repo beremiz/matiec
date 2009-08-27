@@ -19,6 +19,8 @@ SEARCH_UTIL_FILES += search_varfb_instance_type.o
 SEARCH_UTIL_FILES += search_var_instance_decl.o
 SEARCH_UTIL_FILES += spec_init_separator.o
 SEARCH_UTIL_FILES += type_initial_value.o
+SEARCH_UTIL_FILES += add_en_eno_param_decl.o
+SEARCH_UTIL_FILES += get_sizeof_datatype.o
 SEARCH_UTIL_FILES += get_function_type.o
 
 

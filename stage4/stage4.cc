@@ -157,6 +157,8 @@ void *stage4out_c::printupper(std::string str) {
 #endif
   return NULL;
 }
+
+
 void *stage4out_c::printlocation(std::string str) {
   return printlocation(str.c_str());
 }
