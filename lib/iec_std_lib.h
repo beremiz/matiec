@@ -506,8 +506,6 @@ static inline BOOL __string_to_bool(EN_ENO_PARAMS, STRING IN){
 
 static inline LINT __pstring_to_sint(STRING* IN){
     LINT res = 0;
-    char tmp[STR_MAX_LEN];
-    char tmp2[STR_MAX_LEN];
     __strlen_t l;
     unsigned int shift = 0;
 
@@ -742,21 +740,21 @@ static inline STRING __dt_to_string(EN_ENO_PARAMS, DT IN){
 static inline ULINT __bcd_to_uint(EN_ENO_PARAMS, LWORD IN){
     TEST_EN(ULINT)
     return IN & 0xf +
-           !(IN >>= 4) ? 0 : IN & 0xf * 10ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 100ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 1000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 10000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 100000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 1000000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 10000000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 100000000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 1000000000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 10000000000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 100000000000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 1000000000000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 10000000000000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 100000000000000ULL +
-           !(IN >>= 4) ? 0 : IN & 0xf * 1000000000000000ULL;
+           !(IN >>= 4) ? 0 : (IN & 0xf * 10ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 100ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 1000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 10000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 100000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 1000000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 10000000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 100000000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 1000000000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 10000000000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 100000000000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 1000000000000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 10000000000000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 100000000000000ULL) +
+           !(IN >>= 4) ? 0 : (IN & 0xf * 1000000000000000ULL);
 
 }
 static inline LWORD __uint_to_bcd(EN_ENO_PARAMS, ULINT IN){
@@ -942,7 +940,7 @@ ANY_NBIT(__shr_)
 static inline TYPENAME __ror_##TYPENAME(EN_ENO_PARAMS, TYPENAME IN, USINT N){\
   TEST_EN(TYPENAME)\
   N %= 8*sizeof(TYPENAME);\
-  return (IN >> N) | (IN << 8*sizeof(TYPENAME)-N);\
+  return (IN >> N) | (IN << (8*sizeof(TYPENAME)-N));\
 }
 /* Call previously defined macro for each ANY_NBIT */
 ANY_NBIT(__ror_)
@@ -951,7 +949,7 @@ ANY_NBIT(__ror_)
 static inline TYPENAME __rol_##TYPENAME(EN_ENO_PARAMS, TYPENAME IN, USINT N){\
   TEST_EN(TYPENAME)\
   N %= 8*sizeof(TYPENAME);\
-  return (IN << N) | (IN >> 8*sizeof(TYPENAME)-N);\
+  return (IN << N) | (IN >> (8*sizeof(TYPENAME)-N));\
 }
 /* Call previously defined macro for each ANY_NBIT */
 ANY_NBIT(__rol_)
@@ -995,13 +993,13 @@ ANY_REAL(__sqrt_)
   /**************/
   /*     LN     */
   /**************/
-#define __ln_(TYPENAME) __numeric(__ln_, TYPENAME, ln)
+#define __ln_(TYPENAME) __numeric(__ln_, TYPENAME, log)
 ANY_REAL(__ln_)
 
   /**************/
   /*     LOG    */
   /**************/
-#define __log_(TYPENAME) __numeric(__log_, TYPENAME, log)
+#define __log_(TYPENAME) __numeric(__log_, TYPENAME, log10)
 ANY_REAL(__log_)
 
   /**************/
@@ -1295,29 +1293,29 @@ __ne_time(TIME)
 __compare_string(__ne_, != )
 
 
-///* Get string representation of variable referenced by a void pointer
-// * where type is given as its number */
-//#define __decl_str_case(cat,TYPENAME) \
-//    case TYPENAME##_ENUM:\
-//        return __##cat##_to_string(*(TYPENAME*)p);
-//#define __decl_str_case_bit(TYPENAME) __decl_str_case(bit,TYPENAME)
-//#define __decl_str_case_real(TYPENAME) __decl_str_case(real,TYPENAME)
-//#define __decl_str_case_sint(TYPENAME) __decl_str_case(sint,TYPENAME)
-//#define __decl_str_case_uint(TYPENAME) __decl_str_case(uint,TYPENAME)
-//static inline STRING __get_type_enum_str(__IEC_types_enum t, void* p){
-// switch(t){
-//  __decl_str_case(bool,BOOL)
-//  ANY_NBIT(__decl_str_case_bit)
-//  ANY_REAL(__decl_str_case_real)
-//  ANY_SINT(__decl_str_case_sint)
-//  ANY_UINT(__decl_str_case_uint)
-//  __decl_str_case(time,TIME)
-//  __decl_str_case(date,DATE)
-//  __decl_str_case(tod,TOD)
-//  __decl_str_case(dt, DT)
-// }
-//}
-//
+/* Get string representation of variable referenced by a void pointer
+ * where type is given as its number */
+/*#define __decl_str_case(cat,TYPENAME) \
+    case TYPENAME##_ENUM:\
+        return __##cat##_to_string(*(TYPENAME*)p);
+#define __decl_str_case_bit(TYPENAME) __decl_str_case(bit,TYPENAME)
+#define __decl_str_case_real(TYPENAME) __decl_str_case(real,TYPENAME)
+#define __decl_str_case_sint(TYPENAME) __decl_str_case(sint,TYPENAME)
+#define __decl_str_case_uint(TYPENAME) __decl_str_case(uint,TYPENAME)
+static inline STRING __get_type_enum_str(__IEC_types_enum t, void* p){
+ switch(t){
+  __decl_str_case(bool,BOOL)
+  ANY_NBIT(__decl_str_case_bit)
+  ANY_REAL(__decl_str_case_real)
+  ANY_SINT(__decl_str_case_sint)
+  ANY_UINT(__decl_str_case_uint)
+  __decl_str_case(time,TIME)
+  __decl_str_case(date,DATE)
+  __decl_str_case(tod,TOD)
+  __decl_str_case(dt, DT)
+ }
+}
+*/
 
 
 

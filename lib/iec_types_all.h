@@ -79,6 +79,7 @@ static inline USINT __get_type_enum_size(__IEC_types_enum t){
   ANY_SFC(__decl_size_case_force_BOOL)
   /*TODO handle custom types*/
  }
+ return 0;
 }
 
 /* Get name of type from its number */
@@ -91,6 +92,7 @@ static inline const char* __get_type_enum_name(__IEC_types_enum t){
   ANY_SFC(__decl_typename_case)
   /*TODO handle custom types*/
  }
+ return 0;
 }
 
 

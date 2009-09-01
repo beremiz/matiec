@@ -47,12 +47,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -81,12 +83,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -115,12 +119,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -184,12 +190,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -288,12 +296,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -322,12 +332,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -391,12 +403,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -425,12 +439,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -459,12 +475,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -493,12 +511,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -527,12 +547,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -561,12 +583,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -595,12 +619,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -664,12 +690,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -698,12 +726,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -732,12 +762,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -766,12 +798,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -835,12 +869,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -939,12 +975,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -973,12 +1011,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1042,12 +1082,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1076,12 +1118,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1110,12 +1154,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1144,12 +1190,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1178,12 +1226,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1212,12 +1262,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1246,12 +1298,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1315,12 +1369,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::sint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1349,12 +1405,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1383,12 +1441,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1417,12 +1477,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1486,12 +1548,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1590,12 +1654,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1624,12 +1690,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1693,12 +1761,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1727,12 +1797,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1761,12 +1833,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1795,12 +1869,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1829,12 +1905,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1863,12 +1941,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1897,12 +1977,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -1966,12 +2048,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2000,12 +2084,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2034,12 +2120,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2068,12 +2156,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2137,12 +2227,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2241,12 +2333,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2275,12 +2369,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2344,12 +2440,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2378,12 +2476,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2412,12 +2512,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2446,12 +2548,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2480,12 +2584,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2514,12 +2620,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2548,12 +2656,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -2617,12 +2727,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3176,12 +3288,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3210,12 +3324,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3244,12 +3360,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3278,12 +3396,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3417,12 +3537,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3451,12 +3573,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3520,12 +3644,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3554,12 +3680,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3588,12 +3716,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3622,12 +3752,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3656,12 +3788,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3690,12 +3824,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3724,12 +3860,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -3793,12 +3931,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -4877,12 +5017,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -4911,12 +5053,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -4945,12 +5089,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -4979,12 +5125,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5048,12 +5196,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5152,12 +5302,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5221,12 +5373,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5255,12 +5409,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5289,12 +5445,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5323,12 +5481,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5357,12 +5517,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5391,12 +5553,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5425,12 +5589,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5494,12 +5660,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5528,12 +5696,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5562,12 +5732,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5596,12 +5768,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5630,12 +5804,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5699,12 +5875,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5803,12 +5981,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5872,12 +6052,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5906,12 +6088,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5940,12 +6124,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -5974,12 +6160,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -6008,12 +6196,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -6042,12 +6232,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -6076,12 +6268,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -6145,12 +6339,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::word_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -6844,12 +7040,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -6878,12 +7076,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -6912,12 +7112,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -6946,12 +7148,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7015,12 +7219,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7119,12 +7325,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7153,12 +7361,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7222,12 +7432,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7256,12 +7468,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7290,12 +7504,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7324,12 +7540,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7358,12 +7576,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7392,12 +7612,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7461,12 +7683,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lword_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7495,12 +7719,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7529,12 +7755,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7563,12 +7791,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7597,12 +7827,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7666,12 +7898,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7770,12 +8004,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7804,12 +8040,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7873,12 +8111,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7907,12 +8147,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7941,12 +8183,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -7975,12 +8219,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8009,12 +8255,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8043,12 +8291,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8112,12 +8362,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8146,12 +8398,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8180,12 +8434,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8214,12 +8470,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8248,12 +8506,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8317,12 +8577,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8421,12 +8683,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8455,12 +8719,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8524,12 +8790,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8558,12 +8826,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8592,12 +8862,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8626,12 +8898,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8660,12 +8934,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8694,12 +8970,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8763,12 +9041,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8797,12 +9077,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8831,12 +9113,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8865,12 +9149,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8899,12 +9185,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -8968,12 +9256,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9072,12 +9362,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9106,12 +9398,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9175,12 +9469,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9209,12 +9505,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9243,12 +9541,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9277,12 +9577,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9311,12 +9613,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9345,12 +9649,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9414,12 +9720,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::byte_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9448,12 +9756,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9482,12 +9792,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9516,12 +9828,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9550,12 +9864,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9619,12 +9935,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9723,12 +10041,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9757,12 +10077,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9826,12 +10148,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9860,12 +10184,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9894,12 +10220,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9928,12 +10256,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9962,12 +10292,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -9996,12 +10328,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10065,12 +10399,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10099,12 +10435,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10133,12 +10471,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10167,12 +10507,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10201,12 +10543,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10270,12 +10614,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10374,12 +10720,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10408,12 +10756,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10477,12 +10827,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10511,12 +10863,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10545,12 +10899,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10579,12 +10935,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10613,12 +10971,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10647,12 +11007,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10716,12 +11078,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10750,12 +11114,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10784,12 +11150,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10818,12 +11186,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10852,12 +11222,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10921,12 +11293,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11025,12 +11399,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11059,12 +11435,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11128,12 +11506,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11162,12 +11542,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11196,12 +11578,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11230,12 +11614,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11264,12 +11650,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11298,12 +11686,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11367,12 +11757,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::bool_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11926,12 +12318,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11960,12 +12354,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -11994,12 +12390,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12028,12 +12426,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12097,12 +12497,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12201,12 +12603,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12235,12 +12639,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12304,12 +12710,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12338,12 +12746,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12372,12 +12782,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12406,12 +12818,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12440,12 +12854,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12474,12 +12890,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -12508,12 +12926,14 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::int_type_name, last_type_symbol))
             {
         
+                function_name = (symbol_c*)(new pragma_c("__move_"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
+                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
