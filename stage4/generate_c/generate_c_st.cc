@@ -442,15 +442,7 @@ void *visit(function_invocation_c *symbol) {
       nb_param --;
     ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
 
-    #define search(x) search_f(x)
-    #define next() next_nf()
-//     #define search_constant_type_c::constant_int_type_name  search_expression_type_c::integer
-    #define constant_int_type_name  integer
     #include "st_code_gen.c"
-    #undef constant_int_type_name
-//     #undef search_constant_type_c::constant_int_type_name
-    #undef next
-    #undef  search
 
   }
   else {
