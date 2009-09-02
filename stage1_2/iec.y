@@ -3525,9 +3525,9 @@ eno_param_declaration:
    */
   {$$ = new eno_param_declaration_c($1, new bool_type_name_c(locloc(@$)), new explicit_definition_c(), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
-| en_identifier BOOL
+| eno_identifier BOOL
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in ENO declaration."); yynerrs++;}
-| en_identifier ':' error
+| eno_identifier ':' error
 	{$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no specification defined in ENO declaration.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid specification in ENO declaration."); yyclearin;}
