@@ -1,5 +1,5 @@
 /*
- * (c) 2003 Mario de Sousa
+ * (c) 2009 Mario de Sousa
  *
  * Offered to the public under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2 of the
@@ -23,39 +23,59 @@
  */
 
 
-/* Determine the data type on which another data type is based on.
- * If a new default initial value is given, we DO NOT consider it a
- * new base class, and continue looking further!
+/* Determine the size, in bits, of the data type.
+ * 
+ * NOTE: Currently, only elementary data types with well defined sizes (in the standard) are supported.
+ *       - derived data types are not supported, and these will return 0
+ *       - TIME, DATE, TIME_OF_DAY, and DATE_AND_TIME are not supported, and will return 0
+ *       - STRING and WSTRING are not supported, and the standard merely defines bit per character,
+ *              and not the maximum number of characters, so these will return 0
+ *
+ *       We also support the 'Numeric Literals' Data types.
+ *       i.e., numeric literals are considerd basic data types
+ *       as their data type is undefined (e.g. the datat type of '30'
+ *       could be 'INT' or 'SINT' or 'LINT' or 'USINT' or ...
+ *
+ *       For numeric literals, we return the minimum number of bits
+ *       required to store the value.
  *
  * E.g. TYPE new_int_t : INT; END_TYPE;
  *      TYPE new_int2_t : INT = 2; END_TYPE;
  *      TYPE new_subr_t : INT (4..5); END_TYPE;
  *
- *    new_int_t is really an INT!!
- *    new_int2_t is also really an INT!!
- *    new_subr_t is also really an INT!!
+ *    sizeof(SINT) ->  8
+ *    sizeof(INT)  -> 16
+ *    sizeof(DINT) -> 32
+ *    sizeof(LINT) -> 64
  *
- * Note that a FB declaration is also considered a base type, as
- * we may have FB instances declared of a specific FB type.
+ *    sizeof('1')       ->  1
+ *    sizeof('015')     ->  4    # Leading zeros are ignored!
+ *    sizeof('0')       ->  1    # This is a special case! Even the value 0 needs at least 1 bit to store!
+ *    sizeof('16')      ->  5
+ *    sizeof('2#00101') ->  3
+ *    sizeof('8#334')   ->  9
+ *    sizeof('16#2A')   ->  8
+ *
+ *    sizeof('7.4')     ->  32   # all real literals return 32 bits, the size of a 'REAL'
+ *                               # TODO: study IEC 60559 for the range of values that may be
+ *                               #       stored in a REAL (basic single width floating point format)
+ *                               #       and in a LREAL (basic double width floating point format)
+ *                               #       and see if some real literals need to return 64 instead!
  */
 
+#include "../absyntax/visitor.hh"
 
-class search_base_type_c: public null_visitor_c {
+class get_sizeof_datatype_c: public null_visitor_c {
+
+  public:
+    static int getsize(symbol_c *data_type_symbol);
+    ~get_sizeof_datatype_c(void);
 
   private:
-    symbol_c *current_type_name;
-    bool is_subrange;
-    bool is_enumerated;
+    /* this class is a singleton. So we need a pointer to the single instance... */
+    static get_sizeof_datatype_c *singleton;
 
-  public:
-    search_base_type_c(void);
-
-  public:
-    void *visit(identifier_c *type_name);
-    bool type_is_subrange(symbol_c* type_decl);
-    bool type_is_enumerated(symbol_c* type_decl);
-
-  public:
+  private:
     /*********************/
     /* B 1.2 - Constants */
     /*********************/
@@ -76,11 +96,10 @@ class search_base_type_c: public null_visitor_c {
     void *visit(octal_integer_c *symbol);
     void *visit(hex_integer_c *symbol);
 
-
   /***********************************/
   /* B 1.3.1 - Elementary Data Types */
   /***********************************/
-    void *visit(time_type_name_c *symbol);
+//     void *visit(time_type_name_c *symbol);
     void *visit(bool_type_name_c *symbol);
     void *visit(sint_type_name_c *symbol);
     void *visit(int_type_name_c *symbol);
@@ -92,20 +111,15 @@ class search_base_type_c: public null_visitor_c {
     void *visit(ulint_type_name_c *symbol);
     void *visit(real_type_name_c *symbol);
     void *visit(lreal_type_name_c *symbol);
-    void *visit(date_type_name_c *symbol);
-    void *visit(tod_type_name_c *symbol);
-    void *visit(dt_type_name_c *symbol)	;
+//     void *visit(date_type_name_c *symbol);
+//     void *visit(tod_type_name_c *symbol);
+//     void *visit(dt_type_name_c *symbol)	;
     void *visit(byte_type_name_c *symbol);
     void *visit(word_type_name_c *symbol);
     void *visit(dword_type_name_c *symbol);
     void *visit(lword_type_name_c *symbol);
-    void *visit(string_type_name_c *symbol);
-    void *visit(wstring_type_name_c *symbol);
-
-/*
-    void *visit(constant_int_type_name_c *symbol);
-    void *visit(constant_real_type_name_c *symbol);
-*/
+//     void *visit(string_type_name_c *symbol);
+//     void *visit(wstring_type_name_c *symbol);
 
     /******************************************************/
     /* Extensions to the base standard as defined in      */
@@ -119,6 +133,7 @@ class search_base_type_c: public null_visitor_c {
   /********************************/
   /* B 1.3.3 - Derived data types */
   /********************************/
+#if 0
   /*  simple_type_name ':' simple_spec_init */
     void *visit(simple_type_declaration_c *symbol);
   /* simple_specification ASSIGN constant */
@@ -189,15 +204,8 @@ class search_base_type_c: public null_visitor_c {
   					string_type_declaration_init) // may be == NULL!
   */
     void *visit(string_type_declaration_c *symbol);
-
-  /*****************************/
-  /* B 1.5.2 - Function Blocks */
-  /*****************************/
-  /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
-  // SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
-    void *visit(function_block_declaration_c *symbol);
-
-}; // search_base_type_c
+#endif
+}; // get_sizeof_datatype_c
 
 
 

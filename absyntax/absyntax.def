@@ -84,8 +84,14 @@ SYM_REF0(safebool_type_name_c)
 
 
 /* EN/ENO */
+/* NOTE we store 'EN' and 'ENO' tokens in an identifier_c
+ *      as they may be used as variables, and it is much easier 
+ *      to handle them (fewer special cases) if we do it that way...
+ */
+/*
 SYM_REF0(en_param_c)
 SYM_REF0(eno_param_c)
+*/
 
 /***************************/
 /* 2.1.6 - Pragmas */
@@ -132,7 +138,9 @@ SYM_TOKEN(signed_real_c)
 
 SYM_REF1(neg_literal_c, exp)
 
+/* Not required:
 SYM_REF2(numeric_literal_c, type, value)
+*/
 SYM_REF2(integer_literal_c, type, value)
 SYM_REF2(real_literal_c, type, value)
 SYM_REF2(bit_string_literal_c, type, value)
@@ -206,8 +214,11 @@ SYM_REF0(dword_type_name_c)
 SYM_REF0(lword_type_name_c)
 SYM_REF0(string_type_name_c)
 SYM_REF0(wstring_type_name_c)
+
+/*
 SYM_REF0(constant_int_type_name_c)
 SYM_REF0(constant_real_type_name_c)
+*/
 
 
 /********************************/
@@ -403,15 +414,41 @@ SYM_REF0(retain_option_c)
 SYM_REF0(non_retain_option_c)
 
 /* option -> the RETAIN/NON_RETAIN/<NULL> directive... */
-SYM_REF2(input_declarations_c, option, input_declaration_list)
+/* NOTE: We need to implicitly define the EN and ENO function and FB parameters when the user
+ *       does not do it explicitly in the IEC 61131-3 source code. 
+ *       To be able to distinguish later on between implictly and explicitly defined
+ *       variables, we use the 'method' flag that allows us to remember
+ *       whether this declaration was in the original source code (method -> implicit_definition_c) 
+ *       or not (method -> explicit_definition_c).
+ */
+SYM_REF3(input_declarations_c, option, input_declaration_list, method)
 
 /* helper symbol for input_declarations */
 SYM_LIST(input_declaration_list_c)
 
+/* NOTE: The formal definition of the standard is erroneous, as it simply does not
+ *       consider the EN and ENO keywords!
+ *       The semantic description of the languages clearly states that these may be
+ *       used in several ways. One of them is to declare an EN input parameter, or
+ *       an ENO output parameter.
+ *       We have added the 'en_param_declaration_c' and 'eno_param_declaration_c' 
+ *       to cover for this.
+ *
+ *       We could have re-used the standard class used for all other input variables (with
+ *       an identifier set to 'EN' or 'ENO') however we may sometimes need to add this
+ *       declaration implicitly (if the user does not include it in the source
+ *       code himself), and it is good to know whether it was added implicitly or not.
+ *       So we create a new class that has a 'method' flag that allows us to remember
+ *       whether this declaration was in the original source code (method -> implicit_definition_c) 
+ *       or not (method -> explicit_definition_c).
+ */
+SYM_REF0(implicit_definition_c)
+SYM_REF0(explicit_definition_c)
+SYM_REF4(en_param_declaration_c, name, type, value, method)
+SYM_REF3(eno_param_declaration_c, name, type, method)
+
 /* edge -> The F_EDGE or R_EDGE directive */
 SYM_REF2(edge_declaration_c, edge, var1_list)
-
-SYM_REF0(en_param_declaration_c)
 
 SYM_REF0(raising_edge_option_c)
 SYM_REF0(falling_edge_option_c)
@@ -441,9 +478,14 @@ SYM_LIST(fb_name_list_c)
 
 /* VAR_OUTPUT [RETAIN | NON_RETAIN] var_init_decl_list END_VAR */
 /* option -> may be NULL ! */
-SYM_REF2(output_declarations_c, option, var_init_decl_list)
-
-SYM_REF0(eno_param_declaration_c)
+/* NOTE: We need to implicitly define the EN and ENO function and FB parameters when the user
+ *       does not do it explicitly in the IEC 61131-3 source code. 
+ *       To be able to distinguish later on between implictly and explicitly defined
+ *       variables, we use the 'method' flag that allows us to remember
+ *       whether this declaration was in the original source code (method -> implicit_definition_c) 
+ *       or not (method -> explicit_definition_c).
+ */
+SYM_REF3(output_declarations_c, option, var_init_decl_list, method)
 
 /*  VAR_IN_OUT var_declaration_list END_VAR */
 SYM_REF1(input_output_declarations_c, var_declaration_list)
@@ -885,7 +927,9 @@ SYM_REF2(power_expression_c, l_exp, r_exp)
 SYM_REF1(neg_expression_c, exp)
 SYM_REF1(not_expression_c, exp)
 
-SYM_REF2(function_invocation_c, function_name, parameter_assignment_list)
+/*    formal_param_list -> may be NULL ! */
+/* nonformal_param_list -> may be NULL ! */
+SYM_REF3(function_invocation_c, function_name, formal_param_list, nonformal_param_list)
 
 
 /********************/
@@ -908,8 +952,9 @@ SYM_REF2(assignment_statement_c, l_exp, r_exp)
 SYM_REF0(return_statement_c)
 
 /* fb_name '(' [param_assignment_list] ')' */
-/* param_assignment_list -> may be NULL ! */
-SYM_REF2(fb_invocation_c, fb_name, param_assignment_list)
+/*    formal_param_list -> may be NULL ! */
+/* nonformal_param_list -> may be NULL ! */
+SYM_REF3(fb_invocation_c, fb_name, formal_param_list, nonformal_param_list)
 
 /* helper symbol for fb_invocation */
 /* param_assignment_list ',' param_assignment */

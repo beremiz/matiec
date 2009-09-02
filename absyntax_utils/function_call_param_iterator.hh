@@ -24,15 +24,16 @@
 
 /*
  * Function call parameter iterator.
- * It will iterate through the formal parameters of a function call
+ * It will iterate through the non-formal parameters of a function call
  * (i.e. function calls using the foo(<param1>, <param2>, ...) syntax).
- * and/or search through the non-formal parameters of a function call
+ * and/or search through the formal parameters of a function call
  * (i.e. function calls using the foo(<name1> = <param1>, <name2> = <param2>, ...) syntax).
  *
  * Calls to function blocks and programs are also supported.
  *
- * Note that calls to next() will only iterate through formal parameters,
- * and calls to search()  will only serach through non-formal parameters.
+ * Note that calls to next_nf() will only iterate through non-formal parameters,
+ * calls to next_f() will only iterate through formal parameters,
+ * and calls to search_f() will only serach through formal parameters.
  */
 
 
@@ -46,13 +47,16 @@ class function_call_param_iterator_c : public null_visitor_c {
        * (or function block or program call!)
        */
     symbol_c *f_call;
-    int next_param, param_count;
+    int iterate_f_next_param, iterate_nf_next_param, param_count;
     identifier_c *search_param_name;
+    symbol_c *current_value;
 
-    /* Which operation of the class was called...
-     * Search a parameter, or iterate to the next parameter.
+    /* Which operation of the class was called:
+     *  - iterate to the next non-formal parameter. 
+     *  - iterate to the next formal parameter. 
+     *  - search a formal parameter, 
      */
-    typedef enum {iterate_op, search_op} operation_t;
+    typedef enum {iterate_nf_op, iterate_f_op, search_f_op} operation_t;
     operation_t current_operation;
 
   private:
@@ -70,17 +74,31 @@ class function_call_param_iterator_c : public null_visitor_c {
      */
     function_call_param_iterator_c(symbol_c *f_call);
 
-    /* Skip to the next parameter. After object creation,
+    /* Skip to the next formal parameter. After object creation,
+     * the object references on parameter _before_ the first, so
+     * this function must be called once to get the object to
+     * reference the first parameter...
+     *
+     * Returns the paramater name to which a value is being passed!
+     * You can determine the value being passed by calling 
+     * function_call_param_iterator_c::search_f()
+     */
+    symbol_c *next_f(void);
+
+    /* Skip to the next non-formal parameter. After object creation,
      * the object references on parameter _before_ the first, so
      * this function must be called once to get the object to
      * reference the first parameter...
      *
      * Returns whatever is being passed to the parameter!
      */
-    symbol_c *next(void);
+    symbol_c *next_nf(void);
 
     /* Search for the value passed to the parameter named <param_name>...  */
-    symbol_c *search(symbol_c *param_name);
+    symbol_c *search_f(symbol_c *param_name);
+
+    /* Returns the value being passed to the current parameter. */
+    symbol_c *get_current_value(void);
 
 
   private:
@@ -254,6 +272,10 @@ class function_call_param_iterator_c : public null_visitor_c {
   /*******************/
   /* B 2.2 Operators */
   /*******************/
+  /*  any_identifier ASSIGN */
+  // SYM_REF1(il_assign_operator_c, variable_name)
+    void *visit(il_assign_operator_c *symbol);
+
   /*| [NOT] any_identifier SENDTO */
   // SYM_REF2(il_assign_out_operator_c, option, variable_name)
     void *visit(il_assign_out_operator_c *symbol);

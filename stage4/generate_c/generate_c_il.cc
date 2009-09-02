@@ -54,34 +54,6 @@
  * the possible il_operand variable instance was declared).
  */
 
-class search_il_operand_type_c {
-
-  private:
-    search_varfb_instance_type_c search_varfb_instance_type;
-    search_constant_type_c search_constant_type;
-
-  public:
-    search_il_operand_type_c(symbol_c *search_scope): search_varfb_instance_type(search_scope) {}
-
-  public:
-    symbol_c *get_type(symbol_c *il_operand) {
-      symbol_c *res;
-
-      /* We first assume that it is a constant... */
-      res = search_constant_type.get_type(il_operand);
-      if (res != NULL) return res;
-
-      /* Nope, now we assume it is a variable, and determine its type... */
-      res = search_varfb_instance_type.get_type(il_operand);
-      if (NULL != res) return res;
-
-      /* not found */
-      return NULL;
-    }
-};
-
-
-
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
@@ -176,7 +148,6 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
      * This object instance will then later be called while the
      * remaining il code is being handled.
      */
-    //search_il_operand_type_c *search_il_operand_type;
     search_expression_type_c *search_expression_type;
 
     /* The initial value that should be given to the IL default variable
@@ -244,38 +215,6 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     il_default_variable_c default_variable_name;
     il_default_variable_c default_variable_back_name;
 
-    /* Some function calls in the body of functions or function blocks
-     * may leave some parameters to their default values, and
-     * ignore some output parameters of the function being called.
-     * Our conversion of ST functions to C++ does not contemplate that,
-     * i.e. each called function must get all it's input and output
-     * parameters set correctly.
-     * For input parameters we merely need to call the function with
-     * the apropriate default value, but for output parameters
-     * we must create temporary variables to hold the output value.
-     *
-     * We declare all the temporary output variables at the begining of
-     * the body of each function or function block, and use them as
-     * in function calls later on as they become necessary...
-     * Note that we cannot create these variables just before a function
-     * call, as the function call itself may be integrated within an
-     * expression, or another function call!
-     *
-     * The variables are declared in the exact same order in which they
-     * will be used later on during the function calls, which allows us
-     * to simply re-create the name that was used for the temporary variable
-     * instead of keeping it in some list.
-     * The names are recreated by the temp_var_name_factory, after reset()
-     * has been called!
-     *
-     * This function will genertae code similar to...
-     *
-     *     INT __TMP_0 = 23;
-     *     REAL __TMP_1 = 45.5;
-     *     ...
-     */
-    temp_var_name_c temp_var_name_factory;
-
     /* When calling a function block, we must first find it's type,
      * by searching through the declarations of the variables currently
      * in scope.
@@ -303,7 +242,6 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       default_variable_name(IL_DEFVAR, NULL),
       default_variable_back_name(IL_DEFVAR_BACK, NULL)
     {
-      //search_il_operand_type  = new search_il_operand_type_c(scope);
       search_expression_type = new search_expression_type_c(scope);
       search_fb_instance_decl = new search_fb_instance_decl_c(scope);
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
@@ -316,14 +254,11 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
 
     virtual ~generate_c_il_c(void) {
       delete search_fb_instance_decl;
-      //delete search_il_operand_type;
       delete search_expression_type;
       delete search_varfb_instance_type;
     }
 
     void generate(instruction_list_c *il) {
-      generate_c_tempvardecl_c generate_c_tempvardecl(&s4o);
-      generate_c_tempvardecl.generate(il, &temp_var_name_factory);
       il->accept(*this);
     }
 
@@ -384,13 +319,14 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       if (NULL == sv) ERROR;
       identifier_c *id = dynamic_cast<identifier_c *>(sv->var_name);
       if (NULL == id) ERROR;
-
+      
       identifier_c param(param_name);
 
       //SYM_REF3(il_param_assignment_c, il_assign_operator, il_operand, simple_instr_list)
-      il_param_assignment_c il_param_assignment(&param, &this->default_variable_name, NULL);
+      il_assign_operator_c il_assign_operator(&param);
+      il_param_assignment_c il_param_assignment(&il_assign_operator, &this->default_variable_name, NULL);
       // SYM_LIST(il_param_list_c)
-      il_param_list_c il_param_list;
+      il_param_list_c il_param_list;   
       il_param_list.add_element(&il_param_assignment);
       CAL_operator_c CAL_operator;
       // SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list)
@@ -461,6 +397,9 @@ void *visit(il_default_variable_c *symbol) {
 
 private:
 
+#if 0
+I NEED TO FIX THIS!!!
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 void *visit(eno_param_c *symbol) {
   if (this->is_variable_prefix_null()) {
     s4o.print("*");
@@ -471,6 +410,9 @@ void *visit(eno_param_c *symbol) {
   s4o.print("ENO");
   return NULL;
 }
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+#endif
+
 
 /*********************/
 /* B 1.4 - Variables */
@@ -632,7 +574,15 @@ void *visit(il_function_call_c *symbol) {
     if (symbol->il_operand_list != NULL)
       nb_param += ((list_c *)symbol->il_operand_list)->n;
 
+    #define search(x) search_f(x)
+    #define next() next_nf()
+//     #define search_constant_type_c::constant_int_type_name  search_expression_type_c::integer
+    #define constant_int_type_name  integer
     #include "il_code_gen.c"
+    #undef constant_int_type_name
+//     #undef search_constant_type_c::constant_int_type_name
+    #undef next
+    #undef  search
 
   }
   else {
@@ -673,11 +623,11 @@ void *visit(il_function_call_c *symbol) {
        * the following line...
        */
       if (param_value == NULL)
-        param_value = function_call_param_iterator.search(param_name);
+        param_value = function_call_param_iterator.search_f(param_name);
   
       /* Get the value from a foo(<param_value>) style call */
       if (param_value == NULL)
-        param_value = function_call_param_iterator.next();
+        param_value = function_call_param_iterator.next_nf();
       
       if (param_value == NULL && param_direction == function_param_iterator_c::direction_in) {
         /* No value given for parameter, so we must use the default... */
@@ -844,11 +794,11 @@ void *visit(il_fb_call_c *symbol) {
     function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
 
     /* Get the value from a foo(<param_name> = <param_value>) style call */
-    symbol_c *param_value = function_call_param_iterator.search(param_name);
+    symbol_c *param_value = function_call_param_iterator.search_f(param_name);
 
     /* Get the value from a foo(<param_value>) style call */
     if (param_value == NULL)
-      param_value = function_call_param_iterator.next();
+      param_value = function_call_param_iterator.next_nf();
 
     symbol_c *param_type = fp_iterator.param_type();
     if (param_type == NULL) ERROR;
@@ -889,18 +839,18 @@ void *visit(il_fb_call_c *symbol) {
     function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
 
     /* Get the value from a foo(<param_name> = <param_value>) style call */
-    symbol_c *param_value = function_call_param_iterator.search(param_name);
+    symbol_c *param_value = function_call_param_iterator.search_f(param_name);
 
     /* Get the value from a foo(<param_value>) style call */
     if (param_value == NULL)
-      param_value = function_call_param_iterator.next();
+      param_value = function_call_param_iterator.next_nf();
 
     /* now output the value assignment */
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
         symbol_c *param_type = search_varfb_instance_type->get_type(param_value, false);
-        
+
         s4o.print(";\n"+ s4o.indent_spaces);
         param_value->accept(*this);
         s4o.print(" = ");
@@ -955,7 +905,7 @@ void *visit(il_formal_funct_call_c *symbol) {
     
     identifier_c en_param_name("EN");
     /* Get the value from EN param */
-    symbol_c *EN_param_value = function_call_param_iterator.search(&en_param_name);
+    symbol_c *EN_param_value = function_call_param_iterator.search_f(&en_param_name);
     if (EN_param_value == NULL)
       EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
     else
@@ -964,12 +914,20 @@ void *visit(il_formal_funct_call_c *symbol) {
     
     identifier_c eno_param_name("EN0");
     /* Get the value from ENO param */
-    symbol_c *ENO_param_value = function_call_param_iterator.search(&eno_param_name);
+    symbol_c *ENO_param_value = function_call_param_iterator.search_f(&eno_param_name);
     if (ENO_param_value != NULL)
       nb_param --;
     ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
     
+    #define search(x) search_f(x)
+    #define next() next_nf()
+//     #define search_constant_type_c::constant_int_type_name  search_expression_type_c::integer
+    #define constant_int_type_name  integer
     #include "st_code_gen.c"
+    #undef constant_int_type_name
+//     #undef search_constant_type_c::constant_int_type_name
+    #undef next
+    #undef  search
     
   }
   else {
@@ -998,7 +956,7 @@ void *visit(il_formal_funct_call_c *symbol) {
   
       /* Get the value from a foo(<param_name> = <param_value>) style call */
       if (param_value == NULL)
-        param_value = function_call_param_iterator.search(param_name);
+        param_value = function_call_param_iterator.search_f(param_name);
   
       /* Get the value from a foo(<param_value>) style call */
       /* NOTE: the following line of code is not required in this case, but it doesn't
@@ -1009,7 +967,7 @@ void *visit(il_formal_funct_call_c *symbol) {
        * the following line...
        */
       if (param_value == NULL)
-        param_value = function_call_param_iterator.next();
+        param_value = function_call_param_iterator.next_nf();
       
       if (param_value == NULL) {
         /* No value given for parameter, so we must use the default... */

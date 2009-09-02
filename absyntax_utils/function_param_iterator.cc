@@ -60,21 +60,51 @@ extern void error_exit(const char *file_name, int line_no);
 
 
 void* function_param_iterator_c::handle_param_list(list_c *list) {
-  if (next_param <= param_count + list->n)
-    return list->elements[next_param - param_count - 1];
+  switch (current_operation) {
+    case iterate_op:
+      if (next_param <= param_count + list->n)
+        return list->elements[next_param - param_count - 1];
 
-  /* the desired param is not on this list... */
-  param_count += list->n;
- return NULL;
+      /* the desired param is not on this list... */
+      param_count += list->n;
+      break;
+
+    case search_op:
+      for(int i = 0; i < list->n; i++) {
+        identifier_c *variable_name = dynamic_cast<identifier_c *>(list->elements[i]);
+        if (variable_name == NULL) ERROR;
+
+        if (strcasecmp(search_param_name->value, variable_name->value) == 0)
+          /* FOUND! This is the same parameter!! */
+          return (void *)variable_name;
+      }
+      break;
+  } /* switch */
+
+  /* Not found! */
+  return NULL;
 }
 
 void* function_param_iterator_c::handle_single_param(symbol_c *var_name) {
-  param_count++;
-  if (next_param == param_count)
-    return var_name;
+  switch (current_operation) {
+    case iterate_op:
+      param_count++;
+      if (next_param == param_count)
+        return var_name;
+      break;
 
-  /* not yet the desired param... */
- return NULL;
+    case search_op:
+      identifier_c *variable_name = dynamic_cast<identifier_c *>(var_name);
+      if (variable_name == NULL) ERROR;
+
+      if (strcasecmp(search_param_name->value, variable_name->value) == 0)
+        /* FOUND! This is the same parameter!! */
+        return (void *)variable_name;
+      break;
+  } /* switch */
+
+  /* Not found! */
+  return NULL;
 }
 
 void* function_param_iterator_c::iterate_list(list_c *list) {
@@ -92,36 +122,30 @@ void function_param_iterator_c::reset(void) {
   next_param = param_count = 0;
   current_param_name = NULL;
   current_param_type = current_param_default_value = NULL;
-  en_declared = false;
-  eno_declared = false;
 }
 
+
 /* initialise the iterator object.
- * We must be given a reference to the function declaration
+ * We must be given a reference to one of the following
+ *     - function_declaration_c
+ *     - function_block_declaration_c
+ *     - program_declaration_c
  * that will be analysed...
  */
-function_param_iterator_c::function_param_iterator_c(function_declaration_c *f_decl) {
-  this->f_decl = f_decl;
+function_param_iterator_c::function_param_iterator_c(symbol_c *pou_decl) {
+  /* do some consistency checks... */
+  function_declaration_c       * f_decl = dynamic_cast<function_declaration_c       *>(pou_decl);
+  function_block_declaration_c *fb_decl = dynamic_cast<function_block_declaration_c *>(pou_decl);
+  program_declaration_c        * p_decl = dynamic_cast<program_declaration_c        *>(pou_decl);
+
+  if ((NULL == f_decl) && (NULL == fb_decl) && (NULL == p_decl)) ERROR;
+
+  /* OK. Now initialise this object... */
+  this->f_decl = pou_decl;
   reset();
 }
 
-/* initialise the iterator object.
- * We must be given a reference to the function block declaration
- * that will be analysed...
- */
-function_param_iterator_c::function_param_iterator_c(function_block_declaration_c *fb_decl) {
-  this->f_decl = fb_decl;
-  reset();
-}
 
-/* initialise the iterator object.
- * We must be given a reference to the program declaration
- * that will be analysed...
- */
-function_param_iterator_c::function_param_iterator_c(program_declaration_c *p_decl) {
-  this->f_decl = p_decl;
-  reset();
-}
 
 /* Skip to the next parameter. After object creation,
  * the object references on parameter _before_ the first, so
@@ -133,44 +157,31 @@ function_param_iterator_c::function_param_iterator_c(program_declaration_c *p_de
 identifier_c *function_param_iterator_c::next(void) {
   void *res;
   identifier_c *identifier;
+ 
   param_count = 0;
   next_param++;
+  current_operation = function_param_iterator_c::iterate_op;
   res = f_decl->accept(*this);
-  if (res != NULL) {
-    symbol_c *sym = (symbol_c *)res;
-    identifier = dynamic_cast<identifier_c *>(sym);
-    if (identifier == NULL)
-      ERROR;
-  }
-  else if (!en_declared) {
-    current_param_direction = direction_in;
-    identifier = declare_en_param();
-  }
-  else if (!eno_declared) {
-    current_param_direction = direction_out;
-    identifier = declare_eno_param();
-  }
-  else
+  if (res == NULL) 
     return NULL;
-  
+
+  symbol_c *sym = (symbol_c *)res;
+  identifier = dynamic_cast<identifier_c *>(sym);
+  if (identifier == NULL)
+    ERROR;
   current_param_name = identifier;
   return current_param_name;
 }
 
-identifier_c *function_param_iterator_c::declare_en_param(void) {
-  en_declared = true;
-  identifier_c *identifier = new identifier_c("EN");
-  current_param_type = (symbol_c*)(new bool_type_name_c());
-  current_param_default_value = (symbol_c*)(new boolean_literal_c(current_param_type, new boolean_true_c()));
-  return identifier;
-}
-
-identifier_c *function_param_iterator_c::declare_eno_param(void) {
-  eno_declared = true;
-  identifier_c *identifier = new identifier_c("ENO");
-  current_param_type = (symbol_c*)(new bool_type_name_c());
-  current_param_default_value = NULL;
-  return identifier;
+/* Search for the value passed to the parameter named <param_name>...  */
+identifier_c *function_param_iterator_c::search(symbol_c *param_name) {
+  if (NULL == param_name) ERROR;
+  search_param_name = dynamic_cast<identifier_c *>(param_name);
+  if (NULL == search_param_name) ERROR;
+  current_operation = function_param_iterator_c::search_op;
+  void *res = f_decl->accept(*this);
+  identifier_c *res_param_name = dynamic_cast<identifier_c *>((symbol_c *)res);
+  return res_param_name;
 }
 
 /* Returns the currently referenced parameter's default value,
@@ -207,8 +218,16 @@ void *function_param_iterator_c::visit(edge_declaration_c *symbol) {TRACE("edge_
 
 void *function_param_iterator_c::visit(en_param_declaration_c *symbol) {
   TRACE("en_param_declaration_c");
-  if (en_declared) ERROR;
-  return (void *)declare_en_param();
+  /* It is OK to store these values in the current_param_XXX
+   * variables, because if the desired parameter is not in the
+   * variable list we will be analysing, the current_param_XXXX
+   * variables will get overwritten when we visit the next
+   * var1_init_decl_c list!
+   */
+  current_param_default_value = symbol->value;
+  current_param_type = symbol->type;
+
+  return handle_single_param(symbol->name);
 }
 
 /* var1_list ':' array_spec_init */
@@ -226,8 +245,20 @@ void *function_param_iterator_c::visit(output_declarations_c *symbol) {
 }
 void *function_param_iterator_c::visit(eno_param_declaration_c *symbol) {
   TRACE("eno_param_declaration_c");
+  /* It is OK to store these values in the current_param_XXX
+   * variables, because if the desired parameter is not in the
+   * variable list we will be analysing, the current_param_XXXX
+   * variables will get overwritten when we visit the next
+   * var1_init_decl_c list!
+   */
+  current_param_default_value = NULL;
+  current_param_type = symbol->type;
+
+  return handle_single_param(symbol->name);
+#if 0
   if (eno_declared) ERROR;
   return (void *)declare_eno_param();
+#endif
 }
 void *function_param_iterator_c::visit(input_output_declarations_c *symbol) {
   TRACE("input_output_declarations_c");

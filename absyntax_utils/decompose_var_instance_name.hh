@@ -56,11 +56,19 @@ class decompose_var_instance_name_c: null_visitor_c {
     symbol_c *next_part(void);
 
   private:
+  /*************************/
+  /* B.1 - Common elements */
+  /*************************/
+  /*******************************************/
+  /* B 1.1 - Letters, digits and identifiers */
+  /*******************************************/
+    void *visit(identifier_c *symbol);
+
   /*********************/
   /* B 1.4 - Variables */
   /*********************/
     void *visit(symbolic_variable_c *symbol);
-  
+
   /********************************************/
   /* B.1.4.1   Directly Represented Variables */
   /********************************************/

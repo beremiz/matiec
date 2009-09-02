@@ -149,8 +149,6 @@ extern void error_exit(const char *file_name, int line_no);
 #define TEMP_VAR VAR_LEADER "TMP_"
 #define SOURCE_VAR VAR_LEADER "SRC_"
 
-#include "generate_c_tempvardecl.cc"
-
 #include "generate_c_st.cc"
 #include "generate_c_il.cc"
 
@@ -498,13 +496,13 @@ void *visit(function_declaration_c *symbol) {
   /* (A.3) Function parameters */
   s4o.indent_right();
   vardecl = new generate_c_vardecl_c(&s4o,
-  				      generate_c_vardecl_c::finterface_vf,
-  				      generate_c_vardecl_c::input_vt |
-				        generate_c_vardecl_c::output_vt |
-				        generate_c_vardecl_c::inoutput_vt |
-                generate_c_vardecl_c::eneno_vt);
+                                     generate_c_vardecl_c::finterface_vf,
+                                     generate_c_vardecl_c::input_vt    |
+                                     generate_c_vardecl_c::output_vt   |
+                                     generate_c_vardecl_c::inoutput_vt |
+                                     generate_c_vardecl_c::en_vt       |
+                                     generate_c_vardecl_c::eno_vt);
   vardecl->print(symbol->var_declarations_list);
-  vardecl->print_eneno();
   delete vardecl;
   
   s4o.indent_left();
@@ -515,11 +513,12 @@ void *visit(function_declaration_c *symbol) {
   /* (B.1) Variables declared in ST source code */
   s4o.indent_right();
   
-  vardecl = new generate_c_vardecl_c(&s4o, 
-                generate_c_vardecl_c::localinit_vf, 
-                generate_c_vardecl_c::output_vt |
+  vardecl = new generate_c_vardecl_c(&s4o,
+                generate_c_vardecl_c::localinit_vf,
+                generate_c_vardecl_c::output_vt   |
                 generate_c_vardecl_c::inoutput_vt |
-                generate_c_vardecl_c::private_vt);
+                generate_c_vardecl_c::private_vt  |
+                generate_c_vardecl_c::eno_vt);
   vardecl->print(symbol->var_declarations_list);
   delete vardecl;
 
@@ -541,9 +540,9 @@ void *visit(function_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "// Control execution\n");
   s4o.print(s4o.indent_spaces + "if (!EN) {\n");
   s4o.indent_right();
-  s4o.print(s4o.indent_spaces + "if (ENO != NULL) {\n");
+  s4o.print(s4o.indent_spaces + "if (__ENO != NULL) {\n");
   s4o.indent_right();
-  s4o.print(s4o.indent_spaces + "*ENO = __BOOL_LITERAL(FALSE);\n");
+  s4o.print(s4o.indent_spaces + "*__ENO = __BOOL_LITERAL(FALSE);\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n");
   s4o.print(s4o.indent_spaces + "return ");
@@ -551,24 +550,16 @@ void *visit(function_declaration_c *symbol) {
   s4o.print(";\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n");
-  s4o.print(s4o.indent_spaces + "else {\n");
-  s4o.indent_right();
-  s4o.print(s4o.indent_spaces + "if (ENO != NULL) {\n");
-  s4o.indent_right();
-  s4o.print(s4o.indent_spaces + "*ENO = __BOOL_LITERAL(TRUE);\n");
-  s4o.indent_left();
-  s4o.print(s4o.indent_spaces + "}\n");
-  s4o.indent_left();
-  s4o.print(s4o.indent_spaces + "}\n");
-  
+
   /* (C) Function body */
   generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol);
   symbol->function_body->accept(generate_c_code);
   
   vardecl = new generate_c_vardecl_c(&s4o,
                 generate_c_vardecl_c::foutputassign_vf,
-                generate_c_vardecl_c::output_vt |
-                generate_c_vardecl_c::inoutput_vt);
+                generate_c_vardecl_c::output_vt   |
+                generate_c_vardecl_c::inoutput_vt |
+                generate_c_vardecl_c::eno_vt);
   vardecl->print(symbol->var_declarations_list);
   delete vardecl;
   
@@ -610,23 +601,23 @@ void *visit(function_block_declaration_c *symbol) {
   /* (A.2) Public variables: i.e. the function parameters... */
   s4o_incl.print(s4o_incl.indent_spaces + "// FB Interface - IN, OUT, IN_OUT variables\n");
   vardecl = new generate_c_vardecl_c(&s4o_incl,
-  				      generate_c_vardecl_c::local_vf,
-  				      generate_c_vardecl_c::input_vt |
-  				      generate_c_vardecl_c::output_vt |
-  				      generate_c_vardecl_c::inoutput_vt |
-                generate_c_vardecl_c::eneno_vt);
+                                     generate_c_vardecl_c::local_vf,
+                                     generate_c_vardecl_c::input_vt    |
+                                     generate_c_vardecl_c::output_vt   |
+                                     generate_c_vardecl_c::inoutput_vt |
+                                     generate_c_vardecl_c::en_vt       |
+                                     generate_c_vardecl_c::eno_vt);
   vardecl->print(symbol->var_declarations);
-  vardecl->print_eneno();
   delete vardecl;
   s4o_incl.print("\n");
   /* (A.3) Private internal variables */
   s4o_incl.print(s4o_incl.indent_spaces + "// FB private variables - TEMP, private and located variables\n");
   vardecl = new generate_c_vardecl_c(&s4o_incl,
-  				      generate_c_vardecl_c::local_vf,
-				        generate_c_vardecl_c::temp_vt |
-  				      generate_c_vardecl_c::private_vt |
-  				      generate_c_vardecl_c::located_vt |
-  				      generate_c_vardecl_c::external_vt);
+                                     generate_c_vardecl_c::local_vf,
+                                     generate_c_vardecl_c::temp_vt    |
+                                     generate_c_vardecl_c::private_vt |
+                                     generate_c_vardecl_c::located_vt |
+                                     generate_c_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   
@@ -660,25 +651,16 @@ void *visit(function_block_declaration_c *symbol) {
   /* (B.2) Member initializations... */
   s4o.print(s4o.indent_spaces);
   vardecl = new generate_c_vardecl_c(&s4o,
-  				      generate_c_vardecl_c::constructorinit_vf,
-  				      generate_c_vardecl_c::input_vt |
-  				      generate_c_vardecl_c::output_vt |
-  				      generate_c_vardecl_c::inoutput_vt |
-  				      generate_c_vardecl_c::private_vt |
-				        generate_c_vardecl_c::located_vt |
-				        generate_c_vardecl_c::external_vt |
-                generate_c_vardecl_c::eneno_vt);
+                                     generate_c_vardecl_c::constructorinit_vf,
+                                     generate_c_vardecl_c::input_vt    |
+                                     generate_c_vardecl_c::output_vt   |
+                                     generate_c_vardecl_c::inoutput_vt |
+                                     generate_c_vardecl_c::private_vt  |
+                                     generate_c_vardecl_c::located_vt  |
+                                     generate_c_vardecl_c::external_vt |
+                                     generate_c_vardecl_c::en_vt       |
+                                     generate_c_vardecl_c::eno_vt);
   vardecl->print(symbol->var_declarations, NULL, FB_FUNCTION_PARAM"->");
-  if (!vardecl->is_en_declared()) {
-    s4o.print("\n" + s4o.indent_spaces);
-    s4o.print(FB_FUNCTION_PARAM);
-    s4o.print("->EN = __BOOL_LITERAL(TRUE);");
-  }
-  if (!vardecl->is_eno_declared()) {
-    s4o.print("\n" + s4o.indent_spaces);
-    s4o.print(FB_FUNCTION_PARAM);
-    s4o.print("->ENO = __BOOL_LITERAL(TRUE);");
-  }
   delete vardecl;
   s4o.print("\n");
   /* (B.3) Generate private internal variables for SFC */
@@ -737,8 +719,8 @@ void *visit(function_block_declaration_c *symbol) {
   /* function body */
   s4o.print(s4o.indent_spaces + "// Initialise TEMP variables\n");
   vardecl = new generate_c_vardecl_c(&s4o,
-  				      generate_c_vardecl_c::init_vf,
-				      generate_c_vardecl_c::temp_vt);
+                                     generate_c_vardecl_c::init_vf,
+                                     generate_c_vardecl_c::temp_vt);
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
@@ -801,10 +783,10 @@ void *visit(program_declaration_c *symbol) {
   /* (A.2) Public variables: i.e. the program parameters... */
   s4o_incl.print(s4o_incl.indent_spaces + "// PROGRAM Interface - IN, OUT, IN_OUT variables\n");
   vardecl = new generate_c_vardecl_c(&s4o_incl,
-  				      generate_c_vardecl_c::local_vf,
-  				      generate_c_vardecl_c::input_vt |
-  				      generate_c_vardecl_c::output_vt |
-  				      generate_c_vardecl_c::inoutput_vt);
+                                     generate_c_vardecl_c::local_vf,
+                                     generate_c_vardecl_c::input_vt  |
+                                     generate_c_vardecl_c::output_vt |
+                                     generate_c_vardecl_c::inoutput_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
   s4o_incl.print("\n");
@@ -812,7 +794,7 @@ void *visit(program_declaration_c *symbol) {
   s4o_incl.print(s4o_incl.indent_spaces + "// PROGRAM private variables - TEMP, private and located variables\n");
   vardecl = new generate_c_vardecl_c(&s4o_incl,
                 generate_c_vardecl_c::local_vf,
-                generate_c_vardecl_c::temp_vt |
+                generate_c_vardecl_c::temp_vt    |
                 generate_c_vardecl_c::private_vt |
                 generate_c_vardecl_c::located_vt |
                 generate_c_vardecl_c::external_vt);
@@ -847,13 +829,13 @@ void *visit(program_declaration_c *symbol) {
   /* (B.2) Member initializations... */
   s4o.print(s4o.indent_spaces);
   vardecl = new generate_c_vardecl_c(&s4o,
-  				      generate_c_vardecl_c::constructorinit_vf,
-  				      generate_c_vardecl_c::input_vt |
-  				      generate_c_vardecl_c::output_vt |
-  				      generate_c_vardecl_c::inoutput_vt |
-  				      generate_c_vardecl_c::private_vt |
-  				      generate_c_vardecl_c::located_vt |
-				      generate_c_vardecl_c::external_vt);
+                                     generate_c_vardecl_c::constructorinit_vf,
+                                     generate_c_vardecl_c::input_vt    |
+                                     generate_c_vardecl_c::output_vt   |
+                                     generate_c_vardecl_c::inoutput_vt |
+                                     generate_c_vardecl_c::private_vt  |
+                                     generate_c_vardecl_c::located_vt  |
+                                     generate_c_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
@@ -894,8 +876,8 @@ void *visit(program_declaration_c *symbol) {
   /* function body */
   s4o.print(s4o.indent_spaces + "// Initialise TEMP variables\n");
   vardecl = new generate_c_vardecl_c(&s4o,
-  				      generate_c_vardecl_c::init_vf,
-				      generate_c_vardecl_c::temp_vt);
+                                     generate_c_vardecl_c::init_vf,
+                                     generate_c_vardecl_c::temp_vt);
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
@@ -987,8 +969,8 @@ void *visit(configuration_declaration_c *symbol) {
   
   /* (A.2) Global variables */
   vardecl = new generate_c_vardecl_c(&s4o,
-  				      generate_c_vardecl_c::local_vf,
-  				      generate_c_vardecl_c::global_vt);
+                                     generate_c_vardecl_c::local_vf,
+                                     generate_c_vardecl_c::global_vt);
   vardecl->print(symbol);
   delete vardecl;
   s4o.print("\n");
@@ -1008,8 +990,8 @@ void *visit(configuration_declaration_c *symbol) {
   /* (B.3) Global variables initializations... */
   s4o.print(s4o.indent_spaces);
   vardecl = new generate_c_vardecl_c(&s4o,
-  				      generate_c_vardecl_c::constructorinit_vf,
-  				      generate_c_vardecl_c::global_vt);
+                                     generate_c_vardecl_c::constructorinit_vf,
+                                     generate_c_vardecl_c::global_vt);
   vardecl->print(symbol);
   delete vardecl;
   s4o.print("\n");
@@ -1125,7 +1107,7 @@ class generate_c_resources_c: public generate_c_typedecl_c {
   public:
     generate_c_resources_c(stage4out_c *s4o_ptr, symbol_c *config_scope, symbol_c *resource_scope, unsigned long time)
       : generate_c_typedecl_c(s4o_ptr) {
-      search_config_instance = new search_var_instance_decl_c(config_scope);
+      search_config_instance   = new search_var_instance_decl_c(config_scope);
       search_resource_instance = new search_var_instance_decl_c(resource_scope);
       common_ticktime = time;
       current_resource_name = NULL;
@@ -1181,7 +1163,7 @@ END_RESOURCE
 /* task_configuration_list program_configuration_list */
 // SYM_REF2(single_resource_declaration_c, task_configuration_list, program_configuration_list)
     void *visit(single_resource_declaration_c *symbol) {
-    	bool single_resource = current_resource_name == NULL;
+      bool single_resource = current_resource_name == NULL;
       if (single_resource)
         current_resource_name = new identifier_c("RESOURCE");
       generate_c_vardecl_c *vardecl;
@@ -1204,9 +1186,9 @@ END_RESOURCE
       /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
         vardecl = new generate_c_vardecl_c(&s4o,
-                      generate_c_vardecl_c::local_vf,
-                      generate_c_vardecl_c::global_vt,
-                      current_resource_name);
+                                           generate_c_vardecl_c::local_vf,
+                                           generate_c_vardecl_c::global_vt,
+                                           current_resource_name);
         vardecl->print(current_global_vars);
         delete vardecl;
         s4o.print("\n");
@@ -1238,8 +1220,8 @@ END_RESOURCE
       if (current_global_vars != NULL) {
         s4o.print(s4o.indent_spaces);
         vardecl = new generate_c_vardecl_c(&s4o,
-                      generate_c_vardecl_c::constructorinit_vf,
-                      generate_c_vardecl_c::global_vt);
+                                           generate_c_vardecl_c::constructorinit_vf,
+                                           generate_c_vardecl_c::global_vt);
         vardecl->print(current_global_vars);
         delete vardecl;
       }
@@ -1475,10 +1457,10 @@ END_RESOURCE
         
         s4o.print(s4o.indent_spaces + "{extern ");
         var_decl->accept(*this);
-        s4o.print(" ");
+        s4o.print(" *");
         symbol->prog_data_source->accept(*this);
         s4o.print("; ");
-        s4o.print(current_program_name);
+        s4o.printupper(current_program_name);
         s4o.print(".");
         symbol->symbolic_variable->accept(*this);
         s4o.print(" = ");
@@ -1508,20 +1490,19 @@ END_RESOURCE
         else
           vartype = search_resource_instance->get_vartype();
         
-        s4o.print(s4o.indent_spaces);
         s4o.print(s4o.indent_spaces + "{extern ");
         var_decl->accept(*this);
-        s4o.print(" ");
+        s4o.print(" *");
         symbol->data_sink->accept(*this);
         s4o.print("; ");
         if (vartype || search_var_instance_decl_c::global_vt)
           s4o.print("*");
         symbol->data_sink->accept(*this);
         s4o.print(" = ");
-        s4o.print(current_program_name);
+        s4o.printupper(current_program_name);
         s4o.print(".");
         symbol->symbolic_variable->accept(*this);
-        s4o.print("};\n");
+        s4o.print(";};\n");
       }
       return NULL;
     }
@@ -1668,18 +1649,18 @@ class generate_c_c: public iterator_visitor_c {
     }
 
     void *visit(resource_declaration_c *symbol) {
-    	symbol->resource_name->accept(*this);
-    	stage4out_c resources_s4o(current_builddir, current_name, "c");
+      symbol->resource_name->accept(*this);
+      stage4out_c resources_s4o(current_builddir, current_name, "c");
       generate_c_resources_c generate_c_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
-    	symbol->accept(generate_c_resources);
-    	return NULL;
+      symbol->accept(generate_c_resources);
+      return NULL;
     }
 
     void *visit(single_resource_declaration_c *symbol) {
-    	stage4out_c resources_s4o(current_builddir, "RESOURCE", "c");
+      stage4out_c resources_s4o(current_builddir, "RESOURCE", "c");
       generate_c_resources_c generate_c_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
-    	symbol->accept(generate_c_resources);
-    	return NULL;
+      symbol->accept(generate_c_resources);
+      return NULL;
     }
     
 };

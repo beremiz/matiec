@@ -741,9 +741,8 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
     static const unsigned int program_vt  = 0x0100;  // PROGRAM (inside a configuration!)
 						     //    Programs declared inside a resource will not be declared
 						     //    unless program_vt is acompanied by resource_vt
-
-    static const unsigned int eneno_vt  = 0x0200;  // EN/ENO declaration
-    
+    static const unsigned int en_vt       = 0x0200;  // EN  declaration
+    static const unsigned int eno_vt      = 0x0400;  // ENO declaration
     static const unsigned int resource_vt = 0x8000;  // RESOURCE (inside a configuration!)
                                                      //    This, just of itself, will not print out any declarations!!
 						     //    It must be acompanied by either program_vt and/or global_vt
@@ -802,11 +801,11 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
     typedef enum {finterface_vf,
                   foutputassign_vf,
                   local_vf,
-		              localinit_vf,
-		              init_vf,
-		              constructorinit_vf,
-		              globalinit_vf
-		             } varformat_t;
+                  localinit_vf,
+                  init_vf,
+                  constructorinit_vf,
+                  globalinit_vf
+                 } varformat_t;
 
 
   private:
@@ -831,10 +830,6 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
     /* Current parsed resource name, for resource 
      * specific global variable declaration (with #define...)*/
     symbol_c *resource_name;
-
-    /* Store if En and ENO parameters have been defined by user */
-    bool en_declared;
-    bool eno_declared;
 
     /* Holds the references to the type and initial value
      * of the variables currently being declared.
@@ -878,8 +873,9 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
     symbol_c *globalnamespace;
 
     /* Actually produce the output where variables are declared... */
-    /* Note that located variables are the exception, they
-     * being declared in the located_var_decl_c visitor...
+    /* Note that located variables and EN/ENO are the exception, they
+     * being declared in the located_var_decl_c,
+     * en_param_declaration_c and eno_param_declaration_c visitors...
      */
     void *declare_variables(symbol_c *symbol, bool is_fb = false) {
       list_c *list = dynamic_cast<list_c *>(symbol);
@@ -986,19 +982,9 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
       globalnamespace         = NULL;
       nv = NULL;
       resource_name = res_name;
-      en_declared = false;
-      eno_declared = false;
     }
 
     ~generate_c_vardecl_c(void) {}
-
-    bool is_en_declared(void) {
-      return en_declared;
-    }
-    
-    bool is_eno_declared(void) {
-      return eno_declared;
-    }
 
     void print(symbol_c *symbol, symbol_c *scope = NULL, const char *variable_prefix = NULL) {
       this->set_variable_prefix(variable_prefix);
@@ -1020,24 +1006,6 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
       delete nv;
       nv = NULL;
       globalnamespace = NULL;
-    }
-
-    void print_eneno(void) {
-      if (!en_declared) {
-        if (wanted_varformat == finterface_vf) {
-          if (finterface_var_count > 0)
-            s4o.print(",\n" + s4o.indent_spaces);
-          s4o.print("BOOL EN");
-        }
-        else
-          s4o.print(s4o.indent_spaces + "BOOL EN;\n");
-      }
-      if (!eno_declared) {
-        if (wanted_varformat == finterface_vf)
-          s4o.print(",\n" + s4o.indent_spaces + "BOOL *ENO");
-        else
-          s4o.print(s4o.indent_spaces + "BOOL ENO;\n");
-      }
     }
 
   protected:
@@ -1157,24 +1125,108 @@ void *visit(edge_declaration_c *symbol) {
 
 void *visit(en_param_declaration_c *symbol) {
   TRACE("en_declaration_c");
-  if (en_declared) ERROR;
   if (wanted_varformat == finterface_vf) {
     finterface_var_count++;
   }  
-  if ((current_vartype & eneno_vt) != 0) {
+  if ((wanted_vartype & en_vt) != 0) {
     if (wanted_varformat == finterface_vf) {
       s4o.print(nv->get());
-      s4o.print("\n" + s4o.indent_spaces + "BOOL EN");
+      s4o.print("\n" + s4o.indent_spaces);
+      symbol->type->accept(*this);
+      s4o.print(" ");
+      symbol->name->accept(*this);
     }
+
+    if ((wanted_varformat == local_vf) ||
+        (wanted_varformat == init_vf) ||
+        (wanted_varformat == localinit_vf)) {
+      s4o.print(s4o.indent_spaces);
+      if (wanted_varformat != init_vf) {
+        symbol->type->accept(*this);
+        s4o.print(" ");
+      }
+      print_variable_prefix();
+      symbol->name->accept(*this);
+      if (wanted_varformat != local_vf) {
+        s4o.print(" = ");
+        symbol->value->accept(*this);
+        s4o.print(";");
+      }
+      s4o.print(";\n");
+    }
+
     if (wanted_varformat == constructorinit_vf) {
+      /* NOTE: I (Mario) think this is dead code - never gets executed. Must confirm it before deleting it... */
       s4o.print(nv->get());
       this->print_variable_prefix();
-      s4o.print("ENO = __BOOL_LITERAL(TRUE);");
+      // s4o.print("EN = __BOOL_LITERAL(TRUE);");
+      symbol->name->accept(*this);
+      s4o.print(" = ");
+      symbol->value->accept(*this);
+      s4o.print(";");
     }
   }
-  en_declared = true;
   return NULL;
 }
+
+
+void *visit(eno_param_declaration_c *symbol) {
+  TRACE("eno_declaration_c");
+  if (wanted_varformat == finterface_vf) {
+    finterface_var_count++;
+  }
+  if ((wanted_vartype & eno_vt) != 0) {
+    if (wanted_varformat == finterface_vf) {
+      s4o.print(nv->get());
+      // s4o.print("\n" + s4o.indent_spaces + "BOOL *ENO");
+      s4o.print("\n" + s4o.indent_spaces);
+      symbol->type->accept(*this);
+      s4o.print(" *__");
+      symbol->name->accept(*this);
+    }
+
+    if ((wanted_varformat == local_vf) ||
+        (wanted_varformat == init_vf) ||
+        (wanted_varformat == localinit_vf)) {
+      s4o.print(s4o.indent_spaces);
+      if (wanted_varformat != init_vf) {
+        symbol->type->accept(*this);
+        s4o.print(" ");
+      }
+      print_variable_prefix();
+      symbol->name->accept(*this);
+      if (wanted_varformat != local_vf) {
+        s4o.print(" = __BOOL_LITERAL(TRUE);");
+      }
+      s4o.print(";\n");
+    }
+
+    if (wanted_varformat == foutputassign_vf) {
+      s4o.print(s4o.indent_spaces + "if (__");
+      symbol->name->accept(*this);
+      s4o.print(" != NULL) {\n");
+      s4o.indent_right();
+      s4o.print(s4o.indent_spaces + "*__");
+      symbol->name->accept(*this);
+      s4o.print(" = ");
+      symbol->name->accept(*this);
+      s4o.print(";\n");
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "}\n");
+    }
+
+    if (wanted_varformat == constructorinit_vf) {
+      /* NOTE: I (Mario) think this is dead code - never gets executed. Must confirm it before deleting it... */
+      s4o.print(nv->get());
+      this->print_variable_prefix();
+      // s4o.print("ENO = __BOOL_LITERAL(TRUE);");
+      symbol->name->accept(*this);
+      s4o.print(" = __BOOL_LITERAL(TRUE);");
+    }
+  }
+  return NULL;
+}
+
 
 void *visit(raising_edge_option_c *symbol) {
   // TO DO ...
@@ -1298,26 +1350,6 @@ void *visit(output_declarations_c *symbol) {
   return NULL;
 }
 
-void *visit(eno_param_declaration_c *symbol) {
-  TRACE("eno_declaration_c");
-  if (eno_declared) ERROR;
-  if (wanted_varformat == finterface_vf) {
-    finterface_var_count++;
-  }
-  if ((current_vartype & eneno_vt) != 0) {
-    if (wanted_varformat == finterface_vf) {
-      s4o.print(nv->get());
-      s4o.print("\n" + s4o.indent_spaces + "BOOL *EN0");
-    }
-    if (wanted_varformat == constructorinit_vf) {
-      s4o.print(nv->get());
-      this->print_variable_prefix();
-      s4o.print("ENO = __BOOL_LITERAL(TRUE);");
-    }
-  }
-  eno_declared = true;
-  return NULL;
-}
 
 /*  VAR_IN_OUT var_declaration_list END_VAR */
 void *visit(input_output_declarations_c *symbol) {
@@ -2213,7 +2245,9 @@ private:
    * to it, and then output the c equivalent...
    */
   function_param_iterator_c fp_iterator(p_decl);
+#if 0
   function_call_param_iterator_c function_call_param_iterator(symbol);
+#endif
   identifier_c *param_name;
   nv->push("", ", ");
   for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
@@ -2249,17 +2283,6 @@ private:
         s4o.print(nv->get());
         s4o.print("&");
         param_value->accept(*this);
-#endif
-	break;
-#if 0
-        if (param_value == NULL) {
-	  /* no parameter value given, so we pass a previously declared temporary variable. */
-          std::string *temp_var_name = temp_var_name_factory.new_name();
-          s4o.print(*temp_var_name);
-          delete temp_var_name;
-	} else {
-          param_value->accept(*this);
-	}
 #endif
 	break;
     } /* switch */

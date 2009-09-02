@@ -81,7 +81,7 @@ void error_exit(const char *file_name, int line_no) {
 #include "stage1_2/stage1_2.hh"
 #include "absyntax_utils/absyntax_utils.hh"
 
-//int stage3(symbol_c *tree_root);
+int stage3(symbol_c *tree_root);
 int stage4(symbol_c *tree_root, const char *builddir);
 
 
@@ -172,11 +172,12 @@ int main(int argc, char **argv) {
 
   /* 2nd Pass */
   absyntax_utils_init(tree_root);
+  add_en_eno_param_decl_c::add_to(tree_root);
+
   /* not yet implemented... */
-  /*
   if (stage3(tree_root) < 0)
     return EXIT_FAILURE;
-  */
+  
 
   /* 3rd Pass */
   if (stage4(tree_root, builddir) < 0)

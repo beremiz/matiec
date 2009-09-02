@@ -43,6 +43,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <typeinfo>
 #include "generate_iec.hh"
 
 #include "../stage4.hh"
@@ -122,6 +123,7 @@ void *print_unary_expression(symbol_c *exp,
   public:
 
 /*  EN/ENO */
+#if 0
 void *visit(en_param_c *symbol) {
   s4o.print("EN");
   return NULL;
@@ -131,6 +133,17 @@ void *visit(eno_param_c *symbol) {
   s4o.print("ENO");
   return NULL;
 }
+void *visit(en_param_c *symbol) {
+  return symbol->param_name->accept(*this);
+}
+
+void *visit(eno_param_c *symbol) {
+  return symbol->param_name->accept(*this);
+}
+#endif
+
+
+
 
 /***************************/
 /* 2.1.6 Pragmas */
@@ -161,7 +174,6 @@ void *visit(binary_integer_c *symbol) {return print_token(symbol);}
 void *visit(octal_integer_c *symbol) {return print_token(symbol);}
 void *visit(hex_integer_c *symbol) {return print_token(symbol);}
 
-void *visit(numeric_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
 void *visit(integer_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
 void *visit(real_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
 void *visit(bit_string_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
@@ -314,9 +326,10 @@ void *visit(lword_type_name_c *symbol) {s4o.print("LWORD"); return NULL;}
 void *visit(dword_type_name_c *symbol) {s4o.print("DWORD"); return NULL;}
 void *visit(string_type_name_c *symbol) {s4o.print("STRING"); return NULL;}
 void *visit(wstring_type_name_c *symbol) {s4o.print("WSTRING"); return NULL;}
+/*
 void *visit(constant_int_type_name_c *symbol) {return NULL;}
 void *visit(constant_real_type_name_c *symbol) {return NULL;}
-
+*/
 
 /********************************/
 /* B 1.3.3 - Derived data types */
@@ -589,14 +602,16 @@ void *visit(non_retain_option_c *symbol) {s4o.print("NON_RETAIN"); return NULL;}
 /* VAR_INPUT [RETAIN | NON_RETAIN] input_declaration_list END_VAR */
 /* option -> the RETAIN/NON_RETAIN/<NULL> directive... */
 void *visit(input_declarations_c *symbol) {
-  s4o.print(s4o.indent_spaces); s4o.print("VAR_INPUT ");
-  if (symbol->option != NULL)
-    symbol->option->accept(*this);
-  s4o.print("\n");
-  s4o.indent_right();
-  symbol->input_declaration_list->accept(*this);
-  s4o.indent_left();
-  s4o.print(s4o.indent_spaces); s4o.print("END_VAR\n");
+  if (typeid(*(symbol->method)) == typeid(explicit_definition_c)) {
+    s4o.print(s4o.indent_spaces); s4o.print("VAR_INPUT ");
+    if (symbol->option != NULL)
+      symbol->option->accept(*this);
+    s4o.print("\n");
+    s4o.indent_right();
+    symbol->input_declaration_list->accept(*this);
+    s4o.indent_left();
+    s4o.print(s4o.indent_spaces); s4o.print("END_VAR\n");
+  }
   return NULL;
 }
 
@@ -614,8 +629,29 @@ void *visit(edge_declaration_c *symbol) {
   return NULL;
 }
 
+/* dummy classes only used as flags! */
+void *visit(explicit_definition_c *symbol) {return NULL;}
+void *visit(implicit_definition_c *symbol) {return NULL;}
+
+/* EN : BOOL := 1 */
 void *visit(en_param_declaration_c *symbol) {
-  s4o.print("EN : BOOL := 1");
+  if (typeid(*(symbol->method)) == typeid(explicit_definition_c)) {
+    symbol->name->accept(*this);
+    s4o.print(" : ");
+    symbol->type->accept(*this);
+    s4o.print(" := ");
+    symbol->value->accept(*this);
+  }
+  return NULL;
+}
+
+/* ENO : BOOL */
+void *visit(eno_param_declaration_c *symbol) {
+  if (typeid(*(symbol->method)) == typeid(explicit_definition_c)) {
+    symbol->name->accept(*this);
+    s4o.print(" : ");
+    symbol->type->accept(*this);
+  }
   return NULL;
 }
 
@@ -682,19 +718,16 @@ void *visit(fb_name_list_c *symbol) {return print_list(symbol, "", ", ");}
 /* VAR_OUTPUT [RETAIN | NON_RETAIN] var_init_decl_list END_VAR */
 /* option -> may be NULL ! */
 void *visit(output_declarations_c *symbol) {
-  s4o.print(s4o.indent_spaces); s4o.print("VAR_OUTPUT ");
-  if (symbol->option != NULL)
-    symbol->option->accept(*this);
-  s4o.print("\n");
-  s4o.indent_right();
-  symbol->var_init_decl_list->accept(*this);
-  s4o.indent_left();
-  s4o.print(s4o.indent_spaces); s4o.print("END_VAR\n");
-  return NULL;
-}
-
-void *visit(eno_param_declaration_c *symbol) {
-  s4o.print("EN0 : BOOL");
+  if (typeid(*(symbol->method)) == typeid(explicit_definition_c)) {
+    s4o.print(s4o.indent_spaces); s4o.print("VAR_OUTPUT ");
+    if (symbol->option != NULL)
+      symbol->option->accept(*this);
+    s4o.print("\n");
+    s4o.indent_right();
+    symbol->var_init_decl_list->accept(*this);
+    s4o.indent_left();
+    s4o.print(s4o.indent_spaces); s4o.print("END_VAR\n");
+  }
   return NULL;
 }
 
@@ -1689,7 +1722,13 @@ void *visit(not_expression_c *symbol) {return print_unary_expression(symbol->exp
 void *visit(function_invocation_c *symbol) {
   symbol->function_name->accept(*this);
   s4o.print("(");
-  symbol->parameter_assignment_list->accept(*this);
+
+  /* If the syntax parser is working correctly, exactly one of the 
+   * following two symbols will be NULL, while the other is != NULL.
+   */
+  if (symbol->   formal_param_list != NULL) symbol->   formal_param_list->accept(*this);
+  if (symbol->nonformal_param_list != NULL) symbol->nonformal_param_list->accept(*this);
+
   s4o.print(")");
   return NULL;
 }
@@ -1726,8 +1765,13 @@ void *visit(return_statement_c *symbol) {
 void *visit(fb_invocation_c *symbol) {
   symbol->fb_name->accept(*this);
   s4o.print("(");
-  if (symbol->param_assignment_list != NULL)
-    symbol->param_assignment_list->accept(*this);
+  /* If the syntax parser is working correctly, at most one of the 
+   * following two symbols will be NULL, while the other is != NULL.
+   * The two may be NULL simultaneously!
+   */
+  if (symbol->   formal_param_list != NULL) symbol->   formal_param_list->accept(*this);
+  if (symbol->nonformal_param_list != NULL) symbol->nonformal_param_list->accept(*this);
+
   s4o.print(")");
   return NULL;
 }

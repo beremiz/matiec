@@ -167,7 +167,9 @@ extern symbol_c *tree_root;
 symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator);
 
 /* return if current token is a syntax element */
+/* ERROR_CHECK_BEGIN */
 bool is_current_syntax_token();
+/* ERROR_CHECK_END */
 
 /* print an error message */
 void print_err_msg(int first_line,
@@ -211,9 +213,9 @@ void print_err_msg(int first_line,
 
 
 
-/*****************************/
-/* Prelimenary constructs... */
-/*****************************/
+/*************************************/
+/* Prelimenary helpful constructs... */
+/*************************************/
 /* A token used to identify the very end of the input file
  * after all includes have already been processed.
  *
@@ -277,17 +279,27 @@ void print_err_msg(int first_line,
 
 
 
+/**********************************************************************************/
+/* B XXX - Things that are missing from the standard, but should have been there! */
+/**********************************************************************************/
+
+
 /* The pragmas... */
 %token <ID>	pragma_token
 %type <leaf>	pragma
 
 
-/* Where do these tokens belong ?? */
-/* TODO: get the syntax parser to handle these tokens... */
+/* Where do these tokens belong?? They are missing from the standard! */
+/* NOTE: There are other tokens related to these 'EN' ENO', that are also 
+ * missing from the standard. However, their location in the annex B is 
+ * relatively obvious, so they have been inserted in what seems to us their 
+ * correct place in order to ease understanding of the parser...
+ */
 %token	EN
 %token	ENO
-%type <leaf>	en_param
-%type <leaf>	eno_param
+%type <leaf>	en_identifier
+%type <leaf>	eno_identifier
+
 
 
 
@@ -669,6 +681,7 @@ void print_err_msg(int first_line,
 %type  <list>	input_declaration_list
 %type  <leaf>	input_declaration
 %type  <leaf>	edge_declaration
+/* en_param_declaration is not in the standard, but should be! */
 %type  <leaf>	en_param_declaration
 %type  <leaf>	var_init_decl
 %type  <leaf>	var1_init_decl
@@ -685,6 +698,7 @@ void print_err_msg(int first_line,
 %type  <leaf>	output_declarations
 %type  <leaf>	var_output_init_decl
 %type  <list>	var_output_init_decl_list
+/* eno_param_declaration is not in the standard, but should be! */
 %type  <leaf>	eno_param_declaration
 %type  <leaf>	input_output_declarations
 /* helper symbol for input_output_declarations */
@@ -1321,30 +1335,38 @@ void print_err_msg(int first_line,
 /********************************************************/
 
 
-
-
-
-/*****************************/
-/* Prelimenary constructs... */
-/*****************************/
 start:
   library	{$$ = $1;}
 ;
+
+
+/**********************************************************************************/
+/* B XXX - Things that are missing from the standard, but should have been there! */
+/**********************************************************************************/
+
 
 /* the pragmas... */
 pragma:
   pragma_token	{$$ = new pragma_c($1, locloc(@$));}
 
+
 /* EN/ENO */
-en_param:
-  EN	{$$ = new en_param_c(locloc(@$));}
+/* Tese tokens are essentially used as variable names, so we handle them 
+ * similarly to these...
+ */
+en_identifier:
+  EN	{$$ = new identifier_c("EN", locloc(@$));}
 ;
 
-eno_param:
-  ENO	{$$ = new eno_param_c(locloc(@$));}
+eno_identifier:
+  ENO	{$$ = new identifier_c("ENO", locloc(@$));}
 ;
 
 
+
+/*************************************/
+/* Prelimenary helpful constructs... */
+/*************************************/
 
 /* NOTE:
  *       short version:
@@ -2997,10 +3019,26 @@ string_type_declaration_init:
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
+/* NOTE: The standard is erroneous in it's definition of 'variable' because:
+ *         - The standard considers 'ENO' as a keyword...
+ *         - ...which means that it may never be parsed as an 'identifier'...
+ *         - ...and therefore may never be used as the name of a variable inside an expression.
+ *         - However, a function/FB must be able to assign the ENO parameter
+ *           it's value, doing it in an assignment statement, and therefore using the 'ENO'
+ *           character sequence as an identifier!
+ *        The solution we found was to also allow the ENO keyword to be 
+ *         used as the name of a variable. Note that this variable may be used
+ *         even though it is not explicitly declared as a function/FB variable,
+ *         as the standard requires us to define it implicitly in this case!
+ *         We could not therefore handle the ENO as a normal variable that would
+ *         go into the previously_declared_variable symbol table, as we may need to
+ *         allow it to be used as a variable even though it is not declared as such!
+ */
 variable:
   symbolic_variable
 | prev_declared_direct_variable
-| eno_param
+| eno_identifier
+	{$$ = new symbolic_variable_c($1, locloc(@$));}
 ;
 
 
@@ -3140,11 +3178,11 @@ field_selector: any_identifier;
 /******************************************/
 input_declarations:
   VAR_INPUT            input_declaration_list END_VAR
-	{$$ = new input_declarations_c(NULL, $2, locloc(@$));}
+	{$$ = new input_declarations_c(NULL, $2, new explicit_definition_c(), locloc(@$));}
 | VAR_INPUT RETAIN     input_declaration_list END_VAR
-	{$$ = new input_declarations_c(new retain_option_c(locloc(@2)), $3, locloc(@$));}
+	{$$ = new input_declarations_c(new retain_option_c(locloc(@2)), $3, new explicit_definition_c(), locloc(@$));}
 | VAR_INPUT NON_RETAIN input_declaration_list END_VAR
-	{$$ = new input_declarations_c(new non_retain_option_c(locloc(@2)), $3, locloc(@$));}
+	{$$ = new input_declarations_c(new non_retain_option_c(locloc(@2)), $3, new explicit_definition_c(), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | VAR_INPUT END_VAR
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "no variable declared in input variable(s) declaration."); yynerrs++;}
@@ -3194,6 +3232,11 @@ input_declaration_list:
 ;
 
 
+/* NOTE: The formal definition of 'input_declaration' as defined in the standard is erroneous,
+ *       as it does not allow a user defined 'EN' input parameter. However,
+ *       The semantic description of the languages clearly states that this is allowed.
+ *       We have added the 'en_param_declaration' clause to cover for this.
+ */
 input_declaration:
   var_init_decl
 | edge_declaration
@@ -3212,7 +3255,9 @@ edge_declaration:
 | var1_list BOOL F_EDGE
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in edge declaration."); yynerrs++;}
 | var1_list ':' BOOL R_EDGE F_EDGE
-	{$$ = NULL; print_err_msg(locf(@5), locl(@5), "'R_EDGE' and 'F_EDGE' can't be present at the same time in edge declaration."); yynerrs++;}
+	{$$ = NULL; print_err_msg(locl(@5), locf(@5), "'R_EDGE' and 'F_EDGE' can't be present at the same time in edge declaration."); yynerrs++;}
+| var1_list ':' BOOL F_EDGE R_EDGE
+	{$$ = NULL; print_err_msg(locl(@5), locf(@5), "'R_EDGE' and 'F_EDGE' can't be present at the same time in edge declaration."); yynerrs++;}
 | var1_list ':' R_EDGE
 	{$$ = NULL; print_err_msg(locl(@2), locf(@3), "'BOOL' missing in edge declaration."); yynerrs++;}
 | var1_list ':' F_EDGE
@@ -3220,21 +3265,28 @@ edge_declaration:
 /* ERROR_CHECK_END */
 ;
 
+
+/* NOTE: The formal definition of the standard is erroneous, as it simply does not
+ *       consider the EN and ENO keywords!
+ *       The semantic description of the languages clearly states that these may be
+ *       used in several ways. One of them is to declare an EN input parameter.
+ *       We have added the 'en_param_declaration' clause to cover for this.
+ */
 en_param_declaration:
-  en_param ':' BOOL ASSIGN boolean_literal
-  {$$ = new en_param_declaration_c(locloc(@$));}
-| en_param ':' BOOL ASSIGN integer
-  {$$ = new en_param_declaration_c(locloc(@$));}
+  en_identifier ':' BOOL ASSIGN boolean_literal
+  {$$ = new en_param_declaration_c($1, new bool_type_name_c(locloc(@$)), $5, new explicit_definition_c(), locloc(@$));}
+| en_identifier ':' BOOL ASSIGN integer
+  {$$ = new en_param_declaration_c($1, new bool_type_name_c(locloc(@$)), $5, new explicit_definition_c(), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
-| en_param BOOL ASSIGN boolean_literal
+| en_identifier BOOL ASSIGN boolean_literal
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in EN declaration."); yynerrs++;}
-| en_param BOOL ASSIGN integer
+| en_identifier BOOL ASSIGN integer
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in EN declaration."); yynerrs++;}
-| en_param ':' ASSIGN boolean_literal
+| en_identifier ':' ASSIGN boolean_literal
   {$$ = NULL; print_err_msg(locl(@2), locf(@3), "'BOOL' missing in EN declaration."); yynerrs++;}
-| en_param ':' ASSIGN integer
+| en_identifier ':' ASSIGN integer
 	{$$ = NULL; print_err_msg(locl(@2), locf(@3), "'BOOL' missing in EN declaration."); yynerrs++;}
-| en_param ':' BOOL ASSIGN error
+| en_identifier ':' BOOL ASSIGN error
 	{$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no specification defined in EN declaration.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid specification in EN declaration."); yyclearin;}
@@ -3402,11 +3454,11 @@ var1_list_with_colon:
 
 output_declarations:
   VAR_OUTPUT var_output_init_decl_list END_VAR
-	{$$ = new output_declarations_c(NULL, $2, locloc(@$));}
+	{$$ = new output_declarations_c(NULL, $2, new explicit_definition_c(), locloc(@$));}
 | VAR_OUTPUT RETAIN var_output_init_decl_list END_VAR
-	{$$ = new output_declarations_c(new retain_option_c(locloc(@2)), $3, locloc(@$));}
+	{$$ = new output_declarations_c(new retain_option_c(locloc(@2)), $3, new explicit_definition_c(), locloc(@$));}
 | VAR_OUTPUT NON_RETAIN var_output_init_decl_list END_VAR
-	{$$ = new output_declarations_c(new non_retain_option_c(locloc(@2)), $3, locloc(@$));}
+	{$$ = new output_declarations_c(new non_retain_option_c(locloc(@2)), $3, new explicit_definition_c(), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | VAR_OUTPUT END_VAR
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "no variable declared in output variable(s) declaration."); yynerrs++;}
@@ -3435,6 +3487,12 @@ output_declarations:
 /* ERROR_CHECK_END */
 ;
 
+
+/* NOTE: The formal definition of 'var_output_init_decl' as defined in the standard is erroneous,
+ *       as it does not allow a user defined 'ENO' output parameter. However,
+ *       The semantic description of the languages clearly states that this is allowed.
+ *       We have added the 'eno_param_declaration' clause to cover for this.
+ */
 var_output_init_decl:
   var_init_decl
 | eno_param_declaration
@@ -3453,13 +3511,23 @@ var_output_init_decl_list:
 /* ERROR_CHECK_END */
 ;
 
+
+/* NOTE: The formal definition of the standard is erroneous, as it simply does not
+ *       consider the EN and ENO keywords!
+ *       The semantic description of the languages clearly states that these may be
+ *       used in several ways. One of them is to declare an ENO output parameter.
+ *       We have added the 'eno_param_declaration' clause to cover for this.
+ */
 eno_param_declaration:
-  eno_param ':' BOOL
-  {$$ = new eno_param_declaration_c(locloc(@$));}
+  eno_identifier ':' BOOL
+  /* NOTE We do _NOT_ include this variable in the previously_declared_variable symbol table!
+   *      Please read the comment above the definition of 'variable' for the reason for this.
+   */
+  {$$ = new eno_param_declaration_c($1, new bool_type_name_c(locloc(@$)), new explicit_definition_c(), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
-| en_param BOOL
-	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in EN0 declaration."); yynerrs++;}
-| en_param ':' error
+| en_identifier BOOL
+	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in ENO declaration."); yynerrs++;}
+| en_identifier ':' error
 	{$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no specification defined in ENO declaration.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid specification in ENO declaration."); yyclearin;}
@@ -6509,7 +6577,7 @@ il_assign_operator:
 /*  variable_name ASSIGN */
   any_identifier ASSIGN
 	{$$ = new il_assign_operator_c($1, locloc(@$));}
-| en_param ASSIGN
+| en_identifier ASSIGN
 	{$$ = new il_assign_operator_c($1, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | error ASSIGN
@@ -6523,12 +6591,12 @@ il_assign_out_operator:
 /*  any_identifier SENDTO */
   sendto_identifier SENDTO
 	{$$ = new il_assign_out_operator_c(NULL, $1, locloc(@$));}
-| eno_param SENDTO
+| eno_identifier SENDTO
 	{$$ = new il_assign_out_operator_c(NULL, $1, locloc(@$));}
 /*| NOT variable_name SENDTO */
 | NOT sendto_identifier SENDTO
 	{$$ = new il_assign_out_operator_c(new not_paramassign_c(locloc(@1)), $2, locloc(@$));}
-| NOT eno_param SENDTO
+| NOT eno_identifier SENDTO
 	{$$ = new il_assign_out_operator_c(new not_paramassign_c(locloc(@1)), $2, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | error SENDTO
@@ -6864,9 +6932,9 @@ primary_expression:
 function_invocation:
 /*  function_name '(' [param_assignment_list] ')' */
   function_name_no_NOT_clashes '(' param_assignment_formal_list ')'
-	{$$ = new function_invocation_c($1, $3, locloc(@$));}
+	{$$ = new function_invocation_c($1, $3, NULL, locloc(@$));}
 | function_name_no_NOT_clashes '(' param_assignment_nonformal_list ')'
-	{$$ = new function_invocation_c($1, $3, locloc(@$));}
+	{$$ = new function_invocation_c($1, NULL, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */ 
 | function_name_no_NOT_clashes param_assignment_formal_list ')'
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "'(' missing after function name in ST expression."); yynerrs++;}
@@ -6952,11 +7020,11 @@ return_statement:
 
 fb_invocation:
   prev_declared_fb_name '(' ')'
-	{$$ = new fb_invocation_c($1, NULL, locloc(@$));	}
+	{$$ = new fb_invocation_c($1, NULL, NULL, locloc(@$));	}
 | prev_declared_fb_name '(' param_assignment_formal_list ')'
-	{$$ = new fb_invocation_c($1, $3, locloc(@$));}
+	{$$ = new fb_invocation_c($1, $3, NULL, locloc(@$));}
 | prev_declared_fb_name '(' param_assignment_nonformal_list ')'
-	{$$ = new fb_invocation_c($1, $3, locloc(@$));}
+	{$$ = new fb_invocation_c($1, NULL, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | prev_declared_fb_name ')'
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'(' missing after function block name in ST statement."); yynerrs++;}
@@ -7048,19 +7116,19 @@ param_assignment_nonformal:
 param_assignment_formal:
   any_identifier ASSIGN expression
 	{$$ = new input_variable_param_assignment_c($1, $3, locloc(@$));}
-| en_param ASSIGN expression
+| en_identifier ASSIGN expression
 	{$$ = new input_variable_param_assignment_c($1, $3, locloc(@$));}
 /*| variable_name SENDTO variable */
 /*| any_identifier SENDTO variable */
 | sendto_identifier SENDTO variable
 	{$$ = new output_variable_param_assignment_c(NULL, $1, $3, locloc(@$));}
-| eno_param SENDTO variable
+| eno_identifier SENDTO variable
 	{$$ = new output_variable_param_assignment_c(NULL, $1, $3, locloc(@$));}
 /*| NOT variable_name SENDTO variable */
 /*| NOT any_identifier SENDTO variable*/
 | NOT sendto_identifier SENDTO variable
 	{$$ = new output_variable_param_assignment_c(new not_paramassign_c(locloc(@$)), $2, $4, locloc(@$));}
-| NOT eno_param SENDTO variable
+| NOT eno_identifier SENDTO variable
 	{$$ = new output_variable_param_assignment_c(new not_paramassign_c(locloc(@$)), $2, $4, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | any_identifier ASSIGN error
@@ -7069,7 +7137,7 @@ param_assignment_formal:
 	 else {print_err_msg(locf(@3), locl(@3), "invalid expression in ST formal parameter assignment."); yyclearin;}
 	 yyerrok;
 	}
-| en_param ASSIGN error
+| en_identifier ASSIGN error
   {$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no expression defined in ST formal parameter assignment.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid expression in ST formal parameter assignment."); yyclearin;}
@@ -7081,7 +7149,7 @@ param_assignment_formal:
 	 else {print_err_msg(locf(@3), locl(@3), "invalid expression in ST formal parameter out assignment."); yyclearin;}
 	 yyerrok;
 	}
-| eno_param SENDTO error
+| eno_identifier SENDTO error
   {$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no expression defined in ST formal parameter out assignment.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid expression in ST formal parameter out assignment."); yyclearin;}
@@ -7097,7 +7165,7 @@ param_assignment_formal:
 	 else {print_err_msg(locf(@4), locl(@4), "invalid expression in ST formal parameter out negated assignment."); yyclearin;}
 	 yyerrok;
 	}
-| NOT eno_param SENDTO error
+| NOT eno_identifier SENDTO error
   {$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@3), locf(@4), "no expression defined in ST formal parameter out negated assignment.");}
 	 else {print_err_msg(locf(@4), locl(@4), "invalid expression in ST formal parameter out negated assignment."); yyclearin;}
@@ -7358,7 +7426,9 @@ for_statement:
  * If we don't, then the correct use of any previosuly declared 
  * variable would result in an incorrect syntax error
 */
-control_variable: prev_declared_variable_name {$$ = $1;};
+control_variable: 
+  prev_declared_variable_name 
+	{$$ = new symbolic_variable_c($1,locloc(@$));};
 // control_variable: identifier {$$ = $1;};
 
 /* Integrated directly into for_statement */
@@ -7481,35 +7551,38 @@ void yyerror (const char *error_msg) {
 }
 
 
+/* ERROR_CHECK_BEGIN */
 bool is_current_syntax_token() {
-	switch (yychar) {
-  	case ';':
-  	case ',':
-  	case ')':
-  	case ']':
-  	case '+':
-  	case '*':
-  	case '-':
-  	case '/':
-  	case '<':
-  	case '>':
-  	case '=':
-  	case '&':
-  	case OR:
-  	case XOR:
-  	case AND:
-  	case AND2:
-  	case OPER_NE:
-  	case OPER_LE:
-  	case OPER_GE:
-  	case MOD:
-  	case OPER_EXP:
-  	case NOT:
-  		return true;
- 		default:
- 			return false;
- 	}
+  switch (yychar) {
+    case ';':
+    case ',':
+    case ')':
+    case ']':
+    case '+':
+    case '*':
+    case '-':
+    case '/':
+    case '<':
+    case '>':
+    case '=':
+    case '&':
+    case OR:
+    case XOR:
+    case AND:
+    case AND2:
+    case OPER_NE:
+    case OPER_LE:
+    case OPER_GE:
+    case MOD:
+    case OPER_EXP:
+    case NOT:
+      return true;
+    default:
+     return false;
+  }
 }
+/* ERROR_CHECK_END */
+
 
 void print_err_msg(int first_line,
                    int first_column,
@@ -7544,64 +7617,64 @@ symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator) {
   const char *name = NULL;
   identifier_c *res;
 
-  op_2_str(NOT, "NOT");
+  op_2_str(NOT,   "NOT");
 
-  op_2_str(AND, "AND");
-  op_2_str(OR, "OR");
-  op_2_str(XOR, "XOR");
-  op_2_str(ADD, "ADD");
-  op_2_str(SUB, "SUB");
-  op_2_str(MUL, "MUL");
-  op_2_str(DIV, "DIV");
-  op_2_str(MOD, "MOD");
-  op_2_str(GT, "GT");
-  op_2_str(GE, "GE");
-  op_2_str(EQ, "EQ");
-  op_2_str(LT, "LT");
-  op_2_str(LE, "LE");
-  op_2_str(NE, "NE");
+  op_2_str(AND,   "AND");
+  op_2_str(OR,    "OR");
+  op_2_str(XOR,   "XOR");
+  op_2_str(ADD,   "ADD");
+  op_2_str(SUB,   "SUB");
+  op_2_str(MUL,   "MUL");
+  op_2_str(DIV,   "DIV");
+  op_2_str(MOD,   "MOD");
+  op_2_str(GT,    "GT");
+  op_2_str(GE,    "GE");
+  op_2_str(EQ,    "EQ");
+  op_2_str(LT,    "LT");
+  op_2_str(LE,    "LE");
+  op_2_str(NE,    "NE");
 
-  op_2_str(LD, "LD");
-  op_2_str(LDN, "LDN");
-  op_2_str(ST, "ST");
-  op_2_str(STN, "STN");
+  op_2_str(LD,    "LD");
+  op_2_str(LDN,   "LDN");
+  op_2_str(ST,    "ST");
+  op_2_str(STN,   "STN");
 
-  op_2_str(S, "S");
-  op_2_str(R, "R");
-  op_2_str(S1, "S1");
-  op_2_str(R1, "R1");
+  op_2_str(S,     "S");
+  op_2_str(R,     "R");
+  op_2_str(S1,    "S1");
+  op_2_str(R1,    "R1");
 
-  op_2_str(CLK, "CLK");
-  op_2_str(CU, "CU");
-  op_2_str(CD, "CD");
-  op_2_str(PV, "PV");
-  op_2_str(IN, "IN");
-  op_2_str(PT, "PT");
+  op_2_str(CLK,   "CLK");
+  op_2_str(CU,    "CU");
+  op_2_str(CD,    "CD");
+  op_2_str(PV,    "PV");
+  op_2_str(IN,    "IN");
+  op_2_str(PT,    "PT");
 
-  op_2_str(ANDN, "ANDN");
-  op_2_str(ORN, "ORN");
-  op_2_str(XORN, "XORN");
+  op_2_str(ANDN,  "ANDN");
+  op_2_str(ORN,   "ORN");
+  op_2_str(XORN,  "XORN");
 
-  op_2_str(ADD, "ADD");
-  op_2_str(SUB, "SUB");
-  op_2_str(MUL, "MUL");
-  op_2_str(DIV, "DIV");
+  op_2_str(ADD,   "ADD");
+  op_2_str(SUB,   "SUB");
+  op_2_str(MUL,   "MUL");
+  op_2_str(DIV,   "DIV");
 
-  op_2_str(GT, "GT");
-  op_2_str(GE, "GE");
-  op_2_str(EQ, "EQ");
-  op_2_str(LT, "LT");
-  op_2_str(LE, "LE");
-  op_2_str(NE, "NE");
+  op_2_str(GT,    "GT");
+  op_2_str(GE,    "GE");
+  op_2_str(EQ,    "EQ");
+  op_2_str(LT,    "LT");
+  op_2_str(LE,    "LE");
+  op_2_str(NE,    "NE");
 
-  op_2_str(CAL, "CAL");
-  op_2_str(CALC, "CALC");
+  op_2_str(CAL,   "CAL");
+  op_2_str(CALC,  "CALC");
   op_2_str(CALCN, "CALCN");
-  op_2_str(RET, "RET");
-  op_2_str(RETC, "RETC");
+  op_2_str(RET,   "RET");
+  op_2_str(RETC,  "RETC");
   op_2_str(RETCN, "RETCN");
-  op_2_str(JMP, "JMP");
-  op_2_str(JMPC, "JMPC");
+  op_2_str(JMP,   "JMP");
+  op_2_str(JMPC,  "JMPC");
   op_2_str(JMPCN, "JMPCN");
 
   if (name == NULL)
