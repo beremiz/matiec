@@ -429,6 +429,46 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       return NULL;
     }
 
+    void *visit(en_param_declaration_c *symbol) {
+      TRACE("en_param_declaration_c");
+
+      /* Start off by setting the current_var_type_symbol and
+       * current_var_init_symbol private variables...
+       */
+      this->current_var_type_symbol = symbol->type;
+
+      /* now to produce the c equivalent... */
+      declare_variable(symbol->name);
+
+      /* Values no longer in scope, and therefore no longer used.
+       * Make an effort to keep them set to NULL when not in use
+       * in order to catch bugs as soon as possible...
+       */
+      reset_var_type_symbol();
+
+      return NULL;
+    }
+
+    void *visit(eno_param_declaration_c *symbol) {
+      TRACE("eno_param_declaration_c");
+
+      /* Start off by setting the current_var_type_symbol and
+       * current_var_init_symbol private variables...
+       */
+      this->current_var_type_symbol = symbol->type;
+
+      /* now to produce the c equivalent... */
+      declare_variable(symbol->name);
+
+      /* Values no longer in scope, and therefore no longer used.
+       * Make an effort to keep them set to NULL when not in use
+       * in order to catch bugs as soon as possible...
+       */
+      reset_var_type_symbol();
+
+      return NULL;
+    }
+
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/
