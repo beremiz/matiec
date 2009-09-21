@@ -13819,7 +13819,13 @@ switch(current_function_type){
                             }
                             
                         }while(param_value != NULL);
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lint_type_name;
+                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lreal_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = return_type_symbol;
                         break;
                         
@@ -14030,7 +14036,13 @@ switch(current_function_type){
                             }
                             
                         }while(param_value != NULL);
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lint_type_name;
+                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lreal_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = return_type_symbol;
                         break;
                         
@@ -14132,7 +14144,13 @@ switch(current_function_type){
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lint_type_name;
+                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lreal_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = return_type_symbol;
                         break;
                         
@@ -14388,7 +14406,13 @@ switch(current_function_type){
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lint_type_name;
+                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lreal_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = return_type_symbol;
                         break;
                         
@@ -14490,7 +14514,13 @@ switch(current_function_type){
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lint_type_name;
+                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lreal_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = return_type_symbol;
                         break;
                         
@@ -14552,7 +14582,13 @@ switch(current_function_type){
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
                         ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lint_type_name;
+                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lreal_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = IN1_type_symbol;
                         break;
                         
@@ -14593,7 +14629,13 @@ switch(current_function_type){
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
-                symbol_c * return_type_symbol = last_type_symbol;
+                symbol_c * return_type_symbol;
+                if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                    return_type_symbol = &search_constant_type_c::lint_type_name;
+                else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                    return_type_symbol = &search_constant_type_c::lreal_type_name;
+                else
+                    return_type_symbol = last_type_symbol;
                 function_type_suffix = return_type_symbol;
                 break;
                 
@@ -14926,7 +14968,11 @@ switch(current_function_type){
                             }
                             
                         }while(param_value != NULL);
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lword_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = return_type_symbol;
                         break;
                         
@@ -15017,7 +15063,11 @@ switch(current_function_type){
                             }
                             
                         }while(param_value != NULL);
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lword_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = return_type_symbol;
                         break;
                         
@@ -15108,7 +15158,11 @@ switch(current_function_type){
                             }
                             
                         }while(param_value != NULL);
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lword_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = return_type_symbol;
                         break;
                         
@@ -15226,7 +15280,13 @@ switch(current_function_type){
                                 if (IN1_type_symbol == NULL)
                                   IN1_type_symbol = last_type_symbol;
                                 ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
-                                symbol_c * return_type_symbol = last_type_symbol;
+                                symbol_c * return_type_symbol;
+                                if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                                    return_type_symbol = &search_constant_type_c::lint_type_name;
+                                else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                                    return_type_symbol = &search_constant_type_c::lreal_type_name;
+                                else
+                                    return_type_symbol = last_type_symbol;
                                 function_type_suffix = IN0_type_symbol;
                                 break;
                                 
@@ -15323,7 +15383,13 @@ switch(current_function_type){
                             }
                             
                         }while(param_value != NULL);
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lint_type_name;
+                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lreal_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = return_type_symbol;
                         break;
                         
@@ -15414,7 +15480,13 @@ switch(current_function_type){
                             }
                             
                         }while(param_value != NULL);
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol;
+                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lint_type_name;
+                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                            return_type_symbol = &search_constant_type_c::lreal_type_name;
+                        else
+                            return_type_symbol = last_type_symbol;
                         function_type_suffix = return_type_symbol;
                         break;
                         
@@ -15615,7 +15687,13 @@ switch(current_function_type){
                                     }
                                     
                                 }while(param_value != NULL);
-                                symbol_c * return_type_symbol = last_type_symbol;
+                                symbol_c * return_type_symbol;
+                                if (search_expression_type->is_literal_integer_type(last_type_symbol))
+                                    return_type_symbol = &search_constant_type_c::lint_type_name;
+                                else if (search_expression_type->is_literal_real_type(last_type_symbol))
+                                    return_type_symbol = &search_constant_type_c::lreal_type_name;
+                                else
+                                    return_type_symbol = last_type_symbol;
                                 function_type_suffix = return_type_symbol;
                                 break;
                                 

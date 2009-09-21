@@ -165,13 +165,13 @@ extern void error_exit(const char *file_name, int line_no);
 /* A helper class that knows how to generate code for both the IL and ST languages... */
 class calculate_time_c: public iterator_visitor_c {
   private:
-    unsigned long time;
+    unsigned long long time;
     float current_value;
   
   public:
     calculate_time_c(void){time = 0;};
     
-    unsigned long get_time(void) {return time;};
+    unsigned long long get_time(void) {return time;};
 
     void *get_integer_value(token_c *token) {
       std::string str = "";
@@ -213,7 +213,7 @@ class calculate_time_c: public iterator_visitor_c {
       if (symbol->hours)
         symbol->hours->accept(*this);
       symbol->days->accept(*this);
-      time += (unsigned long)(current_value * 24 * 3600 * SECOND);
+      time += (unsigned long long)(current_value * 24 * 3600 * SECOND);
       return NULL;
     }
     
@@ -222,7 +222,7 @@ class calculate_time_c: public iterator_visitor_c {
       if (symbol->minutes)
         symbol->minutes->accept(*this);
       symbol->hours->accept(*this);
-      time += (unsigned long)(current_value * 3600 * SECOND);
+      time += (unsigned long long)(current_value * 3600 * SECOND);
       return NULL;
     }
     
@@ -231,7 +231,7 @@ class calculate_time_c: public iterator_visitor_c {
       if (symbol->seconds)
         symbol->seconds->accept(*this);
       symbol->minutes->accept(*this);
-      time += (unsigned long)(current_value * 60 * SECOND);
+      time += (unsigned long long)(current_value * 60 * SECOND);
       return NULL;
     }
     
@@ -240,14 +240,14 @@ class calculate_time_c: public iterator_visitor_c {
       if (symbol->milliseconds)
         symbol->milliseconds->accept(*this);
       symbol->seconds->accept(*this);
-      time += (unsigned long)(current_value * SECOND);
+      time += (unsigned long long)(current_value * SECOND);
       return NULL;
     }
     
     /* SYM_REF2(milliseconds_c, milliseconds, unused) */
     void *visit(milliseconds_c *symbol) {
       symbol->milliseconds->accept(*this);
-      time += (unsigned long)(current_value * MILLISECOND);
+      time += (unsigned long long)(current_value * MILLISECOND);
       return NULL;
     }
 };
@@ -259,37 +259,52 @@ class calculate_time_c: public iterator_visitor_c {
 
 class calculate_common_ticktime_c: public iterator_visitor_c {
   private:
-    unsigned long common_ticktime;
+    unsigned long long common_ticktime;
+    unsigned long long least_common_ticktime;
     
   public:
-    calculate_common_ticktime_c(void){common_ticktime = 0;}
+    calculate_common_ticktime_c(void){
+      common_ticktime = 0;
+      least_common_ticktime = 0;
+    }
     
-    unsigned long euclide(unsigned long a, unsigned long b) {
-      unsigned long c = a % b;
+    unsigned long long euclide(unsigned long long a, unsigned long long b) {
+      unsigned long long c = a % b;
       if (c == 0)
         return b;
       else
         return euclide(b, c);
     }
     
-    void update_ticktime(unsigned long time) {
+    void update_ticktime(unsigned long long time) {
       if (common_ticktime == 0)
         common_ticktime = time;
       else if (time > common_ticktime)
         common_ticktime = euclide(time, common_ticktime);
       else
         common_ticktime = euclide(common_ticktime, time);
+      if (least_common_ticktime == 0)
+        least_common_ticktime = time;
+      else
+        least_common_ticktime = (least_common_ticktime * time) / common_ticktime;
     }
 
-    unsigned long get_ticktime(void) {
+    unsigned long long get_common_ticktime(void) {
       return common_ticktime;
+    }
+
+    unsigned long get_greatest_tick_count(void) {
+      unsigned long long least_common_tick = least_common_ticktime / common_ticktime;
+      if (least_common_tick >> 32)
+        ERROR;
+      return (unsigned long)(~(((unsigned long)-2) % (unsigned long)least_common_tick) + 1);
     }
 
 /*  TASK task_name task_initialization */
 //SYM_REF2(task_configuration_c, task_name, task_initialization)  
     void *visit(task_initialization_c *symbol) {
       calculate_time_c calculate_time;
-      unsigned long time = 0;
+      unsigned long long time = 0;
       if (symbol->interval_data_source != NULL) {
         symbol->interval_data_source->accept(calculate_time);
         time = calculate_time.get_time();
@@ -1013,7 +1028,7 @@ void *visit(configuration_declaration_c *symbol) {
   /* (C.2) Run function name... */
   s4o.print(s4o.indent_spaces + "void config");
   s4o.print(FB_RUN_SUFFIX);
-  s4o.print("(int tick) {\n");
+  s4o.print("(unsigned long tick) {\n");
   s4o.indent_right();
 
   /* (C.3) Resources initializations... */
@@ -1037,7 +1052,7 @@ void *visit(resource_declaration_c *symbol) {
     }
     else {
       s4o.print(FB_RUN_SUFFIX);
-      s4o.print("(int tick);\n");
+      s4o.print("(unsigned long tick);\n");
     }
   }
   if (wanted_declaretype == initdeclare_dt || wanted_declaretype == rundeclare_dt) {
@@ -1064,7 +1079,7 @@ void *visit(single_resource_declaration_c *symbol) {
     }
     else {
       s4o.print(FB_RUN_SUFFIX);
-      s4o.print("(int tick);\n");
+      s4o.print("(unsigned long tick);\n");
     }
   }
   if (wanted_declaretype == initdeclare_dt || wanted_declaretype == rundeclare_dt) {
@@ -1243,7 +1258,7 @@ END_RESOURCE
       s4o.print("void ");
       current_resource_name->accept(*this);
       s4o.print(FB_RUN_SUFFIX);
-      s4o.print("(int tick) {\n");
+      s4o.print("(unsigned long tick) {\n");
       s4o.indent_right();
       
       wanted_declaretype = run_dt;
@@ -1630,16 +1645,19 @@ class generate_c_c: public iterator_visitor_c {
       
       calculate_common_ticktime_c calculate_common_ticktime;
       symbol->accept(calculate_common_ticktime);
-      common_ticktime = calculate_common_ticktime.get_ticktime();
+      common_ticktime = calculate_common_ticktime.get_common_ticktime();
       
       symbol->configuration_name->accept(*this);
       stage4out_c config_s4o(current_builddir, current_name, "c");
       generate_c_config_c generate_c_config(&config_s4o);
       symbol->accept(generate_c_config);
         
-      config_s4o.print("int common_ticktime__ = ");
-      config_s4o.print_integer((int)(common_ticktime / 1000000));
-      config_s4o.print("; /*ms*/\n");
+      config_s4o.print("unsigned long long common_ticktime__ = ");
+      config_s4o.print_long_long_integer(common_ticktime);
+      config_s4o.print("; /*ns*/\n");
+      config_s4o.print("unsigned long greatest_tick_count__ = ");
+      config_s4o.print_long_integer(calculate_common_ticktime.get_greatest_tick_count());
+      config_s4o.print("; /*tick*/\n");
       
       symbol->resource_declarations->accept(*this);
 

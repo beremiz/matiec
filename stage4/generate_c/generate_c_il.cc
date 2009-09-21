@@ -202,6 +202,9 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
      * The following object is it...
      */
     bool_type_name_c bool_type;
+    lint_type_name_c lint_type;
+    lword_type_name_c lword_type;
+    lreal_type_name_c lreal_type;
 
     /* the data type of the IL default variable... */
     #define IL_DEFVAR_T VAR_LEADER "IL_DEFVAR_T"
@@ -379,6 +382,38 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
         s4o.print(") ");
       }
       else {ERROR;}
+    }
+
+    void BYTE_operator_result_type(void) {
+      if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type)) {
+        if (search_expression_type->is_literal_integer_type(this->current_operand_type))
+          this->default_variable_name.current_type = &(this->lword_type);
+        else
+          this->default_variable_name.current_type = this->current_operand_type;
+      }
+      else if (search_expression_type->is_literal_integer_type(this->current_operand_type))
+    	  this->current_operand_type = this->default_variable_name.current_type;
+    }
+
+    void NUM_operator_result_type(void) {
+      if (search_expression_type->is_literal_real_type(this->default_variable_name.current_type)) {
+        if (search_expression_type->is_literal_integer_type(this->current_operand_type) ||
+            search_expression_type->is_literal_real_type(this->current_operand_type))
+          this->default_variable_name.current_type = &(this->lreal_type);
+        else
+          this->default_variable_name.current_type = this->current_operand_type;
+      }
+      else if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type)) {
+        if (search_expression_type->is_literal_integer_type(this->current_operand_type))
+          this->default_variable_name.current_type = &(this->lint_type);
+        else if (search_expression_type->is_literal_real_type(this->current_operand_type))
+          this->default_variable_name.current_type = &(this->lreal_type);
+        else
+          this->default_variable_name.current_type = this->current_operand_type;
+      }
+      else if (search_expression_type->is_literal_integer_type(this->current_operand_type) ||
+               search_expression_type->is_literal_real_type(this->current_operand_type))
+        this->current_operand_type = this->default_variable_name.current_type;
     }
 
 
@@ -1151,14 +1186,23 @@ void *visit(il_param_out_assignment_c *symbol) {ERROR; return NULL;} // should n
 
 void *visit(LD_operator_c *symbol)	{
   /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_literal_integer_type(this->current_operand_type))
+	  this->default_variable_name.current_type = &(this->lint_type);
+  else if (search_expression_type->is_literal_real_type(this->current_operand_type))
+  	  this->default_variable_name.current_type = &(this->lreal_type);
+  else
+	  this->default_variable_name.current_type = this->current_operand_type;
   XXX_operator(&(this->default_variable_name), " = ", this->current_operand);
+  this->default_variable_name.current_type = this->current_operand_type;
   return NULL;
 }
 
 void *visit(LDN_operator_c *symbol)	{
   /* the data type resulting from this operation... */
-  this->default_variable_name.current_type = this->current_operand_type;
+  if (search_expression_type->is_literal_integer_type(this->current_operand_type))
+    this->default_variable_name.current_type = &(this->lword_type);
+  else
+    this->default_variable_name.current_type = this->current_operand_type;
   XXX_operator(&(this->default_variable_name),
                search_expression_type->is_bool_type(this->current_operand_type)?" = !":" = ~",
                this->current_operand);
@@ -1175,6 +1219,9 @@ void *visit(ST_operator_c *symbol)	{
     operand_type->accept(*this);
     s4o.print("(");
   }
+  if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type) ||
+	  search_expression_type->is_literal_real_type(this->default_variable_name.current_type))
+    this->default_variable_name.current_type = this->current_operand_type;
   this->default_variable_name.accept(*this);
   if (search_base_type.type_is_subrange(operand_type))
     s4o.print(")");
@@ -1196,6 +1243,8 @@ void *visit(STN_operator_c *symbol)	{
     s4o.print("!");
   else
     s4o.print("~");
+  if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type))
+	this->default_variable_name.current_type = this->current_operand_type;
   this->default_variable_name.accept(*this);
   if (search_base_type.type_is_subrange(operand_type))
     s4o.print(")");
@@ -1244,7 +1293,8 @@ void *visit(PT_operator_c *symbol)	{return XXX_CAL_operator("PT", this->current_
 void *visit(AND_operator_c *symbol)	{
   if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    XXX_operator(&(this->default_variable_name), " &= ", this->current_operand);
+	BYTE_operator_result_type();
+	XXX_operator(&(this->default_variable_name), " &= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
   }
@@ -1255,7 +1305,8 @@ void *visit(AND_operator_c *symbol)	{
 void *visit(OR_operator_c *symbol)	{
   if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    XXX_operator(&(this->default_variable_name), " |= ", this->current_operand);
+	BYTE_operator_result_type();
+	XXX_operator(&(this->default_variable_name), " |= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
   }
@@ -1266,7 +1317,8 @@ void *visit(OR_operator_c *symbol)	{
 void *visit(XOR_operator_c *symbol)	{
   if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    // '^' is a bit by bit exclusive OR !! Also seems to work with boolean types!
+	BYTE_operator_result_type();
+	// '^' is a bit by bit exclusive OR !! Also seems to work with boolean types!
     XXX_operator(&(this->default_variable_name), " ^= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
@@ -1278,7 +1330,8 @@ void *visit(XOR_operator_c *symbol)	{
 void *visit(ANDN_operator_c *symbol)	{
   if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    XXX_operator(&(this->default_variable_name),
+	BYTE_operator_result_type();
+	XXX_operator(&(this->default_variable_name),
                  search_expression_type->is_bool_type(this->current_operand_type)?" &= !":" &= ~",
                  this->current_operand);
     /* the data type resulting from this operation... */
@@ -1291,7 +1344,8 @@ void *visit(ANDN_operator_c *symbol)	{
 void *visit(ORN_operator_c *symbol)	{
   if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    XXX_operator(&(this->default_variable_name),
+	BYTE_operator_result_type();
+	XXX_operator(&(this->default_variable_name),
                  search_expression_type->is_bool_type(this->current_operand_type)?" |= !":" |= ~",
                  this->current_operand);
     /* the data type resulting from this operation... */
@@ -1304,7 +1358,8 @@ void *visit(ORN_operator_c *symbol)	{
 void *visit(XORN_operator_c *symbol)	{
   if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    XXX_operator(&(this->default_variable_name),
+	BYTE_operator_result_type();
+	XXX_operator(&(this->default_variable_name),
                  // bit by bit exclusive OR !! Also seems to work with boolean types!
                  search_expression_type->is_bool_type(this->current_operand_type)?" ^= !":" ^= ~",
                  this->current_operand);
@@ -1325,7 +1380,8 @@ void *visit(ADD_operator_c *symbol)	{
   }
   if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    XXX_operator(&(this->default_variable_name), " += ", this->current_operand);
+	NUM_operator_result_type();
+	XXX_operator(&(this->default_variable_name), " += ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
@@ -1344,7 +1400,8 @@ void *visit(SUB_operator_c *symbol)	{
   }
   if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    XXX_operator(&(this->default_variable_name), " -= ", this->current_operand);
+	NUM_operator_result_type();
+	XXX_operator(&(this->default_variable_name), " -= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
     return NULL;
@@ -1362,6 +1419,7 @@ void *visit(MUL_operator_c *symbol)	{
   }
   if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+	NUM_operator_result_type();
     XXX_operator(&(this->default_variable_name), " *= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
@@ -1380,7 +1438,8 @@ void *visit(DIV_operator_c *symbol)	{
   }
   if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    XXX_operator(&(this->default_variable_name), " /= ", this->current_operand);
+	NUM_operator_result_type();
+	XXX_operator(&(this->default_variable_name), " /= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
   }
@@ -1391,7 +1450,8 @@ void *visit(DIV_operator_c *symbol)	{
 void *visit(MOD_operator_c *symbol)	{
   if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    XXX_operator(&(this->default_variable_name), " %= ", this->current_operand);
+	NUM_operator_result_type();
+	XXX_operator(&(this->default_variable_name), " %= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
   }
