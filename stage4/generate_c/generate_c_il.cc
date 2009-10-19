@@ -513,9 +513,24 @@ void *visit(instruction_list_c *symbol) {
   s4o.print(IL_DEFVAR_T);
   s4o.print(" ");
   this->default_variable_name.accept(*this);
-  s4o.print(";\n\n");
+  s4o.print(";\n");
+  s4o.print(s4o.indent_spaces);
+  print_backup_variable();
+  s4o.print(".INTvar = 0;\n\n");
 
   print_list(symbol, s4o.indent_spaces, ";\n" + s4o.indent_spaces, ";\n");
+
+  /* label not used by at least one goto result in a warning.
+   * To work around this we introduce the useless goto
+   * to humour the compiler...
+   */
+  s4o.print("\n");
+  s4o.print(s4o.indent_spaces);
+  s4o.print("/* to humour the compiler, we insert a goto */\n");
+  s4o.print(s4o.indent_spaces);
+  s4o.print("goto ");
+  s4o.print(END_LABEL);
+  s4o.print(";\n");
 
   /* write the label marking the end of the code block */
   /* please see the comment before the RET_operator_c visitor for details... */
