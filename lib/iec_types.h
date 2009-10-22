@@ -31,7 +31,7 @@ typedef float    IEC_REAL;
 typedef double   IEC_LREAL;
 
 
-#if !defined __timespec_defined
+#if !defined __timespec_defined && !defined __time_t_defined
 # define __timespec_defined     1
 
 struct timespec

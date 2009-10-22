@@ -453,9 +453,12 @@ static inline __strlen_t __pfind(STRING* IN1, STRING* IN2){
     UINT count2 = 0; /* count of matching char */
     while(count1 + count2 < IN1->len && count2 < IN2->len)
     {
-        if(IN1->body[count1 + count2] != IN2->body[count2++]){
-            count1 += count2;
+        if(IN1->body[count1 + count2] != IN2->body[count2]){
+            count1 += count2 + 1;
             count2 = 0;
+        }
+        else {
+            count2++;
         }
     }
     return count2 == IN2->len -1 ? 0 : count1 + 1;
@@ -761,43 +764,31 @@ static inline STRING __dt_to_string(EN_ENO_PARAMS, DT IN){
     /* BCD */
 #define __bcd_digit(fac)
 static inline ULINT __bcd_to_uint(EN_ENO_PARAMS, LWORD IN){
+    ULINT res;
+    ULINT i;
     TEST_EN(ULINT)
-    return IN & 0xf +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 10ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 100ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 1000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 10000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 100000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 1000000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 10000000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 100000000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 1000000000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 10000000000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 100000000000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 1000000000000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 10000000000000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 100000000000000ULL) +
-           !(IN >>= 4) ? 0 : (IN & 0xf * 1000000000000000ULL);
 
+    res = IN & 0xf;
+    for(i = 10ULL; i <= 1000000000000000ULL; i *= 10){
+        if(!(IN >>= 4))
+            break;
+        res += (IN & 0xf) * i;
+    }
+    return res;
 }
+
 static inline LWORD __uint_to_bcd(EN_ENO_PARAMS, ULINT IN){
+    LWORD res;
+    USINT i;
     TEST_EN(LWORD)
-    return (IN - (IN /= 10))|
-           (IN - (IN /= 10)) << 4 |
-           (IN - (IN /= 10)) << 8 |
-           (IN - (IN /= 10)) << 12 |
-           (IN - (IN /= 10)) << 16 |
-           (IN - (IN /= 10)) << 20 |
-           (IN - (IN /= 10)) << 24 |
-           (IN - (IN /= 10)) << 28 |
-           (IN - (IN /= 10)) << 32 |
-           (IN - (IN /= 10)) << 36 |
-           (IN - (IN /= 10)) << 40 |
-           (IN - (IN /= 10)) << 44 |
-           (IN - (IN /= 10)) << 48 |
-           (IN - (IN /= 10)) << 52 |
-           (IN - (IN /= 10)) << 56 |
-           (IN - (IN /= 10)) << 60;
+
+    res = IN % 10;
+    for(i = 4; i<=60; i += 4){
+        if(!(IN /= 10))
+            break;
+        res |= (IN % 10) << i;
+    }
+    return res;
 }
 
 /* workaround for va-atgs limitation on shorter that int params */
