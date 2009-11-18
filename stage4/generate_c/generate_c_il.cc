@@ -712,7 +712,14 @@ void *visit(il_function_call_c *symbol) {
           param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
         }
         if (param_value == NULL) ERROR;
-        if (search_base_type.type_is_subrange(param_type)) {
+        if (search_expression_type->is_literal_integer_type(param_type) ||
+			search_expression_type->is_literal_real_type(param_type)) {
+			if (function_type_suffix == NULL) ERROR;
+			function_type_suffix->accept(*this);
+		}
+		else
+			param_type->accept(*this);
+		if (search_base_type.type_is_subrange(param_type)) {
           s4o.print("__CHECK_");
           param_type->accept(*this);
           s4o.print("(");
@@ -1043,7 +1050,14 @@ void *visit(il_formal_funct_call_c *symbol) {
           param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
         }
         if (param_value == NULL) ERROR;
-        if (search_base_type.type_is_subrange(param_type)) {
+        if (search_expression_type->is_literal_integer_type(param_type) ||
+			search_expression_type->is_literal_real_type(param_type)) {
+			if (function_type_suffix == NULL) ERROR;
+			function_type_suffix->accept(*this);
+		}
+		else
+			param_type->accept(*this);
+		if (search_base_type.type_is_subrange(param_type)) {
           s4o.print("__CHECK_");
           param_type->accept(*this);
           s4o.print("(");
