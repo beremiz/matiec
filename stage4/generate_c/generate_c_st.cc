@@ -40,6 +40,13 @@
 
 class generate_c_st_c: public generate_c_typedecl_c {
 
+  public:
+    typedef enum {
+      expression_vg,
+      assignment_vg,
+      fparam_output_vg
+    } variablegeneration_t;
+
   private:
     /* When calling a function block, we must first find it's type,
      * by searching through the declarations of the variables currently
@@ -72,17 +79,22 @@ class generate_c_st_c: public generate_c_typedecl_c {
 
     symbol_c* current_array_type;
 
-    bool current_param_is_pointer;
+    int fcall_number;
+    symbol_c *fbname;
+
+    variablegeneration_t wanted_variablegeneration;
 
   public:
-    generate_c_st_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
+    generate_c_st_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_c_typedecl_c(s4o_ptr) {
       search_fb_instance_decl = new search_fb_instance_decl_c(scope);
       search_expression_type = new search_expression_type_c(scope);
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
       this->set_variable_prefix(variable_prefix);
       current_array_type = NULL;
-      current_param_is_pointer = false;
+      fcall_number = 0;
+      fbname = name;
+      wanted_variablegeneration = expression_vg;
     }
 
     virtual ~generate_c_st_c(void) {
@@ -105,18 +117,71 @@ class generate_c_st_c: public generate_c_typedecl_c {
 /*********************/
 void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-  if (!current_param_is_pointer && (vartype == search_var_instance_decl_c::external_vt || vartype == search_var_instance_decl_c::located_vt)) {
-    s4o.print("*(");
-    generate_c_base_c::visit(symbol);
-    s4o.print(")");
-  }
-  else if (current_param_is_pointer && vartype != search_var_instance_decl_c::external_vt && vartype != search_var_instance_decl_c::located_vt) {
-    s4o.print("&(");
-    generate_c_base_c::visit(symbol);
-    s4o.print(")");
+  if (this->is_variable_prefix_null()) {
+    if (wanted_variablegeneration == fparam_output_vg) {
+      if (vartype == search_var_instance_decl_c::external_vt) {
+    	s4o.print(GET_EXTERNAL);
+    	s4o.print("(");
+    	symbol->var_name->accept(*this);
+      }
+      else {
+    	s4o.print("&(");
+        generate_c_base_c::visit(symbol);
+      }
+      s4o.print(")");
+    }
+    else {
+      if (vartype == search_var_instance_decl_c::external_vt) {
+        s4o.print(GET_EXTERNAL);
+        s4o.print("(");
+        symbol->var_name->accept(*this);
+        s4o.print(")");
+      }
+      else
+    	generate_c_base_c::visit(symbol);
+    }
   }
   else {
-    generate_c_base_c::visit(symbol);
+    switch (wanted_variablegeneration) {
+      case expression_vg:
+        if (vartype == search_var_instance_decl_c::external_vt) {
+    	  s4o.print(GET_EXTERNAL);
+    	  s4o.print("(");
+          symbol->var_name->accept(*this);
+        }
+        else {
+          if (vartype == search_var_instance_decl_c::located_vt)
+            s4o.print(GET_LOCATED);
+          else
+            s4o.print(GET_VAR);
+          s4o.print("(");
+          generate_c_base_c::visit(symbol);
+        }
+        s4o.print(")");
+		break;
+      case fparam_output_vg:
+        if (vartype == search_var_instance_decl_c::external_vt) {
+          s4o.print(GET_EXTERNAL_BY_REF);
+          s4o.print("(");
+          symbol->var_name->accept(*this);
+        }
+        else {
+          if (vartype == search_var_instance_decl_c::located_vt)
+            s4o.print(GET_LOCATED_BY_REF);
+          else
+            s4o.print(GET_VAR_BY_REF);
+          s4o.print("(");
+          generate_c_base_c::visit(symbol);
+        }
+        s4o.print(")");
+        break;
+      default:
+        if (vartype == search_var_instance_decl_c::external_vt)
+          symbol->var_name->accept(*this);
+        else
+          generate_c_base_c::visit(symbol);
+        break;
+	}
   }
   return NULL;
 }
@@ -129,14 +194,29 @@ void *visit(direct_variable_c *symbol) {
   TRACE("direct_variable_c");
   /* Do not use print_token() as it will change everything into uppercase */
   if (strlen(symbol->value) == 0) ERROR;
-  if (!current_param_is_pointer) {
-    s4o.print("*(");
+  if (this->is_variable_prefix_null()) {
+    if (wanted_variablegeneration != fparam_output_vg)
+	  s4o.print("*(");
+  }
+  else {
+    switch (wanted_variablegeneration) {
+      case expression_vg:
+  	    s4o.print(GET_LOCATED);
+  	    s4o.print("(");
+  	    break;
+      case fparam_output_vg:
+        s4o.print(GET_LOCATED_BY_REF);
+        s4o.print("(");
+        break;
+      default:
+        break;
+    }
   }
   this->print_variable_prefix();
   s4o.printlocation(symbol->value + 1);
-  if (!current_param_is_pointer) {
+  if ((this->is_variable_prefix_null() && wanted_variablegeneration != fparam_output_vg) ||
+	  wanted_variablegeneration != assignment_vg)
     s4o.print(")");
-  }
   return NULL;
 }
 
@@ -404,8 +484,7 @@ void *visit(function_invocation_c *symbol) {
   symbol_c* function_type_prefix = NULL;
   symbol_c* function_name = NULL;
   symbol_c* function_type_suffix = NULL;
-  std::list<FUNCTION_PARAM> param_list;
-  FUNCTION_PARAM *param;
+  DECLARE_PARAM_LIST()
 
   symbol_c *parameter_assignment_list = NULL;
   if (NULL != symbol->   formal_param_list) parameter_assignment_list = symbol->   formal_param_list;
@@ -433,26 +512,25 @@ void *visit(function_invocation_c *symbol) {
       EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
     else
       nb_param --;
-    ADD_PARAM_LIST(EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
+    ADD_PARAM_LIST(&en_param_name, EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
 
     identifier_c eno_param_name("ENO");
     /* Get the value from ENO param */
     symbol_c *ENO_param_value = function_call_param_iterator.search_f(&eno_param_name);
     if (ENO_param_value != NULL)
       nb_param --;
-    ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
+    ADD_PARAM_LIST(&eno_param_name, ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
 
     #include "st_code_gen.c"
 
   }
   else {
-    /* loop through each function parameter, find the value we should pass
+	function_name = symbol->function_name;
+
+	/* loop through each function parameter, find the value we should pass
      * to it, and then output the c equivalent...
      */
     function_param_iterator_c fp_iterator(f_decl);
-  
-    function_name = symbol->function_name;
-  
     identifier_c *param_name;
     function_call_param_iterator_c function_call_param_iterator(symbol);
     for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
@@ -475,33 +553,56 @@ void *visit(function_invocation_c *symbol) {
       symbol_c *param_type = fp_iterator.param_type();
       if (param_type == NULL) ERROR;
       
-      ADD_PARAM_LIST(param_value, param_type, param_direction)
+      ADD_PARAM_LIST(param_name, param_value, param_type, param_direction)
     } /* for(...) */
     // symbol->parameter_assignment->accept(*this);
   }
   
+  bool has_output_params = false;
+
+  if (!this->is_variable_prefix_null()) {
+    PARAM_LIST_ITERATOR() {
+	  if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
+		   PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
+		  PARAM_VALUE != NULL) {
+	    if (!has_output_params) {
+		  has_output_params = true;
+		}
+	  }
+    }
+  }
+
   if (function_type_prefix != NULL) {
     s4o.print("(");
     function_type_prefix->accept(*this);
     s4o.print(")");
   }
-  if (function_name != NULL)
+  if (has_output_params) {
+	fcall_number++;
+	s4o.print("__");
+    fbname->accept(*this);
+    s4o.print("_");
     function_name->accept(*this);
-  if (function_type_suffix != NULL)
-    function_type_suffix->accept(*this);
+    s4o.print_integer(fcall_number);
+  }
+  else {
+    function_name->accept(*this);
+    if (function_type_suffix != NULL)
+      function_type_suffix->accept(*this);
+  }
   s4o.print("(");
   s4o.indent_right();
   
-  std::list<FUNCTION_PARAM>::iterator pt;
-  for(pt = param_list.begin(); pt != param_list.end(); pt++) {
-    if (pt != param_list.begin())
-      s4o.print(",\n"+s4o.indent_spaces);
-    symbol_c *param_value = pt->param_value;
-    symbol_c *param_type = pt->param_type;
+  int nb_param = 0;
+  PARAM_LIST_ITERATOR() {
+    symbol_c *param_value = PARAM_VALUE;
+    symbol_c *param_type = PARAM_TYPE;
           
-    switch (pt->param_direction) {
+    switch (PARAM_DIRECTION) {
       case function_param_iterator_c::direction_in:
-        if (param_value == NULL) {
+    	if (nb_param > 0)
+    	  s4o.print(",\n"+s4o.indent_spaces);
+    	if (param_value == NULL) {
           /* If not, get the default value of this variable's type */
           param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
         }
@@ -515,34 +616,39 @@ void *visit(function_invocation_c *symbol) {
         else
         	param_type->accept(*this);
         s4o.print(")");
-        if (search_base_type.type_is_subrange(param_type)) {
-          s4o.print("__CHECK_");
-          param_type->accept(*this);
-          s4o.print("(");
-        }
-        param_value->accept(*this);
-        if (search_base_type.type_is_subrange(param_type))
-          s4o.print(")");
+        print_check_function(param_type, param_value);
+        nb_param++;
         break;
       case function_param_iterator_c::direction_out:
       case function_param_iterator_c::direction_inout:
-        current_param_is_pointer = true;
-        if (param_value == NULL) {
-          s4o.print("NULL");
-        } else {
-          param_value->accept(*this);
-        }
-        current_param_is_pointer = false;
+    	if (!has_output_params) {
+          if (nb_param > 0)
+        	s4o.print(",\n"+s4o.indent_spaces);
+    	  if (param_value == NULL)
+            s4o.print("NULL");
+          else {
+            wanted_variablegeneration = fparam_output_vg;
+            param_value->accept(*this);
+            wanted_variablegeneration = expression_vg;
+          }
+    	  nb_param++;
+    	}
         break;
       case function_param_iterator_c::direction_extref:
         /* TODO! */
         ERROR;
         break;
     } /* switch */
-  }  
-  
+  }
+  if (has_output_params) {
+    if (nb_param > 0)
+      s4o.print(",\n"+s4o.indent_spaces);
+    s4o.print(FB_FUNCTION_PARAM);
+  }
   s4o.print(")");
   s4o.indent_left();
+
+  CLEAR_PARAM_LIST()
 
   return NULL;
 }
@@ -560,15 +666,29 @@ void *visit(statement_list_c *symbol) {
 void *visit(assignment_statement_c *symbol) {
   symbol_c *left_type = search_varfb_instance_type->get_type(symbol->l_exp, false);
   
-  symbol->l_exp->accept(*this);
-  s4o.print(" = ");
-  if (search_base_type.type_is_subrange(left_type)) {
-    s4o.print("__CHECK_");
-    left_type->accept(*this);
+  if (!this->is_variable_prefix_null()) {
+    unsigned int vartype = search_varfb_instance_type->get_vartype(symbol->l_exp);
+    if (vartype == search_var_instance_decl_c::external_vt)
+	  s4o.print(SET_EXTERNAL);
+    else if (vartype == search_var_instance_decl_c::located_vt)
+	  s4o.print(SET_LOCATED);
+    else
+	  s4o.print(SET_VAR);
     s4o.print("(");
+
+    wanted_variablegeneration = assignment_vg;
+    symbol->l_exp->accept(*this);
+    wanted_variablegeneration = expression_vg;
+
+    s4o.print(",");
   }
-  symbol->r_exp->accept(*this);
-  if (search_base_type.type_is_subrange(left_type))
+  else {
+	symbol->l_exp->accept(*this);
+
+    s4o.print(" = ");
+  }
+  print_check_function(left_type, symbol->r_exp);
+  if (!this->is_variable_prefix_null())
     s4o.print(")");
   return NULL;
 }
@@ -617,18 +737,20 @@ void *visit(fb_invocation_c *symbol) {
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_in) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
-        print_variable_prefix();
+        if (!this->is_variable_prefix_null()) {
+          s4o.print(SET_VAR);
+          s4o.print("(");
+        }
+    	print_variable_prefix();
         symbol->fb_name->accept(*this);
         s4o.print(".");
         param_name->accept(*this);
-        s4o.print(" = ");
-        if (search_base_type.type_is_subrange(param_type)) {
-          s4o.print("__CHECK_");
-          param_type->accept(*this);
-          s4o.print("(");
-        }
-        param_value->accept(*this);
-        if (search_base_type.type_is_subrange(param_type))
+        if (this->is_variable_prefix_null())
+          s4o.print(" = ");
+        else
+          s4o.print(",");
+        print_check_function(param_type, param_value);
+        if (!this->is_variable_prefix_null())
           s4o.print(")");
         s4o.print(";\n" + s4o.indent_spaces);
       }
@@ -662,20 +784,29 @@ void *visit(fb_invocation_c *symbol) {
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
         symbol_c *param_type = search_varfb_instance_type->get_type(param_value, false);
-        
-        s4o.print(";\n"+ s4o.indent_spaces);
-        param_value->accept(*this);
-        s4o.print(" = ");
-        if (search_base_type.type_is_subrange(param_type)) {
-          s4o.print("__CHECK_");
-          param_type->accept(*this);
+
+        if (!this->is_variable_prefix_null()) {
+          unsigned int vartype = search_varfb_instance_type->get_vartype(param_value);
+          s4o.print(";\n"+ s4o.indent_spaces);
+          if (vartype == search_var_instance_decl_c::external_vt)
+            s4o.print(SET_EXTERNAL);
+          else if (vartype == search_var_instance_decl_c::located_vt)
+            s4o.print(SET_LOCATED);
+          else
+            s4o.print(SET_VAR);
           s4o.print("(");
+
+          wanted_variablegeneration = assignment_vg;
+          param_value->accept(*this);
+          wanted_variablegeneration = expression_vg;
+          s4o.print(",");
         }
-        print_variable_prefix();
-        symbol->fb_name->accept(*this);
-        s4o.print(".");
-        param_name->accept(*this);
-        if (search_base_type.type_is_subrange(param_type))
+        else {
+          param_value->accept(*this);
+          s4o.print(" = ");
+        }
+        print_check_function(param_type, param_name, symbol->fb_name);
+        if (!this->is_variable_prefix_null())
           s4o.print(")");
       }
   } /* for(...) */

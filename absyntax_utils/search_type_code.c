@@ -55,9 +55,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -91,9 +91,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -127,9 +127,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -163,9 +163,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -199,9 +199,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -235,9 +235,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -271,9 +271,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -307,9 +307,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -343,9 +343,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -379,9 +379,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -415,9 +415,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -451,9 +451,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -487,9 +487,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -523,9 +523,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -559,9 +559,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -595,9 +595,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -631,9 +631,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -667,9 +667,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -703,9 +703,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -739,9 +739,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -775,9 +775,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -811,9 +811,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -847,9 +847,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -883,9 +883,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -919,9 +919,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -955,9 +955,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -991,9 +991,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1027,9 +1027,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1063,9 +1063,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1099,9 +1099,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1135,9 +1135,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1171,9 +1171,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1207,9 +1207,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1243,9 +1243,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1279,9 +1279,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1315,9 +1315,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1351,9 +1351,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1387,9 +1387,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1423,9 +1423,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1459,9 +1459,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1495,9 +1495,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1531,9 +1531,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1567,9 +1567,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1603,9 +1603,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1639,9 +1639,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1675,9 +1675,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1711,9 +1711,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1747,9 +1747,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1783,9 +1783,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1819,9 +1819,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1855,9 +1855,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1891,9 +1891,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1927,9 +1927,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1963,9 +1963,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -1999,9 +1999,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2035,9 +2035,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2071,9 +2071,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2107,9 +2107,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2143,9 +2143,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2179,9 +2179,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2215,9 +2215,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2251,9 +2251,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2287,9 +2287,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2323,9 +2323,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2359,9 +2359,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2395,9 +2395,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2431,9 +2431,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2467,9 +2467,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2503,9 +2503,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2539,9 +2539,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2575,9 +2575,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2611,9 +2611,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2647,9 +2647,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2683,9 +2683,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2719,9 +2719,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2755,9 +2755,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2791,9 +2791,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2827,9 +2827,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2863,9 +2863,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2899,9 +2899,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2935,9 +2935,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -2971,9 +2971,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3007,9 +3007,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3043,9 +3043,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3079,9 +3079,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3115,9 +3115,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3151,9 +3151,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3187,9 +3187,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3223,9 +3223,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3259,9 +3259,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3295,9 +3295,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3331,9 +3331,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3367,9 +3367,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3403,9 +3403,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3439,9 +3439,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3475,9 +3475,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3511,9 +3511,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3547,9 +3547,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3583,9 +3583,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3619,9 +3619,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3655,9 +3655,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3691,9 +3691,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3727,9 +3727,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3763,9 +3763,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3799,9 +3799,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3835,9 +3835,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3871,9 +3871,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3907,9 +3907,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3943,9 +3943,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -3979,9 +3979,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4015,9 +4015,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4051,9 +4051,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4087,9 +4087,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4123,9 +4123,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4159,9 +4159,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4195,9 +4195,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4231,9 +4231,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4267,9 +4267,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4303,9 +4303,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4339,9 +4339,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4375,9 +4375,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4411,9 +4411,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4447,9 +4447,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4483,9 +4483,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4519,9 +4519,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4555,9 +4555,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4591,9 +4591,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4627,9 +4627,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4663,9 +4663,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4699,9 +4699,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4735,9 +4735,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4771,9 +4771,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4807,9 +4807,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4843,9 +4843,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4879,9 +4879,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4915,9 +4915,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4951,9 +4951,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -4987,9 +4987,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5023,9 +5023,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5059,9 +5059,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5095,9 +5095,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5131,9 +5131,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5167,9 +5167,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5203,9 +5203,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5239,9 +5239,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5275,9 +5275,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5311,9 +5311,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5347,9 +5347,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5383,9 +5383,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5419,9 +5419,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5455,9 +5455,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5491,9 +5491,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5527,9 +5527,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5563,9 +5563,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5599,9 +5599,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5635,9 +5635,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5671,9 +5671,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5707,9 +5707,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5743,9 +5743,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5779,9 +5779,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5815,9 +5815,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5851,9 +5851,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5887,9 +5887,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5923,9 +5923,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5959,9 +5959,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -5995,9 +5995,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6031,9 +6031,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6067,9 +6067,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6103,9 +6103,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6139,9 +6139,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6175,9 +6175,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6211,9 +6211,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6247,9 +6247,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6283,9 +6283,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6319,9 +6319,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6355,9 +6355,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6391,9 +6391,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6427,9 +6427,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6463,9 +6463,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6499,9 +6499,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6535,9 +6535,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6571,9 +6571,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6607,9 +6607,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6643,9 +6643,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6679,9 +6679,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6715,9 +6715,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6751,9 +6751,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6787,9 +6787,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6823,9 +6823,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6859,9 +6859,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6895,9 +6895,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6931,9 +6931,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -6967,9 +6967,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7003,9 +7003,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7039,9 +7039,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7075,9 +7075,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7111,9 +7111,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7147,9 +7147,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7183,9 +7183,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7219,9 +7219,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7255,9 +7255,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7291,9 +7291,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7327,9 +7327,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7363,9 +7363,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7399,9 +7399,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7435,9 +7435,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7471,9 +7471,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7507,9 +7507,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7543,9 +7543,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7579,9 +7579,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7615,9 +7615,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7651,9 +7651,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7687,9 +7687,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7723,9 +7723,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7759,9 +7759,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7795,9 +7795,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7831,9 +7831,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7867,9 +7867,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7903,9 +7903,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7939,9 +7939,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -7975,9 +7975,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8011,9 +8011,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8047,9 +8047,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8083,9 +8083,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8119,9 +8119,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8155,9 +8155,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8191,9 +8191,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8227,9 +8227,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8263,9 +8263,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8299,9 +8299,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8335,9 +8335,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8371,9 +8371,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8407,9 +8407,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8443,9 +8443,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8479,9 +8479,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8515,9 +8515,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8551,9 +8551,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8587,9 +8587,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8623,9 +8623,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8659,9 +8659,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8695,9 +8695,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8731,9 +8731,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8767,9 +8767,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8803,9 +8803,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8839,9 +8839,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8875,9 +8875,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8911,9 +8911,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8947,9 +8947,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -8983,9 +8983,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9019,9 +9019,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9055,9 +9055,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9091,9 +9091,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9127,9 +9127,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9163,9 +9163,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9199,9 +9199,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9235,9 +9235,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9271,9 +9271,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9307,9 +9307,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9343,9 +9343,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9379,9 +9379,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9415,9 +9415,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9451,9 +9451,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9487,9 +9487,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9523,9 +9523,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9559,9 +9559,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9595,9 +9595,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9631,9 +9631,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9667,9 +9667,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9703,9 +9703,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9739,9 +9739,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9775,9 +9775,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9811,9 +9811,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9847,9 +9847,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9883,9 +9883,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9919,9 +9919,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9955,9 +9955,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -9991,9 +9991,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10027,9 +10027,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10063,9 +10063,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10099,9 +10099,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10135,9 +10135,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10171,9 +10171,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10207,9 +10207,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10243,9 +10243,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10279,9 +10279,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10315,9 +10315,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10351,9 +10351,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10387,9 +10387,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10423,9 +10423,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10459,9 +10459,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10495,9 +10495,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10531,9 +10531,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10567,9 +10567,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10603,9 +10603,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10639,9 +10639,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10675,9 +10675,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10711,9 +10711,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10747,9 +10747,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10783,9 +10783,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10819,9 +10819,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10855,9 +10855,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10891,9 +10891,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10927,9 +10927,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10963,9 +10963,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -10999,9 +10999,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11035,9 +11035,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11071,9 +11071,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11107,9 +11107,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11143,9 +11143,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11179,9 +11179,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11215,9 +11215,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11251,9 +11251,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11287,9 +11287,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11323,9 +11323,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11359,9 +11359,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11395,9 +11395,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11431,9 +11431,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11467,9 +11467,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11503,9 +11503,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11539,9 +11539,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11575,9 +11575,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11611,9 +11611,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11647,9 +11647,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11683,9 +11683,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11719,9 +11719,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11755,9 +11755,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11791,9 +11791,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11827,9 +11827,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11863,9 +11863,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11899,9 +11899,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11935,9 +11935,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -11971,9 +11971,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12007,9 +12007,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12043,9 +12043,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12079,9 +12079,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12115,9 +12115,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12151,9 +12151,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12187,9 +12187,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12223,9 +12223,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12259,9 +12259,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12295,9 +12295,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12331,9 +12331,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12367,9 +12367,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12403,9 +12403,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12439,9 +12439,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12475,9 +12475,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12511,9 +12511,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12547,9 +12547,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12583,9 +12583,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12619,9 +12619,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12655,9 +12655,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12691,9 +12691,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12727,9 +12727,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12763,9 +12763,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12799,9 +12799,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12835,9 +12835,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12871,9 +12871,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12907,9 +12907,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12943,9 +12943,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -12979,9 +12979,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13015,9 +13015,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13051,9 +13051,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13087,9 +13087,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13123,9 +13123,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13159,9 +13159,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13195,9 +13195,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13231,9 +13231,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13267,9 +13267,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13303,9 +13303,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13339,9 +13339,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13375,9 +13375,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13411,9 +13411,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13447,9 +13447,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13483,9 +13483,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13519,9 +13519,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13555,9 +13555,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13591,9 +13591,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13627,9 +13627,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13663,9 +13663,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13699,9 +13699,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13735,9 +13735,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13771,9 +13771,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13807,9 +13807,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13843,9 +13843,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13879,9 +13879,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13915,9 +13915,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13951,9 +13951,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -13968,9 +13968,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14005,9 +14005,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14036,9 +14036,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14067,9 +14067,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14109,9 +14109,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14126,9 +14126,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14163,9 +14163,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14205,9 +14205,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14222,9 +14222,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14259,9 +14259,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14290,9 +14290,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14329,9 +14329,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14368,9 +14368,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14410,9 +14410,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14427,9 +14427,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14464,9 +14464,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14506,9 +14506,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14523,9 +14523,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14571,9 +14571,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14588,9 +14588,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14636,9 +14636,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14678,9 +14678,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14695,9 +14695,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14737,9 +14737,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14754,9 +14754,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14796,9 +14796,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14813,9 +14813,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14855,9 +14855,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14872,9 +14872,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14914,9 +14914,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14931,9 +14931,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14977,9 +14977,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -14994,9 +14994,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15040,9 +15040,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15057,9 +15057,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15103,9 +15103,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15139,9 +15139,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("G");
+            identifier_c G_param_name("G");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *G_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *G_param_value = function_call_param_iterator.search_f(&G_param_name);
             symbol_c *G_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15156,9 +15156,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN0");
+                    identifier_c IN0_param_name("IN0");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&IN0_param_name);
                     symbol_c *IN0_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15173,9 +15173,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     {
                 
                         {
-                            identifier_c param_name("IN1");
+                            identifier_c IN1_param_name("IN1");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
                             symbol_c *IN1_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -15227,9 +15227,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15244,9 +15244,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15292,9 +15292,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15309,9 +15309,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15357,9 +15357,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("MN");
+            identifier_c MN_param_name("MN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *MN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *MN_param_value = function_call_param_iterator.search_f(&MN_param_name);
             symbol_c *MN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15374,9 +15374,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN");
+                    identifier_c IN_param_name("IN");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
                     symbol_c *IN_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15391,9 +15391,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     {
                 
                         {
-                            identifier_c param_name("MX");
+                            identifier_c MX_param_name("MX");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *MX_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *MX_param_value = function_call_param_iterator.search_f(&MX_param_name);
                             symbol_c *MX_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -15439,9 +15439,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("K");
+            identifier_c K_param_name("K");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *K_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *K_param_value = function_call_param_iterator.search_f(&K_param_name);
             symbol_c *K_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15456,9 +15456,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN0");
+                    identifier_c IN0_param_name("IN0");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&IN0_param_name);
                     symbol_c *IN0_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15473,9 +15473,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     {
                 
                         {
-                            identifier_c param_name("IN1");
+                            identifier_c IN1_param_name("IN1");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
                             symbol_c *IN1_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -15527,9 +15527,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15544,9 +15544,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15586,9 +15586,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15603,9 +15603,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15645,9 +15645,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15662,9 +15662,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15704,9 +15704,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15721,9 +15721,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15763,9 +15763,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15780,9 +15780,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15822,9 +15822,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15839,9 +15839,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15881,9 +15881,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15917,9 +15917,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15934,9 +15934,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15976,9 +15976,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -15993,9 +15993,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16035,9 +16035,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -16052,9 +16052,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16069,9 +16069,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            identifier_c P_param_name("P");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -16117,9 +16117,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -16134,9 +16134,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16165,9 +16165,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16207,9 +16207,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -16224,9 +16224,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16241,9 +16241,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            identifier_c P_param_name("P");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -16289,9 +16289,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -16306,9 +16306,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16323,9 +16323,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            identifier_c P_param_name("P");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -16371,9 +16371,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -16388,9 +16388,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16405,9 +16405,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     {
                 
                         {
-                            identifier_c param_name("L");
+                            identifier_c L_param_name("L");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                             symbol_c *L_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -16422,9 +16422,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                             {
                         
                                 {
-                                    identifier_c param_name("P");
+                                    identifier_c P_param_name("P");
                                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                                    symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                                    symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                                     symbol_c *P_type_symbol = NULL;
                                     
                                     /* Get the value from a foo(<param_value>) style call */
@@ -16476,9 +16476,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
@@ -16493,9 +16493,9 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26592,9 +26592,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26629,9 +26629,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26660,9 +26660,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26691,9 +26691,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26740,9 +26740,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26777,9 +26777,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26826,9 +26826,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26863,9 +26863,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26894,9 +26894,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26933,9 +26933,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -26972,9 +26972,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27021,9 +27021,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27058,9 +27058,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27107,9 +27107,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27162,9 +27162,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27249,9 +27249,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27298,9 +27298,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27347,9 +27347,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27396,9 +27396,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27445,9 +27445,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27498,9 +27498,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27551,9 +27551,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27630,9 +27630,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN0");
+                    identifier_c IN0_param_name("IN0");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&IN0_param_name);
                     symbol_c *IN0_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27647,9 +27647,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     {
                 
                         {
-                            identifier_c param_name("IN1");
+                            identifier_c IN1_param_name("IN1");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
                             symbol_c *IN1_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -27708,9 +27708,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27763,9 +27763,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27818,9 +27818,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN");
+                    identifier_c IN_param_name("IN");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
                     symbol_c *IN_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27835,9 +27835,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     {
                 
                         {
-                            identifier_c param_name("MX");
+                            identifier_c MX_param_name("MX");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *MX_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *MX_param_value = function_call_param_iterator.search_f(&MX_param_name);
                             symbol_c *MX_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -27890,9 +27890,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN0");
+                    identifier_c IN0_param_name("IN0");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&IN0_param_name);
                     symbol_c *IN0_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -27907,9 +27907,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     {
                 
                         {
-                            identifier_c param_name("IN1");
+                            identifier_c IN1_param_name("IN1");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
                             symbol_c *IN1_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -27968,9 +27968,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28017,9 +28017,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28066,9 +28066,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28115,9 +28115,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28164,9 +28164,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28213,9 +28213,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28288,9 +28288,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28337,9 +28337,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28386,9 +28386,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28403,9 +28403,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            identifier_c P_param_name("P");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -28458,9 +28458,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28489,9 +28489,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28538,9 +28538,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28555,9 +28555,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            identifier_c P_param_name("P");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -28610,9 +28610,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28627,9 +28627,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            identifier_c P_param_name("P");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -28682,9 +28682,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -28699,9 +28699,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     {
                 
                         {
-                            identifier_c param_name("L");
+                            identifier_c L_param_name("L");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                             symbol_c *L_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -28716,9 +28716,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                             {
                         
                                 {
-                                    identifier_c param_name("P");
+                                    identifier_c P_param_name("P");
                                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                                    symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                                    symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                                     symbol_c *P_type_symbol = NULL;
                                     
                                     /* Get the value from a foo(<param_value>) style call */
@@ -28777,9 +28777,9 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */

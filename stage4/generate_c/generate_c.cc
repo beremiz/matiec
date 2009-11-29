@@ -122,6 +122,47 @@ extern void error_exit(const char *file_name, int line_no);
 
 #define SFC_STEP_ACTION_PREFIX "__SFC_"
 
+
+/* Variable declaration symbol for accessor macros */
+#define DECLARE_VAR "__DECLARE_VAR"
+#define DECLARE_GLOBAL "__DECLARE_GLOBAL"
+#define DECLARE_GLOBAL_LOCATION "__DECLARE_GLOBAL_LOCATION"
+#define DECLARE_GLOBAL_LOCATED "__DECLARE_GLOBAL_LOCATED"
+#define DECLARE_EXTERNAL "__DECLARE_EXTERNAL"
+#define DECLARE_LOCATED "__DECLARE_LOCATED"
+
+/* Variable declaration symbol for accessor macros */
+#define INIT_VAR "__INIT_VAR"
+#define INIT_GLOBAL "__INIT_GLOBAL"
+#define INIT_GLOBAL_LOCATED "__INIT_GLOBAL_LOCATED"
+#define INIT_EXTERNAL "__INIT_EXTERNAL"
+#define INIT_LOCATED "__INIT_LOCATED"
+#define INIT_LOCATED_VALUE "__INIT_LOCATED_VALUE"
+
+
+/* Variable getter symbol for accessor macros */
+#define GET_VAR "__GET_VAR"
+#define GET_EXTERNAL "__GET_EXTERNAL"
+#define GET_LOCATED "__GET_LOCATED"
+#define GET_VAR_BY_REF "__GET_VAR_BY_REF"
+#define GET_EXTERNAL_BY_REF "__GET_EXTERNAL_BY_REF"
+#define GET_LOCATED_BY_REF "__GET_LOCATED_BY_REF"
+
+/* Variable setter symbol for accessor macros */
+#define SET_VAR "__SET_VAR"
+#define SET_EXTERNAL "__SET_EXTERNAL"
+#define SET_LOCATED "__SET_LOCATED"
+
+
+/* Generate a name for a temporary variable.
+ * Each new name generated is appended a different number,
+ * starting off from 0.
+ * After calling reset(), the names will start off again from 0.
+ */
+#define VAR_LEADER "__"
+#define TEMP_VAR VAR_LEADER "TMP_"
+#define SOURCE_VAR VAR_LEADER "SRC_"
+
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
@@ -140,17 +181,9 @@ extern void error_exit(const char *file_name, int line_no);
 /***********************************************************************/
 /***********************************************************************/
 
-/* Generate a name for a temporary variable.
- * Each new name generated is appended a different number,
- * starting off from 0.
- * After calling reset(), the names will start off again from 0.
- */
-#define VAR_LEADER "__"
-#define TEMP_VAR VAR_LEADER "TMP_"
-#define SOURCE_VAR VAR_LEADER "SRC_"
-
 #include "generate_c_st.cc"
 #include "generate_c_il.cc"
+#include "generate_c_inlinefcall.cc"
 
 #include "generate_c.hh"
 
@@ -320,15 +353,16 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
 /***********************************************************************/
 /***********************************************************************/
 
-/* A helper class that knows how to generate code for both the IL and ST languages... */
+/* A helper class that knows how to generate code for the SFC, IL and ST languages... */
 class generate_c_SFC_IL_ST_c: public null_visitor_c {
   private:
     stage4out_c *s4o_ptr;
     symbol_c *scope;
+    symbol_c *fbname;
     const char *variable_prefix;
 
   public:
-    generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL);
+    generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL);
     /*********************************************/
     /* B.1.6  Sequential function chart elements */
     /*********************************************/
@@ -366,27 +400,28 @@ class generate_c_SFC_IL_ST_c: public null_visitor_c {
 
 #include "generate_c_sfc.cc"
 
-generate_c_SFC_IL_ST_c::generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix) {
+generate_c_SFC_IL_ST_c::generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix) {
   if (NULL == scope) ERROR;
   this->s4o_ptr = s4o_ptr;
   this->scope = scope;
+  this->fbname = name;
   this->variable_prefix = variable_prefix;
 }
 
 void *generate_c_SFC_IL_ST_c::visit(sequential_function_chart_c * symbol) {
-  generate_c_sfc_c generate_c_sfc(s4o_ptr, scope, variable_prefix);
+  generate_c_sfc_c generate_c_sfc(s4o_ptr, fbname, scope, variable_prefix);
   generate_c_sfc.generate(symbol);
   return NULL;
 }
 
 void *generate_c_SFC_IL_ST_c::visit(instruction_list_c *symbol) {
-  generate_c_il_c generate_c_il(s4o_ptr, scope, variable_prefix);
+  generate_c_il_c generate_c_il(s4o_ptr, fbname, scope, variable_prefix);
   generate_c_il.generate(symbol);
   return NULL;
 }
 
 void *generate_c_SFC_IL_ST_c::visit(statement_list_c *symbol) {
-  generate_c_st_c generate_c_st(s4o_ptr, scope, variable_prefix);
+  generate_c_st_c generate_c_st(s4o_ptr, fbname, scope, variable_prefix);
   generate_c_st.generate(symbol);
   return NULL;
 }
@@ -567,7 +602,7 @@ void *visit(function_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "}\n");
 
   /* (C) Function body */
-  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol);
+  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->derived_function_name, symbol);
   symbol->function_body->accept(generate_c_code);
   
   vardecl = new generate_c_vardecl_c(&s4o,
@@ -649,6 +684,10 @@ void *visit(function_block_declaration_c *symbol) {
   s4o_incl.print(";\n\n");
   delete typedecl;
 
+  /* (A.6) Function Block inline function declaration for function invocation */
+  generate_c_inlinefcall_c inline_decl(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
+  symbol->fblock_body->accept(inline_decl);
+
   /* (B) Constructor */
   /* (B.1) Constructor name... */
   s4o.print(s4o.indent_spaces + "void ");
@@ -713,20 +752,26 @@ void *visit(function_block_declaration_c *symbol) {
 
   s4o.print(s4o.indent_spaces + "// Control execution\n");
   s4o.print(s4o.indent_spaces + "if (!");
+  s4o.print(GET_VAR);
+  s4o.print("(");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print("->EN) {\n");
+  s4o.print("->EN)) {\n");
   s4o.indent_right();
   s4o.print(s4o.indent_spaces);
+  s4o.print(SET_VAR);
+  s4o.print("(");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print("->ENO = __BOOL_LITERAL(FALSE);\n");
+  s4o.print("->ENO,__BOOL_LITERAL(FALSE));\n");
   s4o.print(s4o.indent_spaces + "return;\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n");
   s4o.print(s4o.indent_spaces + "else {\n");
   s4o.indent_right();
   s4o.print(s4o.indent_spaces);
+  s4o.print(SET_VAR);
+  s4o.print("(");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print("->ENO = __BOOL_LITERAL(TRUE);\n");
+  s4o.print("->ENO,__BOOL_LITERAL(TRUE));\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n");
 
@@ -741,7 +786,7 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print("\n");
 
   /* (C.5) Function code */
-  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
+  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
   symbol->fblock_body->accept(generate_c_code);
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
@@ -827,6 +872,10 @@ void *visit(program_declaration_c *symbol) {
   s4o_incl.print(";\n\n");
   delete typedecl;
 
+  /* (A.6) Function Block inline function declaration for function invocation */
+  generate_c_inlinefcall_c inline_decl(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
+  symbol->function_block_body->accept(inline_decl);
+
   /* (B) Constructor */
   /* (B.1) Constructor name... */
   s4o.print(s4o.indent_spaces + "void ");
@@ -898,7 +947,7 @@ void *visit(program_declaration_c *symbol) {
   s4o.print("\n");
 
   /* (C.5) Function code */
-  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
+  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
   symbol->function_block_body->accept(generate_c_code);
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
@@ -1197,7 +1246,9 @@ END_RESOURCE
       s4o.print("\n\n");
       
       s4o.print("extern int common_ticktime__;\n\n");
-       
+
+      s4o.print("#include \"accessor.h\"\n\n");
+
       /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
         vardecl = new generate_c_vardecl_c(&s4o,
@@ -1567,7 +1618,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 0 - Programming Model */
 /***************************/
     void *visit(library_c *symbol) {
-      pous_incl_s4o.print("#ifndef __POUS_H\n#define __POUS_H\n\n");
+      pous_incl_s4o.print("#ifndef __POUS_H\n#define __POUS_H\n\n#include \"accessor.h\"\n\n");
       for(int i = 0; i < symbol->n; i++) {
         symbol->elements[i]->accept(*this);
       }

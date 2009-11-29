@@ -888,8 +888,14 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
           (wanted_varformat == localinit_vf)) {
         for(int i = 0; i < list->n; i++) {
           s4o.print(s4o.indent_spaces);
-          if (wanted_varformat != init_vf) {
-            this->current_var_type_symbol->accept(*this);
+          if (wanted_varformat == local_vf) {
+        	s4o.print(DECLARE_VAR);
+        	s4o.print("(");
+        	this->current_var_type_symbol->accept(*this);
+            s4o.print(",");
+          }
+          else if (wanted_varformat == localinit_vf) {
+        	this->current_var_type_symbol->accept(*this);
             s4o.print(" ");
           }
           print_variable_prefix();
@@ -899,8 +905,10 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
               s4o.print(" = ");
               this->current_var_init_symbol->accept(*this);
             }
+            s4o.print(";\n");
           }
-          s4o.print(";\n");
+          else
+        	s4o.print(")\n");
         }
       }
 
@@ -956,11 +964,13 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
           }
           else if (this->current_var_init_symbol != NULL) {
             s4o.print(nv->get());
+            s4o.print(INIT_VAR);
+            s4o.print("(");
             this->print_variable_prefix();
             list->elements[i]->accept(*this);
-            s4o.print(" = ");
+            s4o.print(",");
             this->current_var_init_symbol->accept(*this);
-            s4o.print(";");
+            s4o.print(")");
           }
         }
       }
@@ -1141,29 +1151,38 @@ void *visit(en_param_declaration_c *symbol) {
         (wanted_varformat == init_vf) ||
         (wanted_varformat == localinit_vf)) {
       s4o.print(s4o.indent_spaces);
-      if (wanted_varformat != init_vf) {
+      if (wanted_varformat == local_vf) {
+    	s4o.print(DECLARE_VAR);
+    	s4o.print("(");
+    	symbol->type->accept(*this);
+        s4o.print(",");
+      }
+      else if (wanted_varformat == localinit_vf) {
         symbol->type->accept(*this);
         s4o.print(" ");
       }
       print_variable_prefix();
       symbol->name->accept(*this);
-      if (wanted_varformat != local_vf) {
+      if (wanted_varformat == local_vf)
+    	s4o.print(")\n");
+      else {
         s4o.print(" = ");
         symbol->value->accept(*this);
-        s4o.print(";");
+        s4o.print(";\n");
       }
-      s4o.print(";\n");
     }
 
     if (wanted_varformat == constructorinit_vf) {
       /* NOTE: I (Mario) think this is dead code - never gets executed. Must confirm it before deleting it... */
       s4o.print(nv->get());
+      s4o.print(INIT_VAR);
+      s4o.print("(");
       this->print_variable_prefix();
       // s4o.print("EN = __BOOL_LITERAL(TRUE);");
       symbol->name->accept(*this);
-      s4o.print(" = ");
+      s4o.print(",");
       symbol->value->accept(*this);
-      s4o.print(";");
+      s4o.print(")");
     }
   }
   return NULL;
@@ -1189,16 +1208,22 @@ void *visit(eno_param_declaration_c *symbol) {
         (wanted_varformat == init_vf) ||
         (wanted_varformat == localinit_vf)) {
       s4o.print(s4o.indent_spaces);
-      if (wanted_varformat != init_vf) {
+      if (wanted_varformat == local_vf) {
+    	s4o.print(DECLARE_VAR);
+    	s4o.print("(");
+        symbol->type->accept(*this);
+        s4o.print(",");
+      }
+      else if (wanted_varformat == localinit_vf) {
         symbol->type->accept(*this);
         s4o.print(" ");
       }
       print_variable_prefix();
       symbol->name->accept(*this);
-      if (wanted_varformat != local_vf) {
-        s4o.print(" = __BOOL_LITERAL(TRUE);");
-      }
-      s4o.print(";\n");
+      if (wanted_varformat == local_vf)
+    	s4o.print(")\n");
+      else
+    	s4o.print(" = __BOOL_LITERAL(TRUE);\n");
     }
 
     if (wanted_varformat == foutputassign_vf) {
@@ -1218,10 +1243,12 @@ void *visit(eno_param_declaration_c *symbol) {
     if (wanted_varformat == constructorinit_vf) {
       /* NOTE: I (Mario) think this is dead code - never gets executed. Must confirm it before deleting it... */
       s4o.print(nv->get());
+      s4o.print(INIT_VAR);
+      s4o.print("(");
       this->print_variable_prefix();
       // s4o.print("ENO = __BOOL_LITERAL(TRUE);");
       symbol->name->accept(*this);
-      s4o.print(" = __BOOL_LITERAL(TRUE);");
+      s4o.print(",__BOOL_LITERAL(TRUE))");
     }
   }
   return NULL;
@@ -1490,40 +1517,43 @@ void *visit(located_var_decl_c *symbol) {
   switch(wanted_varformat) {
     case local_vf:
       s4o.print(s4o.indent_spaces);
+      s4o.print(DECLARE_LOCATED);
+      s4o.print("(");
       this->current_var_type_symbol->accept(*this);
-      s4o.print(" *");
+      s4o.print(",");
       if (symbol->variable_name != NULL)
         symbol->variable_name->accept(*this);
       else
         symbol->location->accept(*this);
-      s4o.print(";\n");
+      s4o.print(")\n");
       break;
 
     case constructorinit_vf:
       s4o.print(nv->get());
-      s4o.print("{extern ");
+      s4o.print(INIT_LOCATED);
+      s4o.print("(");
       this->current_var_type_symbol->accept(*this);
-      s4o.print("* ");
+      s4o.print(",");
       symbol->location->accept(*this);
-      s4o.print("; ");
-      print_variable_prefix();
+      s4o.print(",");
       if (symbol->variable_name != NULL)
         symbol->variable_name->accept(*this);
       else
         symbol->location->accept(*this);
-      s4o.print(" = ");
-      symbol->location->accept(*this);
+      s4o.print(",");
+      print_variable_prefix();
+      s4o.print(")\n");
       if (this->current_var_init_symbol != NULL) {
-        s4o.print("; *");
-        print_variable_prefix();
-        if (symbol->variable_name != NULL)
+    	s4o.print(INIT_LOCATED_VALUE);
+    	s4o.print("(");
+    	if (symbol->variable_name != NULL)
           symbol->variable_name->accept(*this);
         else
           symbol->location->accept(*this);
-        s4o.print(" = ");
+    	s4o.print(",");
         this->current_var_init_symbol->accept(*this);
+        s4o.print(")\n");
       }
-      s4o.print(";}");
       break;
 
     case globalinit_vf:
@@ -1623,29 +1653,25 @@ void *visit(external_declaration_c *symbol) {
     case local_vf:
     case localinit_vf:
       s4o.print(s4o.indent_spaces);
+      s4o.print(DECLARE_EXTERNAL);
+      s4o.print("(");
       this->current_var_type_symbol->accept(*this);
-      s4o.print(" *");
+      s4o.print(",");
       symbol->global_var_name->accept(*this);
-      if ((wanted_varformat == localinit_vf) &&
-          (this->current_var_init_symbol != NULL)) {
-        s4o.print(" = ");
-        this->current_var_init_symbol->accept(*this);
-      }
-      s4o.print(";\n");
+      s4o.print(")\n");
       break;
 
     case constructorinit_vf:
       s4o.print(nv->get());
-      s4o.print("{extern ");
+      s4o.print(INIT_EXTERNAL);
+      s4o.print("(");
       this->current_var_type_symbol->accept(*this);
-      s4o.print(" *");
+      s4o.print(",");
       symbol->global_var_name->accept(*this);
-      s4o.print("; ");
+      s4o.print(",");
       print_variable_prefix();
       symbol->global_var_name->accept(*this);
-      s4o.print(" = ");
-      symbol->global_var_name->accept(*this);
-      s4o.print(";}");
+      s4o.print(")");
       break;
 
     case finterface_vf:
@@ -1738,53 +1764,56 @@ void *visit(global_var_spec_c *symbol) {
   /* now to produce the c equivalent... */
   switch(wanted_varformat) {
     case local_vf:
-      s4o.print("extern ");
+      s4o.print(s4o.indent_spaces);
+      s4o.print(DECLARE_GLOBAL_LOCATION);
+      s4o.print("(");
       this->current_var_type_symbol->accept(*this);
-      s4o.print("* ");
+      s4o.print(",");
       symbol->location->accept(*this);
-      s4o.print(";\n");
+      s4o.print(")\n");
       if (symbol->global_var_name != NULL) {
         s4o.print(s4o.indent_spaces);
+        s4o.print(DECLARE_GLOBAL_LOCATED);
+        s4o.print("(");
         this->current_var_type_symbol->accept(*this);
-        s4o.print(" *");
+        s4o.print(",");
         if (this->resource_name != NULL) {
             this->resource_name->accept(*this);
-            s4o.print("__");
         }
+        s4o.print(",");
         symbol->global_var_name->accept(*this);
-        s4o.print(";\n");
-        if (this->resource_name != NULL) {
-            s4o.print(s4o.indent_spaces);
-            s4o.print("#define ");
-            symbol->global_var_name->accept(*this);
-            s4o.print(" ");
-            this->resource_name->accept(*this);
-            s4o.print("__");
-            symbol->global_var_name->accept(*this);
-            s4o.print("\n");
-        }
+        s4o.print(")\n");
       }
       break;
 
     case constructorinit_vf:
-      s4o.print(nv->get());
-      
       if (symbol->global_var_name != NULL) {
+    	s4o.print(nv->get());
+    	s4o.print(s4o.indent_spaces);
+    	s4o.print(INIT_GLOBAL_LOCATED);
+    	s4o.print("(");
+    	if (this->resource_name != NULL) {
+    	  this->resource_name->accept(*this);
+    	}
+        s4o.print(",");
         symbol->global_var_name->accept(*this);
-      	s4o.print(" = ");
+      	s4o.print(",");
       	symbol->location->accept(*this);
-      	s4o.print(";");
-        s4o.print(nv->get());
-      	s4o.print("*");
-        symbol->global_var_name->accept(*this);
+      	s4o.print(")");
       }
-      else
-        symbol->location->accept(*this);
-      s4o.print(" = ");
       if (this->current_var_init_symbol != NULL) {
-        this->current_var_init_symbol->accept(*this);
+	    s4o.print(nv->get());
+	    s4o.print(s4o.indent_spaces);
+	    s4o.print(INIT_GLOBAL);
+	    s4o.print("(");
+	    if (symbol->global_var_name != NULL)
+		  symbol->global_var_name->accept(*this);
+	    else
+		  symbol->location->accept(*this);
+	    s4o.print(",");
+	    this->current_var_init_symbol->accept(*this);
+	    s4o.print(")");
       }
-      s4o.print(";");
       break;
 
     default:
@@ -1817,33 +1846,16 @@ void *visit(global_var_list_c *symbol) {
     case local_vf:
     case localinit_vf:
       for(int i = 0; i < list->n; i++) {
-        s4o.print(s4o.indent_spaces);
+    	s4o.print(s4o.indent_spaces);
+    	s4o.print(DECLARE_GLOBAL);
+    	s4o.print("(");
         this->current_var_type_symbol->accept(*this);
-        s4o.print(" ");
+        s4o.print(",");
         if(this->resource_name != NULL)
             this->resource_name->accept(*this);
-        s4o.print("__");
+        s4o.print(",");
         list->elements[i]->accept(*this);
-        s4o.print(";\n");
-        if(this->resource_name != NULL)
-            s4o.print("static ");
-        this->current_var_type_symbol->accept(*this);
-        s4o.print(" *");
-        list->elements[i]->accept(*this);
-        s4o.print(" = &");
-        if(this->resource_name != NULL)
-            this->resource_name->accept(*this);
-        s4o.print("__");
-        list->elements[i]->accept(*this);
-#if 0
-        if (wanted_varformat == localinit_vf) {
-          if (this->current_var_init_symbol != NULL) {
-            s4o.print(" = ");
-            this->current_var_init_symbol->accept(*this);
-          }
-        }
-#endif
-        s4o.print(";\n");
+        s4o.print(")\n");
       }
       break;
 
@@ -1852,11 +1864,12 @@ void *visit(global_var_list_c *symbol) {
         for(int i = 0; i < list->n; i++) {
           s4o.print(nv->get());
 
-          s4o.print("*");
+          s4o.print(INIT_GLOBAL);
+          s4o.print("(");
           list->elements[i]->accept(*this);
-          s4o.print(" = ");
+          s4o.print(",");
           this->current_var_init_symbol->accept(*this);
-          s4o.print(";");
+          s4o.print(")");
 #if 0
  	  /* The following code would be for globalinit_vf !!
 	   * But it is not currently required...

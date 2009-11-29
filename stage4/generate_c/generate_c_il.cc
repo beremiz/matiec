@@ -139,6 +139,13 @@ class il_default_variable_c: public symbol_c {
 
 class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor_c {
 
+  public:
+    typedef enum {
+      expression_vg,
+      assignment_vg,
+      fparam_output_vg
+    } variablegeneration_t;
+
   private:
     /* When compiling il code, it becomes necessary to determine the
      * data type of il operands. To do this, we must first find the
@@ -237,10 +244,13 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
 
     search_base_type_c search_base_type;
 
-    bool current_param_is_pointer;
+    int fcall_number;
+    symbol_c *fbname;
+
+    variablegeneration_t wanted_variablegeneration;
 
   public:
-    generate_c_il_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
+    generate_c_il_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_c_typedecl_c(s4o_ptr),
       default_variable_name(IL_DEFVAR, NULL),
       default_variable_back_name(IL_DEFVAR_BACK, NULL)
@@ -251,7 +261,9 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       current_operand = NULL;
       current_operand_type = NULL;
       il_default_variable_init_value = NULL;
-      current_param_is_pointer = false;
+      fcall_number = 0;
+      fbname = name;
+      wanted_variablegeneration = expression_vg;
       this->set_variable_prefix(variable_prefix);
     }
 
@@ -423,7 +435,12 @@ void *visit(il_default_variable_c *symbol) {
   symbol->var_name->accept(*this);
   if (NULL != symbol->current_type) {
     s4o.print(".");
-    symbol->current_type->accept(*this);
+    if (search_expression_type->is_literal_integer_type(symbol->current_type))
+      this->lint_type.accept(*this);
+    else if (search_expression_type->is_literal_real_type(this->default_variable_name.current_type))
+      this->lreal_type.accept(*this);
+    else
+      symbol->current_type->accept(*this);
     s4o.print("var");
   }
   return NULL;
@@ -452,20 +469,75 @@ TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
+/* B 1.4 - Variables */
+/*********************/
 void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-  if (!current_param_is_pointer && (vartype == search_var_instance_decl_c::external_vt || vartype == search_var_instance_decl_c::located_vt)) {
-    s4o.print("*(");
-    generate_c_base_c::visit(symbol);
-    s4o.print(")");
-  }
-  else if (current_param_is_pointer && vartype != search_var_instance_decl_c::external_vt && vartype != search_var_instance_decl_c::located_vt) {
-    s4o.print("&(");
-    generate_c_base_c::visit(symbol);
-    s4o.print(")");
+  if (this->is_variable_prefix_null()) {
+    if (wanted_variablegeneration == fparam_output_vg) {
+      if (vartype == search_var_instance_decl_c::external_vt) {
+    	s4o.print(GET_EXTERNAL);
+    	s4o.print("(");
+    	symbol->var_name->accept(*this);
+      }
+      else {
+    	s4o.print("&(");
+        generate_c_base_c::visit(symbol);
+      }
+      s4o.print(")");
+    }
+    else {
+      if (vartype == search_var_instance_decl_c::external_vt) {
+        s4o.print(GET_EXTERNAL);
+        s4o.print("(");
+        symbol->var_name->accept(*this);
+        s4o.print(")");
+      }
+      else
+    	generate_c_base_c::visit(symbol);
+    }
   }
   else {
-    generate_c_base_c::visit(symbol);
+    switch (wanted_variablegeneration) {
+      case expression_vg:
+        if (vartype == search_var_instance_decl_c::external_vt) {
+    	  s4o.print(GET_EXTERNAL);
+    	  s4o.print("(");
+          symbol->var_name->accept(*this);
+        }
+        else {
+          if (vartype == search_var_instance_decl_c::located_vt)
+            s4o.print(GET_LOCATED);
+          else
+            s4o.print(GET_VAR);
+          s4o.print("(");
+          generate_c_base_c::visit(symbol);
+        }
+        s4o.print(")");
+		break;
+      case fparam_output_vg:
+        if (vartype == search_var_instance_decl_c::external_vt) {
+          s4o.print(GET_EXTERNAL_BY_REF);
+          s4o.print("(");
+          symbol->var_name->accept(*this);
+        }
+        else {
+          if (vartype == search_var_instance_decl_c::located_vt)
+            s4o.print(GET_LOCATED_BY_REF);
+          else
+            s4o.print(GET_VAR_BY_REF);
+          s4o.print("(");
+          generate_c_base_c::visit(symbol);
+        }
+        s4o.print(")");
+        break;
+      default:
+        if (vartype == search_var_instance_decl_c::external_vt)
+          symbol->var_name->accept(*this);
+        else
+          generate_c_base_c::visit(symbol);
+        break;
+	}
   }
   return NULL;
 }
@@ -478,14 +550,29 @@ void *visit(direct_variable_c *symbol) {
   TRACE("direct_variable_c");
   /* Do not use print_token() as it will change everything into uppercase */
   if (strlen(symbol->value) == 0) ERROR;
-  if (!current_param_is_pointer) {
-    s4o.print("*(");
+  if (this->is_variable_prefix_null()) {
+    if (wanted_variablegeneration != fparam_output_vg)
+	  s4o.print("*(");
+  }
+  else {
+    switch (wanted_variablegeneration) {
+      case expression_vg:
+  	    s4o.print(GET_LOCATED);
+  	    s4o.print("(");
+  	    break;
+      case fparam_output_vg:
+        s4o.print(GET_LOCATED_BY_REF);
+        s4o.print("(");
+        break;
+      default:
+        break;
+    }
   }
   this->print_variable_prefix();
   s4o.printlocation(symbol->value + 1);
-  if (!current_param_is_pointer) {
+  if ((this->is_variable_prefix_null() && wanted_variablegeneration != fparam_output_vg) ||
+	  wanted_variablegeneration != assignment_vg)
     s4o.print(")");
-  }
   return NULL;
 }
 
@@ -597,8 +684,7 @@ void *visit(il_function_call_c *symbol) {
   symbol_c* function_type_prefix = NULL;
   symbol_c* function_name = NULL;
   symbol_c* function_type_suffix = NULL;
-  std::list<FUNCTION_PARAM> param_list;
-  FUNCTION_PARAM *param;
+  DECLARE_PARAM_LIST()
   
   symbol_c *param_data_type = default_variable_name.current_type;
   symbol_c *return_data_type = NULL;
@@ -612,13 +698,16 @@ void *visit(il_function_call_c *symbol) {
     
     function_call_param_iterator_c function_call_param_iterator(symbol);
     
+    identifier_c en_param_name("EN");
     /* Add the value from EN param */
-    ADD_PARAM_LIST((symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c())), 
+    ADD_PARAM_LIST(&en_param_name,
+                   (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c())),
                    (symbol_c*)(new bool_type_name_c()), 
                    function_param_iterator_c::direction_in)
     
+    identifier_c eno_param_name("ENO");
     /* Add the value from ENO param */
-    ADD_PARAM_LIST(NULL, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
+    ADD_PARAM_LIST(&eno_param_name, NULL, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
     
     int nb_param = 1;
     if (symbol->il_operand_list != NULL)
@@ -677,10 +766,24 @@ void *visit(il_function_call_c *symbol) {
         param_value = fp_iterator.default_value();
       }
       
-      ADD_PARAM_LIST(param_value, param_type, fp_iterator.param_direction())
+      ADD_PARAM_LIST(param_name, param_value, param_type, fp_iterator.param_direction())
     } /* for(...) */
   }
   
+  bool has_output_params = false;
+
+  if (!this->is_variable_prefix_null()) {
+    PARAM_LIST_ITERATOR() {
+	  if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
+		   PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
+		  PARAM_VALUE != NULL) {
+	    if (!has_output_params) {
+		  has_output_params = true;
+		}
+	  }
+    }
+  }
+
   default_variable_name.current_type = return_data_type;
   this->default_variable_name.accept(*this);
   default_variable_name.current_type = param_data_type;
@@ -691,27 +794,38 @@ void *visit(il_function_call_c *symbol) {
     function_type_prefix->accept(*this);
     s4o.print(")");
   }
-  if (function_name != NULL)
+  if (has_output_params) {
+  	fcall_number++;
+  	s4o.print("__");
+    fbname->accept(*this);
+    s4o.print("_");
     function_name->accept(*this);
-  if (function_type_suffix != NULL)
-    function_type_suffix->accept(*this);
+    s4o.print_integer(fcall_number);
+  }
+  else {
+    if (function_name != NULL)
+	  function_name->accept(*this);
+    if (function_type_suffix != NULL)
+	  function_type_suffix->accept(*this);
+  }
   s4o.print("(");
   s4o.indent_right();
   
-  std::list<FUNCTION_PARAM>::iterator pt;
-  for(pt = param_list.begin(); pt != param_list.end(); pt++) {
-    if (pt != param_list.begin())
-      s4o.print(",\n"+s4o.indent_spaces);
-    symbol_c *param_value = pt->param_value;
-    symbol_c *param_type = pt->param_type;
+  int nb_param = 0;
+  PARAM_LIST_ITERATOR() {
+    symbol_c *param_value = PARAM_VALUE;
+    symbol_c *param_type = PARAM_TYPE;
     
-    switch (pt->param_direction) {
+    switch (PARAM_DIRECTION) {
       case function_param_iterator_c::direction_in:
+    	if (nb_param > 0)
+    	  s4o.print(",\n"+s4o.indent_spaces);
         if (param_value == NULL) {
           /* If not, get the default value of this variable's type */
           param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
         }
         if (param_value == NULL) ERROR;
+        s4o.print("(");
         if (search_expression_type->is_literal_integer_type(param_type) ||
 			search_expression_type->is_literal_real_type(param_type)) {
 			if (function_type_suffix == NULL) ERROR;
@@ -719,24 +833,24 @@ void *visit(il_function_call_c *symbol) {
 		}
 		else
 			param_type->accept(*this);
-		if (search_base_type.type_is_subrange(param_type)) {
-          s4o.print("__CHECK_");
-          param_type->accept(*this);
-          s4o.print("(");
-        }
-        param_value->accept(*this);
-        if (search_base_type.type_is_subrange(param_type))
-          s4o.print(")");
+        s4o.print(")");
+        print_check_function(param_type, param_value);
+        nb_param++;
         break;
       case function_param_iterator_c::direction_out:
       case function_param_iterator_c::direction_inout:
-        current_param_is_pointer = true;
-        if (param_value == NULL) {
-          s4o.print("NULL");
-        } else {
-          param_value->accept(*this);
-        }
-        current_param_is_pointer = false;
+    	if (!has_output_params) {
+          if (nb_param > 0)
+    		s4o.print(",\n"+s4o.indent_spaces);
+		  if (param_value == NULL) {
+		    s4o.print("NULL");
+		  } else {
+		    wanted_variablegeneration = fparam_output_vg;
+		    param_value->accept(*this);
+		    wanted_variablegeneration = expression_vg;
+		  }
+		  nb_param++;
+    	}
         break;
       case function_param_iterator_c::direction_extref:
         /* TODO! */
@@ -744,10 +858,18 @@ void *visit(il_function_call_c *symbol) {
         break;
     } /* switch */
   }
+  if (has_output_params) {
+    if (nb_param > 0)
+	  s4o.print(",\n"+s4o.indent_spaces);
+    s4o.print(FB_FUNCTION_PARAM);
+  }
   
   s4o.print(")");
   /* the data type returned by the function, and stored in the il default variable... */
   default_variable_name.current_type = return_data_type;
+
+  CLEAR_PARAM_LIST()
+
   return NULL;
 }
 
@@ -856,17 +978,19 @@ void *visit(il_fb_call_c *symbol) {
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_in) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
-        symbol->fb_name->accept(*this);
+    	if (!this->is_variable_prefix_null()) {
+    	  s4o.print(SET_VAR);
+    	  s4o.print("(");
+    	}
+    	symbol->fb_name->accept(*this);
         s4o.print(".");
         param_name->accept(*this);
-        s4o.print(" = ");
-        if (search_base_type.type_is_subrange(param_type)) {
-          s4o.print("__CHECK_");
-          param_type->accept(*this);
-          s4o.print("(");
-        }
-        param_value->accept(*this);
-        if (search_base_type.type_is_subrange(param_type))
+        if (this->is_variable_prefix_null())
+          s4o.print(" = ");
+        else
+          s4o.print(",");
+        print_check_function(param_type, param_value);
+        if (!this->is_variable_prefix_null())
           s4o.print(")");
         s4o.print(";\n" + s4o.indent_spaces);
       }
@@ -899,19 +1023,29 @@ void *visit(il_fb_call_c *symbol) {
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
         symbol_c *param_type = search_varfb_instance_type->get_type(param_value, false);
+        unsigned int vartype = search_varfb_instance_type->get_vartype(param_value);
 
-        s4o.print(";\n"+ s4o.indent_spaces);
-        param_value->accept(*this);
-        s4o.print(" = ");
-        if (search_base_type.type_is_subrange(param_type)) {
-          s4o.print("__CHECK_");
-          param_type->accept(*this);
-          s4o.print("(");
+        if (!this->is_variable_prefix_null()) {
+		  s4o.print(";\n"+ s4o.indent_spaces);
+		  if (vartype == search_var_instance_decl_c::external_vt)
+		    s4o.print(SET_EXTERNAL);
+		  else if (vartype == search_var_instance_decl_c::located_vt)
+		    s4o.print(SET_LOCATED);
+		  else
+		    s4o.print(SET_VAR);
+		  s4o.print("(");
+
+		  wanted_variablegeneration = assignment_vg;
+		  param_value->accept(*this);
+		  wanted_variablegeneration = expression_vg;
+		  s4o.print(",");
         }
-        symbol->fb_name->accept(*this);
-        s4o.print(".");
-        param_name->accept(*this);
-        if (search_base_type.type_is_subrange(param_type))
+        else {
+          param_value->accept(*this);
+          s4o.print(" = ");
+        }
+        print_check_function(param_type, param_name, symbol->fb_name);
+        if (!this->is_variable_prefix_null())
           s4o.print(")");
       }
   } /* for(...) */
@@ -934,8 +1068,7 @@ void *visit(il_formal_funct_call_c *symbol) {
   symbol_c* function_type_prefix = NULL;
   symbol_c* function_name = NULL;
   symbol_c* function_type_suffix = NULL;
-  std::list<FUNCTION_PARAM> param_list;
-  FUNCTION_PARAM *param;
+  DECLARE_PARAM_LIST()
 
   symbol_c *return_data_type = NULL;
 
@@ -959,14 +1092,14 @@ void *visit(il_formal_funct_call_c *symbol) {
       EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
     else
       nb_param --;
-    ADD_PARAM_LIST(EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
+    ADD_PARAM_LIST(&en_param_name, EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
     
     identifier_c eno_param_name("EN0");
     /* Get the value from ENO param */
     symbol_c *ENO_param_value = function_call_param_iterator.search_f(&eno_param_name);
     if (ENO_param_value != NULL)
       nb_param --;
-    ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
+    ADD_PARAM_LIST(&eno_param_name, ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
     
     #include "st_code_gen.c"
     
@@ -1016,10 +1149,24 @@ void *visit(il_formal_funct_call_c *symbol) {
         param_value = fp_iterator.default_value();
       }
       
-      ADD_PARAM_LIST(param_value, param_type, fp_iterator.param_direction())
+      ADD_PARAM_LIST(param_name, param_value, param_type, fp_iterator.param_direction())
     }
   }
   
+  bool has_output_params = false;
+
+  if (!this->is_variable_prefix_null()) {
+    PARAM_LIST_ITERATOR() {
+	  if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
+		   PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
+		  PARAM_VALUE != NULL) {
+	    if (!has_output_params) {
+		  has_output_params = true;
+		}
+	  }
+    }
+  }
+
   default_variable_name.current_type = return_data_type;
   this->default_variable_name.accept(*this);
   s4o.print(" = ");
@@ -1029,27 +1176,38 @@ void *visit(il_formal_funct_call_c *symbol) {
     function_type_prefix->accept(*this);
     s4o.print(")");
   }
-  if (function_name != NULL)
+  if (has_output_params) {
+	fcall_number++;
+	s4o.print("__");
+    fbname->accept(*this);
+    s4o.print("_");
     function_name->accept(*this);
-  if (function_type_suffix != NULL)
-    function_type_suffix->accept(*this);
+    s4o.print_integer(fcall_number);
+  }
+  else {
+    if (function_name != NULL)
+      function_name->accept(*this);
+    if (function_type_suffix != NULL)
+      function_type_suffix->accept(*this);
+  }
   s4o.print("(");
   s4o.indent_right();
   
-  std::list<FUNCTION_PARAM>::iterator pt;
-  for(pt = param_list.begin(); pt != param_list.end(); pt++) {
-    if (pt != param_list.begin())
-      s4o.print(",\n"+s4o.indent_spaces);
-    symbol_c *param_value = pt->param_value;
-    symbol_c *param_type = pt->param_type;
+  int nb_param = 0;
+  PARAM_LIST_ITERATOR() {
+	symbol_c *param_value = PARAM_VALUE;
+    symbol_c *param_type = PARAM_TYPE;
     
-    switch (pt->param_direction) {
+    switch (PARAM_DIRECTION) {
       case function_param_iterator_c::direction_in:
-        if (param_value == NULL) {
+    	if (nb_param > 0)
+    	  s4o.print(",\n"+s4o.indent_spaces);
+    	if (param_value == NULL) {
           /* If not, get the default value of this variable's type */
           param_value = (symbol_c *)param_type->accept(*type_initial_value_c::instance());
         }
         if (param_value == NULL) ERROR;
+        s4o.print("(");
         if (search_expression_type->is_literal_integer_type(param_type) ||
 			search_expression_type->is_literal_real_type(param_type)) {
 			if (function_type_suffix == NULL) ERROR;
@@ -1057,35 +1215,42 @@ void *visit(il_formal_funct_call_c *symbol) {
 		}
 		else
 			param_type->accept(*this);
-		if (search_base_type.type_is_subrange(param_type)) {
-          s4o.print("__CHECK_");
-          param_type->accept(*this);
-          s4o.print("(");
-        }
-        param_value->accept(*this);
-        if (search_base_type.type_is_subrange(param_type))
-          s4o.print(")");
-	      break;
+        s4o.print(")");
+        print_check_function(param_type, param_value);
+		nb_param++;
+        break;
       case function_param_iterator_c::direction_out:
       case function_param_iterator_c::direction_inout:
-        current_param_is_pointer = true;
-        if (param_value == NULL) {
-          s4o.print("NULL");
-        } else {
-          param_value->accept(*this);
-        }
-        current_param_is_pointer = false;
-	      break;
+    	if (!has_output_params) {
+          if (nb_param > 0)
+        	s4o.print(",\n"+s4o.indent_spaces);
+		  if (param_value == NULL) {
+		    s4o.print("NULL");
+		  } else {
+		    wanted_variablegeneration = fparam_output_vg;
+		    param_value->accept(*this);
+		    wanted_variablegeneration = expression_vg;
+		  }
+    	}
+	    break;
       case function_param_iterator_c::direction_extref:
         /* TODO! */
         ERROR;
 	      break;
     } /* switch */
   } /* for(...) */
+  if (has_output_params) {
+    if (nb_param > 0)
+      s4o.print(",\n"+s4o.indent_spaces);
+    s4o.print(FB_FUNCTION_PARAM);
+  }
 
   // symbol->parameter_assignment->accept(*this);
   s4o.print(")");
   /* the data type returned by the function, and stored in the il default variable... */
+
+  CLEAR_PARAM_LIST()
+
   return NULL;
 }
 
@@ -1215,23 +1380,14 @@ void *visit(il_param_out_assignment_c *symbol) {ERROR; return NULL;} // should n
 
 void *visit(LD_operator_c *symbol)	{
   /* the data type resulting from this operation... */
-  if (search_expression_type->is_literal_integer_type(this->current_operand_type))
-	  this->default_variable_name.current_type = &(this->lint_type);
-  else if (search_expression_type->is_literal_real_type(this->current_operand_type))
-  	  this->default_variable_name.current_type = &(this->lreal_type);
-  else
-	  this->default_variable_name.current_type = this->current_operand_type;
-  XXX_operator(&(this->default_variable_name), " = ", this->current_operand);
   this->default_variable_name.current_type = this->current_operand_type;
+  XXX_operator(&(this->default_variable_name), " = ", this->current_operand);
   return NULL;
 }
 
 void *visit(LDN_operator_c *symbol)	{
   /* the data type resulting from this operation... */
-  if (search_expression_type->is_literal_integer_type(this->current_operand_type))
-    this->default_variable_name.current_type = &(this->lword_type);
-  else
-    this->default_variable_name.current_type = this->current_operand_type;
+  this->default_variable_name.current_type = this->current_operand_type;
   XXX_operator(&(this->default_variable_name),
                search_expression_type->is_bool_type(this->current_operand_type)?" = !":" = ~",
                this->current_operand);
@@ -1241,32 +1397,58 @@ void *visit(LDN_operator_c *symbol)	{
 void *visit(ST_operator_c *symbol)	{
   symbol_c *operand_type = search_varfb_instance_type->get_type(this->current_operand, false);
   
-  this->current_operand->accept(*this);
-  s4o.print(" = ");
-  if (search_base_type.type_is_subrange(operand_type)) {
-    s4o.print("__CHECK_");
-    operand_type->accept(*this);
+  if (!this->is_variable_prefix_null()) {
+    unsigned int vartype = search_varfb_instance_type->get_vartype(this->current_operand);
+    if (vartype == search_var_instance_decl_c::external_vt)
+      s4o.print(SET_EXTERNAL);
+    else if (vartype == search_var_instance_decl_c::located_vt)
+      s4o.print(SET_LOCATED);
+    else
+      s4o.print(SET_VAR);
     s4o.print("(");
+
+    wanted_variablegeneration = assignment_vg;
+    this->current_operand->accept(*this);
+    wanted_variablegeneration = expression_vg;
+
+    s4o.print(",");
+  }
+  else {
+    this->current_operand->accept(*this);
+    s4o.print(" = ");
   }
   if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type) ||
 	  search_expression_type->is_literal_real_type(this->default_variable_name.current_type))
     this->default_variable_name.current_type = this->current_operand_type;
-  this->default_variable_name.accept(*this);
-  if (search_base_type.type_is_subrange(operand_type))
+  print_check_function(operand_type, (symbol_c*)&(this->default_variable_name));
+  if (!this->is_variable_prefix_null())
     s4o.print(")");
-  /* the data type resulting from this operation is unchamged. */
+  /* the data type resulting from this operation is unchanged. */
   return NULL;
 }
 
 void *visit(STN_operator_c *symbol)	{
   symbol_c *operand_type = search_varfb_instance_type->get_type(this->current_operand, false);
   
-  this->current_operand->accept(*this);
-  s4o.print(" = ");
-  if (search_base_type.type_is_subrange(operand_type)) {
-    s4o.print("__CHECK_");
-    operand_type->accept(*this);
+  if (!this->is_variable_prefix_null()) {
+    unsigned int vartype = search_varfb_instance_type->get_vartype(this->current_operand);
+    if (vartype == search_var_instance_decl_c::external_vt)
+      s4o.print(SET_EXTERNAL);
+    else if (vartype == search_var_instance_decl_c::located_vt)
+      s4o.print(SET_LOCATED);
+    else
+	  s4o.print(SET_VAR);
     s4o.print("(");
+
+    wanted_variablegeneration = assignment_vg;
+    this->current_operand->accept(*this);
+    wanted_variablegeneration = expression_vg;
+
+    s4o.print(",");
+  }
+  else {
+    this->current_operand->accept(*this);
+    s4o.print(" = ");
   }
   if (search_expression_type->is_bool_type(this->current_operand_type))
     s4o.print("!");
@@ -1275,7 +1457,7 @@ void *visit(STN_operator_c *symbol)	{
   if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type))
 	this->default_variable_name.current_type = this->current_operand_type;
   this->default_variable_name.accept(*this);
-  if (search_base_type.type_is_subrange(operand_type))
+  if (!this->is_variable_prefix_null())
     s4o.print(")");
   /* the data type resulting from this operation is unchamged. */
   return NULL;

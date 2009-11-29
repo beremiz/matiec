@@ -79,7 +79,7 @@ typedef struct {
 #define __DATE_LITERAL(value) __literal(DATE,value,)
 #define __TOD_LITERAL(value) __literal(TOD,value,)
 #define __DT_LITERAL(value) __literal(DT,value,)
-#define __STRING_LITERAL(value) __literal(STRING,value,)
+#define __STRING_LITERAL(count,value) (STRING){count,value}
 #define __BYTE_LITERAL(value) __literal(BYTE,value,)
 #define __WORD_LITERAL(value) __literal(WORD,value,)
 #define __DWORD_LITERAL(value) __literal(DWORD,value,__32b_sufix)

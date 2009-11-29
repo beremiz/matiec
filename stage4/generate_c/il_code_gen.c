@@ -38,6 +38,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -51,7 +52,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -74,6 +75,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -87,7 +89,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -110,6 +112,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -123,7 +126,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -146,6 +149,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -159,7 +163,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -181,6 +185,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -194,7 +199,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -217,6 +222,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -230,7 +236,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -252,6 +258,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -265,7 +272,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -287,6 +294,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -300,7 +308,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -323,6 +331,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -336,7 +345,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -359,6 +368,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -372,7 +382,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -394,6 +404,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -407,7 +418,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -430,6 +441,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -443,7 +455,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -466,6 +478,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -479,7 +492,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -502,6 +515,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -515,7 +529,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -538,6 +552,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -551,7 +566,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -574,6 +589,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -587,7 +603,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -610,6 +626,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -623,7 +640,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -646,6 +663,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -659,7 +677,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -681,6 +699,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -694,7 +713,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -717,6 +736,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -730,7 +750,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -753,6 +773,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -766,7 +787,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -789,6 +810,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -802,7 +824,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -825,6 +847,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -838,7 +861,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -860,6 +883,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -873,7 +897,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -896,6 +920,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -909,7 +934,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -931,6 +956,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -944,7 +970,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -966,6 +992,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -979,7 +1006,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1002,6 +1029,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1015,7 +1043,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1038,6 +1066,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1051,7 +1080,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -1073,6 +1102,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1086,7 +1116,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1109,6 +1139,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1122,7 +1153,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1145,6 +1176,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1158,7 +1190,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1181,6 +1213,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1194,7 +1227,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1217,6 +1250,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1230,7 +1264,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1253,6 +1287,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1266,7 +1301,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1289,6 +1324,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1302,7 +1338,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1325,6 +1361,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1338,7 +1375,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -1360,6 +1397,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1373,7 +1411,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1396,6 +1434,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1409,7 +1448,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1432,6 +1471,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1445,7 +1485,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1468,6 +1508,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1481,7 +1522,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1504,6 +1545,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1517,7 +1559,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -1539,6 +1581,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1552,7 +1595,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1575,6 +1618,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1588,7 +1632,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -1610,6 +1654,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1623,7 +1668,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -1645,6 +1690,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1658,7 +1704,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1681,6 +1727,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1694,7 +1741,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1717,6 +1764,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1730,7 +1778,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -1752,6 +1800,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1765,7 +1814,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1788,6 +1837,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1801,7 +1851,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1824,6 +1874,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1837,7 +1888,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1860,6 +1911,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1873,7 +1925,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1896,6 +1948,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1909,7 +1962,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1932,6 +1985,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1945,7 +1999,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -1968,6 +2022,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -1981,7 +2036,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2004,6 +2059,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2017,7 +2073,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2039,6 +2095,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2052,7 +2109,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2075,6 +2132,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2088,7 +2146,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2111,6 +2169,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2124,7 +2183,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2147,6 +2206,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2160,7 +2220,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2183,6 +2243,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2196,7 +2257,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2218,6 +2279,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2231,7 +2293,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2254,6 +2316,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2267,7 +2330,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2289,6 +2352,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2302,7 +2366,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2324,6 +2388,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2337,7 +2402,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2360,6 +2425,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2373,7 +2439,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2396,6 +2462,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2409,7 +2476,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2431,6 +2498,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2444,7 +2512,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2467,6 +2535,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2480,7 +2549,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2503,6 +2572,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2516,7 +2586,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2539,6 +2609,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2552,7 +2623,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2575,6 +2646,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2588,7 +2660,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2611,6 +2683,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2624,7 +2697,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2647,6 +2720,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2660,7 +2734,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2683,6 +2757,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2696,7 +2771,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2718,6 +2793,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2731,7 +2807,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -2754,6 +2830,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2767,7 +2844,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2789,6 +2866,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2802,7 +2880,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2824,6 +2902,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2837,7 +2916,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2859,6 +2938,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2872,7 +2952,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2894,6 +2974,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2907,7 +2988,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2929,6 +3010,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2942,7 +3024,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2964,6 +3046,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -2977,7 +3060,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -2999,6 +3082,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3012,7 +3096,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3034,6 +3118,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3047,7 +3132,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3069,6 +3154,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3082,7 +3168,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3104,6 +3190,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3117,7 +3204,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3139,6 +3226,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3152,7 +3240,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3174,6 +3262,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3187,7 +3276,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3209,6 +3298,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3222,7 +3312,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3244,6 +3334,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3257,7 +3348,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3279,6 +3370,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3292,7 +3384,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3315,6 +3407,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3328,7 +3421,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3351,6 +3444,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3364,7 +3458,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3387,6 +3481,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3400,7 +3495,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3423,6 +3518,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3436,7 +3532,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3458,6 +3554,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3471,7 +3568,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3493,6 +3590,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3506,7 +3604,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3528,6 +3626,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3541,7 +3640,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3564,6 +3663,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3577,7 +3677,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3600,6 +3700,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3613,7 +3714,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3635,6 +3736,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3648,7 +3750,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3671,6 +3773,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3684,7 +3787,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3707,6 +3810,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3720,7 +3824,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3743,6 +3847,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3756,7 +3861,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3779,6 +3884,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3792,7 +3898,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3815,6 +3921,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3828,7 +3935,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3851,6 +3958,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3864,7 +3972,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3887,6 +3995,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3900,7 +4009,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3922,6 +4031,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3935,7 +4045,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -3958,6 +4068,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -3971,7 +4082,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -3993,6 +4104,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4006,7 +4118,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4028,6 +4140,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4041,7 +4154,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4063,6 +4176,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4076,7 +4190,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4098,6 +4212,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4111,7 +4226,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4133,6 +4248,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4146,7 +4262,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4168,6 +4284,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4181,7 +4298,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4203,6 +4320,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4216,7 +4334,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4238,6 +4356,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4251,7 +4370,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4273,6 +4392,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4286,7 +4406,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4308,6 +4428,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4321,7 +4442,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4343,6 +4464,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4356,7 +4478,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4378,6 +4500,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4391,7 +4514,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4413,6 +4536,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4426,7 +4550,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4448,6 +4572,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4461,7 +4586,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4483,6 +4608,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4496,7 +4622,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4518,6 +4644,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4531,7 +4658,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4553,6 +4680,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4566,7 +4694,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4588,6 +4716,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4601,7 +4730,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4623,6 +4752,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4636,7 +4766,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4658,6 +4788,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4671,7 +4802,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4693,6 +4824,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4706,7 +4838,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4728,6 +4860,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4741,7 +4874,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4763,6 +4896,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4776,7 +4910,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4798,6 +4932,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4811,7 +4946,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4833,6 +4968,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4846,7 +4982,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4868,6 +5004,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4881,7 +5018,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4903,6 +5040,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4916,7 +5054,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4938,6 +5076,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4951,7 +5090,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -4973,6 +5112,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -4986,7 +5126,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -5008,6 +5148,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5021,7 +5162,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5044,6 +5185,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5057,7 +5199,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5080,6 +5222,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5093,7 +5236,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5116,6 +5259,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5129,7 +5273,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5152,6 +5296,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5165,7 +5310,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -5187,6 +5332,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5200,7 +5346,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5223,6 +5369,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5236,7 +5383,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -5258,6 +5405,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5271,7 +5419,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -5293,6 +5441,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5306,7 +5455,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5329,6 +5478,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5342,7 +5492,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -5364,6 +5514,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5377,7 +5528,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5400,6 +5551,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5413,7 +5565,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5436,6 +5588,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5449,7 +5602,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5472,6 +5625,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5485,7 +5639,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5508,6 +5662,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5521,7 +5676,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5544,6 +5699,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5557,7 +5713,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5580,6 +5736,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5593,7 +5750,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5616,6 +5773,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5629,7 +5787,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -5651,6 +5809,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5664,7 +5823,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5687,6 +5846,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5700,7 +5860,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5723,6 +5883,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5736,7 +5897,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5759,6 +5920,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5772,7 +5934,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5795,6 +5957,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5808,7 +5971,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5831,6 +5994,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5844,7 +6008,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -5866,6 +6030,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5879,7 +6044,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -5902,6 +6067,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5915,7 +6081,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -5937,6 +6103,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5950,7 +6117,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -5972,6 +6139,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -5985,7 +6153,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -6008,6 +6176,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6021,7 +6190,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6043,6 +6212,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6056,7 +6226,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -6079,6 +6249,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6092,7 +6263,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -6115,6 +6286,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6128,7 +6300,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -6151,6 +6323,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6164,7 +6337,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -6187,6 +6360,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6200,7 +6374,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -6223,6 +6397,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6236,7 +6411,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -6259,6 +6434,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6272,7 +6448,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -6295,6 +6471,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6308,7 +6485,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6330,6 +6507,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6343,7 +6521,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -6366,6 +6544,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6379,7 +6558,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6401,6 +6580,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6414,7 +6594,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6436,6 +6616,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6449,7 +6630,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6471,6 +6652,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6484,7 +6666,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6506,6 +6688,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6519,7 +6702,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6541,6 +6724,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6554,7 +6738,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6576,6 +6760,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6589,7 +6774,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6611,6 +6796,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6624,7 +6810,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6646,6 +6832,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6659,7 +6846,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6681,6 +6868,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6694,7 +6882,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6716,6 +6904,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6729,7 +6918,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6751,6 +6940,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6764,7 +6954,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6786,6 +6976,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6799,7 +6990,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6821,6 +7012,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6834,7 +7026,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6856,6 +7048,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6869,7 +7062,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6891,6 +7084,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6904,7 +7098,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6926,6 +7120,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6939,7 +7134,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6961,6 +7156,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -6974,7 +7170,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -6996,6 +7192,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7009,7 +7206,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -7031,6 +7228,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7044,7 +7242,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7067,6 +7265,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7080,7 +7279,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7103,6 +7302,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7116,7 +7316,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7139,6 +7339,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7152,7 +7353,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7175,6 +7376,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7188,7 +7390,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -7210,6 +7412,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7223,7 +7426,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7246,6 +7449,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7259,7 +7463,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -7281,6 +7485,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7294,7 +7499,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -7316,6 +7521,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7329,7 +7535,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7352,6 +7558,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7365,7 +7572,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7388,6 +7595,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7401,7 +7609,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -7423,6 +7631,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7436,7 +7645,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7459,6 +7668,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7472,7 +7682,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7495,6 +7705,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7508,7 +7719,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7531,6 +7742,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7544,7 +7756,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7567,6 +7779,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7580,7 +7793,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7603,6 +7816,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7616,7 +7830,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7639,6 +7853,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7652,7 +7867,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -7674,6 +7889,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7687,7 +7903,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7710,6 +7926,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7723,7 +7940,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7746,6 +7963,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7759,7 +7977,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7782,6 +8000,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7795,7 +8014,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7818,6 +8037,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7831,7 +8051,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7854,6 +8074,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7867,7 +8088,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -7889,6 +8110,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7902,7 +8124,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -7925,6 +8147,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7938,7 +8161,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -7960,6 +8183,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -7973,7 +8197,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -7995,6 +8219,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8008,7 +8233,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8031,6 +8256,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8044,7 +8270,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8067,6 +8293,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8080,7 +8307,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -8102,6 +8329,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8115,7 +8343,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8138,6 +8366,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8151,7 +8380,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8174,6 +8403,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8187,7 +8417,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8210,6 +8440,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8223,7 +8454,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8246,6 +8477,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8259,7 +8491,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8282,6 +8514,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8295,7 +8528,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8318,6 +8551,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8331,7 +8565,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -8353,6 +8587,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8366,7 +8601,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8389,6 +8624,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8402,7 +8638,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8425,6 +8661,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8438,7 +8675,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8461,6 +8698,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8474,7 +8712,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8497,6 +8735,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8510,7 +8749,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8533,6 +8772,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8546,7 +8786,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -8568,6 +8808,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8581,7 +8822,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8604,6 +8845,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8617,7 +8859,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -8639,6 +8881,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8652,7 +8895,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -8674,6 +8917,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8687,7 +8931,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8710,6 +8954,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8723,7 +8968,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8746,6 +8991,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8759,7 +9005,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -8781,6 +9027,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8794,7 +9041,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8817,6 +9064,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8830,7 +9078,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8853,6 +9101,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8866,7 +9115,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8889,6 +9138,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8902,7 +9152,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8925,6 +9175,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8938,7 +9189,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8961,6 +9212,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -8974,7 +9226,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -8997,6 +9249,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9010,7 +9263,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -9032,6 +9285,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9045,7 +9299,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9068,6 +9322,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9081,7 +9336,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9104,6 +9359,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9117,7 +9373,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9140,6 +9396,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9153,7 +9410,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9176,6 +9433,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9189,7 +9447,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9212,6 +9470,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9225,7 +9484,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -9247,6 +9506,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9260,7 +9520,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9283,6 +9543,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9296,7 +9557,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -9318,6 +9579,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9331,7 +9593,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -9353,6 +9615,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9366,7 +9629,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9389,6 +9652,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9402,7 +9666,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9425,6 +9689,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9438,7 +9703,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -9460,6 +9725,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9473,7 +9739,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9496,6 +9762,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9509,7 +9776,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9532,6 +9799,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9545,7 +9813,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9568,6 +9836,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9581,7 +9850,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9604,6 +9873,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9617,7 +9887,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9640,6 +9910,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9653,7 +9924,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9676,6 +9947,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9689,7 +9961,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -9711,6 +9983,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9724,7 +9997,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9747,6 +10020,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9760,7 +10034,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9783,6 +10057,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9796,7 +10071,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9819,6 +10094,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9832,7 +10108,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9855,6 +10131,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9868,7 +10145,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9891,6 +10168,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9904,7 +10182,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -9926,6 +10204,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9939,7 +10218,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -9962,6 +10241,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -9975,7 +10255,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -9997,6 +10277,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10010,7 +10291,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -10032,6 +10313,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10045,7 +10327,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10068,6 +10350,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10081,7 +10364,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10104,6 +10387,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10117,7 +10401,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -10139,6 +10423,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10152,7 +10437,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10175,6 +10460,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10188,7 +10474,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10211,6 +10497,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10224,7 +10511,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10247,6 +10534,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10260,7 +10548,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10283,6 +10571,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10296,7 +10585,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10319,6 +10608,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10332,7 +10622,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10355,6 +10645,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10368,7 +10659,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -10390,6 +10681,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10403,7 +10695,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10426,6 +10718,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10439,7 +10732,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10462,6 +10755,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10475,7 +10769,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10498,6 +10792,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10511,7 +10806,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10534,6 +10829,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10547,7 +10843,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10570,6 +10866,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10583,7 +10880,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -10605,6 +10902,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10618,7 +10916,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10641,6 +10939,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10654,7 +10953,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -10676,6 +10975,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10689,7 +10989,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -10711,6 +11011,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10724,7 +11025,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10747,6 +11048,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10760,7 +11062,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10783,6 +11085,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10796,7 +11099,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -10818,6 +11121,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10831,7 +11135,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10854,6 +11158,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10867,7 +11172,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10890,6 +11195,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10903,7 +11209,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10926,6 +11232,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10939,7 +11246,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10962,6 +11269,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -10975,7 +11283,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -10998,6 +11306,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11011,7 +11320,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11034,6 +11343,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11047,7 +11357,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11069,6 +11379,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11082,7 +11393,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11105,6 +11416,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11118,7 +11430,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11141,6 +11453,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11154,7 +11467,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11177,6 +11490,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11190,7 +11504,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11213,6 +11527,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11226,7 +11541,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11249,6 +11564,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11262,7 +11578,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11284,6 +11600,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11297,7 +11614,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11320,6 +11637,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11333,7 +11651,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11355,6 +11673,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11368,7 +11687,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11390,6 +11709,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11403,7 +11723,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11426,6 +11746,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11439,7 +11760,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11462,6 +11783,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11475,7 +11797,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11497,6 +11819,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11510,7 +11833,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11533,6 +11856,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11546,7 +11870,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11569,6 +11893,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11582,7 +11907,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11605,6 +11930,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11618,7 +11944,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11641,6 +11967,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11654,7 +11981,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11677,6 +12004,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11690,7 +12018,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11713,6 +12041,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11726,7 +12055,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11748,6 +12077,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11761,7 +12091,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -11784,6 +12114,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11797,7 +12128,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11819,6 +12150,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11832,7 +12164,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11854,6 +12186,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11867,7 +12200,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11889,6 +12222,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11902,7 +12236,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11924,6 +12258,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11937,7 +12272,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11959,6 +12294,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -11972,7 +12308,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -11994,6 +12330,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12007,7 +12344,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12029,6 +12366,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12042,7 +12380,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12064,6 +12402,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12077,7 +12416,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12099,6 +12438,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12112,7 +12452,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12134,6 +12474,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12147,7 +12488,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12169,6 +12510,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12182,7 +12524,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12204,6 +12546,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12217,7 +12560,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12239,6 +12582,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12252,7 +12596,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12274,6 +12618,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12287,7 +12632,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12309,6 +12654,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12322,7 +12668,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::real_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12345,6 +12691,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12358,7 +12705,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12381,6 +12728,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12394,7 +12742,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12417,6 +12765,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12430,7 +12779,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12453,6 +12802,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12466,7 +12816,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12488,6 +12838,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12501,7 +12852,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12524,6 +12875,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12537,7 +12889,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12559,6 +12911,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12572,7 +12925,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12594,6 +12947,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12607,7 +12961,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12630,6 +12984,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12643,7 +12998,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12666,6 +13021,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12679,7 +13035,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12701,6 +13057,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12714,7 +13071,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12737,6 +13094,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12750,7 +13108,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12773,6 +13131,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12786,7 +13145,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lreal_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12809,6 +13168,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12822,7 +13182,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12845,6 +13205,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12858,7 +13219,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12881,6 +13242,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12894,7 +13256,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12917,6 +13279,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12930,7 +13293,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
                 function_type_suffix = IN_type_symbol;
@@ -12953,6 +13316,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -12966,7 +13330,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -12988,6 +13352,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13000,7 +13365,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 function_type_prefix = (symbol_c*)(new pragma_c("int"));
                 break;
@@ -13022,6 +13387,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13035,7 +13401,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -13057,6 +13423,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13070,7 +13437,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -13092,6 +13459,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13105,7 +13473,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -13127,6 +13495,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13140,7 +13509,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -13162,6 +13531,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13175,7 +13545,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -13197,6 +13567,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13210,7 +13581,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -13232,6 +13603,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13245,7 +13617,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -13267,6 +13639,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13280,7 +13653,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 function_type_prefix = return_type_symbol;
                 break;
@@ -13302,6 +13675,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13315,7 +13689,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                 break;
                 
@@ -13336,6 +13710,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13349,7 +13724,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::date_type_name;
                 break;
                 
@@ -13370,6 +13745,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13383,7 +13759,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13405,6 +13781,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13418,7 +13795,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13440,6 +13817,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13453,7 +13831,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13475,6 +13853,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13488,7 +13867,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13510,6 +13889,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13523,7 +13903,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13545,6 +13925,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13558,7 +13939,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13580,6 +13961,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13593,7 +13975,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13615,6 +13997,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13628,7 +14011,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13650,6 +14033,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13663,7 +14047,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13685,6 +14069,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13698,7 +14083,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13720,6 +14105,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -13733,7 +14119,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = IN_type_symbol;
                 break;
@@ -13755,6 +14141,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -13765,9 +14152,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -13787,15 +14174,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -13815,7 +14203,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -13841,9 +14229,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -13861,11 +14249,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                         break;
                         
@@ -13881,9 +14269,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -13901,11 +14289,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                         break;
                         
@@ -13921,9 +14309,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -13941,11 +14329,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                         break;
                         
@@ -13972,6 +14360,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -13982,9 +14371,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14004,15 +14393,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -14032,7 +14422,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -14058,9 +14448,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14078,11 +14468,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                         break;
                         
@@ -14109,6 +14499,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -14119,9 +14510,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14139,11 +14530,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol;
                         if (search_expression_type->is_literal_integer_type(last_type_symbol))
                             return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -14166,9 +14557,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14186,11 +14577,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                         break;
                         
@@ -14206,9 +14597,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14226,11 +14617,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                         break;
                         
@@ -14243,11 +14634,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                         break;
                         
@@ -14263,9 +14654,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14283,11 +14674,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                         break;
                         
@@ -14300,11 +14691,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
                         break;
                         
@@ -14320,9 +14711,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14340,11 +14731,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                         break;
                         
@@ -14371,6 +14762,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -14381,9 +14773,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14401,11 +14793,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol;
                         if (search_expression_type->is_literal_integer_type(last_type_symbol))
                             return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -14428,9 +14820,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14448,11 +14840,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
                         break;
                         
@@ -14479,6 +14871,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -14489,9 +14882,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14509,11 +14902,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol;
                         if (search_expression_type->is_literal_integer_type(last_type_symbol))
                             return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -14547,6 +14940,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -14557,9 +14951,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14577,11 +14971,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol;
                         if (search_expression_type->is_literal_integer_type(last_type_symbol))
                             return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -14615,6 +15009,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -14628,7 +15023,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol;
                 if (search_expression_type->is_literal_integer_type(last_type_symbol))
                     return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -14656,6 +15051,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -14666,9 +15062,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14686,11 +15082,11 @@ switch(current_function_type){
                         
                         if (IN_type_symbol == NULL)
                           IN_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (N_type_symbol == NULL)
                           N_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&N_param_name, N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = IN_type_symbol;
                         function_type_suffix = IN_type_symbol;
                         break;
@@ -14718,6 +15114,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -14728,9 +15125,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14748,11 +15145,11 @@ switch(current_function_type){
                         
                         if (IN_type_symbol == NULL)
                           IN_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (N_type_symbol == NULL)
                           N_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&N_param_name, N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = IN_type_symbol;
                         function_type_suffix = IN_type_symbol;
                         break;
@@ -14780,6 +15177,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -14790,9 +15188,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14810,11 +15208,11 @@ switch(current_function_type){
                         
                         if (IN_type_symbol == NULL)
                           IN_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (N_type_symbol == NULL)
                           N_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&N_param_name, N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = IN_type_symbol;
                         function_type_suffix = IN_type_symbol;
                         break;
@@ -14842,6 +15240,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -14852,9 +15251,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("N");
+                    identifier_c N_param_name("N");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(&N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14872,11 +15271,11 @@ switch(current_function_type){
                         
                         if (IN_type_symbol == NULL)
                           IN_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (N_type_symbol == NULL)
                           N_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&N_param_name, N_param_value, N_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = IN_type_symbol;
                         function_type_suffix = IN_type_symbol;
                         break;
@@ -14904,6 +15303,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -14914,9 +15314,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -14936,15 +15336,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -14964,7 +15365,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -14999,6 +15400,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -15009,9 +15411,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15031,15 +15433,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -15059,7 +15462,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -15094,6 +15497,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -15104,9 +15508,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15126,15 +15530,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -15154,7 +15559,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -15189,6 +15594,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -15202,7 +15608,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = IN_type_symbol;
                 function_type_suffix = return_type_symbol;
                 break;
@@ -15224,6 +15630,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c G_param_name("G");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *G_param_value = &this->default_variable_name;
         
@@ -15234,9 +15641,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN0");
+                    identifier_c IN0_param_name("IN0");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&IN0_param_name);
                     symbol_c *IN0_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15251,9 +15658,9 @@ switch(current_function_type){
                     {
                 
                         {
-                            identifier_c param_name("IN1");
+                            identifier_c IN1_param_name("IN1");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
                             symbol_c *IN1_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -15271,15 +15678,15 @@ switch(current_function_type){
                                 
                                 if (G_type_symbol == NULL)
                                   G_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(G_param_value, G_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&G_param_name, G_param_value, G_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (IN0_type_symbol == NULL)
                                   IN0_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(IN0_param_value, IN0_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&IN0_param_name, IN0_param_value, IN0_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (IN1_type_symbol == NULL)
                                   IN1_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                                 symbol_c * return_type_symbol;
                                 if (search_expression_type->is_literal_integer_type(last_type_symbol))
                                     return_type_symbol = &search_constant_type_c::lint_type_name;
@@ -15319,6 +15726,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -15329,9 +15737,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15351,15 +15759,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -15379,7 +15788,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -15416,6 +15825,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -15426,9 +15836,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15448,15 +15858,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -15476,7 +15887,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -15513,6 +15924,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c MN_param_name("MN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *MN_param_value = &this->default_variable_name;
         
@@ -15523,9 +15935,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN");
+                    identifier_c IN_param_name("IN");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN_param_value = function_call_param_iterator.search_f(&IN_param_name);
                     symbol_c *IN_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15540,9 +15952,9 @@ switch(current_function_type){
                     {
                 
                         {
-                            identifier_c param_name("MX");
+                            identifier_c MX_param_name("MX");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *MX_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *MX_param_value = function_call_param_iterator.search_f(&MX_param_name);
                             symbol_c *MX_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -15560,15 +15972,15 @@ switch(current_function_type){
                                 
                                 if (MN_type_symbol == NULL)
                                   MN_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(MN_param_value, MN_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&MN_param_name, MN_param_value, MN_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (IN_type_symbol == NULL)
                                   IN_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (MX_type_symbol == NULL)
                                   MX_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(MX_param_value, MX_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&MX_param_name, MX_param_value, MX_type_symbol, function_param_iterator_c::direction_in)
                                 symbol_c * return_type_symbol = IN_type_symbol;
                                 function_type_suffix = IN_type_symbol;
                                 break;
@@ -15602,6 +16014,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c K_param_name("K");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *K_param_value = &this->default_variable_name;
         
@@ -15612,9 +16025,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN0");
+                    identifier_c IN0_param_name("IN0");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(&IN0_param_name);
                     symbol_c *IN0_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15629,9 +16042,9 @@ switch(current_function_type){
                     {
                 
                         {
-                            identifier_c param_name("IN1");
+                            identifier_c IN1_param_name("IN1");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(&IN1_param_name);
                             symbol_c *IN1_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -15651,19 +16064,20 @@ switch(current_function_type){
                                   nb_param = 3;
                                 char* nb_param_str = new char[10];
                                 sprintf(nb_param_str, "%d", nb_param);
-                                ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                                identifier_c nb_param_name("nb_param");
+                                ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                                 
                                 if (K_type_symbol == NULL)
                                   K_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(K_param_value, K_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&K_param_name, K_param_value, K_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (IN0_type_symbol == NULL)
                                   IN0_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(IN0_param_value, IN0_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&IN0_param_name, IN0_param_value, IN0_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (IN1_type_symbol == NULL)
                                   IN1_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 int base_num = 2;
                                 symbol_c *param_value = NULL;
@@ -15683,7 +16097,7 @@ switch(current_function_type){
                                         last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                                     
                                         /*Function specific CODE */
-                                        ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                        ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                                     }
                                     
                                 }while(param_value != NULL);
@@ -15726,6 +16140,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -15736,9 +16151,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15758,15 +16173,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -15786,7 +16202,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -15817,6 +16233,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -15827,9 +16244,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15849,15 +16266,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -15877,7 +16295,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -15908,6 +16326,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -15918,9 +16337,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -15940,15 +16359,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -15968,7 +16388,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -15999,6 +16419,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -16009,9 +16430,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16031,15 +16452,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -16059,7 +16481,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -16090,6 +16512,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -16100,9 +16523,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16122,15 +16545,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -16150,7 +16574,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -16181,6 +16605,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -16191,9 +16616,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16213,15 +16638,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -16241,7 +16667,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -16272,6 +16698,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -16285,7 +16712,7 @@ switch(current_function_type){
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 break;
                 
@@ -16306,6 +16733,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -16316,9 +16744,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16336,11 +16764,11 @@ switch(current_function_type){
                         
                         if (IN_type_symbol == NULL)
                           IN_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (L_type_symbol == NULL)
                           L_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&L_param_name, L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                         break;
                         
@@ -16367,6 +16795,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -16377,9 +16806,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16397,11 +16826,11 @@ switch(current_function_type){
                         
                         if (IN_type_symbol == NULL)
                           IN_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (L_type_symbol == NULL)
                           L_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&L_param_name, L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                         break;
                         
@@ -16428,6 +16857,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -16438,9 +16868,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16455,9 +16885,9 @@ switch(current_function_type){
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            identifier_c P_param_name("P");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -16475,15 +16905,15 @@ switch(current_function_type){
                                 
                                 if (IN_type_symbol == NULL)
                                   IN_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (L_type_symbol == NULL)
                                   L_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&L_param_name, L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (P_type_symbol == NULL)
                                   P_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&P_param_name, P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
                                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                                 break;
                                 
@@ -16516,6 +16946,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -16526,9 +16957,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16546,11 +16977,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
                         break;
                         
@@ -16566,9 +16997,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16588,15 +17019,16 @@ switch(current_function_type){
                           nb_param = 2;
                         char* nb_param_str = new char[10];
                         sprintf(nb_param_str, "%d", nb_param);
-                        ADD_PARAM_LIST((symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
+                        identifier_c nb_param_name("nb_param");
+                        ADD_PARAM_LIST(&nb_param_name, (symbol_c*)(new integer_c((const char *)nb_param_str)), (symbol_c*)(new int_type_name_c()), function_param_iterator_c::direction_in)
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         
                         int base_num = 3;
                         symbol_c *param_value = NULL;
@@ -16616,7 +17048,7 @@ switch(current_function_type){
                                 last_type_symbol = last_type_symbol && search_expression_type->is_same_type(current_type_symbol, last_type_symbol) ? search_expression_type->common_type(current_type_symbol, last_type_symbol) : current_type_symbol ;
                             
                                 /*Function specific CODE */
-                                ADD_PARAM_LIST(param_value, current_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&param_name, param_value, current_type_symbol, function_param_iterator_c::direction_in)
                             }
                             
                         }while(param_value != NULL);
@@ -16646,6 +17078,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -16656,9 +17089,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16673,9 +17106,9 @@ switch(current_function_type){
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            identifier_c P_param_name("P");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -16693,15 +17126,15 @@ switch(current_function_type){
                                 
                                 if (IN1_type_symbol == NULL)
                                   IN1_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (IN2_type_symbol == NULL)
                                   IN2_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (P_type_symbol == NULL)
                                   P_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&P_param_name, P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
                                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                                 break;
                                 
@@ -16734,6 +17167,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN_param_name("IN");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN_param_value = &this->default_variable_name;
         
@@ -16744,9 +17178,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("L");
+                    identifier_c L_param_name("L");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16761,9 +17195,9 @@ switch(current_function_type){
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            identifier_c P_param_name("P");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -16781,15 +17215,15 @@ switch(current_function_type){
                                 
                                 if (IN_type_symbol == NULL)
                                   IN_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (L_type_symbol == NULL)
                                   L_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&L_param_name, L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
                                 
                                 if (P_type_symbol == NULL)
                                   P_type_symbol = last_type_symbol;
-                                ADD_PARAM_LIST(P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
+                                ADD_PARAM_LIST(&P_param_name, P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
                                 symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                                 break;
                                 
@@ -16822,6 +17256,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -16832,9 +17267,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16849,9 +17284,9 @@ switch(current_function_type){
                     {
                 
                         {
-                            identifier_c param_name("L");
+                            identifier_c L_param_name("L");
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *L_param_value = function_call_param_iterator.search_f(&param_name);
+                            symbol_c *L_param_value = function_call_param_iterator.search_f(&L_param_name);
                             symbol_c *L_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
@@ -16866,9 +17301,9 @@ switch(current_function_type){
                             {
                         
                                 {
-                                    identifier_c param_name("P");
+                                    identifier_c P_param_name("P");
                                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                                    symbol_c *P_param_value = function_call_param_iterator.search_f(&param_name);
+                                    symbol_c *P_param_value = function_call_param_iterator.search_f(&P_param_name);
                                     symbol_c *P_type_symbol = NULL;
                                     
                                     /* Get the value from a foo(<param_value>) style call */
@@ -16886,19 +17321,19 @@ switch(current_function_type){
                                         
                                         if (IN1_type_symbol == NULL)
                                           IN1_type_symbol = last_type_symbol;
-                                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                                         
                                         if (IN2_type_symbol == NULL)
                                           IN2_type_symbol = last_type_symbol;
-                                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                                         
                                         if (L_type_symbol == NULL)
                                           L_type_symbol = last_type_symbol;
-                                        ADD_PARAM_LIST(L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
+                                        ADD_PARAM_LIST(&L_param_name, L_param_value, L_type_symbol, function_param_iterator_c::direction_in)
                                         
                                         if (P_type_symbol == NULL)
                                           P_type_symbol = last_type_symbol;
-                                        ADD_PARAM_LIST(P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
+                                        ADD_PARAM_LIST(&P_param_name, P_param_value, P_type_symbol, function_param_iterator_c::direction_in)
                                         symbol_c * return_type_symbol = &search_constant_type_c::string_type_name;
                                         break;
                                         
@@ -16937,6 +17372,7 @@ switch(current_function_type){
         symbol_c *last_type_symbol = NULL;
 
         {
+            identifier_c IN1_param_name("IN1");
             /* Get the value from a foo(<param_name> = <param_value>) style call */
             symbol_c *IN1_param_value = &this->default_variable_name;
         
@@ -16947,9 +17383,9 @@ switch(current_function_type){
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    identifier_c IN2_param_name("IN2");
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(&IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
@@ -16967,11 +17403,11 @@ switch(current_function_type){
                         
                         if (IN1_type_symbol == NULL)
                           IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
                         
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        ADD_PARAM_LIST(&IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
                         symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                         break;
                         

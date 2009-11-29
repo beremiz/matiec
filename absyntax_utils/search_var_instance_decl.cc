@@ -25,7 +25,7 @@
 /* Determine the data type of a specific variable instance, including
  * function block instances.
  * A reference to the relevant variable declaration is returned.
- * The variable instance may NOT be a member of a structure of a memeber
+ * The variable instance may NOT be a member of a structure of a member
  * of a structure of an element of an array of ...
  *
  * example:
@@ -58,12 +58,15 @@
 
 search_var_instance_decl_c::search_var_instance_decl_c(symbol_c *search_scope) {
   this->current_vartype = none_vt;
+  this->current_varqualifier = none_vq;
   this->search_scope = search_scope;
   this->search_name = NULL;
   this->current_type_decl = NULL;
 }
 
 symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable_instance_name) {
+  this->current_vartype = none_vt;
+  this->current_varqualifier = none_vq;
   this->search_name = variable_instance_name;
   return (symbol_c *)search_scope->accept(*this);
 }
@@ -72,12 +75,16 @@ unsigned int search_var_instance_decl_c::get_vartype() {
   return current_vartype;
 }
 
+unsigned int search_var_instance_decl_c::get_varqualifier() {
+  return current_varqualifier;
+}
+
 /***************************/
 /* B 0 - Programming Model */
 /***************************/
 void *search_var_instance_decl_c::visit(library_c *symbol) {
   /* we do not want to search multiple declaration scopes,
-   * so we do not visit all the functions, fucntion blocks, etc...
+   * so we do not visit all the functions, function blocks, etc...
    */
   return NULL;
 }
@@ -85,17 +92,36 @@ void *search_var_instance_decl_c::visit(library_c *symbol) {
 
 
 /******************************************/
-/* B 1.4.3 - Declaration & Initialisation */
+/* B 1.4.3 - Declaration & Initialization */
 /******************************************/
+
+void *search_var_instance_decl_c::visit(constant_option_c *symbol) {
+  current_varqualifier = constant_vq;
+  return NULL;
+}
+
+void *search_var_instance_decl_c::visit(retain_option_c *symbol) {
+  current_varqualifier = retain_vq;
+  return NULL;
+}
+
+void *search_var_instance_decl_c::visit(non_retain_option_c *symbol) {
+  current_varqualifier = non_retain_vq;
+  return NULL;
+}
+
 /* edge -> The F_EDGE or R_EDGE directive */
 // SYM_REF2(edge_declaration_c, edge, var1_list)
 // TODO
 
 void *search_var_instance_decl_c::visit(input_declarations_c *symbol) {
   current_vartype = input_vt;
+  if (symbol->option != NULL)
+    symbol->option->accept(*this);
   void *res = symbol->input_declaration_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
   }
   return res;
 }
@@ -104,9 +130,12 @@ void *search_var_instance_decl_c::visit(input_declarations_c *symbol) {
 /* option -> may be NULL ! */
 void *search_var_instance_decl_c::visit(output_declarations_c *symbol) {
   current_vartype = output_vt;
+  if (symbol->option != NULL)
+    symbol->option->accept(*this);
   void *res = symbol->var_init_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
   }
   return res;
 }
@@ -134,9 +163,12 @@ void *search_var_instance_decl_c::visit(eno_param_declaration_c *symbol) {
 /* helper symbol for input_declarations */
 void *search_var_instance_decl_c::visit(var_declarations_c *symbol) {
   current_vartype = private_vt;
+  if (symbol->option != NULL)
+    symbol->option->accept(*this);
   void *res = symbol->var_init_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
   }
   return res;
 }
@@ -144,9 +176,11 @@ void *search_var_instance_decl_c::visit(var_declarations_c *symbol) {
 /*  VAR RETAIN var_init_decl_list END_VAR */
 void *search_var_instance_decl_c::visit(retentive_var_declarations_c *symbol) {
   current_vartype = private_vt;
+  current_varqualifier = retain_vq;
   void *res = symbol->var_init_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
   }
   return res;
 }
@@ -156,9 +190,12 @@ void *search_var_instance_decl_c::visit(retentive_var_declarations_c *symbol) {
 //SYM_REF2(located_var_declarations_c, option, located_var_decl_list)
 void *search_var_instance_decl_c::visit(located_var_declarations_c *symbol) {
   current_vartype = located_vt;
+  if (symbol->option != NULL)
+    symbol->option->accept(*this);
   void *res = symbol->located_var_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
   }
   return res;
 }
@@ -168,9 +205,12 @@ void *search_var_instance_decl_c::visit(located_var_declarations_c *symbol) {
 //SYM_REF2(external_var_declarations_c, option, external_declaration_list)
 void *search_var_instance_decl_c::visit(external_var_declarations_c *symbol) {
   current_vartype = external_vt;
+  if (symbol->option != NULL)
+    symbol->option->accept(*this);
   void *res = symbol->external_declaration_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
   }
   return res;
 }
@@ -180,9 +220,12 @@ void *search_var_instance_decl_c::visit(external_var_declarations_c *symbol) {
 //SYM_REF2(global_var_declarations_c, option, global_var_decl_list)
 void *search_var_instance_decl_c::visit(global_var_declarations_c *symbol) {
   current_vartype = global_vt;
+  if (symbol->option != NULL)
+    symbol->option->accept(*this);
   void *res = symbol->global_var_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
   }
   return res;
 }
