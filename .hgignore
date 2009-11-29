@@ -1,1 +1,12 @@
 .project
+
+syntax: regexp
+\.o$
+syntax: regexp
+^iec2c$
+syntax: regexp
+^iec2iec$
+syntax: regexp
+\.depend$
+syntax: regexp
+^stage1_2/iec\.(y|flex)\..*$
