@@ -608,13 +608,12 @@ void *visit(function_invocation_c *symbol) {
         }
         if (param_value == NULL) ERROR;
         s4o.print("(");
-        if (search_expression_type->is_literal_integer_type(param_type) ||
-            search_expression_type->is_literal_real_type(param_type)) {
-        	if (function_type_suffix == NULL) ERROR;
-        	function_type_suffix->accept(*this);
-        }
+        if (search_expression_type->is_literal_integer_type(param_type))
+          search_expression_type->lint_type_name.accept(*this);
+        else if (search_expression_type->is_literal_real_type(param_type))
+          search_expression_type->lreal_type_name.accept(*this);
         else
-        	param_type->accept(*this);
+          param_type->accept(*this);
         s4o.print(")");
         print_check_function(param_type, param_value);
         nb_param++;
