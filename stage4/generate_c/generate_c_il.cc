@@ -469,28 +469,24 @@ TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
-/* B 1.4 - Variables */
-/*********************/
+
 void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
   if (this->is_variable_prefix_null()) {
     if (wanted_variablegeneration == fparam_output_vg) {
-      if (vartype == search_var_instance_decl_c::external_vt) {
+      if (vartype == search_var_instance_decl_c::external_vt)
     	s4o.print(GET_EXTERNAL);
-    	s4o.print("(");
-    	symbol->var_name->accept(*this);
-      }
-      else {
-    	s4o.print("&(");
-        generate_c_base_c::visit(symbol);
-      }
+      else
+    	s4o.print("&");
+      s4o.print("(");
+      generate_c_base_c::visit(symbol);
       s4o.print(")");
     }
     else {
       if (vartype == search_var_instance_decl_c::external_vt) {
         s4o.print(GET_EXTERNAL);
         s4o.print("(");
-        symbol->var_name->accept(*this);
+        generate_c_base_c::visit(symbol);
         s4o.print(")");
       }
       else
@@ -500,42 +496,29 @@ void *visit(symbolic_variable_c *symbol) {
   else {
     switch (wanted_variablegeneration) {
       case expression_vg:
-        if (vartype == search_var_instance_decl_c::external_vt) {
+        if (vartype == search_var_instance_decl_c::external_vt)
     	  s4o.print(GET_EXTERNAL);
-    	  s4o.print("(");
-          symbol->var_name->accept(*this);
-        }
-        else {
-          if (vartype == search_var_instance_decl_c::located_vt)
-            s4o.print(GET_LOCATED);
-          else
-            s4o.print(GET_VAR);
-          s4o.print("(");
-          generate_c_base_c::visit(symbol);
-        }
+    	else if (vartype == search_var_instance_decl_c::located_vt)
+		  s4o.print(GET_LOCATED);
+	    else
+		  s4o.print(GET_VAR);
+	    s4o.print("(");
+	    generate_c_base_c::visit(symbol);
         s4o.print(")");
 		break;
       case fparam_output_vg:
-        if (vartype == search_var_instance_decl_c::external_vt) {
+        if (vartype == search_var_instance_decl_c::external_vt)
           s4o.print(GET_EXTERNAL_BY_REF);
-          s4o.print("(");
-          symbol->var_name->accept(*this);
-        }
-        else {
-          if (vartype == search_var_instance_decl_c::located_vt)
-            s4o.print(GET_LOCATED_BY_REF);
-          else
-            s4o.print(GET_VAR_BY_REF);
-          s4o.print("(");
-          generate_c_base_c::visit(symbol);
-        }
+        else if (vartype == search_var_instance_decl_c::located_vt)
+          s4o.print(GET_LOCATED_BY_REF);
+        else
+          s4o.print(GET_VAR_BY_REF);
+        s4o.print("(");
+        generate_c_base_c::visit(symbol);
         s4o.print(")");
         break;
       default:
-        if (vartype == search_var_instance_decl_c::external_vt)
-          symbol->var_name->accept(*this);
-        else
-          generate_c_base_c::visit(symbol);
+        generate_c_base_c::visit(symbol);
         break;
 	}
   }

@@ -66,15 +66,10 @@ class search_var_instance_decl_c: public search_visitor_c {
     /* Will contain a single value of generate_c_vardecl_c::XXXX_vt */
     unsigned int current_vartype;
 
-    /* variable used to store the qualifier of variable currently being processed... */
-    /* Will contain a single value of generate_c_vardecl_c::XXXX_vq */
-    unsigned int current_varqualifier;
-
   public:
     search_var_instance_decl_c(symbol_c *search_scope);
     symbol_c *get_decl(symbol_c *variable_instance_name);
     unsigned int get_vartype();
-    unsigned int get_varqualifier();
 
   public:
 
@@ -89,12 +84,6 @@ class search_var_instance_decl_c: public search_visitor_c {
     static const unsigned int global_vt   = 0x0040;  // VAR_GLOBAL
     static const unsigned int located_vt  = 0x0080;  // VAR <var_name> AT <location>
 
-    /* the qualifier of variables that need to be processed... */
-    static const unsigned int none_vq        = 0x0000;
-    static const unsigned int constant_vq    = 0x0001;  // CONSTANT
-    static const unsigned int retain_vq      = 0x0002;  // RETAIN
-    static const unsigned int non_retain_vq  = 0x0002;  // NON_RETAIN
-
   private:
     /***************************/
     /* B 0 - Programming Model */
@@ -105,9 +94,6 @@ class search_var_instance_decl_c: public search_visitor_c {
     /* B 1.4.3 - Declaration & Initialisation */
     /******************************************/
 
-    void *visit(constant_option_c *symbol);
-    void *visit(retain_option_c *symbol);
-    void *visit(non_retain_option_c *symbol);
     /* edge -> The F_EDGE or R_EDGE directive */
     // SYM_REF2(edge_declaration_c, edge, var1_list)
     // TODO

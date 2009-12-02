@@ -699,7 +699,7 @@ void *visit(function_block_declaration_c *symbol) {
   symbol->fblock_name->accept(*this);
   s4o.print(" *");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print(") {\n");
+  s4o.print(", BOOL retain) {\n");
   s4o.indent_right();
 
   /* (B.2) Member initializations... */
@@ -887,7 +887,7 @@ void *visit(program_declaration_c *symbol) {
   symbol->program_type_name->accept(*this);
   s4o.print(" *");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print(") {\n");
+  s4o.print(", BOOL retain) {\n");
   s4o.indent_right();
 
   /* (B.2) Member initializations... */
@@ -1202,6 +1202,50 @@ class generate_c_resources_c: public generate_c_typedecl_c {
 
     assigntype_t wanted_assigntype;
 
+    /* the qualifier of variables that need to be processed... */
+    static const unsigned int none_vq        = 0x0000;
+    static const unsigned int constant_vq    = 0x0001;  // CONSTANT
+    static const unsigned int retain_vq      = 0x0002;  // RETAIN
+    static const unsigned int non_retain_vq  = 0x0004;  // NON_RETAIN
+
+    /* variable used to store the qualifier of program currently being processed... */
+    unsigned int current_varqualifier;
+
+    void *print_retain(void) {
+	  s4o.print(",");
+      switch (current_varqualifier) {
+		case retain_vq:
+          s4o.print("1");
+          break;
+        case non_retain_vq:
+          s4o.print("0");
+          break;
+		default:
+		  s4o.print("retain");
+		  break;
+      }
+      return NULL;
+    }
+
+    /******************************************/
+    /* B 1.4.3 - Declaration & Initialisation */
+    /******************************************/
+
+    void *visit(constant_option_c *symbol) {
+      current_varqualifier = constant_vq;
+      return NULL;
+    }
+
+    void *visit(retain_option_c *symbol) {
+      current_varqualifier = retain_vq;
+      return NULL;
+    }
+
+    void *visit(non_retain_option_c *symbol) {
+      current_varqualifier = non_retain_vq;
+      return NULL;
+    }
+
 /********************************/
 /* B 1.7 Configuration elements */
 /********************************/
@@ -1281,6 +1325,8 @@ END_RESOURCE
       s4o.print(FB_INIT_SUFFIX);
       s4o.print("(void) {\n");
       s4o.indent_right();
+      s4o.print(s4o.indent_spaces);
+      s4o.print("BOOL retain = 0;\n");
       
       /* (B.2) Global variables initialisations... */
       if (current_global_vars != NULL) {
@@ -1350,11 +1396,14 @@ END_RESOURCE
           s4o.print("\n");
           break;
         case init_dt:
+          if (symbol->retain_option != NULL)
+        	symbol->retain_option->accept(*this);
           s4o.print(s4o.indent_spaces);
           symbol->program_type_name->accept(*this);
           s4o.print(FB_INIT_SUFFIX);
           s4o.print("(&");
           symbol->program_name->accept(*this);
+          print_retain();
           s4o.print(");\n");
           break;
         case run_dt:

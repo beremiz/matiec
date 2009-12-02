@@ -34,6 +34,12 @@
 
 class generate_c_inline_c: public generate_c_typedecl_c {
 
+  public:
+    typedef enum {
+      expression_vg,
+      assignment_vg
+    } variablegeneration_t;
+
   private:
 
     /* The name of the IL default variable... */
@@ -53,6 +59,8 @@ class generate_c_inline_c: public generate_c_typedecl_c {
 
     search_base_type_c search_base_type;
 
+    variablegeneration_t wanted_variablegeneration;
+
   public:
     generate_c_inline_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_c_typedecl_c(s4o_ptr),
@@ -63,6 +71,7 @@ class generate_c_inline_c: public generate_c_typedecl_c {
       this->set_variable_prefix(variable_prefix);
       fcall_number = 0;
       fbname = name;
+      wanted_variablegeneration = expression_vg;
     }
 
     virtual ~generate_c_inline_c(void) {
@@ -162,8 +171,9 @@ class generate_c_inline_c: public generate_c_typedecl_c {
           else
             s4o.print(SET_VAR);
           s4o.print("(");
-
+          wanted_variablegeneration = assignment_vg;
           PARAM_VALUE->accept(*this);
+          wanted_variablegeneration = expression_vg;
           s4o.print(", ");
           print_check_function(PARAM_TYPE, PARAM_NAME, NULL, true);
           s4o.print(");\n");
@@ -185,21 +195,25 @@ class generate_c_inline_c: public generate_c_typedecl_c {
     /* B 1.4 - Variables */
     /*********************/
     void *visit(symbolic_variable_c *symbol) {
-      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-      if (vartype == search_var_instance_decl_c::external_vt) {
-        s4o.print(GET_EXTERNAL);
-        s4o.print("(");
-        symbol->var_name->accept(*this);
+      if (wanted_variablegeneration == expression_vg) {
+	    unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+	    if (vartype == search_var_instance_decl_c::external_vt) {
+		  s4o.print(GET_EXTERNAL);
+		  s4o.print("(");
+		  symbol->var_name->accept(*this);
+	    }
+	    else {
+		  if (vartype == search_var_instance_decl_c::located_vt)
+		    s4o.print(GET_LOCATED);
+		  else
+		    s4o.print(GET_VAR);
+		  s4o.print("(");
+		  generate_c_base_c::visit(symbol);
+	    }
+	    s4o.print(")");
       }
-      else {
-        if (vartype == search_var_instance_decl_c::located_vt)
-          s4o.print(GET_LOCATED);
-        else
-          s4o.print(GET_VAR);
-        s4o.print("(");
+      else
         generate_c_base_c::visit(symbol);
-      }
-      s4o.print(")");
       return NULL;
     }
 

@@ -280,7 +280,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       update_var_type_symbol(symbol->array_spec_init);
       
       this->current_var_type_category = array_vtc;
-      declare_variables(symbol->var1_list);
+      //declare_variables(symbol->var1_list);
     
       /* Values no longer in scope, and therefore no longer used.
        * Make an effort to keep them set to NULL when not in use
@@ -305,7 +305,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       update_var_type_symbol(symbol->initialized_structure);
     
       /* now to produce the c equivalent... */
-      declare_variables(symbol->var1_list);
+      //declare_variables(symbol->var1_list);
     
       /* Values no longer in scope, and therefore no longer used.
        * Make an effort to keep them set to NULL when not in use

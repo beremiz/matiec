@@ -398,10 +398,12 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print("__debug_transition_list[");
             print_transition_number();
             s4o.print("],");
+            s4o.print(GET_VAR);
+            s4o.print("(");
             print_variable_prefix();
             s4o.print("__transition_list[");
             print_transition_number();
-            s4o.print("]);\n");
+            s4o.print("]));\n");
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}\n");
           }

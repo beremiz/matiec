@@ -10,12 +10,53 @@
 /* Include non windows.h clashing typedefs */
 #include "iec_types.h"
 
-/* Those typdefs clash with windows.h */
-/* i.e. this file cannot be included aside windows.h */
-typedef IEC_BOOL  BOOL;
-
 #define TRUE 1
 #define FALSE 0
+
+#define __DECLARE_IEC_TYPE(type)\
+typedef IEC_##type type;\
+\
+typedef struct {\
+  IEC_##type value;\
+  IEC_BYTE flags;\
+} __IEC_##type##_t;\
+\
+typedef struct {\
+  IEC_##type *value;\
+  IEC_BYTE flags;\
+  IEC_##type fvalue;\
+} __IEC_##type##_p;
+
+#define __DECLARE_DERIVED_TYPE(base, type)\
+typedef base type;\
+typedef __IEC_##base##_t __IEC_##type##_t;
+
+#define __DECLARE_COMPLEX_STRUCT(type)\
+typedef struct {\
+  type value;\
+  IEC_BYTE flags;\
+} __IEC_##type##_t;\
+\
+typedef struct {\
+  type *value;\
+  IEC_BYTE flags;\
+} __IEC_##type##_p;
+
+#define __DECLARE_ARRAY_TYPE(base, type, size)\
+typedef base type size;\
+__DECLARE_COMPLEX_STRUCT(type);
+
+#define __DECLARE_STRUCT_TYPE(elements, type)\
+typedef elements type;\
+__DECLARE_COMPLEX_STRUCT(type);
+
+/* Those typdefs clash with windows.h */
+/* i.e. this file cannot be included aside windows.h */
+ANY(__DECLARE_IEC_TYPE)
+
+
+/*
+typedef IEC_BOOL  BOOL;
 
 typedef IEC_SINT    SINT;
 typedef IEC_INT   INT;
@@ -41,9 +82,10 @@ typedef IEC_DT DT;
 typedef IEC_TOD TOD;
 
 typedef IEC_STRING STRING;
+*/
 
 typedef struct {
-  BOOL state;     // current step state. 0 : inative, 1: active
+  __IEC_BOOL_t state;     // current step state. 0 : inative, 1: active
   BOOL prev_state;  // previous step state. 0 : inative, 1: active
   TIME elapsed_time;  // time since step is active
 } STEP;

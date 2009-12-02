@@ -99,12 +99,12 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(s4o.indent_spaces + "UINT __nb_actions;\n");
           
           /* transitions table declaration */
-          s4o.print(s4o.indent_spaces + "BOOL __transition_list[");
+          s4o.print(s4o.indent_spaces + "__IEC_BOOL_t __transition_list[");
           s4o.print_integer(transition_number);
           s4o.print("];\n");
           
           /* transitions debug table declaration */
-          s4o.print(s4o.indent_spaces + "BOOL __debug_transition_list[");
+          s4o.print(s4o.indent_spaces + "__IEC_BOOL_t __debug_transition_list[");
           s4o.print_integer(transition_number);
           s4o.print("];\n");
           
@@ -128,7 +128,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           wanted_sfcdeclaration = sfcinit_sd;
           
           /* steps table initialisation */
-          s4o.print(s4o.indent_spaces + "STEP temp_step = {0, 0, 0};\n");
+          s4o.print(s4o.indent_spaces + "static const STEP temp_step = {{0, 0}, 0, 0};\n");
           s4o.print(s4o.indent_spaces + "for(i = 0; i < ");
           print_variable_prefix();
           s4o.print("__nb_steps; i++) {\n");
@@ -154,7 +154,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           wanted_sfcdeclaration = sfcinit_sd;
           
           /* actions table initialisation */
-          s4o.print(s4o.indent_spaces + "ACTION temp_action = {0, 0, 0, 0, 0, 0};\n");
+          s4o.print(s4o.indent_spaces + "static const ACTION temp_action = {0, 0, 0, 0, 0, 0};\n");
           s4o.print(s4o.indent_spaces + "for(i = 0; i < ");
           print_variable_prefix();
           s4o.print("__nb_actions; i++) {\n");
@@ -208,10 +208,12 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           break;
         case sfcinit_sd:
           s4o.print(s4o.indent_spaces);
+          s4o.print(SET_VAR);
+          s4o.print("(");
           print_variable_prefix();
           s4o.print("__step_list[");
           s4o.print_integer(step_number);
-          s4o.print("].state = 1;\n");
+          s4o.print("].state,1);\n");
           step_number++;
           break;
         case stepdef_sd:

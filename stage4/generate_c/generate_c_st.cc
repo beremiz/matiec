@@ -119,22 +119,19 @@ void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
   if (this->is_variable_prefix_null()) {
     if (wanted_variablegeneration == fparam_output_vg) {
-      if (vartype == search_var_instance_decl_c::external_vt) {
+      if (vartype == search_var_instance_decl_c::external_vt)
     	s4o.print(GET_EXTERNAL);
-    	s4o.print("(");
-    	symbol->var_name->accept(*this);
-      }
-      else {
-    	s4o.print("&(");
-        generate_c_base_c::visit(symbol);
-      }
+      else
+    	s4o.print("&");
+      s4o.print("(");
+      generate_c_base_c::visit(symbol);
       s4o.print(")");
     }
     else {
       if (vartype == search_var_instance_decl_c::external_vt) {
         s4o.print(GET_EXTERNAL);
         s4o.print("(");
-        symbol->var_name->accept(*this);
+        generate_c_base_c::visit(symbol);
         s4o.print(")");
       }
       else
@@ -144,42 +141,29 @@ void *visit(symbolic_variable_c *symbol) {
   else {
     switch (wanted_variablegeneration) {
       case expression_vg:
-        if (vartype == search_var_instance_decl_c::external_vt) {
+        if (vartype == search_var_instance_decl_c::external_vt)
     	  s4o.print(GET_EXTERNAL);
-    	  s4o.print("(");
-          symbol->var_name->accept(*this);
-        }
-        else {
-          if (vartype == search_var_instance_decl_c::located_vt)
-            s4o.print(GET_LOCATED);
-          else
-            s4o.print(GET_VAR);
-          s4o.print("(");
-          generate_c_base_c::visit(symbol);
-        }
+    	else if (vartype == search_var_instance_decl_c::located_vt)
+		  s4o.print(GET_LOCATED);
+	    else
+		  s4o.print(GET_VAR);
+	    s4o.print("(");
+	    generate_c_base_c::visit(symbol);
         s4o.print(")");
 		break;
       case fparam_output_vg:
-        if (vartype == search_var_instance_decl_c::external_vt) {
+        if (vartype == search_var_instance_decl_c::external_vt)
           s4o.print(GET_EXTERNAL_BY_REF);
-          s4o.print("(");
-          symbol->var_name->accept(*this);
-        }
-        else {
-          if (vartype == search_var_instance_decl_c::located_vt)
-            s4o.print(GET_LOCATED_BY_REF);
-          else
-            s4o.print(GET_VAR_BY_REF);
-          s4o.print("(");
-          generate_c_base_c::visit(symbol);
-        }
+        else if (vartype == search_var_instance_decl_c::located_vt)
+          s4o.print(GET_LOCATED_BY_REF);
+        else
+          s4o.print(GET_VAR_BY_REF);
+        s4o.print("(");
+        generate_c_base_c::visit(symbol);
         s4o.print(")");
         break;
       default:
-        if (vartype == search_var_instance_decl_c::external_vt)
-          symbol->var_name->accept(*this);
-        else
-          generate_c_base_c::visit(symbol);
+        generate_c_base_c::visit(symbol);
         break;
 	}
   }
@@ -223,6 +207,67 @@ void *visit(direct_variable_c *symbol) {
 /*************************************/
 /* B.1.4.2   Multi-element Variables */
 /*************************************/
+
+// SYM_REF2(structured_variable_c, record_variable, field_selector)
+void *visit(structured_variable_c *symbol) {
+  TRACE("structured_variable_c");
+
+  unsigned int vartype = search_varfb_instance_type->get_vartype(symbol->record_variable);
+  if (this->is_variable_prefix_null()) {
+	  symbol->record_variable->accept(*this);
+	  s4o.print(".");
+	  symbol->field_selector->accept(*this);
+  }
+  else {
+	  variablegeneration_t old_wanted_variablegeneration = wanted_variablegeneration;
+	  switch (wanted_variablegeneration) {
+      case expression_vg:
+    	wanted_variablegeneration = assignment_vg;
+    	if (vartype == search_var_instance_decl_c::external_vt) {
+    	  s4o.print(GET_EXTERNAL);
+    	  s4o.print("(");
+    	  symbol->record_variable->accept(*this);
+    	  s4o.print(").");
+    	  symbol->field_selector->accept(*this);
+        }
+        else {
+          if (vartype == search_var_instance_decl_c::located_vt)
+            s4o.print(GET_LOCATED);
+          else
+            s4o.print(GET_VAR);
+          s4o.print("(");
+          symbol->record_variable->accept(*this);
+          s4o.print(".");
+          symbol->field_selector->accept(*this);
+          s4o.print(")");
+        }
+        wanted_variablegeneration = old_wanted_variablegeneration;
+		break;
+      case fparam_output_vg:
+    	wanted_variablegeneration = assignment_vg;
+    	s4o.print("&(");
+    	if (vartype == search_var_instance_decl_c::external_vt)
+          s4o.print(GET_EXTERNAL);
+        else if (vartype == search_var_instance_decl_c::located_vt)
+          s4o.print(GET_LOCATED);
+        else
+          s4o.print(GET_VAR);
+        s4o.print("(");
+    	symbol->record_variable->accept(*this);
+    	s4o.print(").");
+    	symbol->field_selector->accept(*this);
+    	s4o.print("))");
+        wanted_variablegeneration = old_wanted_variablegeneration;
+        break;
+      default:
+    	symbol->record_variable->accept(*this);
+    	s4o.print(".");
+    	symbol->field_selector->accept(*this);
+        break;
+	}
+  }
+  return NULL;
+}
 
 /*  subscripted_variable '[' subscript_list ']' */
 //SYM_REF2(array_variable_c, subscripted_variable, subscript_list)

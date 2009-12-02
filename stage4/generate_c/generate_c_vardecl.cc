@@ -40,8 +40,39 @@
 
 //#include "../../util/symtable.hh"
 
+class initialization_analyzer_c: public null_visitor_c {
+  public:
+	typedef enum {
+	  simple_it,
+	  array_it,
+	  struct_it
+	} initialization_type_t;
 
+  private:
 
+	initialization_type_t current_type;
+
+  public:
+	initialization_analyzer_c(symbol_c* symbol) {
+	  current_type = simple_it;
+      symbol->accept(*this);
+	}
+	~initialization_analyzer_c(void) {}
+
+	initialization_type_t get_initialization_type(void) {
+	  return current_type;
+	}
+
+	void *visit(array_initial_elements_list_c *symbol) {
+      current_type = array_it;
+      return NULL;
+	}
+
+    void *visit(structure_element_initialization_list_c *symbol) {
+      current_type = struct_it;
+      return NULL;
+    }
+};
 
 class generate_c_array_initialization_c: public generate_c_typedecl_c {
 
@@ -96,6 +127,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       print_integer(dimension_number);
       s4o.print("];\n");
       s4o.print(s4o.indent_spaces);
+      s4o.print("static const ");
       array_specification->accept(*this);
       s4o.print(" temp = ");
       init_array_values(array_initialization);
@@ -124,7 +156,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       if (defined_values_count < array_size) {
         for (int i = defined_values_count; i < array_size; i++) {
           if (defined_values_count > 0)
-            s4o.print(", ");
+            s4o.print(",");
           array_default_value->accept(*this);
           defined_values_count++;
         }
@@ -156,20 +188,23 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       
       for (i = 0; i < symbol->n; i++) {
         s4o.print(s4o.indent_spaces);
+        s4o.print(SET_VAR);
+        s4o.print("(");
         print_variable_prefix();
         symbol->elements[i]->accept(*this);
+        s4o.print(",temp");
         for (j = 0; j < dimension_number; j++) {
           s4o.print("[index[");
           print_integer(j);
           s4o.print("]]");
         }
-        s4o.print(" = temp");
+        s4o.print(",");
         for (j = 0; j < dimension_number; j++) {
           s4o.print("[index[");
           print_integer(j);
           s4o.print("]]");
         }
-        s4o.print(";\n");
+        s4o.print(");\n");
       }
       return NULL;
     }
@@ -245,15 +280,16 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
               if (defined_values_count >= array_size)
                 ERROR;
               if (defined_values_count > 0)
-                s4o.print(", ");
+                s4o.print(",");
               symbol->elements[i]->accept(*this);
               defined_values_count++;
             }
             else {
               array_initial_elements_c *array_initial_element = dynamic_cast<array_initial_elements_c *>(symbol->elements[i]);
             
-              if (array_initial_element != NULL)
-                symbol->elements[i]->accept(*this);
+              if (array_initial_element != NULL) {
+            	  symbol->elements[i]->accept(*this);
+              }
             }
             current_initialization_count++;
           }
@@ -281,7 +317,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
             initial_element_number = temp_element_number;
             if (initial_element_number > 0) {
               defined_values_count++;
-              s4o.print(", ");
+              s4o.print(",");
             }
           }
           else
@@ -290,11 +326,13 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
             ERROR;
           for (int i = 0; i < initial_element_number; i++) {
             if (i > 0)
-              s4o.print(", ");
-            if (symbol->array_initial_element != NULL)
+              s4o.print(",");
+            if (symbol->array_initial_element != NULL) {
               symbol->array_initial_element->accept(*this);
-            else
+            }
+            else {
               array_default_value->accept(*this);
+            }
           }
           if (initial_element_number > 1)
             defined_values_count += initial_element_number - 1;
@@ -514,6 +552,7 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
       s4o.print(s4o.indent_spaces + "{\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
+      s4o.print("static const ");
       structure_type_name->accept(*this);
       s4o.print(" temp = ");
       structure_initialization->accept(*this);
@@ -550,8 +589,10 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
       for (i = 0; i < symbol->n; i++) {
         s4o.print(s4o.indent_spaces);
         print_variable_prefix();
+        s4o.print(SET_VAR);
+        s4o.print("(");
         symbol->elements[i]->accept(*this);
-        s4o.print(" = temp;\n");
+        s4o.print(",temp);\n");
       }
       return NULL;
     }
@@ -583,7 +624,7 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
       structure_init_element_iterator_c structure_init_element_iterator(symbol);
       for(int i = 1; (element_name = structure_iterator.next()) != NULL; i++) {
         if (i > 1)
-          s4o.print(", ");
+          s4o.print(",");
         
         /* Get the value from an initialization */
         symbol_c *element_value = structure_init_element_iterator.search(element_name);
@@ -604,9 +645,9 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
         
         if (element_value == NULL) ERROR;
         
-        structure_element_initialization_list_c *structure_element_initialization_list = dynamic_cast<structure_element_initialization_list_c *>(element_value);
+        initialization_analyzer_c initialization_analyzer(element_value);
             
-        if (structure_element_initialization_list != NULL) {
+        if (initialization_analyzer.get_initialization_type() == initialization_analyzer_c::struct_it) {
           generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
           structure_initialization->set_variable_prefix(get_variable_prefix());
           structure_initialization->init_structure_default(current_element_type);
@@ -614,8 +655,9 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
           element_value->accept(*structure_initialization);
           delete structure_initialization;
         }
-        else
+        else {
           element_value->accept(*this);
+        }
       }
       s4o.print("}");
       return NULL;
@@ -747,6 +789,13 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
                                                      //    This, just of itself, will not print out any declarations!!
 						     //    It must be acompanied by either program_vt and/or global_vt
 
+    /* the qualifier of variables that need to be processed... */
+    static const unsigned int none_vq        = 0x0000;
+    static const unsigned int constant_vq    = 0x0001;  // CONSTANT
+    static const unsigned int retain_vq      = 0x0002;  // RETAIN
+    static const unsigned int non_retain_vq  = 0x0004;  // NON_RETAIN
+
+
     /* How variables should be declared: as local variables or
      * variables within a function call interface.
      *
@@ -813,9 +862,14 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
     /* Only set in the constructor...! */
     /* Will contain a set of values of generate_c_vardecl_c::XXXX_vt */
     unsigned int wanted_vartype;
+
     /* variable used to store the type of variable currently being processed... */
     /* Will contain a single value of generate_c_vardecl_c::XXXX_vt */
     unsigned int current_vartype;
+
+    /* variable used to store the qualifier of variable currently being processed... */
+    /* Will contain a single value of generate_c_vardecl_c::XXXX_vq */
+    unsigned int current_varqualifier;
 
     /* How variables should be declared: as local variables or
      * variables within a function interface...
@@ -872,6 +926,22 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
      */
     symbol_c *globalnamespace;
 
+    void *print_retain(void) {
+	  s4o.print(",");
+      switch (current_varqualifier) {
+		case retain_vq:
+          s4o.print("1");
+          break;
+        case non_retain_vq:
+          s4o.print("0");
+          break;
+		default:
+		  s4o.print("retain");
+		  break;
+      }
+      return NULL;
+    }
+
     /* Actually produce the output where variables are declared... */
     /* Note that located variables and EN/ENO are the exception, they
      * being declared in the located_var_decl_c,
@@ -889,10 +959,15 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
         for(int i = 0; i < list->n; i++) {
           s4o.print(s4o.indent_spaces);
           if (wanted_varformat == local_vf) {
-        	s4o.print(DECLARE_VAR);
-        	s4o.print("(");
+        	if (!is_fb) {
+        	  s4o.print(DECLARE_VAR);
+        	  s4o.print("(");
+        	}
         	this->current_var_type_symbol->accept(*this);
-            s4o.print(",");
+        	if (is_fb)
+        	  s4o.print(" ");
+        	else
+        	  s4o.print(",");
           }
           else if (wanted_varformat == localinit_vf) {
         	this->current_var_type_symbol->accept(*this);
@@ -907,8 +982,10 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
             }
             s4o.print(";\n");
           }
+          else if (is_fb)
+        	s4o.print(";\n");
           else
-        	s4o.print(")\n");
+            s4o.print(")\n");
         }
       }
 
@@ -960,6 +1037,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
             s4o.print("(&");
             this->print_variable_prefix();
             list->elements[i]->accept(*this);
+            print_retain();
             s4o.print(");");
           }
           else if (this->current_var_init_symbol != NULL) {
@@ -970,6 +1048,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
             list->elements[i]->accept(*this);
             s4o.print(",");
             this->current_var_init_symbol->accept(*this);
+            print_retain();
             s4o.print(")");
           }
         }
@@ -987,6 +1066,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
       wanted_varformat = varformat;
       wanted_vartype   = vartype;
       current_vartype  = none_vt;
+      current_varqualifier = none_vq;
       current_var_type_symbol = NULL;
       current_var_init_symbol = NULL;
       globalnamespace         = NULL;
@@ -1096,9 +1176,21 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
 /******************************************/
 /* B 1.4.3 - Declaration & Initialisation */
 /******************************************/
-void *visit(constant_option_c *symbol) {s4o.print("CONSTANT"); return NULL;}
-void *visit(retain_option_c *symbol) {s4o.print("RETAIN"); return NULL;}
-void *visit(non_retain_option_c *symbol) {s4o.print("NON_RETAIN"); return NULL;}
+
+void *visit(constant_option_c *symbol) {
+  current_varqualifier = constant_vq;
+  return NULL;
+}
+
+void *visit(retain_option_c *symbol) {
+  current_varqualifier = retain_vq;
+  return NULL;
+}
+
+void *visit(non_retain_option_c *symbol) {
+  current_varqualifier = non_retain_vq;
+  return NULL;
+}
 
 void *visit(input_declarations_c *symbol) {
   TRACE("input_declarations_c");
@@ -1110,8 +1202,11 @@ void *visit(input_declarations_c *symbol) {
 */
     //s4o.indent_right();
     current_vartype = input_vt;
+    if (symbol->option != NULL)
+      symbol->option->accept(*this);
     symbol->input_declaration_list->accept(*this);
     current_vartype = none_vt;
+    current_varqualifier = none_vt;
     //s4o.indent_left();
   }
   return NULL;
@@ -1182,6 +1277,7 @@ void *visit(en_param_declaration_c *symbol) {
       symbol->name->accept(*this);
       s4o.print(",");
       symbol->value->accept(*this);
+      print_retain();
       s4o.print(")");
     }
   }
@@ -1248,7 +1344,9 @@ void *visit(eno_param_declaration_c *symbol) {
       this->print_variable_prefix();
       // s4o.print("ENO = __BOOL_LITERAL(TRUE);");
       symbol->name->accept(*this);
-      s4o.print(",__BOOL_LITERAL(TRUE))");
+      s4o.print(",__BOOL_LITERAL(TRUE)");
+      print_retain();
+      s4o.print(")");
     }
   }
   return NULL;
@@ -1370,8 +1468,11 @@ void *visit(output_declarations_c *symbol) {
 */
     //s4o.indent_right();
     current_vartype = output_vt;
+    if (symbol->option != NULL)
+      symbol->option->accept(*this);
     symbol->var_init_decl_list->accept(*this);
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
     //s4o.indent_left();
   }
   return NULL;
@@ -1454,8 +1555,11 @@ void *visit(var_declarations_c *symbol) {
       symbol->option->accept(*this);
 */
     current_vartype = private_vt;
+    if (symbol->option != NULL)
+      symbol->option->accept(*this);
     symbol->var_init_decl_list->accept(*this);
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
   }
   return NULL;
 }
@@ -1465,8 +1569,10 @@ void *visit(retentive_var_declarations_c *symbol) {
   TRACE("retentive_var_declarations_c");
   if ((wanted_vartype & private_vt) != 0) {
     current_vartype = private_vt;
+    current_varqualifier = retain_vq;
     symbol->var_init_decl_list->accept(*this);
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
   }
   return NULL;
 }
@@ -1483,8 +1589,11 @@ void *visit(located_var_declarations_c *symbol) {
       symbol->option->accept(*this);
 */
     current_vartype = located_vt;
+    if (symbol->option != NULL)
+      symbol->option->accept(*this);
     symbol->located_var_decl_list->accept(*this);
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
   }
   return NULL;
 }
@@ -1542,6 +1651,7 @@ void *visit(located_var_decl_c *symbol) {
         symbol->location->accept(*this);
       s4o.print(",");
       print_variable_prefix();
+      print_retain();
       s4o.print(")\n");
       if (this->current_var_init_symbol != NULL) {
     	s4o.print(INIT_LOCATED_VALUE);
@@ -1616,8 +1726,11 @@ void *visit(external_var_declarations_c *symbol) {
 */
     //s4o.indent_right();
     current_vartype = external_vt;
+    if (symbol->option != NULL)
+      symbol->option->accept(*this);
     symbol->external_declaration_list->accept(*this);
     current_vartype = none_vt;
+    current_varqualifier = none_vq;
     //s4o.indent_left();
   }
   return NULL;
@@ -1671,6 +1784,7 @@ void *visit(external_declaration_c *symbol) {
       s4o.print(",");
       print_variable_prefix();
       symbol->global_var_name->accept(*this);
+      print_retain();
       s4o.print(")");
       break;
 
@@ -1712,8 +1826,11 @@ void *visit(global_var_declarations_c *symbol) {
     unsigned int previous_vartype = current_vartype;
       // previous_vartype will be either none_vt, or resource_vt
     current_vartype = global_vt;
+    if (symbol->option != NULL)
+      symbol->option->accept(*this);
     symbol->global_var_decl_list->accept(*this);
     current_vartype = previous_vartype;
+    current_varqualifier = none_vq;
     //s4o.indent_left();
   }
   return NULL;
@@ -1799,6 +1916,7 @@ void *visit(global_var_spec_c *symbol) {
         symbol->global_var_name->accept(*this);
       	s4o.print(",");
       	symbol->location->accept(*this);
+        print_retain();
       	s4o.print(")");
       }
       if (this->current_var_init_symbol != NULL) {
@@ -1812,6 +1930,7 @@ void *visit(global_var_spec_c *symbol) {
 		  symbol->location->accept(*this);
 	    s4o.print(",");
 	    this->current_var_init_symbol->accept(*this);
+	    print_retain();
 	    s4o.print(")");
       }
       break;
@@ -1869,6 +1988,7 @@ void *visit(global_var_list_c *symbol) {
           list->elements[i]->accept(*this);
           s4o.print(",");
           this->current_var_init_symbol->accept(*this);
+          print_retain();
           s4o.print(")");
 #if 0
  	  /* The following code would be for globalinit_vf !!
