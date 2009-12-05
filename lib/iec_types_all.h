@@ -13,9 +13,9 @@
 #define TRUE 1
 #define FALSE 0
 
-#define __DEBUG_FLAG 1
-#define __FORCE_FLAG 2
-#define __RETAIN_FLAG 4
+#define __IEC_DEBUG_FLAG 0x01
+#define __IEC_FORCE_FLAG 0x02
+#define __IEC_RETAIN_FLAG 0x04
 
 #define __DECLARE_IEC_TYPE(type)\
 typedef IEC_##type type;\
@@ -58,36 +58,6 @@ __DECLARE_COMPLEX_STRUCT(type);
 /* i.e. this file cannot be included aside windows.h */
 ANY(__DECLARE_IEC_TYPE)
 
-
-/*
-typedef IEC_BOOL  BOOL;
-
-typedef IEC_SINT    SINT;
-typedef IEC_INT   INT;
-typedef IEC_DINT   DINT;
-typedef IEC_LINT   LINT;
-
-typedef IEC_USINT    USINT;
-typedef IEC_UINT   UINT;
-typedef IEC_UDINT   UDINT;
-typedef IEC_ULINT   ULINT;
-
-typedef IEC_BYTE    BYTE;
-typedef IEC_WORD   WORD;
-typedef IEC_DWORD   DWORD;
-typedef IEC_LWORD   LWORD;
-
-typedef IEC_REAL    REAL;
-typedef IEC_LREAL   LREAL;
-
-typedef IEC_TIME TIME;
-typedef IEC_DATE DATE;
-typedef IEC_DT DT;
-typedef IEC_TOD TOD;
-
-typedef IEC_STRING STRING;
-*/
-
 typedef struct {
   __IEC_BOOL_t state;     // current step state. 0 : inative, 1: active
   BOOL prev_state;  // previous step state. 0 : inative, 1: active
@@ -108,38 +78,28 @@ typedef struct {
 
 /* Enumerate native types */
 #define __decl_enum_type(TYPENAME) TYPENAME##_ENUM,
+#define __decl_enum_pointer(TYPENAME) TYPENAME##_P_ENUM,
 typedef enum{
   ANY(__decl_enum_type)
-  ANY_SFC(__decl_enum_type)
-  /*TODO handle custom types*/
+  ANY(__decl_enum_pointer)
+  /* SFC specific types are never external or global */
+  UNKNOWN_ENUM
 } __IEC_types_enum;
 
 /* Get size of type from its number */
-#define __decl_size_case(TYPENAME) case TYPENAME##_ENUM: return sizeof(TYPENAME);
-#define __decl_size_case_force_BOOL(TYPENAME) case TYPENAME##_ENUM: return sizeof(BOOL);
+#define __decl_size_case(TYPENAME) \
+	case TYPENAME##_ENUM:\
+	case TYPENAME##_P_ENUM:\
+		return sizeof(TYPENAME);
 static inline USINT __get_type_enum_size(__IEC_types_enum t){
  switch(t){
   ANY(__decl_size_case)
   /* size do not correspond to real struct.
    * only a bool is used to represent state*/
-  ANY_SFC(__decl_size_case_force_BOOL)
-  /*TODO handle custom types*/
+  default:
+	  return 0;
  }
  return 0;
 }
-
-/* Get name of type from its number */
-#define __decl_typename_case(TYPENAME) case TYPENAME##_ENUM: return #TYPENAME ;
-static inline const char* __get_type_enum_name(__IEC_types_enum t){
- switch(t){
-  ANY(__decl_typename_case)
-  /* size do not correspond to real struct.
-   * only a bool is used to represent state*/
-  ANY_SFC(__decl_typename_case)
-  /*TODO handle custom types*/
- }
- return 0;
-}
-
 
 #endif /*IEC_TYPES_ALL_H*/
