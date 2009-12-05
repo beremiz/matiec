@@ -13,9 +13,9 @@
 #define TRUE 1
 #define FALSE 0
 
-#define DEBUG_FLAG 1
-#define FORCE_FLAG 2
-#define RETAIN_FLAG 4
+#define __DEBUG_FLAG 1
+#define __FORCE_FLAG 2
+#define __RETAIN_FLAG 4
 
 #define __DECLARE_IEC_TYPE(type)\
 typedef IEC_##type type;\

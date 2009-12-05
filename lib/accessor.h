@@ -20,21 +20,25 @@
 
 
 // variable initialization macros
-#define __INIT_STRUCT(name, initial, retained)\
-    name.value = initial;\
-	name.flags |= retained?RETAIN_FLAG:0;
+#define __INIT_RETAIN(name, retained)\
+    name.flags |= retained?__RETAIN_FLAG:0;
 #define __INIT_VAR(name, initial, retained)\
-	__INIT_STRUCT(name, initial, retained)
+	name.value = initial;\
+	__INIT_RETAIN(name, retained)
 #define __INIT_GLOBAL(name, initial, retained)\
-	__INIT_STRUCT((*GLOBAL__##name), initial, retained)
+	(*GLOBAL__##name).value = initial;\
+	__INIT_RETAIN((*GLOBAL__##name), retained)
 #define __INIT_GLOBAL_LOCATED(resource, name, location, retained)\
-	__INIT_STRUCT(resource##__##name, location, retained)
+	resource##__##name.value = location;\
+	__INIT_RETAIN(resource##__##name, retained)
 #define __INIT_EXTERNAL(type, global, name, retained)\
 	{extern __IEC_##type##_t *GLOBAL__##global;\
-	 __INIT_STRUCT(name, &((*GLOBAL__##global).value), retained)}
+	 name.value = &((*GLOBAL__##global).value);\
+     __INIT_RETAIN(name, retained)}
 #define __INIT_LOCATED(type, location, name, retained)\
 	{extern type *location;\
-	 __INIT_STRUCT(name, location, retained)}
+	 name.value = location;\
+	 __INIT_RETAIN(name, retained)}
 #define __INIT_LOCATED_VALUE(name, initial)\
 	*(name.value) = initial;
 
@@ -42,10 +46,10 @@
 // variable getting macros
 #define __GET_VAR(name, ...)\
 	name.value __VA_ARGS__
-#define __GET_EXTERNAL(name)\
-	name.flags & FORCE_FLAG ? name.fvalue : *(name.value)
-#define __GET_LOCATED(name)\
-	name.flags & FORCE_FLAG ? name.fvalue : *(name.value)
+#define __GET_EXTERNAL(name, ...)\
+	(name.flags & __FORCE_FLAG) ? name.fvalue __VA_ARGS__ : *(name.value) __VA_ARGS__
+#define __GET_LOCATED(name, ...)\
+	(name.flags & __FORCE_FLAG) ? name.fvalue __VA_ARGS__ : *(name.value) __VA_ARGS__
 #define __GET_VAR_BY_REF(name)\
 	&(name)
 #define __GET_EXTERNAL_BY_REF(name)\
@@ -55,10 +59,10 @@
 
 // variable setting macros
 #define __SET_VAR(name, new_value, ...)\
-	if (!(name.flags & FORCE_FLAG)) name.value __VA_ARGS__ = new_value
-#define __SET_EXTERNAL(name, new_value)\
-	if (!(name.flags & FORCE_FLAG)) *(name.value) = new_value
-#define __SET_LOCATED(name, new_value)\
-	if (!(name.flags & FORCE_FLAG)) *(name.value) = new_value
+	if (!(name.flags & __FORCE_FLAG)) name.value __VA_ARGS__ = new_value
+#define __SET_EXTERNAL(name, new_value, ...)\
+	if (!(name.flags & __FORCE_FLAG)) *(name.value) __VA_ARGS__ = new_value
+#define __SET_LOCATED(name, new_value, ...)\
+	if (!(name.flags & __FORCE_FLAG)) *(name.value) __VA_ARGS__ = new_value
 
 #endif //__ACCESSOR_H
