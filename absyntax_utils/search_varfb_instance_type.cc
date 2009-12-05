@@ -56,13 +56,13 @@
 search_varfb_instance_type_c::search_varfb_instance_type_c(symbol_c *search_scope): search_var_instance_decl(search_scope) {
   this->decompose_var_instance_name = NULL;
   this->current_structelement_name = NULL;
-  this->search_base_type = false;
+  this->current_rawtype = NULL;
 }
 
-symbol_c *search_varfb_instance_type_c::get_type(symbol_c *variable_name, bool base_type) {
+symbol_c *search_varfb_instance_type_c::get_type(symbol_c *variable_name) {
   this->current_structelement_name = NULL;
+  this->current_rawtype = NULL;
   this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
-  this->search_base_type = base_type;
   if (NULL == decompose_var_instance_name) ERROR;
 
   /* find the part of the variable name that will appear in the
@@ -88,7 +88,7 @@ symbol_c *search_varfb_instance_type_c::get_type(symbol_c *variable_name, bool b
   symbol_c *res = (symbol_c *)var_decl->accept(*this);
   if (NULL == res) ERROR;
 
-  /* make sure that we have decomposed all strcuture elements of the variable name */
+  /* make sure that we have decomposed all structure elements of the variable name */
   symbol_c *var_name = decompose_var_instance_name->next_part();
   if (NULL != var_name) ERROR;
 
@@ -97,6 +97,8 @@ symbol_c *search_varfb_instance_type_c::get_type(symbol_c *variable_name, bool b
 
 unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) {
   this->current_structelement_name = NULL;
+  this->current_rawtype = NULL;
+  this->is_complex = false;
   this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
   if (NULL == decompose_var_instance_name) ERROR;
 
@@ -120,13 +122,26 @@ unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) 
    * This class, while visiting, will recursively call
    * decompose_var_instance_name->get_next() when and if required...
    */
+  var_decl->accept(*this);
   unsigned int res = search_var_instance_decl.get_vartype();
   
-  /* make sure that we have decomposed all strcuture elements of the variable name */
+  /* make sure that we have decomposed all structure elements of the variable name */
   symbol_c *var_name = decompose_var_instance_name->next_part();
   if (NULL != var_name) ERROR;
 
   return res;
+}
+
+symbol_c *search_varfb_instance_type_c::get_rawtype(symbol_c *variable_name) {
+  symbol_c *rawtype = this->get_type(variable_name);
+  if (this->current_rawtype != NULL)
+    return this->current_rawtype;
+  else
+	return rawtype;
+}
+
+bool search_varfb_instance_type_c::type_is_complex(void) {
+  return this->is_complex;
 }
 
 /* a helper function... */
@@ -163,10 +178,11 @@ void *search_varfb_instance_type_c::visit(identifier_c *type_name) {
   /* No. It is not a function block, so we let
    * the base class take care of it...
    */
-  if (this->search_base_type)
-    return search_base_type_c::visit(type_name);
+  this->current_rawtype = type_name;
+  if (current_structelement_name == NULL)
+	return base_type(type_name);
   else
-    return type_name;
+    return search_base_type_c::visit(type_name);
 }
 
 /********************************/
@@ -181,6 +197,7 @@ void *search_varfb_instance_type_c::visit(array_type_declaration_c *symbol) {
 /* array_specification [ASSIGN array_initialization} */
 /* array_initialization may be NULL ! */
 void *search_varfb_instance_type_c::visit(array_spec_init_c *symbol) {
+  this->is_complex = true;
   symbol_c *var_name = decompose_var_instance_name->next_part();
   if (NULL != var_name)
     current_structelement_name = var_name;
@@ -209,7 +226,8 @@ void *search_varfb_instance_type_c::visit(structure_type_declaration_c *symbol) 
 /* structure_initialization may be NULL ! */
 // SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
 void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
-  /* make sure that we have decomposed all strcuture elements of the variable name */
+  this->is_complex = true;
+  /* make sure that we have decomposed all structure elements of the variable name */
   symbol_c *var_name = decompose_var_instance_name->next_part();
   if (NULL == var_name) {
     /* this is it... !

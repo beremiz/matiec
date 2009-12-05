@@ -69,7 +69,7 @@ symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable_instance_name)
   return (symbol_c *)search_scope->accept(*this);
 }
 
-unsigned int search_var_instance_decl_c::get_vartype() {
+unsigned int search_var_instance_decl_c::get_vartype(void) {
   return current_vartype;
 }
 

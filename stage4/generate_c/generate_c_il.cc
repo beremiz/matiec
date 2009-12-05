@@ -1004,7 +1004,7 @@ void *visit(il_fb_call_c *symbol) {
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
-        symbol_c *param_type = search_varfb_instance_type->get_type(param_value, false);
+        symbol_c *param_type = search_varfb_instance_type->get_rawtype(param_value);
         unsigned int vartype = search_varfb_instance_type->get_vartype(param_value);
 
         if (!this->is_variable_prefix_null()) {
@@ -1376,7 +1376,7 @@ void *visit(LDN_operator_c *symbol)	{
 }
 
 void *visit(ST_operator_c *symbol)	{
-  symbol_c *operand_type = search_varfb_instance_type->get_type(this->current_operand, false);
+  symbol_c *operand_type = search_varfb_instance_type->get_rawtype(this->current_operand);
   
   if (!this->is_variable_prefix_null()) {
     unsigned int vartype = search_varfb_instance_type->get_vartype(this->current_operand);
@@ -1409,7 +1409,7 @@ void *visit(ST_operator_c *symbol)	{
 }
 
 void *visit(STN_operator_c *symbol)	{
-  symbol_c *operand_type = search_varfb_instance_type->get_type(this->current_operand, false);
+  symbol_c *operand_type = search_varfb_instance_type->get_rawtype(this->current_operand);
   
   if (!this->is_variable_prefix_null()) {
     unsigned int vartype = search_varfb_instance_type->get_vartype(this->current_operand);

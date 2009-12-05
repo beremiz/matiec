@@ -588,9 +588,9 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
       
       for (i = 0; i < symbol->n; i++) {
         s4o.print(s4o.indent_spaces);
-        print_variable_prefix();
         s4o.print(SET_VAR);
         s4o.print("(");
+        print_variable_prefix();
         symbol->elements[i]->accept(*this);
         s4o.print(",temp);\n");
       }
@@ -1506,7 +1506,13 @@ SYM_REF2(array_var_declaration_c, var1_list, array_specification)
 #endif
 
 void *visit(array_initial_elements_list_c *symbol) {
-  s4o.print(";// array initialisation");
+  if (wanted_varformat == localinit_vf) {
+	generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
+	array_initialization->init_array_dimensions(this->current_var_type_symbol);
+	array_initialization->current_mode = generate_c_array_initialization_c::initializationvalue_am;
+	array_initialization->init_array_values(this->current_var_init_symbol);
+	delete array_initialization;
+  }
   return NULL;
 }
 
@@ -1542,6 +1548,16 @@ void *visit(structured_var_declaration_c *symbol) {
   return NULL;
 }
 
+void *visit(structure_element_initialization_list_c *symbol) {
+  if (wanted_varformat == localinit_vf) {
+    generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
+    structure_initialization->init_structure_default(this->current_var_type_symbol);
+    structure_initialization->current_mode = generate_c_structure_initialization_c::initializationvalue_sm;
+    this->current_var_init_symbol->accept(*structure_initialization);
+	delete structure_initialization;
+  }
+  return NULL;
+}
 
 /* VAR [CONSTANT] var_init_decl_list END_VAR */
 /* option -> may be NULL ! */

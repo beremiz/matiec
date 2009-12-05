@@ -53,13 +53,16 @@ class search_varfb_instance_type_c: public search_base_type_c {
     search_var_instance_decl_c search_var_instance_decl;
     decompose_var_instance_name_c *decompose_var_instance_name;
     symbol_c *current_structelement_name;
-    bool search_base_type;
+    symbol_c *current_rawtype;
+    bool is_complex;
 
   public:
     search_varfb_instance_type_c(symbol_c *search_scope);
-    symbol_c *get_type(symbol_c *variable_name, bool base_type = true);
+    symbol_c *get_type(symbol_c *variable_name);
+    symbol_c *get_rawtype(symbol_c *variable_name);
 
     unsigned int get_vartype(symbol_c *variable_name);
+    bool type_is_complex(void);
 
   private:
     /* a helper function... */

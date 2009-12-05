@@ -69,7 +69,7 @@ class search_var_instance_decl_c: public search_visitor_c {
   public:
     search_var_instance_decl_c(symbol_c *search_scope);
     symbol_c *get_decl(symbol_c *variable_instance_name);
-    unsigned int get_vartype();
+    unsigned int get_vartype(void);
 
   public:
 
