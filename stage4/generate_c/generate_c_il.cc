@@ -143,6 +143,8 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     typedef enum {
       expression_vg,
       assignment_vg,
+      complextype_base_vg,
+      complextype_suffix_vg,
       fparam_output_vg
     } variablegeneration_t;
 
@@ -244,6 +246,8 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
 
     search_base_type_c search_base_type;
 
+    symbol_c* current_array_type;
+
     int fcall_number;
     symbol_c *fbname;
 
@@ -261,6 +265,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       current_operand = NULL;
       current_operand_type = NULL;
       il_default_variable_init_value = NULL;
+      current_array_type = NULL;
       fcall_number = 0;
       fbname = name;
       wanted_variablegeneration = expression_vg;
@@ -428,6 +433,68 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
         this->current_operand_type = this->default_variable_name.current_type;
     }
 
+    void *print_getter(symbol_c *symbol) {
+      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+      if (vartype == search_var_instance_decl_c::external_vt)
+    	s4o.print(GET_EXTERNAL);
+      else if (vartype == search_var_instance_decl_c::located_vt)
+    	s4o.print(GET_LOCATED);
+      else
+    	s4o.print(GET_VAR);
+      s4o.print("(");
+
+      wanted_variablegeneration = complextype_base_vg;
+      symbol->accept(*this);
+      if (search_varfb_instance_type->type_is_complex())
+    	s4o.print(",");
+      wanted_variablegeneration = complextype_suffix_vg;
+      symbol->accept(*this);
+      s4o.print(")");
+      wanted_variablegeneration = expression_vg;
+      return NULL;
+    }
+
+    void *print_setter(symbol_c* symbol,
+    		symbol_c* type,
+    		symbol_c* value,
+    		symbol_c* fb_symbol = NULL,
+    		symbol_c* fb_value = NULL,
+    		bool negative = false) {
+      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+      if (vartype == search_var_instance_decl_c::external_vt)
+        s4o.print(SET_EXTERNAL);
+      else if (vartype == search_var_instance_decl_c::located_vt)
+        s4o.print(SET_LOCATED);
+      else
+        s4o.print(SET_VAR);
+      s4o.print("(");
+
+      if (fb_symbol != NULL) {
+        print_variable_prefix();
+        fb_symbol->accept(*this);
+        s4o.print(".");
+      }
+      else
+        wanted_variablegeneration = complextype_base_vg;
+      symbol->accept(*this);
+      s4o.print(",");
+      if (negative) {
+	    if (search_expression_type->is_bool_type(this->current_operand_type))
+		  s4o.print("!");
+	    else
+		  s4o.print("~");
+      }
+      wanted_variablegeneration = expression_vg;
+      print_check_function(type, value, fb_value);
+      if (search_varfb_instance_type->type_is_complex()) {
+        s4o.print(",");
+        wanted_variablegeneration = complextype_suffix_vg;
+        symbol->accept(*this);
+      }
+      s4o.print(")");
+      wanted_variablegeneration = expression_vg;
+      return NULL;
+    }
 
 public:
 void *visit(il_default_variable_c *symbol) {
@@ -471,8 +538,13 @@ TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 /*********************/
 
 void *visit(symbolic_variable_c *symbol) {
-  unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-  if (this->is_variable_prefix_null()) {
+  unsigned int vartype;
+  if (wanted_variablegeneration == complextype_base_vg)
+	generate_c_base_c::visit(symbol);
+  else if (wanted_variablegeneration == complextype_suffix_vg)
+	return NULL;
+  else if (this->is_variable_prefix_null()) {
+	vartype = search_varfb_instance_type->get_vartype(symbol);
     if (wanted_variablegeneration == fparam_output_vg) {
       if (vartype == search_var_instance_decl_c::external_vt)
     	s4o.print(GET_EXTERNAL);
@@ -496,6 +568,7 @@ void *visit(symbolic_variable_c *symbol) {
   else {
     switch (wanted_variablegeneration) {
       case expression_vg:
+    	vartype = search_varfb_instance_type->get_vartype(symbol);
         if (vartype == search_var_instance_decl_c::external_vt)
     	  s4o.print(GET_EXTERNAL);
     	else if (vartype == search_var_instance_decl_c::located_vt)
@@ -507,6 +580,7 @@ void *visit(symbolic_variable_c *symbol) {
         s4o.print(")");
 		break;
       case fparam_output_vg:
+    	vartype = search_varfb_instance_type->get_vartype(symbol);
         if (vartype == search_var_instance_decl_c::external_vt)
           s4o.print(GET_EXTERNAL_BY_REF);
         else if (vartype == search_var_instance_decl_c::located_vt)
@@ -556,6 +630,80 @@ void *visit(direct_variable_c *symbol) {
   if ((this->is_variable_prefix_null() && wanted_variablegeneration != fparam_output_vg) ||
 	  wanted_variablegeneration != assignment_vg)
     s4o.print(")");
+  return NULL;
+}
+
+/*************************************/
+/* B.1.4.2   Multi-element Variables */
+/*************************************/
+
+// SYM_REF2(structured_variable_c, record_variable, field_selector)
+void *visit(structured_variable_c *symbol) {
+  TRACE("structured_variable_c");
+  switch (wanted_variablegeneration) {
+    case complextype_base_vg:
+      symbol->record_variable->accept(*this);
+      break;
+    case complextype_suffix_vg:
+      symbol->record_variable->accept(*this);
+      s4o.print(".");
+      symbol->field_selector->accept(*this);
+      break;
+    default:
+      if (this->is_variable_prefix_null()) {
+    	symbol->record_variable->accept(*this);
+    	s4o.print(".");
+    	symbol->field_selector->accept(*this);
+      }
+      else
+    	print_getter(symbol);
+      break;
+  }
+  return NULL;
+}
+
+/*  subscripted_variable '[' subscript_list ']' */
+//SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
+void *visit(array_variable_c *symbol) {
+  switch (wanted_variablegeneration) {
+    case complextype_base_vg:
+      symbol->subscripted_variable->accept(*this);
+      break;
+    case complextype_suffix_vg:
+      current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+      symbol->subscripted_variable->accept(*this);
+      if (current_array_type != NULL) {
+        symbol->subscript_list->accept(*this);
+        current_array_type = NULL;
+      }
+      break;
+    default:
+      if (this->is_variable_prefix_null()) {
+    	current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+    	symbol->subscripted_variable->accept(*this);
+    	if (current_array_type != NULL) {
+    	  symbol->subscript_list->accept(*this);
+    	  current_array_type = NULL;
+    	}
+      }
+      else
+    	print_getter(symbol);
+      break;
+  }
+  return NULL;
+}
+
+/* subscript_list ',' subscript */
+void *visit(subscript_list_c *symbol) {
+  for (int i =  0; i < symbol->n; i++) {
+    s4o.print("[__");
+    current_array_type->accept(*this);
+    s4o.print("_TRANSIDX");
+    print_integer(i);
+    s4o.print("(");
+    symbol->elements[i]->accept(*this);
+    s4o.print(")]");
+  }
   return NULL;
 }
 
@@ -960,20 +1108,16 @@ void *visit(il_fb_call_c *symbol) {
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_in) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
-    	if (!this->is_variable_prefix_null()) {
-    	  s4o.print(SET_VAR);
-    	  s4o.print("(");
-    	}
-    	symbol->fb_name->accept(*this);
-        s4o.print(".");
-        param_name->accept(*this);
-        if (this->is_variable_prefix_null())
+    	if (this->is_variable_prefix_null()) {
+    	  symbol->fb_name->accept(*this);
+          s4o.print(".");
+          param_name->accept(*this);
           s4o.print(" = ");
-        else
-          s4o.print(",");
-        print_check_function(param_type, param_value);
-        if (!this->is_variable_prefix_null())
-          s4o.print(")");
+          print_check_function(param_type, param_value);
+    	}
+        else {
+          print_setter(param_name, param_type, param_value, symbol->fb_name);
+        }
         s4o.print(";\n" + s4o.indent_spaces);
       }
   } /* for(...) */
@@ -1005,30 +1149,14 @@ void *visit(il_fb_call_c *symbol) {
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
         symbol_c *param_type = search_varfb_instance_type->get_rawtype(param_value);
-        unsigned int vartype = search_varfb_instance_type->get_vartype(param_value);
-
-        if (!this->is_variable_prefix_null()) {
-		  s4o.print(";\n"+ s4o.indent_spaces);
-		  if (vartype == search_var_instance_decl_c::external_vt)
-		    s4o.print(SET_EXTERNAL);
-		  else if (vartype == search_var_instance_decl_c::located_vt)
-		    s4o.print(SET_LOCATED);
-		  else
-		    s4o.print(SET_VAR);
-		  s4o.print("(");
-
-		  wanted_variablegeneration = assignment_vg;
+        if (this->is_variable_prefix_null()) {
 		  param_value->accept(*this);
-		  wanted_variablegeneration = expression_vg;
-		  s4o.print(",");
-        }
-        else {
-          param_value->accept(*this);
-          s4o.print(" = ");
-        }
-        print_check_function(param_type, param_name, symbol->fb_name);
-        if (!this->is_variable_prefix_null())
-          s4o.print(")");
+		  s4o.print(" = ");
+		  print_check_function(param_type, param_name, symbol->fb_name);
+		}
+		else {
+		  print_setter(param_value, param_type, param_name, NULL, symbol->fb_name);
+		}
       }
   } /* for(...) */
 
@@ -1377,70 +1505,39 @@ void *visit(LDN_operator_c *symbol)	{
 
 void *visit(ST_operator_c *symbol)	{
   symbol_c *operand_type = search_varfb_instance_type->get_rawtype(this->current_operand);
-  
-  if (!this->is_variable_prefix_null()) {
-    unsigned int vartype = search_varfb_instance_type->get_vartype(this->current_operand);
-    if (vartype == search_var_instance_decl_c::external_vt)
-      s4o.print(SET_EXTERNAL);
-    else if (vartype == search_var_instance_decl_c::located_vt)
-      s4o.print(SET_LOCATED);
-    else
-      s4o.print(SET_VAR);
-    s4o.print("(");
-
-    wanted_variablegeneration = assignment_vg;
-    this->current_operand->accept(*this);
-    wanted_variablegeneration = expression_vg;
-
-    s4o.print(",");
-  }
-  else {
+  if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type) ||
+  	  search_expression_type->is_literal_real_type(this->default_variable_name.current_type))
+      this->default_variable_name.current_type = this->current_operand_type;
+  if (this->is_variable_prefix_null()) {
     this->current_operand->accept(*this);
     s4o.print(" = ");
+    print_check_function(operand_type, (symbol_c*)&(this->default_variable_name));
   }
-  if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type) ||
-	  search_expression_type->is_literal_real_type(this->default_variable_name.current_type))
-    this->default_variable_name.current_type = this->current_operand_type;
-  print_check_function(operand_type, (symbol_c*)&(this->default_variable_name));
-  if (!this->is_variable_prefix_null())
-    s4o.print(")");
+  else {
+	print_setter(this->current_operand, operand_type, (symbol_c*)&(this->default_variable_name));
+  }
   /* the data type resulting from this operation is unchanged. */
   return NULL;
 }
 
 void *visit(STN_operator_c *symbol)	{
   symbol_c *operand_type = search_varfb_instance_type->get_rawtype(this->current_operand);
-  
-  if (!this->is_variable_prefix_null()) {
-    unsigned int vartype = search_varfb_instance_type->get_vartype(this->current_operand);
-    if (vartype == search_var_instance_decl_c::external_vt)
-      s4o.print(SET_EXTERNAL);
-    else if (vartype == search_var_instance_decl_c::located_vt)
-      s4o.print(SET_LOCATED);
-    else
-	  s4o.print(SET_VAR);
-    s4o.print("(");
-
-    wanted_variablegeneration = assignment_vg;
-    this->current_operand->accept(*this);
-    wanted_variablegeneration = expression_vg;
-
-    s4o.print(",");
-  }
-  else {
-    this->current_operand->accept(*this);
-    s4o.print(" = ");
-  }
-  if (search_expression_type->is_bool_type(this->current_operand_type))
-    s4o.print("!");
-  else
-    s4o.print("~");
   if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type))
 	this->default_variable_name.current_type = this->current_operand_type;
-  this->default_variable_name.accept(*this);
-  if (!this->is_variable_prefix_null())
-    s4o.print(")");
-  /* the data type resulting from this operation is unchamged. */
+  
+  if (this->is_variable_prefix_null()) {
+    this->current_operand->accept(*this);
+    s4o.print(" = ");
+    if (search_expression_type->is_bool_type(this->current_operand_type))
+      s4o.print("!");
+    else
+	  s4o.print("~");
+    this->default_variable_name.accept(*this);
+  }
+  else {
+	print_setter(this->current_operand, operand_type, (symbol_c*)&(this->default_variable_name), NULL, NULL, true);
+  }
+  /* the data type resulting from this operation is unchanged. */
   return NULL;
 }
 

@@ -813,7 +813,6 @@ void *visit(fb_invocation_c *symbol) {
       if ((param_direction == function_param_iterator_c::direction_in) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
         if (this->is_variable_prefix_null()) {
-          print_variable_prefix();
           symbol->fb_name->accept(*this);
           s4o.print(".");
           param_name->accept(*this);
@@ -821,7 +820,7 @@ void *visit(fb_invocation_c *symbol) {
           print_check_function(param_type, param_value);
         }
         else {
-        	print_setter(param_name, param_type, param_value, symbol->fb_name);
+          print_setter(param_name, param_type, param_value, symbol->fb_name);
         }
         s4o.print(";\n" + s4o.indent_spaces);
       }

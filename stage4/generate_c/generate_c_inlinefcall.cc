@@ -37,7 +37,9 @@ class generate_c_inline_c: public generate_c_typedecl_c {
   public:
     typedef enum {
       expression_vg,
-      assignment_vg
+      assignment_vg,
+      complextype_base_vg,
+      complextype_suffix_vg
     } variablegeneration_t;
 
   private:
@@ -49,6 +51,8 @@ class generate_c_inline_c: public generate_c_typedecl_c {
 	 * scope ...
 	 */
 	il_default_variable_c default_variable_name;
+
+	symbol_c* current_array_type;
 
 	int fcall_number;
 	symbol_c *fbname;
@@ -162,21 +166,8 @@ class generate_c_inline_c: public generate_c_typedecl_c {
         	PARAM_VALUE != NULL) {
 
           s4o.print(s4o.indent_spaces);
-
-          unsigned int vartype = search_varfb_instance_type->get_vartype(PARAM_VALUE);
-          if (vartype == search_var_instance_decl_c::external_vt)
-            s4o.print(SET_EXTERNAL);
-          else if (vartype == search_var_instance_decl_c::located_vt)
-            s4o.print(SET_LOCATED);
-          else
-            s4o.print(SET_VAR);
-          s4o.print("(");
-          wanted_variablegeneration = assignment_vg;
-          PARAM_VALUE->accept(*this);
-          wanted_variablegeneration = expression_vg;
-          s4o.print(", ");
-          print_check_function(PARAM_TYPE, PARAM_NAME, NULL, true);
-          s4o.print(");\n");
+          print_setter(PARAM_VALUE, PARAM_TYPE, PARAM_NAME);
+          s4o.print(";\n");
 		}
 	  }
 	  s4o.print(s4o.indent_spaces + "return ");
@@ -191,12 +182,65 @@ class generate_c_inline_c: public generate_c_typedecl_c {
 
   private:
 
+    void *print_getter(symbol_c *symbol) {
+      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+      if (vartype == search_var_instance_decl_c::external_vt)
+    	s4o.print(GET_EXTERNAL);
+      else if (vartype == search_var_instance_decl_c::located_vt)
+    	s4o.print(GET_LOCATED);
+      else
+    	s4o.print(GET_VAR);
+      s4o.print("(");
+
+      wanted_variablegeneration = complextype_base_vg;
+      symbol->accept(*this);
+      if (search_varfb_instance_type->type_is_complex())
+    	s4o.print(",");
+      wanted_variablegeneration = complextype_suffix_vg;
+      symbol->accept(*this);
+      s4o.print(")");
+      wanted_variablegeneration = expression_vg;
+      return NULL;
+    }
+
+    void *print_setter(symbol_c* symbol,
+    		symbol_c* type,
+    		symbol_c* value) {
+      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+      if (vartype == search_var_instance_decl_c::external_vt)
+        s4o.print(SET_EXTERNAL);
+      else if (vartype == search_var_instance_decl_c::located_vt)
+        s4o.print(SET_LOCATED);
+      else
+        s4o.print(SET_VAR);
+      s4o.print("(");
+
+      wanted_variablegeneration = complextype_base_vg;
+      symbol->accept(*this);
+      s4o.print(",");
+      wanted_variablegeneration = expression_vg;
+      print_check_function(type, value, NULL, true);
+      if (search_varfb_instance_type->type_is_complex()) {
+        s4o.print(",");
+        wanted_variablegeneration = complextype_suffix_vg;
+        symbol->accept(*this);
+      }
+      s4o.print(")");
+      wanted_variablegeneration = expression_vg;
+      return NULL;
+    }
+
     /*********************/
     /* B 1.4 - Variables */
     /*********************/
     void *visit(symbolic_variable_c *symbol) {
-      if (wanted_variablegeneration == expression_vg) {
-	    unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+      unsigned int vartype;
+      if (wanted_variablegeneration == complextype_base_vg)
+        generate_c_base_c::visit(symbol);
+      else if (wanted_variablegeneration == complextype_suffix_vg)
+        return NULL;
+      else if (wanted_variablegeneration == expression_vg) {
+	    vartype = search_varfb_instance_type->get_vartype(symbol);
 	    if (vartype == search_var_instance_decl_c::external_vt) {
 		  s4o.print(GET_EXTERNAL);
 		  s4o.print("(");
@@ -230,6 +274,66 @@ class generate_c_inline_c: public generate_c_typedecl_c {
       this->print_variable_prefix();
       s4o.printlocation(symbol->value + 1);
       s4o.print(")");
+      return NULL;
+    }
+
+    /*************************************/
+    /* B.1.4.2   Multi-element Variables */
+    /*************************************/
+
+    // SYM_REF2(structured_variable_c, record_variable, field_selector)
+    void *visit(structured_variable_c *symbol) {
+      TRACE("structured_variable_c");
+      switch (wanted_variablegeneration) {
+        case complextype_base_vg:
+          symbol->record_variable->accept(*this);
+          break;
+        case complextype_suffix_vg:
+          symbol->record_variable->accept(*this);
+          s4o.print(".");
+          symbol->field_selector->accept(*this);
+          break;
+        default:
+          if (this->is_variable_prefix_null()) {
+        	symbol->record_variable->accept(*this);
+        	s4o.print(".");
+        	symbol->field_selector->accept(*this);
+          }
+          else
+        	print_getter(symbol);
+          break;
+      }
+      return NULL;
+    }
+
+    /*  subscripted_variable '[' subscript_list ']' */
+    //SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
+    void *visit(array_variable_c *symbol) {
+      switch (wanted_variablegeneration) {
+        case complextype_base_vg:
+          symbol->subscripted_variable->accept(*this);
+          break;
+        case complextype_suffix_vg:
+          current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+          symbol->subscripted_variable->accept(*this);
+          if (current_array_type != NULL) {
+            symbol->subscript_list->accept(*this);
+            current_array_type = NULL;
+          }
+          break;
+        default:
+          if (this->is_variable_prefix_null()) {
+        	current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+        	symbol->subscripted_variable->accept(*this);
+        	if (current_array_type != NULL) {
+        	  symbol->subscript_list->accept(*this);
+        	  current_array_type = NULL;
+        	}
+          }
+          else
+        	print_getter(symbol);
+          break;
+      }
       return NULL;
     }
 
