@@ -50,7 +50,8 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
         stepundef_sd,
         actiondef_sd,
         actionundef_sd,
-        actioncount_sd
+        actioncount_sd,
+        transitioncount_sd
        } sfcdeclaration_t;
   
   private:
@@ -107,6 +108,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(s4o.indent_spaces + "__IEC_BOOL_t __debug_transition_list[");
           s4o.print_integer(transition_number);
           s4o.print("];\n");
+          s4o.print(s4o.indent_spaces + "UINT __nb_transitions;\n");
           
           /* last_ticktime declaration */
           s4o.print(s4o.indent_spaces + "TIME __lasttick_time;\n");
@@ -165,6 +167,18 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.indent_left();
           s4o.print(s4o.indent_spaces + "}\n");
           
+          /* transitions table count */
+          wanted_sfcdeclaration = transitioncount_sd;
+          for(int i = 0; i < symbol->n; i++)
+            symbol->elements[i]->accept(*this);
+          s4o.print(s4o.indent_spaces);
+          print_variable_prefix();
+          s4o.print("__nb_transitions = ");
+          s4o.print_integer(transition_number);
+          s4o.print(";\n");
+          transition_number = 0;
+          wanted_sfcdeclaration = sfcinit_sd;
+
           /* last_ticktime initialisation */
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
@@ -268,6 +282,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
     void *visit(transition_c *symbol) {
       switch (wanted_sfcdeclaration) {
         case sfcdecl_sd:
+        case transitioncount_sd:
           transition_number++;
           break;
         default:

@@ -561,7 +561,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       print_symbol_list();
       s4o.print("__step_list[");
       print_step_number();
-      s4o.print("].state;STEP;\n");
+      s4o.print("].state;BOOL;\n");
       step_number++;
       return NULL;
     }
@@ -577,7 +577,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       print_symbol_list();
       s4o.print("__step_list[");
       print_step_number();
-      s4o.print("].state;STEP;\n");
+      s4o.print("].state;BOOL;\n");
       step_number++;
       return NULL;
     }
@@ -601,7 +601,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       print_symbol_list();
       s4o.print("__debug_transition_list[");
       print_transition_number();
-      s4o.print("];TRANSITION;\n");
+      s4o.print("];BOOL;\n");
       transition_number++;
       return NULL;
     }
@@ -640,7 +640,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       print_symbol_list();
       s4o.print("__action_list[");
       print_action_number();
-      s4o.print("].state;ACTION;\n");
+      s4o.print("].state;BOOL;\n");
       action_number++;
       return NULL;
     }

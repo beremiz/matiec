@@ -661,7 +661,7 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       s4o.print(s4o.indent_spaces +"BOOL transition;\n");
       s4o.print(s4o.indent_spaces +"TIME elapsed_time, current_time;\n\n");
       
-      /* generate elapsed_time initialisations */
+      /* generate elapsed_time initializations */
       s4o.print(s4o.indent_spaces + "// Calculate elapsed_time\n");
       s4o.print(s4o.indent_spaces +"current_time = __CURRENT_TIME;\n");
       s4o.print(s4o.indent_spaces +"elapsed_time = __time_sub(__BOOL_LITERAL(TRUE), NULL, current_time, ");
@@ -671,8 +671,26 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       print_variable_prefix();
       s4o.print("__lasttick_time = current_time;\n");
       
-      /* generate step initialisations */
-      s4o.print(s4o.indent_spaces + "// Steps initialisation\n");
+      /* generate transition initializations */
+      s4o.print(s4o.indent_spaces + "// Transitions initialization\n");
+      s4o.print(s4o.indent_spaces + "if (__DEBUG) {\n");
+      s4o.indent_right();
+      s4o.print(s4o.indent_spaces + "for (i = 0; i < ");
+      print_variable_prefix();
+      s4o.print("__nb_transitions; i++) {\n");
+      s4o.indent_right();
+      s4o.print(s4o.indent_spaces);
+      print_variable_prefix();
+      s4o.print("__transition_list[i] = ");
+      print_variable_prefix();
+      s4o.print("__debug_transition_list[i];\n");
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "}\n");
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "}\n");
+
+      /* generate step initializations */
+      s4o.print(s4o.indent_spaces + "// Steps initialization\n");
       s4o.print(s4o.indent_spaces + "for (i = 0; i < ");
       print_variable_prefix();
       s4o.print("__nb_steps; i++) {\n");
@@ -700,8 +718,8 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
 
-      /* generate action initilizations */
-      s4o.print(s4o.indent_spaces + "// Actions initialisation\n");
+      /* generate action initializations */
+      s4o.print(s4o.indent_spaces + "// Actions initialization\n");
       s4o.print(s4o.indent_spaces + "for (i = 0; i < ");
       print_variable_prefix();
       s4o.print("__nb_actions; i++) {\n");
