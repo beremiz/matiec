@@ -1661,24 +1661,25 @@ void *visit(located_var_decl_c *symbol) {
       s4o.print(",");
       symbol->location->accept(*this);
       s4o.print(",");
+      print_variable_prefix();
       if (symbol->variable_name != NULL)
         symbol->variable_name->accept(*this);
       else
         symbol->location->accept(*this);
-      s4o.print(",");
-      print_variable_prefix();
       print_retain();
       s4o.print(")\n");
       if (this->current_var_init_symbol != NULL) {
+    	s4o.print(s4o.indent_spaces);
     	s4o.print(INIT_LOCATED_VALUE);
     	s4o.print("(");
+    	print_variable_prefix();
     	if (symbol->variable_name != NULL)
           symbol->variable_name->accept(*this);
         else
           symbol->location->accept(*this);
     	s4o.print(",");
         this->current_var_init_symbol->accept(*this);
-        s4o.print(")\n");
+        s4o.print(")");
       }
       break;
 
