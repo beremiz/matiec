@@ -7,7 +7,11 @@
 	__IEC_##type##_t name;
 #define __DECLARE_GLOBAL(type, resource, name)\
 	__IEC_##type##_t resource##__##name;\
-	static __IEC_##type##_t *GLOBAL__##name = &resource##__##name;
+	static __IEC_##type##_t *GLOBAL__##name = &resource##__##name;\
+	void __SET_GLOBAL_##name(type value) {\
+		if (!((*GLOBAL__##name).flags & __IEC_FORCE_FLAG))\
+			(*GLOBAL__##name).value = value;\
+	}
 #define __DECLARE_GLOBAL_LOCATION(type, location)\
 	extern type *location;
 #define __DECLARE_GLOBAL_LOCATED(type, resource, name)\
@@ -60,8 +64,11 @@
 // variable setting macros
 #define __SET_VAR(name, new_value, ...)\
 	if (!(name.flags & __IEC_FORCE_FLAG)) name.value __VA_ARGS__ = new_value
-#define __SET_EXTERNAL(name, new_value, ...)\
-	if (!(name.flags & __IEC_FORCE_FLAG)) *(name.value) __VA_ARGS__ = new_value
+#define __SET_EXTERNAL(global, name, new_value)\
+	if (!(name.flags & __IEC_FORCE_FLAG))\
+		__SET_GLOBAL_##global(new_value)
+#define __SET_COMPLEX_EXTERNAL(name, new_value, ...)\
+	*(name.value) __VA_ARGS__ = new_value
 #define __SET_LOCATED(name, new_value, ...)\
 	if (!(name.flags & __IEC_FORCE_FLAG)) *(name.value) __VA_ARGS__ = new_value
 

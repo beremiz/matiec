@@ -461,13 +461,27 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     		symbol_c* fb_value = NULL,
     		bool negative = false) {
       unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-      if (vartype == search_var_instance_decl_c::external_vt)
-        s4o.print(SET_EXTERNAL);
-      else if (vartype == search_var_instance_decl_c::located_vt)
-        s4o.print(SET_LOCATED);
-      else
-        s4o.print(SET_VAR);
-      s4o.print("(");
+      if (vartype == search_var_instance_decl_c::external_vt) {
+        symbolic_variable_c *variable = dynamic_cast<symbolic_variable_c *>(symbol);
+        /* TODO Find a solution for forcing global complex variables */
+        if (variable != NULL) {
+          s4o.print(SET_EXTERNAL);
+          s4o.print("(");
+          variable->var_name->accept(*this);
+          s4o.print(",");
+        }
+        else {
+          s4o.print(SET_COMPLEX_EXTERNAL);
+          s4o.print("(");
+        }
+      }
+      else {
+        if (vartype == search_var_instance_decl_c::located_vt)
+          s4o.print(SET_LOCATED);
+        else
+          s4o.print(SET_VAR);
+        s4o.print("(");
+      }
 
       if (fb_symbol != NULL) {
         print_variable_prefix();

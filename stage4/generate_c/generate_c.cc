@@ -151,6 +151,7 @@ extern void error_exit(const char *file_name, int line_no);
 /* Variable setter symbol for accessor macros */
 #define SET_VAR "__SET_VAR"
 #define SET_EXTERNAL "__SET_EXTERNAL"
+#define SET_COMPLEX_EXTERNAL "__SET_COMPLEX_EXTERNAL"
 #define SET_LOCATED "__SET_LOCATED"
 
 
