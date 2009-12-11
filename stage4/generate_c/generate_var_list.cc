@@ -43,7 +43,59 @@ typedef struct
   symbol_c *symbol;
 } SYMBOL;
 
+typedef enum {
+  none_lt,
+  input_lt,
+  output_lt,
+  memory_lt
+} locationtype_t;
 
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+
+class search_location_type_c: public iterator_visitor_c {
+
+  public:
+    locationtype_t current_location_type;
+
+  public:
+	search_location_type_c(void) {}
+
+	virtual ~search_location_type_c(void) {}
+
+	locationtype_t get_location_type(symbol_c *symbol) {
+      current_location_type = none_lt;
+      symbol->accept(*this);
+      if (current_location_type == none_lt) ERROR;
+      return current_location_type;
+	}
+
+  private:
+
+	void *visit(incompl_location_c* symbol) {
+      if (symbol->value[1] == 'I')
+        current_location_type = input_lt;
+	  else if (symbol->value[1] == 'Q')
+        current_location_type = output_lt;
+	  else if (symbol->value[1] == 'M')
+        current_location_type = memory_lt;
+      return NULL;
+	}
+
+	void *visit(direct_variable_c *symbol) {
+      if (symbol->value[1] == 'I')
+        current_location_type = input_lt;
+	  else if (symbol->value[1] == 'Q')
+        current_location_type = output_lt;
+	  else if (symbol->value[1] == 'M')
+        current_location_type = memory_lt;
+      return NULL;
+	}
+};
 
 
 /***********************************************************************/
@@ -69,7 +121,9 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     typedef enum {
       none_vtc,
       variable_vtc,
-      pointer_vtc,
+      external_vtc,
+      located_input_vtc,
+      located_output_vtc,
       array_vtc,
       structure_vtc,
       function_block_vtc
@@ -169,8 +223,14 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       print_var_number();
       s4o.print(";");
       switch (this->current_var_type_category) {
-        case pointer_vtc:
-          s4o.print("PT");
+        case external_vtc:
+          s4o.print("EXT");
+          break;
+        case located_input_vtc:
+          s4o.print("IN");
+          break;
+        case located_output_vtc:
+          s4o.print("OUT");
           break;
         case array_vtc:
           s4o.print("ARRAY");
@@ -261,11 +321,43 @@ class generate_var_list_c: protected generate_c_typedecl_c {
          */
         update_var_type_symbol(symbol->located_var_spec_init);
         
-        if (symbol->variable_name != NULL) {
-          this->current_var_type_category = pointer_vtc;
+        search_location_type_c search_location_type;
+        locationtype_t location_type = search_location_type.get_location_type(symbol->location);
+        if (location_type == input_lt)
+          this->current_var_type_category = located_input_vtc;
+        else if (location_type == output_lt)
+          this->current_var_type_category = located_output_vtc;
+
+        if (symbol->variable_name != NULL)
           declare_variable(symbol->variable_name);
-        }
+        else
+          declare_variable(symbol->location);
         
+        current_var_type_symbol = NULL;
+        return NULL;
+    }
+
+    /* variable_name incompl_location ':' var_spec */
+    /* variable_name -> may be NULL ! */
+    //SYM_REF3(incompl_located_var_decl_c, variable_name, incompl_location, var_spec)
+    void *visit(incompl_located_var_decl_c *symbol) {
+        /* Start off by setting the current_var_type_symbol and
+         * current_var_init_symbol private variables...
+         */
+        update_var_type_symbol(symbol->var_spec);
+
+        search_location_type_c search_location_type;
+        locationtype_t location_type = search_location_type.get_location_type(symbol->incompl_location);
+        if (location_type == input_lt)
+          this->current_var_type_category = located_input_vtc;
+        else if (location_type == output_lt)
+          this->current_var_type_category = located_output_vtc;
+
+        if (symbol->variable_name != NULL)
+          declare_variable(symbol->variable_name);
+        else
+          declare_variable(symbol->incompl_location);
+
         current_var_type_symbol = NULL;
         return NULL;
     }
@@ -355,8 +447,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       update_var_type_symbol(symbol->specification);
       
       /* now to produce the c equivalent... */
-      if (this->current_var_type_category == variable_vtc)
-        this->current_var_type_category = pointer_vtc;
+      this->current_var_type_category = external_vtc;
       declare_variable(symbol->global_var_name);
       
       /* Values no longer in scope, and therefore no longer used.
@@ -402,10 +493,17 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     /*| global_var_name location */
     // SYM_REF2(global_var_spec_c, global_var_name, location)
     void *visit(global_var_spec_c *symbol) {
-      if (symbol->global_var_name != NULL) {
-        this->current_var_type_category = pointer_vtc;
+      search_location_type_c search_location_type;
+	  locationtype_t location_type = search_location_type.get_location_type(symbol->location);
+	  if (location_type == input_lt)
+        this->current_var_type_category = located_input_vtc;
+      else if (location_type == output_lt)
+        this->current_var_type_category = located_output_vtc;
+
+      if (symbol->global_var_name != NULL)
         declare_variable(symbol->global_var_name);
-      }
+      else
+        declare_variable(symbol->location);
       return NULL;
     }
     
