@@ -597,6 +597,8 @@ void *visit(function_invocation_c *symbol) {
   if (NULL != symbol->nonformal_param_list) parameter_assignment_list = symbol->nonformal_param_list;
   if (NULL == parameter_assignment_list) ERROR;
 
+  function_call_param_iterator_c function_call_param_iterator(symbol);
+
   function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
   if (f_decl == function_symtable.end_value()) {
     /* The function called is not in the symtable, so we test if it is a
@@ -606,8 +608,6 @@ void *visit(function_invocation_c *symbol) {
     if (current_function_type == function_none) ERROR;
 
     symbol_c *function_return_type = search_expression_type->get_type(symbol);
-
-    function_call_param_iterator_c function_call_param_iterator(symbol);
 
     int nb_param = ((list_c *)parameter_assignment_list)->n;
 
@@ -638,17 +638,21 @@ void *visit(function_invocation_c *symbol) {
      */
     function_param_iterator_c fp_iterator(f_decl);
     identifier_c *param_name;
-    function_call_param_iterator_c function_call_param_iterator(symbol);
     for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
       
+      symbol_c *param_type = fp_iterator.param_type();
+      if (param_type == NULL) ERROR;
+
       function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
       
       /* Get the value from a foo(<param_name> = <param_value>) style call */
       symbol_c *param_value = function_call_param_iterator.search_f(param_name);
   
       /* Get the value from a foo(<param_value>) style call */
-      if (param_value == NULL)
+      if (param_value == NULL) {
         param_value = function_call_param_iterator.next_nf();
+        if (param_value != NULL && fp_iterator.is_en_eno_param_implicit()) ERROR;
+      }
       
       if (param_value == NULL && param_direction == function_param_iterator_c::direction_in) {
         /* No value given for parameter, so we must use the default... */
@@ -656,14 +660,13 @@ void *visit(function_invocation_c *symbol) {
         param_value = fp_iterator.default_value();
       }
       
-      symbol_c *param_type = fp_iterator.param_type();
-      if (param_type == NULL) ERROR;
-      
       ADD_PARAM_LIST(param_name, param_value, param_type, param_direction)
     } /* for(...) */
     // symbol->parameter_assignment->accept(*this);
   }
   
+  if (function_call_param_iterator.next_nf() != NULL) ERROR;
+
   bool has_output_params = false;
 
   if (!this->is_variable_prefix_null()) {

@@ -389,8 +389,8 @@ class generate_c_inline_c: public generate_c_typedecl_c {
 		  /* if it is the first parameter, semantics specifies that we should
 		   * get the value off the IL default variable!
 		   */
-		 if (1 == i)
-		   param_value = &this->default_variable_name;
+		  if (1 == i)
+		    param_value = &this->default_variable_name;
 
 		  /* Get the value from a foo(<param_name> = <param_value>) style call */
 		  /* NOTE: the following line of code is not required in this case, but it doesn't
@@ -404,8 +404,10 @@ class generate_c_inline_c: public generate_c_typedecl_c {
 			param_value = function_call_param_iterator.search_f(param_name);
 
 		  /* Get the value from a foo(<param_value>) style call */
-		  if (param_value == NULL)
-			param_value = function_call_param_iterator.next_nf();
+          if (param_value == NULL) {
+            param_value = function_call_param_iterator.next_nf();
+            if (param_value != NULL && fp_iterator.is_en_eno_param_implicit()) ERROR;
+          }
 
 		  if (param_value == NULL && param_direction == function_param_iterator_c::direction_in) {
 			/* No value given for parameter, so we must use the default... */
@@ -415,6 +417,8 @@ class generate_c_inline_c: public generate_c_typedecl_c {
 
 		  ADD_PARAM_LIST(param_name, param_value, param_type, fp_iterator.param_direction())
 		} /* for(...) */
+
+		if (function_call_param_iterator.next_nf() != NULL) ERROR;
 
 		PARAM_LIST_ITERATOR() {
 			if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
@@ -472,8 +476,10 @@ class generate_c_inline_c: public generate_c_typedecl_c {
 		   * with the function calling code in generate_c_st_c, which does require
 		   * the following line...
 		   */
-		  if (param_value == NULL)
-			param_value = function_call_param_iterator.next_nf();
+		  if (param_value == NULL) {
+            param_value = function_call_param_iterator.next_nf();
+            if (param_value != NULL && fp_iterator.is_en_eno_param_implicit()) ERROR;
+          }
 
 		  if (param_value == NULL) {
 			/* No value given for parameter, so we must use the default... */
@@ -483,6 +489,8 @@ class generate_c_inline_c: public generate_c_typedecl_c {
 
 		  ADD_PARAM_LIST(param_name, param_value, param_type, fp_iterator.param_direction())
 		}
+
+		if (function_call_param_iterator.next_nf() != NULL) ERROR;
 
 		PARAM_LIST_ITERATOR() {
       	  if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
@@ -531,6 +539,8 @@ class generate_c_inline_c: public generate_c_typedecl_c {
         identifier_c *param_name;
         function_call_param_iterator_c function_call_param_iterator(symbol);
         for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
+          symbol_c *param_type = fp_iterator.param_type();
+          if (param_type == NULL) ERROR;
 
           function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
 
@@ -538,8 +548,10 @@ class generate_c_inline_c: public generate_c_typedecl_c {
           symbol_c *param_value = function_call_param_iterator.search_f(param_name);
 
           /* Get the value from a foo(<param_value>) style call */
-          if (param_value == NULL)
+          if (param_value == NULL) {
             param_value = function_call_param_iterator.next_nf();
+            if (param_value != NULL && fp_iterator.is_en_eno_param_implicit()) ERROR;
+          }
 
           if (param_value == NULL && param_direction == function_param_iterator_c::direction_in) {
             /* No value given for parameter, so we must use the default... */
@@ -547,12 +559,11 @@ class generate_c_inline_c: public generate_c_typedecl_c {
             param_value = fp_iterator.default_value();
           }
 
-          symbol_c *param_type = fp_iterator.param_type();
-          if (param_type == NULL) ERROR;
-
           ADD_PARAM_LIST(param_name, param_value, param_type, param_direction)
         } /* for(...) */
         // symbol->parameter_assignment->accept(*this);
+
+        if (function_call_param_iterator.next_nf() != NULL) ERROR;
 
         PARAM_LIST_ITERATOR() {
       	  if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||

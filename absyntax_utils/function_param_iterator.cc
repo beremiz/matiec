@@ -159,6 +159,7 @@ identifier_c *function_param_iterator_c::next(void) {
   identifier_c *identifier;
  
   param_count = 0;
+  en_eno_param_implicit = false;
   next_param++;
   current_operation = function_param_iterator_c::iterate_op;
   res = f_decl->accept(*this);
@@ -196,11 +197,21 @@ symbol_c *function_param_iterator_c::param_type(void) {
   return current_param_type;
 }
 
+/* Returns if currently referenced parameter is an implicit defined EN/ENO parameter. */
+bool function_param_iterator_c::is_en_eno_param_implicit(void) {
+  return en_eno_param_implicit;
+}
+
 /* Returns the currently referenced parameter's data passing direction.
  * i.e. VAR_INPUT, VAR_OUTPUT or VAR_INOUT
  */
 function_param_iterator_c::param_direction_t function_param_iterator_c::param_direction(void) {
   return current_param_direction;
+}
+
+void *function_param_iterator_c::visit(implicit_definition_c *symbol) {
+	en_eno_param_implicit = current_operation == function_param_iterator_c::iterate_op;
+	return NULL;
 }
 
 /****************************************/
@@ -224,6 +235,8 @@ void *function_param_iterator_c::visit(en_param_declaration_c *symbol) {
    * variables will get overwritten when we visit the next
    * var1_init_decl_c list!
    */
+  symbol->method->accept(*this);
+
   current_param_default_value = symbol->value;
   current_param_type = symbol->type;
 
@@ -251,14 +264,12 @@ void *function_param_iterator_c::visit(eno_param_declaration_c *symbol) {
    * variables will get overwritten when we visit the next
    * var1_init_decl_c list!
    */
+  symbol->method->accept(*this);
+
   current_param_default_value = NULL;
   current_param_type = symbol->type;
 
   return handle_single_param(symbol->name);
-#if 0
-  if (eno_declared) ERROR;
-  return (void *)declare_eno_param();
-#endif
 }
 void *function_param_iterator_c::visit(input_output_declarations_c *symbol) {
   TRACE("input_output_declarations_c");

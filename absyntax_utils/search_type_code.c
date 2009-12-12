@@ -13984,13 +13984,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -14142,13 +14136,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -14238,13 +14226,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -14443,13 +14425,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -14539,13 +14515,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -14604,13 +14574,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -14652,13 +14616,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
             
             {
         
-                symbol_c * return_type_symbol;
-                if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                    return_type_symbol = &search_constant_type_c::lint_type_name;
-                else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                    return_type_symbol = &search_constant_type_c::lreal_type_name;
-                else
-                    return_type_symbol = last_type_symbol;
+                symbol_c * return_type_symbol = last_type_symbol;
                 return return_type_symbol;
                 
             }
@@ -14947,11 +14905,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     if(IN2_type_symbol == NULL || search_expression_type->is_binary_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lword_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -15010,11 +14964,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     if(IN2_type_symbol == NULL || search_expression_type->is_binary_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lword_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -15073,11 +15023,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     if(IN2_type_symbol == NULL || search_expression_type->is_binary_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lword_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -15189,13 +15135,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                             
                             {
                         
-                                symbol_c * return_type_symbol;
-                                if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                                    return_type_symbol = &search_constant_type_c::lint_type_name;
-                                else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                                    return_type_symbol = &search_constant_type_c::lreal_type_name;
-                                else
-                                    return_type_symbol = last_type_symbol;
+                                symbol_c * return_type_symbol = last_type_symbol;
                                 return return_type_symbol;
                                 
                             }
@@ -15260,13 +15200,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -15325,13 +15259,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                     
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -15489,13 +15417,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
                             
                             {
                         
-                                symbol_c * return_type_symbol;
-                                if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                                    return_type_symbol = &search_constant_type_c::lint_type_name;
-                                else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                                    return_type_symbol = &search_constant_type_c::lreal_type_name;
-                                else
-                                    return_type_symbol = last_type_symbol;
+                                symbol_c * return_type_symbol = last_type_symbol;
                                 return return_type_symbol;
                                 
                             }
@@ -26608,13 +26530,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -26756,13 +26672,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -26842,13 +26752,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -27037,13 +26941,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -27123,13 +27021,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -27178,13 +27070,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -27216,13 +27102,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
             
             {
         
-                symbol_c * return_type_symbol;
-                if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                    return_type_symbol = &search_constant_type_c::lint_type_name;
-                else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                    return_type_symbol = &search_constant_type_c::lreal_type_name;
-                else
-                    return_type_symbol = last_type_symbol;
+                symbol_c * return_type_symbol = last_type_symbol;
                 return return_type_symbol;
                 
             }
@@ -27461,11 +27341,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     if(IN2_type_symbol == NULL || search_expression_type->is_binary_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lword_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -27514,11 +27390,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     if(IN2_type_symbol == NULL || search_expression_type->is_binary_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lword_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -27567,11 +27439,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     if(IN2_type_symbol == NULL || search_expression_type->is_binary_type(IN2_type_symbol))
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lword_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -27663,13 +27531,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                             
                             {
                         
-                                symbol_c * return_type_symbol;
-                                if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                                    return_type_symbol = &search_constant_type_c::lint_type_name;
-                                else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                                    return_type_symbol = &search_constant_type_c::lreal_type_name;
-                                else
-                                    return_type_symbol = last_type_symbol;
+                                symbol_c * return_type_symbol = last_type_symbol;
                                 return return_type_symbol;
                                 
                             }
@@ -27724,13 +27586,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -27779,13 +27635,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                     
                     {
                 
-                        symbol_c * return_type_symbol;
-                        if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lint_type_name;
-                        else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                            return_type_symbol = &search_constant_type_c::lreal_type_name;
-                        else
-                            return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = last_type_symbol;
                         return return_type_symbol;
                         
                     }
@@ -27923,13 +27773,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
                             
                             {
                         
-                                symbol_c * return_type_symbol;
-                                if (search_expression_type->is_literal_integer_type(last_type_symbol))
-                                    return_type_symbol = &search_constant_type_c::lint_type_name;
-                                else if (search_expression_type->is_literal_real_type(last_type_symbol))
-                                    return_type_symbol = &search_constant_type_c::lreal_type_name;
-                                else
-                                    return_type_symbol = last_type_symbol;
+                                symbol_c * return_type_symbol = last_type_symbol;
                                 return return_type_symbol;
                                 
                             }
