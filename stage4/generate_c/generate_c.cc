@@ -639,6 +639,7 @@ void *visit(function_block_declaration_c *symbol) {
   generate_c_vardecl_c *vardecl;
   generate_c_sfcdecl_c *sfcdecl;
   generate_c_typedecl_c *typedecl;
+  generate_c_inlinefcall_c *inlinedecl;
   TRACE("function_block_declaration_c");
 
   /* (A) Function Block data structure declaration... */
@@ -686,8 +687,9 @@ void *visit(function_block_declaration_c *symbol) {
   delete typedecl;
 
   /* (A.6) Function Block inline function declaration for function invocation */
-  generate_c_inlinefcall_c inline_decl(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
-  symbol->fblock_body->accept(inline_decl);
+  inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
+  inlinedecl->print(symbol->fblock_body);
+  delete inlinedecl;
 
   /* (B) Constructor */
   /* (B.1) Constructor name... */
@@ -830,6 +832,7 @@ void *visit(program_declaration_c *symbol) {
   generate_c_vardecl_c *vardecl;
   generate_c_sfcdecl_c *sfcdecl;
   generate_c_typedecl_c *typedecl;
+  generate_c_inlinefcall_c *inlinedecl;
   TRACE("program_declaration_c");
 
   /* (A) Program data structure declaration... */
@@ -874,8 +877,9 @@ void *visit(program_declaration_c *symbol) {
   delete typedecl;
 
   /* (A.6) Function Block inline function declaration for function invocation */
-  generate_c_inlinefcall_c inline_decl(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
-  symbol->function_block_body->accept(inline_decl);
+  inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
+  inlinedecl->print(symbol->function_block_body);
+  delete inlinedecl;
 
   /* (B) Constructor */
   /* (B.1) Constructor name... */

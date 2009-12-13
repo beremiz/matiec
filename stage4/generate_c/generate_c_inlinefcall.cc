@@ -32,7 +32,7 @@
 
 #define INLINE_RESULT_TEMP_VAR "__res"
 
-class generate_c_inline_c: public generate_c_typedecl_c {
+class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
   public:
     typedef enum {
@@ -66,7 +66,7 @@ class generate_c_inline_c: public generate_c_typedecl_c {
     variablegeneration_t wanted_variablegeneration;
 
   public:
-    generate_c_inline_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
+    generate_c_inlinefcall_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_c_typedecl_c(s4o_ptr),
       default_variable_name(IL_DEFVAR, NULL)
     {
@@ -78,14 +78,23 @@ class generate_c_inline_c: public generate_c_typedecl_c {
       wanted_variablegeneration = expression_vg;
     }
 
-    virtual ~generate_c_inline_c(void) {
+    virtual ~generate_c_inlinefcall_c(void) {
+      delete search_expression_type;
       delete search_varfb_instance_type;
     }
 
-    void *generate_inline(symbol_c *function_name,
-    		symbol_c *return_data_type,
-    		std::list<FUNCTION_PARAM*> param_list) {
-      std::list<FUNCTION_PARAM*>::iterator pt;
+    void print(symbol_c* symbol) {
+      function_call_iterator_c fc_iterator(symbol);
+      symbol_c* function_call;
+      while ((function_call = fc_iterator.next()) != NULL) {
+    	function_call->accept(*this);
+      }
+    }
+
+    void generate_inline(symbol_c *function_name,
+            symbol_c *return_data_type,
+            std::list<FUNCTION_PARAM*> param_list) {
+            std::list<FUNCTION_PARAM*>::iterator pt;
 
       fcall_number++;
 
@@ -176,8 +185,6 @@ class generate_c_inline_c: public generate_c_typedecl_c {
 
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n\n");
-
-      return NULL;
     }
 
   private:
@@ -581,43 +588,6 @@ class generate_c_inline_c: public generate_c_typedecl_c {
 	  return NULL;
     }
 
-};  /* generate_c_inline_c */
-
-
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-
-
-class generate_c_inlinefcall_c: public iterator_visitor_c {
-
-  private:
-	generate_c_inline_c *generate_c_inline;
-
-  public:
-	generate_c_inlinefcall_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL) {
-	  generate_c_inline = new generate_c_inline_c(s4o_ptr, name, scope, variable_prefix);
-	}
-
-	virtual ~generate_c_inlinefcall_c(void) {
-	  delete generate_c_inline;
-	}
-
-  private:
-
-	void *visit(function_invocation_c *symbol) {
-	  return symbol->accept(*generate_c_inline);
-	}
-
-	void *visit(il_function_call_c *symbol) {
-	  return symbol->accept(*generate_c_inline);
-	}
-
-	void *visit(il_formal_funct_call_c *symbol) {
-	  return symbol->accept(*generate_c_inline);
-	}
-}; /* generate_c_inlinefcall_c */
-
+};  /* generate_c_inlinefcall_c */
 
 
