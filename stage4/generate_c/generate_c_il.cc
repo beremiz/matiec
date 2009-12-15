@@ -657,23 +657,27 @@ void *visit(array_variable_c *symbol) {
       symbol->subscripted_variable->accept(*this);
       break;
     case complextype_suffix_vg:
-      current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
       symbol->subscripted_variable->accept(*this);
-      if (current_array_type != NULL) {
-    	s4o.print(".table");
-        symbol->subscript_list->accept(*this);
-        current_array_type = NULL;
-      }
+
+      current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+      if (current_array_type == NULL) ERROR;
+
+      s4o.print(".table");
+      symbol->subscript_list->accept(*this);
+
+      current_array_type = NULL;
       break;
     default:
       if (this->is_variable_prefix_null()) {
-    	current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
-    	symbol->subscripted_variable->accept(*this);
-    	if (current_array_type != NULL) {
-          s4o.print(".table");
-    	  symbol->subscript_list->accept(*this);
-    	  current_array_type = NULL;
-    	}
+        symbol->subscripted_variable->accept(*this);
+
+        current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+        if (current_array_type == NULL) ERROR;
+
+        s4o.print(".table");
+        symbol->subscript_list->accept(*this);
+
+        current_array_type = NULL;
       }
       else
     	print_getter(symbol);

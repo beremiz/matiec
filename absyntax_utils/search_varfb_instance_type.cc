@@ -180,31 +180,12 @@ void *search_varfb_instance_type_c::visit(identifier_c *type_name) {
   /* No. It is not a function block, so we let
    * the base class take care of it...
    */
-  current_structelement_name = decompose_var_instance_name->next_part();
-  if (NULL == current_structelement_name) {
-	/* this is it... !
-     * No need to look any further...
-     */
-    /* NOTE: we could simply do a
-     *   return (void *)symbol;
-     *       nevertheless, note that this search_varfb_instance_type_c
-     *       class inherits from the search_base_type_c class,
-     *       which means that it will usually return the base type,
-     *       and not the derived type (*). If we are to be consistent,
-     *       we should guarantee that we always return the base type.
-     *       To do this we could use
-     *   return (void *)symbol->accept(*this);
-     *       since this class inherits from the search_base_type_c.
-     *       However, in this case we don't want it to follow
-     *       the structs as this search_varfb_instance_type_c does.
-     *       We therefore have to create a new search_base_type_c
-     *       instance to search through this type without going
-     *       through the structs...
-     */
+  if (NULL == decompose_var_instance_name->next_part(false)) {
     return base_type(type_name);
   }
-  else
-    return search_base_type_c::visit(type_name);
+  else {
+	return search_base_type_c::visit(type_name);
+  }
 }
 
 /********************************/
@@ -213,16 +194,17 @@ void *search_varfb_instance_type_c::visit(identifier_c *type_name) {
 
 /*  identifier ':' array_spec_init */
 void *search_varfb_instance_type_c::visit(array_type_declaration_c *symbol) {
+  this->is_complex = true;
   return symbol->array_spec_init->accept(*this);
 }
     
-/* array_specification [ASSIGN array_initialization} */
+/* array_specification [ASSIGN array_initialization] */
 /* array_initialization may be NULL ! */
 void *search_varfb_instance_type_c::visit(array_spec_init_c *symbol) {
   this->is_complex = true;
   return symbol->array_specification->accept(*this);
 }
-    
+
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *search_varfb_instance_type_c::visit(array_specification_c *symbol) {
   this->is_complex = true;
@@ -253,6 +235,9 @@ void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
 /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
 /* structure_element_declaration_list structure_element_declaration ';' */
 void *search_varfb_instance_type_c::visit(structure_element_declaration_list_c *symbol)	{
+  /* make sure that we have decomposed all structure elements of the variable name */
+  current_structelement_name = decompose_var_instance_name->next_part();
+  /* now search the structure declaration */
   return visit_list(symbol);
 }
 
