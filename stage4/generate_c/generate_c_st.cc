@@ -295,7 +295,8 @@ void *visit(array_variable_c *symbol) {
       current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
       symbol->subscripted_variable->accept(*this);
       if (current_array_type != NULL) {
-        symbol->subscript_list->accept(*this);
+        s4o.print(".table");
+    	symbol->subscript_list->accept(*this);
         current_array_type = NULL;
       }
       break;
@@ -304,6 +305,7 @@ void *visit(array_variable_c *symbol) {
     	current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
     	symbol->subscripted_variable->accept(*this);
     	if (current_array_type != NULL) {
+          s4o.print(".table");
     	  symbol->subscript_list->accept(*this);
     	  current_array_type = NULL;
     	}
@@ -332,12 +334,24 @@ void *visit(subscript_list_c *symbol) {
 /******************************************/
 /* B 1.4.3 - Declaration & Initialisation */
 /******************************************/
+
+/* helper symbol for structure_initialization */
+/* structure_element_initialization_list ',' structure_element_initialization */
 void *visit(structure_element_initialization_list_c *symbol) {
   generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
   structure_initialization->init_structure_default(this->current_param_type);
-  structure_initialization->current_mode = generate_c_structure_initialization_c::initializationvalue_sm;
-  symbol->accept(*structure_initialization);
+  structure_initialization->init_structure_values(symbol);
   delete structure_initialization;
+  return NULL;
+}
+
+/* helper symbol for array_initialization */
+/* array_initial_elements_list ',' array_initial_elements */
+void *visit(array_initial_elements_list_c *symbol) {
+  generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
+  array_initialization->init_array_size(this->current_param_type);
+  array_initialization->init_array_values(symbol);
+  delete array_initialization;
   return NULL;
 }
 

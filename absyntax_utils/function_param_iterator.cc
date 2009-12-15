@@ -294,7 +294,14 @@ void *function_param_iterator_c::visit(var_declaration_list_c *symbol) {TRACE("v
 
 /*  var1_list ':' array_specification */
 //SYM_REF2(array_var_declaration_c, var1_list, array_specification)
-void *function_param_iterator_c::visit(array_var_declaration_c *symbol) {TRACE("array_var_declaration_c"); return symbol->var1_list->accept(*this);}
+void *function_param_iterator_c::visit(array_var_declaration_c *symbol) {
+	TRACE("array_var_declaration_c");
+
+	current_param_default_value = NULL;
+	current_param_type = symbol->array_specification;
+
+	return symbol->var1_list->accept(*this);
+}
 
 /*  var1_list ':' structure_type_name */
 //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)

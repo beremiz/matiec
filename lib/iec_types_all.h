@@ -47,7 +47,9 @@ typedef struct {\
 } __IEC_##type##_p;
 
 #define __DECLARE_ARRAY_TYPE(base, type, size)\
-typedef base type size;\
+typedef struct {\
+  base table size;\
+} type;\
 __DECLARE_COMPLEX_STRUCT(type);
 
 #define __DECLARE_STRUCT_TYPE(elements, type)\

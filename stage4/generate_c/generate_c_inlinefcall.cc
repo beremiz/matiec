@@ -303,13 +303,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
           symbol->field_selector->accept(*this);
           break;
         default:
-          if (this->is_variable_prefix_null()) {
-        	symbol->record_variable->accept(*this);
-        	s4o.print(".");
-        	symbol->field_selector->accept(*this);
-          }
-          else
-        	print_getter(symbol);
+          print_getter(symbol);
           break;
       }
       return NULL;
@@ -326,21 +320,13 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
           current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
           symbol->subscripted_variable->accept(*this);
           if (current_array_type != NULL) {
+            s4o.print(".table");
             symbol->subscript_list->accept(*this);
             current_array_type = NULL;
           }
           break;
         default:
-          if (this->is_variable_prefix_null()) {
-        	current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
-        	symbol->subscripted_variable->accept(*this);
-        	if (current_array_type != NULL) {
-        	  symbol->subscript_list->accept(*this);
-        	  current_array_type = NULL;
-        	}
-          }
-          else
-        	print_getter(symbol);
+          print_getter(symbol);
           break;
       }
       return NULL;

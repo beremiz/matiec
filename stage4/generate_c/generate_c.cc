@@ -331,7 +331,7 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
       unsigned long long least_common_tick = least_common_ticktime / common_ticktime;
       if (least_common_tick >> 32)
         ERROR;
-      return (unsigned long)(~(((unsigned long)-2) % (unsigned long)least_common_tick) + 1);
+      return (unsigned long)(~(((unsigned long)-1) % (unsigned long)least_common_tick) + 1);
     }
 
 /*  TASK task_name task_initialization */
@@ -1294,7 +1294,7 @@ END_RESOURCE
       current_resource_name->accept(*this);
       s4o.print("\n\n");
       
-      s4o.print("extern int common_ticktime__;\n\n");
+      s4o.print("extern unsigned long long common_ticktime__;\n\n");
 
       s4o.print("#include \"accessor.h\"\n\n");
 
@@ -1652,7 +1652,7 @@ class generate_c_c: public iterator_visitor_c {
     const char *current_name;
     const char *current_builddir;
 
-    unsigned long common_ticktime;
+    unsigned long long common_ticktime;
 
   public:
     generate_c_c(stage4out_c *s4o_ptr, const char *builddir): 
