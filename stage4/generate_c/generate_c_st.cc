@@ -208,22 +208,12 @@ void *visit(symbolic_variable_c *symbol) {
   else if (this->is_variable_prefix_null()) {
 	vartype = search_varfb_instance_type->get_vartype(symbol);
 	if (wanted_variablegeneration == fparam_output_vg) {
-	  if (vartype == search_var_instance_decl_c::inoutput_vt)
-		generate_c_base_c::visit(symbol);
-	  else {
-		s4o.print("&(");
-        generate_c_base_c::visit(symbol);
-        s4o.print(")");
-	  }
+	  s4o.print("&(");
+      generate_c_base_c::visit(symbol);
+      s4o.print(")");
     }
     else {
-      if (vartype == search_var_instance_decl_c::inoutput_vt) {
-        s4o.print("(*");
-        generate_c_base_c::visit(symbol);
-        s4o.print(")");
-      }
-      else
-    	generate_c_base_c::visit(symbol);
+      generate_c_base_c::visit(symbol);
     }
   }
   else

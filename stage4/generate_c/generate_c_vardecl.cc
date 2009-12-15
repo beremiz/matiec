@@ -955,7 +955,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
       /* now to produce the c equivalent... */
       if ((wanted_varformat == local_vf) ||
           (wanted_varformat == init_vf) ||
-          (wanted_varformat == localinit_vf && (current_vartype & inoutput_vt) == 0)) {
+          (wanted_varformat == localinit_vf)) {
         for(int i = 0; i < list->n; i++) {
           s4o.print(s4o.indent_spaces);
           if (wanted_varformat == local_vf) {
@@ -976,11 +976,45 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
           print_variable_prefix();
           list->elements[i]->accept(*this);
           if (wanted_varformat != local_vf) {
-            if (this->current_var_init_symbol != NULL) {
-              s4o.print(" = ");
+        	if (wanted_varformat == localinit_vf &&
+        		(current_vartype & inoutput_vt) != 0) {
+              s4o.print(";\n");
+              s4o.print(s4o.indent_spaces);
+              s4o.print("if (__");
+              list->elements[i]->accept(*this);
+              s4o.print(" != NULL) {\n");
+              s4o.indent_right();
+              s4o.print(s4o.indent_spaces);
+              list->elements[i]->accept(*this);
+              s4o.print(" = *__");
+              list->elements[i]->accept(*this);
+              s4o.print(";\n");
+              s4o.indent_left();
+              s4o.print(s4o.indent_spaces);
+              s4o.print("}\n");
+              s4o.print(s4o.indent_spaces);
+              s4o.print("else {\n");
+              s4o.indent_right();
+              s4o.print(s4o.indent_spaces);
+              s4o.print("static const ");
+              this->current_var_type_symbol->accept(*this);
+              s4o.print(" temp = ");
               this->current_var_init_symbol->accept(*this);
+              s4o.print(";\n");
+              s4o.print(s4o.indent_spaces);
+              list->elements[i]->accept(*this);
+              s4o.print(" = temp;\n");
+              s4o.indent_left();
+              s4o.print(s4o.indent_spaces);
+              s4o.print("}\n");
             }
-            s4o.print(";\n");
+        	else {
+        	  if (this->current_var_init_symbol != NULL) {
+                s4o.print(" = ");
+                this->current_var_init_symbol->accept(*this);
+              }
+              s4o.print(";\n");
+            }
           }
           else if (is_fb)
         	s4o.print(";\n");
@@ -995,10 +1029,8 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
           s4o.print(nv->get());
           s4o.print("\n" + s4o.indent_spaces);
           this->current_var_type_symbol->accept(*this);
-          if ((current_vartype & output_vt) != 0)
+          if ((current_vartype & (output_vt | inoutput_vt)) != 0)
             s4o.print(" *__");
-          else if ((current_vartype & inoutput_vt) != 0)
-            s4o.print(" *");
           else
             s4o.print(" ");
           list->elements[i]->accept(*this);
@@ -1014,7 +1046,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
 
       if (wanted_varformat == foutputassign_vf) {
         for(int i = 0; i < list->n; i++) {
-          if ((current_vartype & output_vt) != 0) {
+          if ((current_vartype & (output_vt | inoutput_vt)) != 0) {
             s4o.print(s4o.indent_spaces + "if (__");
             list->elements[i]->accept(*this);
             s4o.print(" != NULL) {\n");
