@@ -245,11 +245,25 @@ void *function_param_iterator_c::visit(en_param_declaration_c *symbol) {
 
 /* var1_list ':' array_spec_init */
 //SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
-void *function_param_iterator_c::visit(array_var_init_decl_c *symbol) {TRACE("array_var_init_decl_c"); return symbol->var1_list->accept(*this);}
+void *function_param_iterator_c::visit(array_var_init_decl_c *symbol) {
+  TRACE("array_var_init_decl_c");
+
+  current_param_default_value = spec_init_sperator_c::get_init(symbol->array_spec_init);
+  current_param_type = spec_init_sperator_c::get_spec(symbol->array_spec_init);
+
+  return symbol->var1_list->accept(*this);
+}
 
 /*  var1_list ':' initialized_structure */
 //SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
-void *function_param_iterator_c::visit(structured_var_init_decl_c *symbol) {TRACE("structured_var_init_decl_c"); return symbol->var1_list->accept(*this);}
+void *function_param_iterator_c::visit(structured_var_init_decl_c *symbol) {
+  TRACE("structured_var_init_decl_c");
+
+  current_param_default_value = spec_init_sperator_c::get_init(symbol->initialized_structure);
+  current_param_type = spec_init_sperator_c::get_spec(symbol->initialized_structure);
+
+  return symbol->var1_list->accept(*this);
+}
 
 void *function_param_iterator_c::visit(output_declarations_c *symbol) {
   TRACE("output_declarations_c");
@@ -284,7 +298,14 @@ void *function_param_iterator_c::visit(array_var_declaration_c *symbol) {TRACE("
 
 /*  var1_list ':' structure_type_name */
 //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
-void *function_param_iterator_c::visit(structured_var_declaration_c *symbol) {TRACE("structured_var_declaration_c"); return symbol->var1_list->accept(*this);}
+void *function_param_iterator_c::visit(structured_var_declaration_c *symbol) {
+  TRACE("structured_var_declaration_c");
+
+  current_param_default_value = NULL;
+  current_param_type = symbol->structure_type_name;
+
+  return symbol->var1_list->accept(*this);
+}
 
 /* VAR [CONSTANT] var_init_decl_list END_VAR */
 void *function_param_iterator_c::visit(var_declarations_c *symbol) {TRACE("var_declarations_c"); return NULL;}

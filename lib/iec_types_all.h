@@ -79,9 +79,11 @@ typedef struct {
 /* Enumerate native types */
 #define __decl_enum_type(TYPENAME) TYPENAME##_ENUM,
 #define __decl_enum_pointer(TYPENAME) TYPENAME##_P_ENUM,
+#define __decl_enum_output(TYPENAME) TYPENAME##_O_ENUM,
 typedef enum{
   ANY(__decl_enum_type)
   ANY(__decl_enum_pointer)
+  ANY(__decl_enum_output)
   /* SFC specific types are never external or global */
   UNKNOWN_ENUM
 } __IEC_types_enum;

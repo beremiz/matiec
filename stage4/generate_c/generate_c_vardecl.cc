@@ -955,7 +955,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
       /* now to produce the c equivalent... */
       if ((wanted_varformat == local_vf) ||
           (wanted_varformat == init_vf) ||
-          (wanted_varformat == localinit_vf)) {
+          (wanted_varformat == localinit_vf && (current_vartype & inoutput_vt) == 0)) {
         for(int i = 0; i < list->n; i++) {
           s4o.print(s4o.indent_spaces);
           if (wanted_varformat == local_vf) {
@@ -995,8 +995,10 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
           s4o.print(nv->get());
           s4o.print("\n" + s4o.indent_spaces);
           this->current_var_type_symbol->accept(*this);
-          if ((current_vartype & (output_vt | inoutput_vt)) != 0)
+          if ((current_vartype & output_vt) != 0)
             s4o.print(" *__");
+          else if ((current_vartype & inoutput_vt) != 0)
+            s4o.print(" *");
           else
             s4o.print(" ");
           list->elements[i]->accept(*this);
@@ -1012,7 +1014,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
 
       if (wanted_varformat == foutputassign_vf) {
         for(int i = 0; i < list->n; i++) {
-          if ((current_vartype & (output_vt | inoutput_vt)) != 0) {
+          if ((current_vartype & output_vt) != 0) {
             s4o.print(s4o.indent_spaces + "if (__");
             list->elements[i]->accept(*this);
             s4o.print(" != NULL) {\n");

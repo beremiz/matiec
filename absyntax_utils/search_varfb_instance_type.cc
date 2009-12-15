@@ -175,12 +175,34 @@ void *search_varfb_instance_type_c::visit(identifier_c *type_name) {
     /* Type declaration found!! */
     return fb_decl->accept(*this);
 
+  this->current_rawtype = type_name;
+
   /* No. It is not a function block, so we let
    * the base class take care of it...
    */
-  this->current_rawtype = type_name;
-  if (current_structelement_name == NULL)
-	return base_type(type_name);
+  current_structelement_name = decompose_var_instance_name->next_part();
+  if (NULL == current_structelement_name) {
+	/* this is it... !
+     * No need to look any further...
+     */
+    /* NOTE: we could simply do a
+     *   return (void *)symbol;
+     *       nevertheless, note that this search_varfb_instance_type_c
+     *       class inherits from the search_base_type_c class,
+     *       which means that it will usually return the base type,
+     *       and not the derived type (*). If we are to be consistent,
+     *       we should guarantee that we always return the base type.
+     *       To do this we could use
+     *   return (void *)symbol->accept(*this);
+     *       since this class inherits from the search_base_type_c.
+     *       However, in this case we don't want it to follow
+     *       the structs as this search_varfb_instance_type_c does.
+     *       We therefore have to create a new search_base_type_c
+     *       instance to search through this type without going
+     *       through the structs...
+     */
+    return base_type(type_name);
+  }
   else
     return search_base_type_c::visit(type_name);
 }
@@ -198,22 +220,18 @@ void *search_varfb_instance_type_c::visit(array_type_declaration_c *symbol) {
 /* array_initialization may be NULL ! */
 void *search_varfb_instance_type_c::visit(array_spec_init_c *symbol) {
   this->is_complex = true;
-  symbol_c *var_name = decompose_var_instance_name->next_part();
-  if (NULL != var_name)
-    current_structelement_name = var_name;
   return symbol->array_specification->accept(*this);
 }
     
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *search_varfb_instance_type_c::visit(array_specification_c *symbol) {
-  symbol_c *var_name = decompose_var_instance_name->next_part();
-  if (NULL != var_name)
-    current_structelement_name = var_name;
+  this->is_complex = true;
   return symbol->non_generic_type_name->accept(*this);
 }
 
 /*  structure_type_name ':' structure_specification */
 void *search_varfb_instance_type_c::visit(structure_type_declaration_c *symbol) {
+  this->is_complex = true;
   return symbol->structure_specification->accept(*this);
   /* NOTE: structure_specification will point to either a
    *       initialized_structure_c
@@ -227,33 +245,6 @@ void *search_varfb_instance_type_c::visit(structure_type_declaration_c *symbol) 
 // SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
 void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
   this->is_complex = true;
-  /* make sure that we have decomposed all structure elements of the variable name */
-  symbol_c *var_name = decompose_var_instance_name->next_part();
-  if (NULL == var_name) {
-    /* this is it... !
-     * No need to look any further...
-     */
-    /* NOTE: we could simply do a
-    *   return (void *)symbol;
-    *       nevertheless, note that this search_varfb_instance_type_c
-    *       class inherits from the search_base_type_c class,
-    *       which means that it will usually return the base type,
-    *       and not the derived type (*). If we are to be consistent,
-    *       we should guarantee that we always return the base type.
-    *       To do this we could use
-    *   return (void *)symbol->accept(*this);
-    *       since this class inherits from the search_base_type_c.
-    *       However, in this case we don't want it to follow
-    *       the structs as this search_varfb_instance_type_c does.
-    *       We therefore have to create a new search_base_type_c
-    *       instance to search through this type without going
-    *       through the structs...
-    */
-      return base_type(symbol->structure_type_name);
-  }
-
-  /* now search the structure declaration */
-  current_structelement_name = var_name;
   /* recursively find out the data type of var_name... */
   return symbol->structure_type_name->accept(*this);
 }

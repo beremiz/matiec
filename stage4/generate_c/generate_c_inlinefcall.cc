@@ -92,7 +92,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     }
 
     void generate_inline(symbol_c *function_name,
-            symbol_c *return_data_type,
+            symbol_c *function_type_prefix,
+            symbol_c *function_type_suffix,
             std::list<FUNCTION_PARAM*> param_list) {
             std::list<FUNCTION_PARAM*>::iterator pt;
 
@@ -100,11 +101,13 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
       s4o.print(s4o.indent_spaces);
       s4o.print("inline ");
-      return_data_type->accept(*this);
+      function_type_prefix->accept(*this);
       s4o.print(" __");
       fbname->accept(*this);
       s4o.print("_");
       function_name->accept(*this);
+      if (function_type_suffix)
+        function_type_suffix->accept(*this);
       s4o.print_integer(fcall_number);
       s4o.print("(");
       s4o.indent_right();
@@ -126,7 +129,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       s4o.indent_right();
 
       s4o.print(s4o.indent_spaces);
-      return_data_type->accept(*this);
+      function_type_prefix->accept(*this);
       s4o.print(" "),
       s4o.print(INLINE_RESULT_TEMP_VAR);
       s4o.print(";\n");
@@ -149,6 +152,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 	  s4o.print(s4o.indent_spaces + INLINE_RESULT_TEMP_VAR),
 			  s4o.print(" = ");
 	  function_name->accept(*this);
+	  if (function_type_suffix)
+        function_type_suffix->accept(*this);
 	  s4o.print("(");
 	  s4o.indent_right();
 
@@ -260,25 +265,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
         generate_c_base_c::visit(symbol);
       else if (wanted_variablegeneration == complextype_suffix_vg)
         return NULL;
-      else if (wanted_variablegeneration == expression_vg) {
-	    vartype = search_varfb_instance_type->get_vartype(symbol);
-	    if (vartype == search_var_instance_decl_c::external_vt) {
-		  s4o.print(GET_EXTERNAL);
-		  s4o.print("(");
-		  symbol->var_name->accept(*this);
-	    }
-	    else {
-		  if (vartype == search_var_instance_decl_c::located_vt)
-		    s4o.print(GET_LOCATED);
-		  else
-		    s4o.print(GET_VAR);
-		  s4o.print("(");
-		  generate_c_base_c::visit(symbol);
-	    }
-	    s4o.print(")");
-      }
       else
-        generate_c_base_c::visit(symbol);
+        print_getter(symbol);
       return NULL;
     }
 
@@ -367,16 +355,46 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     /***********************************/
 
     void *visit(il_function_call_c *symbol) {
-	  function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
+      symbol_c* function_type_prefix = NULL;
+      symbol_c* function_name = NULL;
+      symbol_c* function_type_suffix = NULL;
+      DECLARE_PARAM_LIST()
 
-	  if (f_decl != function_symtable.end_value()) {
-		DECLARE_PARAM_LIST()
-		bool has_output_params = false;
+      symbol_c *param_data_type = default_variable_name.current_type;
+
+      function_call_param_iterator_c function_call_param_iterator(symbol);
+
+      function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
+	  if (f_decl == function_symtable.end_value()) {
+        function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
+        if (current_function_type == function_none) ERROR;
+
+        function_type_prefix = (symbol_c *)search_expression_type->compute_standard_function_il(symbol, param_data_type);
+
+        symbol_c *en_param_name = (symbol_c *)(new identifier_c("EN"));
+        /* Add the value from EN param */
+        ADD_PARAM_LIST(en_param_name,
+                       (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c())),
+                       (symbol_c*)(new bool_type_name_c()),
+                       function_param_iterator_c::direction_in)
+
+        symbol_c *eno_param_name = (symbol_c *)(new identifier_c("ENO"));
+        /* Add the value from ENO param */
+        ADD_PARAM_LIST(eno_param_name, NULL, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
+
+        int nb_param = 1;
+        if (symbol->il_operand_list != NULL)
+          nb_param += ((list_c *)symbol->il_operand_list)->n;
+
+        #include "il_code_gen.c"
+
+      }
+	  else {
+		function_name = symbol->function_name;
 
 		/* determine the base data type returned by the function being called... */
 		search_base_type_c search_base_type;
-		symbol_c *return_data_type = (symbol_c *)f_decl->type_name->accept(search_base_type);
-		if (NULL == return_data_type) ERROR;
+		function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
 
 		/* loop through each function parameter, find the value we should pass
 		 * to it, and then output the c equivalent...
@@ -384,7 +402,6 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
 		function_param_iterator_c fp_iterator(f_decl);
 		identifier_c *param_name;
-		function_call_param_iterator_c function_call_param_iterator(symbol);
 		for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
 		  symbol_c *param_type = fp_iterator.param_type();
 		  if (param_type == NULL) ERROR;
@@ -424,36 +441,75 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
 		  ADD_PARAM_LIST(param_name, param_value, param_type, fp_iterator.param_direction())
 		} /* for(...) */
-
-		if (function_call_param_iterator.next_nf() != NULL) ERROR;
-
-		PARAM_LIST_ITERATOR() {
-			if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
-				 PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
-				PARAM_VALUE != NULL) {
-			  has_output_params = true;
-			}
-		}
-
-	    if (has_output_params)
-	      generate_inline(symbol->function_name, return_data_type, param_list);
-
-	    CLEAR_PARAM_LIST()
 	  }
-	  return NULL;
+
+	  if (function_call_param_iterator.next_nf() != NULL) ERROR;
+      if (NULL == function_type_prefix) ERROR;
+
+      bool has_output_params = false;
+
+      PARAM_LIST_ITERATOR() {
+        if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
+             PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
+             PARAM_VALUE != NULL) {
+          has_output_params = true;
+        }
+      }
+
+      if (has_output_params)
+        generate_inline(function_name, function_type_prefix, function_type_suffix, param_list);
+
+      CLEAR_PARAM_LIST()
+
+      return NULL;
     }
 
+    /* | function_name '(' eol_list [il_param_list] ')' */
+    // SYM_REF2(il_formal_funct_call_c, function_name, il_param_list)
     void *visit(il_formal_funct_call_c *symbol) {
-	  function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
+      symbol_c* function_type_prefix = NULL;
+      symbol_c* function_name = NULL;
+      symbol_c* function_type_suffix = NULL;
+      DECLARE_PARAM_LIST()
 
-	  if (f_decl != function_symtable.end_value()) {
-		DECLARE_PARAM_LIST()
-		bool has_output_params = false;
+      function_call_param_iterator_c function_call_param_iterator(symbol);
+
+      function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
+      if (f_decl == function_symtable.end_value()) {
+        function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
+        if (current_function_type == function_none) ERROR;
+
+        function_type_prefix = (symbol_c *)search_expression_type->compute_standard_function_default(NULL, symbol);
+
+        int nb_param = 0;
+        if (symbol->il_param_list != NULL)
+          nb_param += ((list_c *)symbol->il_param_list)->n;
+
+        symbol_c *en_param_name = (symbol_c *)(new identifier_c("EN"));
+        /* Get the value from EN param */
+        symbol_c *EN_param_value = function_call_param_iterator.search_f(en_param_name);
+        if (EN_param_value == NULL)
+          EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
+        else
+          nb_param --;
+        ADD_PARAM_LIST(en_param_name, EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
+
+        symbol_c *eno_param_name = (symbol_c *)(new identifier_c("ENO"));
+        /* Get the value from ENO param */
+        symbol_c *ENO_param_value = function_call_param_iterator.search_f(eno_param_name);
+        if (ENO_param_value != NULL)
+          nb_param --;
+        ADD_PARAM_LIST(eno_param_name, ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
+
+        #include "st_code_gen.c"
+
+      }
+      else {
+        function_name = symbol->function_name;
 
 		/* determine the base data type returned by the function being called... */
 		search_base_type_c search_base_type;
-		symbol_c *return_data_type = (symbol_c *)f_decl->type_name->accept(search_base_type);
-		if (NULL == return_data_type) ERROR;
+		function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
 
 		/* loop through each function parameter, find the value we should pass
 		 * to it, and then output the c equivalent...
@@ -461,7 +517,6 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
 		function_param_iterator_c fp_iterator(f_decl);
 		identifier_c *param_name;
-		function_call_param_iterator_c function_call_param_iterator(symbol);
 		for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
 		  symbol_c *param_type = fp_iterator.param_type();
 		  if (param_type == NULL) ERROR;
@@ -496,22 +551,26 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
 		  ADD_PARAM_LIST(param_name, param_value, param_type, fp_iterator.param_direction())
 		}
+      }
 
-		if (function_call_param_iterator.next_nf() != NULL) ERROR;
+      if (function_call_param_iterator.next_nf() != NULL) ERROR;
+      if (NULL == function_type_prefix) ERROR;
 
-		PARAM_LIST_ITERATOR() {
-      	  if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
-      		   PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
-      	      PARAM_VALUE != NULL) {
-      	    has_output_params = true;
-      	  }
+      bool has_output_params = false;
+
+      PARAM_LIST_ITERATOR() {
+        if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
+             PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
+             PARAM_VALUE != NULL) {
+          has_output_params = true;
         }
+      }
 
-        if (has_output_params)
-	      generate_inline(symbol->function_name, return_data_type, param_list);
+      if (has_output_params)
+        generate_inline(function_name, function_type_prefix, function_type_suffix, param_list);
 
-        CLEAR_PARAM_LIST()
-	  }
+      CLEAR_PARAM_LIST()
+
       return NULL;
     }
 
@@ -523,28 +582,61 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     /***********************/
 
     void *visit(function_invocation_c *symbol) {
+      symbol_c* function_type_prefix = NULL;
+      symbol_c* function_name = NULL;
+      symbol_c* function_type_suffix = NULL;
+      DECLARE_PARAM_LIST()
+
+      symbol_c *parameter_assignment_list = NULL;
+      if (NULL != symbol->   formal_param_list) parameter_assignment_list = symbol->   formal_param_list;
+      if (NULL != symbol->nonformal_param_list) parameter_assignment_list = symbol->nonformal_param_list;
+      if (NULL == parameter_assignment_list) ERROR;
+
+      function_call_param_iterator_c function_call_param_iterator(symbol);
+
       function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
+      if (f_decl == function_symtable.end_value()) {
+        /* The function called is not in the symtable, so we test if it is a
+         * standard function defined in standard */
 
-      if (f_decl != function_symtable.end_value()) {
-    	DECLARE_PARAM_LIST()
-    	bool has_output_params = false;
+        function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
+        if (current_function_type == function_none) ERROR;
 
-    	symbol_c *parameter_assignment_list = NULL;
-	    if (NULL != symbol->   formal_param_list) parameter_assignment_list = symbol->   formal_param_list;
-	    if (NULL != symbol->nonformal_param_list) parameter_assignment_list = symbol->nonformal_param_list;
-	    if (NULL == parameter_assignment_list) ERROR;
+        function_type_prefix = search_expression_type->get_type(symbol);
+
+        int nb_param = ((list_c *)parameter_assignment_list)->n;
+
+        symbol_c *en_param_name = (symbol_c *)(new identifier_c("EN"));
+        /* Get the value from EN param */
+        symbol_c *EN_param_value = function_call_param_iterator.search_f(en_param_name);
+        if (EN_param_value == NULL)
+          EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
+        else
+          nb_param --;
+        ADD_PARAM_LIST(en_param_name, EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
+
+        symbol_c *eno_param_name = (symbol_c *)(new identifier_c("ENO"));
+        /* Get the value from ENO param */
+        symbol_c *ENO_param_value = function_call_param_iterator.search_f(eno_param_name);
+        if (ENO_param_value != NULL)
+          nb_param --;
+        ADD_PARAM_LIST(eno_param_name, ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
+
+        #include "st_code_gen.c"
+
+      }
+      else {
+        function_name = symbol->function_name;
 
 	    /* determine the base data type returned by the function being called... */
 		search_base_type_c search_base_type;
-		symbol_c *return_data_type = (symbol_c *)f_decl->type_name->accept(search_base_type);
-		if (NULL == return_data_type) ERROR;
+		function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
 
     	/* loop through each function parameter, find the value we should pass
          * to it, and then output the c equivalent...
          */
         function_param_iterator_c fp_iterator(f_decl);
         identifier_c *param_name;
-        function_call_param_iterator_c function_call_param_iterator(symbol);
         for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
           symbol_c *param_type = fp_iterator.param_type();
           if (param_type == NULL) ERROR;
@@ -569,22 +661,26 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
           ADD_PARAM_LIST(param_name, param_value, param_type, param_direction)
         } /* for(...) */
         // symbol->parameter_assignment->accept(*this);
-
-        if (function_call_param_iterator.next_nf() != NULL) ERROR;
-
-        PARAM_LIST_ITERATOR() {
-      	  if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
-      			PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
-              PARAM_VALUE != NULL) {
-      	    has_output_params = true;
-      	  }
-        }
-
-        if (has_output_params)
-	      generate_inline(symbol->function_name, return_data_type, param_list);
-
-        CLEAR_PARAM_LIST()
       }
+
+      if (function_call_param_iterator.next_nf() != NULL) ERROR;
+      if (NULL == function_type_prefix) ERROR;
+
+	  bool has_output_params = false;
+
+	  PARAM_LIST_ITERATOR() {
+        if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
+             PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
+             PARAM_VALUE != NULL) {
+          has_output_params = true;
+        }
+      }
+
+      if (has_output_params)
+        generate_inline(function_name, function_type_prefix, function_type_suffix, param_list);
+
+      CLEAR_PARAM_LIST()
+
 	  return NULL;
     }
 
