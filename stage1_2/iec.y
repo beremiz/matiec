@@ -6579,6 +6579,22 @@ il_assign_operator:
 	{$$ = new il_assign_operator_c($1, locloc(@$));}
 | en_identifier ASSIGN
 	{$$ = new il_assign_operator_c($1, locloc(@$));}
+| S1_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| R1_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| CLK_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| CU_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| CD_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| PV_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| IN_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| PT_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | error ASSIGN
   {$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid parameter defined in parameter assignment."); yyerrok;}
