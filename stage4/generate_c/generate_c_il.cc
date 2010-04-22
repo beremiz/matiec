@@ -1144,6 +1144,7 @@ void *visit(il_fb_call_c *symbol) {
   function_block_type_name->accept(*this);
   s4o.print(FB_FUNCTION_SUFFIX);
   s4o.print("(&");
+  print_variable_prefix();
   symbol->fb_name->accept(*this);
   s4o.print(")");
 
@@ -1167,8 +1168,9 @@ void *visit(il_fb_call_c *symbol) {
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
         symbol_c *param_type = search_varfb_instance_type->get_rawtype(param_value);
+        s4o.print(";\n" + s4o.indent_spaces);
         if (this->is_variable_prefix_null()) {
-		  param_value->accept(*this);
+          param_value->accept(*this);
 		  s4o.print(" = ");
 		  print_check_function(param_type, param_name, symbol->fb_name);
 		}
@@ -1575,7 +1577,15 @@ void *visit(S_operator_c *symbol)	{
 
   C_modifier();
   this->current_operand->accept(*this);
-  s4o.print(search_expression_type->is_bool_type(this->current_operand_type)?" = true":" = 1");
+  s4o.print(" = __");
+  if (search_expression_type->is_bool_type(this->current_operand_type))
+    s4o.print("BOOL_LITERAL(TRUE)");
+  else if (search_expression_type->is_integer_type(this->current_operand_type)) {
+    this->current_operand_type->accept(*this);
+    s4o.print("_LITERAL(1)");
+  }
+  else
+    ERROR;
   /* the data type resulting from this operation is unchanged! */
   return NULL;
 }
@@ -1585,7 +1595,15 @@ void *visit(R_operator_c *symbol)	{
 
   C_modifier();
   this->current_operand->accept(*this);
-  s4o.print(search_expression_type->is_bool_type(this->current_operand_type)?" = false":" = 0");
+  s4o.print(" = __");
+  if (search_expression_type->is_bool_type(this->current_operand_type))
+    s4o.print("BOOL_LITERAL(FALSE)");
+  else if (search_expression_type->is_integer_type(this->current_operand_type)) {
+    this->current_operand_type->accept(*this);
+    s4o.print("_LITERAL(0)");
+  }
+  else
+    ERROR;
   /* the data type resulting from this operation is unchanged! */
   return NULL;
 }

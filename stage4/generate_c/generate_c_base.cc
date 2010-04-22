@@ -249,15 +249,21 @@ class generate_c_base_c: public iterator_visitor_c {
 		s4o.print("(");
       }
       if (fb_name != NULL) {
+        s4o.print(GET_VAR);
+        s4o.print("(");
         print_variable_prefix();
         fb_name->accept(*this);
         s4o.print(".");
+        value->accept(*this);
+        s4o.print(")");
       }
-      if (temp)
-    	s4o.print(TEMP_VAR);
-      value->accept(*this);
+      else {
+        if (temp)
+    	  s4o.print(TEMP_VAR);
+        value->accept(*this);
+      }
       if (is_subrange)
-    	  s4o.print(")");
+        s4o.print(")");
       return NULL;
     }
 

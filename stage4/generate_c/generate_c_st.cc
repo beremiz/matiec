@@ -875,6 +875,7 @@ void *visit(fb_invocation_c *symbol) {
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
         symbol_c *param_type = search_varfb_instance_type->get_rawtype(param_value);
+        s4o.print(";\n" + s4o.indent_spaces);
         if (this->is_variable_prefix_null()) {
           param_value->accept(*this);
           s4o.print(" = ");
