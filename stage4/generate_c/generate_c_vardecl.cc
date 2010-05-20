@@ -1945,7 +1945,6 @@ void *visit(global_var_spec_c *symbol) {
     case constructorinit_vf:
       if (symbol->global_var_name != NULL) {
     	s4o.print(nv->get());
-    	s4o.print(s4o.indent_spaces);
     	s4o.print(INIT_GLOBAL_LOCATED);
     	s4o.print("(");
     	if (this->resource_name != NULL) {
@@ -1960,7 +1959,6 @@ void *visit(global_var_spec_c *symbol) {
       }
       if (this->current_var_init_symbol != NULL) {
 	    s4o.print(nv->get());
-	    s4o.print(s4o.indent_spaces);
 	    s4o.print(INIT_GLOBAL);
 	    s4o.print("(");
 	    if (symbol->global_var_name != NULL)

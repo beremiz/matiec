@@ -8,15 +8,31 @@
 #define __DECLARE_GLOBAL(type, resource, name)\
 	__IEC_##type##_t resource##__##name;\
 	static __IEC_##type##_t *GLOBAL__##name = &resource##__##name;\
+	void __INIT_GLOBAL_##name(type value) {\
+		(*GLOBAL__##name).value = value;\
+	}\
 	void __SET_GLOBAL_##name(type value) {\
 		if (!((*GLOBAL__##name).flags & __IEC_FORCE_FLAG))\
 			(*GLOBAL__##name).value = value;\
+	}\
+	type* __GET_GLOBAL_##name(void) {\
+		return &((*GLOBAL__##name).value);\
 	}
 #define __DECLARE_GLOBAL_LOCATION(type, location)\
 	extern type *location;
 #define __DECLARE_GLOBAL_LOCATED(type, resource, name)\
 	__IEC_##type##_p resource##__##name;\
-	static __IEC_##type##_p *GLOBAL__##name;
+	static __IEC_##type##_p *GLOBAL__##name = &resource##__##name;\
+	void __INIT_GLOBAL_##name(type value) {\
+		*((*GLOBAL__##name).value) = value;\
+	}\
+	void __SET_GLOBAL_##name(type value) {\
+		if (!((*GLOBAL__##name).flags & __IEC_FORCE_FLAG))\
+			*((*GLOBAL__##name).value) = value;\
+	}\
+	type* __GET_GLOBAL_##name(void) {\
+		return (*GLOBAL__##name).value;\
+	}
 #define __DECLARE_EXTERNAL(type, name)\
 	__IEC_##type##_p name;
 #define __DECLARE_LOCATED(type, name)\
@@ -30,15 +46,14 @@
 	name.value = initial;\
 	__INIT_RETAIN(name, retained)
 #define __INIT_GLOBAL(name, initial, retained)\
-	(*GLOBAL__##name).value = initial;\
+	__INIT_GLOBAL_##name(initial);\
 	__INIT_RETAIN((*GLOBAL__##name), retained)
 #define __INIT_GLOBAL_LOCATED(resource, name, location, retained)\
 	resource##__##name.value = location;\
 	__INIT_RETAIN(resource##__##name, retained)
 #define __INIT_EXTERNAL(type, global, name, retained)\
-	{extern __IEC_##type##_t *GLOBAL__##global;\
-	 name.value = &((*GLOBAL__##global).value);\
-     __INIT_RETAIN(name, retained)}
+	name.value = __GET_GLOBAL_##global();\
+    __INIT_RETAIN(name, retained)
 #define __INIT_LOCATED(type, location, name, retained)\
 	{extern type *location;\
 	 name.value = location;\
