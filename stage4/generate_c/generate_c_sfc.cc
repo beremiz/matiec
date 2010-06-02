@@ -38,10 +38,6 @@ typedef struct
   int index;
 } TRANSITION;
 
-
-
-
-
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
@@ -64,7 +60,6 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
     generate_c_il_c *generate_c_il;
     generate_c_st_c *generate_c_st;
     generate_c_SFC_IL_ST_c *generate_c_code;
-    search_var_instance_decl_c *search_var_instance_decl;
     
     int transition_number;
     std::list<TRANSITION> transition_list;
@@ -80,7 +75,6 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       generate_c_il = new generate_c_il_c(s4o_ptr, name, scope, variable_prefix);
       generate_c_st = new generate_c_st_c(s4o_ptr, name, scope, variable_prefix);
       generate_c_code = new generate_c_SFC_IL_ST_c(s4o_ptr, name, scope, variable_prefix);
-      search_var_instance_decl = new search_var_instance_decl_c(scope);
       this->set_variable_prefix(variable_prefix);
     }
     
@@ -89,7 +83,6 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       delete generate_c_il;
       delete generate_c_st;
       delete generate_c_code;
-      delete search_var_instance_decl;
     }
 
     void reset_transition_number(void) {transition_number = 0;}
@@ -131,9 +124,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
     }      
 
     void print_transition_number(void) {
-      char str[10];
-      sprintf(str, "%d", transition_number);
-      s4o.print(str);
+      s4o.print_integer(transition_number);
     }
 
     void print_reset_step(symbol_c *step_name) {
@@ -154,13 +145,6 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
     }
     
-    bool is_variable(symbol_c *symbol) {
-      /* we try to find the variable instance declaration, to determine its type... */
-      symbol_c *var_decl = search_var_instance_decl->get_decl(symbol);
-      
-      return var_decl != NULL;
-    }
-
 /*********************************************/
 /* B.1.6  Sequential function chart elements */
 /*********************************************/
@@ -564,29 +548,17 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
               s4o.print(" = 1;\n");  
             }
             if (strcmp(qualifier, "S") == 0) {
-              if (is_variable(current_action)) {
-                print_variable_prefix();
-                current_action->accept(*this);
-              }
-              else
-                print_action_argument(current_action, "set");
+              print_action_argument(current_action, "set");
               s4o.print(" = 1;\n");
             }
             if (strcmp(qualifier, "R") == 0) {
-              if (is_variable(current_action)) {
-                print_variable_prefix();
-                current_action->accept(*this);
-                s4o.print(" = 0;\n");
-              }
-              else {
-                print_action_argument(current_action, "reset");
-                s4o.print(" = 1;\n");
-              }
+              print_action_argument(current_action, "reset");
+              s4o.print(" = 1;\n");
             }
             if (strcmp(qualifier, "SD") == 0 || strcmp(qualifier, "DS") == 0 || 
                 strcmp(qualifier, "SL") == 0) {
               if (strcmp(qualifier, "SL") == 0) {
-                print_action_argument(current_action, "reset_remaining_time");  
+                print_action_argument(current_action, "reset_remaining_time");
               }
               else {
                 print_action_argument(current_action, "set_remaining_time");
@@ -623,7 +595,6 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
 }; /* generate_c_sfc_actiondecl_c */
  
  
- 
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
@@ -632,17 +603,30 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
 class generate_c_sfc_c: public generate_c_typedecl_c {
   
   private:
+    std::list<VARIABLE> variable_list;
+
     generate_c_sfc_elements_c *generate_c_sfc_elements;
+    search_var_instance_decl_c *search_var_instance_decl;
     
   public:
     generate_c_sfc_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_c_typedecl_c(s4o_ptr) {
       generate_c_sfc_elements = new generate_c_sfc_elements_c(s4o_ptr, name, scope, variable_prefix);
+      search_var_instance_decl = new search_var_instance_decl_c(scope);
       this->set_variable_prefix(variable_prefix);
     }
   
     virtual ~generate_c_sfc_c(void) {
+      variable_list.clear();
       delete generate_c_sfc_elements;
+      delete search_var_instance_decl;
+    }
+
+    bool is_variable(symbol_c *symbol) {
+      /* we try to find the variable instance declaration, to determine if symbol is variable... */
+      symbol_c *var_decl = search_var_instance_decl->get_decl(symbol);
+
+      return var_decl != NULL;
     }
 
 /*********************************************/
@@ -654,6 +638,7 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       
       generate_c_sfc_elements->reset_transition_number();
       for(i = 0; i < symbol->n; i++) {
+        symbol->elements[i]->accept(*this);
         generate_c_sfc_elements->generate(symbol->elements[i], generate_c_sfc_elements_c::transitionlist_sg);
       }
       
@@ -850,6 +835,38 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       
       /* generate action execution */
       s4o.print(s4o.indent_spaces + "// Actions execution\n");
+      {
+        std::list<VARIABLE>::iterator pt;
+        for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
+          symbol_c *var_decl = search_var_instance_decl->get_decl(pt->symbol);
+          if (var_decl != NULL) {
+            unsigned int vartype = search_var_instance_decl->get_vartype();
+
+            s4o.print(s4o.indent_spaces);
+            if (vartype == search_var_instance_decl_c::external_vt) {
+          	  s4o.print(SET_EXTERNAL);
+          	  s4o.print("(");
+          	  pt->symbol->accept(*this);
+              s4o.print(",");
+            }
+          	else {
+          	  if (vartype == search_var_instance_decl_c::located_vt)
+          	    s4o.print(SET_LOCATED);
+          	  else
+          	    s4o.print(SET_VAR);
+              s4o.print("(");
+          	}
+            print_variable_prefix();
+            pt->symbol->accept(*this);
+            s4o.print(",");
+            print_variable_prefix();
+            s4o.print("__action_list[");
+            s4o.print(SFC_STEP_ACTION_PREFIX);
+            pt->symbol->accept(*this);
+            s4o.print("].state);\n");
+          }
+        }
+      }
       for(i = 0; i < symbol->n; i++) {
         generate_c_sfc_elements->generate(symbol->elements[i], generate_c_sfc_elements_c::actionbody_sg);
       }
@@ -858,6 +875,41 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       return NULL;
     }
     
+    void *visit(initial_step_c *symbol) {
+      symbol->action_association_list->accept(*this);
+      return NULL;
+    }
+
+    void *visit(step_c *symbol) {
+      symbol->action_association_list->accept(*this);
+      return NULL;
+    }
+
+    void *visit(action_association_c *symbol) {
+      symbol_c *var_decl = search_var_instance_decl->get_decl(symbol->action_name);
+
+      if (var_decl != NULL) {
+        std::list<VARIABLE>::iterator pt;
+        for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
+          if (!compare_identifiers(pt->symbol, symbol->action_name))
+            return NULL;
+        }
+        VARIABLE *variable;
+        variable = new VARIABLE;
+        variable->symbol = (identifier_c*)(symbol->action_name);
+        variable_list.push_back(*variable);
+      }
+      return NULL;
+    }
+
+    void *visit(transition_c *symbol) {
+      return NULL;
+    }
+
+    void *visit(action_c *symbol) {
+      return NULL;
+    }
+
     void generate(sequential_function_chart_c *sfc) {
       sfc->accept(*this);
     }

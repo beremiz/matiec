@@ -674,11 +674,11 @@ void *visit(function_block_declaration_c *symbol) {
   delete vardecl;
   
   /* (A.4) Generate private internal variables for SFC */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, generate_c_sfcdecl_c::sfcdecl_sd);
-  sfcdecl->print(symbol->fblock_body);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, symbol);
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::sfcdecl_sd);
   delete sfcdecl;
   s4o_incl.print("\n");
-  
+
   /* (A.5) Function Block data structure type name. */
   s4o_incl.indent_left();
   s4o_incl.print("} ");
@@ -720,25 +720,23 @@ void *visit(function_block_declaration_c *symbol) {
   vardecl->print(symbol->var_declarations, NULL, FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
+
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, symbol, FB_FUNCTION_PARAM"->");
+
   /* (B.3) Generate private internal variables for SFC */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::sfcinit_sd);
-  sfcdecl->print(symbol->fblock_body, FB_FUNCTION_PARAM"->");
-  delete sfcdecl;
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::sfcinit_sd);
+
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n\n");
 
   
   /* (C) Function with FB body */
   /* (C.1) Step definitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepdef_sd);
-  sfcdecl->print(symbol->fblock_body);
-  delete sfcdecl;
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::stepdef_sd);
   
   /* (C.2) Action definitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actiondef_sd);
-  sfcdecl->print(symbol->fblock_body);
-  delete sfcdecl;
-  
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::actiondef_sd);
+
   /* (C.3) Function declaration */
   s4o.print("// Code part\n");
   /* function interface */
@@ -798,13 +796,11 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "() \n\n");
 
   /* (C.6) Step undefinitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepundef_sd);
-  sfcdecl->print(symbol->fblock_body);
-  delete sfcdecl;
-  
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::stepundef_sd);
+
   /* (C.7) Action undefinitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actionundef_sd);
-  sfcdecl->print(symbol->fblock_body);
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::actionundef_sd);
+
   delete sfcdecl;
 
   s4o.indent_left();
@@ -864,10 +860,12 @@ void *visit(program_declaration_c *symbol) {
                 generate_c_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
+
   /* (A.4) Generate private internal variables for SFC */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, generate_c_sfcdecl_c::sfcdecl_sd);
-  sfcdecl->print(symbol->function_block_body);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, symbol);
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::sfcdecl_sd);
   delete sfcdecl;
+  s4o_incl.print("\n");
   
   /* (A.5) Program data structure type name. */
   s4o_incl.indent_left();
@@ -908,24 +906,21 @@ void *visit(program_declaration_c *symbol) {
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
+
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, symbol, FB_FUNCTION_PARAM"->");
+
   /* (B.3) Generate private internal variables for SFC */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::sfcinit_sd);
-  sfcdecl->print(symbol->function_block_body,FB_FUNCTION_PARAM"->");
-  delete sfcdecl;
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::sfcinit_sd);
 
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n\n");
 
   /* (C) Function with PROGRAM body */
   /* (C.1) Step definitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepdef_sd);
-  sfcdecl->print(symbol->function_block_body);
-  delete sfcdecl;
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::stepdef_sd);
   
   /* (C.2) Action definitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actiondef_sd);
-  sfcdecl->print(symbol->function_block_body);
-  delete sfcdecl;
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::actiondef_sd);
 
   /* (C.3) Function declaration */
   s4o.print("// Code part\n");
@@ -961,15 +956,13 @@ void *visit(program_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "() \n\n");
 
   /* (C.6) Step undefinitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepundef_sd);
-  sfcdecl->print(symbol->function_block_body);
-  delete sfcdecl;
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::stepundef_sd);
   
   /* (C.7) Action undefinitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actionundef_sd);
-  sfcdecl->print(symbol->function_block_body);
-  delete sfcdecl;
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::actionundef_sd);
   
+  delete sfcdecl;
+
   s4o.indent_left();
   s4o.print("\n\n\n\n");
 
