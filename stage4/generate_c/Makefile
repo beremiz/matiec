@@ -23,10 +23,6 @@ test: test_iec_std_lib
 
 Makefile.depend depend:
 	$(CXX) -MM -MG -I. *.cc \
-	  | perl -pe 's/:/ Makefile.depend:/' > Makefile.depend
+	  | sed 's/:/ Makefile.depend:/' > Makefile.depend
 
 include Makefile.depend
-
-
-
-

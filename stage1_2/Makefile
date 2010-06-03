@@ -46,8 +46,9 @@ noerrorcheck: iec.y
 
 
 Makefile.depend depend:
-	$(CXX) -MM -MG -I. *.cc > Makefile.depend
-	#| perl -pe 's/:/ Makefile.depend:/' > Makefile.depend
+	$(CXX) -MM -MG -I. *.cc \
+	  | sed 's/:/ Makefile.depend:/' > Makefile.depend
 
 include Makefile.depend
+
 
