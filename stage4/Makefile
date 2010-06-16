@@ -19,3 +19,8 @@ CXXFLAGS += -I. -I../*
 ../% /% absyntax/% stage1_2/% stage3/% stage4/% util/%:
 	        $(MAKE) -C $(@D) $(@F)
 
+Makefile.depend depend:
+	$(CXX) -MM -MG -I. *.cc \
+	  | sed 's/:/ Makefile.depend:/' > Makefile.depend
+
+include Makefile.depend

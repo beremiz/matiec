@@ -66,7 +66,7 @@ iec2iec: main.o stage4/generate_iec/generate_iec.o stage4/stage4.o $(LIBS)
 
 Makefile.depend depend:
 	$(CXX) -MM -MG -I. *.cc \
-	  | perl -pe 's/:/ Makefile.depend:/' > Makefile.depend
+	  | sed 's/:/ Makefile.depend:/' > Makefile.depend
 
 include Makefile.depend
 
