@@ -93,6 +93,7 @@ typedef enum{
 /* Get size of type from its number */
 #define __decl_size_case(TYPENAME) \
 	case TYPENAME##_ENUM:\
+	case TYPENAME##_O_ENUM:\
 	case TYPENAME##_P_ENUM:\
 		return sizeof(TYPENAME);
 static inline USINT __get_type_enum_size(__IEC_types_enum t){
