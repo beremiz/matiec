@@ -1485,31 +1485,37 @@ END_RESOURCE
             s4o.print(FB_INIT_SUFFIX);
             s4o.print("(&");
             current_task_name->accept(*this);
-            s4o.print("_R_TRIG);\n");
+            s4o.print("_R_TRIG, retain);\n");
           }
           break;
         case run_dt:
           if (symbol->single_data_source != NULL) {
             symbol_c *config_var_decl = NULL;
             symbol_c *res_var_decl = NULL;
+            unsigned int vartype;
             symbol_c *current_var_reference = ((global_var_reference_c *)(symbol->single_data_source))->global_var_name;
             res_var_decl = search_resource_instance->get_decl(current_var_reference);
             if (res_var_decl == NULL) {
               config_var_decl = search_config_instance->get_decl(current_var_reference);
               if (config_var_decl == NULL)
                 ERROR;
+              vartype = search_config_instance->get_vartype();
               s4o.print(s4o.indent_spaces + "{extern ");
               config_var_decl->accept(*this);
               s4o.print(" *");
               symbol->single_data_source->accept(*this);
               s4o.print("; ");
             }
-            else
+            else {
+              vartype = search_resource_instance->get_vartype();
               s4o.print(s4o.indent_spaces);
+            }
+            s4o.print(SET_VAR);
+            s4o.print("(");
             current_task_name->accept(*this);
-            s4o.print("_R_TRIG.CLK = *");
+            s4o.print("_R_TRIG.CLK, *__GET_GLOBAL_");
             symbol->single_data_source->accept(*this);
-            s4o.print(";");
+            s4o.print("());");
             if (config_var_decl != NULL)
               s4o.print("}");
             s4o.print("\n");
@@ -1521,8 +1527,10 @@ END_RESOURCE
             s4o.print(s4o.indent_spaces);
             current_task_name->accept(*this);
             s4o.print(" = ");
+            s4o.print(GET_VAR);
+            s4o.print("(");
             current_task_name->accept(*this);
-            s4o.print("_R_TRIG.Q");
+            s4o.print("_R_TRIG.Q)");
           }
           else {
             s4o.print(s4o.indent_spaces);
@@ -1745,6 +1753,10 @@ class generate_c_c: public iterator_visitor_c {
       calculate_common_ticktime_c calculate_common_ticktime;
       symbol->accept(calculate_common_ticktime);
       common_ticktime = calculate_common_ticktime.get_common_ticktime();
+      if (common_ticktime == 0) {
+        fprintf(stderr, "\nYou must at least define a periodic task to set cycle period!");
+        ERROR;
+      }
       
       symbol->configuration_name->accept(*this);
       stage4out_c config_s4o(current_builddir, current_name, "c");
