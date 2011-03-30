@@ -383,13 +383,13 @@ void *visit(mod_expression_c *symbol) {
 }
 
 /* TODO: power expression... */
-void *visit(power_expression_c *symbol) {ERROR; return print_binary_expression(symbol->l_exp, symbol->r_exp, " ** ");}
+void *visit(power_expression_c *symbol) {
+  ERROR; 
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " ** ");
+}
+
 void *visit(neg_expression_c *symbol) {
-  symbol_c *exp_type = search_expression_type->get_type(symbol->exp);
-  if (search_expression_type->is_integer_type(exp_type) || search_expression_type->is_real_type(exp_type))
-    return print_unary_expression(symbol->exp, " -");
-  ERROR;
-  return NULL;
+  return print_unary_expression(symbol->exp, " -");
 }
 
 void *visit(not_expression_c *symbol) {

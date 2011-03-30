@@ -960,6 +960,7 @@ void *visit(configuration_declaration_c *symbol) {
   s4o.print("/* Editing this file is not recommended... */\n");
   s4o.print("/*******************************************/\n\n");
   s4o.print("#include \"iec_std_lib.h\"\n\n");
+  s4o.print("#include \"accessor.h\"\n\n"); 
   
   /* (A) configuration declaration... */
   /* (A.1) configuration name in comment */

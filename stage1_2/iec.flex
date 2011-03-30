@@ -1034,11 +1034,16 @@ ENO	return ENO;			/* Keyword */
 	/* B 1.2.1 - Numeric Literals */
 	/******************************/
 TRUE		return TRUE;		/* Keyword */
-BOOL#1  	return TRUE;		/* Keyword (Data Type) + Delimiter */
-BOOL#TRUE	return TRUE;		/* Keyword (Data Type) + Delimiter + Keyword */
+BOOL#1  	return boolean_true_literal_token;
+BOOL#TRUE	return boolean_true_literal_token;
+SAFEBOOL#1	{if (get_opt_safe_extensions()) {return safeboolean_true_literal_token;} else{REJECT;}} /* Keyword (Data Type) */ 
+SAFEBOOL#TRUE	{if (get_opt_safe_extensions()) {return safeboolean_true_literal_token;} else{REJECT;}} /* Keyword (Data Type) */
+
 FALSE		return FALSE;		/* Keyword */
-BOOL#0  	return FALSE;		/* Keyword (Data Type) + Delimiter */
-BOOL#FALSE  	return FALSE;		/* Keyword (Data Type) + Delimiter + Keyword */
+BOOL#0  	return boolean_false_literal_token;
+BOOL#FALSE  	return boolean_false_literal_token;
+SAFEBOOL#0	{if (get_opt_safe_extensions()) {return safeboolean_false_literal_token;} else{REJECT;}} /* Keyword (Data Type) */ 
+SAFEBOOL#FALSE	{if (get_opt_safe_extensions()) {return safeboolean_false_literal_token;} else{REJECT;}} /* Keyword (Data Type) */
 
 
 	/************************/
@@ -1064,11 +1069,82 @@ DT		return DATE_AND_TIME;	/* Keyword (Data Type) */
 	/***********************************/
 	/* B 1.3.1 - Elementary Data Types */
 	/***********************************/
+BOOL		return BOOL;		/* Keyword (Data Type) */
+
 BYTE		return BYTE;		/* Keyword (Data Type) */
 WORD		return WORD;		/* Keyword (Data Type) */
 DWORD		return DWORD;		/* Keyword (Data Type) */
 LWORD		return LWORD;		/* Keyword (Data Type) */
 
+SINT		return SINT;		/* Keyword (Data Type) */
+INT		return INT;		/* Keyword (Data Type) */
+DINT		return DINT;		/* Keyword (Data Type) */
+LINT		return LINT;		/* Keyword (Data Type) */
+
+USINT		return USINT;		/* Keyword (Data Type) */
+UINT		return UINT;		/* Keyword (Data Type) */
+UDINT		return UDINT;		/* Keyword (Data Type) */
+ULINT		return ULINT;		/* Keyword (Data Type) */
+
+REAL		return REAL;		/* Keyword (Data Type) */
+LREAL		return LREAL;		/* Keyword (Data Type) */
+
+WSTRING		return WSTRING;		/* Keyword (Data Type) */
+STRING		return STRING;		/* Keyword (Data Type) */
+
+TIME		return TIME;		/* Keyword (Data Type) */
+DATE		return DATE;		/* Keyword (Data Type) */
+DT		return DT;		/* Keyword (Data Type) */
+TOD		return TOD;		/* Keyword (Data Type) */
+DATE_AND_TIME	return DATE_AND_TIME;	/* Keyword (Data Type) */
+TIME_OF_DAY	return TIME_OF_DAY;	/* Keyword (Data Type) */
+
+	/*****************************************************************/
+	/* Keywords defined in "Safety Software Technical Specification" */
+	/*****************************************************************/
+        /* 
+         * NOTE: The following keywords are define in 
+         *       "Safety Software Technical Specification,
+         *        Part 1: Concepts and Function Blocks,  
+         *        Version 1.0 – Official Release"
+         *        written by PLCopen - Technical Committee 5
+         *
+         *        We only support these extensions and keywords
+         *        if the apropriate command line option is given.
+         */
+SAFEBOOL	     {if (get_opt_safe_extensions()) {return SAFEBOOL;}          else {REJECT;}} 
+
+SAFEBYTE	     {if (get_opt_safe_extensions()) {return SAFEBYTE;}          else {REJECT;}} 
+SAFEWORD	     {if (get_opt_safe_extensions()) {return SAFEWORD;}          else {REJECT;}} 
+SAFEDWORD	     {if (get_opt_safe_extensions()) {return SAFEDWORD;}         else{REJECT;}}
+SAFELWORD	     {if (get_opt_safe_extensions()) {return SAFELWORD;}         else{REJECT;}}
+               
+SAFEREAL	     {if (get_opt_safe_extensions()) {return SAFESINT;}          else{REJECT;}}
+SAFELREAL    	     {if (get_opt_safe_extensions()) {return SAFELREAL;}         else{REJECT;}}
+                  
+SAFESINT	     {if (get_opt_safe_extensions()) {return SAFESINT;}          else{REJECT;}}
+SAFEINT	             {if (get_opt_safe_extensions()) {return SAFEINT;}           else{REJECT;}}
+SAFEDINT	     {if (get_opt_safe_extensions()) {return SAFEDINT;}          else{REJECT;}}
+SAFELINT             {if (get_opt_safe_extensions()) {return SAFELINT;}          else{REJECT;}}
+
+SAFEUSINT            {if (get_opt_safe_extensions()) {return SAFEUSINT;}         else{REJECT;}}
+SAFEUINT             {if (get_opt_safe_extensions()) {return SAFEUINT;}          else{REJECT;}}
+SAFEUDINT            {if (get_opt_safe_extensions()) {return SAFEUDINT;}         else{REJECT;}}
+SAFEULINT            {if (get_opt_safe_extensions()) {return SAFEULINT;}         else{REJECT;}}
+
+ /* SAFESTRING and SAFEWSTRING are not yet supported, i.e. checked correctly, in the semantic analyser (stage 3) */
+ /*  so it is best not to support them at all... */
+ /*
+SAFEWSTRING          {if (get_opt_safe_extensions()) {return SAFEWSTRING;}       else{REJECT;}}
+SAFESTRING           {if (get_opt_safe_extensions()) {return SAFESTRING;}        else{REJECT;}}
+ */
+
+SAFETIME             {if (get_opt_safe_extensions()) {return SAFETIME;}          else{REJECT;}}
+SAFEDATE             {if (get_opt_safe_extensions()) {return SAFEDATE;}          else{REJECT;}}
+SAFEDT               {if (get_opt_safe_extensions()) {return SAFEDT;}            else{REJECT;}}
+SAFETOD              {if (get_opt_safe_extensions()) {return SAFETOD;}           else{REJECT;}}
+SAFEDATE_AND_TIME    {if (get_opt_safe_extensions()) {return SAFEDATE_AND_TIME;} else{REJECT;}}
+SAFETIME_OF_DAY      {if (get_opt_safe_extensions()) {return SAFETIME_OF_DAY;}   else{REJECT;}}
 
 	/********************************/
 	/* B 1.3.2 - Generic data types */
@@ -1105,30 +1181,6 @@ END_STRUCT	return END_STRUCT;	/* Keyword */
 	/*********************/
 	/* B 1.4 - Variables */
 	/*********************/
-REAL		return REAL;		/* Keyword (Data Type) */
-LREAL		return LREAL;		/* Keyword (Data Type) */
-
-SINT		return SINT;		/* Keyword (Data Type) */
-INT		return INT;		/* Keyword (Data Type) */
-DINT		return DINT;		/* Keyword (Data Type) */
-LINT		return LINT;		/* Keyword (Data Type) */
-
-USINT		return USINT;		/* Keyword (Data Type) */
-UINT		return UINT;		/* Keyword (Data Type) */
-UDINT		return UDINT;		/* Keyword (Data Type) */
-ULINT		return ULINT;		/* Keyword (Data Type) */
-
-
-WSTRING		return WSTRING;		/* Keyword (Data Type) */
-STRING		return STRING;		/* Keyword (Data Type) */
-BOOL		return BOOL;		/* Keyword (Data Type) */
-TIME		return TIME;		/* Keyword (Data Type) */
-DATE		return DATE;		/* Keyword (Data Type) */
-DT		return DT;		/* Keyword (Data Type) */
-TOD		return TOD;		/* Keyword (Data Type) */
-DATE_AND_TIME	return DATE_AND_TIME;	/* Keyword (Data Type) */
-TIME_OF_DAY	return TIME_OF_DAY;	/* Keyword (Data Type) */
-
 
 	/******************************************/
 	/* B 1.4.3 - Declaration & Initialisation */
@@ -1388,20 +1440,7 @@ END_REPEAT	return END_REPEAT;	/* Keyword */
 EXIT		return EXIT;		/* Keyword */
 
 
-	/*****************************************************************/
-	/* Keywords defined in "Safety Software Technical Specification" */
-	/*****************************************************************/
-        /* 
-         * NOTE: The following keywords are define in 
-         *       "Safety Software Technical Specification,
-         *        Part 1: Concepts and Function Blocks,  
-         *        Version 1.0 – Official Release"
-         *        written by PLCopen - Technical Committee 5
-         *
-         *        We only support these extensions and keywords
-         *        if the apropriate command line option is given.
-         */
-SAFEBOOL	{if (get_opt_safe_extensions()) {return SAFEBOOL;} else{REJECT;}}	/* Keyword (Data Type) */ 
+
 
 
 

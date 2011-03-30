@@ -76,20 +76,53 @@ class visit_expression_type_c: public search_constant_type_c {
     visit_expression_type_c(symbol_c *search_scope);
     virtual ~visit_expression_type_c(void);
 
-    /* A helper function... */
-    bool is_ANY_ELEMENTARY_type(symbol_c *type_symbol);
-    bool is_ANY_MAGNITUDE_type(symbol_c *type_symbol);
-    bool is_ANY_DATE_type(symbol_c *type_symbol);
-    bool is_ANY_STRING_type(symbol_c *type_symbol);
-    bool is_ANY_INT_type(symbol_c *type_symbol);
-    bool is_ANY_REAL_type(symbol_c *type_symbol);
-    bool is_ANY_NUM_type(symbol_c *type_symbol);
-    bool is_ANY_BIT_type(symbol_c *type_symbol);
-    bool is_BOOL_type(symbol_c *type_symbol);
 
-    bool is_literal_integer_type(symbol_c *type_symbol);
-    bool is_literal_real_type(symbol_c *type_symbol);
-    bool is_literal_bool_type(symbol_c *type_symbol);
+    typedef struct {
+      symbol_c *value;
+      symbol_c *type;
+    } value_and_type_t; 
+
+    /* A helper function... */
+    bool is_ANY_ELEMENTARY_type         (symbol_c *type_symbol);
+    bool is_ANY_SAFEELEMENTARY_type     (symbol_c *type_symbol);
+    bool is_ANY_ELEMENTARY_compatible   (symbol_c *type_symbol);
+
+    bool is_ANY_MAGNITUDE_type          (symbol_c *type_symbol);
+    bool is_ANY_SAFEMAGNITUDE_type      (symbol_c *type_symbol);
+    bool is_ANY_MAGNITUDE_compatible    (symbol_c *type_symbol);
+
+    bool is_ANY_DATE_type               (symbol_c *type_symbol);
+    bool is_ANY_SAFEDATE_type           (symbol_c *type_symbol);
+    bool is_ANY_DATE_compatible         (symbol_c *type_symbol);
+
+    bool is_ANY_STRING_type             (symbol_c *type_symbol);
+    bool is_ANY_SAFESTRING_type         (symbol_c *type_symbol);
+    bool is_ANY_STRING_compatible       (symbol_c *type_symbol);   
+
+    bool is_ANY_INT_type                (symbol_c *type_symbol);
+    bool is_ANY_SAFEINT_type            (symbol_c *type_symbol);
+    bool is_ANY_INT_compatible          (symbol_c *type_symbol);
+
+    bool is_ANY_REAL_type               (symbol_c *type_symbol);
+    bool is_ANY_SAFEREAL_type           (symbol_c *type_symbol);
+    bool is_ANY_REAL_compatible         (symbol_c *type_symbol);
+
+    bool is_ANY_NUM_type                (symbol_c *type_symbol);
+    bool is_ANY_SAFENUM_type            (symbol_c *type_symbol);
+    bool is_ANY_NUM_compatible          (symbol_c *type_symbol);
+
+    bool is_ANY_BIT_type                (symbol_c *type_symbol);
+    bool is_ANY_SAFEBIT_type            (symbol_c *type_symbol);
+    bool is_ANY_BIT_compatible          (symbol_c *type_symbol);
+
+    bool is_BOOL_type                   (symbol_c *type_symbol);
+    bool is_SAFEBOOL_type               (symbol_c *type_symbol);
+    bool is_ANY_BOOL_compatible         (symbol_c *type_symbol);
+    
+    bool is_nonneg_literal_integer_type (symbol_c *type_symbol);
+    bool is_literal_integer_type        (symbol_c *type_symbol);
+    bool is_literal_real_type           (symbol_c *type_symbol);
+    bool is_literal_bool_type           (symbol_c *type_symbol);
 
     /* Determine the common data type between two data types.
      * If no common data type found, return NULL.
@@ -108,7 +141,35 @@ class visit_expression_type_c: public search_constant_type_c {
      *  if no common data type is found.
      */
     symbol_c *common_type(symbol_c *first_type, symbol_c *second_type);
-    /* Return TRUE if there is a common data type, otherwise return FALSE */
+/* Return TRUE if the second (value) data type may be assigned to a variable of the first (variable) data type
+ * such as: 
+ *     var_type     value_type
+ *    BOOL           BYTE#7     -> returns false
+ *    INT            INT#7      -> returns true
+ *    INT            7          -> returns true
+ *    REAL           7.89       -> returns true
+ *    REAL           7          -> returns true
+ *    INT            7.89       -> returns false
+ *    SAFEBOOL       BOOL#1     -> returns false   !!!
+ *   etc...
+ *
+ * NOTE: It is assumed that the var_type is the data type of an lvalue
+ */
+    bool is_valid_assignment(symbol_c *var_type, symbol_c *value_type);
+
+/* Return TRUE if there is a common data type, otherwise return FALSE
+ * i.e., return TRUE if both data types may be used simultaneously in an expression
+ * such as:
+ *    BOOL#0     AND BYTE#7  -> returns false
+ *    0          AND BYTE#7  -> returns true
+ *    INT#10     AND INT#7   -> returns true
+ *    INT#10     AND 7       -> returns true
+ *    REAL#34.3  AND 7.89    -> returns true
+ *    REAL#34.3  AND 7       -> returns true
+ *    INT#10     AND 7.89    -> returns false
+ *    SAFEBOOL#0 AND BOOL#1  -> returns true   !!!
+ *   etc...
+ */
     bool is_compatible_type(symbol_c *first_type, symbol_c *second_type);
 
     void compute_input_operatores(symbol_c *symbol, const char *input_operator);
@@ -128,8 +189,9 @@ class visit_expression_type_c: public search_constant_type_c {
 
     /* A helper function... */
     typedef bool (visit_expression_type_c::*is_data_type_t)(symbol_c *type_symbol);  /* a pointer to a function! */
-    symbol_c *compute_boolean_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
-    symbol_c *compute_numeric_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
+//    symbol_c *compute_boolean_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
+//    symbol_c *compute_numeric_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
+    symbol_c *compute_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
 
     /* a helper function... */
     symbol_c *base_type(symbol_c *symbol);

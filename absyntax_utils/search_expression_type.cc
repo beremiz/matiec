@@ -49,24 +49,34 @@ search_expression_type_c::~search_expression_type_c(void) {
 bool search_expression_type_c::is_bool_type(symbol_c *type_symbol) {
   bool_type_name_c tt;
   if (type_symbol == NULL) {return true;}
-  return (typeid(*type_symbol) == typeid(bool_type_name_c));
+  if (typeid(*type_symbol) == typeid(safebool_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(bool_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(boolean_true_c))       {return true;}
+  if (typeid(*type_symbol) == typeid(boolean_false_c))      {return true;}
+  return false;
 }
 
 /* A helper function... */
 bool search_expression_type_c::is_time_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return true;}
-  if (typeid(*type_symbol) == typeid(time_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(date_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(tod_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(dt_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(time_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(date_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(tod_type_name_c))      {return true;}
+  if (typeid(*type_symbol) == typeid(dt_type_name_c))       {return true;}
+  if (typeid(*type_symbol) == typeid(safetime_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(safedate_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(safetod_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safedt_type_name_c))   {return true;}
   return false;
 }
 
 /* A helper function... */
 bool search_expression_type_c::is_string_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return true;}
-  if (typeid(*type_symbol) == typeid(string_type_name_c))  {return true;}
-  if (typeid(*type_symbol) == typeid(wstring_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(string_type_name_c))      {return true;}
+  if (typeid(*type_symbol) == typeid(wstring_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(safestring_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safewstring_type_name_c)) {return true;}
   return false;
 }
 
@@ -74,6 +84,7 @@ bool search_expression_type_c::is_string_type(symbol_c *type_symbol) {
 bool search_expression_type_c::is_literal_integer_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return true;}
   if (typeid(*type_symbol) == typeid(integer_c))        {return true;}
+  if (typeid(*type_symbol) == typeid(neg_integer_c))    {return true;}
   if (typeid(*type_symbol) == typeid(binary_integer_c)) {return true;}
   if (typeid(*type_symbol) == typeid(octal_integer_c))  {return true;}
   if (typeid(*type_symbol) == typeid(hex_integer_c))    {return true;}
@@ -83,29 +94,40 @@ bool search_expression_type_c::is_literal_integer_type(symbol_c *type_symbol) {
 /* A helper function... */
 bool search_expression_type_c::is_integer_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return true;}
-  if (typeid(*type_symbol) == typeid(sint_type_name_c))  {return true;}
-  if (typeid(*type_symbol) == typeid(int_type_name_c))   {return true;}
-  if (typeid(*type_symbol) == typeid(dint_type_name_c))  {return true;}
-  if (typeid(*type_symbol) == typeid(lint_type_name_c))  {return true;}
-  if (typeid(*type_symbol) == typeid(usint_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(uint_type_name_c))  {return true;}
-  if (typeid(*type_symbol) == typeid(udint_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(ulint_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(sint_type_name_c))      {return true;}
+  if (typeid(*type_symbol) == typeid(int_type_name_c))       {return true;}
+  if (typeid(*type_symbol) == typeid(dint_type_name_c))      {return true;}
+  if (typeid(*type_symbol) == typeid(lint_type_name_c))      {return true;}
+  if (typeid(*type_symbol) == typeid(usint_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(uint_type_name_c))      {return true;}
+  if (typeid(*type_symbol) == typeid(udint_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(ulint_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(safesint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safeint_type_name_c))   {return true;}
+  if (typeid(*type_symbol) == typeid(safedint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safelint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safeusint_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(safeuint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safeudint_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(safeulint_type_name_c)) {return true;}
   return is_literal_integer_type(type_symbol);
 }
 
 /* A helper function... */
 bool search_expression_type_c::is_literal_real_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return true;}
-  if (typeid(*type_symbol) == typeid(real_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(real_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(neg_real_c)) {return true;}
   return false;
 }
 
 /* A helper function... */
 bool search_expression_type_c::is_real_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return true;}
-  if (typeid(*type_symbol) == typeid(real_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(lreal_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(real_type_name_c))      {return true;}
+  if (typeid(*type_symbol) == typeid(lreal_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(safereal_type_name_c))  {return true;} 
+  if (typeid(*type_symbol) == typeid(safelreal_type_name_c)) {return true;}  
   return is_literal_real_type(type_symbol);
 }
 
@@ -116,28 +138,34 @@ bool search_expression_type_c::is_num_type(symbol_c *type_symbol) {
 
 bool search_expression_type_c::is_nbinary_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return true;}
-  if (typeid(*type_symbol) == typeid(byte_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(word_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(dword_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(lword_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(byte_type_name_c))      {return true;}
+  if (typeid(*type_symbol) == typeid(word_type_name_c))      {return true;}
+  if (typeid(*type_symbol) == typeid(dword_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(lword_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(safebyte_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safeword_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safedword_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(safelword_type_name_c)) {return true;}
   return is_literal_integer_type(type_symbol);
 }
 
 bool search_expression_type_c::is_binary_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return true;}
-  if (typeid(*type_symbol) == typeid(bool_type_name_c)) {return true;}
-  return is_nbinary_type(type_symbol);
+//   if (typeid(*type_symbol) == typeid(bool_type_name_c))     {return true;}
+//   if (typeid(*type_symbol) == typeid(safebool_type_name_c)) {return true;}
+  return (is_nbinary_type(type_symbol) || is_bool_type(type_symbol));
 }
 
 bool search_expression_type_c::is_same_type(symbol_c *first_type, symbol_c *second_type) {
   if (first_type == NULL || second_type == NULL) {return true;}
   if (typeid(*first_type) == typeid(*second_type)) {return true;}
-  if (is_integer_type(first_type) && is_literal_integer_type(second_type)) {return true;}
-  if (is_literal_integer_type(first_type) && is_integer_type(second_type)) {return true;}
-  if (is_binary_type(first_type) && is_literal_integer_type(second_type))  {return true;}
-  if (is_literal_integer_type(first_type) && is_binary_type(second_type))  {return true;}
-  if (is_real_type(first_type) && is_literal_real_type(second_type)) {return true;}
-  if (is_literal_real_type(first_type) && is_real_type(second_type)) {return true;}
+  if (is_bool_type(first_type)            && is_bool_type(second_type))            {return true;}
+  if (is_integer_type(first_type)         && is_literal_integer_type(second_type)) {return true;}
+  if (is_literal_integer_type(first_type) && is_integer_type(second_type))         {return true;}
+  if (is_binary_type(first_type)          && is_literal_integer_type(second_type)) {return true;}
+  if (is_literal_integer_type(first_type) && is_binary_type(second_type))          {return true;}
+  if (is_real_type(first_type)            && is_literal_real_type(second_type))    {return true;}
+  if (is_literal_real_type(first_type)    && is_real_type(second_type))            {return true;}
   return false;
 }
 
@@ -146,12 +174,12 @@ symbol_c* search_expression_type_c::common_type(symbol_c *first_type, symbol_c *
   if (first_type == NULL) {return second_type;}
   if (second_type == NULL) {return first_type;}
   if (typeid(*first_type) == typeid(*second_type)) {return first_type;}
-  if (is_integer_type(first_type) && is_literal_integer_type(second_type)) {return first_type;}
-  if (is_literal_integer_type(first_type) && is_integer_type(second_type)) {return second_type;}
-  if (is_binary_type(first_type) && is_literal_integer_type(second_type))  {return first_type;}
-  if (is_literal_integer_type(first_type) && is_binary_type(second_type))  {return second_type;}
-  if (is_real_type(first_type) && is_literal_real_type(second_type)) {return first_type;}
-  if (is_literal_real_type(first_type) && is_real_type(second_type)) {return second_type;}
+  if (is_integer_type(first_type)         && is_literal_integer_type(second_type)) {return first_type;}
+  if (is_literal_integer_type(first_type) && is_integer_type(second_type))         {return second_type;}
+  if (is_binary_type(first_type)          && is_literal_integer_type(second_type)) {return first_type;}
+  if (is_literal_integer_type(first_type) && is_binary_type(second_type))          {return second_type;}
+  if (is_real_type(first_type)            && is_literal_real_type(second_type))    {return first_type;}
+  if (is_literal_real_type(first_type)    && is_real_type(second_type))            {return second_type;}
   return NULL;
 }
 

@@ -67,10 +67,6 @@ class search_constant_type_c: public search_visitor_c {
   static time_type_name_c     time_type_name;
   static int_type_name_c      int_type_name;
 
-/*
-  static constant_real_type_name_c     constant_real_type_name;
-  static constant_int_type_name_c      constant_int_type_name;
-*/
 /* temporarily here until we remove the st_code_gen.c and il_code_gen.c files... */
   static integer_c      integer;
 
@@ -81,7 +77,15 @@ class search_constant_type_c: public search_visitor_c {
   /*  Version 1.0 – Official Release"                   */
   /* by PLCopen - Technical Committee 5 - 2006-01-31    */
   /******************************************************/
-  static safebool_type_name_c          safebool_type_name;
+ 
+//  static safebool_type_name_c          safebool_type_name;
+  /* The following is required because the expression (TOD_var - TOD_var) will result in a data type
+   *  (in this case, TIME) that is neither of the expression elements...
+   */
+  static safetime_type_name_c     safetime_type_name;
+  static safetod_type_name_c      safetod_type_name;
+  static safedt_type_name_c       safedt_type_name;
+
 
 
   public:
@@ -97,7 +101,9 @@ class search_constant_type_c: public search_visitor_c {
     /* B 1.2.1 - Numeric Literals */
     /******************************/
     void *visit(real_c *symbol);
+    void *visit(neg_real_c *symbol);
     void *visit(integer_c *symbol);
+    void *visit(neg_integer_c *symbol);
     void *visit(binary_integer_c *symbol);
     void *visit(octal_integer_c *symbol);
     void *visit(hex_integer_c *symbol);

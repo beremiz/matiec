@@ -107,6 +107,28 @@ class type_initial_value_c : public null_visitor_c {
     void *visit(string_type_name_c *symbol);
     void *visit(wstring_type_name_c *symbol);
 
+    void *visit(safetime_type_name_c *symbol);
+    void *visit(safebool_type_name_c *symbol);
+    void *visit(safesint_type_name_c *symbol);
+    void *visit(safeint_type_name_c *symbol);
+    void *visit(safedint_type_name_c *symbol);
+    void *visit(safelint_type_name_c *symbol);
+    void *visit(safeusint_type_name_c *symbol);
+    void *visit(safeuint_type_name_c *symbol);
+    void *visit(safeudint_type_name_c *symbol);
+    void *visit(safeulint_type_name_c *symbol);
+    void *visit(safereal_type_name_c *symbol);
+    void *visit(safelreal_type_name_c *symbol);
+    void *visit(safedate_type_name_c *symbol);
+    void *visit(safetod_type_name_c *symbol);
+    void *visit(safedt_type_name_c *symbol);
+    void *visit(safebyte_type_name_c *symbol);
+    void *visit(safeword_type_name_c *symbol);
+    void *visit(safedword_type_name_c *symbol);
+    void *visit(safelword_type_name_c *symbol);
+    void *visit(safestring_type_name_c *symbol);
+    void *visit(safewstring_type_name_c *symbol);
+
     /********************************/
     /* B 1.3.3 - Derived data types */
     /********************************/

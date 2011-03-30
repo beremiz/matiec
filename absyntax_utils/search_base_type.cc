@@ -85,10 +85,14 @@ bool search_base_type_c::type_is_enumerated(symbol_c* type_decl) {
   * If 'x' were a SINT, then the '30' would have to be a SINT too!
   */
 void *search_base_type_c::visit(real_c *symbol)          	{return (void *)symbol;}
+void *search_base_type_c::visit(neg_real_c *symbol)          	{return (void *)symbol;}
 void *search_base_type_c::visit(integer_c *symbol)       	{return (void *)symbol;}
+void *search_base_type_c::visit(neg_integer_c *symbol)       	{return (void *)symbol;}
 void *search_base_type_c::visit(binary_integer_c *symbol)	{return (void *)symbol;}
 void *search_base_type_c::visit(octal_integer_c *symbol) 	{return (void *)symbol;}
 void *search_base_type_c::visit(hex_integer_c *symbol)   	{return (void *)symbol;}
+void *search_base_type_c::visit(boolean_true_c *symbol)   	{return (void *)symbol;}
+void *search_base_type_c::visit(boolean_false_c *symbol)   	{return (void *)symbol;}
 
 
 /***********************************/
@@ -115,10 +119,8 @@ void *search_base_type_c::visit(dword_type_name_c *symbol)	{return (void *)symbo
 void *search_base_type_c::visit(lword_type_name_c *symbol)	{return (void *)symbol;}
 void *search_base_type_c::visit(string_type_name_c *symbol)	{return (void *)symbol;}
 void *search_base_type_c::visit(wstring_type_name_c *symbol)	{return (void *)symbol;}
-/*
-void *search_base_type_c::visit(constant_int_type_name_c *symbol)	{return (void *)symbol;}
-void *search_base_type_c::visit(constant_real_type_name_c *symbol)	{return (void *)symbol;}
-*/
+
+
 /******************************************************/
 /* Extensions to the base standard as defined in      */
 /* "Safety Software Technical Specification,          */
@@ -126,7 +128,28 @@ void *search_base_type_c::visit(constant_real_type_name_c *symbol)	{return (void
 /*  Version 1.0 – Official Release"                   */
 /* by PLCopen - Technical Committee 5 - 2006-01-31    */
 /******************************************************/
-void *search_base_type_c::visit(safebool_type_name_c *symbol)	{return (void *)symbol;}
+
+void *search_base_type_c::visit(safetime_type_name_c *symbol)     {return (void *)symbol;}
+void *search_base_type_c::visit(safebool_type_name_c *symbol)     {return (void *)symbol;}
+void *search_base_type_c::visit(safesint_type_name_c *symbol)     {return (void *)symbol;}
+void *search_base_type_c::visit(safeint_type_name_c *symbol)      {return (void *)symbol;}
+void *search_base_type_c::visit(safedint_type_name_c *symbol)     {return (void *)symbol;}
+void *search_base_type_c::visit(safelint_type_name_c *symbol)     {return (void *)symbol;}
+void *search_base_type_c::visit(safeusint_type_name_c *symbol)    {return (void *)symbol;}
+void *search_base_type_c::visit(safeuint_type_name_c *symbol)     {return (void *)symbol;}
+void *search_base_type_c::visit(safeudint_type_name_c *symbol)    {return (void *)symbol;}
+void *search_base_type_c::visit(safeulint_type_name_c *symbol)    {return (void *)symbol;}
+void *search_base_type_c::visit(safereal_type_name_c *symbol)     {return (void *)symbol;}
+void *search_base_type_c::visit(safelreal_type_name_c *symbol)    {return (void *)symbol;}
+void *search_base_type_c::visit(safedate_type_name_c *symbol)     {return (void *)symbol;}
+void *search_base_type_c::visit(safetod_type_name_c *symbol)      {return (void *)symbol;}
+void *search_base_type_c::visit(safedt_type_name_c *symbol)       {return (void *)symbol;}
+void *search_base_type_c::visit(safebyte_type_name_c *symbol)     {return (void *)symbol;}
+void *search_base_type_c::visit(safeword_type_name_c *symbol)     {return (void *)symbol;}
+void *search_base_type_c::visit(safedword_type_name_c *symbol)    {return (void *)symbol;}
+void *search_base_type_c::visit(safelword_type_name_c *symbol)    {return (void *)symbol;}
+void *search_base_type_c::visit(safestring_type_name_c *symbol)   {return (void *)symbol;}
+void *search_base_type_c::visit(safewstring_type_name_c *symbol)  {return (void *)symbol;}
 
 /********************************/
 /* B 1.3.3 - Derived data types */

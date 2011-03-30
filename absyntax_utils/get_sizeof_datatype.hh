@@ -91,7 +91,9 @@ class get_sizeof_datatype_c: public null_visitor_c {
       * If 'x' were a SINT, then the '30' would have to be a SINT too!
       */
     void *visit(real_c *symbol);
+    void *visit(neg_real_c *symbol);
     void *visit(integer_c *symbol);
+    void *visit(neg_integer_c *symbol);
     void *visit(binary_integer_c *symbol);
     void *visit(octal_integer_c *symbol);
     void *visit(hex_integer_c *symbol);
@@ -128,7 +130,27 @@ class get_sizeof_datatype_c: public null_visitor_c {
     /*  Version 1.0 – Official Release"                   */
     /* by PLCopen - Technical Committee 5 - 2006-01-31    */
     /******************************************************/
+//     void *visit(safetime_type_name_c *symbol);
     void *visit(safebool_type_name_c *symbol);
+    void *visit(safesint_type_name_c *symbol);
+    void *visit(safeint_type_name_c *symbol);
+    void *visit(safedint_type_name_c *symbol);
+    void *visit(safelint_type_name_c *symbol);
+    void *visit(safeusint_type_name_c *symbol);
+    void *visit(safeuint_type_name_c *symbol);
+    void *visit(safeudint_type_name_c *symbol);
+    void *visit(safeulint_type_name_c *symbol);
+    void *visit(safereal_type_name_c *symbol);
+    void *visit(safelreal_type_name_c *symbol);
+//     void *visit(safedate_type_name_c *symbol);
+//     void *visit(safetod_type_name_c *symbol);
+//     void *visit(safedt_type_name_c *symbol)	;
+    void *visit(safebyte_type_name_c *symbol);
+    void *visit(safeword_type_name_c *symbol);
+    void *visit(safedword_type_name_c *symbol);
+    void *visit(safelword_type_name_c *symbol);
+//     void *visit(safestring_type_name_c *symbol);
+//     void *visit(safewstring_type_name_c *symbol);
 
   /********************************/
   /* B 1.3.3 - Derived data types */

@@ -1,5 +1,5 @@
 /*
- * (c) 20099 Catarina da Costa Boucinha
+ * (c) 2009 Mario de Sousa
  *
  * Offered to the public under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2 of the

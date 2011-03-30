@@ -59,7 +59,9 @@ symbol_c *search_constant_type_c::get_type(symbol_c *constant) {
   * If 'x' were a SINT, then the '30' would have to be a SINT too!
   */
 void *search_constant_type_c::visit(real_c *symbol)           {return (void *)symbol;}
+void *search_constant_type_c::visit(neg_real_c *symbol)       {return (void *)symbol;}
 void *search_constant_type_c::visit(integer_c *symbol)        {return (void *)symbol;}
+void *search_constant_type_c::visit(neg_integer_c *symbol)    {return (void *)symbol;}
 void *search_constant_type_c::visit(binary_integer_c *symbol) {return (void *)symbol;}
 void *search_constant_type_c::visit(octal_integer_c *symbol)  {return (void *)symbol;}
 void *search_constant_type_c::visit(hex_integer_c *symbol)    {return (void *)symbol;}
@@ -90,7 +92,7 @@ void *search_constant_type_c::visit(single_byte_character_string_c *symbol) {ret
 /* B 1.2.3.1 - Duration */
 /************************/
 void *search_constant_type_c::visit(neg_time_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(duration_c *symbol) {return (void *)&time_type_name;}
+void *search_constant_type_c::visit(duration_c *symbol) {return (void *)(symbol->type_name);}
 void *search_constant_type_c::visit(fixed_point_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
 void *search_constant_type_c::visit(days_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
 void *search_constant_type_c::visit(hours_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
@@ -101,11 +103,12 @@ void *search_constant_type_c::visit(milliseconds_c *symbol) {ERROR; return NULL;
 /************************************/
 /* B 1.2.3.2 - Time of day and Date */
 /************************************/
-void *search_constant_type_c::visit(time_of_day_c *symbol) {return (void *)&tod_type_name;}
+void *search_constant_type_c::visit(time_of_day_c *symbol) {return (void *)(symbol->type_name);}
 void *search_constant_type_c::visit(daytime_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(date_c *symbol) {return (void *)&date_type_name;}
+void *search_constant_type_c::visit(date_c *symbol) {return (void *)(symbol->type_name);}
 void *search_constant_type_c::visit(date_literal_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(date_and_time_c *symbol) {return (void *)&dt_type_name;}
+void *search_constant_type_c::visit(date_and_time_c *symbol) {return (void *)(symbol->type_name);}
+
 
 real_type_name_c     search_constant_type_c::real_type_name;
 sint_type_name_c     search_constant_type_c::sint_type_name;
@@ -129,10 +132,16 @@ bool_type_name_c     search_constant_type_c::bool_type_name;
 time_type_name_c     search_constant_type_c::time_type_name;
 int_type_name_c      search_constant_type_c::int_type_name;
 
-/*
-constant_real_type_name_c     search_constant_type_c::constant_real_type_name;
-constant_int_type_name_c      search_constant_type_c::constant_int_type_name;
-*/
+// safebool_type_name_c    search_constant_type_c::safebool_type_name;
+  /* The following is required because the expression (TOD_var - TOD_var) will result in a data type
+   *  (in this case, TIME) that is neither of the expression elements...
+   */
+safetime_type_name_c     search_constant_type_c::safetime_type_name;
+safetod_type_name_c      search_constant_type_c::safetod_type_name;
+safedt_type_name_c       search_constant_type_c::safedt_type_name;
+
+
+
 /* temporarily here until we remove the st_code_gen.c and il_code_gen.c files... */
 /* It should then move to search_expression_type_c                               */
 integer_c search_constant_type_c::integer("1");
