@@ -1,21 +1,27 @@
 /*
- * (c) 2003 Mario de Sousa
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
+ *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
 
 /*
- * An IEC 61131-3 IL and ST compiler.
+ * An IEC 61131-3 compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
@@ -97,6 +103,10 @@ static void printusage(const char *cmd) {
       /* Version 1.0 – Official Release                     */
       /******************************************************/
   printf("  s : allow use of safe extensions\n");
+  printf("\n");
+  printf("%s - Copyright (C) 2003-2011 \n"
+         "This program comes with ABSOLUTELY NO WARRANTY!\n"
+         "This is free software licensed under GPL v3, and you are welcome to redistribute it under the conditions specified by this license.\n", cmd);
 }
 
 
