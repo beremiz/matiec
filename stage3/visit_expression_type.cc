@@ -2011,7 +2011,7 @@ SYM_REF0(not_paramassign_c)
 // SYM_REF4(if_statement_c, expression, statement_list, elseif_statement_list, else_statement_list)
 void *visit_expression_type_c::visit(if_statement_c *symbol) {
   symbol_c *expr_type = base_type((symbol_c*)symbol->expression->accept(*this));
-  if (!is_BOOL_type(expr_type)) STAGE3_ERROR(symbol,symbol,"IF conditional expression is not of boolean type.");
+  if (!is_BOOL_type(expr_type)) STAGE3_ERROR(symbol->expression,symbol->expression,"IF conditional expression is not of boolean type.");
   if (NULL != symbol->statement_list)
     symbol->statement_list->accept(*this); 
   if (NULL != symbol->elseif_statement_list)  
@@ -2030,7 +2030,7 @@ void *visit_expression_type_c::visit(if_statement_c *symbol) {
 // SYM_REF2(elseif_statement_c, expression, statement_list)
 void *visit_expression_type_c::visit(elseif_statement_c *symbol) {
   symbol_c *elseif_expr_type = base_type((symbol_c*)symbol->expression->accept(*this));
-  if(!is_BOOL_type(elseif_expr_type)) STAGE3_ERROR(symbol,symbol,"ELSIF conditional expression is not of boolean type.");
+  if(!is_BOOL_type(elseif_expr_type)) STAGE3_ERROR(symbol->expression,symbol->expression,"ELSIF conditional expression is not of boolean type.");
   if (NULL != symbol->statement_list)
     symbol->statement_list->accept(*this); 
   return NULL;
@@ -2095,14 +2095,14 @@ void *visit_expression_type_c::visit(for_statement_c *symbol) {
   if (NULL != beg_expr_type) {
     /* The BEG value is assigned to the variable, so we check for assignment validity! */ 
     if(!is_valid_assignment(var_type, beg_expr_type)) 
-      STAGE3_ERROR(symbol, symbol, "Data type mismatch between control variable and initial value.");
+      STAGE3_ERROR(symbol->beg_expression, symbol->beg_expression, "Data type mismatch between control variable and initial value.");
   }
   // TO
   symbol_c *end_expr_type = base_type((symbol_c*)symbol->end_expression->accept(*this));
   if (NULL != end_expr_type) { 
     /* The TO value is only used for comparison, so we only check for compatibility! */ 
     if(!is_compatible_type(var_type, end_expr_type)) 
-      STAGE3_ERROR(symbol, symbol, "Data type mismatch between control variable and final value.");
+      STAGE3_ERROR(symbol->end_expression, symbol->end_expression, "Data type mismatch between control variable and final value.");
   }
   // BY
   if(symbol->by_expression != NULL) {
@@ -2110,7 +2110,7 @@ void *visit_expression_type_c::visit(for_statement_c *symbol) {
     if (NULL != end_expr_type) {   
       /* The BY value is used in an expression (add, sub, ...), so we only check for compatibility! */ 
       if(!is_compatible_type(var_type, by_expr_type)) 
-        STAGE3_ERROR(symbol, symbol, "Data type mismatch between control variable and BY value.");
+        STAGE3_ERROR(symbol->by_expression, symbol->by_expression, "Data type mismatch between control variable and BY value.");
     }
   }
   // DO
@@ -2126,7 +2126,7 @@ void *visit_expression_type_c::visit(while_statement_c *symbol) {
   symbol_c *expr_type = base_type((symbol_c*)symbol->expression->accept(*this));
   if (NULL != expr_type) {
     if(!is_BOOL_type(expr_type)) 
-      STAGE3_ERROR(symbol,symbol,"WHILE conditional expression is not of boolean type.");
+      STAGE3_ERROR(symbol->expression,symbol->expression,"WHILE conditional expression is not of boolean type.");
   }
  
   if (NULL != symbol->statement_list)
@@ -2143,7 +2143,7 @@ void *visit_expression_type_c::visit(repeat_statement_c *symbol) {
   symbol_c *expr_type = base_type((symbol_c*)symbol->expression->accept(*this));
   if (NULL != expr_type) {
     if(!is_BOOL_type(expr_type)) 
-      STAGE3_ERROR(symbol,symbol,"REPEAT conditional expression is not of boolean type.");
+      STAGE3_ERROR(symbol->expression,symbol->expression,"REPEAT conditional expression is not of boolean type.");
   }
   return NULL;
 }
