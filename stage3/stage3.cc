@@ -29,6 +29,9 @@ int type_safety(symbol_c *tree_root){
 
 	(*tree_root).accept(visit_expression_type);
 
+	if (visit_expression_type.get_error_found())
+	  return -1;
+	
 	return 0;
 }
 

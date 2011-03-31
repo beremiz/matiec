@@ -67,15 +67,17 @@ class visit_expression_type_c: public search_constant_type_c {
      */
     int  il_parenthesis_level;
     bool il_error;
+    bool error_found;
 
     symbol_c *il_default_variable_type;
     symbol_c *il_operand_type;
 
 
   public:
-    visit_expression_type_c(symbol_c *search_scope);
+    visit_expression_type_c(symbol_c *ignore);
     virtual ~visit_expression_type_c(void);
 
+    bool get_error_found(void);
 
     typedef struct {
       symbol_c *value;
@@ -191,16 +193,16 @@ class visit_expression_type_c: public search_constant_type_c {
     typedef bool (visit_expression_type_c::*is_data_type_t)(symbol_c *type_symbol);  /* a pointer to a function! */
 //    symbol_c *compute_boolean_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
 //    symbol_c *compute_numeric_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
-    symbol_c *compute_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
+//    symbol_c *compute_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
+    symbol_c *compute_expression(symbol_c *left_type, symbol_c *right_type, is_data_type_t is_data_type,
+                                 symbol_c *left_expr=NULL, symbol_c *right_expr=NULL);
+
 
     /* a helper function... */
     symbol_c *base_type(symbol_c *symbol);
 
     /* a helper function... */
     void *verify_null(symbol_c *symbol);
-
-
-
 
     /*********************/
     /* B 1.4 - Variables */

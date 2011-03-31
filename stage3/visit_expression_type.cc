@@ -55,6 +55,7 @@
            LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column,  \
            msg);                                                                       \
     il_error = true;                                                                   \
+    error_found = true;                                                                \
   }
 
 
@@ -112,12 +113,16 @@ void *visit_expression_type_c::visit(function_block_declaration_c *symbol) {
 
 
 
-visit_expression_type_c::visit_expression_type_c(symbol_c *search_scope) {
+visit_expression_type_c::visit_expression_type_c(symbol_c *ignore) {
+  error_found = false;
 }
 
 visit_expression_type_c::~visit_expression_type_c(void) {
 }
 
+bool visit_expression_type_c::get_error_found(void) {
+  return error_found;
+}
 
 
 
@@ -137,11 +142,15 @@ visit_expression_type_c::~visit_expression_type_c(void) {
  *
  *  When the following code handles a literal, it is really a literal of unknown data type.
  *    e.g.   42, may be considered an int, a byte, a word, etc... 
+ *
+ * NOTE: type_symbol == NULL is valid!
+ *       This will occur, for example, when and undefined/undeclared symbolic_variable is used in the program.
+ *       This will not be of any type, so we always return false.
  */
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_ELEMENTARY_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   return is_ANY_MAGNITUDE_type(type_symbol)
       || is_ANY_BIT_type      (type_symbol)
       || is_ANY_STRING_type   (type_symbol)
@@ -150,7 +159,7 @@ bool visit_expression_type_c::is_ANY_ELEMENTARY_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_SAFEELEMENTARY_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   return is_ANY_SAFEMAGNITUDE_type(type_symbol)
       || is_ANY_SAFEBIT_type      (type_symbol)
       || is_ANY_SAFESTRING_type   (type_symbol)
@@ -159,7 +168,7 @@ bool visit_expression_type_c::is_ANY_SAFEELEMENTARY_type(symbol_c *type_symbol) 
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_ELEMENTARY_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   /* NOTE: doing 
    *          return is_ANY_SAFEELEMENTARY_type() || is_ANY_ELEMENTARY_type()
    *       is incorrect, as the literals would never be considered compatible...
@@ -173,21 +182,21 @@ bool visit_expression_type_c::is_ANY_ELEMENTARY_compatible(symbol_c *type_symbol
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_MAGNITUDE_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(time_type_name_c)) {return true;}
   return is_ANY_NUM_type(type_symbol);
 }
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_SAFEMAGNITUDE_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(safetime_type_name_c)) {return true;}
   return is_ANY_SAFENUM_type(type_symbol);
 }
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_MAGNITUDE_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (is_ANY_MAGNITUDE_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEMAGNITUDE_type(type_symbol))              {return true;}
 
@@ -196,7 +205,7 @@ bool visit_expression_type_c::is_ANY_MAGNITUDE_compatible(symbol_c *type_symbol)
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_NUM_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (is_ANY_REAL_type(type_symbol))                       {return true;}
   if (is_ANY_INT_type(type_symbol))                        {return true;}
   return false;
@@ -204,14 +213,14 @@ bool visit_expression_type_c::is_ANY_NUM_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_SAFENUM_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   return is_ANY_SAFEREAL_type(type_symbol) 
       || is_ANY_SAFEINT_type (type_symbol);
 }
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_NUM_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (is_ANY_REAL_compatible(type_symbol))                       {return true;}
   if (is_ANY_INT_compatible(type_symbol))                        {return true;}
   return false;  
@@ -219,7 +228,7 @@ bool visit_expression_type_c::is_ANY_NUM_compatible(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_DATE_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(date_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(tod_type_name_c))  {return true;}
   if (typeid(*type_symbol) == typeid(dt_type_name_c))   {return true;}
@@ -228,7 +237,7 @@ bool visit_expression_type_c::is_ANY_DATE_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_SAFEDATE_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(safedate_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(safetod_type_name_c))  {return true;}
   if (typeid(*type_symbol) == typeid(safedt_type_name_c))   {return true;}
@@ -237,7 +246,7 @@ bool visit_expression_type_c::is_ANY_SAFEDATE_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_DATE_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (is_ANY_DATE_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEDATE_type(type_symbol))              {return true;}
   return false;
@@ -245,7 +254,7 @@ bool visit_expression_type_c::is_ANY_DATE_compatible(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_STRING_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(string_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(wstring_type_name_c)) {return true;}
 // TODO literal_string ???
@@ -254,7 +263,7 @@ bool visit_expression_type_c::is_ANY_STRING_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_SAFESTRING_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(safestring_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(safewstring_type_name_c)) {return true;}
   return false;
@@ -262,7 +271,7 @@ bool visit_expression_type_c::is_ANY_SAFESTRING_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_STRING_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (is_ANY_STRING_type    (type_symbol))              {return true;}
   if (is_ANY_SAFESTRING_type(type_symbol))              {return true;}
   return false;
@@ -270,7 +279,7 @@ bool visit_expression_type_c::is_ANY_STRING_compatible(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_INT_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(sint_type_name_c))  {return true;}
   if (typeid(*type_symbol) == typeid(int_type_name_c))   {return true;}
   if (typeid(*type_symbol) == typeid(dint_type_name_c))  {return true;}
@@ -284,7 +293,7 @@ bool visit_expression_type_c::is_ANY_INT_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_SAFEINT_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(safesint_type_name_c))  {return true;}
   if (typeid(*type_symbol) == typeid(safeint_type_name_c))   {return true;}
   if (typeid(*type_symbol) == typeid(safedint_type_name_c))  {return true;}
@@ -298,7 +307,7 @@ bool visit_expression_type_c::is_ANY_SAFEINT_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_INT_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (is_ANY_INT_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEINT_type(type_symbol))              {return true;}
   if (is_literal_integer_type(type_symbol))          {return true;}
@@ -307,7 +316,7 @@ bool visit_expression_type_c::is_ANY_INT_compatible(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_REAL_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(real_type_name_c))  {return true;}
   if (typeid(*type_symbol) == typeid(lreal_type_name_c)) {return true;}
   return false;
@@ -315,7 +324,7 @@ bool visit_expression_type_c::is_ANY_REAL_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_SAFEREAL_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(safereal_type_name_c))  {return true;}
   if (typeid(*type_symbol) == typeid(safelreal_type_name_c)) {return true;}
   return false;
@@ -323,7 +332,7 @@ bool visit_expression_type_c::is_ANY_SAFEREAL_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_REAL_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (is_ANY_REAL_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEREAL_type(type_symbol))              {return true;}
   if (is_literal_real_type(type_symbol))              {return true;}
@@ -332,7 +341,7 @@ bool visit_expression_type_c::is_ANY_REAL_compatible(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_BIT_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(bool_type_name_c))     {return true;}
   if (typeid(*type_symbol) == typeid(byte_type_name_c))     {return true;}
   if (typeid(*type_symbol) == typeid(word_type_name_c))     {return true;}
@@ -343,7 +352,7 @@ bool visit_expression_type_c::is_ANY_BIT_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_SAFEBIT_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(safebool_type_name_c))     {return true;}
   if (typeid(*type_symbol) == typeid(safebyte_type_name_c))     {return true;}
   if (typeid(*type_symbol) == typeid(safeword_type_name_c))     {return true;}
@@ -354,7 +363,7 @@ bool visit_expression_type_c::is_ANY_SAFEBIT_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_BIT_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (is_ANY_BIT_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEBIT_type(type_symbol))              {return true;}
   if (is_nonneg_literal_integer_type(type_symbol))   {return true;}
@@ -364,21 +373,21 @@ bool visit_expression_type_c::is_ANY_BIT_compatible(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_BOOL_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(bool_type_name_c))      {return true;}
   return false;
 }
 
 /* A helper function... */
 bool visit_expression_type_c::is_SAFEBOOL_type(symbol_c *type_symbol){
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(safebool_type_name_c))  {return true;}
   return false;  
 }
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_BOOL_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (is_BOOL_type    (type_symbol))              {return true;}
   if (is_SAFEBOOL_type(type_symbol))              {return true;}
   if (is_literal_bool_type(type_symbol))              {return true;}
@@ -394,7 +403,7 @@ bool visit_expression_type_c::is_ANY_BOOL_compatible(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_literal_integer_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(neg_integer_c))        {return true;}
   return is_nonneg_literal_integer_type(type_symbol);
 }
@@ -402,7 +411,7 @@ bool visit_expression_type_c::is_literal_integer_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_nonneg_literal_integer_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(integer_c))        {return true;}
   if (typeid(*type_symbol) == typeid(binary_integer_c)) {return true;}
   if (typeid(*type_symbol) == typeid(octal_integer_c))  {return true;}
@@ -413,7 +422,7 @@ bool visit_expression_type_c::is_nonneg_literal_integer_type(symbol_c *type_symb
 
 /* A helper function... */
 bool visit_expression_type_c::is_literal_real_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(real_c))     {return true;}
   if (typeid(*type_symbol) == typeid(neg_real_c)) {return true;}
   return false;
@@ -424,7 +433,7 @@ bool visit_expression_type_c::is_literal_real_type(symbol_c *type_symbol) {
 bool visit_expression_type_c::is_literal_bool_type(symbol_c *type_symbol) {
   bool_type_name_c bool_t;
 
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(boolean_true_c))    {return true;}
   if (typeid(*type_symbol) == typeid(boolean_false_c))   {return true;}
   if (is_nonneg_literal_integer_type(type_symbol))
@@ -445,7 +454,7 @@ bool visit_expression_type_c::is_literal_bool_type(symbol_c *type_symbol) {
  */
 
 symbol_c *visit_expression_type_c::common_type__(symbol_c *first_type, symbol_c *second_type) {
-  if (first_type == NULL && second_type == NULL) {ERROR;}
+  if (first_type == NULL && second_type == NULL) {return NULL;}
   if (first_type == NULL)  {return second_type;}
   if (second_type == NULL) {return first_type;}
 
@@ -543,9 +552,12 @@ symbol_c *visit_expression_type_c::common_type__(symbol_c *first_type, symbol_c 
  *  if no common data type is found.
  */
 symbol_c *visit_expression_type_c::common_type(symbol_c *first_type, symbol_c *second_type) {
+/*  
   symbol_c *res = common_type__(first_type, second_type);
   if (NULL == res) ERROR;
   return res;
+*/
+  return common_type__(first_type, second_type);
 }
 
 
@@ -564,9 +576,8 @@ symbol_c *visit_expression_type_c::common_type(symbol_c *first_type, symbol_c *s
  * NOTE: It is assumed that the var_type is the data type of an lvalue
  */
 bool visit_expression_type_c::is_valid_assignment(symbol_c *var_type, symbol_c *value_type) {
-  if (var_type == NULL)   {/* STAGE3_ERROR(value_type, value_type, "Var_type   == NULL"); */ ERROR;}
-  if (value_type == NULL) {/* STAGE3_ERROR(var_type,   var_type,   "Value_type == NULL"); */ ERROR;}
-  if (var_type == NULL || value_type == NULL) {ERROR;}
+  if (var_type == NULL)   {/* STAGE3_ERROR(value_type, value_type, "Var_type   == NULL"); */ return false;}
+  if (value_type == NULL) {/* STAGE3_ERROR(var_type,   var_type,   "Value_type == NULL"); */ return false;}
 
   symbol_c *common_type = common_type__(var_type, value_type);
   if (NULL == common_type)
@@ -589,7 +600,7 @@ bool visit_expression_type_c::is_valid_assignment(symbol_c *var_type, symbol_c *
  *   etc...
  */
 bool visit_expression_type_c::is_compatible_type(symbol_c *first_type, symbol_c *second_type) {
-  if (first_type == NULL || second_type == NULL) {ERROR;}
+  if (first_type == NULL || second_type == NULL) {return false;}
   return (NULL != common_type__(first_type, second_type));
 }
 
@@ -634,20 +645,23 @@ bool visit_expression_type_c::is_compatible_type(symbol_c *first_type, symbol_c 
 symbol_c *visit_expression_type_c::compute_boolean_expression(symbol_c *left_type, symbol_c *right_type,
                                                               is_data_type_t is_data_type) {
 */
-symbol_c *visit_expression_type_c::compute_expression(symbol_c *left_type, symbol_c *right_type,
-                                                      is_data_type_t is_data_type) {
+symbol_c *visit_expression_type_c::compute_expression(symbol_c *left_type,      symbol_c *right_type,     is_data_type_t is_data_type,
+						      symbol_c *left_expr, symbol_c *right_expr) {
   bool error = false;
 
   if (!(this->*is_data_type)(left_type)) {
-    STAGE3_ERROR(left_type, left_type, "Invalid data type of left operand.");
+    if (left_expr != NULL)
+      STAGE3_ERROR(left_expr, left_expr, "Invalid data type of left operand.");
     error = true;
   }
   if (!(this->*is_data_type)(right_type)) {
-    STAGE3_ERROR(right_type, right_type, "Invalid data type of right operand.");
+    if (right_expr != NULL)
+      STAGE3_ERROR(right_expr, right_expr, "Invalid data type of right operand.");
     error = true;
   }
   if (!is_compatible_type(left_type, right_type)) {
-    STAGE3_ERROR(left_type, right_type, "Type mismatch between operands.");
+    if ((left_expr != NULL) && (right_expr != NULL))
+      STAGE3_ERROR(left_expr, right_expr, "Type mismatch between operands.");
     error = true;
   }
 
@@ -860,6 +874,10 @@ void visit_expression_type_c::check_formal_call(symbol_c *f_call, symbol_c *f_de
 
 /* a helper function... */
 symbol_c *visit_expression_type_c::base_type(symbol_c *symbol) {
+  /* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used
+   *       in the code.
+   */
+  if (symbol == NULL) return NULL;
   return (symbol_c *)symbol->accept(search_base_type);
 }
 
