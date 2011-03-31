@@ -107,6 +107,16 @@ void *stage4out_c::print_integer(int integer) {
   return NULL;
 }
 
+void *stage4out_c::print_long_integer(unsigned long l_integer) {
+  *out << l_integer << "UL";
+  return NULL;
+}
+
+void *stage4out_c::print_long_long_integer(unsigned long long ll_integer) {
+  *out << ll_integer << "ULL";
+  return NULL;
+}
+
 void *stage4out_c::printupper(const char *str) {
   for (int i = 0; str[i] != '\0'; i++)
     *out << (unsigned char)toupper(str[i]);

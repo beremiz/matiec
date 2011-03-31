@@ -10,40 +10,58 @@
 /* Include non windows.h clashing typedefs */
 #include "iec_types.h"
 
-/* Those typdefs clash with windows.h */
-/* i.e. this file cannot be included aside windows.h */
-typedef IEC_BOOL  BOOL;
-
 #define TRUE 1
 #define FALSE 0
 
-typedef IEC_SINT    SINT;
-typedef IEC_INT   INT;
-typedef IEC_DINT   DINT;
-typedef IEC_LINT   LINT;
+#define __IEC_DEBUG_FLAG 0x01
+#define __IEC_FORCE_FLAG 0x02
+#define __IEC_RETAIN_FLAG 0x04
 
-typedef IEC_USINT    USINT;
-typedef IEC_UINT   UINT;
-typedef IEC_UDINT   UDINT;
-typedef IEC_ULINT   ULINT;
+#define __DECLARE_IEC_TYPE(type)\
+typedef IEC_##type type;\
+\
+typedef struct {\
+  IEC_##type value;\
+  IEC_BYTE flags;\
+} __IEC_##type##_t;\
+\
+typedef struct {\
+  IEC_##type *value;\
+  IEC_BYTE flags;\
+  IEC_##type fvalue;\
+} __IEC_##type##_p;
 
-typedef IEC_BYTE    BYTE;
-typedef IEC_WORD   WORD;
-typedef IEC_DWORD   DWORD;
-typedef IEC_LWORD   LWORD;
+#define __DECLARE_DERIVED_TYPE(base, type)\
+typedef base type;\
+typedef __IEC_##base##_t __IEC_##type##_t;
 
-typedef IEC_REAL    REAL;
-typedef IEC_LREAL   LREAL;
+#define __DECLARE_COMPLEX_STRUCT(type)\
+typedef struct {\
+  type value;\
+  IEC_BYTE flags;\
+} __IEC_##type##_t;\
+\
+typedef struct {\
+  type *value;\
+  IEC_BYTE flags;\
+} __IEC_##type##_p;
 
-typedef IEC_TIME TIME;
-typedef IEC_DATE DATE;
-typedef IEC_DT DT;
-typedef IEC_TOD TOD;
+#define __DECLARE_ARRAY_TYPE(base, type, size)\
+typedef struct {\
+  base table size;\
+} type;\
+__DECLARE_COMPLEX_STRUCT(type);
 
-typedef IEC_STRING STRING;
+#define __DECLARE_STRUCT_TYPE(elements, type)\
+typedef elements type;\
+__DECLARE_COMPLEX_STRUCT(type);
+
+/* Those typdefs clash with windows.h */
+/* i.e. this file cannot be included aside windows.h */
+ANY(__DECLARE_IEC_TYPE)
 
 typedef struct {
-  BOOL state;     // current step state. 0 : inative, 1: active
+  __IEC_BOOL_t state;     // current step state. 0 : inative, 1: active
   BOOL prev_state;  // previous step state. 0 : inative, 1: active
   TIME elapsed_time;  // time since step is active
 } STEP;
@@ -62,36 +80,31 @@ typedef struct {
 
 /* Enumerate native types */
 #define __decl_enum_type(TYPENAME) TYPENAME##_ENUM,
+#define __decl_enum_pointer(TYPENAME) TYPENAME##_P_ENUM,
+#define __decl_enum_output(TYPENAME) TYPENAME##_O_ENUM,
 typedef enum{
   ANY(__decl_enum_type)
-  ANY_SFC(__decl_enum_type)
-  /*TODO handle custom types*/
+  ANY(__decl_enum_pointer)
+  ANY(__decl_enum_output)
+  /* SFC specific types are never external or global */
+  UNKNOWN_ENUM
 } __IEC_types_enum;
 
 /* Get size of type from its number */
-#define __decl_size_case(TYPENAME) case TYPENAME##_ENUM: return sizeof(TYPENAME);
-#define __decl_size_case_force_BOOL(TYPENAME) case TYPENAME##_ENUM: return sizeof(BOOL);
+#define __decl_size_case(TYPENAME) \
+	case TYPENAME##_ENUM:\
+	case TYPENAME##_O_ENUM:\
+	case TYPENAME##_P_ENUM:\
+		return sizeof(TYPENAME);
 static inline USINT __get_type_enum_size(__IEC_types_enum t){
  switch(t){
   ANY(__decl_size_case)
   /* size do not correspond to real struct.
    * only a bool is used to represent state*/
-  ANY_SFC(__decl_size_case_force_BOOL)
-  /*TODO handle custom types*/
+  default:
+	  return 0;
  }
+ return 0;
 }
-
-/* Get name of type from its number */
-#define __decl_typename_case(TYPENAME) case TYPENAME##_ENUM: return #TYPENAME ;
-static inline const char* __get_type_enum_name(__IEC_types_enum t){
- switch(t){
-  ANY(__decl_typename_case)
-  /* size do not correspond to real struct.
-   * only a bool is used to represent state*/
-  ANY_SFC(__decl_typename_case)
-  /*TODO handle custom types*/
- }
-}
-
 
 #endif /*IEC_TYPES_ALL_H*/

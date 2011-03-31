@@ -185,19 +185,7 @@ symbol_c* search_expression_type_c::common_type(symbol_c *first_type, symbol_c *
 
 
 integer_c search_expression_type_c::integer("1"); // what default value should we use here ???
-#define compute_standard_function_default search_expression_type_c::compute_standard_function_default
-#define compute_standard_function_il search_expression_type_c::compute_standard_function_il
-#define search(x) search_f(x)
-#define next() next_nf()
-//     #define search_constant_type_c::constant_int_type_name  search_expression_type_c::integer
-#define constant_int_type_name  integer
 #include "search_type_code.c"
-#undef constant_int_type_name
-//     #undef search_constant_type_c::constant_int_type_name
-#undef next
-#undef search
-#undef compute_standard_function_default
-#undef compute_standard_function_il
 
 /*static bool_type_name_c bool_type_name;*/
 

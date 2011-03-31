@@ -56,13 +56,13 @@
 search_varfb_instance_type_c::search_varfb_instance_type_c(symbol_c *search_scope): search_var_instance_decl(search_scope) {
   this->decompose_var_instance_name = NULL;
   this->current_structelement_name = NULL;
-  this->search_base_type = false;
+  this->current_rawtype = NULL;
 }
 
-symbol_c *search_varfb_instance_type_c::get_type(symbol_c *variable_name, bool base_type) {
+symbol_c *search_varfb_instance_type_c::get_type(symbol_c *variable_name) {
   this->current_structelement_name = NULL;
+  this->current_rawtype = NULL;
   this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
-  this->search_base_type = base_type;
   if (NULL == decompose_var_instance_name) ERROR;
 
   /* find the part of the variable name that will appear in the
@@ -88,7 +88,7 @@ symbol_c *search_varfb_instance_type_c::get_type(symbol_c *variable_name, bool b
   symbol_c *res = (symbol_c *)var_decl->accept(*this);
   if (NULL == res) ERROR;
 
-  /* make sure that we have decomposed all strcuture elements of the variable name */
+  /* make sure that we have decomposed all structure elements of the variable name */
   symbol_c *var_name = decompose_var_instance_name->next_part();
   if (NULL != var_name) ERROR;
 
@@ -97,6 +97,8 @@ symbol_c *search_varfb_instance_type_c::get_type(symbol_c *variable_name, bool b
 
 unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) {
   this->current_structelement_name = NULL;
+  this->current_rawtype = NULL;
+  this->is_complex = false;
   this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
   if (NULL == decompose_var_instance_name) ERROR;
 
@@ -120,13 +122,26 @@ unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) 
    * This class, while visiting, will recursively call
    * decompose_var_instance_name->get_next() when and if required...
    */
+  var_decl->accept(*this);
   unsigned int res = search_var_instance_decl.get_vartype();
   
-  /* make sure that we have decomposed all strcuture elements of the variable name */
+  /* make sure that we have decomposed all structure elements of the variable name */
   symbol_c *var_name = decompose_var_instance_name->next_part();
   if (NULL != var_name) ERROR;
 
   return res;
+}
+
+symbol_c *search_varfb_instance_type_c::get_rawtype(symbol_c *variable_name) {
+  symbol_c *rawtype = this->get_type(variable_name);
+  if (this->current_rawtype != NULL)
+    return this->current_rawtype;
+  else
+	return rawtype;
+}
+
+bool search_varfb_instance_type_c::type_is_complex(void) {
+  return this->is_complex;
 }
 
 /* a helper function... */
@@ -160,13 +175,17 @@ void *search_varfb_instance_type_c::visit(identifier_c *type_name) {
     /* Type declaration found!! */
     return fb_decl->accept(*this);
 
+  this->current_rawtype = type_name;
+
   /* No. It is not a function block, so we let
    * the base class take care of it...
    */
-  if (this->search_base_type)
-    return search_base_type_c::visit(type_name);
-  else
-    return type_name;
+  if (NULL == decompose_var_instance_name->next_part(false)) {
+    return base_type(type_name);
+  }
+  else {
+	return search_base_type_c::visit(type_name);
+  }
 }
 
 /********************************/
@@ -175,28 +194,26 @@ void *search_varfb_instance_type_c::visit(identifier_c *type_name) {
 
 /*  identifier ':' array_spec_init */
 void *search_varfb_instance_type_c::visit(array_type_declaration_c *symbol) {
+  this->is_complex = true;
   return symbol->array_spec_init->accept(*this);
 }
     
-/* array_specification [ASSIGN array_initialization} */
+/* array_specification [ASSIGN array_initialization] */
 /* array_initialization may be NULL ! */
 void *search_varfb_instance_type_c::visit(array_spec_init_c *symbol) {
-  symbol_c *var_name = decompose_var_instance_name->next_part();
-  if (NULL != var_name)
-    current_structelement_name = var_name;
+  this->is_complex = true;
   return symbol->array_specification->accept(*this);
 }
-    
+
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *search_varfb_instance_type_c::visit(array_specification_c *symbol) {
-  symbol_c *var_name = decompose_var_instance_name->next_part();
-  if (NULL != var_name)
-    current_structelement_name = var_name;
+  this->is_complex = true;
   return symbol->non_generic_type_name->accept(*this);
 }
 
 /*  structure_type_name ':' structure_specification */
 void *search_varfb_instance_type_c::visit(structure_type_declaration_c *symbol) {
+  this->is_complex = true;
   return symbol->structure_specification->accept(*this);
   /* NOTE: structure_specification will point to either a
    *       initialized_structure_c
@@ -209,33 +226,7 @@ void *search_varfb_instance_type_c::visit(structure_type_declaration_c *symbol) 
 /* structure_initialization may be NULL ! */
 // SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
 void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
-  /* make sure that we have decomposed all strcuture elements of the variable name */
-  symbol_c *var_name = decompose_var_instance_name->next_part();
-  if (NULL == var_name) {
-    /* this is it... !
-     * No need to look any further...
-     */
-    /* NOTE: we could simply do a
-    *   return (void *)symbol;
-    *       nevertheless, note that this search_varfb_instance_type_c
-    *       class inherits from the search_base_type_c class,
-    *       which means that it will usually return the base type,
-    *       and not the derived type (*). If we are to be consistent,
-    *       we should guarantee that we always return the base type.
-    *       To do this we could use
-    *   return (void *)symbol->accept(*this);
-    *       since this class inherits from the search_base_type_c.
-    *       However, in this case we don't want it to follow
-    *       the structs as this search_varfb_instance_type_c does.
-    *       We therefore have to create a new search_base_type_c
-    *       instance to search through this type without going
-    *       through the structs...
-    */
-      return base_type(symbol->structure_type_name);
-  }
-
-  /* now search the structure declaration */
-  current_structelement_name = var_name;
+  this->is_complex = true;
   /* recursively find out the data type of var_name... */
   return symbol->structure_type_name->accept(*this);
 }
@@ -244,6 +235,9 @@ void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
 /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
 /* structure_element_declaration_list structure_element_declaration ';' */
 void *search_varfb_instance_type_c::visit(structure_element_declaration_list_c *symbol)	{
+  /* make sure that we have decomposed all structure elements of the variable name */
+  current_structelement_name = decompose_var_instance_name->next_part();
+  /* now search the structure declaration */
   return visit_list(symbol);
 }
 

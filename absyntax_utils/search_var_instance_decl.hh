@@ -69,7 +69,7 @@ class search_var_instance_decl_c: public search_visitor_c {
   public:
     search_var_instance_decl_c(symbol_c *search_scope);
     symbol_c *get_decl(symbol_c *variable_instance_name);
-    unsigned int get_vartype();
+    unsigned int get_vartype(void);
 
   public:
 
@@ -93,6 +93,7 @@ class search_var_instance_decl_c: public search_visitor_c {
     /******************************************/
     /* B 1.4.3 - Declaration & Initialisation */
     /******************************************/
+
     /* edge -> The F_EDGE or R_EDGE directive */
     // SYM_REF2(edge_declaration_c, edge, var1_list)
     // TODO

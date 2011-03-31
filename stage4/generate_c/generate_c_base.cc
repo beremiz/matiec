@@ -51,18 +51,36 @@
 
 typedef struct
 {
+  symbol_c *param_name;
   symbol_c *param_value;
   symbol_c *param_type;
   function_param_iterator_c::param_direction_t param_direction;
 } FUNCTION_PARAM;
 
-#define ADD_PARAM_LIST(value, type, direction)\
+#define DECLARE_PARAM_LIST()\
+  std::list<FUNCTION_PARAM*> param_list;\
+  std::list<FUNCTION_PARAM*>::iterator pt;\
+  FUNCTION_PARAM *param;
+
+#define ADD_PARAM_LIST(name, value, type, direction)\
   param = new FUNCTION_PARAM;\
+  param->param_name = name;\
   param->param_value = value;\
   param->param_type = type;\
   param->param_direction = direction;\
-  param_list.push_back(*param);
+  param_list.push_back(param);
 
+#define PARAM_LIST_ITERATOR() for(pt = param_list.begin(); pt != param_list.end(); pt++)
+
+#define PARAM_NAME (*pt)->param_name
+#define PARAM_VALUE (*pt)->param_value
+#define PARAM_TYPE (*pt)->param_type
+#define PARAM_DIRECTION (*pt)->param_direction
+
+#define CLEAR_PARAM_LIST()\
+  PARAM_LIST_ITERATOR()\
+    delete *pt;\
+  param_list.clear();
 
 
 class generate_c_base_c: public iterator_visitor_c {
@@ -72,7 +90,7 @@ class generate_c_base_c: public iterator_visitor_c {
 
   private:
     /* Unlike programs that are mapped onto C++ classes, Function Blocks are mapped onto a data structure type
-     * and a separate function conatining the code. This function is passed a pointer to an instance of the data
+     * and a separate function containing the code. This function is passed a pointer to an instance of the data
      * structure. This means that the code inside the functions must insert a pointer to the data structure whenever
      * it wishes to access a Function Block variable.
      * The variable_prefix_ variable will contain the correct string which needs to be prefixed to all variable accesses.
@@ -80,10 +98,10 @@ class generate_c_base_c: public iterator_visitor_c {
      */
     const char *variable_prefix_;
 
-
-
   public:
-    generate_c_base_c(stage4out_c *s4o_ptr): s4o(*s4o_ptr) {variable_prefix_ = NULL;}
+    generate_c_base_c(stage4out_c *s4o_ptr): s4o(*s4o_ptr) {
+      variable_prefix_ = NULL;
+    }
     ~generate_c_base_c(void) {}
 
     void set_variable_prefix(const char *variable_prefix) {variable_prefix_ = variable_prefix;}
@@ -219,6 +237,36 @@ class generate_c_base_c: public iterator_visitor_c {
       return NULL;
     }
 
+    void *print_check_function(symbol_c *type,
+          symbol_c *value,
+          symbol_c *fb_name = NULL,
+          bool temp = false) {
+      search_base_type_c search_base_type;
+      bool is_subrange = search_base_type.type_is_subrange(type);
+      if (is_subrange) {
+		s4o.print("__CHECK_");
+		type->accept(*this);
+		s4o.print("(");
+      }
+      if (fb_name != NULL) {
+        s4o.print(GET_VAR);
+        s4o.print("(");
+        print_variable_prefix();
+        fb_name->accept(*this);
+        s4o.print(".");
+        value->accept(*this);
+        s4o.print(")");
+      }
+      else {
+        if (temp)
+    	  s4o.print(TEMP_VAR);
+        value->accept(*this);
+      }
+      if (is_subrange)
+        s4o.print(")");
+      return NULL;
+    }
+
 /***************************/
 /* 2.1.6 - Pragmas */
 /***************************/
@@ -347,11 +395,11 @@ class generate_c_base_c: public iterator_visitor_c {
       } /* for() */
 
       str += '"';
-      s4o.print("(STRING){");
+      s4o.print("__STRING_LITERAL(");
       s4o.print_integer(count); 
       s4o.print(",");
       s4o.print(str);
-      s4o.print("}");
+      s4o.print(")");
       return NULL;
     }
 

@@ -495,8 +495,10 @@ void *function_call_param_iterator_c::visit(function_invocation_c *symbol) {
   /* If the syntax parser is working correctly, exactly one of the 
    * following two symbols will be NULL, while the other is != NULL.
    */
-  if (symbol->   formal_param_list != NULL) return symbol->   formal_param_list->accept(*this);
-  if (symbol->nonformal_param_list != NULL) return symbol->nonformal_param_list->accept(*this);
+  if (symbol == (function_invocation_c *)f_call) {
+	if (symbol->   formal_param_list != NULL) return symbol->   formal_param_list->accept(*this);
+    if (symbol->nonformal_param_list != NULL) return symbol->nonformal_param_list->accept(*this);
+  }
 
   return NULL;
 }

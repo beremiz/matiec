@@ -81,6 +81,7 @@ class function_param_iterator_c : public null_visitor_c {
     symbol_c *current_param_type;
     symbol_c *current_param_default_value;
     param_direction_t current_param_direction;
+    bool en_eno_param_implicit;
     /* Which operation of the class was called...
      * Search a parameter, or iterate to the next parameter.
      */
@@ -131,12 +132,16 @@ class function_param_iterator_c : public null_visitor_c {
     /* Returns the currently referenced parameter's type name. */
     symbol_c *param_type(void);
 
+    /* Returns if currently referenced parameter is an implicit defined EN/ENO parameter. */
+    bool is_en_eno_param_implicit(void);
+
     /* Returns the currently referenced parameter's data passing direction.
      * i.e. VAR_INPUT, VAR_OUTPUT or VAR_INOUT
      */
     param_direction_t param_direction(void);
 
     private:
+    void *visit(implicit_definition_c *symbol);
     /******************************************/
     /* B 1.4.3 - Declaration & Initialisation */
     /******************************************/

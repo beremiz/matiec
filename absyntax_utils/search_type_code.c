@@ -29,7 +29,7 @@
  
  
 
-void *compute_standard_function_default(function_invocation_c *st_symbol = NULL, il_formal_funct_call_c *il_symbol = NULL) {
+void *search_expression_type_c::compute_standard_function_default(function_invocation_c *st_symbol = NULL, il_formal_funct_call_c *il_symbol = NULL) {
   function_type_t current_function_type;
   function_call_param_iterator_c *tmp_function_call_param_iterator;
   if (st_symbol != NULL && il_symbol == NULL) {
@@ -55,14 +55,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -91,14 +91,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -127,14 +127,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -163,14 +163,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -199,14 +199,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -235,14 +235,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -271,14 +271,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -307,14 +307,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -343,14 +343,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -379,14 +379,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -415,14 +415,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -451,14 +451,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -487,14 +487,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -523,14 +523,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -559,14 +559,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -595,14 +595,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -631,14 +631,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -667,14 +667,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -703,14 +703,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -739,14 +739,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -775,14 +775,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -811,14 +811,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -847,14 +847,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -883,14 +883,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -919,14 +919,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -955,14 +955,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -991,14 +991,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1027,14 +1027,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1063,14 +1063,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1099,14 +1099,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1135,14 +1135,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1171,14 +1171,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1207,14 +1207,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1243,14 +1243,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1279,14 +1279,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1315,14 +1315,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1351,14 +1351,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1387,14 +1387,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1423,14 +1423,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1459,14 +1459,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1495,14 +1495,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1531,14 +1531,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1567,14 +1567,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1603,14 +1603,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1639,14 +1639,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1675,14 +1675,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1711,14 +1711,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1747,14 +1747,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1783,14 +1783,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1819,14 +1819,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1855,14 +1855,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1891,14 +1891,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1927,14 +1927,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1963,14 +1963,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -1999,14 +1999,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2035,14 +2035,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2071,14 +2071,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2107,14 +2107,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2143,14 +2143,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2179,14 +2179,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2215,14 +2215,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2251,14 +2251,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2287,14 +2287,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2323,14 +2323,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2359,14 +2359,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2395,14 +2395,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2431,14 +2431,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2467,14 +2467,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2503,14 +2503,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2539,14 +2539,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2575,14 +2575,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2611,14 +2611,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2647,14 +2647,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2683,14 +2683,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2719,14 +2719,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2755,14 +2755,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2791,14 +2791,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2827,14 +2827,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2863,14 +2863,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2899,14 +2899,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2935,14 +2935,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -2971,14 +2971,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3007,14 +3007,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3043,14 +3043,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3079,14 +3079,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3115,14 +3115,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3151,14 +3151,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3187,14 +3187,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3223,14 +3223,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3259,14 +3259,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3295,14 +3295,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3331,14 +3331,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3367,14 +3367,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3403,14 +3403,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3439,14 +3439,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3475,14 +3475,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3511,14 +3511,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3547,14 +3547,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3583,14 +3583,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3619,14 +3619,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3655,14 +3655,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3691,14 +3691,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3727,14 +3727,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3763,14 +3763,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3799,14 +3799,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3835,14 +3835,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3871,14 +3871,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3907,14 +3907,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3943,14 +3943,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -3979,14 +3979,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4015,14 +4015,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4051,14 +4051,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4087,14 +4087,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4123,14 +4123,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4159,14 +4159,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4195,14 +4195,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4231,14 +4231,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4267,14 +4267,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4303,14 +4303,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4339,14 +4339,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4375,14 +4375,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4411,14 +4411,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4447,14 +4447,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4483,14 +4483,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4519,14 +4519,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4555,14 +4555,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4591,14 +4591,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4627,14 +4627,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4663,14 +4663,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4699,14 +4699,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4735,14 +4735,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4771,14 +4771,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4807,14 +4807,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4843,14 +4843,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4879,14 +4879,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4915,14 +4915,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4951,14 +4951,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -4987,14 +4987,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5023,14 +5023,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5059,14 +5059,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5095,14 +5095,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5131,14 +5131,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5167,14 +5167,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5203,14 +5203,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5239,14 +5239,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5275,14 +5275,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5311,14 +5311,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5347,14 +5347,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5383,14 +5383,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5419,14 +5419,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5455,14 +5455,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5491,14 +5491,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5527,14 +5527,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5563,14 +5563,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5599,14 +5599,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5635,14 +5635,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5671,14 +5671,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5707,14 +5707,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5743,14 +5743,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5779,14 +5779,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5815,14 +5815,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5851,14 +5851,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5887,14 +5887,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5923,14 +5923,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5959,14 +5959,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -5995,14 +5995,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6031,14 +6031,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6067,14 +6067,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6103,14 +6103,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6139,14 +6139,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6175,14 +6175,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6211,14 +6211,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6247,14 +6247,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6283,14 +6283,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6319,14 +6319,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6355,14 +6355,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6391,14 +6391,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6427,14 +6427,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6463,14 +6463,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6499,14 +6499,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6535,14 +6535,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6571,14 +6571,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6607,14 +6607,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6643,14 +6643,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6679,14 +6679,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6715,14 +6715,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6751,14 +6751,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6787,14 +6787,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6823,14 +6823,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6859,14 +6859,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6895,14 +6895,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6931,14 +6931,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -6967,14 +6967,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7003,14 +7003,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7039,14 +7039,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7075,14 +7075,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7111,14 +7111,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7147,14 +7147,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7183,14 +7183,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7219,14 +7219,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7255,14 +7255,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7291,14 +7291,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7327,14 +7327,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7363,14 +7363,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7399,14 +7399,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7435,14 +7435,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7471,14 +7471,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7507,14 +7507,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7543,14 +7543,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7579,14 +7579,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7615,14 +7615,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7651,14 +7651,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7687,14 +7687,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7723,14 +7723,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7759,14 +7759,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7795,14 +7795,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7831,14 +7831,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7867,14 +7867,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7903,14 +7903,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7939,14 +7939,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -7975,14 +7975,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8011,14 +8011,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8047,14 +8047,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8083,14 +8083,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8119,14 +8119,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8155,14 +8155,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8191,14 +8191,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8227,14 +8227,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8263,14 +8263,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8299,14 +8299,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8335,14 +8335,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8371,14 +8371,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8407,14 +8407,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8443,14 +8443,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8479,14 +8479,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8515,14 +8515,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8551,14 +8551,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8587,14 +8587,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8623,14 +8623,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8659,14 +8659,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8695,14 +8695,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8731,14 +8731,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8767,14 +8767,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8803,14 +8803,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8839,14 +8839,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8875,14 +8875,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8911,14 +8911,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8947,14 +8947,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -8983,14 +8983,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9019,14 +9019,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9055,14 +9055,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9091,14 +9091,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9127,14 +9127,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9163,14 +9163,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9199,14 +9199,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9235,14 +9235,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9271,14 +9271,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9307,14 +9307,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9343,14 +9343,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9379,14 +9379,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9415,14 +9415,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9451,14 +9451,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9487,14 +9487,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9523,14 +9523,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9559,14 +9559,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9595,14 +9595,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9631,14 +9631,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9667,14 +9667,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9703,14 +9703,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9739,14 +9739,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9775,14 +9775,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9811,14 +9811,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9847,14 +9847,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9883,14 +9883,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9919,14 +9919,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9955,14 +9955,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -9991,14 +9991,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10027,14 +10027,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10063,14 +10063,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10099,14 +10099,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10135,14 +10135,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10171,14 +10171,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10207,14 +10207,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10243,14 +10243,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10279,14 +10279,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10315,14 +10315,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10351,14 +10351,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10387,14 +10387,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10423,14 +10423,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10459,14 +10459,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10495,14 +10495,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10531,14 +10531,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10567,14 +10567,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10603,14 +10603,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10639,14 +10639,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10675,14 +10675,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10711,14 +10711,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10747,14 +10747,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10783,14 +10783,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10819,14 +10819,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10855,14 +10855,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10891,14 +10891,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10927,14 +10927,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10963,14 +10963,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -10999,14 +10999,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11035,14 +11035,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11071,14 +11071,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11107,14 +11107,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11143,14 +11143,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11179,14 +11179,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11215,14 +11215,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11251,14 +11251,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11287,14 +11287,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11323,14 +11323,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11359,14 +11359,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11395,14 +11395,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11431,14 +11431,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11467,14 +11467,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11503,14 +11503,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11539,14 +11539,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11575,14 +11575,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11611,14 +11611,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11647,14 +11647,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11683,14 +11683,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11719,14 +11719,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11755,14 +11755,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11791,14 +11791,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11827,14 +11827,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11863,14 +11863,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11899,14 +11899,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11935,14 +11935,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -11971,14 +11971,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12007,14 +12007,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12043,14 +12043,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12079,14 +12079,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12115,14 +12115,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12151,14 +12151,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12187,14 +12187,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12223,14 +12223,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12259,14 +12259,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12295,14 +12295,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12331,14 +12331,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12367,14 +12367,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12403,14 +12403,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12439,14 +12439,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12475,14 +12475,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12511,14 +12511,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12547,14 +12547,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12583,14 +12583,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12619,14 +12619,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12655,14 +12655,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12691,14 +12691,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12727,14 +12727,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12763,14 +12763,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12799,14 +12799,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12835,14 +12835,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12871,14 +12871,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12907,14 +12907,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12943,14 +12943,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -12979,14 +12979,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13015,14 +13015,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13051,14 +13051,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13087,14 +13087,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13123,14 +13123,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13159,14 +13159,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13175,7 +13175,7 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             if(IN_type_symbol == NULL || search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 return return_type_symbol;
                 
             }
@@ -13195,14 +13195,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13231,14 +13231,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13267,14 +13267,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13303,14 +13303,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13339,14 +13339,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13355,7 +13355,7 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 return return_type_symbol;
                 
             }
@@ -13375,14 +13375,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13391,7 +13391,7 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 return return_type_symbol;
                 
             }
@@ -13411,14 +13411,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13427,7 +13427,7 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 return return_type_symbol;
                 
             }
@@ -13447,14 +13447,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13463,7 +13463,7 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 return return_type_symbol;
                 
             }
@@ -13483,14 +13483,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13519,14 +13519,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13555,14 +13555,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13591,14 +13591,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13627,14 +13627,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13663,14 +13663,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13699,14 +13699,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13735,14 +13735,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13771,14 +13771,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13807,14 +13807,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13843,14 +13843,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13879,14 +13879,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13915,14 +13915,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -13951,14 +13951,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -13968,14 +13968,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -13999,14 +13999,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14030,14 +14030,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14061,14 +14061,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14103,14 +14103,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -14120,14 +14120,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14151,14 +14151,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14193,14 +14193,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -14210,14 +14210,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14241,14 +14241,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14272,14 +14272,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14311,14 +14311,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14350,14 +14350,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14392,14 +14392,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -14409,14 +14409,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14440,14 +14440,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14482,14 +14482,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -14499,14 +14499,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14541,14 +14541,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -14558,14 +14558,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14600,14 +14600,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -14636,14 +14636,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -14653,14 +14653,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("N");
+                    symbol_c *N_param_name = (symbol_c *)(new identifier_c("N"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (N_param_value == NULL)
-                      N_param_value = function_call_param_iterator.next();
+                      N_param_value = function_call_param_iterator.next_nf();
                     if (N_param_value != NULL) {
                       N_type_symbol = search_expression_type->get_type(N_param_value);
                       last_type_symbol = last_type_symbol && N_type_symbol && search_expression_type->is_same_type(N_type_symbol, last_type_symbol) ? search_expression_type->common_type(N_type_symbol, last_type_symbol) : N_type_symbol ;
@@ -14695,14 +14695,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -14712,14 +14712,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("N");
+                    symbol_c *N_param_name = (symbol_c *)(new identifier_c("N"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (N_param_value == NULL)
-                      N_param_value = function_call_param_iterator.next();
+                      N_param_value = function_call_param_iterator.next_nf();
                     if (N_param_value != NULL) {
                       N_type_symbol = search_expression_type->get_type(N_param_value);
                       last_type_symbol = last_type_symbol && N_type_symbol && search_expression_type->is_same_type(N_type_symbol, last_type_symbol) ? search_expression_type->common_type(N_type_symbol, last_type_symbol) : N_type_symbol ;
@@ -14754,14 +14754,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -14771,14 +14771,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("N");
+                    symbol_c *N_param_name = (symbol_c *)(new identifier_c("N"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (N_param_value == NULL)
-                      N_param_value = function_call_param_iterator.next();
+                      N_param_value = function_call_param_iterator.next_nf();
                     if (N_param_value != NULL) {
                       N_type_symbol = search_expression_type->get_type(N_param_value);
                       last_type_symbol = last_type_symbol && N_type_symbol && search_expression_type->is_same_type(N_type_symbol, last_type_symbol) ? search_expression_type->common_type(N_type_symbol, last_type_symbol) : N_type_symbol ;
@@ -14813,14 +14813,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -14830,14 +14830,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("N");
+                    symbol_c *N_param_name = (symbol_c *)(new identifier_c("N"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (N_param_value == NULL)
-                      N_param_value = function_call_param_iterator.next();
+                      N_param_value = function_call_param_iterator.next_nf();
                     if (N_param_value != NULL) {
                       N_type_symbol = search_expression_type->get_type(N_param_value);
                       last_type_symbol = last_type_symbol && N_type_symbol && search_expression_type->is_same_type(N_type_symbol, last_type_symbol) ? search_expression_type->common_type(N_type_symbol, last_type_symbol) : N_type_symbol ;
@@ -14872,14 +14872,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -14889,14 +14889,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14931,14 +14931,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -14948,14 +14948,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -14990,14 +14990,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15007,14 +15007,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -15049,14 +15049,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -15085,14 +15085,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("G");
+            symbol_c *G_param_name = (symbol_c *)(new identifier_c("G"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *G_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *G_param_value = function_call_param_iterator.search_f(G_param_name);
             symbol_c *G_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (G_param_value == NULL)
-              G_param_value = function_call_param_iterator.next();
+              G_param_value = function_call_param_iterator.next_nf();
             if (G_param_value != NULL) {
               G_type_symbol = search_expression_type->get_type(G_param_value);
               last_type_symbol = last_type_symbol && G_type_symbol && search_expression_type->is_same_type(G_type_symbol, last_type_symbol) ? search_expression_type->common_type(G_type_symbol, last_type_symbol) : G_type_symbol ;
@@ -15102,14 +15102,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN0");
+                    symbol_c *IN0_param_name = (symbol_c *)(new identifier_c("IN0"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN0_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(IN0_param_name);
                     symbol_c *IN0_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN0_param_value == NULL)
-                      IN0_param_value = function_call_param_iterator.next();
+                      IN0_param_value = function_call_param_iterator.next_nf();
                     if (IN0_param_value != NULL) {
                       IN0_type_symbol = search_expression_type->get_type(IN0_param_value);
                       last_type_symbol = last_type_symbol && IN0_type_symbol && search_expression_type->is_same_type(IN0_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN0_type_symbol, last_type_symbol) : IN0_type_symbol ;
@@ -15119,14 +15119,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
                     {
                 
                         {
-                            identifier_c param_name("IN1");
+                            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
                             symbol_c *IN1_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (IN1_param_value == NULL)
-                              IN1_param_value = function_call_param_iterator.next();
+                              IN1_param_value = function_call_param_iterator.next_nf();
                             if (IN1_param_value != NULL) {
                               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
                               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15167,14 +15167,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15184,14 +15184,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -15226,14 +15226,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15243,14 +15243,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -15285,14 +15285,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("MN");
+            symbol_c *MN_param_name = (symbol_c *)(new identifier_c("MN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *MN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *MN_param_value = function_call_param_iterator.search_f(MN_param_name);
             symbol_c *MN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (MN_param_value == NULL)
-              MN_param_value = function_call_param_iterator.next();
+              MN_param_value = function_call_param_iterator.next_nf();
             if (MN_param_value != NULL) {
               MN_type_symbol = search_expression_type->get_type(MN_param_value);
               last_type_symbol = last_type_symbol && MN_type_symbol && search_expression_type->is_same_type(MN_type_symbol, last_type_symbol) ? search_expression_type->common_type(MN_type_symbol, last_type_symbol) : MN_type_symbol ;
@@ -15302,14 +15302,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN");
+                    symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
                     symbol_c *IN_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN_param_value == NULL)
-                      IN_param_value = function_call_param_iterator.next();
+                      IN_param_value = function_call_param_iterator.next_nf();
                     if (IN_param_value != NULL) {
                       IN_type_symbol = search_expression_type->get_type(IN_param_value);
                       last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -15319,14 +15319,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
                     {
                 
                         {
-                            identifier_c param_name("MX");
+                            symbol_c *MX_param_name = (symbol_c *)(new identifier_c("MX"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *MX_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *MX_param_value = function_call_param_iterator.search_f(MX_param_name);
                             symbol_c *MX_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (MX_param_value == NULL)
-                              MX_param_value = function_call_param_iterator.next();
+                              MX_param_value = function_call_param_iterator.next_nf();
                             if (MX_param_value != NULL) {
                               MX_type_symbol = search_expression_type->get_type(MX_param_value);
                               last_type_symbol = last_type_symbol && MX_type_symbol && search_expression_type->is_same_type(MX_type_symbol, last_type_symbol) ? search_expression_type->common_type(MX_type_symbol, last_type_symbol) : MX_type_symbol ;
@@ -15367,14 +15367,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("K");
+            symbol_c *K_param_name = (symbol_c *)(new identifier_c("K"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *K_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *K_param_value = function_call_param_iterator.search_f(K_param_name);
             symbol_c *K_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (K_param_value == NULL)
-              K_param_value = function_call_param_iterator.next();
+              K_param_value = function_call_param_iterator.next_nf();
             if (K_param_value != NULL) {
               K_type_symbol = search_expression_type->get_type(K_param_value);
               last_type_symbol = last_type_symbol && K_type_symbol && search_expression_type->is_same_type(K_type_symbol, last_type_symbol) ? search_expression_type->common_type(K_type_symbol, last_type_symbol) : K_type_symbol ;
@@ -15384,14 +15384,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN0");
+                    symbol_c *IN0_param_name = (symbol_c *)(new identifier_c("IN0"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN0_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(IN0_param_name);
                     symbol_c *IN0_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN0_param_value == NULL)
-                      IN0_param_value = function_call_param_iterator.next();
+                      IN0_param_value = function_call_param_iterator.next_nf();
                     if (IN0_param_value != NULL) {
                       IN0_type_symbol = search_expression_type->get_type(IN0_param_value);
                       last_type_symbol = last_type_symbol && IN0_type_symbol && search_expression_type->is_same_type(IN0_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN0_type_symbol, last_type_symbol) : IN0_type_symbol ;
@@ -15401,14 +15401,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
                     {
                 
                         {
-                            identifier_c param_name("IN1");
+                            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
                             symbol_c *IN1_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (IN1_param_value == NULL)
-                              IN1_param_value = function_call_param_iterator.next();
+                              IN1_param_value = function_call_param_iterator.next_nf();
                             if (IN1_param_value != NULL) {
                               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
                               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15449,14 +15449,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15466,14 +15466,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -15508,14 +15508,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15525,14 +15525,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -15567,14 +15567,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15584,14 +15584,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -15626,14 +15626,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15643,14 +15643,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -15685,14 +15685,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15702,14 +15702,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -15744,14 +15744,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -15761,14 +15761,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -15803,14 +15803,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -15839,14 +15839,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -15856,14 +15856,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("L");
+                    symbol_c *L_param_name = (symbol_c *)(new identifier_c("L"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (L_param_value == NULL)
-                      L_param_value = function_call_param_iterator.next();
+                      L_param_value = function_call_param_iterator.next_nf();
                     if (L_param_value != NULL) {
                       L_type_symbol = search_expression_type->get_type(L_param_value);
                       last_type_symbol = last_type_symbol && L_type_symbol && search_expression_type->is_same_type(L_type_symbol, last_type_symbol) ? search_expression_type->common_type(L_type_symbol, last_type_symbol) : L_type_symbol ;
@@ -15898,14 +15898,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -15915,14 +15915,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("L");
+                    symbol_c *L_param_name = (symbol_c *)(new identifier_c("L"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (L_param_value == NULL)
-                      L_param_value = function_call_param_iterator.next();
+                      L_param_value = function_call_param_iterator.next_nf();
                     if (L_param_value != NULL) {
                       L_type_symbol = search_expression_type->get_type(L_param_value);
                       last_type_symbol = last_type_symbol && L_type_symbol && search_expression_type->is_same_type(L_type_symbol, last_type_symbol) ? search_expression_type->common_type(L_type_symbol, last_type_symbol) : L_type_symbol ;
@@ -15957,14 +15957,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -15974,14 +15974,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("L");
+                    symbol_c *L_param_name = (symbol_c *)(new identifier_c("L"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (L_param_value == NULL)
-                      L_param_value = function_call_param_iterator.next();
+                      L_param_value = function_call_param_iterator.next_nf();
                     if (L_param_value != NULL) {
                       L_type_symbol = search_expression_type->get_type(L_param_value);
                       last_type_symbol = last_type_symbol && L_type_symbol && search_expression_type->is_same_type(L_type_symbol, last_type_symbol) ? search_expression_type->common_type(L_type_symbol, last_type_symbol) : L_type_symbol ;
@@ -15991,14 +15991,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            symbol_c *P_param_name = (symbol_c *)(new identifier_c("P"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (P_param_value == NULL)
-                              P_param_value = function_call_param_iterator.next();
+                              P_param_value = function_call_param_iterator.next_nf();
                             if (P_param_value != NULL) {
                               P_type_symbol = search_expression_type->get_type(P_param_value);
                               last_type_symbol = last_type_symbol && P_type_symbol && search_expression_type->is_same_type(P_type_symbol, last_type_symbol) ? search_expression_type->common_type(P_type_symbol, last_type_symbol) : P_type_symbol ;
@@ -16039,14 +16039,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -16056,14 +16056,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -16087,14 +16087,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -16129,14 +16129,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -16146,14 +16146,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -16163,14 +16163,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            symbol_c *P_param_name = (symbol_c *)(new identifier_c("P"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (P_param_value == NULL)
-                              P_param_value = function_call_param_iterator.next();
+                              P_param_value = function_call_param_iterator.next_nf();
                             if (P_param_value != NULL) {
                               P_type_symbol = search_expression_type->get_type(P_param_value);
                               last_type_symbol = last_type_symbol && P_type_symbol && search_expression_type->is_same_type(P_type_symbol, last_type_symbol) ? search_expression_type->common_type(P_type_symbol, last_type_symbol) : P_type_symbol ;
@@ -16211,14 +16211,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN");
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
             symbol_c *IN_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next();
+              IN_param_value = function_call_param_iterator.next_nf();
             if (IN_param_value != NULL) {
               IN_type_symbol = search_expression_type->get_type(IN_param_value);
               last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -16228,14 +16228,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("L");
+                    symbol_c *L_param_name = (symbol_c *)(new identifier_c("L"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (L_param_value == NULL)
-                      L_param_value = function_call_param_iterator.next();
+                      L_param_value = function_call_param_iterator.next_nf();
                     if (L_param_value != NULL) {
                       L_type_symbol = search_expression_type->get_type(L_param_value);
                       last_type_symbol = last_type_symbol && L_type_symbol && search_expression_type->is_same_type(L_type_symbol, last_type_symbol) ? search_expression_type->common_type(L_type_symbol, last_type_symbol) : L_type_symbol ;
@@ -16245,14 +16245,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            symbol_c *P_param_name = (symbol_c *)(new identifier_c("P"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (P_param_value == NULL)
-                              P_param_value = function_call_param_iterator.next();
+                              P_param_value = function_call_param_iterator.next_nf();
                             if (P_param_value != NULL) {
                               P_type_symbol = search_expression_type->get_type(P_param_value);
                               last_type_symbol = last_type_symbol && P_type_symbol && search_expression_type->is_same_type(P_type_symbol, last_type_symbol) ? search_expression_type->common_type(P_type_symbol, last_type_symbol) : P_type_symbol ;
@@ -16293,14 +16293,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -16310,14 +16310,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -16327,14 +16327,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
                     {
                 
                         {
-                            identifier_c param_name("L");
+                            symbol_c *L_param_name = (symbol_c *)(new identifier_c("L"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *L_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *L_param_value = function_call_param_iterator.search_f(L_param_name);
                             symbol_c *L_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (L_param_value == NULL)
-                              L_param_value = function_call_param_iterator.next();
+                              L_param_value = function_call_param_iterator.next_nf();
                             if (L_param_value != NULL) {
                               L_type_symbol = search_expression_type->get_type(L_param_value);
                               last_type_symbol = last_type_symbol && L_type_symbol && search_expression_type->is_same_type(L_type_symbol, last_type_symbol) ? search_expression_type->common_type(L_type_symbol, last_type_symbol) : L_type_symbol ;
@@ -16344,14 +16344,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
                             {
                         
                                 {
-                                    identifier_c param_name("P");
+                                    symbol_c *P_param_name = (symbol_c *)(new identifier_c("P"));
                                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                                    symbol_c *P_param_value = function_call_param_iterator.search(&param_name);
+                                    symbol_c *P_param_value = function_call_param_iterator.search_f(P_param_name);
                                     symbol_c *P_type_symbol = NULL;
                                     
                                     /* Get the value from a foo(<param_value>) style call */
                                     if (P_param_value == NULL)
-                                      P_param_value = function_call_param_iterator.next();
+                                      P_param_value = function_call_param_iterator.next_nf();
                                     if (P_param_value != NULL) {
                                       P_type_symbol = search_expression_type->get_type(P_param_value);
                                       last_type_symbol = last_type_symbol && P_type_symbol && search_expression_type->is_same_type(P_type_symbol, last_type_symbol) ? search_expression_type->common_type(P_type_symbol, last_type_symbol) : P_type_symbol ;
@@ -16398,14 +16398,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
         symbol_c *last_type_symbol = NULL;
 
         {
-            identifier_c param_name("IN1");
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
             /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
             symbol_c *IN1_type_symbol = NULL;
             
             /* Get the value from a foo(<param_value>) style call */
             if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next();
+              IN1_param_value = function_call_param_iterator.next_nf();
             if (IN1_param_value != NULL) {
               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -16415,14 +16415,14 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -16455,7 +16455,7 @@ void *compute_standard_function_default(function_invocation_c *st_symbol = NULL,
   return NULL;
 }
 
-void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_data_type) {
+void *search_expression_type_c::compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_data_type) {
   
   function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
   function_call_param_iterator_c function_call_param_iterator(symbol);  
@@ -25941,7 +25941,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             if(IN_type_symbol == NULL || search_expression_type->is_real_type(IN_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 return return_type_symbol;
                 
             }
@@ -26071,7 +26071,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::udint_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 return return_type_symbol;
                 
             }
@@ -26097,7 +26097,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::uint_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 return return_type_symbol;
                 
             }
@@ -26123,7 +26123,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::usint_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 return return_type_symbol;
                 
             }
@@ -26149,7 +26149,7 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::ulint_type_name, last_type_symbol))
             {
         
-                symbol_c * return_type_symbol = &search_constant_type_c::constant_int_type_name;
+                symbol_c * return_type_symbol = &search_constant_type_c::integer;
                 return return_type_symbol;
                 
             }
@@ -26514,14 +26514,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26545,14 +26545,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26576,14 +26576,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26607,14 +26607,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26656,14 +26656,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26687,14 +26687,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26736,14 +26736,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26767,14 +26767,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26798,14 +26798,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26837,14 +26837,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26876,14 +26876,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26925,14 +26925,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -26956,14 +26956,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27005,14 +27005,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27054,14 +27054,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27129,14 +27129,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("N");
+                    symbol_c *N_param_name = (symbol_c *)(new identifier_c("N"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (N_param_value == NULL)
-                      N_param_value = function_call_param_iterator.next();
+                      N_param_value = function_call_param_iterator.next_nf();
                     if (N_param_value != NULL) {
                       N_type_symbol = search_expression_type->get_type(N_param_value);
                       last_type_symbol = last_type_symbol && N_type_symbol && search_expression_type->is_same_type(N_type_symbol, last_type_symbol) ? search_expression_type->common_type(N_type_symbol, last_type_symbol) : N_type_symbol ;
@@ -27178,14 +27178,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("N");
+                    symbol_c *N_param_name = (symbol_c *)(new identifier_c("N"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (N_param_value == NULL)
-                      N_param_value = function_call_param_iterator.next();
+                      N_param_value = function_call_param_iterator.next_nf();
                     if (N_param_value != NULL) {
                       N_type_symbol = search_expression_type->get_type(N_param_value);
                       last_type_symbol = last_type_symbol && N_type_symbol && search_expression_type->is_same_type(N_type_symbol, last_type_symbol) ? search_expression_type->common_type(N_type_symbol, last_type_symbol) : N_type_symbol ;
@@ -27227,14 +27227,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("N");
+                    symbol_c *N_param_name = (symbol_c *)(new identifier_c("N"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (N_param_value == NULL)
-                      N_param_value = function_call_param_iterator.next();
+                      N_param_value = function_call_param_iterator.next_nf();
                     if (N_param_value != NULL) {
                       N_type_symbol = search_expression_type->get_type(N_param_value);
                       last_type_symbol = last_type_symbol && N_type_symbol && search_expression_type->is_same_type(N_type_symbol, last_type_symbol) ? search_expression_type->common_type(N_type_symbol, last_type_symbol) : N_type_symbol ;
@@ -27276,14 +27276,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("N");
+                    symbol_c *N_param_name = (symbol_c *)(new identifier_c("N"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *N_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *N_param_value = function_call_param_iterator.search_f(N_param_name);
                     symbol_c *N_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (N_param_value == NULL)
-                      N_param_value = function_call_param_iterator.next();
+                      N_param_value = function_call_param_iterator.next_nf();
                     if (N_param_value != NULL) {
                       N_type_symbol = search_expression_type->get_type(N_param_value);
                       last_type_symbol = last_type_symbol && N_type_symbol && search_expression_type->is_same_type(N_type_symbol, last_type_symbol) ? search_expression_type->common_type(N_type_symbol, last_type_symbol) : N_type_symbol ;
@@ -27325,14 +27325,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27374,14 +27374,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27423,14 +27423,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27498,14 +27498,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN0");
+                    symbol_c *IN0_param_name = (symbol_c *)(new identifier_c("IN0"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN0_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(IN0_param_name);
                     symbol_c *IN0_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN0_param_value == NULL)
-                      IN0_param_value = function_call_param_iterator.next();
+                      IN0_param_value = function_call_param_iterator.next_nf();
                     if (IN0_param_value != NULL) {
                       IN0_type_symbol = search_expression_type->get_type(IN0_param_value);
                       last_type_symbol = last_type_symbol && IN0_type_symbol && search_expression_type->is_same_type(IN0_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN0_type_symbol, last_type_symbol) : IN0_type_symbol ;
@@ -27515,14 +27515,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
                     {
                 
                         {
-                            identifier_c param_name("IN1");
+                            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
                             symbol_c *IN1_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (IN1_param_value == NULL)
-                              IN1_param_value = function_call_param_iterator.next();
+                              IN1_param_value = function_call_param_iterator.next_nf();
                             if (IN1_param_value != NULL) {
                               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
                               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -27570,14 +27570,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27619,14 +27619,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27668,14 +27668,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN");
+                    symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
                     symbol_c *IN_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN_param_value == NULL)
-                      IN_param_value = function_call_param_iterator.next();
+                      IN_param_value = function_call_param_iterator.next_nf();
                     if (IN_param_value != NULL) {
                       IN_type_symbol = search_expression_type->get_type(IN_param_value);
                       last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
@@ -27685,14 +27685,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
                     {
                 
                         {
-                            identifier_c param_name("MX");
+                            symbol_c *MX_param_name = (symbol_c *)(new identifier_c("MX"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *MX_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *MX_param_value = function_call_param_iterator.search_f(MX_param_name);
                             symbol_c *MX_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (MX_param_value == NULL)
-                              MX_param_value = function_call_param_iterator.next();
+                              MX_param_value = function_call_param_iterator.next_nf();
                             if (MX_param_value != NULL) {
                               MX_type_symbol = search_expression_type->get_type(MX_param_value);
                               last_type_symbol = last_type_symbol && MX_type_symbol && search_expression_type->is_same_type(MX_type_symbol, last_type_symbol) ? search_expression_type->common_type(MX_type_symbol, last_type_symbol) : MX_type_symbol ;
@@ -27740,14 +27740,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN0");
+                    symbol_c *IN0_param_name = (symbol_c *)(new identifier_c("IN0"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN0_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN0_param_value = function_call_param_iterator.search_f(IN0_param_name);
                     symbol_c *IN0_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN0_param_value == NULL)
-                      IN0_param_value = function_call_param_iterator.next();
+                      IN0_param_value = function_call_param_iterator.next_nf();
                     if (IN0_param_value != NULL) {
                       IN0_type_symbol = search_expression_type->get_type(IN0_param_value);
                       last_type_symbol = last_type_symbol && IN0_type_symbol && search_expression_type->is_same_type(IN0_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN0_type_symbol, last_type_symbol) : IN0_type_symbol ;
@@ -27757,14 +27757,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
                     {
                 
                         {
-                            identifier_c param_name("IN1");
+                            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *IN1_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
                             symbol_c *IN1_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (IN1_param_value == NULL)
-                              IN1_param_value = function_call_param_iterator.next();
+                              IN1_param_value = function_call_param_iterator.next_nf();
                             if (IN1_param_value != NULL) {
                               IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
                               last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
@@ -27812,14 +27812,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27861,14 +27861,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27910,14 +27910,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -27959,14 +27959,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -28008,14 +28008,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -28057,14 +28057,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -28132,14 +28132,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("L");
+                    symbol_c *L_param_name = (symbol_c *)(new identifier_c("L"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (L_param_value == NULL)
-                      L_param_value = function_call_param_iterator.next();
+                      L_param_value = function_call_param_iterator.next_nf();
                     if (L_param_value != NULL) {
                       L_type_symbol = search_expression_type->get_type(L_param_value);
                       last_type_symbol = last_type_symbol && L_type_symbol && search_expression_type->is_same_type(L_type_symbol, last_type_symbol) ? search_expression_type->common_type(L_type_symbol, last_type_symbol) : L_type_symbol ;
@@ -28181,14 +28181,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("L");
+                    symbol_c *L_param_name = (symbol_c *)(new identifier_c("L"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (L_param_value == NULL)
-                      L_param_value = function_call_param_iterator.next();
+                      L_param_value = function_call_param_iterator.next_nf();
                     if (L_param_value != NULL) {
                       L_type_symbol = search_expression_type->get_type(L_param_value);
                       last_type_symbol = last_type_symbol && L_type_symbol && search_expression_type->is_same_type(L_type_symbol, last_type_symbol) ? search_expression_type->common_type(L_type_symbol, last_type_symbol) : L_type_symbol ;
@@ -28230,14 +28230,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("L");
+                    symbol_c *L_param_name = (symbol_c *)(new identifier_c("L"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (L_param_value == NULL)
-                      L_param_value = function_call_param_iterator.next();
+                      L_param_value = function_call_param_iterator.next_nf();
                     if (L_param_value != NULL) {
                       L_type_symbol = search_expression_type->get_type(L_param_value);
                       last_type_symbol = last_type_symbol && L_type_symbol && search_expression_type->is_same_type(L_type_symbol, last_type_symbol) ? search_expression_type->common_type(L_type_symbol, last_type_symbol) : L_type_symbol ;
@@ -28247,14 +28247,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            symbol_c *P_param_name = (symbol_c *)(new identifier_c("P"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (P_param_value == NULL)
-                              P_param_value = function_call_param_iterator.next();
+                              P_param_value = function_call_param_iterator.next_nf();
                             if (P_param_value != NULL) {
                               P_type_symbol = search_expression_type->get_type(P_param_value);
                               last_type_symbol = last_type_symbol && P_type_symbol && search_expression_type->is_same_type(P_type_symbol, last_type_symbol) ? search_expression_type->common_type(P_type_symbol, last_type_symbol) : P_type_symbol ;
@@ -28302,14 +28302,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -28333,14 +28333,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -28382,14 +28382,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -28399,14 +28399,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            symbol_c *P_param_name = (symbol_c *)(new identifier_c("P"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (P_param_value == NULL)
-                              P_param_value = function_call_param_iterator.next();
+                              P_param_value = function_call_param_iterator.next_nf();
                             if (P_param_value != NULL) {
                               P_type_symbol = search_expression_type->get_type(P_param_value);
                               last_type_symbol = last_type_symbol && P_type_symbol && search_expression_type->is_same_type(P_type_symbol, last_type_symbol) ? search_expression_type->common_type(P_type_symbol, last_type_symbol) : P_type_symbol ;
@@ -28454,14 +28454,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("L");
+                    symbol_c *L_param_name = (symbol_c *)(new identifier_c("L"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *L_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *L_param_value = function_call_param_iterator.search_f(L_param_name);
                     symbol_c *L_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (L_param_value == NULL)
-                      L_param_value = function_call_param_iterator.next();
+                      L_param_value = function_call_param_iterator.next_nf();
                     if (L_param_value != NULL) {
                       L_type_symbol = search_expression_type->get_type(L_param_value);
                       last_type_symbol = last_type_symbol && L_type_symbol && search_expression_type->is_same_type(L_type_symbol, last_type_symbol) ? search_expression_type->common_type(L_type_symbol, last_type_symbol) : L_type_symbol ;
@@ -28471,14 +28471,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
                     {
                 
                         {
-                            identifier_c param_name("P");
+                            symbol_c *P_param_name = (symbol_c *)(new identifier_c("P"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *P_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *P_param_value = function_call_param_iterator.search_f(P_param_name);
                             symbol_c *P_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (P_param_value == NULL)
-                              P_param_value = function_call_param_iterator.next();
+                              P_param_value = function_call_param_iterator.next_nf();
                             if (P_param_value != NULL) {
                               P_type_symbol = search_expression_type->get_type(P_param_value);
                               last_type_symbol = last_type_symbol && P_type_symbol && search_expression_type->is_same_type(P_type_symbol, last_type_symbol) ? search_expression_type->common_type(P_type_symbol, last_type_symbol) : P_type_symbol ;
@@ -28526,14 +28526,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
@@ -28543,14 +28543,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
                     {
                 
                         {
-                            identifier_c param_name("L");
+                            symbol_c *L_param_name = (symbol_c *)(new identifier_c("L"));
                             /* Get the value from a foo(<param_name> = <param_value>) style call */
-                            symbol_c *L_param_value = function_call_param_iterator.search(&param_name);
+                            symbol_c *L_param_value = function_call_param_iterator.search_f(L_param_name);
                             symbol_c *L_type_symbol = NULL;
                             
                             /* Get the value from a foo(<param_value>) style call */
                             if (L_param_value == NULL)
-                              L_param_value = function_call_param_iterator.next();
+                              L_param_value = function_call_param_iterator.next_nf();
                             if (L_param_value != NULL) {
                               L_type_symbol = search_expression_type->get_type(L_param_value);
                               last_type_symbol = last_type_symbol && L_type_symbol && search_expression_type->is_same_type(L_type_symbol, last_type_symbol) ? search_expression_type->common_type(L_type_symbol, last_type_symbol) : L_type_symbol ;
@@ -28560,14 +28560,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
                             {
                         
                                 {
-                                    identifier_c param_name("P");
+                                    symbol_c *P_param_name = (symbol_c *)(new identifier_c("P"));
                                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                                    symbol_c *P_param_value = function_call_param_iterator.search(&param_name);
+                                    symbol_c *P_param_value = function_call_param_iterator.search_f(P_param_name);
                                     symbol_c *P_type_symbol = NULL;
                                     
                                     /* Get the value from a foo(<param_value>) style call */
                                     if (P_param_value == NULL)
-                                      P_param_value = function_call_param_iterator.next();
+                                      P_param_value = function_call_param_iterator.next_nf();
                                     if (P_param_value != NULL) {
                                       P_type_symbol = search_expression_type->get_type(P_param_value);
                                       last_type_symbol = last_type_symbol && P_type_symbol && search_expression_type->is_same_type(P_type_symbol, last_type_symbol) ? search_expression_type->common_type(P_type_symbol, last_type_symbol) : P_type_symbol ;
@@ -28621,14 +28621,14 @@ void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_d
             {
         
                 {
-                    identifier_c param_name("IN2");
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
                     /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search(&param_name);
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
                     symbol_c *IN2_type_symbol = NULL;
                     
                     /* Get the value from a foo(<param_value>) style call */
                     if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next();
+                      IN2_param_value = function_call_param_iterator.next_nf();
                     if (IN2_param_value != NULL) {
                       IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
                       last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;

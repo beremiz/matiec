@@ -46,20 +46,21 @@ decompose_var_instance_name_c::decompose_var_instance_name_c(symbol_c *variable_
   previously_returned_variable_name = NULL;
 }
 
-symbol_c *decompose_var_instance_name_c::next_part(void) {
+symbol_c *decompose_var_instance_name_c::next_part(bool increment) {
   /* We must always start from the top!
    * See note in the structured_variable_c visitor
    * to understand why...
    */
   symbol_c *res = (symbol_c *)variable_name->accept(*this);
-  next_variable_name = current_recursive_variable_name;
+  if (increment)
+    next_variable_name = current_recursive_variable_name;
 
   if (previously_returned_variable_name == res)
-    return NULL;
-  previously_returned_variable_name = res;
+	  return NULL;
+  if (increment)
+    previously_returned_variable_name = res;
   return res;
 }
-
 
 /*************************/
 /* B.1 - Common elements */
@@ -123,7 +124,7 @@ void *decompose_var_instance_name_c::visit(structured_variable_c *symbol) {
      * so we do not have to recursevily visit it again...
      * return (void *)symbol->field_selector->accept(*this);  -> NOT REQUIRED!!
      */
-     return (void *)symbol->field_selector;
+	 return (void *)symbol->field_selector;
   }
 
   current_recursive_variable_name = symbol;

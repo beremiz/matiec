@@ -25,7 +25,7 @@
 /* Determine the data type of a specific variable instance, including
  * function block instances.
  * A reference to the relevant variable declaration is returned.
- * The variable instance may NOT be a member of a structure of a memeber
+ * The variable instance may NOT be a member of a structure of a member
  * of a structure of an element of an array of ...
  *
  * example:
@@ -64,11 +64,12 @@ search_var_instance_decl_c::search_var_instance_decl_c(symbol_c *search_scope) {
 }
 
 symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable_instance_name) {
+  this->current_vartype = none_vt;
   this->search_name = variable_instance_name;
   return (symbol_c *)search_scope->accept(*this);
 }
 
-unsigned int search_var_instance_decl_c::get_vartype() {
+unsigned int search_var_instance_decl_c::get_vartype(void) {
   return current_vartype;
 }
 
@@ -77,7 +78,7 @@ unsigned int search_var_instance_decl_c::get_vartype() {
 /***************************/
 void *search_var_instance_decl_c::visit(library_c *symbol) {
   /* we do not want to search multiple declaration scopes,
-   * so we do not visit all the functions, fucntion blocks, etc...
+   * so we do not visit all the functions, function blocks, etc...
    */
   return NULL;
 }
@@ -85,8 +86,9 @@ void *search_var_instance_decl_c::visit(library_c *symbol) {
 
 
 /******************************************/
-/* B 1.4.3 - Declaration & Initialisation */
+/* B 1.4.3 - Declaration & Initialization */
 /******************************************/
+
 /* edge -> The F_EDGE or R_EDGE directive */
 // SYM_REF2(edge_declaration_c, edge, var1_list)
 // TODO

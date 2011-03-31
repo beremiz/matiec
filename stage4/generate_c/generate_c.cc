@@ -122,6 +122,48 @@ extern void error_exit(const char *file_name, int line_no);
 
 #define SFC_STEP_ACTION_PREFIX "__SFC_"
 
+
+/* Variable declaration symbol for accessor macros */
+#define DECLARE_VAR "__DECLARE_VAR"
+#define DECLARE_GLOBAL "__DECLARE_GLOBAL"
+#define DECLARE_GLOBAL_LOCATION "__DECLARE_GLOBAL_LOCATION"
+#define DECLARE_GLOBAL_LOCATED "__DECLARE_GLOBAL_LOCATED"
+#define DECLARE_EXTERNAL "__DECLARE_EXTERNAL"
+#define DECLARE_LOCATED "__DECLARE_LOCATED"
+
+/* Variable declaration symbol for accessor macros */
+#define INIT_VAR "__INIT_VAR"
+#define INIT_GLOBAL "__INIT_GLOBAL"
+#define INIT_GLOBAL_LOCATED "__INIT_GLOBAL_LOCATED"
+#define INIT_EXTERNAL "__INIT_EXTERNAL"
+#define INIT_LOCATED "__INIT_LOCATED"
+#define INIT_LOCATED_VALUE "__INIT_LOCATED_VALUE"
+
+
+/* Variable getter symbol for accessor macros */
+#define GET_VAR "__GET_VAR"
+#define GET_EXTERNAL "__GET_EXTERNAL"
+#define GET_LOCATED "__GET_LOCATED"
+#define GET_VAR_BY_REF "__GET_VAR_BY_REF"
+#define GET_EXTERNAL_BY_REF "__GET_EXTERNAL_BY_REF"
+#define GET_LOCATED_BY_REF "__GET_LOCATED_BY_REF"
+
+/* Variable setter symbol for accessor macros */
+#define SET_VAR "__SET_VAR"
+#define SET_EXTERNAL "__SET_EXTERNAL"
+#define SET_COMPLEX_EXTERNAL "__SET_COMPLEX_EXTERNAL"
+#define SET_LOCATED "__SET_LOCATED"
+
+
+/* Generate a name for a temporary variable.
+ * Each new name generated is appended a different number,
+ * starting off from 0.
+ * After calling reset(), the names will start off again from 0.
+ */
+#define VAR_LEADER "__"
+#define TEMP_VAR VAR_LEADER "TMP_"
+#define SOURCE_VAR VAR_LEADER "SRC_"
+
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
@@ -140,17 +182,9 @@ extern void error_exit(const char *file_name, int line_no);
 /***********************************************************************/
 /***********************************************************************/
 
-/* Generate a name for a temporary variable.
- * Each new name generated is appended a different number,
- * starting off from 0.
- * After calling reset(), the names will start off again from 0.
- */
-#define VAR_LEADER "__"
-#define TEMP_VAR VAR_LEADER "TMP_"
-#define SOURCE_VAR VAR_LEADER "SRC_"
-
 #include "generate_c_st.cc"
 #include "generate_c_il.cc"
+#include "generate_c_inlinefcall.cc"
 
 #include "generate_c.hh"
 
@@ -165,13 +199,13 @@ extern void error_exit(const char *file_name, int line_no);
 /* A helper class that knows how to generate code for both the IL and ST languages... */
 class calculate_time_c: public iterator_visitor_c {
   private:
-    unsigned long time;
+    unsigned long long time;
     float current_value;
   
   public:
     calculate_time_c(void){time = 0;};
     
-    unsigned long get_time(void) {return time;};
+    unsigned long long get_time(void) {return time;};
 
     void *get_integer_value(token_c *token) {
       std::string str = "";
@@ -213,7 +247,7 @@ class calculate_time_c: public iterator_visitor_c {
       if (symbol->hours)
         symbol->hours->accept(*this);
       symbol->days->accept(*this);
-      time += (unsigned long)(current_value * 24 * 3600 * SECOND);
+      time += (unsigned long long)(current_value * 24 * 3600 * SECOND);
       return NULL;
     }
     
@@ -222,7 +256,7 @@ class calculate_time_c: public iterator_visitor_c {
       if (symbol->minutes)
         symbol->minutes->accept(*this);
       symbol->hours->accept(*this);
-      time += (unsigned long)(current_value * 3600 * SECOND);
+      time += (unsigned long long)(current_value * 3600 * SECOND);
       return NULL;
     }
     
@@ -231,7 +265,7 @@ class calculate_time_c: public iterator_visitor_c {
       if (symbol->seconds)
         symbol->seconds->accept(*this);
       symbol->minutes->accept(*this);
-      time += (unsigned long)(current_value * 60 * SECOND);
+      time += (unsigned long long)(current_value * 60 * SECOND);
       return NULL;
     }
     
@@ -240,14 +274,14 @@ class calculate_time_c: public iterator_visitor_c {
       if (symbol->milliseconds)
         symbol->milliseconds->accept(*this);
       symbol->seconds->accept(*this);
-      time += (unsigned long)(current_value * SECOND);
+      time += (unsigned long long)(current_value * SECOND);
       return NULL;
     }
     
     /* SYM_REF2(milliseconds_c, milliseconds, unused) */
     void *visit(milliseconds_c *symbol) {
       symbol->milliseconds->accept(*this);
-      time += (unsigned long)(current_value * MILLISECOND);
+      time += (unsigned long long)(current_value * MILLISECOND);
       return NULL;
     }
 };
@@ -259,37 +293,52 @@ class calculate_time_c: public iterator_visitor_c {
 
 class calculate_common_ticktime_c: public iterator_visitor_c {
   private:
-    unsigned long common_ticktime;
+    unsigned long long common_ticktime;
+    unsigned long long least_common_ticktime;
     
   public:
-    calculate_common_ticktime_c(void){common_ticktime = 0;}
+    calculate_common_ticktime_c(void){
+      common_ticktime = 0;
+      least_common_ticktime = 0;
+    }
     
-    unsigned long euclide(unsigned long a, unsigned long b) {
-      unsigned long c = a % b;
+    unsigned long long euclide(unsigned long long a, unsigned long long b) {
+      unsigned long long c = a % b;
       if (c == 0)
         return b;
       else
         return euclide(b, c);
     }
     
-    void update_ticktime(unsigned long time) {
+    void update_ticktime(unsigned long long time) {
       if (common_ticktime == 0)
         common_ticktime = time;
       else if (time > common_ticktime)
         common_ticktime = euclide(time, common_ticktime);
       else
         common_ticktime = euclide(common_ticktime, time);
+      if (least_common_ticktime == 0)
+        least_common_ticktime = time;
+      else
+        least_common_ticktime = (least_common_ticktime * time) / common_ticktime;
     }
 
-    unsigned long get_ticktime(void) {
+    unsigned long long get_common_ticktime(void) {
       return common_ticktime;
+    }
+
+    unsigned long get_greatest_tick_count(void) {
+      unsigned long long least_common_tick = least_common_ticktime / common_ticktime;
+      if (least_common_tick >> 32)
+        ERROR;
+      return (unsigned long)(~(((unsigned long)-1) % (unsigned long)least_common_tick) + 1);
     }
 
 /*  TASK task_name task_initialization */
 //SYM_REF2(task_configuration_c, task_name, task_initialization)  
     void *visit(task_initialization_c *symbol) {
       calculate_time_c calculate_time;
-      unsigned long time = 0;
+      unsigned long long time = 0;
       if (symbol->interval_data_source != NULL) {
         symbol->interval_data_source->accept(calculate_time);
         time = calculate_time.get_time();
@@ -305,15 +354,16 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
 /***********************************************************************/
 /***********************************************************************/
 
-/* A helper class that knows how to generate code for both the IL and ST languages... */
+/* A helper class that knows how to generate code for the SFC, IL and ST languages... */
 class generate_c_SFC_IL_ST_c: public null_visitor_c {
   private:
     stage4out_c *s4o_ptr;
     symbol_c *scope;
+    symbol_c *fbname;
     const char *variable_prefix;
 
   public:
-    generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL);
+    generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL);
     /*********************************************/
     /* B.1.6  Sequential function chart elements */
     /*********************************************/
@@ -351,27 +401,28 @@ class generate_c_SFC_IL_ST_c: public null_visitor_c {
 
 #include "generate_c_sfc.cc"
 
-generate_c_SFC_IL_ST_c::generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix) {
+generate_c_SFC_IL_ST_c::generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix) {
   if (NULL == scope) ERROR;
   this->s4o_ptr = s4o_ptr;
   this->scope = scope;
+  this->fbname = name;
   this->variable_prefix = variable_prefix;
 }
 
 void *generate_c_SFC_IL_ST_c::visit(sequential_function_chart_c * symbol) {
-  generate_c_sfc_c generate_c_sfc(s4o_ptr, scope, variable_prefix);
+  generate_c_sfc_c generate_c_sfc(s4o_ptr, fbname, scope, variable_prefix);
   generate_c_sfc.generate(symbol);
   return NULL;
 }
 
 void *generate_c_SFC_IL_ST_c::visit(instruction_list_c *symbol) {
-  generate_c_il_c generate_c_il(s4o_ptr, scope, variable_prefix);
+  generate_c_il_c generate_c_il(s4o_ptr, fbname, scope, variable_prefix);
   generate_c_il.generate(symbol);
   return NULL;
 }
 
 void *generate_c_SFC_IL_ST_c::visit(statement_list_c *symbol) {
-  generate_c_st_c generate_c_st(s4o_ptr, scope, variable_prefix);
+  generate_c_st_c generate_c_st(s4o_ptr, fbname, scope, variable_prefix);
   generate_c_st.generate(symbol);
   return NULL;
 }
@@ -552,7 +603,7 @@ void *visit(function_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "}\n");
 
   /* (C) Function body */
-  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol);
+  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->derived_function_name, symbol);
   symbol->function_body->accept(generate_c_code);
   
   vardecl = new generate_c_vardecl_c(&s4o,
@@ -588,6 +639,7 @@ void *visit(function_block_declaration_c *symbol) {
   generate_c_vardecl_c *vardecl;
   generate_c_sfcdecl_c *sfcdecl;
   generate_c_typedecl_c *typedecl;
+  generate_c_inlinefcall_c *inlinedecl;
   TRACE("function_block_declaration_c");
 
   /* (A) Function Block data structure declaration... */
@@ -622,17 +674,22 @@ void *visit(function_block_declaration_c *symbol) {
   delete vardecl;
   
   /* (A.4) Generate private internal variables for SFC */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, generate_c_sfcdecl_c::sfcdecl_sd);
-  sfcdecl->print(symbol->fblock_body);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, symbol);
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::sfcdecl_sd);
   delete sfcdecl;
   s4o_incl.print("\n");
-  
+
   /* (A.5) Function Block data structure type name. */
   s4o_incl.indent_left();
   s4o_incl.print("} ");
   symbol->fblock_name->accept(*typedecl);
   s4o_incl.print(";\n\n");
   delete typedecl;
+
+  /* (A.6) Function Block inline function declaration for function invocation */
+  inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
+  inlinedecl->print(symbol->fblock_body);
+  delete inlinedecl;
 
   /* (B) Constructor */
   /* (B.1) Constructor name... */
@@ -645,7 +702,7 @@ void *visit(function_block_declaration_c *symbol) {
   symbol->fblock_name->accept(*this);
   s4o.print(" *");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print(") {\n");
+  s4o.print(", BOOL retain) {\n");
   s4o.indent_right();
 
   /* (B.2) Member initializations... */
@@ -663,25 +720,23 @@ void *visit(function_block_declaration_c *symbol) {
   vardecl->print(symbol->var_declarations, NULL, FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
+
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, symbol, FB_FUNCTION_PARAM"->");
+
   /* (B.3) Generate private internal variables for SFC */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::sfcinit_sd);
-  sfcdecl->print(symbol->fblock_body, FB_FUNCTION_PARAM"->");
-  delete sfcdecl;
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::sfcinit_sd);
+
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n\n");
 
   
   /* (C) Function with FB body */
   /* (C.1) Step definitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepdef_sd);
-  sfcdecl->print(symbol->fblock_body);
-  delete sfcdecl;
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::stepdef_sd);
   
   /* (C.2) Action definitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actiondef_sd);
-  sfcdecl->print(symbol->fblock_body);
-  delete sfcdecl;
-  
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::actiondef_sd);
+
   /* (C.3) Function declaration */
   s4o.print("// Code part\n");
   /* function interface */
@@ -698,20 +753,26 @@ void *visit(function_block_declaration_c *symbol) {
 
   s4o.print(s4o.indent_spaces + "// Control execution\n");
   s4o.print(s4o.indent_spaces + "if (!");
+  s4o.print(GET_VAR);
+  s4o.print("(");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print("->EN) {\n");
+  s4o.print("->EN)) {\n");
   s4o.indent_right();
   s4o.print(s4o.indent_spaces);
+  s4o.print(SET_VAR);
+  s4o.print("(");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print("->ENO = __BOOL_LITERAL(FALSE);\n");
+  s4o.print("->ENO,__BOOL_LITERAL(FALSE));\n");
   s4o.print(s4o.indent_spaces + "return;\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n");
   s4o.print(s4o.indent_spaces + "else {\n");
   s4o.indent_right();
   s4o.print(s4o.indent_spaces);
+  s4o.print(SET_VAR);
+  s4o.print("(");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print("->ENO = __BOOL_LITERAL(TRUE);\n");
+  s4o.print("->ENO,__BOOL_LITERAL(TRUE));\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n");
 
@@ -726,7 +787,7 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print("\n");
 
   /* (C.5) Function code */
-  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
+  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
   symbol->fblock_body->accept(generate_c_code);
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
@@ -735,13 +796,11 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "() \n\n");
 
   /* (C.6) Step undefinitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepundef_sd);
-  sfcdecl->print(symbol->fblock_body);
-  delete sfcdecl;
-  
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::stepundef_sd);
+
   /* (C.7) Action undefinitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actionundef_sd);
-  sfcdecl->print(symbol->fblock_body);
+  sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::actionundef_sd);
+
   delete sfcdecl;
 
   s4o.indent_left();
@@ -769,6 +828,7 @@ void *visit(program_declaration_c *symbol) {
   generate_c_vardecl_c *vardecl;
   generate_c_sfcdecl_c *sfcdecl;
   generate_c_typedecl_c *typedecl;
+  generate_c_inlinefcall_c *inlinedecl;
   TRACE("program_declaration_c");
 
   /* (A) Program data structure declaration... */
@@ -800,10 +860,12 @@ void *visit(program_declaration_c *symbol) {
                 generate_c_vardecl_c::external_vt);
   vardecl->print(symbol->var_declarations);
   delete vardecl;
+
   /* (A.4) Generate private internal variables for SFC */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, generate_c_sfcdecl_c::sfcdecl_sd);
-  sfcdecl->print(symbol->function_block_body);
+  sfcdecl = new generate_c_sfcdecl_c(&s4o_incl, symbol);
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::sfcdecl_sd);
   delete sfcdecl;
+  s4o_incl.print("\n");
   
   /* (A.5) Program data structure type name. */
   s4o_incl.indent_left();
@@ -811,6 +873,11 @@ void *visit(program_declaration_c *symbol) {
   symbol->program_type_name->accept(*typedecl);
   s4o_incl.print(";\n\n");
   delete typedecl;
+
+  /* (A.6) Function Block inline function declaration for function invocation */
+  inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
+  inlinedecl->print(symbol->function_block_body);
+  delete inlinedecl;
 
   /* (B) Constructor */
   /* (B.1) Constructor name... */
@@ -823,7 +890,7 @@ void *visit(program_declaration_c *symbol) {
   symbol->program_type_name->accept(*this);
   s4o.print(" *");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print(") {\n");
+  s4o.print(", BOOL retain) {\n");
   s4o.indent_right();
 
   /* (B.2) Member initializations... */
@@ -839,24 +906,21 @@ void *visit(program_declaration_c *symbol) {
   vardecl->print(symbol->var_declarations, NULL,  FB_FUNCTION_PARAM"->");
   delete vardecl;
   s4o.print("\n");
+
+  sfcdecl = new generate_c_sfcdecl_c(&s4o, symbol, FB_FUNCTION_PARAM"->");
+
   /* (B.3) Generate private internal variables for SFC */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::sfcinit_sd);
-  sfcdecl->print(symbol->function_block_body,FB_FUNCTION_PARAM"->");
-  delete sfcdecl;
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::sfcinit_sd);
 
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n\n");
 
   /* (C) Function with PROGRAM body */
   /* (C.1) Step definitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepdef_sd);
-  sfcdecl->print(symbol->function_block_body);
-  delete sfcdecl;
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::stepdef_sd);
   
   /* (C.2) Action definitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actiondef_sd);
-  sfcdecl->print(symbol->function_block_body);
-  delete sfcdecl;
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::actiondef_sd);
 
   /* (C.3) Function declaration */
   s4o.print("// Code part\n");
@@ -883,7 +947,7 @@ void *visit(program_declaration_c *symbol) {
   s4o.print("\n");
 
   /* (C.5) Function code */
-  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol, FB_FUNCTION_PARAM"->");
+  generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
   symbol->function_block_body->accept(generate_c_code);
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
@@ -892,15 +956,13 @@ void *visit(program_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces + "() \n\n");
 
   /* (C.6) Step undefinitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::stepundef_sd);
-  sfcdecl->print(symbol->function_block_body);
-  delete sfcdecl;
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::stepundef_sd);
   
   /* (C.7) Action undefinitions */
-  sfcdecl = new generate_c_sfcdecl_c(&s4o, generate_c_sfcdecl_c::actionundef_sd);
-  sfcdecl->print(symbol->function_block_body);
-  delete sfcdecl;
+  sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::actionundef_sd);
   
+  delete sfcdecl;
+
   s4o.indent_left();
   s4o.print("\n\n\n\n");
 
@@ -962,6 +1024,8 @@ void *visit(configuration_declaration_c *symbol) {
   s4o.print("#include \"iec_std_lib.h\"\n\n");
   s4o.print("#include \"accessor.h\"\n\n"); 
   
+  s4o.print("#include \"accessor.h\"\n\n");
+
   /* (A) configuration declaration... */
   /* (A.1) configuration name in comment */
   s4o.print("// CONFIGURATION ");
@@ -987,6 +1051,8 @@ void *visit(configuration_declaration_c *symbol) {
   s4o.print(FB_INIT_SUFFIX);
   s4o.print("(void) {\n");
   s4o.indent_right();
+  s4o.print(s4o.indent_spaces);
+  s4o.print("BOOL retain = 0;\n");
   
   /* (B.3) Global variables initializations... */
   s4o.print(s4o.indent_spaces);
@@ -1014,7 +1080,7 @@ void *visit(configuration_declaration_c *symbol) {
   /* (C.2) Run function name... */
   s4o.print(s4o.indent_spaces + "void config");
   s4o.print(FB_RUN_SUFFIX);
-  s4o.print("(int tick) {\n");
+  s4o.print("(unsigned long tick) {\n");
   s4o.indent_right();
 
   /* (C.3) Resources initializations... */
@@ -1038,7 +1104,7 @@ void *visit(resource_declaration_c *symbol) {
     }
     else {
       s4o.print(FB_RUN_SUFFIX);
-      s4o.print("(int tick);\n");
+      s4o.print("(unsigned long tick);\n");
     }
   }
   if (wanted_declaretype == initdeclare_dt || wanted_declaretype == rundeclare_dt) {
@@ -1065,7 +1131,7 @@ void *visit(single_resource_declaration_c *symbol) {
     }
     else {
       s4o.print(FB_RUN_SUFFIX);
-      s4o.print("(int tick);\n");
+      s4o.print("(unsigned long tick);\n");
     }
   }
   if (wanted_declaretype == initdeclare_dt || wanted_declaretype == rundeclare_dt) {
@@ -1139,6 +1205,50 @@ class generate_c_resources_c: public generate_c_typedecl_c {
 
     assigntype_t wanted_assigntype;
 
+    /* the qualifier of variables that need to be processed... */
+    static const unsigned int none_vq        = 0x0000;
+    static const unsigned int constant_vq    = 0x0001;  // CONSTANT
+    static const unsigned int retain_vq      = 0x0002;  // RETAIN
+    static const unsigned int non_retain_vq  = 0x0004;  // NON_RETAIN
+
+    /* variable used to store the qualifier of program currently being processed... */
+    unsigned int current_varqualifier;
+
+    void *print_retain(void) {
+	  s4o.print(",");
+      switch (current_varqualifier) {
+		case retain_vq:
+          s4o.print("1");
+          break;
+        case non_retain_vq:
+          s4o.print("0");
+          break;
+		default:
+		  s4o.print("retain");
+		  break;
+      }
+      return NULL;
+    }
+
+    /******************************************/
+    /* B 1.4.3 - Declaration & Initialisation */
+    /******************************************/
+
+    void *visit(constant_option_c *symbol) {
+      current_varqualifier = constant_vq;
+      return NULL;
+    }
+
+    void *visit(retain_option_c *symbol) {
+      current_varqualifier = retain_vq;
+      return NULL;
+    }
+
+    void *visit(non_retain_option_c *symbol) {
+      current_varqualifier = non_retain_vq;
+      return NULL;
+    }
+
 /********************************/
 /* B 1.7 Configuration elements */
 /********************************/
@@ -1182,8 +1292,10 @@ END_RESOURCE
       current_resource_name->accept(*this);
       s4o.print("\n\n");
       
-      s4o.print("extern int common_ticktime__;\n\n");
-       
+      s4o.print("extern unsigned long long common_ticktime__;\n\n");
+
+      s4o.print("#include \"accessor.h\"\n\n");
+
       /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
         vardecl = new generate_c_vardecl_c(&s4o,
@@ -1216,13 +1328,16 @@ END_RESOURCE
       s4o.print(FB_INIT_SUFFIX);
       s4o.print("(void) {\n");
       s4o.indent_right();
+      s4o.print(s4o.indent_spaces);
+      s4o.print("BOOL retain = 0;\n");
       
       /* (B.2) Global variables initialisations... */
       if (current_global_vars != NULL) {
         s4o.print(s4o.indent_spaces);
         vardecl = new generate_c_vardecl_c(&s4o,
                                            generate_c_vardecl_c::constructorinit_vf,
-                                           generate_c_vardecl_c::global_vt);
+                                           generate_c_vardecl_c::global_vt,
+                                           current_resource_name);
         vardecl->print(current_global_vars);
         delete vardecl;
       }
@@ -1244,7 +1359,7 @@ END_RESOURCE
       s4o.print("void ");
       current_resource_name->accept(*this);
       s4o.print(FB_RUN_SUFFIX);
-      s4o.print("(int tick) {\n");
+      s4o.print("(unsigned long tick) {\n");
       s4o.indent_right();
       
       wanted_declaretype = run_dt;
@@ -1285,11 +1400,14 @@ END_RESOURCE
           s4o.print("\n");
           break;
         case init_dt:
+          if (symbol->retain_option != NULL)
+        	symbol->retain_option->accept(*this);
           s4o.print(s4o.indent_spaces);
           symbol->program_type_name->accept(*this);
           s4o.print(FB_INIT_SUFFIX);
           s4o.print("(&");
           symbol->program_name->accept(*this);
+          print_retain();
           s4o.print(");\n");
           break;
         case run_dt:
@@ -1372,31 +1490,37 @@ END_RESOURCE
             s4o.print(FB_INIT_SUFFIX);
             s4o.print("(&");
             current_task_name->accept(*this);
-            s4o.print("_R_TRIG);\n");
+            s4o.print("_R_TRIG, retain);\n");
           }
           break;
         case run_dt:
           if (symbol->single_data_source != NULL) {
             symbol_c *config_var_decl = NULL;
             symbol_c *res_var_decl = NULL;
+            unsigned int vartype;
             symbol_c *current_var_reference = ((global_var_reference_c *)(symbol->single_data_source))->global_var_name;
             res_var_decl = search_resource_instance->get_decl(current_var_reference);
             if (res_var_decl == NULL) {
               config_var_decl = search_config_instance->get_decl(current_var_reference);
               if (config_var_decl == NULL)
                 ERROR;
+              vartype = search_config_instance->get_vartype();
               s4o.print(s4o.indent_spaces + "{extern ");
               config_var_decl->accept(*this);
               s4o.print(" *");
               symbol->single_data_source->accept(*this);
               s4o.print("; ");
             }
-            else
+            else {
+              vartype = search_resource_instance->get_vartype();
               s4o.print(s4o.indent_spaces);
+            }
+            s4o.print(SET_VAR);
+            s4o.print("(");
             current_task_name->accept(*this);
-            s4o.print("_R_TRIG.CLK = *");
+            s4o.print("_R_TRIG.CLK, *__GET_GLOBAL_");
             symbol->single_data_source->accept(*this);
-            s4o.print(";");
+            s4o.print("());");
             if (config_var_decl != NULL)
               s4o.print("}");
             s4o.print("\n");
@@ -1408,8 +1532,10 @@ END_RESOURCE
             s4o.print(s4o.indent_spaces);
             current_task_name->accept(*this);
             s4o.print(" = ");
+            s4o.print(GET_VAR);
+            s4o.print("(");
             current_task_name->accept(*this);
-            s4o.print("_R_TRIG.Q");
+            s4o.print("_R_TRIG.Q)");
           }
           else {
             s4o.print(s4o.indent_spaces);
@@ -1533,7 +1659,7 @@ class generate_c_c: public iterator_visitor_c {
     const char *current_name;
     const char *current_builddir;
 
-    unsigned long common_ticktime;
+    unsigned long long common_ticktime;
 
   public:
     generate_c_c(stage4out_c *s4o_ptr, const char *builddir): 
@@ -1553,7 +1679,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 0 - Programming Model */
 /***************************/
     void *visit(library_c *symbol) {
-      pous_incl_s4o.print("#ifndef __POUS_H\n#define __POUS_H\n\n");
+      pous_incl_s4o.print("#ifndef __POUS_H\n#define __POUS_H\n\n#include \"accessor.h\"\n\n");
       for(int i = 0; i < symbol->n; i++) {
         symbol->elements[i]->accept(*this);
       }
@@ -1631,16 +1757,23 @@ class generate_c_c: public iterator_visitor_c {
       
       calculate_common_ticktime_c calculate_common_ticktime;
       symbol->accept(calculate_common_ticktime);
-      common_ticktime = calculate_common_ticktime.get_ticktime();
+      common_ticktime = calculate_common_ticktime.get_common_ticktime();
+      if (common_ticktime == 0) {
+        fprintf(stderr, "\nYou must at least define a periodic task to set cycle period!");
+        ERROR;
+      }
       
       symbol->configuration_name->accept(*this);
       stage4out_c config_s4o(current_builddir, current_name, "c");
       generate_c_config_c generate_c_config(&config_s4o);
       symbol->accept(generate_c_config);
         
-      config_s4o.print("int common_ticktime__ = ");
-      config_s4o.print_integer((int)(common_ticktime / 1000000));
-      config_s4o.print("; /*ms*/\n");
+      config_s4o.print("unsigned long long common_ticktime__ = ");
+      config_s4o.print_long_long_integer(common_ticktime);
+      config_s4o.print("; /*ns*/\n");
+      config_s4o.print("unsigned long greatest_tick_count__ = ");
+      config_s4o.print_long_integer(calculate_common_ticktime.get_greatest_tick_count());
+      config_s4o.print("; /*tick*/\n");
       
       symbol->resource_declarations->accept(*this);
 

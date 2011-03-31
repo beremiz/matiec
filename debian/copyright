@@ -1,4 +1,4 @@
-This package was debianized by lolitech <gregory.trelat@lolitech.fr> on
+This package was debianized by edouard <edouard.tisserant@gmail.com>> on
 Wed, 21 Nov 2007 17:01:50 +0100.
 
 It was downloaded from <fill in http/ftp site>
@@ -27,7 +27,7 @@ License:
 On Debian systems, the complete text of the GNU General
 Public License can be found in `/usr/share/common-licenses/GPL'.
 
-The Debian packaging is (C) 2007, lolitech <gregory.trelat@lolitech.fr> and
+The Debian packaging is (C) 2007, edouard <edouard.tisserant@gmail.com> and
 is licensed under the GPL, see above.
 
 

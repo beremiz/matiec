@@ -50,10 +50,10 @@
                                   (symbol1))
 
 #define STAGE3_ERROR(symbol1, symbol2, msg) {                                          \
-    printf("semantic error between (%d:%d) and (%d:%d): %s\n",                         \
+    /*printf("semantic error between (%d:%d) and (%d:%d): %s\n",                         \
            FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column, \
            LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column,  \
-           msg);                                                                       \
+           msg);*/                                                                       \
     il_error = true;                                                                   \
   }
 
@@ -64,7 +64,7 @@
 void *visit_expression_type_c::visit(program_declaration_c *symbol) {
   search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
   symbol->var_declarations->accept(*this);
-  printf("checking semantics in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
+  //printf("checking semantics in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
   il_parenthesis_level = 0;
   il_error = false;
   il_default_variable_type = NULL;
@@ -78,7 +78,7 @@ void *visit_expression_type_c::visit(program_declaration_c *symbol) {
 void *visit_expression_type_c::visit(function_declaration_c *symbol) {
   search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
   symbol->var_declarations_list->accept(*this);
-  printf("checking semantics in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
+  //printf("checking semantics in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
   il_parenthesis_level = 0;
   il_error = false;
   il_default_variable_type = NULL;
@@ -92,7 +92,7 @@ void *visit_expression_type_c::visit(function_declaration_c *symbol) {
 void *visit_expression_type_c::visit(function_block_declaration_c *symbol) {
   search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
   symbol->var_declarations->accept(*this);
-  printf("checking semantics in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
+  //printf("checking semantics in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
   il_parenthesis_level = 0;
   il_error = false;
   il_default_variable_type = NULL;

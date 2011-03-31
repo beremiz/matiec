@@ -1,7 +1,7 @@
 Source: matiec
 Section: devel
 Priority: standard
-Maintainer: lolitech <gregory.trelat@lolitech.fr>
+Maintainer: edouard <edouard.tisserant@gmail.com>
 Build-Depends: debhelper (>= 5), bison, flex
 Standards-Version: 3.7.2
 

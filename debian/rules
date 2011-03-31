@@ -49,7 +49,6 @@ install: build
 	
 	cp -a lib $(CURDIR)/debian/matiec/usr/share/matiec
 	cp iec2c $(CURDIR)/debian/matiec/usr/share/matiec
-		
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -59,9 +58,9 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs 
-	dh_installdocs
-	dh_installexamples
+#	dh_installchangelogs 
+#	dh_installdocs
+#	dh_installexamples
 #	dh_install
 #	dh_installmenu
 #	dh_installdebconf	
@@ -73,7 +72,7 @@ binary-arch: build install
 #	dh_installinit
 #	dh_installcron
 #	dh_installinfo
-	dh_installman
+#	dh_installman
 	dh_link
 	dh_strip
 	dh_compress

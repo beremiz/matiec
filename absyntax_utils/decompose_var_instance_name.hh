@@ -53,7 +53,7 @@ class decompose_var_instance_name_c: null_visitor_c {
   public:
     decompose_var_instance_name_c(symbol_c *variable_instance_name);
 
-    symbol_c *next_part(void);
+    symbol_c *next_part(bool increment = true);
 
   private:
   /*************************/

@@ -3629,9 +3629,9 @@ eno_param_declaration:
    */
   {$$ = new eno_param_declaration_c($1, new bool_type_name_c(locloc(@$)), new explicit_definition_c(), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
-| en_identifier BOOL
+| eno_identifier BOOL
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in ENO declaration."); yynerrs++;}
-| en_identifier ':' error
+| eno_identifier ':' error
 	{$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no specification defined in ENO declaration.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid specification in ENO declaration."); yyclearin;}
@@ -6683,6 +6683,22 @@ il_assign_operator:
 	{$$ = new il_assign_operator_c($1, locloc(@$));}
 | en_identifier ASSIGN
 	{$$ = new il_assign_operator_c($1, locloc(@$));}
+| S1_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| R1_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| CLK_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| CU_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| CD_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| PV_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| IN_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
+| PT_operator ASSIGN
+	{$$ = new il_assign_operator_c(il_operator_c_2_identifier_c($1), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | error ASSIGN
   {$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid parameter defined in parameter assignment."); yyerrok;}

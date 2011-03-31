@@ -26,8 +26,8 @@
  * IEC 61131-3 standard function library
  * generated code, do not edit by hand
  */
-
-
+ 
+ 
 function_type_t get_function_type(identifier_c *function_name) {
 
 if (!strcasecmp(function_name->value, "REAL_TO_SINT"))

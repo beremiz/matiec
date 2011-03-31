@@ -80,7 +80,7 @@ FUNCTION_BLOCK TP
     CURRENT_TIME, START_TIME : TIME;
   END_VAR
 
-  {data__->CURRENT_TIME = __CURRENT_TIME;}
+  {__SET_VAR(data__->CURRENT_TIME,__CURRENT_TIME)}
 
   IF ((STATE = 0) AND NOT(PREV_IN) AND IN)   (* found rising edge on IN *)
   THEN
@@ -161,7 +161,7 @@ FUNCTION_BLOCK TON
     CURRENT_TIME, START_TIME : TIME;
   END_VAR
 
-  {data__->CURRENT_TIME = __CURRENT_TIME;}
+  {__SET_VAR(data__->CURRENT_TIME,__CURRENT_TIME)}
 
   IF ((STATE = 0) AND NOT(PREV_IN) AND IN)   (* found rising edge on IN *)
   THEN
@@ -245,7 +245,7 @@ FUNCTION_BLOCK TOF
     CURRENT_TIME, START_TIME : TIME;
   END_VAR
 
-  {data__->CURRENT_TIME = __CURRENT_TIME;}
+  {__SET_VAR(data__->CURRENT_TIME,__CURRENT_TIME)}
 
   IF ((STATE = 0) AND PREV_IN AND NOT(IN))   (* found falling edge on IN *)
   THEN

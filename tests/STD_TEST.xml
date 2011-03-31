@@ -4,8 +4,8 @@
          xmlns:xhtml="http://www.w3.org/1999/xhtml"
          xsi:schemaLocation="http://www.plcopen.org/xml/tc6.xsd http://www.plcopen.org/xml/tc6.xsd">
   <fileHeader contentDescription="This tests as most as possible IEC standard library"
-              companyName="LOLITECH"
-              companyURL="www.lolitech.com"
+              companyName="Beremiz"
+              companyURL="www.beremiz.org"
               productName="BREMIZ"
               productRelease="1"
               productVersion="1"

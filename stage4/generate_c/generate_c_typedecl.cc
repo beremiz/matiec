@@ -195,13 +195,13 @@ class generate_c_typedecl_c: public generate_c_base_c {
 void *visit(subrange_type_declaration_c *symbol) {
   TRACE("subrange_type_declaration_c");  
   
-  s4o_incl.print("typedef ");
+  s4o_incl.print("__DECLARE_DERIVED_TYPE(");
   current_basetypedeclaration = subrangebasetype_bd;
   symbol->subrange_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
-  s4o_incl.print(" ");
+  s4o_incl.print(", ");
   symbol->subrange_type_name->accept(*basedecl);
-  s4o_incl.print(";\n");
+  s4o_incl.print(")\n");
   
   current_type_name = symbol->subrange_type_name;
   
@@ -340,16 +340,17 @@ void *visit(enumerated_value_c *symbol) {
 void *visit(array_type_declaration_c *symbol) {
   TRACE("array_type_declaration_c");
   
-  s4o_incl.print("typedef ");
+  s4o_incl.print("__DECLARE_ARRAY_TYPE(");
   current_basetypedeclaration = arraybasetypeincl_bd;
   symbol->array_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
-  s4o_incl.print(" ");
+  s4o_incl.print(",");
   symbol->identifier->accept(*basedecl);
+  s4o_incl.print(",");
   current_basetypedeclaration = arraysubrange_bd;
   symbol->array_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
-  s4o_incl.print(";\n");
+  s4o_incl.print(")\n");
   
   if (search_base_type.type_is_subrange(symbol->identifier)) {
     s4o.print("#define __CHECK_");
@@ -443,11 +444,11 @@ void *visit(type_declaration_list_c *symbol) {
 void *visit(simple_type_declaration_c *symbol) {
   TRACE("simple_type_declaration_c");
 
-  s4o_incl.print("typedef ");
+  s4o_incl.print("__DECLARE_DERIVED_TYPE");
   symbol->simple_spec_init->accept(*this);
-  s4o_incl.print(" ");
+  s4o_incl.print(",");
   symbol->simple_type_name->accept(*basedecl);
-  s4o_incl.print(";\n");
+  s4o_incl.print(");\n");
   return NULL;
 }
 
@@ -515,11 +516,11 @@ SYM_REF2(array_initial_elements_c, integer, array_initial_element)
 void *visit(structure_type_declaration_c *symbol) {
   TRACE("structure_type_declaration_c");
 
-  s4o_incl.print("typedef ");
+  s4o_incl.print("__DECLARE_STRUCT_TYPE(");
   symbol->structure_specification->accept(*this);
-  s4o_incl.print(" ");
+  s4o_incl.print(",");
   symbol->structure_type_name->accept(*basedecl);
-  s4o_incl.print(";\n");
+  s4o_incl.print(");\n");
   return NULL;
 }
 
