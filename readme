@@ -1,14 +1,14 @@
 
 
 
-  IEC 61131-3 IL and ST compiler
+  MATIEC - IEC 61131-3 compiler
 
 
   The following compiler has been based on the
   FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
 
 
-  (c) 2003 Mario de Sousa
+  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
 
 
 
@@ -27,7 +27,7 @@
  The compiler works in 4(+1) stages:
  Stage 1   - Lexical analyser      - implemented with flex (iec.flex)
  Stage 2   - Syntax parser         - implemented with bison (iec.y)
- Stage 3   - Semantics analyser    - not yet implemented
+ Stage 3   - Semantics analyser    - currently in its early stages
  Stage 4   - Code generator        - implemented in C++
  Stage 4+1 - Binary code generator - gcc, javac, etc...
 
@@ -55,22 +55,6 @@ possible because both stages are executed in the same pass.
 
 
  NOTE 2
- ======
-  I (Mario) have a feeling that the abstract syntax may be
-considerably simplified without any drawbacks to semantic checking
-and code generation. I have nevertheless opted to keep as much 
-info as possible in the abstract syntax tree, in case it may become
-necessary further on.
- Once we start coding the next stages (semantic checking and code
-generation) I will get a better understanding of what is required
-of the abstract syntax tree. At that stage I will be better
-positioned to make a more informed decision on how best to structure
-the abstract syntax tree.
- For now, we play conservative and keep as much info as possible.
-
- 
-
- NOTE 3
  ======
  It would be nice to get this parser integrated into the gcc
 group of compilers. We would then be able to compile our st/il
@@ -145,10 +129,11 @@ Issue 2
 We extend the IEC 61131-3 standard syntax to allow inclusion of 
 other files. The accepted syntax is:
 
-   (*#include "<filename>" *)
+   {#include "<filename>" }
 
-Note how this would be ignored by other standard complient compilers 
-as a simple comment!
+We use a pragma directive for this (allowed by the standard itself),
+ since it is an extension of the standard. In principle, this would 
+be ignored by other standard complient compilers!
 
 
 
@@ -403,4 +388,4 @@ the syntax to read
 
 **************************************************************************
 
-  (c) 2003 Mario de Sousa
+  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
