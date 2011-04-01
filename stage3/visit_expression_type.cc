@@ -650,16 +650,19 @@ symbol_c *visit_expression_type_c::compute_expression(symbol_c *left_type,      
   bool error = false;
 
   if (!(this->*is_data_type)(left_type)) {
+    if (debug) printf("visit_expression_type_c::compute_expression(): invalid left_type\n");
     if (left_expr != NULL)
       STAGE3_ERROR(left_expr, left_expr, "Invalid data type of left operand.");
     error = true;
   }
   if (!(this->*is_data_type)(right_type)) {
+    if (debug) printf("visit_expression_type_c::compute_expression(): invalid right_type\n");
     if (right_expr != NULL)
       STAGE3_ERROR(right_expr, right_expr, "Invalid data type of right operand.");
     error = true;
   }
   if (!is_compatible_type(left_type, right_type)) {
+    if (debug) printf("visit_expression_type_c::compute_expression(): left_type & right_type are incompatible\n");
     if ((left_expr != NULL) && (right_expr != NULL))
       STAGE3_ERROR(left_expr, right_expr, "Type mismatch between operands.");
     error = true;
@@ -806,7 +809,7 @@ void visit_expression_type_c::check_formal_parameter(symbol_c *call_param_name, 
   symbol_c *param_type;
   identifier_c *param_name;
   function_param_iterator_c       fp_iterator(f_decl);
-
+ 
   /* Find the corresponding parameter of the function being called */
   param_name = fp_iterator.search(call_param_name);
   if(param_name == NULL) {
