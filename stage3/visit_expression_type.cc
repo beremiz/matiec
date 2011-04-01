@@ -652,13 +652,13 @@ symbol_c *visit_expression_type_c::compute_expression(symbol_c *left_type,      
   if (!(this->*is_data_type)(left_type)) {
     if (debug) printf("visit_expression_type_c::compute_expression(): invalid left_type\n");
     if (left_expr != NULL)
-      STAGE3_ERROR(left_expr, left_expr, "Invalid data type of left operand.");
+      STAGE3_ERROR(left_expr, left_expr, "Invalid data type of operand, or of data resulting from previous IL instructions.");
     error = true;
   }
   if (!(this->*is_data_type)(right_type)) {
     if (debug) printf("visit_expression_type_c::compute_expression(): invalid right_type\n");
     if (right_expr != NULL)
-      STAGE3_ERROR(right_expr, right_expr, "Invalid data type of right operand.");
+      STAGE3_ERROR(right_expr, right_expr, "Invalid data type of operand.");
     error = true;
   }
   if (!is_compatible_type(left_type, right_type)) {
@@ -888,10 +888,10 @@ symbol_c *visit_expression_type_c::base_type(symbol_c *symbol) {
 /* a helper function... */
 void *visit_expression_type_c::verify_null(symbol_c *symbol){
   if(il_default_variable_type == NULL){
-    STAGE3_ERROR(symbol, symbol, "Il default variable can't be NULL.");
+    STAGE3_ERROR(symbol, symbol, "Missing LD instruction (or equivalent) before this instruction.");
   }
   if(il_operand_type == NULL){
-    STAGE3_ERROR(symbol, symbol, "function requires an operand.");
+    STAGE3_ERROR(symbol, symbol, "This instruction requires an operand.");
   }
   return NULL;
 }
@@ -964,6 +964,7 @@ void *visit_expression_type_c::visit(il_simple_operation_c *symbol) {
     return NULL;
 
   /* determine the data type of the operand */
+  il_operand = symbol->il_operand;
   if (symbol->il_operand != NULL){
     il_operand_type = base_type((symbol_c *)symbol->il_operand->accept(*this));
   } else {
@@ -973,6 +974,7 @@ void *visit_expression_type_c::visit(il_simple_operation_c *symbol) {
   symbol->il_simple_operator->accept(*this);
 
   il_operand_type = NULL;
+  il_operand = NULL;
   return NULL;
 }
 
@@ -1061,16 +1063,18 @@ void *visit_expression_type_c::visit(il_expression_c *symbol) {
   il_parenthesis_level--;
   if (il_parenthesis_level < 0) ERROR;
 
+  il_operand = symbol->simple_instr_list;
   il_operand_type = il_default_variable_type;
   il_default_variable_type = il_default_variable_type_back;
 
   /* Now check the if the data type semantics of operation are correct,
    * but only if no previous error has been found...
    */
-  if (il_error)
-    return NULL;
-  symbol->il_expr_operator->accept(*this);
+  if (!il_error)
+    symbol->il_expr_operator->accept(*this);
 
+  il_operand_type = NULL;
+  il_operand = NULL;
   return NULL;
 }
 
@@ -1252,7 +1256,7 @@ void *visit_expression_type_c::visit(LDN_operator_c *symbol) {
   if(il_operand_type == NULL)
       STAGE3_ERROR(symbol, symbol, "LDN operator requires an operand.");
   if(!is_ANY_BIT_compatible(il_operand_type))
-      STAGE3_ERROR(symbol, symbol, "invalid data type of LDN operand, should be of type ANY_BIT.");
+      STAGE3_ERROR(symbol, il_operand, "invalid data type of LDN operand, should be of type ANY_BIT.");
   il_default_variable_type = il_operand_type;
   return NULL;
 }
@@ -1278,7 +1282,7 @@ void *visit_expression_type_c::visit(ST_operator_c *symbol) {
   if(!is_ANY_BIT_compatible(il_default_variable_type))
       STAGE3_ERROR(symbol, symbol, "invalid data type of il_default_variable for STN operand, should be of type ANY_BIT.");
   if(!is_ANY_BIT_compatible(il_operand_type))
-      STAGE3_ERROR(symbol, symbol, "invalid data type of STN operand, should be of type ANY_BIT.");
+      STAGE3_ERROR(symbol, il_operand, "invalid data type of STN operand, should be of type ANY_BIT.");
   /* data type of il_default_variable_type is unchanged... */
   // il_default_variable_type = il_default_variable_type;
   return NULL;
@@ -1287,7 +1291,7 @@ void *visit_expression_type_c::visit(ST_operator_c *symbol) {
 //SYM_REF0(NOT_operator_c)
 void *visit_expression_type_c::visit(NOT_operator_c *symbol) {
   if(il_operand_type != NULL){
-    STAGE3_ERROR(symbol, symbol, "NOT operator may not have an operand.");
+    STAGE3_ERROR(symbol, il_operand, "NOT operator may not have an operand.");
     return NULL;
   }
   if(il_default_variable_type == NULL) {
@@ -1307,7 +1311,7 @@ void *visit_expression_type_c::visit(NOT_operator_c *symbol) {
 void *visit_expression_type_c::visit(S_operator_c *symbol) {
   verify_null(symbol);
   if (!is_BOOL_type(il_default_variable_type)) {STAGE3_ERROR(symbol, symbol, "IL default variable should be BOOL type.");}
-  if (!is_BOOL_type(il_operand_type)) {STAGE3_ERROR(symbol, symbol, "operator S requires operand of type BOOL.");}
+  if (!is_BOOL_type(il_operand_type)) {STAGE3_ERROR(symbol, il_operand, "operator S requires operand of type BOOL.");}
   /* TODO: check whether il_operand_type is an LVALUE !! */
   /* data type of il_default_variable_type is unchanged... */
   // il_default_variable_type = il_default_variable_type;
@@ -1318,7 +1322,7 @@ void *visit_expression_type_c::visit(S_operator_c *symbol) {
 void *visit_expression_type_c::visit(R_operator_c *symbol) {
   verify_null(symbol);
   if (!is_BOOL_type(il_default_variable_type)) {STAGE3_ERROR(symbol, symbol, "IL default variable should be BOOL type.");}
-  if (!is_BOOL_type(il_operand_type)) {STAGE3_ERROR(symbol, symbol, "operator R requires operand of type BOOL.");}
+  if (!is_BOOL_type(il_operand_type)) {STAGE3_ERROR(symbol, il_operand, "operator R requires operand of type BOOL.");}
   /* TODO: check whether il_operand_type is an LVALUE !! */
   /* data type of il_default_variable_type is unchanged... */
   // il_default_variable_type = il_default_variable_type;
@@ -1377,42 +1381,48 @@ void *visit_expression_type_c::visit(PT_operator_c *symbol) {
 //SYM_REF0(AND_operator_c)
 void *visit_expression_type_c::visit(AND_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
 //SYM_REF0(OR_operator_c)
 void *visit_expression_type_c::visit(OR_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
 //SYM_REF0(XOR_operator_c)
 void *visit_expression_type_c::visit(XOR_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
 // SYM_REF0(ANDN_operator_c)
 void *visit_expression_type_c::visit(ANDN_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
 // SYM_REF0(ORN_operator_c)
 void *visit_expression_type_c::visit(ORN_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
 // SYM_REF0(XORN_operator_c)
 void *visit_expression_type_c::visit(XORN_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
@@ -1446,7 +1456,8 @@ void *visit_expression_type_c::visit(ADD_operator_c *symbol) {
   else if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, safetime_type_name_c))
     il_default_variable_type = &safedt_type_name;
 
-  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible);
+  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible,
+                                                     symbol                  , il_operand);
   return NULL;
 }
 
@@ -1507,7 +1518,8 @@ void *visit_expression_type_c::visit(SUB_operator_c *symbol) {
   else if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, safedt_type_name_c))
     il_default_variable_type = &safetime_type_name;
 
-  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible);
+  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible,
+                                                     symbol                  , il_operand);
   return NULL;
 }
 
@@ -1529,7 +1541,8 @@ void *visit_expression_type_c::visit(MUL_operator_c *symbol) {
   else if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_compatible(right_type))
     il_default_variable_type = &safetime_type_name;
 
-  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_NUM_compatible);
+  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_NUM_compatible,
+                                                     symbol                  , il_operand);
   return NULL;
 }
 
@@ -1551,7 +1564,8 @@ void *visit_expression_type_c::visit(DIV_operator_c *symbol) {
   else if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_compatible(right_type))
     il_default_variable_type = &safetime_type_name;
 
-  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_NUM_compatible);
+  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_NUM_compatible,
+                                                     symbol                  , il_operand);
   return NULL;
 }
 
@@ -1565,7 +1579,8 @@ void *visit_expression_type_c::visit(MOD_operator_c *symbol) {
 // SYM_REF0(GT_operator_c)
 void *visit_expression_type_c::visit(GT_operator_c *symbol) {
   verify_null(symbol);
-  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1573,7 +1588,8 @@ void *visit_expression_type_c::visit(GT_operator_c *symbol) {
 //SYM_REF0(GE_operator_c)
 void *visit_expression_type_c::visit(GE_operator_c *symbol) {
   verify_null(symbol);
-  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1581,7 +1597,8 @@ void *visit_expression_type_c::visit(GE_operator_c *symbol) {
 //SYM_REF0(EQ_operator_c)
 void *visit_expression_type_c::visit(EQ_operator_c *symbol) {
   verify_null(symbol);
-  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1589,7 +1606,8 @@ void *visit_expression_type_c::visit(EQ_operator_c *symbol) {
 //SYM_REF0(LT_operator_c)
 void *visit_expression_type_c::visit(LT_operator_c *symbol) {
   verify_null(symbol);
-  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1597,7 +1615,8 @@ void *visit_expression_type_c::visit(LT_operator_c *symbol) {
 //SYM_REF0(LE_operator_c)
 void *visit_expression_type_c::visit(LE_operator_c *symbol) {
   verify_null(symbol);
-  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1605,7 +1624,8 @@ void *visit_expression_type_c::visit(LE_operator_c *symbol) {
 //SYM_REF0(NE_operator_c)
 void *visit_expression_type_c::visit(NE_operator_c *symbol) {
   verify_null(symbol);
-  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }

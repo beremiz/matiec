@@ -69,8 +69,11 @@ class visit_expression_type_c: public search_constant_type_c {
     bool il_error;
     bool error_found;
 
+    /* the current data type of the data stored in the IL stack, i.e. the default variable */
     symbol_c *il_default_variable_type;
+    /* the current IL operand being analysed - its symbol and its data type */
     symbol_c *il_operand_type;
+    symbol_c *il_operand;
 
 
   public:
