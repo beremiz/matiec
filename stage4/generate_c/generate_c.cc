@@ -1051,7 +1051,9 @@ void *visit(configuration_declaration_c *symbol) {
   s4o.print("(void) {\n");
   s4o.indent_right();
   s4o.print(s4o.indent_spaces);
-  s4o.print("BOOL retain = 0;\n");
+  s4o.print("BOOL retain;\n");
+  s4o.print(s4o.indent_spaces);
+  s4o.print("retain = 0;\n");
   
   /* (B.3) Global variables initializations... */
   s4o.print(s4o.indent_spaces);
@@ -1328,7 +1330,9 @@ END_RESOURCE
       s4o.print("(void) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
-      s4o.print("BOOL retain = 0;\n");
+      s4o.print("BOOL retain;\n");
+      s4o.print(s4o.indent_spaces);
+      s4o.print("retain = 0;\n");
       
       /* (B.2) Global variables initialisations... */
       if (current_global_vars != NULL) {
