@@ -29,12 +29,10 @@ typedef uint64_t   IEC_LWORD;
 typedef float    IEC_REAL;
 typedef double   IEC_LREAL;
 
-#pragma pack(push,1)
 typedef struct {
     long int tv_sec;            /* Seconds.  */
     long int tv_nsec;           /* Nanoseconds.  */
-}IEC_TIMESPEC;
-#pragma pack(pop)
+}__attribute__((packed)) IEC_TIMESPEC;
 
 typedef IEC_TIMESPEC IEC_TIME;
 typedef IEC_TIMESPEC IEC_DATE;
@@ -50,11 +48,9 @@ typedef IEC_TIMESPEC IEC_TOD;
 #endif
 
 typedef STR_LEN_TYPE __strlen_t;
-#pragma pack(push,1)
 typedef struct {
     __strlen_t len;
     uint8_t body[STR_MAX_LEN];
-} IEC_STRING;
-#pragma pack(pop)
+} __attribute__((packed)) IEC_STRING;
 
 #endif /*IEC_TYPES_H*/
