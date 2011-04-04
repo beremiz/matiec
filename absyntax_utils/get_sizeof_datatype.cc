@@ -1,21 +1,28 @@
 /*
- * (c) 2003 Mario de Sousa
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  Copyright (C) 2009-2011  Mario de Sousa (msousa@fe.up.pt)
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
 
 /*
- * An IEC 61131-3 IL and ST compiler.
+ * An IEC 61131-3 compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
@@ -147,14 +154,19 @@ get_sizeof_datatype_c::~get_sizeof_datatype_c(void) {
   * If 'x' were a SINT, then the '30' would have to be a SINT too!
   */
 
-/* NOTE: all integer and real literal tokens will always be positive (i.e. no leading '-')
+/* NOTE: all integer_c and real_c tokens will always be positive (i.e. no leading '-')
  * due to the way the source code is parsed by iec.flex.
  */
 void *get_sizeof_datatype_c::visit(real_c *symbol) {
   return _encode_int(32);
 }
 
-/* NOTE: all integer and real literal tokens will always be positive (i.e. no leading '-')
+void *get_sizeof_datatype_c::visit(neg_real_c *symbol) {
+  return symbol->exp->accept(*this);
+}
+
+
+/* NOTE: all integer_c and real_c literal tokens will always be positive (i.e. no leading '-')
  * due to the way the source code is parsed by iec.flex.
  */
 void *get_sizeof_datatype_c::visit(integer_c *symbol) {
@@ -224,8 +236,13 @@ void *get_sizeof_datatype_c::visit(integer_c *symbol) {
 }
 
 
-/* NOTE: all integer and real literal tokens will always be positive (i.e. no leading '-')
- * due to the way the source code is parsed by iec.flex.
+void *get_sizeof_datatype_c::visit(neg_integer_c *symbol) {
+  return symbol->exp->accept(*this);
+}
+
+
+/* NOTE: all binary_integer_c tokens will always be positive (i.e. no leading '-')
+ * due to the syntax definition of IEC 61131-3.
  */
 void *get_sizeof_datatype_c::visit(binary_integer_c *symbol) {
   const char *sval = symbol->value;
@@ -255,8 +272,8 @@ void *get_sizeof_datatype_c::visit(binary_integer_c *symbol) {
 }
 
 
-/* NOTE: all integer and real literal tokens will always be positive (i.e. no leading '-')
- * due to the way the source code is parsed by iec.flex.
+/* NOTE: all octal_integer_c tokens will always be positive (i.e. no leading '-')
+ * due to the syntax definition of IEC 61131-3.
  */
 void *get_sizeof_datatype_c::visit(octal_integer_c *symbol) {
   const char *sval = symbol->value;
@@ -287,8 +304,8 @@ void *get_sizeof_datatype_c::visit(octal_integer_c *symbol) {
 }
 
 
-/* NOTE: all integer and real literal tokens will always be positive (i.e. no leading '-')
- * due to the way the source code is parsed by iec.flex.
+/* NOTE: all hex_integer_c tokens will always be positive (i.e. no leading '-')
+ * due to the syntax definition of IEC 61131-3.
  */
 void *get_sizeof_datatype_c::visit(hex_integer_c *symbol) {
   const char *sval = symbol->value;
@@ -327,27 +344,27 @@ void *get_sizeof_datatype_c::visit(hex_integer_c *symbol) {
 /***********************************/
 /* B 1.3.1 - Elementary Data Types */
 /***********************************/
-// void *get_sizeof_datatype_c::visit(time_type_name_c *symbol)	{return _encode_int(0); }
-void *get_sizeof_datatype_c::visit(bool_type_name_c *symbol)	{return _encode_int(1); }
-void *get_sizeof_datatype_c::visit(sint_type_name_c *symbol)	{return _encode_int(8); }
-void *get_sizeof_datatype_c::visit(int_type_name_c *symbol)	{return _encode_int(16);}
-void *get_sizeof_datatype_c::visit(dint_type_name_c *symbol)	{return _encode_int(32);}
-void *get_sizeof_datatype_c::visit(lint_type_name_c *symbol)	{return _encode_int(64);}
-void *get_sizeof_datatype_c::visit(usint_type_name_c *symbol)	{return _encode_int(8); }
-void *get_sizeof_datatype_c::visit(uint_type_name_c *symbol)	{return _encode_int(16);}
-void *get_sizeof_datatype_c::visit(udint_type_name_c *symbol)	{return _encode_int(32);}
-void *get_sizeof_datatype_c::visit(ulint_type_name_c *symbol)	{return _encode_int(64);}
-void *get_sizeof_datatype_c::visit(real_type_name_c *symbol)	{return _encode_int(32);}
-void *get_sizeof_datatype_c::visit(lreal_type_name_c *symbol)	{return _encode_int(64);}
-// void *get_sizeof_datatype_c::visit(date_type_name_c *symbol)	{return _encode_int(0); }
-// void *get_sizeof_datatype_c::visit(tod_type_name_c *symbol)	{return _encode_int(0); }
-// void *get_sizeof_datatype_c::visit(dt_type_name_c *symbol)	{return _encode_int(0); }
-void *get_sizeof_datatype_c::visit(byte_type_name_c *symbol)	{return _encode_int(8); }
-void *get_sizeof_datatype_c::visit(word_type_name_c *symbol)	{return _encode_int(16);}
-void *get_sizeof_datatype_c::visit(dword_type_name_c *symbol)	{return _encode_int(32);}
-void *get_sizeof_datatype_c::visit(lword_type_name_c *symbol)	{return _encode_int(64);}
-// void *get_sizeof_datatype_c::visit(string_type_name_c *symbol)	{return _encode_int(0); }
-// void *get_sizeof_datatype_c::visit(wstring_type_name_c *symbol)	{return _encode_int(0); }
+// void *get_sizeof_datatype_c::visit(time_type_name_c *symbol) {return _encode_int(0); }
+void *get_sizeof_datatype_c::visit(bool_type_name_c *symbol)    {return _encode_int(1); }
+void *get_sizeof_datatype_c::visit(sint_type_name_c *symbol)    {return _encode_int(8); }
+void *get_sizeof_datatype_c::visit(int_type_name_c *symbol)     {return _encode_int(16);}
+void *get_sizeof_datatype_c::visit(dint_type_name_c *symbol)    {return _encode_int(32);}
+void *get_sizeof_datatype_c::visit(lint_type_name_c *symbol)    {return _encode_int(64);}
+void *get_sizeof_datatype_c::visit(usint_type_name_c *symbol)   {return _encode_int(8); }
+void *get_sizeof_datatype_c::visit(uint_type_name_c *symbol)    {return _encode_int(16);}
+void *get_sizeof_datatype_c::visit(udint_type_name_c *symbol)   {return _encode_int(32);}
+void *get_sizeof_datatype_c::visit(ulint_type_name_c *symbol)   {return _encode_int(64);}
+void *get_sizeof_datatype_c::visit(real_type_name_c *symbol)    {return _encode_int(32);}
+void *get_sizeof_datatype_c::visit(lreal_type_name_c *symbol)   {return _encode_int(64);}
+// void *get_sizeof_datatype_c::visit(date_type_name_c *symbol) {return _encode_int(0); }
+// void *get_sizeof_datatype_c::visit(tod_type_name_c *symbol)  {return _encode_int(0); }
+// void *get_sizeof_datatype_c::visit(dt_type_name_c *symbol)   {return _encode_int(0); }
+void *get_sizeof_datatype_c::visit(byte_type_name_c *symbol)    {return _encode_int(8); }
+void *get_sizeof_datatype_c::visit(word_type_name_c *symbol)    {return _encode_int(16);}
+void *get_sizeof_datatype_c::visit(dword_type_name_c *symbol)   {return _encode_int(32);}
+void *get_sizeof_datatype_c::visit(lword_type_name_c *symbol)   {return _encode_int(64);}
+// void *get_sizeof_datatype_c::visit(string_type_name_c *symbol)    {return _encode_int(0); }
+// void *get_sizeof_datatype_c::visit(wstring_type_name_c *symbol)   {return _encode_int(0); }
 /******************************************************/
 /* Extensions to the base standard as defined in      */
 /* "Safety Software Technical Specification,          */
@@ -355,7 +372,28 @@ void *get_sizeof_datatype_c::visit(lword_type_name_c *symbol)	{return _encode_in
 /*  Version 1.0 – Official Release"                   */
 /* by PLCopen - Technical Committee 5 - 2006-01-31    */
 /******************************************************/
-void *get_sizeof_datatype_c::visit(safebool_type_name_c *symbol)	{return _encode_int(1);}
+//     void *get_sizeof_datatype_c::visit(safetime_type_name_c *symbol); {return _encode_int(0); }
+void *get_sizeof_datatype_c::visit(safebool_type_name_c *symbol)         {return _encode_int(1); }
+void *get_sizeof_datatype_c::visit(safesint_type_name_c *symbol)         {return _encode_int(8); }
+void *get_sizeof_datatype_c::visit(safeint_type_name_c *symbol)          {return _encode_int(16);}
+void *get_sizeof_datatype_c::visit(safedint_type_name_c *symbol)         {return _encode_int(32);}
+void *get_sizeof_datatype_c::visit(safelint_type_name_c *symbol)         {return _encode_int(64);}
+void *get_sizeof_datatype_c::visit(safeusint_type_name_c *symbol)        {return _encode_int(8); }
+void *get_sizeof_datatype_c::visit(safeuint_type_name_c *symbol)         {return _encode_int(16);}
+void *get_sizeof_datatype_c::visit(safeudint_type_name_c *symbol)        {return _encode_int(32);}
+void *get_sizeof_datatype_c::visit(safeulint_type_name_c *symbol)        {return _encode_int(64);}
+void *get_sizeof_datatype_c::visit(safereal_type_name_c *symbol)         {return _encode_int(32);}
+void *get_sizeof_datatype_c::visit(safelreal_type_name_c *symbol)        {return _encode_int(64);}
+//     void *get_sizeof_datatype_c::visit(safedate_type_name_c *symbol); {return _encode_int(0); }
+//     void *get_sizeof_datatype_c::visit(safetod_type_name_c *symbol);  {return _encode_int(0); }
+//     void *get_sizeof_datatype_c::visit(safedt_type_name_c *symbol);   {return _encode_int(0); }
+void *get_sizeof_datatype_c::visit(safebyte_type_name_c *symbol)         {return _encode_int(8); }
+void *get_sizeof_datatype_c::visit(safeword_type_name_c *symbol)         {return _encode_int(16);}
+void *get_sizeof_datatype_c::visit(safedword_type_name_c *symbol)        {return _encode_int(32);}
+void *get_sizeof_datatype_c::visit(safelword_type_name_c *symbol)        {return _encode_int(64);}
+//     void *get_sizeof_datatype_c::visit(safestring_type_name_c *symbol);  {return _encode_int(0); }
+//     void *get_sizeof_datatype_c::visit(safewstring_type_name_c *symbol); {return _encode_int(0); }
+
 
 /********************************/
 /* B 1.3.3 - Derived data types */

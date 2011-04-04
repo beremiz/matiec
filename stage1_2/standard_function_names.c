@@ -1,21 +1,28 @@
 /*
- * (c) 2008 Edouard TISSERANT
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  Copyright (C) 2008 Edouard TISSERANT
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
 
 /*
- * An IEC 61131-3 IL and ST compiler.
+ * An IEC 61131-3 compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
@@ -29,6 +36,7 @@
  
  
 const char *standard_function_names[] = {
+/*  
 "REAL_TO_SINT",
 "REAL_TO_LINT",
 "REAL_TO_DINT",
@@ -393,6 +401,7 @@ const char *standard_function_names[] = {
 "INT_TO_ULINT",
 "INT_TO_BOOL",
 "INT_TO_TIME",
+*/
 "TRUNC",
 "BCD_TO_UDINT",
 "BCD_TO_UINT",
@@ -402,8 +411,10 @@ const char *standard_function_names[] = {
 "UINT_TO_BCD",
 "USINT_TO_BCD",
 "ULINT_TO_BCD",
+/*
 "DATE_AND_TIME_TO_TIME_OF_DAY",
 "DATE_AND_TIME_TO_DATE",
+*/
 "ABS",
 "SQRT",
 "LN",

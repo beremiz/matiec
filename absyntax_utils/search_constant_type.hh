@@ -1,21 +1,28 @@
 /*
- * (c) 2003 Mario de Sousa
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
 
 /*
- * An IEC 61131-3 IL and ST compiler.
+ * An IEC 61131-3 compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
@@ -67,10 +74,6 @@ class search_constant_type_c: public search_visitor_c {
   static time_type_name_c     time_type_name;
   static int_type_name_c      int_type_name;
 
-/*
-  static constant_real_type_name_c     constant_real_type_name;
-  static constant_int_type_name_c      constant_int_type_name;
-*/
 /* temporarily here until we remove the st_code_gen.c and il_code_gen.c files... */
   static integer_c      integer;
 
@@ -81,7 +84,15 @@ class search_constant_type_c: public search_visitor_c {
   /*  Version 1.0 – Official Release"                   */
   /* by PLCopen - Technical Committee 5 - 2006-01-31    */
   /******************************************************/
-  static safebool_type_name_c          safebool_type_name;
+ 
+//  static safebool_type_name_c          safebool_type_name;
+  /* The following is required because the expression (TOD_var - TOD_var) will result in a data type
+   *  (in this case, TIME) that is neither of the expression elements...
+   */
+  static safetime_type_name_c     safetime_type_name;
+  static safetod_type_name_c      safetod_type_name;
+  static safedt_type_name_c       safedt_type_name;
+
 
 
   public:
@@ -97,7 +108,9 @@ class search_constant_type_c: public search_visitor_c {
     /* B 1.2.1 - Numeric Literals */
     /******************************/
     void *visit(real_c *symbol);
+    void *visit(neg_real_c *symbol);
     void *visit(integer_c *symbol);
+    void *visit(neg_integer_c *symbol);
     void *visit(binary_integer_c *symbol);
     void *visit(octal_integer_c *symbol);
     void *visit(hex_integer_c *symbol);

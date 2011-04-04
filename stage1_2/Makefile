@@ -3,7 +3,7 @@ include ../Makefile.$(shell uname)
 
 
 
-default:	all
+default: all
 
 all: iec.flex.o iec.y.o stage1_2.o
 
@@ -15,6 +15,7 @@ clean:
 	-rm -f stage1_2.o
 	-rm -f iec.y.o
 	-rm -f iec.flex.o
+	-rm -f Makefile.depend
 
 
 CFLAGS += -I. -I../* -I../../absyntax
@@ -22,7 +23,8 @@ CFLAGS += -I. -I../* -I../../absyntax
 iec.flex.c: iec.flex
 	flex -oiec.flex.c iec.flex
 
-stage1_2.cc: iec.y.hh
+stage1_2.cc: iec.y.hh 
+stage1_2.o: stage1_2.cc
 
 iec.flex.o: iec.y.hh iec.flex.c
 	$(CXX) -c iec.flex.c -D DEFAULT_LIBDIR='"$(IECLIBDIR)"' $(CFLAGS)

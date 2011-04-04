@@ -1,21 +1,28 @@
 /*
- * (c) 2009 Mario de Sousa
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  Copyright (C) 2009-2011  Mario de Sousa (msousa@fe.up.pt)
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
 
 /*
- * An IEC 61131-3 IL and ST compiler.
+ * An IEC 61131-3 compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
@@ -50,53 +57,58 @@
                                   (symbol1))
 
 #define STAGE3_ERROR(symbol1, symbol2, msg) {                                          \
-    /*printf("semantic error between (%d:%d) and (%d:%d): %s\n",                         \
+    fprintf(stderr, "semantic error between (%d:%d) and (%d:%d): %s\n",                \
            FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column, \
            LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column,  \
-           msg);*/                                                                       \
+           msg);                                                                       \
     il_error = true;                                                                   \
+    error_found = true;                                                                \
   }
 
 
-
+/* set to 1 to see debug info during execution */
+static int debug = 0;
 
 
 void *visit_expression_type_c::visit(program_declaration_c *symbol) {
   search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
   symbol->var_declarations->accept(*this);
-  //printf("checking semantics in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
+  if (debug) printf("checking semantics in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
   il_parenthesis_level = 0;
   il_error = false;
   il_default_variable_type = NULL;
   symbol->function_block_body->accept(*this);
   il_default_variable_type = NULL;
   delete search_varfb_instance_type;
+  search_varfb_instance_type = NULL;
   return NULL;
 }
 
 void *visit_expression_type_c::visit(function_declaration_c *symbol) {
   search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
   symbol->var_declarations_list->accept(*this);
-  //printf("checking semantics in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
+  if (debug) printf("checking semantics in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
   il_parenthesis_level = 0;
   il_error = false;
   il_default_variable_type = NULL;
   symbol->function_body->accept(*this);
   il_default_variable_type = NULL;
   delete search_varfb_instance_type;
+  search_varfb_instance_type = NULL;
   return NULL;
 }
 
 void *visit_expression_type_c::visit(function_block_declaration_c *symbol) {
   search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
   symbol->var_declarations->accept(*this);
-  //printf("checking semantics in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
+  if (debug) printf("checking semantics in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
   il_parenthesis_level = 0;
   il_error = false;
   il_default_variable_type = NULL;
   symbol->fblock_body->accept(*this);
   il_default_variable_type = NULL;
   delete search_varfb_instance_type;
+  search_varfb_instance_type = NULL;
   return NULL;
 }
 
@@ -108,60 +120,173 @@ void *visit_expression_type_c::visit(function_block_declaration_c *symbol) {
 
 
 
-visit_expression_type_c::visit_expression_type_c(symbol_c *search_scope) {
+visit_expression_type_c::visit_expression_type_c(symbol_c *ignore) {
+  error_found = false;
 }
 
 visit_expression_type_c::~visit_expression_type_c(void) {
 }
 
+bool visit_expression_type_c::get_error_found(void) {
+  return error_found;
+}
+
+
+
+/* NOTE on data type handling and literals...
+ * ==========================================
+ *
+ * Literals that are explicitly type cast 
+ *   e.g.:   BYTE#42
+ *           INT#65
+ *           TIME#45h23m
+ *               etc...
+ *  are NOT considered literals in the following code.
+ *  Since they are type cast, and their data type is fixed and well known,
+ *  they are treated as a variable of that data type (except when determining lvalues)
+ *  In other words, when calling search_constant_type_c on these constants, it returns
+ *  a xxxxx_type_name_c, and not one of the xxxx_literal_c ! 
+ *
+ *  When the following code handles a literal, it is really a literal of unknown data type.
+ *    e.g.   42, may be considered an int, a byte, a word, etc... 
+ *
+ * NOTE: type_symbol == NULL is valid!
+ *       This will occur, for example, when and undefined/undeclared symbolic_variable is used in the program.
+ *       This will not be of any type, so we always return false.
+ */
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_ELEMENTARY_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   return is_ANY_MAGNITUDE_type(type_symbol)
-      || is_ANY_BIT_type(type_symbol)
-      || is_ANY_STRING_type(type_symbol)
-      || is_ANY_DATE_type(type_symbol);
+      || is_ANY_BIT_type      (type_symbol)
+      || is_ANY_STRING_type   (type_symbol)
+      || is_ANY_DATE_type     (type_symbol);
+}
+
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_SAFEELEMENTARY_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  return is_ANY_SAFEMAGNITUDE_type(type_symbol)
+      || is_ANY_SAFEBIT_type      (type_symbol)
+      || is_ANY_SAFESTRING_type   (type_symbol)
+      || is_ANY_SAFEDATE_type     (type_symbol);
+}
+
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_ELEMENTARY_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  /* NOTE: doing 
+   *          return is_ANY_SAFEELEMENTARY_type() || is_ANY_ELEMENTARY_type()
+   *       is incorrect, as the literals would never be considered compatible...
+   */
+  return is_ANY_MAGNITUDE_compatible(type_symbol)
+      || is_ANY_BIT_compatible      (type_symbol)
+      || is_ANY_STRING_compatible   (type_symbol)
+      || is_ANY_DATE_compatible     (type_symbol);
 }
 
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_MAGNITUDE_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(time_type_name_c)) {return true;}
   return is_ANY_NUM_type(type_symbol);
 }
 
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_SAFEMAGNITUDE_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(safetime_type_name_c)) {return true;}
+  return is_ANY_SAFENUM_type(type_symbol);
+}
+
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_MAGNITUDE_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_MAGNITUDE_type    (type_symbol))              {return true;}
+  if (is_ANY_SAFEMAGNITUDE_type(type_symbol))              {return true;}
+
+  return is_ANY_NUM_compatible(type_symbol);
+}
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_NUM_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
-  return is_ANY_REAL_type(type_symbol) || is_ANY_INT_type(type_symbol);
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_REAL_type(type_symbol))                       {return true;}
+  if (is_ANY_INT_type(type_symbol))                        {return true;}
+  return false;
 }
 
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_SAFENUM_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  return is_ANY_SAFEREAL_type(type_symbol) 
+      || is_ANY_SAFEINT_type (type_symbol);
+}
+
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_NUM_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_REAL_compatible(type_symbol))                       {return true;}
+  if (is_ANY_INT_compatible(type_symbol))                        {return true;}
+  return false;  
+}
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_DATE_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(date_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(tod_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(dt_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(tod_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(dt_type_name_c))   {return true;}
   return false;
 }
 
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_SAFEDATE_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(safedate_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(safetod_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safedt_type_name_c))   {return true;}
+  return false;
+}
+
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_DATE_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_DATE_type    (type_symbol))              {return true;}
+  if (is_ANY_SAFEDATE_type(type_symbol))              {return true;}
+  return false;
+}
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_STRING_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(string_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(wstring_type_name_c)) {return true;}
+// TODO literal_string ???
   return false;
 }
 
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_SAFESTRING_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(safestring_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(safewstring_type_name_c)) {return true;}
+  return false;
+}
+
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_STRING_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_STRING_type    (type_symbol))              {return true;}
+  if (is_ANY_SAFESTRING_type(type_symbol))              {return true;}
+  return false;
+}
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_INT_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(sint_type_name_c))  {return true;}
   if (typeid(*type_symbol) == typeid(int_type_name_c))   {return true;}
   if (typeid(*type_symbol) == typeid(dint_type_name_c))  {return true;}
@@ -170,41 +295,114 @@ bool visit_expression_type_c::is_ANY_INT_type(symbol_c *type_symbol) {
   if (typeid(*type_symbol) == typeid(uint_type_name_c))  {return true;}
   if (typeid(*type_symbol) == typeid(udint_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(ulint_type_name_c)) {return true;}
-  if (is_literal_integer_type(type_symbol))              {return true;}
   return false;
 }
 
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_SAFEINT_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(safesint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safeint_type_name_c))   {return true;}
+  if (typeid(*type_symbol) == typeid(safedint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safelint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safeusint_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(safeuint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safeudint_type_name_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(safeulint_type_name_c)) {return true;}
+  return false;
+}
+
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_INT_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_INT_type    (type_symbol))              {return true;}
+  if (is_ANY_SAFEINT_type(type_symbol))              {return true;}
+  if (is_literal_integer_type(type_symbol))          {return true;}
+  return false;
+}
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_REAL_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(real_type_name_c))  {return true;}
   if (typeid(*type_symbol) == typeid(lreal_type_name_c)) {return true;}
-  if (is_literal_real_type(type_symbol))                 {return true;}
   return false;
 }
 
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_SAFEREAL_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(safereal_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safelreal_type_name_c)) {return true;}
+  return false;
+}
+
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_REAL_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_REAL_type    (type_symbol))              {return true;}
+  if (is_ANY_SAFEREAL_type(type_symbol))              {return true;}
+  if (is_literal_real_type(type_symbol))              {return true;}
+  return false;
+}
 
 /* A helper function... */
 bool visit_expression_type_c::is_ANY_BIT_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
-  if (typeid(*type_symbol) == typeid(bool_type_name_c))  {return true;}
-  if (typeid(*type_symbol) == typeid(byte_type_name_c))  {return true;}
-  if (typeid(*type_symbol) == typeid(word_type_name_c))  {return true;}
-  if (typeid(*type_symbol) == typeid(dword_type_name_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(lword_type_name_c)) {return true;}
-  if (is_literal_integer_type(type_symbol))              {return true;}
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(bool_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(byte_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(word_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(dword_type_name_c))    {return true;}
+  if (typeid(*type_symbol) == typeid(lword_type_name_c))    {return true;}
   return false;
 }
 
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_SAFEBIT_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(safebool_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(safebyte_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(safeword_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(safedword_type_name_c))    {return true;}
+  if (typeid(*type_symbol) == typeid(safelword_type_name_c))    {return true;}
+  return false;
+}
+
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_BIT_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_BIT_type    (type_symbol))              {return true;}
+  if (is_ANY_SAFEBIT_type(type_symbol))              {return true;}
+  if (is_nonneg_literal_integer_type(type_symbol))   {return true;}
+  if (is_literal_bool_type(type_symbol))             {return true;}
+  return false;
+}
 
 /* A helper function... */
 bool visit_expression_type_c::is_BOOL_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {ERROR;}
-  if (typeid(*type_symbol) == typeid(bool_type_name_c))  {return true;}
-  if (is_literal_bool_type(type_symbol))                 {return true;}
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(bool_type_name_c))      {return true;}
   return false;
 }
+
+/* A helper function... */
+bool visit_expression_type_c::is_SAFEBOOL_type(symbol_c *type_symbol){
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(safebool_type_name_c))  {return true;}
+  return false;  
+}
+
+/* A helper function... */
+bool visit_expression_type_c::is_ANY_BOOL_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_BOOL_type    (type_symbol))              {return true;}
+  if (is_SAFEBOOL_type(type_symbol))              {return true;}
+  if (is_literal_bool_type(type_symbol))              {return true;}
+  return false;
+}
+
+
+#define is_type(type_name_symbol, type_name_class)  (typeid(*type_name_symbol) == typeid(type_name_class))
 
 
 #define sizeoftype(symbol) get_sizeof_datatype_c::getsize(symbol)
@@ -212,7 +410,15 @@ bool visit_expression_type_c::is_BOOL_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_literal_integer_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {return true;}
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(neg_integer_c))        {return true;}
+  return is_nonneg_literal_integer_type(type_symbol);
+}
+
+
+/* A helper function... */
+bool visit_expression_type_c::is_nonneg_literal_integer_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(integer_c))        {return true;}
   if (typeid(*type_symbol) == typeid(binary_integer_c)) {return true;}
   if (typeid(*type_symbol) == typeid(octal_integer_c))  {return true;}
@@ -223,8 +429,9 @@ bool visit_expression_type_c::is_literal_integer_type(symbol_c *type_symbol) {
 
 /* A helper function... */
 bool visit_expression_type_c::is_literal_real_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {return true;}
-  if (typeid(*type_symbol) == typeid(real_c)) {return true;}
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(real_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(neg_real_c)) {return true;}
   return false;
 }
 
@@ -233,14 +440,13 @@ bool visit_expression_type_c::is_literal_real_type(symbol_c *type_symbol) {
 bool visit_expression_type_c::is_literal_bool_type(symbol_c *type_symbol) {
   bool_type_name_c bool_t;
 
-  if (type_symbol == NULL) {return true;}
+  if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(boolean_true_c))    {return true;}
   if (typeid(*type_symbol) == typeid(boolean_false_c))   {return true;}
-  if (is_literal_integer_type(type_symbol))
+  if (is_nonneg_literal_integer_type(type_symbol))
     if (sizeoftype(&bool_t) >= sizeoftype(type_symbol))  {return true;}
   return false;
 }
-
 
 /* Determine the common data type between two data types.
  * If no common data type found, return NULL.
@@ -253,8 +459,9 @@ bool visit_expression_type_c::is_literal_bool_type(symbol_c *type_symbol) {
  *
  * If two literals, then return the literal that requires more bits...
  */
+
 symbol_c *visit_expression_type_c::common_type__(symbol_c *first_type, symbol_c *second_type) {
-  if (first_type == NULL && second_type == NULL) {ERROR;}
+  if (first_type == NULL && second_type == NULL) {return NULL;}
   if (first_type == NULL)  {return second_type;}
   if (second_type == NULL) {return first_type;}
 
@@ -267,29 +474,81 @@ symbol_c *visit_expression_type_c::common_type__(symbol_c *first_type, symbol_c 
   if (is_literal_bool_type(first_type) && is_literal_bool_type(second_type))
     {return first_type;}
 
-  /* This check can only be made after the is_literal_XXXX checks */
+  /* The following check can only be made after the is_literal_XXXX checks */
   /* When two literals of the same type, with identical typeid's are checked,
-   * we must return the one that occupies more bits...
+   * we must return the one that occupies more bits... This is done above.
    */
   if (typeid(*first_type) == typeid(*second_type)) {return first_type;}
 
-  if (is_BOOL_type(first_type)      && is_literal_bool_type(second_type))     {return first_type;}
-  if (is_BOOL_type(second_type)     && is_literal_bool_type(first_type))      {return second_type;}
+  /* NOTE Although a BOOL is also an ANY_BIT, we must check it explicitly since some
+   *       literal bool values are not literal integers...
+   */ 
+  if (is_BOOL_type(first_type)        && is_literal_bool_type(second_type))    {return first_type;}
+  if (is_BOOL_type(second_type)       && is_literal_bool_type(first_type))     {return second_type;}
 
-  if (is_ANY_BIT_type(first_type)     && is_literal_integer_type(second_type))
+  if (is_SAFEBOOL_type(first_type)    && is_literal_bool_type(second_type))    {return first_type;}
+  if (is_SAFEBOOL_type(second_type)   && is_literal_bool_type(first_type))     {return second_type;}
+
+  if (is_SAFEBOOL_type(first_type)    && is_BOOL_type(second_type))            {return second_type;}
+  if (is_SAFEBOOL_type(second_type)   && is_BOOL_type(first_type))             {return first_type;}
+
+  if (is_ANY_BIT_type(first_type)     && is_nonneg_literal_integer_type(second_type))
     {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
-  if (is_ANY_BIT_type(second_type)    && is_literal_integer_type(first_type))
+  if (is_ANY_BIT_type(second_type)    && is_nonneg_literal_integer_type(first_type))
     {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
 
-  if (is_ANY_INT_type(first_type)   && is_literal_integer_type(second_type))
+  if (is_ANY_SAFEBIT_type(first_type)     && is_nonneg_literal_integer_type(second_type))
     {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
-  if (is_ANY_INT_type(second_type)  && is_literal_integer_type(first_type))
+  if (is_ANY_SAFEBIT_type(second_type)    && is_nonneg_literal_integer_type(first_type))
     {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
 
-  if (is_ANY_REAL_type(first_type)  && is_literal_real_type(second_type))
+  if  (is_ANY_SAFEBIT_type(first_type)    && is_ANY_BIT_type(second_type))
+    {return ((sizeoftype(first_type) == sizeoftype(second_type))? second_type:NULL);}
+  if  (is_ANY_SAFEBIT_type(second_type)   && is_ANY_BIT_type(first_type))
+    {return ((sizeoftype(first_type) == sizeoftype(second_type))? first_type :NULL);}
+
+  if (is_ANY_INT_type(first_type)     && is_literal_integer_type(second_type))
     {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
-  if (is_ANY_REAL_type(second_type) && is_literal_real_type(first_type))
+  if (is_ANY_INT_type(second_type)    && is_literal_integer_type(first_type))
     {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
+
+  if (is_ANY_SAFEINT_type(first_type)     && is_literal_integer_type(second_type))
+    {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
+  if (is_ANY_SAFEINT_type(second_type)    && is_literal_integer_type(first_type))
+    {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
+
+  if  (is_ANY_SAFEINT_type(first_type)    && is_ANY_INT_type(second_type))
+    {return ((sizeoftype(first_type) == sizeoftype(second_type))? second_type:NULL);}
+  if  (is_ANY_SAFEINT_type(second_type)   && is_ANY_INT_type(first_type))
+    {return ((sizeoftype(first_type) == sizeoftype(second_type))? first_type :NULL);}
+
+  if (is_ANY_REAL_type(first_type)    && is_literal_real_type(second_type))
+    {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
+  if (is_ANY_REAL_type(second_type)   && is_literal_real_type(first_type))
+    {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
+
+  if (is_ANY_SAFEREAL_type(first_type)    && is_literal_real_type(second_type))
+    {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
+  if (is_ANY_SAFEREAL_type(second_type)   && is_literal_real_type(first_type))
+    {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
+
+  if  (is_ANY_SAFEREAL_type(first_type)    && is_ANY_REAL_type(second_type))
+    {return ((sizeoftype(first_type) == sizeoftype(second_type))? second_type:NULL);}
+  if  (is_ANY_SAFEREAL_type(second_type)   && is_ANY_REAL_type(first_type))
+    {return ((sizeoftype(first_type) == sizeoftype(second_type))? first_type :NULL);}
+
+  /* the Time and Date types... */
+  if (is_type(first_type,  safetime_type_name_c) && is_type(second_type, time_type_name_c))  {return second_type;}
+  if (is_type(second_type, safetime_type_name_c) && is_type( first_type, time_type_name_c))  {return  first_type;}
+
+  if (is_type(first_type,  safedate_type_name_c) && is_type(second_type, date_type_name_c))  {return second_type;}
+  if (is_type(second_type, safedate_type_name_c) && is_type( first_type, date_type_name_c))  {return  first_type;}
+
+  if (is_type(first_type,  safedt_type_name_c)   && is_type(second_type, dt_type_name_c))    {return second_type;}
+  if (is_type(second_type, safedt_type_name_c)   && is_type( first_type, dt_type_name_c))    {return  first_type;}
+
+  if (is_type(first_type,  safetod_type_name_c)  && is_type(second_type, tod_type_name_c))   {return second_type;}
+  if (is_type(second_type, safetod_type_name_c)  && is_type( first_type, tod_type_name_c))   {return  first_type;}
 
   /* no common type */
   return NULL;
@@ -300,27 +559,66 @@ symbol_c *visit_expression_type_c::common_type__(symbol_c *first_type, symbol_c 
  *  if no common data type is found.
  */
 symbol_c *visit_expression_type_c::common_type(symbol_c *first_type, symbol_c *second_type) {
+/*  
   symbol_c *res = common_type__(first_type, second_type);
   if (NULL == res) ERROR;
   return res;
+*/
+  return common_type__(first_type, second_type);
+}
+
+
+/* Return TRUE if the second (value) data type may be assigned to a variable of the first (variable) data type
+ * such as: 
+ *     var_type     value_type
+ *    BOOL           BYTE#7     -> returns false
+ *    INT            INT#7      -> returns true
+ *    INT            7          -> returns true
+ *    REAL           7.89       -> returns true
+ *    REAL           7          -> returns true
+ *    INT            7.89       -> returns false
+ *    SAFEBOOL       BOOL#1     -> returns false   !!!
+ *   etc...
+ *
+ * NOTE: It is assumed that the var_type is the data type of an lvalue
+ */
+bool visit_expression_type_c::is_valid_assignment(symbol_c *var_type, symbol_c *value_type) {
+  if (var_type == NULL)   {/* STAGE3_ERROR(value_type, value_type, "Var_type   == NULL"); */ return false;}
+  if (value_type == NULL) {/* STAGE3_ERROR(var_type,   var_type,   "Value_type == NULL"); */ return false;}
+
+  symbol_c *common_type = common_type__(var_type, value_type);
+  if (NULL == common_type)
+    return false;
+  return (typeid(*var_type) == typeid(*common_type));
 }
 
 
 /* Return TRUE if there is a common data type, otherwise return FALSE
+ * i.e., return TRUE if both data types may be used simultaneously in an expression
+ * such as:
+ *    BOOL#0     AND BYTE#7  -> returns false
+ *    0          AND BYTE#7  -> returns true
+ *    INT#10     AND INT#7   -> returns true
+ *    INT#10     AND 7       -> returns true
+ *    REAL#34.3  AND 7.89    -> returns true
+ *    REAL#34.3  AND 7       -> returns true
+ *    INT#10     AND 7.89    -> returns false
+ *    SAFEBOOL#0 AND BOOL#1  -> returns true   !!!
+ *   etc...
  */
 bool visit_expression_type_c::is_compatible_type(symbol_c *first_type, symbol_c *second_type) {
-  if (first_type == NULL || second_type == NULL) {ERROR;}
+  if (first_type == NULL || second_type == NULL) {return false;}
   return (NULL != common_type__(first_type, second_type));
 }
 
 
 
-#define is_num_type      is_ANY_NUM_type
-#define is_integer_type  is_ANY_INT_type
-#define is_real_type     is_ANY_REAL_type
-#define is_binary_type   is_ANY_BIT_type
+#define is_num_type      is_ANY_NUM_compatible
+#define is_integer_type  is_ANY_INT_compatible
+#define is_real_type     is_ANY_REAL_compatible
+#define is_binary_type   is_ANY_BIT_compatible
  /* actually the ROR, ROL, SHL, and SHR function also accept boolean type! */
-#define is_nbinary_type  is_ANY_BIT_type  
+#define is_nbinary_type  is_ANY_BIT_compatible
 #define compute_standard_function_default visit_expression_type_c::compute_standard_function_default
 #define compute_standard_function_il visit_expression_type_c::compute_standard_function_il
 #define search_expression_type_c visit_expression_type_c
@@ -350,20 +648,30 @@ bool visit_expression_type_c::is_compatible_type(symbol_c *first_type, symbol_c 
 
 
 /* A helper function... */
+/*
 symbol_c *visit_expression_type_c::compute_boolean_expression(symbol_c *left_type, symbol_c *right_type,
                                                               is_data_type_t is_data_type) {
+*/
+symbol_c *visit_expression_type_c::compute_expression(symbol_c *left_type,      symbol_c *right_type,     is_data_type_t is_data_type,
+						      symbol_c *left_expr, symbol_c *right_expr) {
   bool error = false;
 
   if (!(this->*is_data_type)(left_type)) {
-    STAGE3_ERROR(left_type, left_type, "invalid data type of first operand.");
+    if (debug) printf("visit_expression_type_c::compute_expression(): invalid left_type\n");
+    if (left_expr != NULL)
+      STAGE3_ERROR(left_expr, left_expr, "Invalid data type of operand, or of data resulting from previous IL instructions.");
     error = true;
   }
   if (!(this->*is_data_type)(right_type)) {
-    STAGE3_ERROR(right_type, right_type, "invalid data type of second operand.");
+    if (debug) printf("visit_expression_type_c::compute_expression(): invalid right_type\n");
+    if (right_expr != NULL)
+      STAGE3_ERROR(right_expr, right_expr, "Invalid data type of operand.");
     error = true;
   }
   if (!is_compatible_type(left_type, right_type)) {
-    STAGE3_ERROR(left_type, right_type, "type mismatch between operands.");
+    if (debug) printf("visit_expression_type_c::compute_expression(): left_type & right_type are incompatible\n");
+    if ((left_expr != NULL) && (right_expr != NULL))
+      STAGE3_ERROR(left_expr, right_expr, "Type mismatch between operands.");
     error = true;
   }
 
@@ -374,26 +682,44 @@ symbol_c *visit_expression_type_c::compute_boolean_expression(symbol_c *left_typ
 }
 
 
+# if 0
 /* A helper function... */
 symbol_c *visit_expression_type_c::compute_numeric_expression(symbol_c *left_type, symbol_c *right_type,
                                                               is_data_type_t is_data_type) {
-  if (!(this->*is_data_type)(left_type))
-    STAGE3_ERROR(left_type, right_type, "Both parts of the equation must be the same type.");
-  if (!(this->*is_data_type)(right_type))
-    STAGE3_ERROR(left_type, right_type, "Both parts of the equation must be the same type.");
-  if (!is_compatible_type(left_type, right_type))
-    STAGE3_ERROR(left_type, right_type, "Both parts of the equation must be the same type.");
+  bool error = false;
 
+  if (!(this->*is_data_type)(left_type)) {
+    STAGE3_ERROR(left_type, right_type, "Invalid data type of left operand.");
+    error = true;
+  }
+  if (!(this->*is_data_type)(right_type)) {
+    STAGE3_ERROR(left_type, right_type, "Invalid data type of right operand.");
+    error = true;
+  }
+  if (!is_compatible_type(left_type, right_type)) {
+    STAGE3_ERROR(left_type, right_type, "Type mismatch between operands.");
+    error = true;
+  }
+
+/*
   if (is_literal_integer_type(left_type) || is_literal_real_type(left_type)) {
     return right_type;
   } else {
     return left_type;
   }
+*/
+
+  if (error)
+    return NULL;
+  else
+    return common_type(left_type, right_type);
 
   /* humour the compiler... */
+/*
   return NULL;
+*/
 }
-
+#endif
 
 
 
@@ -425,7 +751,7 @@ void visit_expression_type_c::check_nonformal_call(symbol_c *f_call, symbol_c *f
      */
     if(param_name != NULL) {
       param_type = fp_iterator.param_type();
-      if(!is_compatible_type(il_default_variable_type,param_type)) 
+      if(!is_valid_assignment(param_type, il_default_variable_type)) 
         STAGE3_ERROR(f_call, f_call, "In function/FB call, first parameter has invalid data type.");
     }
   } // if (use_il_defvar)
@@ -449,7 +775,7 @@ void visit_expression_type_c::check_nonformal_call(symbol_c *f_call, symbol_c *f
       /* Get the parameter type */
       param_type = fp_iterator.param_type();
       /* If the declared parameter and the parameter from the function call do no have the same type */
-      if(!is_compatible_type(call_param_type,param_type)) STAGE3_ERROR(call_param_value, call_param_value, "Type mismatch in function/FB call parameter.");
+      if(!is_valid_assignment(param_type, call_param_type)) STAGE3_ERROR(call_param_value, call_param_value, "Type mismatch in function/FB call parameter.");
     }
   }
 }
@@ -490,7 +816,7 @@ void visit_expression_type_c::check_formal_parameter(symbol_c *call_param_name, 
   symbol_c *param_type;
   identifier_c *param_name;
   function_param_iterator_c       fp_iterator(f_decl);
-
+ 
   /* Find the corresponding parameter of the function being called */
   param_name = fp_iterator.search(call_param_name);
   if(param_name == NULL) {
@@ -499,8 +825,7 @@ void visit_expression_type_c::check_formal_parameter(symbol_c *call_param_name, 
     /* Get the parameter type */
     param_type = fp_iterator.param_type();
     /* If the declared parameter and the parameter from the function call have the same type */
-//     if(!is_compatible_type(call_param_type, param_type)) STAGE3_ERROR(call_param_name, call_param_value, "Type mismatch function/FB call parameter.");
-    if(!is_compatible_type(call_param_type, param_type)) STAGE3_ERROR(call_param_name, call_param_name, "Type mismatch function/FB call parameter.");
+    if(!is_valid_assignment(param_type, call_param_type)) STAGE3_ERROR(call_param_name, call_param_name, "Type mismatch function/FB call parameter.");
   }
 }
 
@@ -549,7 +874,7 @@ void visit_expression_type_c::check_formal_call(symbol_c *f_call, symbol_c *f_de
       /* Get the parameter type */
       param_type = fp_iterator.param_type();
       /* If the declared parameter and the parameter from the function call have the same type */
-      if(!is_compatible_type(call_param_type, param_type)) STAGE3_ERROR(call_param_name, call_param_value, "Type mismatch function/FB call parameter.");
+      if(!is_valid_assignment(param_type, call_param_type)) STAGE3_ERROR(call_param_name, call_param_value, "Type mismatch function/FB call parameter.");
     }
   }
 }
@@ -559,6 +884,10 @@ void visit_expression_type_c::check_formal_call(symbol_c *f_call, symbol_c *f_de
 
 /* a helper function... */
 symbol_c *visit_expression_type_c::base_type(symbol_c *symbol) {
+  /* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used
+   *       in the code.
+   */
+  if (symbol == NULL) return NULL;
   return (symbol_c *)symbol->accept(search_base_type);
 }
 
@@ -566,10 +895,10 @@ symbol_c *visit_expression_type_c::base_type(symbol_c *symbol) {
 /* a helper function... */
 void *visit_expression_type_c::verify_null(symbol_c *symbol){
   if(il_default_variable_type == NULL){
-    STAGE3_ERROR(symbol, symbol, "Il default variable can't be NULL.");
+    STAGE3_ERROR(symbol, symbol, "Missing LD instruction (or equivalent) before this instruction.");
   }
   if(il_operand_type == NULL){
-    STAGE3_ERROR(symbol, symbol, "function requires an operand.");
+    STAGE3_ERROR(symbol, symbol, "This instruction requires an operand.");
   }
   return NULL;
 }
@@ -642,6 +971,7 @@ void *visit_expression_type_c::visit(il_simple_operation_c *symbol) {
     return NULL;
 
   /* determine the data type of the operand */
+  il_operand = symbol->il_operand;
   if (symbol->il_operand != NULL){
     il_operand_type = base_type((symbol_c *)symbol->il_operand->accept(*this));
   } else {
@@ -651,6 +981,7 @@ void *visit_expression_type_c::visit(il_simple_operation_c *symbol) {
   symbol->il_simple_operator->accept(*this);
 
   il_operand_type = NULL;
+  il_operand = NULL;
   return NULL;
 }
 
@@ -739,16 +1070,18 @@ void *visit_expression_type_c::visit(il_expression_c *symbol) {
   il_parenthesis_level--;
   if (il_parenthesis_level < 0) ERROR;
 
+  il_operand = symbol->simple_instr_list;
   il_operand_type = il_default_variable_type;
   il_default_variable_type = il_default_variable_type_back;
 
   /* Now check the if the data type semantics of operation are correct,
    * but only if no previous error has been found...
    */
-  if (il_error)
-    return NULL;
-  symbol->il_expr_operator->accept(*this);
+  if (!il_error)
+    symbol->il_expr_operator->accept(*this);
 
+  il_operand_type = NULL;
+  il_operand = NULL;
   return NULL;
 }
 
@@ -929,8 +1262,8 @@ void *visit_expression_type_c::visit(LD_operator_c *symbol) {
 void *visit_expression_type_c::visit(LDN_operator_c *symbol) {
   if(il_operand_type == NULL)
       STAGE3_ERROR(symbol, symbol, "LDN operator requires an operand.");
-  if(!is_ANY_BIT_type(il_operand_type))
-      STAGE3_ERROR(symbol, symbol, "invalid data type of LDN operand, should be of type ANY_BIT.");
+  if(!is_ANY_BIT_compatible(il_operand_type))
+      STAGE3_ERROR(symbol, il_operand, "invalid data type of LDN operand, should be of type ANY_BIT.");
   il_default_variable_type = il_operand_type;
   return NULL;
 }
@@ -938,7 +1271,8 @@ void *visit_expression_type_c::visit(LDN_operator_c *symbol) {
 // SYM_REF0(ST_operator_c)
 void *visit_expression_type_c::visit(ST_operator_c *symbol) {
   verify_null(symbol);
-  if(!is_compatible_type(il_default_variable_type, il_operand_type))
+
+  if(!is_valid_assignment(il_operand_type, il_default_variable_type))
     STAGE3_ERROR(symbol, symbol, "Type mismatch in ST operation.");
   /* TODO: check whether il_operand_type is an LVALUE !! */
   /* data type of il_default_variable_type is unchanged... */
@@ -949,13 +1283,13 @@ void *visit_expression_type_c::visit(ST_operator_c *symbol) {
 // SYM_REF0(STN_operator_c)
  void *visit_expression_type_c::visit(STN_operator_c *symbol) {
   verify_null(symbol);
-  if(!is_compatible_type(il_default_variable_type, il_operand_type))
+  if(!is_valid_assignment(il_operand_type, il_default_variable_type))
     STAGE3_ERROR(symbol, symbol, "Type mismatch in ST operation.");
   /* TODO: check whether il_operand_type is an LVALUE !! */
-  if(!is_ANY_BIT_type(il_default_variable_type))
+  if(!is_ANY_BIT_compatible(il_default_variable_type))
       STAGE3_ERROR(symbol, symbol, "invalid data type of il_default_variable for STN operand, should be of type ANY_BIT.");
-  if(!is_ANY_BIT_type(il_operand_type))
-      STAGE3_ERROR(symbol, symbol, "invalid data type of STN operand, should be of type ANY_BIT.");
+  if(!is_ANY_BIT_compatible(il_operand_type))
+      STAGE3_ERROR(symbol, il_operand, "invalid data type of STN operand, should be of type ANY_BIT.");
   /* data type of il_default_variable_type is unchanged... */
   // il_default_variable_type = il_default_variable_type;
   return NULL;
@@ -964,14 +1298,14 @@ void *visit_expression_type_c::visit(ST_operator_c *symbol) {
 //SYM_REF0(NOT_operator_c)
 void *visit_expression_type_c::visit(NOT_operator_c *symbol) {
   if(il_operand_type != NULL){
-    STAGE3_ERROR(symbol, symbol, "NOT operator may not have an operand.");
+    STAGE3_ERROR(symbol, il_operand, "NOT operator may not have an operand.");
     return NULL;
   }
   if(il_default_variable_type == NULL) {
     STAGE3_ERROR(symbol, symbol, "Il default variable should not be NULL.");
     return NULL;
   }
-  if(!is_ANY_BIT_type(il_default_variable_type)) {
+  if(!is_ANY_BIT_compatible(il_default_variable_type)) {
     STAGE3_ERROR(symbol, symbol, "Il default variable should be of type ANY_BIT.");
     return NULL;
   }
@@ -984,7 +1318,7 @@ void *visit_expression_type_c::visit(NOT_operator_c *symbol) {
 void *visit_expression_type_c::visit(S_operator_c *symbol) {
   verify_null(symbol);
   if (!is_BOOL_type(il_default_variable_type)) {STAGE3_ERROR(symbol, symbol, "IL default variable should be BOOL type.");}
-  if (!is_BOOL_type(il_operand_type)) {STAGE3_ERROR(symbol, symbol, "operator S requires operand of type BOOL.");}
+  if (!is_BOOL_type(il_operand_type)) {STAGE3_ERROR(symbol, il_operand, "operator S requires operand of type BOOL.");}
   /* TODO: check whether il_operand_type is an LVALUE !! */
   /* data type of il_default_variable_type is unchanged... */
   // il_default_variable_type = il_default_variable_type;
@@ -995,7 +1329,7 @@ void *visit_expression_type_c::visit(S_operator_c *symbol) {
 void *visit_expression_type_c::visit(R_operator_c *symbol) {
   verify_null(symbol);
   if (!is_BOOL_type(il_default_variable_type)) {STAGE3_ERROR(symbol, symbol, "IL default variable should be BOOL type.");}
-  if (!is_BOOL_type(il_operand_type)) {STAGE3_ERROR(symbol, symbol, "operator R requires operand of type BOOL.");}
+  if (!is_BOOL_type(il_operand_type)) {STAGE3_ERROR(symbol, il_operand, "operator R requires operand of type BOOL.");}
   /* TODO: check whether il_operand_type is an LVALUE !! */
   /* data type of il_default_variable_type is unchanged... */
   // il_default_variable_type = il_default_variable_type;
@@ -1054,42 +1388,48 @@ void *visit_expression_type_c::visit(PT_operator_c *symbol) {
 //SYM_REF0(AND_operator_c)
 void *visit_expression_type_c::visit(AND_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_boolean_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_type);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
 //SYM_REF0(OR_operator_c)
 void *visit_expression_type_c::visit(OR_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_boolean_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_type);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
 //SYM_REF0(XOR_operator_c)
 void *visit_expression_type_c::visit(XOR_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_boolean_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_type);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
 // SYM_REF0(ANDN_operator_c)
 void *visit_expression_type_c::visit(ANDN_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_boolean_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_type);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
 // SYM_REF0(ORN_operator_c)
 void *visit_expression_type_c::visit(ORN_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_boolean_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_type);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
 // SYM_REF0(XORN_operator_c)
 void *visit_expression_type_c::visit(XORN_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_boolean_expression(il_default_variable_type,  il_operand_type, &visit_expression_type_c::is_ANY_BIT_type);
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_BIT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
@@ -1098,13 +1438,33 @@ void *visit_expression_type_c::visit(ADD_operator_c *symbol) {
   verify_null(symbol);
   symbol_c *left_type  = il_default_variable_type;
   symbol_c *right_type = il_operand_type;
-  if      (typeid(*left_type) == typeid(time_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) 
+
+/* The following is not required, it is already handled by compute_expression() ... */
+/*
+  if      (is_type(left_type, time_type_name_c) && is_type(right_type, time_type_name_c))
     il_default_variable_type = &time_type_name;
-  else if (typeid(*left_type) == typeid(tod_type_name_c)  && typeid(*right_type) == typeid(time_type_name_c)) 
+*/
+
+  if      (is_type(left_type, tod_type_name_c)      && is_type(right_type, time_type_name_c))
     il_default_variable_type = &tod_type_name;
-  else if (typeid(*left_type) == typeid(dt_type_name_c)   && typeid(*right_type) == typeid(time_type_name_c)) 
+  else if (is_type(left_type, safetod_type_name_c)  && is_type(right_type, time_type_name_c))
+    il_default_variable_type = &tod_type_name;
+  else if (is_type(left_type, tod_type_name_c)      && is_type(right_type, safetime_type_name_c))
+    il_default_variable_type = &tod_type_name;
+  else if (is_type(left_type, safetod_type_name_c)  && is_type(right_type, safetime_type_name_c))
+    il_default_variable_type = &safetod_type_name;
+
+  else if (is_type(left_type, dt_type_name_c)       && is_type(right_type, time_type_name_c))
     il_default_variable_type = &dt_type_name;
-  else il_default_variable_type = compute_numeric_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_MAGNITUDE_type);
+  else if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, time_type_name_c))
+    il_default_variable_type = &dt_type_name;
+  else if (is_type(left_type, dt_type_name_c)       && is_type(right_type, safetime_type_name_c))
+    il_default_variable_type = &dt_type_name;
+  else if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, safetime_type_name_c))
+    il_default_variable_type = &safedt_type_name;
+
+  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible,
+                                                     symbol                  , il_operand);
   return NULL;
 }
 
@@ -1113,19 +1473,60 @@ void *visit_expression_type_c::visit(SUB_operator_c *symbol) {
   verify_null(symbol);
   symbol_c *left_type = il_default_variable_type;
   symbol_c *right_type = il_operand_type;;
+
+/* The following is not required, it is already handled by compute_expression() ... */
+/*
   if      (typeid(*left_type) == typeid(time_type_name_c) && typeid(*right_type) == typeid(time_type_name_c))
     il_default_variable_type = &time_type_name;
-  else if (typeid(*left_type) == typeid(date_type_name_c) && typeid(*right_type) == typeid(date_type_name_c))
-    il_default_variable_type = &time_type_name;
-  else if (typeid(*left_type) == typeid(tod_type_name_c)  && typeid(*right_type) == typeid(time_type_name_c))
+*/
+
+  if      (is_type(left_type, tod_type_name_c)       && is_type(right_type, time_type_name_c))
     il_default_variable_type = &tod_type_name;
-  else if (typeid(*left_type) == typeid(tod_type_name_c)  && typeid(*right_type) == typeid(tod_type_name_c))
-    il_default_variable_type = &time_type_name;
-  else if (typeid(*left_type) == typeid(dt_type_name_c)   && typeid(*right_type) == typeid(time_type_name_c))
+  else if (is_type(left_type, safetod_type_name_c)   && is_type(right_type, time_type_name_c))
+    il_default_variable_type = &tod_type_name;
+  else if (is_type(left_type, tod_type_name_c)       && is_type(right_type, safetime_type_name_c))
+    il_default_variable_type = &tod_type_name;
+  else if (is_type(left_type, safetod_type_name_c)   && is_type(right_type, safetime_type_name_c))
+    il_default_variable_type = &safetod_type_name;
+
+  else if (is_type(left_type, dt_type_name_c)       && is_type(right_type, time_type_name_c))
     il_default_variable_type = &dt_type_name;
-  else if (typeid(*left_type) == typeid(dt_type_name_c)   && typeid(*right_type) == typeid(dt_type_name_c))
+  else if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, time_type_name_c))
+    il_default_variable_type = &dt_type_name;
+  else if (is_type(left_type, dt_type_name_c)       && is_type(right_type, safetime_type_name_c))
+    il_default_variable_type = &dt_type_name;
+  else if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, safetime_type_name_c))
+    il_default_variable_type = &safedt_type_name;
+
+  else if (is_type(left_type, date_type_name_c)     && is_type(right_type, date_type_name_c))
     il_default_variable_type = &time_type_name;
-  else il_default_variable_type = compute_numeric_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_MAGNITUDE_type);
+  else if (is_type(left_type, safedate_type_name_c) && is_type(right_type, date_type_name_c))
+    il_default_variable_type = &time_type_name;
+  else if (is_type(left_type, date_type_name_c)     && is_type(right_type, safedate_type_name_c))
+    il_default_variable_type = &time_type_name;
+  else if (is_type(left_type, safedate_type_name_c) && is_type(right_type, safedate_type_name_c))
+    il_default_variable_type = &safetime_type_name;
+
+  else if (is_type(left_type, tod_type_name_c)      && is_type(right_type, tod_type_name_c))
+    il_default_variable_type = &time_type_name;
+  else if (is_type(left_type, safetod_type_name_c)  && is_type(right_type, tod_type_name_c))
+    il_default_variable_type = &time_type_name;
+  else if (is_type(left_type, tod_type_name_c)      && is_type(right_type, safetod_type_name_c))
+    il_default_variable_type = &time_type_name;
+  else if (is_type(left_type, safetod_type_name_c)  && is_type(right_type, safetod_type_name_c))
+    il_default_variable_type = &safetime_type_name;
+
+  else if (is_type(left_type, dt_type_name_c)       && is_type(right_type, dt_type_name_c))
+    il_default_variable_type = &time_type_name;
+  else if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, dt_type_name_c))
+    il_default_variable_type = &time_type_name;
+  else if (is_type(left_type, dt_type_name_c)       && is_type(right_type, safedt_type_name_c))
+    il_default_variable_type = &time_type_name;
+  else if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, safedt_type_name_c))
+    il_default_variable_type = &safetime_type_name;
+
+  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible,
+                                                     symbol                  , il_operand);
   return NULL;
 }
 
@@ -1134,9 +1535,21 @@ void *visit_expression_type_c::visit(MUL_operator_c *symbol) {
   verify_null(symbol);
   symbol_c *left_type = il_default_variable_type;
   symbol_c *right_type = il_operand_type;
-  if (typeid(*left_type) == typeid(time_type_name_c) && is_ANY_NUM_type(right_type))
+
+  if      (is_type(left_type, time_type_name_c)     && is_ANY_NUM_compatible(right_type))
     il_default_variable_type = &time_type_name;
-  else il_default_variable_type = compute_numeric_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_NUM_type);
+  else if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_type(right_type))
+    il_default_variable_type = &time_type_name;
+  else if (is_type(left_type, safetime_type_name_c) && is_ANY_SAFENUM_type(right_type))
+    il_default_variable_type = &safetime_type_name;
+  /* Since we have already checked for ANY_NUM_type and ANY_SAFENUM_type in the previous lines,
+   * this next line is really only to check for integers/reals of undefined type on 'right_type'... 
+   */
+  else if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_compatible(right_type))
+    il_default_variable_type = &safetime_type_name;
+
+  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_NUM_compatible,
+                                                     symbol                  , il_operand);
   return NULL;
 }
 
@@ -1145,23 +1558,36 @@ void *visit_expression_type_c::visit(DIV_operator_c *symbol) {
   verify_null(symbol);
   symbol_c *left_type = il_default_variable_type;
   symbol_c *right_type = il_operand_type;
-  if (typeid(*left_type) == typeid(time_type_name_c) && is_ANY_NUM_type(right_type))
+
+  if      (is_type(left_type, time_type_name_c)     && is_ANY_NUM_compatible(right_type))
     il_default_variable_type = &time_type_name;
-  else il_default_variable_type = compute_numeric_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_NUM_type);
+  else if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_type(right_type))
+    il_default_variable_type = &time_type_name;
+  else if (is_type(left_type, safetime_type_name_c) && is_ANY_SAFENUM_type(right_type))
+    il_default_variable_type = &safetime_type_name;
+  /* Since we have already checked for ANY_NUM_type and ANY_SAFENUM_type in the previous lines,
+   * this next line is really only to check for integers/reals of undefined type on 'right_type'... 
+   */
+  else if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_compatible(right_type))
+    il_default_variable_type = &safetime_type_name;
+
+  else il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_NUM_compatible,
+                                                     symbol                  , il_operand);
   return NULL;
 }
 
 // SYM_REF0(MOD_operator_c)
 void *visit_expression_type_c::visit(MOD_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_numeric_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_INT_type); 
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_INT_compatible); 
   return NULL;
 }
 
 // SYM_REF0(GT_operator_c)
 void *visit_expression_type_c::visit(GT_operator_c *symbol) {
   verify_null(symbol);
-  compute_boolean_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1169,7 +1595,8 @@ void *visit_expression_type_c::visit(GT_operator_c *symbol) {
 //SYM_REF0(GE_operator_c)
 void *visit_expression_type_c::visit(GE_operator_c *symbol) {
   verify_null(symbol);
-  compute_boolean_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1177,7 +1604,8 @@ void *visit_expression_type_c::visit(GE_operator_c *symbol) {
 //SYM_REF0(EQ_operator_c)
 void *visit_expression_type_c::visit(EQ_operator_c *symbol) {
   verify_null(symbol);
-  compute_boolean_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1185,7 +1613,8 @@ void *visit_expression_type_c::visit(EQ_operator_c *symbol) {
 //SYM_REF0(LT_operator_c)
 void *visit_expression_type_c::visit(LT_operator_c *symbol) {
   verify_null(symbol);
-  compute_boolean_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1193,7 +1622,8 @@ void *visit_expression_type_c::visit(LT_operator_c *symbol) {
 //SYM_REF0(LE_operator_c)
 void *visit_expression_type_c::visit(LE_operator_c *symbol) {
   verify_null(symbol);
-  compute_boolean_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1201,7 +1631,8 @@ void *visit_expression_type_c::visit(LE_operator_c *symbol) {
 //SYM_REF0(NE_operator_c)
 void *visit_expression_type_c::visit(NE_operator_c *symbol) {
   verify_null(symbol);
-  compute_boolean_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible,
+                     symbol                  , il_operand);
   il_default_variable_type = &search_expression_type_c::bool_type_name;
   return NULL;
 }
@@ -1299,28 +1730,28 @@ void *visit_expression_type_c::visit(JMPCN_operator_c *symbol) {
 void *visit_expression_type_c::visit(or_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_boolean_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_type);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible);
 }
 
 
 void *visit_expression_type_c::visit(xor_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_boolean_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_type);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible);
 }
 
 
 void *visit_expression_type_c::visit(and_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_boolean_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_type);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible);
 }
 
 
 void *visit_expression_type_c::visit(equ_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_boolean_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1328,7 +1759,7 @@ void *visit_expression_type_c::visit(equ_expression_c *symbol) {
 void *visit_expression_type_c::visit(notequ_expression_c *symbol)  {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_boolean_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1336,7 +1767,7 @@ void *visit_expression_type_c::visit(notequ_expression_c *symbol)  {
 void *visit_expression_type_c::visit(lt_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_boolean_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1344,7 +1775,7 @@ void *visit_expression_type_c::visit(lt_expression_c *symbol) {
 void *visit_expression_type_c::visit(gt_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_boolean_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1352,7 +1783,7 @@ void *visit_expression_type_c::visit(gt_expression_c *symbol) {
 void *visit_expression_type_c::visit(le_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_boolean_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1360,7 +1791,7 @@ void *visit_expression_type_c::visit(le_expression_c *symbol) {
 void *visit_expression_type_c::visit(ge_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_boolean_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_type);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1368,55 +1799,147 @@ void *visit_expression_type_c::visit(ge_expression_c *symbol) {
 void *visit_expression_type_c::visit(add_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  if (typeid(*left_type) == typeid(time_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) {return (void *)&time_type_name;}
-  if (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) {return (void *)&tod_type_name;}
-  if (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) {return (void *)&dt_type_name;}
-  return compute_numeric_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_type);
+
+/* The following is already checked in compute_expression */
+/*
+  if (is_type(left_type, time_type_name_c) && is_type(right_type, time_type_name_c)) 
+    return (void *)&time_type_name;
+*/
+
+  if (is_type(left_type, tod_type_name_c)      && is_type(right_type, time_type_name_c)) 
+    return (void *)&tod_type_name;
+  if (is_type(left_type, safetod_type_name_c)  && is_type(right_type, time_type_name_c)) 
+    return (void *)&tod_type_name;
+  if (is_type(left_type, tod_type_name_c)      && is_type(right_type, safetime_type_name_c)) 
+    return (void *)&tod_type_name;
+  if (is_type(left_type, safetod_type_name_c)  && is_type(right_type, safetime_type_name_c)) 
+    return (void *)&safetod_type_name;
+
+  if (is_type(left_type, dt_type_name_c)       && is_type(right_type, time_type_name_c)) 
+    return (void *)&dt_type_name;
+  if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, time_type_name_c)) 
+    return (void *)&dt_type_name;
+  if (is_type(left_type, dt_type_name_c)       && is_type(right_type, safetime_type_name_c)) 
+    return (void *)&dt_type_name;
+  if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, safetime_type_name_c)) 
+    return (void *)&safedt_type_name;
+
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible);
 }
 
 
 void *visit_expression_type_c::visit(sub_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  if (typeid(*left_type) == typeid(time_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) {return (void *)&time_type_name;}
-  if (typeid(*left_type) == typeid(date_type_name_c) && typeid(*right_type) == typeid(date_type_name_c)) {return (void *)&time_type_name;}
-  if (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) {return (void *)&tod_type_name;}
-  if (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(tod_type_name_c)) {return (void *)&time_type_name;}
-  if (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) {return (void *)&dt_type_name;}
-  if (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(dt_type_name_c)) {return (void *)&time_type_name;}
-  return compute_numeric_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_type);
+
+/* The following is already checked in compute_expression */
+/*
+  if (is_type(left_type, time_type_name_c) && is_type(right_type, time_type_name_c))
+    return (void *)&time_type_name;
+*/
+
+  if (is_type(left_type, tod_type_name_c)     && is_type(right_type, time_type_name_c))
+    return (void *)&tod_type_name;
+  if (is_type(left_type, safetod_type_name_c) && is_type(right_type, time_type_name_c))
+    return (void *)&tod_type_name;
+  if (is_type(left_type, tod_type_name_c)     && is_type(right_type, safetime_type_name_c))
+    return (void *)&tod_type_name;
+  if (is_type(left_type, safetod_type_name_c) && is_type(right_type, safetime_type_name_c))
+    return (void *)&safetod_type_name;
+
+  if (is_type(left_type, dt_type_name_c)     && is_type(right_type, time_type_name_c))
+    return (void *)&dt_type_name;
+  if (is_type(left_type, safedt_type_name_c) && is_type(right_type, time_type_name_c))
+    return (void *)&dt_type_name;
+  if (is_type(left_type, dt_type_name_c)     && is_type(right_type, safetime_type_name_c))
+    return (void *)&dt_type_name;
+  if (is_type(left_type, safedt_type_name_c) && is_type(right_type, safetime_type_name_c))
+    return (void *)&safedt_type_name;
+
+  if (is_type(left_type, tod_type_name_c)     && is_type(right_type, tod_type_name_c))
+    return (void *)&time_type_name;
+  if (is_type(left_type, safetod_type_name_c) && is_type(right_type, tod_type_name_c))
+    return (void *)&time_type_name;
+  if (is_type(left_type, tod_type_name_c)     && is_type(right_type, safetod_type_name_c))
+    return (void *)&time_type_name;
+  if (is_type(left_type, safetod_type_name_c) && is_type(right_type, safetod_type_name_c))
+    return (void *)&safetime_type_name;
+
+  if (is_type(left_type, date_type_name_c)     && is_type(right_type, date_type_name_c))
+    return (void *)&time_type_name;
+  if (is_type(left_type, safedate_type_name_c) && is_type(right_type, date_type_name_c))
+    return (void *)&time_type_name;
+  if (is_type(left_type, date_type_name_c)     && is_type(right_type, safedate_type_name_c))
+    return (void *)&time_type_name;
+  if (is_type(left_type, safedate_type_name_c) && is_type(right_type, safedate_type_name_c))
+    return (void *)&safetime_type_name;
+
+  if (is_type(left_type, dt_type_name_c)     && is_type(right_type, dt_type_name_c))
+    return (void *)&time_type_name;
+  if (is_type(left_type, safedt_type_name_c) && is_type(right_type, dt_type_name_c))
+    return (void *)&time_type_name;
+  if (is_type(left_type, dt_type_name_c)     && is_type(right_type, safedt_type_name_c))
+    return (void *)&time_type_name;
+  if (is_type(left_type, safedt_type_name_c) && is_type(right_type, safedt_type_name_c))
+    return (void *)&safetime_type_name;
+
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible);
 }
 
 
 void *visit_expression_type_c::visit(mul_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  if (typeid(*left_type) == typeid(time_type_name_c) && is_ANY_NUM_type(right_type)) {return (void *)&time_type_name;}
-  return compute_numeric_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_type);
+
+  if (is_type(left_type, time_type_name_c)     && is_ANY_NUM_compatible(right_type)) 
+    return (void *)&time_type_name;
+  if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_type(right_type)) 
+    return (void *)&time_type_name;
+  if (is_type(left_type, safetime_type_name_c) && is_ANY_SAFENUM_type(right_type)) 
+    return (void *)&safetime_type_name;
+  /* Since we have already checked for ANY_NUM_type and ANY_SAFENUM_type in the previous lines,
+   * this next line is really only to check for integers/reals of undefined type on 'right_type'... 
+   */
+  if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_compatible(right_type)) 
+    return (void *)&safetime_type_name;
+
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_compatible);
 }
 
 
 void *visit_expression_type_c::visit(div_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  if (typeid(*left_type) == typeid(time_type_name_c) && is_ANY_NUM_type(right_type)){return (void *)&time_type_name;}
-  return compute_numeric_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_type);
+
+  if (is_type(left_type, time_type_name_c)     && is_ANY_NUM_compatible(right_type)) 
+    return (void *)&time_type_name;
+  if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_type(right_type)) 
+    return (void *)&time_type_name;
+  if (is_type(left_type, safetime_type_name_c) && is_ANY_SAFENUM_type(right_type)) 
+    return (void *)&safetime_type_name;
+  /* Since we have already checked for ANY_NUM_type and ANY_SAFENUM_type in the previous lines,
+   * this next line is really only to check for integers/reals of undefined type on 'right_type'... 
+   */
+  if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_compatible(right_type)) 
+    return (void *)&safetime_type_name;
+
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_compatible);
 }
 
 
 void *visit_expression_type_c::visit(mod_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_numeric_expression(left_type, right_type, &visit_expression_type_c::is_ANY_INT_type);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_INT_compatible);
 }
 
 
 void *visit_expression_type_c::visit(power_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  if (!is_ANY_REAL_type(left_type))
+  if (!is_ANY_REAL_compatible(left_type))
     STAGE3_ERROR(symbol->l_exp, symbol->l_exp, "first operand of ** operator has invalid data type, should be of type ANY_REAL.");
-  if (!is_ANY_NUM_type(right_type))
+  if (!is_ANY_NUM_compatible(right_type))
     STAGE3_ERROR(symbol->r_exp, symbol->r_exp, "second operand of ** operator has invalid data type, should be of type ANY_NUM.");
 
   return (void *)left_type;
@@ -1425,7 +1948,7 @@ void *visit_expression_type_c::visit(power_expression_c *symbol) {
 
 void *visit_expression_type_c::visit(neg_expression_c *symbol) {
   symbol_c *exp_type = base_type((symbol_c *)symbol->exp->accept(*this));
-  if (!is_ANY_MAGNITUDE_type(exp_type))
+  if (!is_ANY_MAGNITUDE_compatible(exp_type))
     STAGE3_ERROR(symbol, symbol, "operand of negate expression '-' has invalid data type, should be of type ANY_MAGNITUDE.");
 
   return exp_type;
@@ -1434,7 +1957,7 @@ void *visit_expression_type_c::visit(neg_expression_c *symbol) {
 
 void *visit_expression_type_c::visit(not_expression_c *symbol) {
   symbol_c *type = base_type((symbol_c *)symbol->exp->accept(*this));
-  return compute_boolean_expression(type, type, &visit_expression_type_c::is_ANY_BIT_type);
+  return compute_expression(type, type, &visit_expression_type_c::is_ANY_BIT_compatible);
 }
 
 
@@ -1475,7 +1998,7 @@ void *visit_expression_type_c::visit(assignment_statement_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
 
-  if (!is_compatible_type(left_type, right_type))  {
+  if (!is_valid_assignment(left_type, right_type))  {
      STAGE3_ERROR(symbol, symbol, "data type mismatch in assignment statement!\n");
   }
   return NULL;
@@ -1536,7 +2059,7 @@ SYM_REF0(not_paramassign_c)
 // SYM_REF4(if_statement_c, expression, statement_list, elseif_statement_list, else_statement_list)
 void *visit_expression_type_c::visit(if_statement_c *symbol) {
   symbol_c *expr_type = base_type((symbol_c*)symbol->expression->accept(*this));
-  if (!is_BOOL_type(expr_type)) STAGE3_ERROR(symbol,symbol,"IF conditional expression is not of boolean type.");
+  if (!is_BOOL_type(expr_type)) STAGE3_ERROR(symbol->expression,symbol->expression,"IF conditional expression is not of boolean type.");
   if (NULL != symbol->statement_list)
     symbol->statement_list->accept(*this); 
   if (NULL != symbol->elseif_statement_list)  
@@ -1555,7 +2078,7 @@ void *visit_expression_type_c::visit(if_statement_c *symbol) {
 // SYM_REF2(elseif_statement_c, expression, statement_list)
 void *visit_expression_type_c::visit(elseif_statement_c *symbol) {
   symbol_c *elseif_expr_type = base_type((symbol_c*)symbol->expression->accept(*this));
-  if(!is_BOOL_type(elseif_expr_type)) STAGE3_ERROR(symbol,symbol,"ELSIF conditional expression is not of boolean type.");
+  if(!is_BOOL_type(elseif_expr_type)) STAGE3_ERROR(symbol->expression,symbol->expression,"ELSIF conditional expression is not of boolean type.");
   if (NULL != symbol->statement_list)
     symbol->statement_list->accept(*this); 
   return NULL;
@@ -1595,6 +2118,7 @@ void *visit_expression_type_c::visit(case_list_c *symbol) {
     } else {
       element_type = base_type(element_type);
       if (NULL != element_type){
+        /* The CASE value is only used for comparison (and not assingment), so we only check for compatibility! */ 
         if (!is_compatible_type(case_expression_type, element_type))
           STAGE3_ERROR(symbol->elements[i], symbol->elements[i], "Invalid data type of case list element.");
       }
@@ -1616,22 +2140,25 @@ void *visit_expression_type_c::visit(for_statement_c *symbol) {
   if (NULL == var_type) ERROR;
   // ASSIGN
   symbol_c *beg_expr_type = base_type((symbol_c*)symbol->beg_expression->accept(*this));
-  if (NULL != beg_expr_type) { 
-    if(!is_compatible_type(var_type,beg_expr_type)) 
-      STAGE3_ERROR(symbol, symbol, "Data type mismatch between control variable and initial value.");
+  if (NULL != beg_expr_type) {
+    /* The BEG value is assigned to the variable, so we check for assignment validity! */ 
+    if(!is_valid_assignment(var_type, beg_expr_type)) 
+      STAGE3_ERROR(symbol->beg_expression, symbol->beg_expression, "Data type mismatch between control variable and initial value.");
   }
   // TO
   symbol_c *end_expr_type = base_type((symbol_c*)symbol->end_expression->accept(*this));
   if (NULL != end_expr_type) { 
-    if(!is_compatible_type(var_type,end_expr_type)) 
-      STAGE3_ERROR(symbol, symbol, "Data type mismatch between control variable and final value.");
+    /* The TO value is only used for comparison, so we only check for compatibility! */ 
+    if(!is_compatible_type(var_type, end_expr_type)) 
+      STAGE3_ERROR(symbol->end_expression, symbol->end_expression, "Data type mismatch between control variable and final value.");
   }
   // BY
   if(symbol->by_expression != NULL) {
     symbol_c *by_expr_type = base_type((symbol_c*)symbol->by_expression->accept(*this));
     if (NULL != end_expr_type) {   
-      if(!is_compatible_type(var_type,by_expr_type)) 
-        STAGE3_ERROR(symbol, symbol, "Data type mismatch between control variable and BY value.");
+      /* The BY value is used in an expression (add, sub, ...), so we only check for compatibility! */ 
+      if(!is_compatible_type(var_type, by_expr_type)) 
+        STAGE3_ERROR(symbol->by_expression, symbol->by_expression, "Data type mismatch between control variable and BY value.");
     }
   }
   // DO
@@ -1647,7 +2174,7 @@ void *visit_expression_type_c::visit(while_statement_c *symbol) {
   symbol_c *expr_type = base_type((symbol_c*)symbol->expression->accept(*this));
   if (NULL != expr_type) {
     if(!is_BOOL_type(expr_type)) 
-      STAGE3_ERROR(symbol,symbol,"WHILE conditional expression is not of boolean type.");
+      STAGE3_ERROR(symbol->expression,symbol->expression,"WHILE conditional expression is not of boolean type.");
   }
  
   if (NULL != symbol->statement_list)
@@ -1664,7 +2191,7 @@ void *visit_expression_type_c::visit(repeat_statement_c *symbol) {
   symbol_c *expr_type = base_type((symbol_c*)symbol->expression->accept(*this));
   if (NULL != expr_type) {
     if(!is_BOOL_type(expr_type)) 
-      STAGE3_ERROR(symbol,symbol,"REPEAT conditional expression is not of boolean type.");
+      STAGE3_ERROR(symbol->expression,symbol->expression,"REPEAT conditional expression is not of boolean type.");
   }
   return NULL;
 }

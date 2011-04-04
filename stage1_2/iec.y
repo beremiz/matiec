@@ -1,21 +1,28 @@
 /*
- * (c) 2003-2007 Mario de Sousa
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
 
 /*
- * An IEC 61131-3 IL, ST and SFC compiler.
+ * An IEC 61131-3 compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
@@ -283,10 +290,25 @@ void print_err_msg(int first_line,
 /* B XXX - Things that are missing from the standard, but should have been there! */
 /**********************************************************************************/
 
+/* Pragmas that our compiler will accept.
+ * See the comment in iec.flex for why these pragmas exist. 
+ */
+%token          disable_code_generation_pragma_token
+%token          enable_code_generation_pragma_token
+%type <leaf>	disable_code_generation_pragma
+%type <leaf>	enable_code_generation_pragma
 
-/* The pragmas... */
+
+/* All other pragmas that we do not support... */
+/* In most stage 4, the text inside the pragmas will simply be copied to the output file.
+ * This allows us to insert C code (if using stage 4 generating C code) 
+ * inside/interningled with the IEC 61131-3 code!
+ */
 %token <ID>	pragma_token
 %type <leaf>	pragma
+
+/* The joining of all previous pragmas, i.e. any possible pragma */
+%type <leaf>	any_pragma
 
 
 /* Where do these tokens belong?? They are missing from the standard! */
@@ -326,9 +348,7 @@ void print_err_msg(int first_line,
 /* B 1.2 - Constants */
 /*********************/
 %type <leaf>	constant
-/* a helper symbol for expression */
-%type  <leaf> non_negative_constant
-
+%type <leaf>	non_negative_constant
 
 /******************************/
 /* B 1.2.1 - Numeric Literals */
@@ -337,12 +357,8 @@ void print_err_msg(int first_line,
   bit
 */
 %type  <leaf> numeric_literal
-/* helper symbol for non_negative_constant */
-%type  <leaf> non_negative_numeric_literal
 %type  <leaf> integer_literal
 %type  <leaf> signed_integer
-/* a helper symbol for non_negative_constant */
-%type  <leaf> non_negative_signed_integer
 %token <ID>   integer_token
 %type  <leaf> integer
 %token <ID>   binary_integer_token
@@ -354,14 +370,15 @@ void print_err_msg(int first_line,
 %token <ID>   real_token
 %type  <leaf> real
 %type  <leaf> signed_real
-/* helper symbol for non_negative_real_literal */
-%type  <leaf> non_negative_signed_real
 %type  <leaf> real_literal
-/* helper symbol for non_negative_numeric_literal */
-%type  <leaf> non_negative_real_literal
 // %type  <leaf> exponent
 %type  <leaf> bit_string_literal
 %type  <leaf> boolean_literal
+
+%token safeboolean_true_literal_token
+%token safeboolean_false_literal_token
+%token boolean_true_literal_token
+%token boolean_false_literal_token
 
 %token FALSE
 %token TRUE
@@ -419,7 +436,7 @@ void print_err_msg(int first_line,
 %token <ID>	fixed_point_ms_token
 %token <ID>	integer_ms_token
 
-%token TIME
+// %token TIME
 %token T_SHARP
 
 
@@ -438,10 +455,10 @@ void print_err_msg(int first_line,
 %type  <leaf>	day
 %type  <leaf>	date_and_time
 
-%token TIME_OF_DAY
-%token DATE
+// %token TIME_OF_DAY
+// %token DATE
 %token D_SHARP
-%token DATE_AND_TIME
+// %token DATE_AND_TIME
 
 
 /**********************/
@@ -522,13 +539,49 @@ void print_err_msg(int first_line,
 %token STRING
 %token BOOL
 
-// %token TIME
-// %token DATE
-// %token DATE_AND_TIME
+%token TIME
+%token DATE
+%token DATE_AND_TIME
 %token DT
-// %token TIME_OF_DAY
+%token TIME_OF_DAY
 %token TOD
 
+/******************************************************/
+/* Symbols defined in                                 */
+/* "Safety Software Technical Specification,          */
+/*  Part 1: Concepts and Function Blocks,             */
+/*  Version 1.0 – Official Release"                   */
+/* by PLCopen - Technical Committee 5 - 2006-01-31    */
+/******************************************************/
+
+%token SAFEBYTE
+%token SAFEWORD
+%token SAFEDWORD
+%token SAFELWORD
+
+%token SAFELREAL
+%token SAFEREAL
+
+%token SAFESINT
+%token SAFEINT
+%token SAFEDINT
+%token SAFELINT
+
+%token SAFEUSINT
+%token SAFEUINT
+%token SAFEUDINT
+%token SAFEULINT
+
+%token SAFEWSTRING
+%token SAFESTRING
+%token SAFEBOOL
+
+%token SAFETIME
+%token SAFEDATE
+%token SAFEDATE_AND_TIME
+%token SAFEDT
+%token SAFETIME_OF_DAY
+%token SAFETOD
 
 /********************************/
 /* B 1.3.2 - Generic data types */
@@ -1168,6 +1221,7 @@ void print_err_msg(int first_line,
 %type  <leaf>	unary_expression
 // %type  <leaf>	unary_operator
 %type  <leaf>	primary_expression
+%type  <leaf>	non_negative_primary_expression
 /* intermediate helper symbol for primary_expression */
 %type  <leaf>	function_invocation
 
@@ -1274,15 +1328,6 @@ void print_err_msg(int first_line,
 %token EXIT
 
 
-/******************************************************/
-/* Symbols defined in                                 */
-/* "Safety Software Technical Specification,          */
-/*  Part 1: Concepts and Function Blocks,             */
-/*  Version 1.0 – Official Release"                   */
-/* by PLCopen - Technical Committee 5 - 2006-01-31    */
-/******************************************************/
-%token SAFEBOOL
-
 %%
 
 
@@ -1346,8 +1391,22 @@ start:
 
 
 /* the pragmas... */
+
+
+disable_code_generation_pragma:
+  disable_code_generation_pragma_token	{$$ = new disable_code_generation_pragma_c(locloc(@$));}
+
+enable_code_generation_pragma:
+  enable_code_generation_pragma_token	{$$ = new enable_code_generation_pragma_c(locloc(@$));}
+
 pragma:
   pragma_token	{$$ = new pragma_c($1, locloc(@$));}
+
+any_pragma:
+  disable_code_generation_pragma
+| enable_code_generation_pragma
+| pragma
+;
 
 
 /* EN/ENO */
@@ -1453,6 +1512,8 @@ library:
 	 $$ = (list_c *)tree_root;
 	}
 | library library_element_declaration
+	{$$ = $1; $$->add_element($2);}
+| library any_pragma
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | library error library_element_declaration
@@ -1597,10 +1658,23 @@ constant:
 | bit_string_literal
 | boolean_literal
 /* NOTE: in order to remove reduce/reduce conflicts,
+ * [between -9.5 being parsed as 
+ *     (i)   a signed real, 
+ *     (ii)  or as a real preceded by the '-' operator
+ *  ]
+ *  we need to define a variant of the constant construct
+ *  where any constant is never preceded by the '-' character.
+ * In order to do this, we have borugh the signed_real 
+ * directly into the definition of the constant construct
+ * (so we can define another non_negative_constant
+ * construct that does not include it!)
+ */
+| signed_real
+/* NOTE: in order to remove reduce/reduce conflicts,
  * unsigned_integer, signed_integer, binary_integer, octal_integer
  * and hex_integer have been integrated directly into
  * the constants construct, instead of belonging to
- * either the bit_string_literal or integer_literal
+ * both the bit_string_literal or integer_literal
  * construct.
  */
 /* NOTE: unsigned_integer, although used in some
@@ -1614,22 +1688,56 @@ constant:
 | hex_integer
 ;
 
-/* a helper symbol for expression */
-/* A constant without any preceding '-', but may
- * include a preceding '+' !
+
+/* NOTE: in order to remove reduce/reduce conflicts,
+ * [between -9.5 being parsed as 
+ *     (i)   a signed real, 
+ *     (ii)  or as a real preceded by the '-' operator
+ *  ]
+ *  we need to define a variant of the constant construct
+ *  where any constant is never preceded by the '-' character.
+ * In order to do this, we have borugh the signed_real 
+ * directly into the definition of the constant construct
+ * (so we can define another non_negative_constant
+ * construct that does not include it!)
  */
 non_negative_constant:
-  non_negative_numeric_literal
+  numeric_literal
 | character_string
 | time_literal
 | bit_string_literal
 | boolean_literal
-| non_negative_signed_integer
+/* NOTE: in order to remove reduce/reduce conflicts,
+ * [between -9.5 being parsed as 
+ *     (i)   a signed real, 
+ *     (ii)  or as a real preceded by the '-' operator
+ *  ]
+ *  we need to define a variant of the constant construct
+ *  where any constant is never preceded by the '-' character.
+ * In order to do this, we have borugh the signed_real 
+ * directly into the definition of the constant construct
+ * (so we can define another non_negative_constant
+ * construct that does not include it!)
+ */
+/* | signed_real */
+| real /* an unsigned real */
+/* NOTE: in order to remove reduce/reduce conflicts,
+ * unsigned_integer, signed_integer, binary_integer, octal_integer
+ * and hex_integer have been integrated directly into
+ * the constants construct, instead of belonging to
+ * both the bit_string_literal or integer_literal
+ * construct.
+ */
+/* NOTE: unsigned_integer, although used in some
+ * rules, is not defined in the spec!
+ * We therefore replaced unsigned_integer as integer
+ */
+| integer  /* i.e. an unsigned_integer */
+/* | signed_integer */
 | binary_integer
 | octal_integer
 | hex_integer
 ;
-
 
 
 /******************************/
@@ -1663,7 +1771,7 @@ non_negative_constant:
  *      Flex handles real, while bison handles signed_real
  *      and real_literal.
  *
- *    - According to the spec, intger '.' integer
+ *    - According to the spec, integer '.' integer
  *      may be reduced to either a real or a fixed_point.
  *      It is nevertheless possible to figure out from the
  *      context which of the two rules should be used in
@@ -1720,12 +1828,6 @@ numeric_literal:
 | real_literal
 ;
 
-/* helper symbol for non_negative_constant */
-non_negative_numeric_literal:
-  integer_literal
-| non_negative_real_literal
-;
-
 
 integer_literal:
   integer_type_name '#' signed_integer
@@ -1761,22 +1863,16 @@ integer_literal:
 signed_integer:
   integer
 | '+' integer   {$$ = $2;}
-| '-' integer	{$$ = new neg_literal_c($2, locloc(@$));}
-;
-
-/* a helper symbol for non_negative_constant */
-/* A integer without any preceding '-', but may
- * include a preceding '+' !
- */
-non_negative_signed_integer:
-  integer
-| '+' integer   {$$ = $2;}
+| '-' integer	{$$ = new neg_integer_c($2, locloc(@$));}
 ;
 
 
 real_literal:
-  signed_real
-| real_type_name '#' signed_real
+/* NOTE: see note in the definition of constant for reason
+ * why signed_real is missing here!
+ */
+/*  signed_real */
+  real_type_name '#' signed_real
 	{$$ = new real_literal_c($1, $3, locf(@1), locl(@3));}
 /* ERROR_CHECK_BEGIN */
 | real_type_name signed_real
@@ -1790,24 +1886,13 @@ real_literal:
 /* ERROR_CHECK_END */
 ;
 
-/* helper symbol for non_negative_numeric_literal */
-non_negative_real_literal:
-  non_negative_signed_real
-| real_type_name '#' signed_real
-	{$$ = new real_literal_c($1, $3, locf(@1), locl(@3));}
-;
 
 signed_real:
   real
 | '+' real	{$$ = $2;}
-| '-' real	{$$ = new neg_literal_c($2, locloc(@2));}
+| '-' real	{$$ = new neg_real_c($2, locloc(@2));}
 ;
 
-/* helper symbol for non_negative_real_literal */
-non_negative_signed_real:
-  real
-| '+' real	{$$ = $2;}
-;
 
 
 bit_string_literal:
@@ -1838,7 +1923,7 @@ bit_string_literal:
 | bit_string_type_name hex_integer
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'#' missing between bit string type name and value in bit string literal."); yynerrs++;}
 | bit_string_type_name '#' error
-  {$$ = NULL;
+	{$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no value defined for bit string literal.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid value for bit string literal."); yyclearin;}
 	 yyerrok;
@@ -1848,12 +1933,36 @@ bit_string_literal:
 
 
 boolean_literal:
-  TRUE	{$$ = new boolean_literal_c(new bool_type_name_c(locloc(@$)),
-  				    new boolean_true_c(locloc(@$)),
-				    locloc(@$));}
-| FALSE	{$$ = new boolean_literal_c(new bool_type_name_c(locloc(@$)),
+  boolean_true_literal_token
+	{$$ = new boolean_literal_c(new bool_type_name_c(locloc(@$)),
+				    new boolean_true_c(locloc(@$)),
+				    locloc(@$));
+	}
+| boolean_false_literal_token
+	{$$ = new boolean_literal_c(new bool_type_name_c(locloc(@$)),
 				    new boolean_false_c(locloc(@$)),
-				    locloc(@$));}
+				    locloc(@$));
+	}
+| safeboolean_true_literal_token
+	{$$ = new boolean_literal_c(new safebool_type_name_c(locloc(@$)),
+				    new boolean_true_c(locloc(@$)),
+				    locloc(@$));
+	}
+| safeboolean_false_literal_token
+	{$$ = new boolean_literal_c(new safebool_type_name_c(locloc(@$)),
+				    new boolean_false_c(locloc(@$)),
+				    locloc(@$));
+	}
+| FALSE
+	{$$ = new boolean_literal_c(NULL,
+				    new boolean_false_c(locloc(@$)),
+				    locloc(@$));
+	}
+| TRUE
+	{$$ = new boolean_literal_c(NULL,
+				    new boolean_true_c(locloc(@$)),
+				    locloc(@$));
+	}
 /*
 |	BOOL '#' '1' {}
 |	BOOL '#' '0' {}
@@ -1935,13 +2044,17 @@ duration:
  *       when it comes across 'T#'
  */
   TIME '#' interval
-	{$$ = new duration_c(NULL, $3, locloc(@$));}
+	{$$ = new duration_c(new time_type_name_c(locloc(@1)), NULL, $3, locloc(@$));}
 | TIME '#' '-' interval
-	{$$ = new duration_c(new neg_time_c(locloc(@$)), $4, locloc(@$));}
+	{$$ = new duration_c(new time_type_name_c(locloc(@1)), new neg_time_c(locloc(@$)), $4, locloc(@$));}
 | T_SHARP interval
-	{$$ = new duration_c(NULL, $2, locloc(@$));}
+	{$$ = new duration_c(new time_type_name_c(locloc(@1)), NULL, $2, locloc(@$));}
 | T_SHARP '-' interval
-	{$$ = new duration_c(new neg_time_c(locloc(@$)), $3, locloc(@$));}
+	{$$ = new duration_c(new time_type_name_c(locloc(@1)), new neg_time_c(locloc(@$)), $3, locloc(@$));}
+| SAFETIME '#' interval
+	{$$ = new duration_c(new safetime_type_name_c(locloc(@1)), NULL, $3, locloc(@$));}
+| SAFETIME '#' '-' interval
+	{$$ = new duration_c(new safetime_type_name_c(locloc(@1)), new neg_time_c(locloc(@$)), $4, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | TIME interval
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'#' missing between 'TIME' and interval in duration."); yynerrs++;}
@@ -2106,7 +2219,9 @@ milliseconds:
 /************************************/
 time_of_day:
   TIME_OF_DAY '#' daytime
-	{$$ = new time_of_day_c($3, locloc(@$));}
+	{$$ = new time_of_day_c(new tod_type_name_c(locloc(@1)), $3, locloc(@$));}
+| SAFETIME_OF_DAY '#' daytime
+	{$$ = new time_of_day_c(new safetod_type_name_c(locloc(@1)), $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | TIME_OF_DAY daytime
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'#' missing between 'TIME_OF_DAY' and daytime in time of day."); yynerrs++;}
@@ -2153,9 +2268,11 @@ day_second: fixed_point;
 
 date:
   DATE '#' date_literal
-	{$$ = new date_c($3, locloc(@$));}
+	{$$ = new date_c(new date_type_name_c(locloc(@1)), $3, locloc(@$));}
 | D_SHARP date_literal
-	{$$ = new date_c($2, locloc(@$));}
+	{$$ = new date_c(new date_type_name_c(locloc(@1)), $2, locloc(@$));}
+| SAFEDATE '#' date_literal
+	{$$ = new date_c(new safedate_type_name_c(locloc(@1)), $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | DATE date_literal
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'#' missing between 'DATE' and date literal in date."); yynerrs++;}
@@ -2206,7 +2323,9 @@ day: integer;
 
 date_and_time:
   DATE_AND_TIME '#' date_literal '-' daytime
-	{$$ = new date_and_time_c($3, $5, locloc(@$));}
+	{$$ = new date_and_time_c(new dt_type_name_c(locloc(@1)), $3, $5, locloc(@$));}
+| SAFEDATE_AND_TIME '#' date_literal '-' daytime
+	{$$ = new date_and_time_c(new safedt_type_name_c(locloc(@1)), $3, $5, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | DATE_AND_TIME date_literal '-' daytime
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'#' missing between 'DATE_AND_TIME' and date literal in date and time."); yynerrs++;}
@@ -2251,6 +2370,14 @@ non_generic_type_name:
 /***********************************/
 /* B 1.3.1 - Elementary Data Types */
 /***********************************/
+    /******************************************************/
+    /* SAFExxxx Symbols defined in                        */
+    /* "Safety Software Technical Specification,          */
+    /*  Part 1: Concepts and Function Blocks,             */
+    /*  Version 1.0 – Official Release"                   */
+    /* by PLCopen - Technical Committee 5 - 2006-01-31    */
+    /******************************************************/
+
 elementary_type_name:
   numeric_type_name
 | date_type_name
@@ -2262,13 +2389,7 @@ elementary_type_name:
  * and grouping type definition for reason why BOOL
  * was added to this definition.
  */
-    /******************************************************/
-    /* Symbols defined in                                 */
-    /* "Safety Software Technical Specification,          */
-    /*  Part 1: Concepts and Function Blocks,             */
-    /*  Version 1.0 – Official Release"                   */
-    /* by PLCopen - Technical Committee 5 - 2006-01-31    */
-    /******************************************************/
+| SAFETIME	{$$ = new safetime_type_name_c(locloc(@$));}
 | SAFEBOOL	{$$ = new safebool_type_name_c(locloc(@$));}
 ;
 
@@ -2283,38 +2404,57 @@ integer_type_name:
 ;
 
 signed_integer_type_name:
-  SINT	{$$ = new sint_type_name_c(locloc(@$));}
-| INT	{$$ = new int_type_name_c(locloc(@$));}
-| DINT	{$$ = new dint_type_name_c(locloc(@$));}
-| LINT	{$$ = new lint_type_name_c(locloc(@$));}
+  SINT		{$$ = new sint_type_name_c(locloc(@$));}
+| INT		{$$ = new int_type_name_c(locloc(@$));}
+| DINT		{$$ = new dint_type_name_c(locloc(@$));}
+| LINT		{$$ = new lint_type_name_c(locloc(@$));}
+| SAFESINT	{$$ = new safesint_type_name_c(locloc(@$));}
+| SAFEINT	{$$ = new safeint_type_name_c(locloc(@$));}
+| SAFEDINT	{$$ = new safedint_type_name_c(locloc(@$));}
+| SAFELINT	{$$ = new safelint_type_name_c(locloc(@$));}
 ;
 
 unsigned_integer_type_name:
-  USINT	{$$ = new usint_type_name_c(locloc(@$));}
-| UINT	{$$ = new uint_type_name_c(locloc(@$));}
-| UDINT	{$$ = new udint_type_name_c(locloc(@$));}
-| ULINT	{$$ = new ulint_type_name_c(locloc(@$));}
+  USINT		{$$ = new usint_type_name_c(locloc(@$));}
+| UINT		{$$ = new uint_type_name_c(locloc(@$));}
+| UDINT		{$$ = new udint_type_name_c(locloc(@$));}
+| ULINT		{$$ = new ulint_type_name_c(locloc(@$));}
+| SAFEUSINT	{$$ = new safeusint_type_name_c(locloc(@$));}
+| SAFEUINT	{$$ = new safeuint_type_name_c(locloc(@$));}
+| SAFEUDINT	{$$ = new safeudint_type_name_c(locloc(@$));}
+| SAFEULINT	{$$ = new safeulint_type_name_c(locloc(@$));}
 ;
 
 real_type_name:
-  REAL	{$$ = new real_type_name_c(locloc(@$));}
-| LREAL	{$$ = new lreal_type_name_c(locloc(@$));}
+  REAL		{$$ = new real_type_name_c(locloc(@$));}
+| LREAL		{$$ = new lreal_type_name_c(locloc(@$));}
+| SAFEREAL	{$$ = new safereal_type_name_c(locloc(@$));}
+| SAFELREAL	{$$ = new safelreal_type_name_c(locloc(@$));}
 ;
 
 date_type_name:
-  DATE		{$$ = new date_type_name_c(locloc(@$));}
-| TIME_OF_DAY	{$$ = new tod_type_name_c(locloc(@$));}
-| TOD		{$$ = new tod_type_name_c(locloc(@$));}
-| DATE_AND_TIME	{$$ = new dt_type_name_c(locloc(@$));}
-| DT		{$$ = new dt_type_name_c(locloc(@$));}
+  DATE			{$$ = new date_type_name_c(locloc(@$));}
+| TIME_OF_DAY		{$$ = new tod_type_name_c(locloc(@$));}
+| TOD			{$$ = new tod_type_name_c(locloc(@$));}
+| DATE_AND_TIME		{$$ = new dt_type_name_c(locloc(@$));}
+| DT			{$$ = new dt_type_name_c(locloc(@$));}
+| SAFEDATE		{$$ = new safedate_type_name_c(locloc(@$));}
+| SAFETIME_OF_DAY	{$$ = new safetod_type_name_c(locloc(@$));}
+| SAFETOD		{$$ = new safetod_type_name_c(locloc(@$));}
+| SAFEDATE_AND_TIME	{$$ = new safedt_type_name_c(locloc(@$));}
+| SAFEDT		{$$ = new safedt_type_name_c(locloc(@$));}
 ;
 
 
 bit_string_type_name:
-  BYTE	{$$ = new byte_type_name_c(locloc(@$));}
-| WORD	{$$ = new word_type_name_c(locloc(@$));}
-| DWORD	{$$ = new dword_type_name_c(locloc(@$));}
-| LWORD	{$$ = new lword_type_name_c(locloc(@$));}
+  BYTE		{$$ = new byte_type_name_c(locloc(@$));}
+| WORD		{$$ = new word_type_name_c(locloc(@$));}
+| DWORD		{$$ = new dword_type_name_c(locloc(@$));}
+| LWORD		{$$ = new lword_type_name_c(locloc(@$));}
+| SAFEBYTE	{$$ = new safebyte_type_name_c(locloc(@$));}
+| SAFEWORD	{$$ = new safeword_type_name_c(locloc(@$));}
+| SAFEDWORD	{$$ = new safedword_type_name_c(locloc(@$));}
+| SAFELWORD	{$$ = new safelword_type_name_c(locloc(@$));}
 /* NOTE: see note under the B 1.2.1 section of token
  * and grouping type definition for reason why the BOOL
  * was omitted from this definition.
@@ -2333,6 +2473,8 @@ bit_string_type_name:
 elementary_string_type_name:
   STRING	{$$ = new string_type_name_c(locloc(@$));}
 | WSTRING	{$$ = new wstring_type_name_c(locloc(@$));}
+| SAFESTRING	{$$ = new safestring_type_name_c(locloc(@$));}
+| SAFEWSTRING	{$$ = new safewstring_type_name_c(locloc(@$));}
 ;
 
 
@@ -5969,11 +6111,11 @@ eol_list:
 instruction_list:
   il_instruction
 	{$$ = new instruction_list_c(locloc(@$)); $$->add_element($1);}
-| pragma eol_list
+| any_pragma eol_list
 	{$$ = new instruction_list_c(locloc(@$)); $$->add_element($1);}
 | instruction_list il_instruction
 	{$$ = $1; $$->add_element($2);}
-| instruction_list pragma
+| instruction_list any_pragma
 	{$$ = $1; $$->add_element($2);}
 ;
 
@@ -6375,7 +6517,7 @@ il_param_instruction_list:
 
 
 il_param_instruction:
-  il_param_assignment ',' eol_list
+  il_param_assignment ',' eol_list 
 | il_param_out_assignment ',' eol_list
 /* ERROR_CHECK_BEGIN */
 | il_param_assignment ',' error
@@ -6607,13 +6749,61 @@ il_assign_out_operator:
 /*  any_identifier SENDTO */
   sendto_identifier SENDTO
 	{$$ = new il_assign_out_operator_c(NULL, $1, locloc(@$));}
+/* The following is not required, as the sendto_identifier_token returned by flex will 
+ * also include the 'ENO' identifier.
+ * The resulting abstract syntax tree is identical with or without this following rule,
+ * as both the eno_identifier and the sendto_identifier are stored as
+ * an identifier_c !!
+ */
+/*
 | eno_identifier SENDTO
 	{$$ = new il_assign_out_operator_c(NULL, $1, locloc(@$));}
+*/
 /*| NOT variable_name SENDTO */
 | NOT sendto_identifier SENDTO
 	{$$ = new il_assign_out_operator_c(new not_paramassign_c(locloc(@1)), $2, locloc(@$));}
+/* The following is not required, as the sendto_identifier_token returned by flex will 
+ * also include the 'ENO' identifier.
+ * The resulting abstract syntax tree is identical with or without this following rule,
+ * as both the eno_identifier and the sendto_identifier are stored as
+ * an identifier_c !!
+ *
+ * NOTE: Removing the following rule also removes a shift/reduce conflict from the parser.
+ *       This conflict is not really an error/ambiguity in the syntax, but rather
+ *       due to the fact that more than a single look-ahead token would be required
+ *       to correctly parse the syntax, something that bison does not support.
+ *
+ *       The shift/reduce conflict arises because bison does not know whether
+ *       to parse the 'NOT ENO' in the following code
+ *         LD 1
+ *         funct_name (
+ *                      NOT ENO => bool_var,
+ *                      EN := TRUE
+ *                    )
+ *        as either a il_param_assignment (wrong!) or an il_param_out_assignment.(correct).
+ *        The '=>' delimiter (known as SEND_TO in this iec.y file) is a dead giveaway that 
+ *        it should be parsed as an il_param_out_assignment, but still, bison gets confused!
+ *        Bison considers the possibility of reducing the 'NOT ENO' as an NOT_operator with
+ *        the 'ENO' operand
+ *        (NOT_operator -> il_simple_operator -> il_simple_operation -> il_simple_instruction ->
+ *          -> simple_instr_list -> il_param_assignment)
+ *        instead of reducing it to an il_param_out_operator.
+ *        ( il_param_out_operator -> il_param_out_assignment)
+ *
+ *        Note that the shift/reduce conflict only manifests itself in the il_formal_funct_call,
+ *        where both the il_param_out_assignment and il_param_assignment are used!
+ * 
+ *          il_param_out_assignment --+--> il_param_instruction -> il_param_instruction_list --+
+ *                                    |                                                        |
+ *          il_param_assignment     --+                                                        |
+ *                                                                                             |
+ *                                                     il_formal_funct_call <- il_param_list <-+
+ *
+ */
+/*
 | NOT eno_identifier SENDTO
 	{$$ = new il_assign_out_operator_c(new not_paramassign_c(locloc(@1)), $2, locloc(@$));}
+*/
 /* ERROR_CHECK_BEGIN */
 | error SENDTO
   {$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid parameter defined in parameter out assignment."); yyerrok;}
@@ -6854,8 +7044,8 @@ power_expression:
 
 
 unary_expression:
-  primary_expression
-| '-' primary_expression
+  non_negative_primary_expression
+| '-' non_negative_primary_expression
 	{$$ = new neg_expression_c($2, locloc(@$));}
 | NOT primary_expression
 	{$$ = new not_expression_c($2, locloc(@$));}
@@ -6890,8 +7080,9 @@ unary_operator: '-' | 'NOT'
  *       expression<-unary_expression<-constant<-integer
  *       (i.e. the constant 9, preceded by a unary negation)
  *
- *       To remove the conlfict, we only allow constants without
+ *       To remove the conflict, we only allow constants without
  *       a preceding '-' to be used in primary_expression
+ *       (i.e. as a parameter to the unary negation operator)
  */
 /* NOTE: We use enumerated_value_without_identifier instead of enumerated_value
  *       in order to remove a reduce/reduce conflict between reducing an
@@ -6903,8 +7094,7 @@ unary_operator: '-' | 'NOT'
  *       for a variable and an enumerated value, then the variable shall be
  *       considered.
  */
-primary_expression:
-/* constant */
+non_negative_primary_expression:
   non_negative_constant
 //| enumerated_value_without_identifier
 | enumerated_value
@@ -6917,6 +7107,22 @@ primary_expression:
   {$$ = NULL; print_err_msg(locl(@2), locf(@3), "')' missing at the end of expression in ST expression."); yyerrok;}
 /* ERROR_CHECK_END */
 ;
+
+
+primary_expression:
+  constant
+//| enumerated_value_without_identifier
+  enumerated_value
+| variable
+| '(' expression ')'
+	{$$ = $2;}
+|  function_invocation
+/* ERROR_CHECK_BEGIN */
+| '(' expression error
+  {$$ = NULL; print_err_msg(locl(@2), locf(@3), "')' missing at the end of expression in ST expression."); yyerrok;}
+/* ERROR_CHECK_END */
+;
+
 
 
 /* intermediate helper symbol for primary_expression */
@@ -6972,11 +7178,11 @@ function_invocation:
 statement_list:
   statement ';'
 	{$$ = new statement_list_c(locloc(@$)); $$->add_element($1);}
-| pragma
+| any_pragma
 	{$$ = new statement_list_c(locloc(@$)); $$->add_element($1);}
 | statement_list statement ';'
 	{$$ = $1; $$->add_element($2);}
-| statement_list pragma
+| statement_list any_pragma
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | statement error
@@ -7138,14 +7344,30 @@ param_assignment_formal:
 /*| any_identifier SENDTO variable */
 | sendto_identifier SENDTO variable
 	{$$ = new output_variable_param_assignment_c(NULL, $1, $3, locloc(@$));}
+/* The following is not required, as the sendto_identifier_token returned by flex will 
+ * also include the 'ENO' identifier.
+ * The resulting abstract syntax tree is identical with or without this following rule,
+ * as both the eno_identifier and the sendto_identifier are stored as
+ * an identifier_c !!
+ */
+/*
 | eno_identifier SENDTO variable
 	{$$ = new output_variable_param_assignment_c(NULL, $1, $3, locloc(@$));}
+*/
 /*| NOT variable_name SENDTO variable */
 /*| NOT any_identifier SENDTO variable*/
 | NOT sendto_identifier SENDTO variable
 	{$$ = new output_variable_param_assignment_c(new not_paramassign_c(locloc(@$)), $2, $4, locloc(@$));}
+/* The following is not required, as the sendto_identifier_token returned by flex will 
+ * also include the 'ENO' identifier.
+ * The resulting abstract syntax tree is identical with or without this following rule,
+ * as both the eno_identifier and the sendto_identifier are stored as
+ * an identifier_c !!
+ */
+/*
 | NOT eno_identifier SENDTO variable
 	{$$ = new output_variable_param_assignment_c(new not_paramassign_c(locloc(@$)), $2, $4, locloc(@$));}
+*/
 /* ERROR_CHECK_BEGIN */
 | any_identifier ASSIGN error
   {$$ = NULL;
@@ -7165,12 +7387,14 @@ param_assignment_formal:
 	 else {print_err_msg(locf(@3), locl(@3), "invalid expression in ST formal parameter out assignment."); yyclearin;}
 	 yyerrok;
 	}
+/*
 | eno_identifier SENDTO error
   {$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no expression defined in ST formal parameter out assignment.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid expression in ST formal parameter out assignment."); yyclearin;}
 	 yyerrok;
 	}
+*/
 | NOT SENDTO variable
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "no parameter name defined in ST formal parameter out negated assignment."); yynerrs++;}
 | NOT error SENDTO variable
@@ -7181,12 +7405,14 @@ param_assignment_formal:
 	 else {print_err_msg(locf(@4), locl(@4), "invalid expression in ST formal parameter out negated assignment."); yyclearin;}
 	 yyerrok;
 	}
+/*
 | NOT eno_identifier SENDTO error
   {$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@3), locf(@4), "no expression defined in ST formal parameter out negated assignment.");}
 	 else {print_err_msg(locf(@4), locl(@4), "invalid expression in ST formal parameter out negated assignment."); yyclearin;}
 	 yyerrok;
 	}
+*/
 /* ERROR_CHECK_END */
 ;
 
@@ -7779,6 +8005,11 @@ int stage2__(const char *filename,
   }
 
   /* first parse the standard library file... */
+  /*
+  #if YYDEBUG
+    yydebug = 1;
+  #endif
+  */
   yyin = lib_file;
   allow_function_overloading = true;
   full_token_loc = full_token_loc_;
@@ -7802,11 +8033,11 @@ int stage2__(const char *filename,
         library_element_symtable.end_value())
       library_element_symtable.insert(standard_function_block_names[i], standard_function_block_name_token);
 
-#if YYDEBUG
-  yydebug = 1;
-#endif
 
   /* now parse the input file... */
+  #if YYDEBUG
+    yydebug = 1;
+  #endif
   yyin = in_file;
   allow_function_overloading = false;
   full_token_loc = full_token_loc_;

@@ -9,6 +9,7 @@ do
   do
 	sed s/XXXX/$id/g $ff > $ff"_"$id.iec
 	if `../../../iec2iec $ff"_"$id.iec -I ../../../lib > $ff"_"$id.out 2>$ff"_"$id.err`
+	#if `../../../iec2c $ff"_"$id.iec -I ../../../lib > $ff"_"$id.out 2>$ff"_"$id.err`
 		# TODO before deciding test is success [OK]
 		#       - test whether xxx.out has size <> 0
 		#       - test whether xxx.err has size == 0

@@ -28,6 +28,10 @@ FUNCTION_BLOCK CTU
     Q : BOOL;
     CV : INT;
   END_VAR
+ 
+  VAR RRR : REAL; END_VAR
+  RRR := 9.9;
+
   IF R THEN CV := 0 ;
   ELSIF CU AND (CV < PV)
        THEN CV := CV+1;

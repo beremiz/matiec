@@ -1,26 +1,33 @@
 /*
- * (c) 2003-2007 Mario de Sousa
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
+ *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
 
 /*
- * An IEC 61131-3 IL and ST compiler.
+ * An IEC 61131-3 compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
  *
  */
+
 
 /*
  * Definition of the Abstract Syntax data structure components
@@ -46,7 +53,7 @@
 /*****************************************************************/
 /*****************************************************************/
 /*                                                               */
-/*             Symbols defined in:                               */
+/*      safe<xxxxxx> Symbols are defined in:                     */
 /*      PLCopen - Technical Committee 5                          */
 /*      Safety Software Technical Specification,                 */
 /*      Part 1: Concepts and Function Blocks,                    */
@@ -57,10 +64,6 @@
 /*****************************************************************/
 /*****************************************************************/
 
-
-
-
-SYM_REF0(safebool_type_name_c)
 
 
 
@@ -93,10 +96,13 @@ SYM_REF0(en_param_c)
 SYM_REF0(eno_param_c)
 */
 
-/***************************/
-/* 2.1.6 - Pragmas */
-/***************************/
+/********************/
+/* 2.1.6 - Pragmas  */
+/********************/
+SYM_REF0(disable_code_generation_pragma_c)
+SYM_REF0(enable_code_generation_pragma_c)
 SYM_TOKEN(pragma_c)
+
 
 /***************************/
 /* B 0 - Programming Model */
@@ -129,14 +135,59 @@ SYM_TOKEN(hex_integer_c)
 /* Note:
  * We do not have signed_integer_c and signed_real_c classes.
  * These are stored in the parse tree as a integer_c or real_c
- * preceded by a unary minus operator.
+ * preceded by a unary minus operator if they are inside an expression,
+ * or a neg_integer_c and neg_real_c when used outside an ST expression.
  */
 /* Not required:
 SYM_TOKEN(signed_integer_c)
 SYM_TOKEN(signed_real_c)
 */
 
-SYM_REF1(neg_literal_c, exp)
+/* NOTE: literal __values__ are stored directly in classes such as:
+ *          - real_c
+ *          - integer_c
+ *          - binary_integer_c
+ *          - etc...
+ *
+ *       However, for both the real_c and the integer_c, if they are preceded 
+ *       by a '-' negation sign, they are further encapsulated inside 
+ *       a neg_literal_c (i.e. the neg_literal_c will point to the 
+ *       real_c or integer_c with the value being negated.
+ *          neg_literal_c -> integer_literal_c
+ *                OR
+ *          neg_literal_c -> real_literal_c
+ *
+ *      In the semantic verification and code generation stages of the compiler,
+ *      the integer_c is treated as a basic (undefined) data type, since an integer
+ *      constant may be used as a BYTE, BOOLEAN, REAL, etc..., depending on the
+ *      context in which it is used.
+ *      However, an integer_c that is preceded by a '-' may not be used
+ *      as an ANY_BIT data type (BYTE, BOOLEAN, WORD, ...).
+ *      We must therefore be able to determine, holding a simple pointer
+ *      to an integer_c, if that integer_c value is preceded by a '-'.
+ *      However, since the neg_literal_c points to the integer_c, and not
+ *      vice-versa, we can't determine that.
+ *      There are 3 simple ways of working around this:
+ *        - change the order of the pointers: 
+ *              have the integer_c and real_c point to the neg_literal_c
+ *        - maintain the order of the pointers, and
+ *              add redundant info to the integer_c and real_c
+ *        - replace the neg_literal_c with two distinc classes
+ *              (neg_integer_c and neg_real_c), one for each
+ *              lietral type. This means that we can now treat
+ *              each of these classes as an unknown data type
+ *              just as we do with the integer_c and real_c.
+ *
+ *      The second option is simply ugly.
+ *      and the first has a serious drawback: when generating code it is
+ *      easier to encapsulate the real or integer values inside prefix
+ *      and postfix symbols (e.g. NEG(<value>) - with postfix ')' )
+ *      if we keep the pointer order as is.
+ *
+ *      For the above reasoning, we use the third option.
+ */  
+SYM_REF1(neg_real_c, exp)
+SYM_REF1(neg_integer_c, exp)
 
 /* Not required:
 SYM_REF2(numeric_literal_c, type, value)
@@ -144,6 +195,8 @@ SYM_REF2(numeric_literal_c, type, value)
 SYM_REF2(integer_literal_c, type, value)
 SYM_REF2(real_literal_c, type, value)
 SYM_REF2(bit_string_literal_c, type, value)
+/* A typed or untyped boolean literal... */
+/* type may be NULL */
 SYM_REF2(boolean_literal_c, type, value)
 
 /* helper class for boolean_literal_c */
@@ -168,7 +221,7 @@ SYM_TOKEN(single_byte_character_string_c)
 /* B 1.2.3.1 - Duration */
 /************************/
 SYM_REF0(neg_time_c)
-SYM_REF2(duration_c, neg, interval)
+SYM_REF3(duration_c, type_name, neg, interval)
 SYM_TOKEN(fixed_point_c)
 SYM_REF2(days_c, days, hours)
 SYM_REF2(hours_c, hours, minutes)
@@ -180,11 +233,11 @@ SYM_REF1(milliseconds_c, milliseconds)
 /************************************/
 /* B 1.2.3.2 - Time of day and Date */
 /************************************/
-SYM_REF1(time_of_day_c, daytime)
+SYM_REF2(time_of_day_c, type_name, daytime)
 SYM_REF3(daytime_c, day_hour, day_minute, day_second)
-SYM_REF1(date_c, date_literal)
+SYM_REF2(date_c, type_name, date_literal)
 SYM_REF3(date_literal_c, year, month, day)
-SYM_REF2(date_and_time_c, date_literal, daytime)
+SYM_REF3(date_and_time_c, type_name, date_literal, daytime)
 
 
 /**********************/
@@ -215,10 +268,31 @@ SYM_REF0(lword_type_name_c)
 SYM_REF0(string_type_name_c)
 SYM_REF0(wstring_type_name_c)
 
-/*
-SYM_REF0(constant_int_type_name_c)
-SYM_REF0(constant_real_type_name_c)
-*/
+  /*****************************************************************/
+  /* Keywords defined in "Safety Software Technical Specification" */
+  /*****************************************************************/
+
+SYM_REF0(safetime_type_name_c)
+SYM_REF0(safebool_type_name_c)
+SYM_REF0(safesint_type_name_c)
+SYM_REF0(safeint_type_name_c)
+SYM_REF0(safedint_type_name_c)
+SYM_REF0(safelint_type_name_c)
+SYM_REF0(safeusint_type_name_c)
+SYM_REF0(safeuint_type_name_c)
+SYM_REF0(safeudint_type_name_c)
+SYM_REF0(safeulint_type_name_c)
+SYM_REF0(safereal_type_name_c)
+SYM_REF0(safelreal_type_name_c)
+SYM_REF0(safedate_type_name_c)
+SYM_REF0(safetod_type_name_c)
+SYM_REF0(safedt_type_name_c)
+SYM_REF0(safebyte_type_name_c)
+SYM_REF0(safeword_type_name_c)
+SYM_REF0(safedword_type_name_c)
+SYM_REF0(safelword_type_name_c)
+SYM_REF0(safestring_type_name_c)
+SYM_REF0(safewstring_type_name_c)
 
 
 /********************************/

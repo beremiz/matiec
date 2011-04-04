@@ -1,21 +1,28 @@
 /*
- * (c) 2003 Mario de Sousa
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
 
 /*
- * An IEC 61131-3 IL and ST compiler.
+ * An IEC 61131-3 compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
@@ -74,6 +81,7 @@ stage4out_c::stage4out_c(const char *dir, const char *radix, const char *extensi
   m_file = file;
   this->indent_level = indent_level;
   this->indent_spaces = "";
+  allow_output = true;
 }
 
 stage4out_c::~stage4out_c(void) {
@@ -84,6 +92,13 @@ stage4out_c::~stage4out_c(void) {
   }
 }
 
+void stage4out_c::enable_output(void) {
+  allow_output = true;
+}
+    
+void stage4out_c::disable_output(void) {
+  allow_output = false;
+}
 
 void stage4out_c::indent_right(void) {
   indent_spaces+=indent_level;
@@ -98,32 +113,38 @@ void stage4out_c::indent_left(void) {
 
 
 void *stage4out_c::print(const char *str) {
+  if (!allow_output) return NULL;
   *out << str;
   return NULL;
 }
 
 void *stage4out_c::print_integer(int integer) {
+  if (!allow_output) return NULL;
   *out << integer;
   return NULL;
 }
 
 void *stage4out_c::print_long_integer(unsigned long l_integer) {
+  if (!allow_output) return NULL;
   *out << l_integer << "UL";
   return NULL;
 }
 
 void *stage4out_c::print_long_long_integer(unsigned long long ll_integer) {
+  if (!allow_output) return NULL;
   *out << ll_integer << "ULL";
   return NULL;
 }
 
 void *stage4out_c::printupper(const char *str) {
+  if (!allow_output) return NULL;
   for (int i = 0; str[i] != '\0'; i++)
     *out << (unsigned char)toupper(str[i]);
   return NULL;
 }
 
 void *stage4out_c::printlocation(const char *str) {
+  if (!allow_output) return NULL;
   *out << "__";
   for (int i = 0; str[i] != '\0'; i++)
     if(str[i] == '.')
@@ -134,6 +155,7 @@ void *stage4out_c::printlocation(const char *str) {
 }
 
 void *stage4out_c::printlocation_comasep(const char *str) {
+  if (!allow_output) return NULL;
   *out << (unsigned char)toupper(str[0]);
   *out << ',';
   *out << (unsigned char)toupper(str[1]);
@@ -148,12 +170,14 @@ void *stage4out_c::printlocation_comasep(const char *str) {
 
 
 void *stage4out_c::print(std::string str) {
+  if (!allow_output) return NULL;
   *out << str;
   return NULL;
 }
 
 
 void *stage4out_c::printupper(std::string str) {
+  if (!allow_output) return NULL;
   /* The string standard class does not have a converter member function to upper case.
    * We have to do it ourselves, a character at a time...
    */
@@ -170,6 +194,7 @@ void *stage4out_c::printupper(std::string str) {
 
 
 void *stage4out_c::printlocation(std::string str) {
+  if (!allow_output) return NULL;
   return printlocation(str.c_str());
 }
 

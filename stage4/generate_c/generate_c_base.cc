@@ -267,9 +267,12 @@ class generate_c_base_c: public iterator_visitor_c {
       return NULL;
     }
 
-/***************************/
-/* 2.1.6 - Pragmas */
-/***************************/
+/********************/
+/* 2.1.6 - Pragmas  */
+/********************/
+    void *visit(enable_code_generation_pragma_c * symbol)   {s4o.enable_output();  return NULL;}
+    void *visit(disable_code_generation_pragma_c * symbol)  {s4o.disable_output(); return NULL;} 
+
     /* Do not use print_token() as it will change everything into uppercase */
     void *visit(pragma_c *symbol) {return s4o.print(symbol->value);}
 
@@ -303,20 +306,33 @@ class generate_c_base_c: public iterator_visitor_c {
     void *visit(octal_integer_c *symbol) {s4o.print("0"); return print_striped_token(symbol, 2);}
     void *visit(hex_integer_c *symbol) {s4o.print("0x"); return print_striped_token(symbol, 3);}
 
-    void *visit(integer_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
-    void *visit(real_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
-    void *visit(bit_string_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
-    void *visit(boolean_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
-
-    /* helper class for boolean_literal_c */
-    void *visit(boolean_true_c *symbol) {s4o.print("TRUE"); return NULL;}
-    void *visit(boolean_false_c *symbol) {s4o.print("FALSE"); return NULL;}
-
-    void *visit(neg_literal_c *symbol) {
+    void *visit(neg_real_c *symbol) {
       s4o.print("-");
       symbol->exp->accept(*this);
       return NULL;
     }
+
+    void *visit(neg_integer_c *symbol) {
+      s4o.print("-");
+      symbol->exp->accept(*this);
+      return NULL;
+    }
+
+    void *visit(integer_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
+    void *visit(real_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
+    void *visit(bit_string_literal_c *symbol) {return print_literal(symbol->type, symbol->value);}
+    void *visit(boolean_literal_c *symbol) {
+      if (NULL != symbol->type)
+        return print_literal(symbol->type, symbol->value);
+      else {
+	bool_type_name_c bool_type;
+	return print_literal(&bool_type, symbol->value);
+      }
+    }
+
+    /* helper class for boolean_literal_c */
+    void *visit(boolean_true_c *symbol) {s4o.print("TRUE"); return NULL;}
+    void *visit(boolean_false_c *symbol) {s4o.print("FALSE"); return NULL;}
 
     void *visit(neg_expression_c *symbol) {
       s4o.print("-");
@@ -562,35 +578,49 @@ void *visit(date_and_time_c *symbol) {
 /***********************************/
 /* B 1.3.1 - Elementary Data Types */
 /***********************************/
-    void *visit(time_type_name_c *symbol) {s4o.print("TIME"); return NULL;}
-    void *visit(bool_type_name_c *symbol) {s4o.print("BOOL"); return NULL;}
-    void *visit(sint_type_name_c *symbol) {s4o.print("SINT"); return NULL;}
-    void *visit(int_type_name_c *symbol) {s4o.print("INT"); return NULL;}
-    void *visit(dint_type_name_c *symbol) {s4o.print("DINT"); return NULL;}
-    void *visit(lint_type_name_c *symbol) {s4o.print("LINT"); return NULL;}
-    void *visit(usint_type_name_c *symbol) {s4o.print("USINT"); return NULL;}
-    void *visit(uint_type_name_c *symbol) {s4o.print("UINT"); return NULL;}
-    void *visit(udint_type_name_c *symbol) {s4o.print("UDINT"); return NULL;}
-    void *visit(ulint_type_name_c *symbol) {s4o.print("ULINT"); return NULL;}
-    void *visit(real_type_name_c *symbol) {s4o.print("REAL"); return NULL;}
-    void *visit(lreal_type_name_c *symbol) {s4o.print("LREAL"); return NULL;}
-    void *visit(date_type_name_c *symbol) {s4o.print("DATE"); return NULL;}
-    void *visit(tod_type_name_c *symbol) {s4o.print("TOD"); return NULL;}
-    void *visit(dt_type_name_c *symbol) {s4o.print("DT"); return NULL;}
-    void *visit(byte_type_name_c *symbol) {s4o.print("BYTE"); return NULL;}
-    void *visit(word_type_name_c *symbol) {s4o.print("WORD"); return NULL;}
-    void *visit(lword_type_name_c *symbol) {s4o.print("LWORD"); return NULL;}
-    void *visit(dword_type_name_c *symbol) {s4o.print("DWORD"); return NULL;}
-    void *visit(string_type_name_c *symbol) {s4o.print("STRING"); return NULL;}
-    void *visit(wstring_type_name_c *symbol) {s4o.print("WSTRING"); return NULL;}
-    /******************************************************/
-    /* Extensions to the base standard as defined in      */
-    /* "Safety Software Technical Specification,          */
-    /*  Part 1: Concepts and Function Blocks,             */
-    /*  Version 1.0 – Official Release"                   */
-    /* by PLCopen - Technical Committee 5 - 2006-01-31    */
-    /******************************************************/
-    void *visit(safebool_type_name_c *symbol) {s4o.print("SAFEBOOL"); return NULL;}
+    void *visit(time_type_name_c *symbol)        {s4o.print("TIME");        return NULL;}
+    void *visit(bool_type_name_c *symbol)        {s4o.print("BOOL");        return NULL;}
+    void *visit(sint_type_name_c *symbol)        {s4o.print("SINT");        return NULL;}
+    void *visit(int_type_name_c *symbol)         {s4o.print("INT");         return NULL;}
+    void *visit(dint_type_name_c *symbol)        {s4o.print("DINT");        return NULL;}
+    void *visit(lint_type_name_c *symbol)        {s4o.print("LINT");        return NULL;}
+    void *visit(usint_type_name_c *symbol)       {s4o.print("USINT");       return NULL;}
+    void *visit(uint_type_name_c *symbol)        {s4o.print("UINT");        return NULL;}
+    void *visit(udint_type_name_c *symbol)       {s4o.print("UDINT");       return NULL;}
+    void *visit(ulint_type_name_c *symbol)       {s4o.print("ULINT");       return NULL;}
+    void *visit(real_type_name_c *symbol)        {s4o.print("REAL");        return NULL;}
+    void *visit(lreal_type_name_c *symbol)       {s4o.print("LREAL");       return NULL;}
+    void *visit(date_type_name_c *symbol)        {s4o.print("DATE");        return NULL;}
+    void *visit(tod_type_name_c *symbol)         {s4o.print("TOD");         return NULL;}
+    void *visit(dt_type_name_c *symbol)          {s4o.print("DT");          return NULL;}
+    void *visit(byte_type_name_c *symbol)        {s4o.print("BYTE");        return NULL;}
+    void *visit(word_type_name_c *symbol)        {s4o.print("WORD");        return NULL;}
+    void *visit(lword_type_name_c *symbol)       {s4o.print("LWORD");       return NULL;}
+    void *visit(dword_type_name_c *symbol)       {s4o.print("DWORD");       return NULL;}
+    void *visit(string_type_name_c *symbol)      {s4o.print("STRING");      return NULL;}
+    void *visit(wstring_type_name_c *symbol)     {s4o.print("WSTRING");     return NULL;}
+
+    void *visit(safetime_type_name_c *symbol)    {s4o.print("TIME");    return NULL;}
+    void *visit(safebool_type_name_c *symbol)    {s4o.print("BOOL");    return NULL;}
+    void *visit(safesint_type_name_c *symbol)    {s4o.print("SINT");    return NULL;}
+    void *visit(safeint_type_name_c *symbol)     {s4o.print("INT");     return NULL;}
+    void *visit(safedint_type_name_c *symbol)    {s4o.print("DINT");    return NULL;}
+    void *visit(safelint_type_name_c *symbol)    {s4o.print("LINT");    return NULL;}
+    void *visit(safeusint_type_name_c *symbol)   {s4o.print("USINT");   return NULL;}
+    void *visit(safeuint_type_name_c *symbol)    {s4o.print("UINT");    return NULL;}
+    void *visit(safeudint_type_name_c *symbol)   {s4o.print("UDINT");   return NULL;}
+    void *visit(safeulint_type_name_c *symbol)   {s4o.print("ULINT");   return NULL;}
+    void *visit(safereal_type_name_c *symbol)    {s4o.print("REAL");    return NULL;}
+    void *visit(safelreal_type_name_c *symbol)   {s4o.print("LREAL");   return NULL;}
+    void *visit(safedate_type_name_c *symbol)    {s4o.print("DATE");    return NULL;}
+    void *visit(safetod_type_name_c *symbol)     {s4o.print("TOD");     return NULL;}
+    void *visit(safedt_type_name_c *symbol)      {s4o.print("DT");      return NULL;}
+    void *visit(safebyte_type_name_c *symbol)    {s4o.print("BYTE");    return NULL;}
+    void *visit(safeword_type_name_c *symbol)    {s4o.print("WORD");    return NULL;}
+    void *visit(safelword_type_name_c *symbol)   {s4o.print("LWORD");   return NULL;}
+    void *visit(safedword_type_name_c *symbol)   {s4o.print("DWORD");   return NULL;}
+    void *visit(safestring_type_name_c *symbol)  {s4o.print("STRING");  return NULL;}
+    void *visit(safewstring_type_name_c *symbol) {s4o.print("WSTRING"); return NULL;}
 
 /********************************/
 /* B.1.3.2 - Generic data types */

@@ -1,21 +1,28 @@
 /*
- * (c) 2003 Mario de Sousa
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
 
 /*
- * An IEC 61131-3 IL and ST compiler.
+ * An IEC 61131-3 compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
@@ -84,6 +91,9 @@
  */
 %option noyy_top_state
 
+/* We will not be using unput() in our flex code... */
+%option nounput
+
 /**************************************************/
 /* External Variable and Function declarations... */
 /**************************************************/
@@ -144,6 +154,14 @@ extern const char *current_filename;
 
 
 /* We will not be using unput() in our flex code... */
+/* NOTE: it seems that this #define is no longer needed, It has been 
+ * replaced by %option nounput.
+ * Should we simply delete it?
+ * For now leave it in, in case someone is using an old version of flex.
+ * In any case, the most harm that can result in a warning message
+ * when compiling iec.flex.c:
+ * warning: ‘void yyunput(int, char*)’ defined but not used
+ */
 #define YY_NO_UNPUT
 
 /* Variable defined by the bison parser.
@@ -438,8 +456,28 @@ const char *INCLUDE_DIRECTORIES[] = {
 /* Prelimenary constructs... */
 /*****************************/
 
+/* In order to allow the declaration of POU prototypes (Function, FB, Program, ...),
+ * especially the prototypes of Functions and FBs defined in the standard
+ * (i.e. standard functions and FBs), we extend the IEC 61131-3 standard syntax 
+ * with two pragmas to indicate that the code is to be parsed (going through the 
+ * lexical, syntactical, and semantic analysers), but no code is to be generated.
+ * 
+ * The accepted syntax is:
+ *  {no_code_generation begin}
+ *    ... prototypes ...
+ *  {no_code_generation end}
+ * 
+ * When parsing these prototypes the abstract syntax tree will be populated as usual,
+ * allowing the semantic analyser to correctly analyse the semantics of calls to these
+ * functions/FBs. However, stage4 will simply ignore all IEC61131-3 code
+ * between the above two pragmas.
+ */
 
-/* A pragma... */
+disable_code_generation_pragma	"{disable code generation}"
+enable_code_generation_pragma	"{enable code generation}"
+
+
+/* Any other pragma... */
 
 pragma "{"[^}]*"}"
 
@@ -726,6 +764,12 @@ incompl_location	%[IQM]\*
 	/* We start off by searching for the pragmas we handle in the lexical parser. */
 <INITIAL>{file_include_pragma}	unput_text(0); yy_push_state(include_beg);
 
+	/* Pragmas sent to syntax analyser (bison) */
+{disable_code_generation_pragma}               return disable_code_generation_pragma_token;
+{enable_code_generation_pragma}                return enable_code_generation_pragma_token;
+<body_state>{disable_code_generation_pragma}   return disable_code_generation_pragma_token;
+<body_state>{enable_code_generation_pragma}    return enable_code_generation_pragma_token;
+
 	/* Any other pragma we find, we just pass it up to the syntax parser...   */
 	/* Note that the <body_state> state is exclusive, so we have to include it here too. */
 {pragma}	{/* return the pragmma without the enclosing '{' and '}' */
@@ -964,6 +1008,7 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 <il_state>{il_whitespace_no_pragma}		/* Eat any whitespace */
 
 
+
 	/*****************************************/
 	/* B.1.1 Letters, digits and identifiers */
 	/*****************************************/
@@ -1034,11 +1079,16 @@ ENO	return ENO;			/* Keyword */
 	/* B 1.2.1 - Numeric Literals */
 	/******************************/
 TRUE		return TRUE;		/* Keyword */
-BOOL#1  	return TRUE;		/* Keyword (Data Type) + Delimiter */
-BOOL#TRUE	return TRUE;		/* Keyword (Data Type) + Delimiter + Keyword */
+BOOL#1  	return boolean_true_literal_token;
+BOOL#TRUE	return boolean_true_literal_token;
+SAFEBOOL#1	{if (get_opt_safe_extensions()) {return safeboolean_true_literal_token;} else{REJECT;}} /* Keyword (Data Type) */ 
+SAFEBOOL#TRUE	{if (get_opt_safe_extensions()) {return safeboolean_true_literal_token;} else{REJECT;}} /* Keyword (Data Type) */
+
 FALSE		return FALSE;		/* Keyword */
-BOOL#0  	return FALSE;		/* Keyword (Data Type) + Delimiter */
-BOOL#FALSE  	return FALSE;		/* Keyword (Data Type) + Delimiter + Keyword */
+BOOL#0  	return boolean_false_literal_token;
+BOOL#FALSE  	return boolean_false_literal_token;
+SAFEBOOL#0	{if (get_opt_safe_extensions()) {return safeboolean_false_literal_token;} else{REJECT;}} /* Keyword (Data Type) */ 
+SAFEBOOL#FALSE	{if (get_opt_safe_extensions()) {return safeboolean_false_literal_token;} else{REJECT;}} /* Keyword (Data Type) */
 
 
 	/************************/
@@ -1064,11 +1114,82 @@ DT		return DATE_AND_TIME;	/* Keyword (Data Type) */
 	/***********************************/
 	/* B 1.3.1 - Elementary Data Types */
 	/***********************************/
+BOOL		return BOOL;		/* Keyword (Data Type) */
+
 BYTE		return BYTE;		/* Keyword (Data Type) */
 WORD		return WORD;		/* Keyword (Data Type) */
 DWORD		return DWORD;		/* Keyword (Data Type) */
 LWORD		return LWORD;		/* Keyword (Data Type) */
 
+SINT		return SINT;		/* Keyword (Data Type) */
+INT		return INT;		/* Keyword (Data Type) */
+DINT		return DINT;		/* Keyword (Data Type) */
+LINT		return LINT;		/* Keyword (Data Type) */
+
+USINT		return USINT;		/* Keyword (Data Type) */
+UINT		return UINT;		/* Keyword (Data Type) */
+UDINT		return UDINT;		/* Keyword (Data Type) */
+ULINT		return ULINT;		/* Keyword (Data Type) */
+
+REAL		return REAL;		/* Keyword (Data Type) */
+LREAL		return LREAL;		/* Keyword (Data Type) */
+
+WSTRING		return WSTRING;		/* Keyword (Data Type) */
+STRING		return STRING;		/* Keyword (Data Type) */
+
+TIME		return TIME;		/* Keyword (Data Type) */
+DATE		return DATE;		/* Keyword (Data Type) */
+DT		return DT;		/* Keyword (Data Type) */
+TOD		return TOD;		/* Keyword (Data Type) */
+DATE_AND_TIME	return DATE_AND_TIME;	/* Keyword (Data Type) */
+TIME_OF_DAY	return TIME_OF_DAY;	/* Keyword (Data Type) */
+
+	/*****************************************************************/
+	/* Keywords defined in "Safety Software Technical Specification" */
+	/*****************************************************************/
+        /* 
+         * NOTE: The following keywords are define in 
+         *       "Safety Software Technical Specification,
+         *        Part 1: Concepts and Function Blocks,  
+         *        Version 1.0 – Official Release"
+         *        written by PLCopen - Technical Committee 5
+         *
+         *        We only support these extensions and keywords
+         *        if the apropriate command line option is given.
+         */
+SAFEBOOL	     {if (get_opt_safe_extensions()) {return SAFEBOOL;}          else {REJECT;}} 
+
+SAFEBYTE	     {if (get_opt_safe_extensions()) {return SAFEBYTE;}          else {REJECT;}} 
+SAFEWORD	     {if (get_opt_safe_extensions()) {return SAFEWORD;}          else {REJECT;}} 
+SAFEDWORD	     {if (get_opt_safe_extensions()) {return SAFEDWORD;}         else{REJECT;}}
+SAFELWORD	     {if (get_opt_safe_extensions()) {return SAFELWORD;}         else{REJECT;}}
+               
+SAFEREAL	     {if (get_opt_safe_extensions()) {return SAFESINT;}          else{REJECT;}}
+SAFELREAL    	     {if (get_opt_safe_extensions()) {return SAFELREAL;}         else{REJECT;}}
+                  
+SAFESINT	     {if (get_opt_safe_extensions()) {return SAFESINT;}          else{REJECT;}}
+SAFEINT	             {if (get_opt_safe_extensions()) {return SAFEINT;}           else{REJECT;}}
+SAFEDINT	     {if (get_opt_safe_extensions()) {return SAFEDINT;}          else{REJECT;}}
+SAFELINT             {if (get_opt_safe_extensions()) {return SAFELINT;}          else{REJECT;}}
+
+SAFEUSINT            {if (get_opt_safe_extensions()) {return SAFEUSINT;}         else{REJECT;}}
+SAFEUINT             {if (get_opt_safe_extensions()) {return SAFEUINT;}          else{REJECT;}}
+SAFEUDINT            {if (get_opt_safe_extensions()) {return SAFEUDINT;}         else{REJECT;}}
+SAFEULINT            {if (get_opt_safe_extensions()) {return SAFEULINT;}         else{REJECT;}}
+
+ /* SAFESTRING and SAFEWSTRING are not yet supported, i.e. checked correctly, in the semantic analyser (stage 3) */
+ /*  so it is best not to support them at all... */
+ /*
+SAFEWSTRING          {if (get_opt_safe_extensions()) {return SAFEWSTRING;}       else{REJECT;}}
+SAFESTRING           {if (get_opt_safe_extensions()) {return SAFESTRING;}        else{REJECT;}}
+ */
+
+SAFETIME             {if (get_opt_safe_extensions()) {return SAFETIME;}          else{REJECT;}}
+SAFEDATE             {if (get_opt_safe_extensions()) {return SAFEDATE;}          else{REJECT;}}
+SAFEDT               {if (get_opt_safe_extensions()) {return SAFEDT;}            else{REJECT;}}
+SAFETOD              {if (get_opt_safe_extensions()) {return SAFETOD;}           else{REJECT;}}
+SAFEDATE_AND_TIME    {if (get_opt_safe_extensions()) {return SAFEDATE_AND_TIME;} else{REJECT;}}
+SAFETIME_OF_DAY      {if (get_opt_safe_extensions()) {return SAFETIME_OF_DAY;}   else{REJECT;}}
 
 	/********************************/
 	/* B 1.3.2 - Generic data types */
@@ -1105,30 +1226,6 @@ END_STRUCT	return END_STRUCT;	/* Keyword */
 	/*********************/
 	/* B 1.4 - Variables */
 	/*********************/
-REAL		return REAL;		/* Keyword (Data Type) */
-LREAL		return LREAL;		/* Keyword (Data Type) */
-
-SINT		return SINT;		/* Keyword (Data Type) */
-INT		return INT;		/* Keyword (Data Type) */
-DINT		return DINT;		/* Keyword (Data Type) */
-LINT		return LINT;		/* Keyword (Data Type) */
-
-USINT		return USINT;		/* Keyword (Data Type) */
-UINT		return UINT;		/* Keyword (Data Type) */
-UDINT		return UDINT;		/* Keyword (Data Type) */
-ULINT		return ULINT;		/* Keyword (Data Type) */
-
-
-WSTRING		return WSTRING;		/* Keyword (Data Type) */
-STRING		return STRING;		/* Keyword (Data Type) */
-BOOL		return BOOL;		/* Keyword (Data Type) */
-TIME		return TIME;		/* Keyword (Data Type) */
-DATE		return DATE;		/* Keyword (Data Type) */
-DT		return DT;		/* Keyword (Data Type) */
-TOD		return TOD;		/* Keyword (Data Type) */
-DATE_AND_TIME	return DATE_AND_TIME;	/* Keyword (Data Type) */
-TIME_OF_DAY	return TIME_OF_DAY;	/* Keyword (Data Type) */
-
 
 	/******************************************/
 	/* B 1.4.3 - Declaration & Initialisation */
@@ -1388,20 +1485,7 @@ END_REPEAT	return END_REPEAT;	/* Keyword */
 EXIT		return EXIT;		/* Keyword */
 
 
-	/*****************************************************************/
-	/* Keywords defined in "Safety Software Technical Specification" */
-	/*****************************************************************/
-        /* 
-         * NOTE: The following keywords are define in 
-         *       "Safety Software Technical Specification,
-         *        Part 1: Concepts and Function Blocks,  
-         *        Version 1.0 – Official Release"
-         *        written by PLCopen - Technical Committee 5
-         *
-         *        We only support these extensions and keywords
-         *        if the apropriate command line option is given.
-         */
-SAFEBOOL	{if (get_opt_safe_extensions()) {return SAFEBOOL;} else{REJECT;}}	/* Keyword (Data Type) */ 
+
 
 
 
