@@ -465,7 +465,7 @@ echo  "*)"
 
 
 echo
-echo {disable code generation}
+echo {enable code generation}
 
 exit 0
 

@@ -2795,4 +2795,4 @@ FUNCTION LWORD_BCD_TO_ULINT : ULINT
 END_FUNCTION
 *)
 
-{disable code generation}
+{enable code generation}
