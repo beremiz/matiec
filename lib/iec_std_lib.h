@@ -791,7 +791,7 @@ static inline LWORD __uint_to_bcd(EN_ENO_PARAMS, ULINT IN){
     return res;
 }
 
-/* workaround for va-atgs limitation on shorter that int params */
+/* workaround for va-args limitation on shorter than int params */
 #define VA_ARGS_REAL LREAL
 #define VA_ARGS_LREAL LREAL
 #define VA_ARGS_SINT DINT

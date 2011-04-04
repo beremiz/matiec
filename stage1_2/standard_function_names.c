@@ -36,7 +36,6 @@
  
  
 const char *standard_function_names[] = {
-/*  
 "REAL_TO_SINT",
 "REAL_TO_LINT",
 "REAL_TO_DINT",
@@ -401,7 +400,6 @@ const char *standard_function_names[] = {
 "INT_TO_ULINT",
 "INT_TO_BOOL",
 "INT_TO_TIME",
-*/
 "TRUNC",
 "BCD_TO_UDINT",
 "BCD_TO_UINT",
@@ -411,10 +409,8 @@ const char *standard_function_names[] = {
 "UINT_TO_BCD",
 "USINT_TO_BCD",
 "ULINT_TO_BCD",
-/*
 "DATE_AND_TIME_TO_TIME_OF_DAY",
 "DATE_AND_TIME_TO_DATE",
-*/
 "ABS",
 "SQRT",
 "LN",
