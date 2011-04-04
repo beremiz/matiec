@@ -1,3 +1,14 @@
+(* Following taken directly from the IEC 61131.3 draft standard *)
+
+(*
+ * An IEC 61131-3 IL and ST compiler.
+ *
+ * Based on the
+ * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
+ *
+ *)
+
+
 FUNCTION_BLOCK HYSTERESIS
     (* Boolean hysteresis on difference *)
     (* of REAL inputs, XIN1 - XIN2      *)
