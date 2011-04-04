@@ -1,0 +1,17 @@
+#CXX = i686-mingw32-c++ 
+CXX = g++ 
+
+#get warnings, debugging information and optimization
+CFLAGS  = -Wall -Wpointer-arith -Wwrite-strings
+# CFLAGS += -Werror
+CFLAGS += -ggdb
+#CFLAGS += -O3 -funroll-loops
+# Note: if the optimizer crashes, we'll leave out the -O3 for those files
+
+#get warnings, debugging information and optimization
+#CXXFLAGS  = -Wall -pedantic -Wpointer-arith -Wwrite-strings
+#CXXFLAGS += -ggdb
+#CXXFLAGS += -O3 -funroll-loops
+CXXFLAGS  = $(CFLAGS)
+
+IECLIBDIR=lib

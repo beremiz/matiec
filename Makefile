@@ -24,7 +24,7 @@ clean:
 	-rm -f iec2iec iec2c *.o absyntax/*.o
 	echo > Makefile.depend
 # make something everywhere (ie, in all Makefiles that have that target)
-	find . -depth -mindepth 2 -maxdepth 2 -name Makefile -printf %h\\n | xargs -i make -C{} $@
+	find . -depth -mindepth 2 -maxdepth 2 -name Makefile | sed 's/Makefile//g' | xargs -I {} make -C{} clean
 
 CXXFLAGS += -I.
 
