@@ -96,10 +96,13 @@ SYM_REF0(en_param_c)
 SYM_REF0(eno_param_c)
 */
 
-/***************************/
-/* 2.1.6 - Pragmas */
-/***************************/
+/********************/
+/* 2.1.6 - Pragmas  */
+/********************/
+SYM_REF0(disable_code_generation_pragma_c)
+SYM_REF0(enable_code_generation_pragma_c)
 SYM_TOKEN(pragma_c)
+
 
 /***************************/
 /* B 0 - Programming Model */

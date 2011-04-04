@@ -267,9 +267,12 @@ class generate_c_base_c: public iterator_visitor_c {
       return NULL;
     }
 
-/***************************/
-/* 2.1.6 - Pragmas */
-/***************************/
+/********************/
+/* 2.1.6 - Pragmas  */
+/********************/
+    void *visit(enable_code_generation_pragma_c * symbol)   {s4o.enable_output();  return NULL;}
+    void *visit(disable_code_generation_pragma_c * symbol)  {s4o.disable_output(); return NULL;} 
+
     /* Do not use print_token() as it will change everything into uppercase */
     void *visit(pragma_c *symbol) {return s4o.print(symbol->value);}
 

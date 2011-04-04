@@ -1,21 +1,28 @@
 /*
- * (c) 2003 Mario de Sousa
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
 
 /*
- * An IEC 61131-3 IL and ST compiler.
+ * An IEC 61131-3 compiler.
  *
  * Based on the
  * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
@@ -364,10 +371,16 @@ class generate_c_SFC_IL_ST_c: public null_visitor_c {
 
   public:
     generate_c_SFC_IL_ST_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL);
+    
+    /********************/
+    /* 2.1.6 - Pragmas  */
+    /********************/
+    void *visit(enable_code_generation_pragma_c * symbol)   {s4o_ptr->enable_output();  return NULL;}
+    void *visit(disable_code_generation_pragma_c * symbol)  {s4o_ptr->disable_output(); return NULL;} 
+    
     /*********************************************/
     /* B.1.6  Sequential function chart elements */
     /*********************************************/
-    
     /*| sequential_function_chart sfc_network*/
     void *visit(sequential_function_chart_c * symbol);
     
@@ -438,14 +451,23 @@ void *generate_c_SFC_IL_ST_c::visit(statement_list_c *symbol) {
 
 
 class generate_c_pous_c: public generate_c_typedecl_c {
-
+  private:
+    stage4out_c *s4o_ptr;
+    
   public:
     generate_c_pous_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
-      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {};
+      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {
+      generate_c_pous_c::s4o_ptr = s4o_ptr;
+    };
     virtual ~generate_c_pous_c(void) {}
 
 
   public:
+/********************/
+/* 2.1.6 - Pragmas  */
+/********************/
+void *visit(enable_code_generation_pragma_c * symbol)   {s4o_ptr->enable_output();  return NULL;}
+void *visit(disable_code_generation_pragma_c * symbol)  {s4o_ptr->disable_output(); return NULL;} 
 
 /*************************/
 /* B.1 - Common elements */
@@ -981,10 +1003,15 @@ void *visit(program_declaration_c *symbol) {
 /***********************************************************************/
 
 class generate_c_config_c: public generate_c_typedecl_c {
+    private:
+    stage4out_c *s4o_ptr;
 
     public:
     generate_c_config_c(stage4out_c *s4o_ptr)
-      : generate_c_typedecl_c(s4o_ptr) {};
+      : generate_c_typedecl_c(s4o_ptr) {
+      generate_c_config_c::s4o_ptr = s4o_ptr;
+    };
+	
     virtual ~generate_c_config_c(void) {}
 
     typedef enum {
@@ -996,12 +1023,18 @@ class generate_c_config_c: public generate_c_typedecl_c {
 
     declaretype_t wanted_declaretype;
 
+    
+public:
+/********************/
+/* 2.1.6 - Pragmas  */
+/********************/
+void *visit(enable_code_generation_pragma_c * symbol)   {s4o_ptr->enable_output();  return NULL;}
+void *visit(disable_code_generation_pragma_c * symbol)  {s4o_ptr->disable_output(); return NULL;} 
+    
+    
 /********************************/
 /* B 1.7 Configuration elements */
 /********************************/
-
-
-public:
 /*
 CONFIGURATION configuration_name
    optional_global_var_declarations
@@ -1168,6 +1201,7 @@ class generate_c_resources_c: public generate_c_typedecl_c {
     symbol_c *current_resource_name;
     symbol_c *current_task_name;
     symbol_c *current_global_vars;
+    stage4out_c *s4o_ptr;
 
   public:
     generate_c_resources_c(stage4out_c *s4o_ptr, symbol_c *config_scope, symbol_c *resource_scope, unsigned long time)
@@ -1178,7 +1212,9 @@ class generate_c_resources_c: public generate_c_typedecl_c {
       current_resource_name = NULL;
       current_task_name = NULL;
       current_global_vars = NULL;
+      generate_c_resources_c::s4o_ptr = s4o_ptr;
     };
+
     virtual ~generate_c_resources_c(void) {
       delete search_config_instance;
       delete search_resource_instance;
@@ -1227,6 +1263,14 @@ class generate_c_resources_c: public generate_c_typedecl_c {
       }
       return NULL;
     }
+
+
+    /********************/
+    /* 2.1.6 - Pragmas  */
+    /********************/
+    void *visit(enable_code_generation_pragma_c * symbol)   {s4o_ptr->enable_output();  return NULL;}
+    void *visit(disable_code_generation_pragma_c * symbol)  {s4o_ptr->disable_output(); return NULL;} 
+    
 
     /******************************************/
     /* B 1.4.3 - Declaration & Initialisation */
@@ -1672,6 +1716,30 @@ class generate_c_c: public iterator_visitor_c {
     }
             
     ~generate_c_c(void) {}
+
+
+
+/********************/
+/* 2.1.6 - Pragmas  */
+/********************/
+    void *visit(enable_code_generation_pragma_c * symbol)  {
+      s4o                  .enable_output();  
+      pous_s4o             .enable_output();  
+      pous_incl_s4o        .enable_output();  
+      located_variables_s4o.enable_output();  
+      variables_s4o        .enable_output();  
+      return NULL;
+    }
+    
+    void *visit(disable_code_generation_pragma_c * symbol)  {
+      s4o                  .disable_output();  
+      pous_s4o             .disable_output();  
+      pous_incl_s4o        .disable_output();  
+      located_variables_s4o.disable_output();  
+      variables_s4o        .disable_output();  
+      return NULL;
+    } 
+
 
 /***************************/
 /* B 0 - Programming Model */

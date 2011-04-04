@@ -40,35 +40,35 @@
 (* A helper FUNCTION BLOCK declaration *)
 function_block foo_fb
  var_input
-  a_1, b_1: int;
+  a_1, b_1: real;
  end_var
  var_output
-  c_1, d_1: int;
+  c_1, d_1: real;
  end_var
-  c_1 := 10 + b_1;
+  c_1 := 10.0 + b_1;
 end_function_block
 
 
 (* A helper FUNCTION declaration *)
-function foo_f1 : int
+function foo_f1 : real
  var_input
-  a_1, b_1: int;
+  a_1, b_1: real;
  end_var
  var_output
-  c_1, d_1: int;
+  c_1, d_1: real;
  end_var
-  c_1 := 10 + b_1;
+  c_1 := 10.0 + b_1;
 end_function
 
 (* Another helper FUNCTION declaration *)
-function foo_f2 : int
+function foo_f2 :real 
  var_input
   a_1, b_1: foo_fb;
  end_var
  var_output
-  c_1, d_1: int;
+  c_1, d_1: real;
  end_var
-  c_1 := 10;
+  c_1 := 10.0;
 end_function
 
 
@@ -77,11 +77,11 @@ end_function
 (* Testing use of XXXX in several locations of variable declarations *)
 (*********************************************************************)
 
-function bar01 : int
+function bar01 : real
  var_input
-  XXXX, a_1, b_1: int;
+  XXXX, a_1, b_1: real;
  end_var
- a_1 := 1;
+ a_1 := 1.0;
 end_function
 
 function_block bar02
@@ -187,21 +187,30 @@ end_function_block
 
 function_block bar90
  var
-  e_1, f_1 : int;
-  XXXX : int;
+  e_1, f_1 : real;
+  XXXX : real;
   fb : foo_fb;
  end_var
-  e_1 := bar01 (XXXX := 10);
+  e_1 := bar01 (XXXX := 10.0);
   e_1 := bar01 (a_1 := XXXX);
   e_1 := bar01 (XXXX := XXXX);
-  fb(XXXX, 20);
-  fb (10, XXXX, e_1, f_1);
+  fb(XXXX, 20.0);
+  fb (10.0, XXXX, e_1, f_1);
   fb (a_1 := XXXX, b_1:=XXXX, c_1=>XXXX, d_1=>f_1);
-  fb(a_1 := 10, b_1:=20, c_1=>e_1, d_1=>XXXX);
-  fb (c_1=>XXXX, a_1:=20, d_1=>f_1);
+  fb(a_1 := 10.0, b_1:=20.0, c_1=>e_1, d_1=>XXXX);
+  fb (c_1=>XXXX, a_1:=20.0, d_1=>f_1);
   XXXX := fb.c_1;
-  fb.a_1 := XXXX + XXXX * 2 * (XXXX) / foo_f1(XXXX, 10, XXXX, e_1) MOD XXXX MOD XXXX ** XXXX;
-  IF (XXXX >= 10) THEN XXXX := 10; END_IF;
+  fb.a_1 := XXXX + XXXX * 2.0 * (XXXX) / foo_f1(XXXX, 10.0, XXXX, e_1) / XXXX ** XXXX;
+  IF (XXXX >= 10.0) THEN XXXX := 10.0; END_IF;
+end_function_block
+
+
+function_block bar90a
+ var
+  e_1, f_1 : int;
+  XXXX : int;
+ end_var
+  XXXX := XXXX MOD XXXX;
   CASE (XXXX + 10) OF
     10: XXXX := 10; 
     10..20:XXXX := 20;
@@ -234,19 +243,19 @@ end_function_block
 
 function_block bar91
  var
-  e_1, f_1 : int;
+  e_1, f_1 : real;
   XXXX : foo_fb;
  end_var
-  XXXX(e_1, 20);
-  XXXX (10, e_1, e_1, f_1);
+  XXXX(e_1, 20.0);
+  XXXX (10.0, e_1, e_1, f_1);
   XXXX (a_1 := e_1, b_1:=e_1 , c_1=>e_1, d_1=>f_1);
-  XXXX(a_1 := 10, b_1:=20, c_1=>e_1, d_1=>e_1);
-  XXXX (c_1=>e_1, a_1:=20, d_1=>f_1);
+  XXXX(a_1 := 10.0, b_1:=20.0, c_1=>e_1, d_1=>e_1);
+  XXXX (c_1=>e_1, a_1:=20.0, d_1=>f_1);
   e_1 := XXXX.c_1;
   XXXX.a_1 := e_1;
   e_1 := foo_f2(XXXX, XXXX, e_1, f_1);
   e_1 := foo_f2 (XXXX, XXXX);
-  e_1 := foo_f2 (c_1 => e_1, b_1 := XXXX, d_1 := 10, a_1 := XXXX);
+  e_1 := foo_f2 (c_1 => e_1, b_1 := XXXX, d_1 := 10.0, a_1 := XXXX);
   e_1 := foo_f2 (b_1 := XXXX);
 end_function_block
 

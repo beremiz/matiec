@@ -91,6 +91,9 @@
  */
 %option noyy_top_state
 
+/* We will not be using unput() in our flex code... */
+%option nounput
+
 /**************************************************/
 /* External Variable and Function declarations... */
 /**************************************************/
@@ -151,6 +154,14 @@ extern const char *current_filename;
 
 
 /* We will not be using unput() in our flex code... */
+/* NOTE: it seems that this #define is no longer needed, It has been 
+ * replaced by %option nounput.
+ * Should we simply delete it?
+ * For now leave it in, in case someone is using an old version of flex.
+ * In any case, the most harm that can result in a warning message
+ * when compiling iec.flex.c:
+ * warning: ‘void yyunput(int, char*)’ defined but not used
+ */
 #define YY_NO_UNPUT
 
 /* Variable defined by the bison parser.
@@ -445,8 +456,28 @@ const char *INCLUDE_DIRECTORIES[] = {
 /* Prelimenary constructs... */
 /*****************************/
 
+/* In order to allow the declaration of POU prototypes (Function, FB, Program, ...),
+ * especially the prototypes of Functions and FBs defined in the standard
+ * (i.e. standard functions and FBs), we extend the IEC 61131-3 standard syntax 
+ * with two pragmas to indicate that the code is to be parsed (going through the 
+ * lexical, syntactical, and semantic analysers), but no code is to be generated.
+ * 
+ * The accepted syntax is:
+ *  {no_code_generation begin}
+ *    ... prototypes ...
+ *  {no_code_generation end}
+ * 
+ * When parsing these prototypes the abstract syntax tree will be populated as usual,
+ * allowing the semantic analyser to correctly analyse the semantics of calls to these
+ * functions/FBs. However, stage4 will simply ignore all IEC61131-3 code
+ * between the above two pragmas.
+ */
 
-/* A pragma... */
+disable_code_generation_pragma	"{disable code generation}"
+enable_code_generation_pragma	"{enable code generation}"
+
+
+/* Any other pragma... */
 
 pragma "{"[^}]*"}"
 
@@ -733,6 +764,12 @@ incompl_location	%[IQM]\*
 	/* We start off by searching for the pragmas we handle in the lexical parser. */
 <INITIAL>{file_include_pragma}	unput_text(0); yy_push_state(include_beg);
 
+	/* Pragmas sent to syntax analyser (bison) */
+{disable_code_generation_pragma}               return disable_code_generation_pragma_token;
+{enable_code_generation_pragma}                return enable_code_generation_pragma_token;
+<body_state>{disable_code_generation_pragma}   return disable_code_generation_pragma_token;
+<body_state>{enable_code_generation_pragma}    return enable_code_generation_pragma_token;
+
 	/* Any other pragma we find, we just pass it up to the syntax parser...   */
 	/* Note that the <body_state> state is exclusive, so we have to include it here too. */
 {pragma}	{/* return the pragmma without the enclosing '{' and '}' */
@@ -969,6 +1006,7 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 
 <INITIAL,config_state,decl_state,st_state,sfc_state,task_init_state,sfc_qualifier_state>{st_whitespace_no_pragma}	/* Eat any whitespace */
 <il_state>{il_whitespace_no_pragma}		/* Eat any whitespace */
+
 
 
 	/*****************************************/

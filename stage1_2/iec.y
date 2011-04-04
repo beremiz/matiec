@@ -290,10 +290,25 @@ void print_err_msg(int first_line,
 /* B XXX - Things that are missing from the standard, but should have been there! */
 /**********************************************************************************/
 
+/* Pragmas that our compiler will accept.
+ * See the comment in iec.flex for why these pragmas exist. 
+ */
+%token          disable_code_generation_pragma_token
+%token          enable_code_generation_pragma_token
+%type <leaf>	disable_code_generation_pragma
+%type <leaf>	enable_code_generation_pragma
 
-/* The pragmas... */
+
+/* All other pragmas that we do not support... */
+/* In most stage 4, the text inside the pragmas will simply be copied to the output file.
+ * This allows us to insert C code (if using stage 4 generating C code) 
+ * inside/interningled with the IEC 61131-3 code!
+ */
 %token <ID>	pragma_token
 %type <leaf>	pragma
+
+/* The joining of all previous pragmas, i.e. any possible pragma */
+%type <leaf>	any_pragma
 
 
 /* Where do these tokens belong?? They are missing from the standard! */
@@ -1376,8 +1391,22 @@ start:
 
 
 /* the pragmas... */
+
+
+disable_code_generation_pragma:
+  disable_code_generation_pragma_token	{$$ = new disable_code_generation_pragma_c(locloc(@$));}
+
+enable_code_generation_pragma:
+  enable_code_generation_pragma_token	{$$ = new enable_code_generation_pragma_c(locloc(@$));}
+
 pragma:
   pragma_token	{$$ = new pragma_c($1, locloc(@$));}
+
+any_pragma:
+  disable_code_generation_pragma
+| enable_code_generation_pragma
+| pragma
+;
 
 
 /* EN/ENO */
@@ -1483,6 +1512,8 @@ library:
 	 $$ = (list_c *)tree_root;
 	}
 | library library_element_declaration
+	{$$ = $1; $$->add_element($2);}
+| library any_pragma
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | library error library_element_declaration
@@ -6080,11 +6111,11 @@ eol_list:
 instruction_list:
   il_instruction
 	{$$ = new instruction_list_c(locloc(@$)); $$->add_element($1);}
-| pragma eol_list
+| any_pragma eol_list
 	{$$ = new instruction_list_c(locloc(@$)); $$->add_element($1);}
 | instruction_list il_instruction
 	{$$ = $1; $$->add_element($2);}
-| instruction_list pragma
+| instruction_list any_pragma
 	{$$ = $1; $$->add_element($2);}
 ;
 
@@ -7147,11 +7178,11 @@ function_invocation:
 statement_list:
   statement ';'
 	{$$ = new statement_list_c(locloc(@$)); $$->add_element($1);}
-| pragma
+| any_pragma
 	{$$ = new statement_list_c(locloc(@$)); $$->add_element($1);}
 | statement_list statement ';'
 	{$$ = $1; $$->add_element($2);}
-| statement_list pragma
+| statement_list any_pragma
 	{$$ = $1; $$->add_element($2);}
 /* ERROR_CHECK_BEGIN */
 | statement error
