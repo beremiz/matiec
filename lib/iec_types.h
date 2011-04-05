@@ -3,7 +3,6 @@
 
 #include <limits.h>
 #include <float.h>
-#include <time.h>
 #include <stdint.h>
 
 /*********************/
@@ -30,22 +29,15 @@ typedef uint64_t   IEC_LWORD;
 typedef float    IEC_REAL;
 typedef double   IEC_LREAL;
 
-
-#if !defined __timespec_defined && !defined __time_t_defined
-# define __timespec_defined     1
-
-struct timespec
-  {
+typedef struct {
     long int tv_sec;            /* Seconds.  */
     long int tv_nsec;           /* Nanoseconds.  */
-  };
+}__attribute__((packed)) IEC_TIMESPEC;
 
-#endif
-
-typedef struct timespec IEC_TIME;
-typedef struct timespec IEC_DATE;
-typedef struct timespec IEC_DT;
-typedef struct timespec IEC_TOD;
+typedef IEC_TIMESPEC IEC_TIME;
+typedef IEC_TIMESPEC IEC_DATE;
+typedef IEC_TIMESPEC IEC_DT;
+typedef IEC_TIMESPEC IEC_TOD;
 
 #ifndef STR_MAX_LEN
 #define STR_MAX_LEN 126
@@ -59,6 +51,6 @@ typedef STR_LEN_TYPE __strlen_t;
 typedef struct {
     __strlen_t len;
     uint8_t body[STR_MAX_LEN];
-} IEC_STRING;
+} __attribute__((packed)) IEC_STRING;
 
 #endif /*IEC_TYPES_H*/

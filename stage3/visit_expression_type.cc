@@ -2,6 +2,7 @@
  *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
  *  Copyright (C) 2009-2011  Mario de Sousa (msousa@fe.up.pt)
+ *  Copyright (C) 2007-2011  Laurent Bessard and Edouard Tisserant
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -57,7 +58,7 @@
                                   (symbol1))
 
 #define STAGE3_ERROR(symbol1, symbol2, msg) {                                          \
-    fprintf(stderr, "semantic error between (%d:%d) and (%d:%d): %s\n",                \
+    fprintf(stderr, "plc.st:%d-%d..%d-%d: error : %s\n",                \
            FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column, \
            LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column,  \
            msg);                                                                       \

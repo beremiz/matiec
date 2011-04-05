@@ -1,56 +1,26 @@
 /*
- * (c) 2007 Mario de Sousa and Laurent Bessard
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- * Offered to the public under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
+ *  Copyright (C) 2007-2011  Laurent Bessard and Edouard Tisserant
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
- * Public License for more details.
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  *
  * This code is made available on the understanding that it will not be
  * used in safety-critical situations without a full and competent review.
  */
-
-/*
- * An IEC 61131-3 IL and ST compiler.
- *
- * Based on the
- * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
- *
- */
-
-/*
- * This is one of the versions available for the 4th stage.
- *
- * This 4th stage generates a c++ source program equivalent
- * to the IL and ST code.
- */
-
-//#include <stdio.h>  /* required for NULL */
-//#include <string>
-//#include <iostream>
-
-//#include "../../util/symtable.hh"
-
-
-
-
-
-
-
-
-
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
 
 class generate_location_list_c: public iterator_visitor_c {
 

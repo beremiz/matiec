@@ -148,7 +148,7 @@ static inline void IEC_error(void) {
 }
 
 
-static inline void __normalize_timespec (struct timespec *ts) {
+static inline void __normalize_timespec (IEC_TIMESPEC *ts) {
   if( ts->tv_nsec < -1000000000 || (( ts->tv_sec > 0 ) && ( ts->tv_nsec < 0 ))){
     ts->tv_sec--;
     ts->tv_nsec += 1000000000;
@@ -159,8 +159,8 @@ static inline void __normalize_timespec (struct timespec *ts) {
   }
 }
 
-static inline struct timespec __time_to_timespec(int sign, double mseconds, double seconds, double minutes, double hours, double days) {
-  struct timespec ts;
+static inline IEC_TIMESPEC __time_to_timespec(int sign, double mseconds, double seconds, double minutes, double hours, double days) {
+  IEC_TIMESPEC ts;
 
   /* sign is 1 for positive values, -1 for negative time... */
   long double total_sec = ((days*24 + hours)*60 + minutes)*60 + seconds + mseconds/1e3;
@@ -172,8 +172,8 @@ static inline struct timespec __time_to_timespec(int sign, double mseconds, doub
 }
 
 
-static inline struct timespec __tod_to_timespec(double seconds, double minutes, double hours) {
-  struct timespec ts;
+static inline IEC_TIMESPEC __tod_to_timespec(double seconds, double minutes, double hours) {
+  IEC_TIMESPEC ts;
 
   long double total_sec = (hours*60 + minutes)*60 + seconds;
   ts.tv_sec = (long int)total_sec;
@@ -182,8 +182,8 @@ static inline struct timespec __tod_to_timespec(double seconds, double minutes, 
   return ts;
 }
 
-static inline struct timespec __date_to_timespec(int day, int month, int year) {
-  struct timespec ts;
+static inline IEC_TIMESPEC __date_to_timespec(int day, int month, int year) {
+  IEC_TIMESPEC ts;
   struct tm broken_down_time;
   time_t epoch_seconds;
 
@@ -205,8 +205,8 @@ static inline struct timespec __date_to_timespec(int day, int month, int year) {
   return ts;
 }
 
-static inline struct timespec __dt_to_timespec(double seconds,  double minutes, double hours, int day, int month, int year) {
-  struct timespec ts;
+static inline IEC_TIMESPEC __dt_to_timespec(double seconds,  double minutes, double hours, int day, int month, int year) {
+  IEC_TIMESPEC ts;
   struct tm broken_down_time;
   time_t epoch_seconds;
 
@@ -791,7 +791,7 @@ static inline LWORD __uint_to_bcd(EN_ENO_PARAMS, ULINT IN){
     return res;
 }
 
-/* workaround for va-atgs limitation on shorter that int params */
+/* workaround for va-args limitation on shorter than int params */
 #define VA_ARGS_REAL LREAL
 #define VA_ARGS_LREAL LREAL
 #define VA_ARGS_SINT DINT

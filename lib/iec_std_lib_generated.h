@@ -1,17 +1,21 @@
 /*
- * (c) 2008 Edouard TISSERANT
+ * Copyright (C) 2007-2011: Edouard TISSERANT and Laurent BESSARD
  *
- * Offered to the public under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
+ * See COPYING and COPYING.LESSER files for copyright details.
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser
- * General Public License for more details.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
  *
- * This code is made available on the understanding that it will not be
- * used in safety-critical situations without a full and competent review.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License 
+ * along with this library. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 /****

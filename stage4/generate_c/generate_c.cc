@@ -2,6 +2,7 @@
  *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
  *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
+ *  Copyright (C) 2007-2011  Laurent Bessard and Edouard Tisserant
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,28 +22,6 @@
  * used in safety-critical situations without a full and competent review.
  */
 
-/*
- * An IEC 61131-3 compiler.
- *
- * Based on the
- * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
- *
- */
-
-
-/*
- * This is one of the versions available for the 4th stage.
- *
- * This 4th stage generates a c++ source program equivalent
- * to the IL and ST code.
- */
-
-
-
-
-
-
-// #include <stdio.h>  /* required for NULL */
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -57,12 +36,6 @@
 
 #include "../stage4.hh"
 
-
-
-
-
-
-
 //#define DEBUG
 #ifdef DEBUG
 #define TRACE(classname) printf("\n____%s____\n",classname);
@@ -70,18 +43,10 @@
 #define TRACE(classname)
 #endif
 
-
-
 #define ERROR error_exit(__FILE__,__LINE__)
 /* function defined in main.cc */
 extern void error_exit(const char *file_name, int line_no);
 
-
-
-
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
 /***********************************************************************/
 
 /* Unlike Programs and Configurations which get mapped onto C++ classes,
@@ -1083,7 +1048,9 @@ void *visit(configuration_declaration_c *symbol) {
   s4o.print("(void) {\n");
   s4o.indent_right();
   s4o.print(s4o.indent_spaces);
-  s4o.print("BOOL retain = 0;\n");
+  s4o.print("BOOL retain;\n");
+  s4o.print(s4o.indent_spaces);
+  s4o.print("retain = 0;\n");
   
   /* (B.3) Global variables initializations... */
   s4o.print(s4o.indent_spaces);
@@ -1371,7 +1338,9 @@ END_RESOURCE
       s4o.print("(void) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
-      s4o.print("BOOL retain = 0;\n");
+      s4o.print("BOOL retain;\n");
+      s4o.print(s4o.indent_spaces);
+      s4o.print("retain = 0;\n");
       
       /* (B.2) Global variables initialisations... */
       if (current_global_vars != NULL) {
