@@ -58,7 +58,7 @@
                                   (symbol1))
 
 #define STAGE3_ERROR(symbol1, symbol2, msg) {                                          \
-    fprintf(stderr, "plc.st:%d-%d..%d-%d: error : %s\n",                \
+    fprintf(stderr, "semantic error between (%d:%d) and (%d:%d): %s\n",                \
            FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column, \
            LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column,  \
            msg);                                                                       \
