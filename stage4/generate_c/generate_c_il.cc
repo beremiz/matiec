@@ -719,9 +719,6 @@ void *visit(array_initial_elements_list_c *symbol) {
 /* B 2.1 Instructions and Operands */
 /***********************************/
 
-/* please see the comment before the RET_operator_c visitor for details... */
-#define END_LABEL VAR_LEADER "end"
-
 /*| instruction_list il_instruction */
 void *visit(instruction_list_c *symbol) {
   
@@ -741,40 +738,6 @@ void *visit(instruction_list_c *symbol) {
   s4o.print(".INTvar = 0;\n\n");
 
   print_list(symbol, s4o.indent_spaces, ";\n" + s4o.indent_spaces, ";\n");
-
-  /* label not used by at least one goto result in a warning.
-   * To work around this we introduce the useless goto
-   * to humour the compiler...
-   */
-  s4o.print("\n");
-  s4o.print(s4o.indent_spaces);
-  s4o.print("/* to humour the compiler, we insert a goto */\n");
-  s4o.print(s4o.indent_spaces);
-  s4o.print("goto ");
-  s4o.print(END_LABEL);
-  s4o.print(";\n");
-
-  /* write the label marking the end of the code block */
-  /* please see the comment before the RET_operator_c visitor for details... */
-  s4o.print("\n");
-  s4o.print(s4o.indent_spaces);
-  s4o.print(END_LABEL);
-  s4o.print(":\n");
-  s4o.indent_right();
-  /* since every label must be followed by at least one statement, and
-   * only the functions will introduce the return statement after this label,
-   * function blocks written in IL would result in invalid C++ code.
-   * To work around this we introduce the equivalent of a 'nop' operation
-   * to humour the compiler...
-   */
-  s4o.print(s4o.indent_spaces);
-  s4o.print("/* to humour the compiler, we insert a nop */\n");
-  s4o.print(s4o.indent_spaces);
-  this->default_variable_name.accept(*this);
-  s4o.print(" = ");
-  this->default_variable_name.accept(*this);
-  s4o.print(";\n");
-  s4o.indent_left();
 
   return NULL;
 }

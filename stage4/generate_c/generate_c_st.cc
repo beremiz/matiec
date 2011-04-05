@@ -796,6 +796,12 @@ void *visit(assignment_statement_c *symbol) {
 /* B 3.2.2 Subprogram Control Statements */
 /*****************************************/
 
+void *visit(return_statement_c *symbol) {
+  s4o.print("goto "); s4o.print(END_LABEL);
+  return NULL;
+}
+
+
 /* fb_name '(' [param_assignment_list] ')' */
 /* param_assignment_list -> may be NULL ! */
 //SYM_REF2(fb_invocation_c, fb_name, param_assignment_list)
