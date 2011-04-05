@@ -1,32 +1,20 @@
 /*
- *  matiec - a compiler for the programming languages defined in IEC 61131-3
+ * Copyright (C) 2007-2011: Edouard TISSERANT and Laurent BESSARD
  *
- *  Copyright (C) 2008 Edouard TISSERANT
+ * See COPYING and COPYING.LESSER files for copyright details.
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- *
- * This code is made available on the understanding that it will not be
- * used in safety-critical situations without a full and competent review.
- */
-
-
-/*
- * An IEC 61131-3 IL and ST compiler.
- *
- * Based on the
- * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -1199,14 +1187,44 @@ if (!strcasecmp(function_name->value, "ATAN"))
 if (!strcasecmp(function_name->value, "ADD"))
     return function_add;
 
+if (!strcasecmp(function_name->value, "ADD_TIME"))
+    return function_add_time;
+
+if (!strcasecmp(function_name->value, "ADD_TOD_TIME"))
+    return function_add_tod_time;
+
+if (!strcasecmp(function_name->value, "ADD_DT_TIME"))
+    return function_add_dt_time;
+
 if (!strcasecmp(function_name->value, "MUL"))
     return function_mul;
+
+if (!strcasecmp(function_name->value, "MULTIME"))
+    return function_multime;
 
 if (!strcasecmp(function_name->value, "SUB"))
     return function_sub;
 
+if (!strcasecmp(function_name->value, "SUB_TIME"))
+    return function_sub_time;
+
+if (!strcasecmp(function_name->value, "SUB_DATE_DATE"))
+    return function_sub_date_date;
+
+if (!strcasecmp(function_name->value, "SUB_TOD_TIME"))
+    return function_sub_tod_time;
+
+if (!strcasecmp(function_name->value, "SUB_TOD_TOD"))
+    return function_sub_tod_tod;
+
+if (!strcasecmp(function_name->value, "SUB_DT_TIME"))
+    return function_sub_dt_time;
+
 if (!strcasecmp(function_name->value, "DIV"))
     return function_div;
+
+if (!strcasecmp(function_name->value, "DIVTIME"))
+    return function_divtime;
 
 if (!strcasecmp(function_name->value, "MOD"))
     return function_mod;
@@ -1288,6 +1306,9 @@ if (!strcasecmp(function_name->value, "MID"))
 
 if (!strcasecmp(function_name->value, "CONCAT"))
     return function_concat;
+
+if (!strcasecmp(function_name->value, "CONCAT_DAT_TOD"))
+    return function_concat_dat_tod;
 
 if (!strcasecmp(function_name->value, "INSERT"))
     return function_insert;

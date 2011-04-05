@@ -21,23 +21,9 @@
  * used in safety-critical situations without a full and competent review.
  *)
 
-(*
- * An IEC 61131-3 compiler.
- *
- * Based on the
- * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
- *
- *)
+(* This is the library conatining the standard function blocks defined in the standard. *)
 
-(*******************************************************************************************************
- * This is the library conatining the standard functions and function blocks defined in the standard.  *
- *******************************************************************************************************
- *)
-
-(* The standard functions *)
-(*{#include "standard_functions.txt" }*)
-
-(* The standard function blocks *)
+(* FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10) *)
 {#include "edge_detection.txt" }
 {#include "bistable.txt" }
 {#include "counter.txt" }
@@ -48,5 +34,6 @@
 {#include "pid_st.txt" }
 {#include "ramp_st.txt" }
 
-(* Some usefull non-standard function blocks *)
+(* Frome later versions of the standard *)
 {#include "sema.txt" }
+
