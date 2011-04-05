@@ -1335,5 +1335,8 @@ static inline STRING __get_type_enum_str(__IEC_types_enum t, void* p){
 
 
 
+#include "standard_functions.h"
+
+
 
 
