@@ -1064,7 +1064,7 @@ void *visit(repeat_statement_c *symbol) {
   return NULL;
 }
 void *visit(exit_statement_c *symbol) {
-  s4o.print("exit(0)");
+  s4o.print("break");
   return NULL;
 }
 
