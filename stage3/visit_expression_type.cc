@@ -44,19 +44,6 @@
 #include <strings.h>
 
 
-/*
-#define FIRST_(symbol1, symbol2) (((symbol1)->first_line   < (symbol2)->first_line)   ? (symbol1) :    \
-                                  ((symbol1)->first_line   > (symbol2)->first_line)   ? (symbol2) :    \
-                                  ((symbol1)->first_column < (symbol2)->first_column) ? (symbol1) :    \
-                                  ((symbol1)->first_column > (symbol2)->first_column) ? (symbol2) :    \
-                                  (symbol1))
-
-#define  LAST_(symbol1, symbol2) (((symbol1)->last_line    < (symbol2)->last_line)    ? (symbol2) :    \
-                                  ((symbol1)->last_line    > (symbol2)->last_line)    ? (symbol1) :    \
-                                  ((symbol1)->last_column  < (symbol2)->last_column)  ? (symbol2) :    \
-                                  ((symbol1)->last_column  > (symbol2)->last_column)  ? (symbol1) :    \
-                                  (symbol1))
-*/
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
 #define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
 
