@@ -43,8 +43,25 @@
 #include <string.h>
 #include <strings.h>
 
+/*
+static inline symbol_c * FIRST_(symbol_c *symbol1, symbol_c *symbol2) {
+  if (symbol1->first_file  == symbol2->first_file)   return symbol1;
 
+  if (symbol1->first_line   < symbol2->first_line)   return symbol1;
+  if (symbol1->first_line   > symbol2->first_line)   return symbol2;
+  if (symbol1->first_column < symbol2->first_column) return symbol1;
+  if (symbol1->first_column > symbol2->first_column) return symbol2;
+  return symbol1;
+}
 
+#define FIRST_(symbol1, symbol2) (((symbol1)->last_file   == (symbol2)->first_file)   ? (symbol1) :    \
+                                  ((symbol1)->first_file  == (symbol2)->last_file)    ? (symbol2) :    \
+                                  ((symbol1)->first_line   < (symbol2)->first_line)   ? (symbol1) :    \
+                                  ((symbol1)->first_line   > (symbol2)->first_line)   ? (symbol2) :    \
+                                  ((symbol1)->first_column < (symbol2)->first_column) ? (symbol1) :    \
+                                  ((symbol1)->first_column > (symbol2)->first_column) ? (symbol2) :    \
+                                  (symbol1))
+*/
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_line   < (symbol2)->first_line)   ? (symbol1) :    \
                                   ((symbol1)->first_line   > (symbol2)->first_line)   ? (symbol2) :    \
                                   ((symbol1)->first_column < (symbol2)->first_column) ? (symbol1) :    \
@@ -58,9 +75,9 @@
                                   (symbol1))
 
 #define STAGE3_ERROR(symbol1, symbol2, msg) {                                          \
-    fprintf(stderr, "semantic error between (%d:%d) and (%d:%d): %s\n",                \
-           FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column, \
-           LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column,  \
+    fprintf(stderr, "%s:(%d:%d) .. %s(%d:%d): %s\n",                                   \
+           FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column, \
+           LAST_(symbol1,symbol2) ->last_file,  LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column,  \
            msg);                                                                       \
     il_error = true;                                                                   \
     error_found = true;                                                                \

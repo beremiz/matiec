@@ -184,11 +184,13 @@ extern YYLTYPE yylloc;
  * back to the bison parser...
  */
 #define YY_USER_ACTION {\
-	  yylloc.first_line = current_tracking->lineNumber;\
-  	yylloc.first_column = current_tracking->currentTokenStart;\
-  	yylloc.last_line = current_tracking->lineNumber;\
-  	yylloc.last_column = current_tracking->currentChar - 1;\
-  	current_tracking->currentTokenStart = current_tracking->currentChar;\
+	yylloc.first_line = current_tracking->lineNumber;\
+	yylloc.first_column = current_tracking->currentTokenStart;\
+	yylloc.first_file = current_filename;\
+	yylloc.last_line = current_tracking->lineNumber;\
+	yylloc.last_column = current_tracking->currentChar - 1;\
+	yylloc.last_file = current_filename;\
+	current_tracking->currentTokenStart = current_tracking->currentChar;\
 	}
 
 
@@ -858,7 +860,13 @@ incompl_location	%[IQM]\*
 			       * the first one (i.e. the one that gets stored in include_stack[0],
 			       * which is never free'd!
 			       */
-			    free((char *)current_filename);
+			    /* NOTE: We do __NOT__ free the malloc()'d memory since 
+			     *       pointers to this filename will be kept by many objects
+			     *       in the abstract syntax tree.
+			     *       This will later be used to provide correct error
+			     *       messages during semantic analysis (stage 3)
+			     */
+			    /* free((char *)current_filename); */
 			    current_filename = include_stack[include_stack_ptr].filename;
 			    yy_push_state(include_end);
 			  }

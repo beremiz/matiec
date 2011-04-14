@@ -116,10 +116,32 @@ void yyerror (const char *error_msg);
 /* Macros used to pass the line and column locations when
  * creating a new object for the abstract syntax tree.
  */
-#define locloc(foo) foo.first_line, foo.first_column, foo.last_line, foo.last_column
-#define   locf(foo) foo.first_line, foo.first_column
-#define   locl(foo) foo.last_line,  foo.last_column
+#define locloc(foo) foo.first_line, foo.first_column, foo.first_file, foo.last_line, foo.last_column, foo.last_file
+#define   locf(foo) foo.first_line, foo.first_column, foo.first_file
+#define   locl(foo) foo.last_line,  foo.last_column, foo.last_file
 
+/* Redefine the default action to take for each rule, so that the filenames are correctly processed... */
+# define YYLLOC_DEFAULT(Current, Rhs, N)                                \
+         do                                                                  \
+           if (N)                                                            \
+             {                                                               \
+               (Current).first_line   = YYRHSLOC(Rhs, 1).first_line;         \
+               (Current).first_column = YYRHSLOC(Rhs, 1).first_column;       \
+               (Current).first_file   = YYRHSLOC(Rhs, 1).first_file;         \
+               (Current).last_line    = YYRHSLOC(Rhs, N).last_line;          \
+               (Current).last_column  = YYRHSLOC(Rhs, N).last_column;        \
+               (Current).last_file    = YYRHSLOC(Rhs, 1).last_file;          \
+             }                                                               \
+           else                                                              \
+             {                                                               \
+               (Current).first_line   = (Current).last_line   =              \
+                 YYRHSLOC(Rhs, 0).last_line;                                 \
+               (Current).first_column = (Current).last_column =              \
+                 YYRHSLOC(Rhs, 0).last_column;                               \
+               (Current).first_file   = (Current).last_file   =              \
+                 YYRHSLOC(Rhs, 0).last_file;                                 \
+             }                                                               \
+         while (0)
 
 
 /* A macro for printing out internal parser errors... */
@@ -182,8 +204,10 @@ bool is_current_syntax_token();
 /* print an error message */
 void print_err_msg(int first_line,
                    int first_column,
+                   const char *first_filename,
                    int last_line,
                    int last_column,
+                   const char *last_filename,
                    const char *additional_error_msg);
 %}
 
@@ -193,6 +217,44 @@ void print_err_msg(int first_line,
 // %glr-parser
 // %expect-rr 1
 
+
+/* The following definitions need to be inside a '%code requires' 
+ * so that they are also included in the header files. If this were not the case,
+ * YYLTYPE would be delcared as something in the iec.cc file, and another thing
+ * (actually the default value of YYLTYPE) in the iec.y.hh heder file.
+ */
+%code requires {
+/* define a new data type to store the locations, so we can also store
+ * the filename in which the token is expressed.
+ */
+/* NOTE: since this code will be placed in the iec.y.hh header file,
+ * as well as the iec.cc file that also includes the iec.y.hh header file,
+ * declaring the typedef struct yyltype__local here would result in a 
+ * compilation error when compiling iec.cc, as this struct would be
+ * declared twice.
+ * We therefore use the #if !defined YYLTYPE ...
+ * to make sure only the first declaration is parsed by the C++ compiler.
+ *
+ * At first glance it seems that what we really should do is delcare the
+ * YYLTYPE directly as an anonymous struct, thus:
+ * #define YYLTYPE struct{ ...}
+ * however, this also results in compilation errors.
+ *
+ * I (Mario) think this is kind of a hack. If you know how to
+ * do this re-declaration of YYLTYPE properly, please let me know!
+ */
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+  typedef struct {
+    int first_line;
+    int first_column;
+    const char *first_file;
+    int last_line;
+    int last_column;
+    const char *last_file;
+  } yyltype__local;
+  #define YYLTYPE yyltype__local
+#endif
+}
 
 
 
@@ -7829,13 +7891,24 @@ bool is_current_syntax_token() {
 
 void print_err_msg(int first_line,
                    int first_column,
+                   const char *first_filename,
                    int last_line,
                    int last_column,
+                   const char *last_filename,
                    const char *additional_error_msg) {
-  if (full_token_loc)
-  	fprintf(stderr, "%s:%d-%d..%d-%d: error : %s\n", current_filename, first_line, first_column, last_line, last_column, additional_error_msg);
-  else
-  	fprintf(stderr, "%s:%d: error : %s\n", current_filename, first_line, additional_error_msg);
+
+  const char *unknown_file = "<unknown_file>";
+  if (first_filename == NULL) first_filename = unknown_file;
+  if ( last_filename == NULL)  last_filename = unknown_file;
+
+  if (full_token_loc) {
+    if (first_filename == last_filename)
+      fprintf(stderr, "%s:%d-%d..%d-%d: error : %s\n", first_filename, first_line, first_column, last_line, last_column, additional_error_msg);
+    else
+      fprintf(stderr, "%s:%d-%d..%s:%d-%d: error : %s\n", first_filename, first_line, first_column, last_filename, last_line, last_column, additional_error_msg);
+  } else {
+      fprintf(stderr, "%s:%d: error : %s\n", first_filename, first_line, additional_error_msg);
+  }
   //fprintf(stderr, "error %d: %s\n", yynerrs /* a global variable */, additional_error_msg);
   print_include_stack();
   //fprintf(stderr, "%s(%d-%d): %s\n", current_filename, first_line, last_line, current_error_msg);
@@ -7926,8 +7999,10 @@ symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator) {
   res = new identifier_c(strdup(name), 
                          il_operator->first_line,
                          il_operator->first_column,
+                         il_operator->first_file,
                          il_operator->last_line,
-                         il_operator->last_column
+                         il_operator->last_column,
+                         il_operator->last_file
                         );
   free(il_operator);
   return res;
