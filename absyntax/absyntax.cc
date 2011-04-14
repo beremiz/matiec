@@ -50,22 +50,24 @@
 
 /* The base class of all symbols */
 symbol_c::symbol_c(
-                   int first_line, int first_column, const char *ffile,
-                   int last_line,  int last_column,  const char *lfile) {
+                   int first_line, int first_column, const char *ffile, long int first_order,
+                   int last_line,  int last_column,  const char *lfile, long int last_order ) {
   this->first_file   = ffile,
   this->first_line   = first_line;
   this->first_column = first_column;
+  this->first_order  = first_order;
   this->last_file    = lfile,
   this->last_line    = last_line;
   this->last_column  = last_column;
+  this->last_order   = last_order;
 }
 
 
 
 token_c::token_c(const char *value, 
-                 int fl, int fc, const char *ffile,
-                 int ll, int lc, const char *lfile)
-  :symbol_c(fl, fc, ffile, ll, lc, lfile) {
+                 int fl, int fc, const char *ffile, long int forder,
+                 int ll, int lc, const char *lfile, long int lorder)
+  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {
   this->value = value;
 //  printf("New token: %s\n", value);
 }
@@ -76,17 +78,17 @@ token_c::token_c(const char *value,
 
 
 list_c::list_c(
-               int fl, int fc, const char *ffile,
-               int ll, int lc, const char *lfile)
-  :symbol_c(fl, fc, ffile, ll, lc, lfile) {
+               int fl, int fc, const char *ffile, long int forder,
+               int ll, int lc, const char *lfile, long int lorder)
+  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {
   n = 0;
   elements = NULL;
 }
 
 list_c::list_c(symbol_c *elem, 
-               int fl, int fc, const char *ffile,
-               int ll, int lc, const char *lfile)
-  :symbol_c(fl, fc, ffile, ll, lc, lfile) {
+               int fl, int fc, const char *ffile, long int forder,
+               int ll, int lc, const char *lfile, long int lorder)
+  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {
   n = 0;
   elements = NULL;
   add_element(elem);
@@ -128,35 +130,35 @@ void list_c::add_element(symbol_c *elem) {
 
 #define SYM_LIST(class_name_c)									\
 class_name_c::class_name_c(									\
-                           int fl, int fc, const char *ffile,					\
-                           int ll, int lc, const char *lfile)					\
-                        :list_c(fl, fc, ffile, ll, lc, lfile) {}				\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+                        :list_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {}		\
 class_name_c::class_name_c(symbol_c *elem, 							\
-                           int fl, int fc, const char *ffile,					\
-                           int ll, int lc, const char *lfile)					\
-			:list_c(elem, fl, fc, ffile, ll, lc, lfile) {}				\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			:list_c(elem, fl, fc, ffile, forder, ll, lc, lfile, lorder) {}		\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 #define SYM_TOKEN(class_name_c)									\
 class_name_c::class_name_c(const char *value, 							\
-                           int fl, int fc, const char *ffile,					\
-                           int ll, int lc, const char *lfile)					\
-			:token_c(value, fl, fc, ffile, ll, lc, lfile) {}			\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			:token_c(value, fl, fc, ffile, forder, ll, lc, lfile, lorder) {}	\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 #define SYM_REF0(class_name_c)									\
 class_name_c::class_name_c(									\
-                           int fl, int fc, const char *ffile,					\
-                           int ll, int lc, const char *lfile)					\
-			  :symbol_c(fl, fc, ffile, ll, lc, lfile) {}				\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {}		\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
 #define SYM_REF1(class_name_c, ref1)								\
 class_name_c::class_name_c(symbol_c *ref1,							\
-                           int fl, int fc, const char *ffile,					\
-                           int ll, int lc, const char *lfile)					\
-			  :symbol_c(fl, fc, ffile, ll, lc, lfile) {				\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
   this->ref1 = ref1;										\
 }												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
@@ -165,9 +167,9 @@ void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 #define SYM_REF2(class_name_c, ref1, ref2)							\
 class_name_c::class_name_c(symbol_c *ref1,							\
 			   symbol_c *ref2,							\
-                           int fl, int fc, const char *ffile,					\
-                           int ll, int lc, const char *lfile)					\
-			  :symbol_c(fl, fc, ffile, ll, lc, lfile) {				\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
   this->ref1 = ref1;										\
   this->ref2 = ref2;										\
 }												\
@@ -178,9 +180,9 @@ void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 class_name_c::class_name_c(symbol_c *ref1,							\
 			   symbol_c *ref2,							\
 			   symbol_c *ref3,							\
-                           int fl, int fc, const char *ffile,					\
-                           int ll, int lc, const char *lfile)					\
-			  :symbol_c(fl, fc, ffile, ll, lc, lfile) {				\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
   this->ref1 = ref1;										\
   this->ref2 = ref2;										\
   this->ref3 = ref3;										\
@@ -193,9 +195,9 @@ class_name_c::class_name_c(symbol_c *ref1,							\
 			   symbol_c *ref2,							\
 			   symbol_c *ref3,							\
 			   symbol_c *ref4,							\
-                           int fl, int fc, const char *ffile,					\
-                           int ll, int lc, const char *lfile)					\
-			  :symbol_c(fl, fc, ffile, ll, lc, lfile) {				\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
   this->ref1 = ref1;										\
   this->ref2 = ref2;										\
   this->ref3 = ref3;										\
@@ -210,9 +212,9 @@ class_name_c::class_name_c(symbol_c *ref1,							\
 			   symbol_c *ref3,							\
 			   symbol_c *ref4,							\
 			   symbol_c *ref5,							\
-                           int fl, int fc, const char *ffile,					\
-                           int ll, int lc, const char *lfile)					\
-			  :symbol_c(fl, fc, ffile, ll, lc, lfile) {				\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
   this->ref1 = ref1;										\
   this->ref2 = ref2;										\
   this->ref3 = ref3;										\
@@ -230,9 +232,9 @@ class_name_c::class_name_c(symbol_c *ref1,							\
 			   symbol_c *ref4,							\
 			   symbol_c *ref5,							\
 			   symbol_c *ref6,							\
-                           int fl, int fc, const char *ffile,					\
-                           int ll, int lc, const char *lfile)					\
-			  :symbol_c(fl, fc, ffile, ll, lc, lfile) {				\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
   this->ref1 = ref1;										\
   this->ref2 = ref2;										\
   this->ref3 = ref3;										\

@@ -179,18 +179,33 @@ extern YYLTYPE yylloc;
       result = YY_NULL;\
     }
 
+
+/* A counter to track the order by which each token is processed.
+ * NOTE: This counter is not exactly linear (i.e., it does not get incremented by 1 for each token).
+ *       i.e.. it may get incremented by more than one between two consecutive tokens.
+ *       This is due to the fact that the counter gets incremented every 'user action' in flex,
+ *       however not every user action will result in a token being passed to bison.
+ *       Nevertheless this is still OK, as we are only interested in the relative
+ *       ordering of tokens...
+ */
+static long int current_order = 0;
+
+
 /* Macro that is executed for every action.
  * We use it to pass the location of the token
  * back to the bison parser...
  */
 #define YY_USER_ACTION {\
-	yylloc.first_line = current_tracking->lineNumber;\
-	yylloc.first_column = current_tracking->currentTokenStart;\
-	yylloc.first_file = current_filename;\
-	yylloc.last_line = current_tracking->lineNumber;\
-	yylloc.last_column = current_tracking->currentChar - 1;\
-	yylloc.last_file = current_filename;\
-	current_tracking->currentTokenStart = current_tracking->currentChar;\
+	yylloc.first_line = current_tracking->lineNumber;			\
+	yylloc.first_column = current_tracking->currentTokenStart;		\
+	yylloc.first_file = current_filename;					\
+	yylloc.first_order = current_order;					\
+	yylloc.last_line = current_tracking->lineNumber;			\
+	yylloc.last_column = current_tracking->currentChar - 1;			\
+	yylloc.last_file = current_filename;					\
+	yylloc.last_order = current_order;					\
+	current_tracking->currentTokenStart = current_tracking->currentChar;	\
+	current_order++;							\
 	}
 
 

@@ -116,9 +116,9 @@ void yyerror (const char *error_msg);
 /* Macros used to pass the line and column locations when
  * creating a new object for the abstract syntax tree.
  */
-#define locloc(foo) foo.first_line, foo.first_column, foo.first_file, foo.last_line, foo.last_column, foo.last_file
-#define   locf(foo) foo.first_line, foo.first_column, foo.first_file
-#define   locl(foo) foo.last_line,  foo.last_column, foo.last_file
+#define locloc(foo) foo.first_line, foo.first_column, foo.first_file, foo.first_order, foo.last_line, foo.last_column, foo.last_file, foo.last_order
+#define   locf(foo) foo.first_line, foo.first_column, foo.first_file, foo.first_order
+#define   locl(foo) foo.last_line,  foo.last_column,  foo.last_file,  foo.last_order
 
 /* Redefine the default action to take for each rule, so that the filenames are correctly processed... */
 # define YYLLOC_DEFAULT(Current, Rhs, N)                                \
@@ -128,9 +128,11 @@ void yyerror (const char *error_msg);
                (Current).first_line   = YYRHSLOC(Rhs, 1).first_line;         \
                (Current).first_column = YYRHSLOC(Rhs, 1).first_column;       \
                (Current).first_file   = YYRHSLOC(Rhs, 1).first_file;         \
+               (Current).first_order  = YYRHSLOC(Rhs, 1).first_order;        \
                (Current).last_line    = YYRHSLOC(Rhs, N).last_line;          \
                (Current).last_column  = YYRHSLOC(Rhs, N).last_column;        \
                (Current).last_file    = YYRHSLOC(Rhs, 1).last_file;          \
+               (Current).last_order   = YYRHSLOC(Rhs, 1).last_order;         \
              }                                                               \
            else                                                              \
              {                                                               \
@@ -140,6 +142,8 @@ void yyerror (const char *error_msg);
                  YYRHSLOC(Rhs, 0).last_column;                               \
                (Current).first_file   = (Current).last_file   =              \
                  YYRHSLOC(Rhs, 0).last_file;                                 \
+               (Current).first_order  = (Current).last_order  =              \
+                 YYRHSLOC(Rhs, 0).last_order;                                \
              }                                                               \
          while (0)
 
@@ -205,9 +209,11 @@ bool is_current_syntax_token();
 void print_err_msg(int first_line,
                    int first_column,
                    const char *first_filename,
+                   long int first_order,
                    int last_line,
                    int last_column,
                    const char *last_filename,
+                   long int last_order,
                    const char *additional_error_msg);
 %}
 
@@ -245,12 +251,14 @@ void print_err_msg(int first_line,
  */
 #if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
   typedef struct {
-    int first_line;
-    int first_column;
+    int         first_line;
+    int         first_column;
     const char *first_file;
-    int last_line;
-    int last_column;
+    long int    first_order;
+    int         last_line;
+    int         last_column;
     const char *last_file;
+    long int    last_order;
   } yyltype__local;
   #define YYLTYPE yyltype__local
 #endif
@@ -7892,9 +7900,11 @@ bool is_current_syntax_token() {
 void print_err_msg(int first_line,
                    int first_column,
                    const char *first_filename,
+                   long int first_order,
                    int last_line,
                    int last_column,
                    const char *last_filename,
+                   long int last_order,
                    const char *additional_error_msg) {
 
   const char *unknown_file = "<unknown_file>";
@@ -8000,9 +8010,11 @@ symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator) {
                          il_operator->first_line,
                          il_operator->first_column,
                          il_operator->first_file,
+                         il_operator->first_order,
                          il_operator->last_line,
                          il_operator->last_column,
-                         il_operator->last_file
+                         il_operator->last_file,
+                         il_operator->last_order
                         );
   free(il_operator);
   return res;

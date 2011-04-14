@@ -71,14 +71,16 @@ class symbol_c {
     int first_line;
     int first_column;
     const char *first_file;  /* filename referenced by first line/column */
+    long int first_order;    /* relative order in which it is read by lexcial analyser */
     int last_line;
     int last_column;
     const char *last_file;  /* filename referenced by last line/column */
+    long int last_order;    /* relative order in which it is read by lexcial analyser */
 
   public:
     /* default constructor */
-    symbol_c(int fl = 0, int fc = 0, const char *ffile = NULL /* filename */,
-             int ll = 0, int lc = 0, const char *lfile = NULL /* filename */
+    symbol_c(int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0, /* order in which it is read by lexcial analyser */
+             int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0  /* order in which it is read by lexcial analyser */
             );
 
     /* default destructor */
@@ -96,8 +98,8 @@ class token_c: public symbol_c {
 
   public:
     token_c(const char *value, 
-            int fl = 0, int fc = 0, const char *ffile = NULL /* filename */,
-            int ll = 0, int lc = 0, const char *lfile = NULL /* filename */
+            int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0, /* order in which it is read by lexcial analyser */
+            int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0  /* order in which it is read by lexcial analyser */
            );
 };
 
@@ -109,13 +111,13 @@ class list_c: public symbol_c {
     symbol_c **elements;
 
   public:
-    list_c(int fl = 0, int fc = 0, const char *ffile = NULL /* filename */,
-           int ll = 0, int lc = 0, const char *lfile = NULL /* filename */
+    list_c(int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0, /* order in which it is read by lexcial analyser */
+           int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0  /* order in which it is read by lexcial analyser */
           );
 
     list_c(symbol_c *elem, 
-	   int fl = 0, int fc = 0, const char *ffile = NULL /* filename */,
-           int ll = 0, int lc = 0, const char *lfile = NULL /* filename */
+           int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0, /* order in which it is read by lexcial analyser */
+           int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0  /* order in which it is read by lexcial analyser */
           );
      /* insert a new element */
     virtual void add_element(symbol_c *elem);
@@ -128,11 +130,11 @@ class list_c: public symbol_c {
 class class_name_c:	public list_c {											\
   public:														\
     class_name_c(													\
-                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, 					\
-                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */);					\
+                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
+                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     class_name_c(symbol_c *elem, 											\
-                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, 					\
-                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */);					\
+                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
+                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
 };
 
@@ -141,8 +143,8 @@ class class_name_c:	public list_c {											\
 class class_name_c: 	public token_c {										\
   public:														\
     class_name_c(const char *value, 											\
-                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, 					\
-                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */);					\
+                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
+                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
 };
 
@@ -151,8 +153,8 @@ class class_name_c: 	public token_c {										\
 class class_name_c: public symbol_c {											\
   public:														\
     class_name_c(		 											\
-                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, 					\
-                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */);					\
+                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
+                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
 };
 
@@ -163,8 +165,8 @@ class class_name_c: public symbol_c {											\
     symbol_c *ref1;													\
   public:														\
     class_name_c(symbol_c *ref1,											\
-                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, 					\
-                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */);					\
+                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
+                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
 };
 
@@ -177,8 +179,8 @@ class class_name_c: public symbol_c {											\
   public:														\
     class_name_c(symbol_c *ref1,											\
 		 symbol_c *ref2 = NULL,											\
-                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, 					\
-                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */);					\
+                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
+                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
 };
 
@@ -193,8 +195,8 @@ class class_name_c: public symbol_c {											\
     class_name_c(symbol_c *ref1,											\
 		 symbol_c *ref2,											\
 		 symbol_c *ref3,											\
-                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, 					\
-                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */);					\
+                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
+                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
 };
 
@@ -211,8 +213,8 @@ class class_name_c: public symbol_c {											\
 		 symbol_c *ref2,											\
 		 symbol_c *ref3,											\
 		 symbol_c *ref4 = NULL,											\
-                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, 					\
-                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */);					\
+                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
+                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
 };
 
@@ -231,8 +233,8 @@ class class_name_c: public symbol_c {											\
 		 symbol_c *ref3,											\
 		 symbol_c *ref4,											\
 		 symbol_c *ref5,											\
-                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, 					\
-                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */);					\
+                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
+                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
 };
 
@@ -253,8 +255,8 @@ class class_name_c: public symbol_c {											\
 		 symbol_c *ref4,											\
 		 symbol_c *ref5,											\
 		 symbol_c *ref6 = NULL,											\
-                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, 					\
-                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */);					\
+                 int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
+                 int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
 };
 
