@@ -5186,7 +5186,7 @@ action_association_list:
 step_name: any_identifier;
 
 action_association:
-  action_name '(' {cmd_goto_sfc_qualifier_state()} action_qualifier {cmd_pop_state()} indicator_name_list ')'
+  action_name '(' {cmd_goto_sfc_qualifier_state();} action_qualifier {cmd_pop_state();} indicator_name_list ')'
 	{$$ = new action_association_c($1, $4, $6, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 /*| action_name '(' error ')'
