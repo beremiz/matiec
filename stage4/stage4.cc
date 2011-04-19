@@ -93,6 +93,10 @@ stage4out_c::~stage4out_c(void) {
   }
 }
 
+void stage4out_c::flush(void) {
+  out->flush();
+}
+
 void stage4out_c::enable_output(void) {
   allow_output = true;
 }

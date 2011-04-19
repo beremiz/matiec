@@ -48,7 +48,9 @@ class stage4out_c {
     stage4out_c(std::string indent_level = "  ");
     stage4out_c(const char *dir, const char *radix, const char *extension, std::string indent_level = "  ");
     ~stage4out_c(void);
-
+    
+    void flush(void);
+    
     void enable_output(void);
     void disable_output(void);
 
