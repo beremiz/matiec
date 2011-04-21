@@ -1307,36 +1307,3 @@ __ne_time(TIME)
 
 __compare_string(__ne_, != )
 
-
-/* Get string representation of variable referenced by a void pointer
- * where type is given as its number */
-/*#define __decl_str_case(cat,TYPENAME) \
-    case TYPENAME##_ENUM:\
-        return __##cat##_to_string(*(TYPENAME*)p);
-#define __decl_str_case_bit(TYPENAME) __decl_str_case(bit,TYPENAME)
-#define __decl_str_case_real(TYPENAME) __decl_str_case(real,TYPENAME)
-#define __decl_str_case_sint(TYPENAME) __decl_str_case(sint,TYPENAME)
-#define __decl_str_case_uint(TYPENAME) __decl_str_case(uint,TYPENAME)
-static inline STRING __get_type_enum_str(__IEC_types_enum t, void* p){
- switch(t){
-  __decl_str_case(bool,BOOL)
-  ANY_NBIT(__decl_str_case_bit)
-  ANY_REAL(__decl_str_case_real)
-  ANY_SINT(__decl_str_case_sint)
-  ANY_UINT(__decl_str_case_uint)
-  __decl_str_case(time,TIME)
-  __decl_str_case(date,DATE)
-  __decl_str_case(tod,TOD)
-  __decl_str_case(dt, DT)
- }
-}
-*/
-
-
-
-
-#include "standard_functions.h"
-
-
-
-
