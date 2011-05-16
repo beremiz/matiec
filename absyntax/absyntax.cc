@@ -49,24 +49,25 @@
 
 
 /* The base class of all symbols */
-symbol_c::symbol_c(void) {
-  this->first_line   = 0;
-  this->first_column = 0;
-  this->last_line    = 0;
-  this->last_column  = 0;
-}
-
-symbol_c::symbol_c(int first_line, int first_column, int last_line, int last_column) {
+symbol_c::symbol_c(
+                   int first_line, int first_column, const char *ffile, long int first_order,
+                   int last_line,  int last_column,  const char *lfile, long int last_order ) {
+  this->first_file   = ffile,
   this->first_line   = first_line;
   this->first_column = first_column;
+  this->first_order  = first_order;
+  this->last_file    = lfile,
   this->last_line    = last_line;
   this->last_column  = last_column;
+  this->last_order   = last_order;
 }
 
 
 
-token_c::token_c(const char *value, int fl, int fc, int ll, int lc)
-  :symbol_c(fl, fc, ll, lc) {
+token_c::token_c(const char *value, 
+                 int fl, int fc, const char *ffile, long int forder,
+                 int ll, int lc, const char *lfile, long int lorder)
+  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {
   this->value = value;
 //  printf("New token: %s\n", value);
 }
@@ -76,14 +77,18 @@ token_c::token_c(const char *value, int fl, int fc, int ll, int lc)
 
 
 
-list_c::list_c(int fl, int fc, int ll, int lc)
-  :symbol_c(fl, fc, ll, lc) {
+list_c::list_c(
+               int fl, int fc, const char *ffile, long int forder,
+               int ll, int lc, const char *lfile, long int lorder)
+  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {
   n = 0;
   elements = NULL;
 }
 
-list_c::list_c(symbol_c *elem, int fl, int fc, int ll, int lc)
-  :symbol_c(fl, fc, ll, lc) {
+list_c::list_c(symbol_c *elem, 
+               int fl, int fc, const char *ffile, long int forder,
+               int ll, int lc, const char *lfile, long int lorder)
+  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {
   n = 0;
   elements = NULL;
   add_element(elem);
@@ -123,113 +128,120 @@ void list_c::add_element(symbol_c *elem) {
 
 
 
-#define SYM_LIST(class_name_c)							\
-class_name_c::class_name_c(int fl, int fc, int ll, int lc)			\
-			:list_c(fl, fc, ll, lc) {}				\
-class_name_c::class_name_c(symbol_c *elem, int fl, int fc, int ll, int lc)	\
-			:list_c(elem, fl, fc, ll, lc) {}			\
+#define SYM_LIST(class_name_c)									\
+class_name_c::class_name_c(									\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+                        :list_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {}		\
+class_name_c::class_name_c(symbol_c *elem, 							\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			:list_c(elem, fl, fc, ffile, forder, ll, lc, lfile, lorder) {}		\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
-#define SYM_TOKEN(class_name_c)							\
-class_name_c::class_name_c(const char *value, int fl, int fc, int ll, int lc)	\
-			:token_c(value, fl, fc, ll, lc) {}			\
+#define SYM_TOKEN(class_name_c)									\
+class_name_c::class_name_c(const char *value, 							\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			:token_c(value, fl, fc, ffile, forder, ll, lc, lfile, lorder) {}	\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
-#define SYM_REF0(class_name_c)					\
-class_name_c::class_name_c(int fl, int fc,			\
-			   int ll, int lc			\
-			  ): symbol_c(fl, fc, ll, lc) {}	\
-void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
-
-
-#define SYM_REF1(class_name_c, ref1)			\
-class_name_c::class_name_c(symbol_c *ref1,		\
-			   int fl, int fc,		\
-			   int ll, int lc		\
-			  ): symbol_c(fl, fc, ll, lc) {	\
-  this->ref1 = ref1;					\
-}							\
+#define SYM_REF0(class_name_c)									\
+class_name_c::class_name_c(									\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {}		\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
-#define SYM_REF2(class_name_c, ref1, ref2)		\
-class_name_c::class_name_c(symbol_c *ref1,		\
-			   symbol_c *ref2,		\
-			   int fl, int fc,		\
-			   int ll, int lc		\
-			  ): symbol_c(fl, fc, ll, lc) {	\
-  this->ref1 = ref1;					\
-  this->ref2 = ref2;					\
-}							\
+#define SYM_REF1(class_name_c, ref1)								\
+class_name_c::class_name_c(symbol_c *ref1,							\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
+  this->ref1 = ref1;										\
+}												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
-#define SYM_REF3(class_name_c, ref1, ref2, ref3)	\
-class_name_c::class_name_c(symbol_c *ref1,		\
-			   symbol_c *ref2,		\
-			   symbol_c *ref3,		\
-			   int fl, int fc,		\
-			   int ll, int lc		\
-			  ): symbol_c(fl, fc, ll, lc) {	\
-  this->ref1 = ref1;					\
-  this->ref2 = ref2;					\
-  this->ref3 = ref3;					\
-}							\
+#define SYM_REF2(class_name_c, ref1, ref2)							\
+class_name_c::class_name_c(symbol_c *ref1,							\
+			   symbol_c *ref2,							\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
+  this->ref1 = ref1;										\
+  this->ref2 = ref2;										\
+}												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
-#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4)	\
-class_name_c::class_name_c(symbol_c *ref1,		\
-			   symbol_c *ref2,		\
-			   symbol_c *ref3,		\
-			   symbol_c *ref4,		\
-			   int fl, int fc,		\
-			   int ll, int lc		\
-			  ): symbol_c(fl, fc, ll, lc) {	\
-  this->ref1 = ref1;					\
-  this->ref2 = ref2;					\
-  this->ref3 = ref3;					\
-  this->ref4 = ref4;					\
-}							\
+#define SYM_REF3(class_name_c, ref1, ref2, ref3)						\
+class_name_c::class_name_c(symbol_c *ref1,							\
+			   symbol_c *ref2,							\
+			   symbol_c *ref3,							\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
+  this->ref1 = ref1;										\
+  this->ref2 = ref2;										\
+  this->ref3 = ref3;										\
+}												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
-#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5)		\
-class_name_c::class_name_c(symbol_c *ref1,				\
-			   symbol_c *ref2,				\
-			   symbol_c *ref3,				\
-			   symbol_c *ref4,				\
-			   symbol_c *ref5,				\
-			   int fl, int fc,				\
-			   int ll, int lc				\
-			  ): symbol_c(fl, fc, ll, lc) {			\
-  this->ref1 = ref1;							\
-  this->ref2 = ref2;							\
-  this->ref3 = ref3;							\
-  this->ref4 = ref4;							\
-  this->ref5 = ref5;							\
-}									\
+#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4)						\
+class_name_c::class_name_c(symbol_c *ref1,							\
+			   symbol_c *ref2,							\
+			   symbol_c *ref3,							\
+			   symbol_c *ref4,							\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
+  this->ref1 = ref1;										\
+  this->ref2 = ref2;										\
+  this->ref3 = ref3;										\
+  this->ref4 = ref4;										\
+}												\
+void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
+
+
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5)					\
+class_name_c::class_name_c(symbol_c *ref1,							\
+			   symbol_c *ref2,							\
+			   symbol_c *ref3,							\
+			   symbol_c *ref4,							\
+			   symbol_c *ref5,							\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
+  this->ref1 = ref1;										\
+  this->ref2 = ref2;										\
+  this->ref3 = ref3;										\
+  this->ref4 = ref4;										\
+  this->ref5 = ref5;										\
+}												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
 
-#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6)	\
-class_name_c::class_name_c(symbol_c *ref1,				\
-			   symbol_c *ref2,				\
-			   symbol_c *ref3,				\
-			   symbol_c *ref4,				\
-			   symbol_c *ref5,				\
-			   symbol_c *ref6,				\
-			   int fl, int fc,				\
-			   int ll, int lc				\
-			  ): symbol_c(fl, fc, ll, lc) {			\
-  this->ref1 = ref1;							\
-  this->ref2 = ref2;							\
-  this->ref3 = ref3;							\
-  this->ref4 = ref4;							\
-  this->ref5 = ref5;							\
-  this->ref6 = ref6;							\
-}									\
+#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6)				\
+class_name_c::class_name_c(symbol_c *ref1,							\
+			   symbol_c *ref2,							\
+			   symbol_c *ref3,							\
+			   symbol_c *ref4,							\
+			   symbol_c *ref5,							\
+			   symbol_c *ref6,							\
+                           int fl, int fc, const char *ffile, long int forder,			\
+                           int ll, int lc, const char *lfile, long int lorder)			\
+			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
+  this->ref1 = ref1;										\
+  this->ref2 = ref2;										\
+  this->ref3 = ref3;										\
+  this->ref4 = ref4;										\
+  this->ref5 = ref5;										\
+  this->ref6 = ref6;										\
+}												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 

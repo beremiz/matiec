@@ -136,6 +136,10 @@ extern void error_exit(const char *file_name, int line_no);
 #define TEMP_VAR VAR_LEADER "TMP_"
 #define SOURCE_VAR VAR_LEADER "SRC_"
 
+/* please see the comment before the RET_operator_c visitor for details... */
+#define END_LABEL VAR_LEADER "end"
+
+
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
@@ -426,6 +430,43 @@ class generate_c_pous_c: public generate_c_typedecl_c {
     };
     virtual ~generate_c_pous_c(void) {}
 
+  private:
+    void print_end_of_block_label(void) {
+      /* Print and __end label for return statements!
+       * If label is not used by at least one goto, compiler will generate a warning.
+       * To work around this we introduce the useless goto.
+       */
+      s4o.print("\n");
+      s4o.print(s4o.indent_spaces);
+      s4o.print("/* to humour the compiler, we insert a goto */\n");
+      s4o.print(s4o.indent_spaces);
+      s4o.print("goto ");
+      s4o.print(END_LABEL);
+      s4o.print(";\n");
+      s4o.indent_left();
+
+      /* write the label marking the end of the code block */
+      /* please see the comment before the RET_operator_c visitor for details... */
+      /* also needed for return_statement_c */
+      s4o.print("\n");
+      s4o.print(s4o.indent_spaces);
+      s4o.print(END_LABEL);
+      s4o.print(":\n");
+      s4o.indent_right();
+
+      /* since every label must be followed by at least one statement, and
+       * only the functions will introduce the return statement after this label,
+       * function blocks written in IL would result in invalid C++ code.
+       * To work around this we introduce the equivalent of a 'nop' operation
+       * to humour the compiler...
+       */
+      s4o.print(s4o.indent_spaces);
+      s4o.print("/* to humour the compiler, we insert a nop */\n");
+      s4o.print(s4o.indent_spaces);
+      s4o.print("if (0);\n\n");
+    }
+  
+
 
   public:
 /********************/
@@ -592,6 +633,8 @@ void *visit(function_declaration_c *symbol) {
   /* (C) Function body */
   generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->derived_function_name, symbol);
   symbol->function_body->accept(generate_c_code);
+  
+  print_end_of_block_label();
   
   vardecl = new generate_c_vardecl_c(&s4o,
                 generate_c_vardecl_c::foutputassign_vf,
@@ -776,6 +819,7 @@ void *visit(function_block_declaration_c *symbol) {
   /* (C.5) Function code */
   generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
   symbol->fblock_body->accept(generate_c_code);
+  print_end_of_block_label();
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
   symbol->fblock_name->accept(*this);
@@ -936,6 +980,7 @@ void *visit(program_declaration_c *symbol) {
   /* (C.5) Function code */
   generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
   symbol->function_block_body->accept(generate_c_code);
+  print_end_of_block_label();
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
   symbol->program_type_name->accept(*this);
