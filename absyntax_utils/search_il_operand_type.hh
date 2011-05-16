@@ -48,7 +48,7 @@
 class search_il_operand_type_c {
 
   private:
-  search_varfb_instance_type_c::search_varfb_instance_type_c search_varfb_instance_type;
+    search_varfb_instance_type_c search_varfb_instance_type;
     search_constant_type_c search_constant_type;
 
   public:
