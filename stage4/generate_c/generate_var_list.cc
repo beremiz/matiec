@@ -110,6 +110,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       variable_vtc,
       external_vtc,
       located_input_vtc,
+      located_memory_vtc,
       located_output_vtc,
       array_vtc,
       structure_vtc,
@@ -215,6 +216,9 @@ class generate_var_list_c: protected generate_c_typedecl_c {
           break;
         case located_input_vtc:
           s4o.print("IN");
+          break;
+        case located_memory_vtc:
+          s4o.print("MEM");
           break;
         case located_output_vtc:
           s4o.print("OUT");
@@ -484,6 +488,8 @@ class generate_var_list_c: protected generate_c_typedecl_c {
 	  locationtype_t location_type = search_location_type.get_location_type(symbol->location);
 	  if (location_type == input_lt)
         this->current_var_type_category = located_input_vtc;
+      else if (location_type == memory_lt)
+        this->current_var_type_category = located_memory_vtc;
       else if (location_type == output_lt)
         this->current_var_type_category = located_output_vtc;
 
