@@ -205,22 +205,22 @@ void *print_setter(symbol_c* symbol,
 void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype;
   if (wanted_variablegeneration == complextype_base_vg)
-	generate_c_base_c::visit(symbol);
+         generate_c_base_c::visit(symbol);
   else if (wanted_variablegeneration == complextype_suffix_vg)
-	return NULL;
+         return NULL;
   else if (this->is_variable_prefix_null()) {
-	vartype = search_varfb_instance_type->get_vartype(symbol);
-	if (wanted_variablegeneration == fparam_output_vg) {
-	  s4o.print("&(");
-      generate_c_base_c::visit(symbol);
-      s4o.print(")");
-    }
-    else {
-      generate_c_base_c::visit(symbol);
-    }
+         vartype = search_varfb_instance_type->get_vartype(symbol);
+         if (wanted_variablegeneration == fparam_output_vg) {
+           s4o.print("&(");
+           generate_c_base_c::visit(symbol);
+           s4o.print(")");
+         } 
+         else {
+           generate_c_base_c::visit(symbol);
+         }
   }
   else
-	print_getter(symbol);
+      print_getter(symbol);
   return NULL;
 }
 
@@ -301,7 +301,9 @@ void *visit(array_variable_c *symbol) {
       if (current_array_type == NULL) ERROR;
 
       s4o.print(".table");
+      wanted_variablegeneration = expression_vg;
       symbol->subscript_list->accept(*this);
+      wanted_variablegeneration = complextype_suffix_vg;
 
       current_array_type = NULL;
       break;
