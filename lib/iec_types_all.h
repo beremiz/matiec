@@ -16,6 +16,7 @@
 #define __IEC_DEBUG_FLAG 0x01
 #define __IEC_FORCE_FLAG 0x02
 #define __IEC_RETAIN_FLAG 0x04
+#define __IEC_OUTPUT_FLAG 0x08
 
 #define __DECLARE_IEC_TYPE(type)\
 typedef IEC_##type type;\
