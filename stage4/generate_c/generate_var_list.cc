@@ -316,6 +316,8 @@ class generate_var_list_c: protected generate_c_typedecl_c {
         locationtype_t location_type = search_location_type.get_location_type(symbol->location);
         if (location_type == input_lt)
           this->current_var_type_category = located_input_vtc;
+        else if (location_type == memory_lt)
+          this->current_var_type_category = located_memory_vtc;
         else if (location_type == output_lt)
           this->current_var_type_category = located_output_vtc;
 
@@ -341,6 +343,8 @@ class generate_var_list_c: protected generate_c_typedecl_c {
         locationtype_t location_type = search_location_type.get_location_type(symbol->incompl_location);
         if (location_type == input_lt)
           this->current_var_type_category = located_input_vtc;
+        else if (location_type == memory_lt)
+          this->current_var_type_category = located_memory_vtc;
         else if (location_type == output_lt)
           this->current_var_type_category = located_output_vtc;
 
