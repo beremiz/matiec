@@ -155,6 +155,7 @@ void *print_setter(symbol_c* symbol,
 		symbol_c* value,
 		symbol_c* fb_symbol = NULL,
 		symbol_c* fb_value = NULL) {
+  
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
   if (vartype == search_var_instance_decl_c::external_vt) {
     symbolic_variable_c *variable = dynamic_cast<symbolic_variable_c *>(symbol);
@@ -185,10 +186,17 @@ void *print_setter(symbol_c* symbol,
   }
   else
     wanted_variablegeneration = complextype_base_vg;
+  
   symbol->accept(*this);
   s4o.print(",");
   wanted_variablegeneration = expression_vg;
   print_check_function(type, value, fb_value);
+  /* We need to call search_varfb_instance_type->get_vartype() again, as it may have been called
+   * again since we called it in the beginning of this print_setter() function.
+   * This make sure the call to search_varfb_instance_type->type_is_complex() will return
+   * the correct value regarding our 'symbol'.
+   */
+  search_varfb_instance_type->get_vartype(symbol);
   if (search_varfb_instance_type->type_is_complex()) {
     s4o.print(",");
     wanted_variablegeneration = complextype_suffix_vg;
