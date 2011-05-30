@@ -260,10 +260,12 @@ void *get_sizeof_datatype_c::visit(binary_integer_c *symbol) {
   if ('\0' == *sval) ERROR;
 
   /* determine the number of bits used... */
-  for (bitsize = 0; '\0' != *sval; sval++, bitsize++) {
+  for (bitsize = 0; '\0' != *sval; sval++) {
     /* consistency check: make sure we only have binary digits! */
-    if (('0' != *sval) && ('1' != *sval))
+    if (('0' != *sval) && ('1' != *sval) && ('_' != *sval))
       ERROR;
+
+    if ('_' != *sval) bitsize ++; /* 1 bits per binary digit */
   }
 
   /* special case... if (value == 0) <=> (bitsize == 0), return bit size of 1 ! */
@@ -291,11 +293,13 @@ void *get_sizeof_datatype_c::visit(octal_integer_c *symbol) {
   if ('\0' == *sval) ERROR;
 
   /* determine the number of bits used... */
-  for (bitsize = 0; '\0' != *sval; sval++, bitsize += 3 /* 3 bits per octal digit */) {
+  for (bitsize = 0; '\0' != *sval; sval++) {
     /* consistency check: make sure we only have octal digits! */
     /* Assumes ASCII */
-    if (('0' > *sval) || ('7' < *sval))
+    if ((('0' > *sval) || ('7' < *sval)) && ('_' != *sval))
       ERROR;
+
+    if ('_' != *sval) bitsize += 3; /* 3 bits per octal digit */
   }
 
   /* special case... if (value == 0) <=> (bitsize == 0), return bit size of 1 ! */
@@ -326,13 +330,16 @@ void *get_sizeof_datatype_c::visit(hex_integer_c *symbol) {
   if ('\0' == *sval) ERROR;
 
   /* determine the number of bits used... */
-  for (bitsize = 0; '\0' != *sval; sval++, bitsize += 4 /* 4 bits per hex digit */) {
-    /* consistency check: make sure we only have hex digits! */
+  for (bitsize = 0; '\0' != *sval; sval++) {
+    /* consistency check: make sure we only have hex digits or underscores! */
     /* Assumes ASCII */
     if (!(('0' <= *sval) && ('9' >= *sval)) && 
         !(('A' <= *sval) && ('F' >= *sval)) &&
-        !(('a' <= *sval) && ('b' >= *sval)))
+        !(('a' <= *sval) && ('b' >= *sval)) &&
+        ! ('_' == *sval))
       ERROR;
+
+    if ('_' != *sval) bitsize += 4; /* 4 bits per hex digit */
   }
 
   /* special case... if (value == 0) <=> (bitsize == 0), return bit size of 1 ! */
