@@ -219,12 +219,29 @@ void *get_sizeof_datatype_c::visit(integer_c *symbol) {
    * (usually 64 bits), which is not good at all!
    */
   /* Let's try to determine bitsize by converting directly from the string!! */
+  char *sval, *oval;
+  const char *pval;
+  oval = sval = (char *)malloc(strlen(symbol->value)+1);
+  if (NULL ==  sval) ERROR;
+
+  /* copy the original string, but leave out any underscores... */
+  for (pval = symbol->value, sval = oval; *pval != '\0'; pval++) {
+    if ('_' != *pval) {*sval = *pval; sval++;}
+  }  
+  *sval = '\0';  
+  
+  sval = oval;
+  if ('\0' == *sval) ERROR;
+
+  for (bitsize = 0; *sval != '\0'; strdivby2(&sval), bitsize ++);
+
+/*
   char *sval = strdup(symbol->value);
   char *oval = sval;
   if (NULL ==  sval) ERROR;
   if ('\0' == *sval) ERROR;
-
   for (bitsize = 0; *sval != '\0'; strdivby2(&sval), bitsize ++);
+*/
 
   /* Even for (value == 0), the above loop will return bitsize == 1!, 
    * so we don't need to handle the special case...
