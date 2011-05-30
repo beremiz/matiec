@@ -421,7 +421,7 @@ void *visit(type_declaration_list_c *symbol) {
 void *visit(simple_type_declaration_c *symbol) {
   TRACE("simple_type_declaration_c");
 
-  s4o_incl.print("__DECLARE_DERIVED_TYPE");
+  s4o_incl.print("__DECLARE_DERIVED_TYPE(");
   symbol->simple_spec_init->accept(*this);
   s4o_incl.print(",");
   symbol->simple_type_name->accept(*basedecl);
