@@ -132,7 +132,7 @@ class generate_c_base_c: public iterator_visitor_c {
 	  bit_mult /= 2;
 	  value += bit_mult * ((token->value[i] == '0')? 0:1);
 	  if (bit_mult == 1) {
-	    str[0] = (value <= 9)? (char)'0' + value : (char)'A' + value;
+	    str[0] = (value <= 9)? (char)'0' + value : (char)'A' + value - 10;
 	    s4o.print(str);
             bit_mult = 0x10;
             value = 0;
