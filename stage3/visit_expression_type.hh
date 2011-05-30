@@ -214,6 +214,11 @@ class visit_expression_type_c: public search_constant_type_c {
 
     /* a helper function... */
     void *verify_null(symbol_c *symbol);
+    
+    /********************************/
+    /* B 1.3.3 - Derived data types */
+    /********************************/
+    void *visit(data_type_declaration_c *symbol);
 
     /*********************/
     /* B 1.4 - Variables */

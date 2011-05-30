@@ -895,6 +895,14 @@ void *visit_expression_type_c::verify_null(symbol_c *symbol){
 }
 
 
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+void *visit_expression_type_c::visit(data_type_declaration_c *symbol) {
+  // TODO !!!
+  /* for the moment we must return NULL so semantic analysis of remaining code is not interrupted! */
+  return NULL;
+}
 
 
 /*********************/
@@ -1989,6 +1997,19 @@ void *visit_expression_type_c::visit(assignment_statement_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
 
+  if (debug) {
+    printf("visit_expression_type_c::visit(assignment_statement_c) called. Checking --->");  
+    symbolic_variable_c *hi = dynamic_cast<symbolic_variable_c *>(symbol->l_exp);  
+    if (hi != NULL) {
+      identifier_c *hi1 = dynamic_cast<identifier_c *>(hi->var_name);  
+      if (hi1 != NULL) printf(hi1->value);
+    }
+    printf(" := ");
+    hex_integer_c *hi2 = dynamic_cast<hex_integer_c *>(symbol->r_exp);  
+    if (hi2 != NULL) printf(hi2->value);
+    printf("\n");
+  } // if (debug)
+  
   if (!is_valid_assignment(left_type, right_type))  {
      STAGE3_ERROR(symbol, symbol, "data type mismatch in assignment statement!\n");
   }
