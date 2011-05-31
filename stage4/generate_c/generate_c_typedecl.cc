@@ -30,6 +30,7 @@ class generate_c_typedecl_c: public generate_c_base_c {
 
   private:
     symbol_c* current_type_name;
+    bool array_is_derived;
     search_base_type_c search_base_type;
 
     generate_c_base_c *basedecl;
@@ -61,6 +62,7 @@ class generate_c_typedecl_c: public generate_c_base_c {
       none_bd,
       subrangebasetype_bd,
       subrangetest_bd,
+      arrayderiveddeclaration_bd,
       arraybasetype_bd,
       arraybasetypeincl_bd,
       arraysubrange_bd,
@@ -317,16 +319,26 @@ void *visit(enumerated_value_c *symbol) {
 void *visit(array_type_declaration_c *symbol) {
   TRACE("array_type_declaration_c");
   
-  s4o_incl.print("__DECLARE_ARRAY_TYPE(");
+  array_is_derived = false;
+  current_basetypedeclaration = arrayderiveddeclaration_bd;
+  symbol->array_spec_init->accept(*this);
+  current_basetypedeclaration = none_bd;
+
+  if (array_is_derived)
+	s4o_incl.print("__DECLARE_DERIVED_TYPE(");
+  else
+    s4o_incl.print("__DECLARE_ARRAY_TYPE(");
   current_basetypedeclaration = arraybasetypeincl_bd;
   symbol->array_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
   s4o_incl.print(",");
   symbol->identifier->accept(*basedecl);
-  s4o_incl.print(",");
-  current_basetypedeclaration = arraysubrange_bd;
-  symbol->array_spec_init->accept(*this);
-  current_basetypedeclaration = none_bd;
+  if (!array_is_derived) {
+    s4o_incl.print(",");
+    current_basetypedeclaration = arraysubrange_bd;
+    symbol->array_spec_init->accept(*this);
+    current_basetypedeclaration = none_bd;
+  }
   s4o_incl.print(")\n");
   
   if (search_base_type.type_is_subrange(symbol->identifier)) {
@@ -353,15 +365,40 @@ void *visit(array_type_declaration_c *symbol) {
 void *visit(array_spec_init_c *symbol) {
   TRACE("array_spec_init_c");
   
-  identifier_c *array_type_name = dynamic_cast<identifier_c *>(symbol->array_specification);
-  
-  if (array_type_name == NULL) {
-    current_typedefinition = array_td;
-    symbol->array_specification->accept(*this);
-    current_typedefinition = none_td;
+  identifier_c *array_type_name;
+
+  switch (current_basetypedeclaration) {
+    case arrayderiveddeclaration_bd:
+      array_type_name = dynamic_cast<identifier_c *>(symbol->array_specification);
+      array_is_derived = array_type_name != NULL;
+      break;
+    case arraytranslateindex_bd:
+      if (!array_is_derived) {
+    	current_typedefinition = array_td;
+    	symbol->array_specification->accept(*this);
+    	current_typedefinition = none_td;
+      }
+
+      s4o.print("#define __");
+      current_type_name->accept(*this);
+      s4o.print("_TRANSIDX(row, index) __");
+      if (array_is_derived)
+         symbol->array_specification->accept(*this);
+      else
+         current_type_name->accept(*this);
+      s4o.print("_TRANSIDX##row(index)");
+      break;
+    default:
+      if (array_is_derived) {
+        symbol->array_specification->accept(*basedecl);
+      }
+      else {
+        current_typedefinition = array_td;
+        symbol->array_specification->accept(*this);
+        current_typedefinition = none_td;
+      }
+      break;
   }
-  else
-    symbol->array_specification->accept(*basedecl);
   return NULL;
 }
 
@@ -425,7 +462,7 @@ void *visit(simple_type_declaration_c *symbol) {
   symbol->simple_spec_init->accept(*this);
   s4o_incl.print(",");
   symbol->simple_type_name->accept(*basedecl);
-  s4o_incl.print(");\n");
+  s4o_incl.print(")\n");
   return NULL;
 }
 

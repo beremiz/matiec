@@ -339,9 +339,9 @@ void *visit(subscript_list_c *symbol) {
   for (int i =  0; i < symbol->n; i++) {
     s4o.print("[__");
     current_array_type->accept(*this);
-    s4o.print("_TRANSIDX");
+    s4o.print("_TRANSIDX(");
     print_integer(i);
-    s4o.print("(");
+    s4o.print(",");
     symbol->elements[i]->accept(*this);
     s4o.print(")]");
   }
