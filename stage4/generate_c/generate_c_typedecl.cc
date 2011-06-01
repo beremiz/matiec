@@ -52,8 +52,10 @@ class generate_c_typedecl_c: public generate_c_base_c {
 
     typedef enum {
       none_td,
+      enumerated_td,
       subrange_td,
-      array_td
+      array_td,
+      struct_td,
     } typedefinition_t;
 
     typedefinition_t current_typedefinition;
@@ -174,11 +176,13 @@ class generate_c_typedecl_c: public generate_c_base_c {
 void *visit(subrange_type_declaration_c *symbol) {
   TRACE("subrange_type_declaration_c");  
   
+  current_typedefinition = subrange_td;
+
   s4o_incl.print("__DECLARE_DERIVED_TYPE(");
   current_basetypedeclaration = subrangebasetype_bd;
   symbol->subrange_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
-  s4o_incl.print(", ");
+  s4o_incl.print(",");
   symbol->subrange_type_name->accept(*basedecl);
   s4o_incl.print(")\n");
   
@@ -188,55 +192,60 @@ void *visit(subrange_type_declaration_c *symbol) {
   symbol->subrange_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
   
+  current_typedefinition = none_td;
+
   return NULL;
 }
 
 /* subrange_specification ASSIGN signed_integer */
 void *visit(subrange_spec_init_c *symbol) {
   TRACE("subrange_spec_init_c");
-  current_typedefinition = subrange_td;
   symbol->subrange_specification->accept(*this);
-  current_typedefinition = none_td;
   return NULL;
 }
 
 /*  integer_type_name '(' subrange')' */
 void *visit(subrange_specification_c *symbol) {
-  switch (current_basetypedeclaration) {
-    case subrangebasetype_bd:
-      symbol->integer_type_name->accept(*basedecl);
-      break;
-    case subrangetest_bd:
-      if (symbol->subrange != NULL) {
-        current_type_name->accept(*this);
-        s4o.print(" __CHECK_");
-        current_type_name->accept(*this);
-        s4o.print("(");
-        current_type_name->accept(*this);
-        s4o.print(" value) {\n");
-        s4o.indent_right();
-        
-        if (search_base_type.type_is_subrange(symbol->integer_type_name)) {
-          s4o.print(s4o.indent_spaces + "value = __CHECK_");
-          symbol->integer_type_name->accept(*this);
-          s4o.print("(value);\n");
+  if (current_typedefinition == subrange_td) {
+    switch (current_basetypedeclaration) {
+      case subrangebasetype_bd:
+        symbol->integer_type_name->accept(*basedecl);
+        break;
+      case subrangetest_bd:
+        if (symbol->subrange != NULL) {
+          current_type_name->accept(*this);
+          s4o.print(" __CHECK_");
+          current_type_name->accept(*this);
+          s4o.print("(");
+          current_type_name->accept(*this);
+          s4o.print(" value) {\n");
+          s4o.indent_right();
+
+          if (search_base_type.type_is_subrange(symbol->integer_type_name)) {
+            s4o.print(s4o.indent_spaces + "value = __CHECK_");
+            symbol->integer_type_name->accept(*this);
+            s4o.print("(value);\n");
+          }
+
+          symbol->subrange->accept(*this);
+
+          s4o.indent_left();
+          s4o.print("}\n");
         }
-        
-        symbol->subrange->accept(*this);
-        
-        s4o.indent_left();
-        s4o.print("}\n");
-      }
-      else {
-        s4o.print("#define __CHECK_");
-        current_type_name->accept(*this);
-        s4o.print(" __CHECK_");
-        symbol->integer_type_name->accept(*this);
-        s4o.print("\n");
-      } 
-      break;
-    default:
-      break;
+        else {
+          s4o.print("#define __CHECK_");
+          current_type_name->accept(*this);
+          s4o.print(" __CHECK_");
+          symbol->integer_type_name->accept(*this);
+          s4o.print("\n");
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  else {
+    symbol->integer_type_name->accept(*basedecl);
   }
   return NULL;
 }
@@ -286,6 +295,8 @@ void *visit(subrange_c *symbol) {
 void *visit(enumerated_type_declaration_c *symbol) {
   TRACE("enumerated_type_declaration_c");
   
+  current_typedefinition = enumerated_td;
+
   s4o_incl.print("typedef enum {\n");
   s4o_incl.indent_right();
   symbol->enumerated_spec_init->accept(*this);
@@ -293,12 +304,18 @@ void *visit(enumerated_type_declaration_c *symbol) {
   s4o_incl.print("} ");
   symbol->enumerated_type_name->accept(*basedecl);
   s4o_incl.print(";\n");
+
+  current_typedefinition = none_td;
+
   return NULL;
 }
 
 void *visit(enumerated_spec_init_c *symbol) {
   TRACE("enumerated_spec_init_c");
-  symbol->enumerated_specification->accept(*this);
+  if (current_typedefinition == enumerated_td)
+    symbol->enumerated_specification->accept(*this);
+  else
+    symbol->enumerated_specification->accept(*basedecl);
   return NULL;
 }
 
@@ -319,6 +336,8 @@ void *visit(enumerated_value_c *symbol) {
 void *visit(array_type_declaration_c *symbol) {
   TRACE("array_type_declaration_c");
   
+  current_typedefinition = array_td;
+
   array_is_derived = false;
   current_basetypedeclaration = arrayderiveddeclaration_bd;
   symbol->array_spec_init->accept(*this);
@@ -357,6 +376,8 @@ void *visit(array_type_declaration_c *symbol) {
   current_basetypedeclaration = none_bd;
   s4o.print("\n");
   
+  current_typedefinition = none_td;
+
   return NULL;
 }
 
@@ -373,11 +394,8 @@ void *visit(array_spec_init_c *symbol) {
       array_is_derived = array_type_name != NULL;
       break;
     case arraytranslateindex_bd:
-      if (!array_is_derived) {
-    	current_typedefinition = array_td;
+      if (!array_is_derived)
     	symbol->array_specification->accept(*this);
-    	current_typedefinition = none_td;
-      }
 
       s4o.print("#define __");
       current_type_name->accept(*this);
@@ -389,14 +407,10 @@ void *visit(array_spec_init_c *symbol) {
       s4o.print("_TRANSIDX##row(index)");
       break;
     default:
-      if (array_is_derived) {
+      if (array_is_derived)
         symbol->array_specification->accept(*basedecl);
-      }
-      else {
-        current_typedefinition = array_td;
+      else
         symbol->array_specification->accept(*this);
-        current_typedefinition = none_td;
-      }
       break;
   }
   return NULL;
@@ -530,11 +544,16 @@ SYM_REF2(array_initial_elements_c, integer, array_initial_element)
 void *visit(structure_type_declaration_c *symbol) {
   TRACE("structure_type_declaration_c");
 
+  current_typedefinition = struct_td;
+
   s4o_incl.print("__DECLARE_STRUCT_TYPE(");
   symbol->structure_specification->accept(*this);
   s4o_incl.print(",");
   symbol->structure_type_name->accept(*basedecl);
   s4o_incl.print(");\n");
+
+  current_typedefinition = none_td;
+
   return NULL;
 }
 
