@@ -1530,7 +1530,9 @@ void *visit(il_instruction_c *symbol) {
     symbol->label->accept(*this);
     s4o.print(": ");
   }
-  symbol->il_instruction->accept(*this);
+  if (symbol->il_instruction != NULL) {
+    symbol->il_instruction->accept(*this);
+  }  
   return NULL;
 }
 

@@ -751,7 +751,9 @@ void *visit(il_instruction_c *symbol) {
     s4o.print(":\n");
     s4o.print(s4o.indent_spaces);
   }
-  symbol->il_instruction->accept(*this);
+  if (NULL != symbol->il_instruction) {
+    symbol->il_instruction->accept(*this);
+  }  
   return NULL;
 }
 

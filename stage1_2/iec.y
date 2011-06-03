@@ -6197,6 +6197,8 @@ il_instruction:
 	{$$ = new il_instruction_c(NULL, $1, locloc(@$));}
 | label ':' il_incomplete_instruction eol_list
 	{$$ = new il_instruction_c($1, $3, locloc(@$));}
+| label ':' eol_list
+	{$$ = new il_instruction_c($1, NULL, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | error eol_list
 	{$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid IL instruction."); yyerrok;}
