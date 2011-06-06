@@ -1187,6 +1187,24 @@ if (!strcasecmp(function_name->value, "ATAN"))
 if (!strcasecmp(function_name->value, "ADD"))
     return function_add;
 
+if (!strcasecmp(function_name->value, "MUL"))
+    return function_mul;
+
+if (!strcasecmp(function_name->value, "SUB"))
+    return function_sub;
+
+if (!strcasecmp(function_name->value, "DIV"))
+    return function_div;
+
+if (!strcasecmp(function_name->value, "MOD"))
+    return function_mod;
+
+if (!strcasecmp(function_name->value, "EXPT"))
+    return function_expt;
+
+if (!strcasecmp(function_name->value, "MOVE"))
+    return function_move;
+
 if (!strcasecmp(function_name->value, "ADD_TIME"))
     return function_add_time;
 
@@ -1196,14 +1214,8 @@ if (!strcasecmp(function_name->value, "ADD_TOD_TIME"))
 if (!strcasecmp(function_name->value, "ADD_DT_TIME"))
     return function_add_dt_time;
 
-if (!strcasecmp(function_name->value, "MUL"))
-    return function_mul;
-
 if (!strcasecmp(function_name->value, "MULTIME"))
     return function_multime;
-
-if (!strcasecmp(function_name->value, "SUB"))
-    return function_sub;
 
 if (!strcasecmp(function_name->value, "SUB_TIME"))
     return function_sub_time;
@@ -1220,20 +1232,8 @@ if (!strcasecmp(function_name->value, "SUB_TOD_TOD"))
 if (!strcasecmp(function_name->value, "SUB_DT_TIME"))
     return function_sub_dt_time;
 
-if (!strcasecmp(function_name->value, "DIV"))
-    return function_div;
-
 if (!strcasecmp(function_name->value, "DIVTIME"))
     return function_divtime;
-
-if (!strcasecmp(function_name->value, "MOD"))
-    return function_mod;
-
-if (!strcasecmp(function_name->value, "EXPT"))
-    return function_expt;
-
-if (!strcasecmp(function_name->value, "MOVE"))
-    return function_move;
 
 if (!strcasecmp(function_name->value, "SHL"))
     return function_shl;

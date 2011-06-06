@@ -471,6 +471,33 @@ static inline __strlen_t __find(EN_ENO_PARAMS, STRING IN1, STRING IN2){
 /***************/
 /* Convertions */
 /***************/
+    /*****************/
+    /*  REAL_TO_INT  */
+    /*****************/
+static inline LINT __real_round(LREAL IN)
+{
+	return fmod(IN, 1) == 0 ? ((LINT)IN / 2) * 2 : (LINT)IN;
+}
+static inline LINT __preal_to_sint(LREAL IN)
+{
+   return IN >= 0 ? __real_round(IN + 0.5) : __real_round(IN - 0.5);
+}
+static inline LINT __preal_to_uint(LREAL IN)
+{
+   return IN >= 0 ? __real_round(IN + 0.5) : 0;
+}
+static inline LINT __real_to_sint(EN_ENO_PARAMS, LREAL IN){
+    TEST_EN(LINT)
+    return (LINT)__preal_to_sint(IN);
+}
+static inline LWORD __real_to_bit(EN_ENO_PARAMS, LREAL IN){
+    TEST_EN(LWORD)
+    return (LWORD)__preal_to_uint(IN);
+}
+static inline ULINT __real_to_uint(EN_ENO_PARAMS, LREAL IN){
+    TEST_EN(ULINT)
+    return (ULINT)__preal_to_uint(IN);
+}
     /***************/
     /*  TO_STRING  */
     /***************/
@@ -584,7 +611,7 @@ static inline LINT __pstring_to_sint(STRING* IN){
 
 static inline LINT __string_to_sint(EN_ENO_PARAMS, STRING IN){
     TEST_EN(LINT)
-    return (LWORD)__pstring_to_sint(&IN);
+    return (LINT)__pstring_to_sint(&IN);
 }
 static inline LWORD __string_to_bit(EN_ENO_PARAMS, STRING IN){
     TEST_EN(LWORD)

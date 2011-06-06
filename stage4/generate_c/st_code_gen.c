@@ -50,14 +50,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_sint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -93,14 +92,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_sint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -136,14 +134,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_sint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -221,14 +218,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_bit"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -348,14 +344,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_uint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -391,14 +386,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_bit"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -476,14 +470,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_bit"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -519,14 +512,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_uint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -605,14 +597,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_bit"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -648,14 +639,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_uint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -691,14 +681,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_uint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -734,14 +723,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_bit"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -819,14 +807,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::real_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_sint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10089,14 +10076,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_sint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::sint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10132,14 +10118,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_sint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10175,14 +10160,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_sint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10260,14 +10244,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_bit"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::dword_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10387,14 +10370,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_uint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::udint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10430,14 +10412,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_bit"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::word_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10515,14 +10496,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_bit"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::lword_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10558,14 +10538,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_uint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::uint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10601,14 +10580,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_bit"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::byte_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10644,14 +10622,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_uint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::usint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10687,14 +10664,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_uint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::ulint_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10730,14 +10706,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_bit"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::bool_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -10815,14 +10790,13 @@ switch(current_function_type){
             if(IN_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::lreal_type_name, last_type_symbol))
             {
         
-                function_name = (symbol_c*)(new pragma_c("__move_"));
+                function_name = (symbol_c*)(new pragma_c("__real_to_sint"));
                 
                 if (IN_type_symbol == NULL)
                   IN_type_symbol = last_type_symbol;
                 ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
                 symbol_c * return_type_symbol = &search_constant_type_c::int_type_name;
                 function_type_prefix = return_type_symbol;
-                function_type_suffix = IN_type_symbol;
                 break;
                 
             }
@@ -16690,210 +16664,6 @@ switch(current_function_type){
     break;
 
 /****
- *ADD_TIME
- */
-    case function_add_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
-            symbol_c *IN1_type_symbol = NULL;
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next_nf();
-            if (IN1_param_value != NULL) {
-              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
-              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
-            }
-            
-            if(IN1_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                {
-                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
-                    /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
-                    symbol_c *IN2_type_symbol = NULL;
-                    
-                    /* Get the value from a foo(<param_value>) style call */
-                    if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next_nf();
-                    if (IN2_param_value != NULL) {
-                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
-                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
-                    }
-                    
-                    if(IN2_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-                    {
-                
-                        function_name = (symbol_c*)(new pragma_c("__time_add"));
-                        
-                        if (IN1_type_symbol == NULL)
-                          IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
-                        
-                        if (IN2_type_symbol == NULL)
-                          IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        break;
-                        
-                    }
-                    
-                    
-                    ERROR;
-                }
-                
-            }
-            
-            
-            ERROR;
-        }
-        
-    }/*function_add_time*/
-    break;
-
-/****
- *ADD_TOD_TIME
- */
-    case function_add_tod_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
-            symbol_c *IN1_type_symbol = NULL;
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next_nf();
-            if (IN1_param_value != NULL) {
-              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
-              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
-            }
-            
-            if(IN1_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
-            {
-        
-                {
-                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
-                    /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
-                    symbol_c *IN2_type_symbol = NULL;
-                    
-                    /* Get the value from a foo(<param_value>) style call */
-                    if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next_nf();
-                    if (IN2_param_value != NULL) {
-                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
-                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
-                    }
-                    
-                    if(IN2_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-                    {
-                
-                        function_name = (symbol_c*)(new pragma_c("__time_add"));
-                        
-                        if (IN1_type_symbol == NULL)
-                          IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
-                        
-                        if (IN2_type_symbol == NULL)
-                          IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
-                        break;
-                        
-                    }
-                    
-                    
-                    ERROR;
-                }
-                
-            }
-            
-            
-            ERROR;
-        }
-        
-    }/*function_add_tod_time*/
-    break;
-
-/****
- *ADD_DT_TIME
- */
-    case function_add_dt_time :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
-            symbol_c *IN1_type_symbol = NULL;
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next_nf();
-            if (IN1_param_value != NULL) {
-              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
-              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
-            }
-            
-            if(IN1_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
-            {
-        
-                {
-                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
-                    /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
-                    symbol_c *IN2_type_symbol = NULL;
-                    
-                    /* Get the value from a foo(<param_value>) style call */
-                    if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next_nf();
-                    if (IN2_param_value != NULL) {
-                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
-                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
-                    }
-                    
-                    if(IN2_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-                    {
-                
-                        function_name = (symbol_c*)(new pragma_c("__time_add"));
-                        
-                        if (IN1_type_symbol == NULL)
-                          IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
-                        
-                        if (IN2_type_symbol == NULL)
-                          IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
-                        break;
-                        
-                    }
-                    
-                    
-                    ERROR;
-                }
-                
-            }
-            
-            
-            ERROR;
-        }
-        
-    }/*function_add_dt_time*/
-    break;
-
-/****
  *MUL
  */
     case function_mul :
@@ -17033,76 +16803,6 @@ switch(current_function_type){
         }
         
     }/*function_mul*/
-    break;
-
-/****
- *MULTIME
- */
-    case function_multime :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
-            symbol_c *IN1_type_symbol = NULL;
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next_nf();
-            if (IN1_param_value != NULL) {
-              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
-              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
-            }
-            
-            if(IN1_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                {
-                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
-                    /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
-                    symbol_c *IN2_type_symbol = NULL;
-                    
-                    /* Get the value from a foo(<param_value>) style call */
-                    if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next_nf();
-                    if (IN2_param_value != NULL) {
-                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
-                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
-                    }
-                    
-                    if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
-                    {
-                
-                        function_name = (symbol_c*)(new pragma_c("__time_mul"));
-                        
-                        if (IN1_type_symbol == NULL)
-                          IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
-                        
-                        if (IN2_type_symbol == NULL)
-                          IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        if (search_expression_type->is_literal_integer_type(function_type_suffix))
-                            function_type_suffix = &search_constant_type_c::lint_type_name;
-                        break;
-                        
-                    }
-                    
-                    
-                    ERROR;
-                }
-                
-            }
-            
-            
-            ERROR;
-        }
-        
-    }/*function_multime*/
     break;
 
 /****
@@ -17366,6 +17066,575 @@ switch(current_function_type){
         }
         
     }/*function_sub*/
+    break;
+
+/****
+ *DIV
+ */
+    case function_div :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
+            symbol_c *IN1_type_symbol = NULL;
+            
+            /* Get the value from a foo(<param_value>) style call */
+            if (IN1_param_value == NULL)
+              IN1_param_value = function_call_param_iterator.next_nf();
+            if (IN1_param_value != NULL) {
+              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
+              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
+            }
+            
+            if(IN1_type_symbol == NULL || search_expression_type->is_num_type(IN1_type_symbol))
+            {
+        
+                {
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
+                    /* Get the value from a foo(<param_name> = <param_value>) style call */
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
+                    symbol_c *IN2_type_symbol = NULL;
+                    
+                    /* Get the value from a foo(<param_value>) style call */
+                    if (IN2_param_value == NULL)
+                      IN2_param_value = function_call_param_iterator.next_nf();
+                    if (IN2_param_value != NULL) {
+                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
+                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
+                    }
+                    
+                    if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
+                    {
+                
+                        function_name = (symbol_c*)(new pragma_c("__div_"));
+                        
+                        if (IN1_type_symbol == NULL)
+                          IN1_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        
+                        if (IN2_type_symbol == NULL)
+                          IN2_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = return_type_symbol;
+                        break;
+                        
+                    }
+                    
+                    
+                    ERROR;
+                }
+                
+            }
+            
+            if(IN1_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                {
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
+                    /* Get the value from a foo(<param_name> = <param_value>) style call */
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
+                    symbol_c *IN2_type_symbol = NULL;
+                    
+                    /* Get the value from a foo(<param_value>) style call */
+                    if (IN2_param_value == NULL)
+                      IN2_param_value = function_call_param_iterator.next_nf();
+                    if (IN2_param_value != NULL) {
+                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
+                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
+                    }
+                    
+                    if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
+                    {
+                
+                        function_name = (symbol_c*)(new pragma_c("__time_div"));
+                        
+                        if (IN1_type_symbol == NULL)
+                          IN1_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        
+                        if (IN2_type_symbol == NULL)
+                          IN2_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                        if (search_expression_type->is_literal_integer_type(function_type_suffix))
+                            function_type_suffix = &search_constant_type_c::lint_type_name;
+                        break;
+                        
+                    }
+                    
+                    
+                    ERROR;
+                }
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_div*/
+    break;
+
+/****
+ *MOD
+ */
+    case function_mod :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
+            symbol_c *IN1_type_symbol = NULL;
+            
+            /* Get the value from a foo(<param_value>) style call */
+            if (IN1_param_value == NULL)
+              IN1_param_value = function_call_param_iterator.next_nf();
+            if (IN1_param_value != NULL) {
+              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
+              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
+            }
+            
+            if(IN1_type_symbol == NULL || search_expression_type->is_num_type(IN1_type_symbol))
+            {
+        
+                {
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
+                    /* Get the value from a foo(<param_name> = <param_value>) style call */
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
+                    symbol_c *IN2_type_symbol = NULL;
+                    
+                    /* Get the value from a foo(<param_value>) style call */
+                    if (IN2_param_value == NULL)
+                      IN2_param_value = function_call_param_iterator.next_nf();
+                    if (IN2_param_value != NULL) {
+                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
+                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
+                    }
+                    
+                    if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
+                    {
+                
+                        function_name = (symbol_c*)(new pragma_c("__mod_"));
+                        
+                        if (IN1_type_symbol == NULL)
+                          IN1_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        
+                        if (IN2_type_symbol == NULL)
+                          IN2_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = return_type_symbol;
+                        break;
+                        
+                    }
+                    
+                    
+                    ERROR;
+                }
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_mod*/
+    break;
+
+/****
+ *EXPT
+ */
+    case function_expt :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
+            symbol_c *IN1_type_symbol = NULL;
+            
+            /* Get the value from a foo(<param_value>) style call */
+            if (IN1_param_value == NULL)
+              IN1_param_value = function_call_param_iterator.next_nf();
+            if (IN1_param_value != NULL) {
+              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
+              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
+            }
+            
+            if(IN1_type_symbol == NULL || search_expression_type->is_real_type(IN1_type_symbol))
+            {
+        
+                {
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
+                    /* Get the value from a foo(<param_name> = <param_value>) style call */
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
+                    symbol_c *IN2_type_symbol = NULL;
+                    
+                    /* Get the value from a foo(<param_value>) style call */
+                    if (IN2_param_value == NULL)
+                      IN2_param_value = function_call_param_iterator.next_nf();
+                    if (IN2_param_value != NULL) {
+                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
+                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
+                    }
+                    
+                    if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
+                    {
+                
+                        function_name = (symbol_c*)(new pragma_c("__expt_"));
+                        
+                        if (IN1_type_symbol == NULL)
+                          IN1_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        
+                        if (IN2_type_symbol == NULL)
+                          IN2_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        symbol_c * return_type_symbol = last_type_symbol;
+                        function_type_suffix = IN1_type_symbol;
+                        break;
+                        
+                    }
+                    
+                    
+                    ERROR;
+                }
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_expt*/
+    break;
+
+/****
+ *MOVE
+ */
+    case function_move :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
+            symbol_c *IN_type_symbol = NULL;
+            
+            /* Get the value from a foo(<param_value>) style call */
+            if (IN_param_value == NULL)
+              IN_param_value = function_call_param_iterator.next_nf();
+            if (IN_param_value != NULL) {
+              IN_type_symbol = search_expression_type->get_type(IN_param_value);
+              last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
+            }
+            
+            
+            {
+        
+                function_name = (symbol_c*)(new pragma_c("__move_"));
+                
+                if (IN_type_symbol == NULL)
+                  IN_type_symbol = last_type_symbol;
+                ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
+                symbol_c * return_type_symbol = last_type_symbol;
+                function_type_suffix = return_type_symbol;
+                if (search_expression_type->is_literal_integer_type(function_type_suffix))
+                    function_type_suffix = &search_constant_type_c::lint_type_name;
+                else if (search_expression_type->is_literal_real_type(function_type_suffix))
+                    function_type_suffix = &search_constant_type_c::lreal_type_name;
+                break;
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_move*/
+    break;
+
+/****
+ *ADD_TIME
+ */
+    case function_add_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
+            symbol_c *IN1_type_symbol = NULL;
+            
+            /* Get the value from a foo(<param_value>) style call */
+            if (IN1_param_value == NULL)
+              IN1_param_value = function_call_param_iterator.next_nf();
+            if (IN1_param_value != NULL) {
+              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
+              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
+            }
+            
+            if(IN1_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                {
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
+                    /* Get the value from a foo(<param_name> = <param_value>) style call */
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
+                    symbol_c *IN2_type_symbol = NULL;
+                    
+                    /* Get the value from a foo(<param_value>) style call */
+                    if (IN2_param_value == NULL)
+                      IN2_param_value = function_call_param_iterator.next_nf();
+                    if (IN2_param_value != NULL) {
+                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
+                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
+                    }
+                    
+                    if(IN2_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+                    {
+                
+                        function_name = (symbol_c*)(new pragma_c("__time_add"));
+                        
+                        if (IN1_type_symbol == NULL)
+                          IN1_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        
+                        if (IN2_type_symbol == NULL)
+                          IN2_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                        break;
+                        
+                    }
+                    
+                    
+                    ERROR;
+                }
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_add_time*/
+    break;
+
+/****
+ *ADD_TOD_TIME
+ */
+    case function_add_tod_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
+            symbol_c *IN1_type_symbol = NULL;
+            
+            /* Get the value from a foo(<param_value>) style call */
+            if (IN1_param_value == NULL)
+              IN1_param_value = function_call_param_iterator.next_nf();
+            if (IN1_param_value != NULL) {
+              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
+              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
+            }
+            
+            if(IN1_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::tod_type_name, last_type_symbol))
+            {
+        
+                {
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
+                    /* Get the value from a foo(<param_name> = <param_value>) style call */
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
+                    symbol_c *IN2_type_symbol = NULL;
+                    
+                    /* Get the value from a foo(<param_value>) style call */
+                    if (IN2_param_value == NULL)
+                      IN2_param_value = function_call_param_iterator.next_nf();
+                    if (IN2_param_value != NULL) {
+                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
+                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
+                    }
+                    
+                    if(IN2_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+                    {
+                
+                        function_name = (symbol_c*)(new pragma_c("__time_add"));
+                        
+                        if (IN1_type_symbol == NULL)
+                          IN1_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        
+                        if (IN2_type_symbol == NULL)
+                          IN2_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        symbol_c * return_type_symbol = &search_constant_type_c::tod_type_name;
+                        break;
+                        
+                    }
+                    
+                    
+                    ERROR;
+                }
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_add_tod_time*/
+    break;
+
+/****
+ *ADD_DT_TIME
+ */
+    case function_add_dt_time :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
+            symbol_c *IN1_type_symbol = NULL;
+            
+            /* Get the value from a foo(<param_value>) style call */
+            if (IN1_param_value == NULL)
+              IN1_param_value = function_call_param_iterator.next_nf();
+            if (IN1_param_value != NULL) {
+              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
+              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
+            }
+            
+            if(IN1_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::dt_type_name, last_type_symbol))
+            {
+        
+                {
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
+                    /* Get the value from a foo(<param_name> = <param_value>) style call */
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
+                    symbol_c *IN2_type_symbol = NULL;
+                    
+                    /* Get the value from a foo(<param_value>) style call */
+                    if (IN2_param_value == NULL)
+                      IN2_param_value = function_call_param_iterator.next_nf();
+                    if (IN2_param_value != NULL) {
+                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
+                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
+                    }
+                    
+                    if(IN2_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+                    {
+                
+                        function_name = (symbol_c*)(new pragma_c("__time_add"));
+                        
+                        if (IN1_type_symbol == NULL)
+                          IN1_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        
+                        if (IN2_type_symbol == NULL)
+                          IN2_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        symbol_c * return_type_symbol = &search_constant_type_c::dt_type_name;
+                        break;
+                        
+                    }
+                    
+                    
+                    ERROR;
+                }
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_add_dt_time*/
+    break;
+
+/****
+ *MULTIME
+ */
+    case function_multime :
+    {
+        symbol_c *last_type_symbol = NULL;
+
+        {
+            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
+            /* Get the value from a foo(<param_name> = <param_value>) style call */
+            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
+            symbol_c *IN1_type_symbol = NULL;
+            
+            /* Get the value from a foo(<param_value>) style call */
+            if (IN1_param_value == NULL)
+              IN1_param_value = function_call_param_iterator.next_nf();
+            if (IN1_param_value != NULL) {
+              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
+              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
+            }
+            
+            if(IN1_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
+            {
+        
+                {
+                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
+                    /* Get the value from a foo(<param_name> = <param_value>) style call */
+                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
+                    symbol_c *IN2_type_symbol = NULL;
+                    
+                    /* Get the value from a foo(<param_value>) style call */
+                    if (IN2_param_value == NULL)
+                      IN2_param_value = function_call_param_iterator.next_nf();
+                    if (IN2_param_value != NULL) {
+                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
+                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
+                    }
+                    
+                    if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
+                    {
+                
+                        function_name = (symbol_c*)(new pragma_c("__time_mul"));
+                        
+                        if (IN1_type_symbol == NULL)
+                          IN1_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
+                        
+                        if (IN2_type_symbol == NULL)
+                          IN2_type_symbol = last_type_symbol;
+                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
+                        symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
+                        if (search_expression_type->is_literal_integer_type(function_type_suffix))
+                            function_type_suffix = &search_constant_type_c::lint_type_name;
+                        break;
+                        
+                    }
+                    
+                    
+                    ERROR;
+                }
+                
+            }
+            
+            
+            ERROR;
+        }
+        
+    }/*function_multime*/
     break;
 
 /****
@@ -17726,117 +17995,6 @@ switch(current_function_type){
     break;
 
 /****
- *DIV
- */
-    case function_div :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
-            symbol_c *IN1_type_symbol = NULL;
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next_nf();
-            if (IN1_param_value != NULL) {
-              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
-              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
-            }
-            
-            if(IN1_type_symbol == NULL || search_expression_type->is_num_type(IN1_type_symbol))
-            {
-        
-                {
-                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
-                    /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
-                    symbol_c *IN2_type_symbol = NULL;
-                    
-                    /* Get the value from a foo(<param_value>) style call */
-                    if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next_nf();
-                    if (IN2_param_value != NULL) {
-                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
-                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
-                    }
-                    
-                    if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
-                    {
-                
-                        function_name = (symbol_c*)(new pragma_c("__div_"));
-                        
-                        if (IN1_type_symbol == NULL)
-                          IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
-                        
-                        if (IN2_type_symbol == NULL)
-                          IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = last_type_symbol;
-                        function_type_suffix = return_type_symbol;
-                        break;
-                        
-                    }
-                    
-                    
-                    ERROR;
-                }
-                
-            }
-            
-            if(IN1_type_symbol == NULL || search_expression_type->is_same_type(&search_constant_type_c::time_type_name, last_type_symbol))
-            {
-        
-                {
-                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
-                    /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
-                    symbol_c *IN2_type_symbol = NULL;
-                    
-                    /* Get the value from a foo(<param_value>) style call */
-                    if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next_nf();
-                    if (IN2_param_value != NULL) {
-                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
-                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
-                    }
-                    
-                    if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
-                    {
-                
-                        function_name = (symbol_c*)(new pragma_c("__time_div"));
-                        
-                        if (IN1_type_symbol == NULL)
-                          IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
-                        
-                        if (IN2_type_symbol == NULL)
-                          IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = &search_constant_type_c::time_type_name;
-                        if (search_expression_type->is_literal_integer_type(function_type_suffix))
-                            function_type_suffix = &search_constant_type_c::lint_type_name;
-                        break;
-                        
-                    }
-                    
-                    
-                    ERROR;
-                }
-                
-            }
-            
-            
-            ERROR;
-        }
-        
-    }/*function_div*/
-    break;
-
-/****
  *DIVTIME
  */
     case function_divtime :
@@ -17904,190 +18062,6 @@ switch(current_function_type){
         }
         
     }/*function_divtime*/
-    break;
-
-/****
- *MOD
- */
-    case function_mod :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
-            symbol_c *IN1_type_symbol = NULL;
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next_nf();
-            if (IN1_param_value != NULL) {
-              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
-              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
-            }
-            
-            if(IN1_type_symbol == NULL || search_expression_type->is_num_type(IN1_type_symbol))
-            {
-        
-                {
-                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
-                    /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
-                    symbol_c *IN2_type_symbol = NULL;
-                    
-                    /* Get the value from a foo(<param_value>) style call */
-                    if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next_nf();
-                    if (IN2_param_value != NULL) {
-                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
-                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
-                    }
-                    
-                    if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
-                    {
-                
-                        function_name = (symbol_c*)(new pragma_c("__mod_"));
-                        
-                        if (IN1_type_symbol == NULL)
-                          IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
-                        
-                        if (IN2_type_symbol == NULL)
-                          IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = last_type_symbol;
-                        function_type_suffix = return_type_symbol;
-                        break;
-                        
-                    }
-                    
-                    
-                    ERROR;
-                }
-                
-            }
-            
-            
-            ERROR;
-        }
-        
-    }/*function_mod*/
-    break;
-
-/****
- *EXPT
- */
-    case function_expt :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN1_param_name = (symbol_c *)(new identifier_c("IN1"));
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN1_param_value = function_call_param_iterator.search_f(IN1_param_name);
-            symbol_c *IN1_type_symbol = NULL;
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN1_param_value == NULL)
-              IN1_param_value = function_call_param_iterator.next_nf();
-            if (IN1_param_value != NULL) {
-              IN1_type_symbol = search_expression_type->get_type(IN1_param_value);
-              last_type_symbol = last_type_symbol && IN1_type_symbol && search_expression_type->is_same_type(IN1_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN1_type_symbol, last_type_symbol) : IN1_type_symbol ;
-            }
-            
-            if(IN1_type_symbol == NULL || search_expression_type->is_real_type(IN1_type_symbol))
-            {
-        
-                {
-                    symbol_c *IN2_param_name = (symbol_c *)(new identifier_c("IN2"));
-                    /* Get the value from a foo(<param_name> = <param_value>) style call */
-                    symbol_c *IN2_param_value = function_call_param_iterator.search_f(IN2_param_name);
-                    symbol_c *IN2_type_symbol = NULL;
-                    
-                    /* Get the value from a foo(<param_value>) style call */
-                    if (IN2_param_value == NULL)
-                      IN2_param_value = function_call_param_iterator.next_nf();
-                    if (IN2_param_value != NULL) {
-                      IN2_type_symbol = search_expression_type->get_type(IN2_param_value);
-                      last_type_symbol = last_type_symbol && IN2_type_symbol && search_expression_type->is_same_type(IN2_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN2_type_symbol, last_type_symbol) : IN2_type_symbol ;
-                    }
-                    
-                    if(IN2_type_symbol == NULL || search_expression_type->is_num_type(IN2_type_symbol))
-                    {
-                
-                        function_name = (symbol_c*)(new pragma_c("__expt_"));
-                        
-                        if (IN1_type_symbol == NULL)
-                          IN1_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN1_param_name, IN1_param_value, IN1_type_symbol, function_param_iterator_c::direction_in)
-                        
-                        if (IN2_type_symbol == NULL)
-                          IN2_type_symbol = last_type_symbol;
-                        ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = last_type_symbol;
-                        function_type_suffix = IN1_type_symbol;
-                        break;
-                        
-                    }
-                    
-                    
-                    ERROR;
-                }
-                
-            }
-            
-            
-            ERROR;
-        }
-        
-    }/*function_expt*/
-    break;
-
-/****
- *MOVE
- */
-    case function_move :
-    {
-        symbol_c *last_type_symbol = NULL;
-
-        {
-            symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
-            /* Get the value from a foo(<param_name> = <param_value>) style call */
-            symbol_c *IN_param_value = function_call_param_iterator.search_f(IN_param_name);
-            symbol_c *IN_type_symbol = NULL;
-            
-            /* Get the value from a foo(<param_value>) style call */
-            if (IN_param_value == NULL)
-              IN_param_value = function_call_param_iterator.next_nf();
-            if (IN_param_value != NULL) {
-              IN_type_symbol = search_expression_type->get_type(IN_param_value);
-              last_type_symbol = last_type_symbol && IN_type_symbol && search_expression_type->is_same_type(IN_type_symbol, last_type_symbol) ? search_expression_type->common_type(IN_type_symbol, last_type_symbol) : IN_type_symbol ;
-            }
-            
-            
-            {
-        
-                function_name = (symbol_c*)(new pragma_c("__move_"));
-                
-                if (IN_type_symbol == NULL)
-                  IN_type_symbol = last_type_symbol;
-                ADD_PARAM_LIST(IN_param_name, IN_param_value, IN_type_symbol, function_param_iterator_c::direction_in)
-                symbol_c * return_type_symbol = last_type_symbol;
-                function_type_suffix = return_type_symbol;
-                if (search_expression_type->is_literal_integer_type(function_type_suffix))
-                    function_type_suffix = &search_constant_type_c::lint_type_name;
-                else if (search_expression_type->is_literal_real_type(function_type_suffix))
-                    function_type_suffix = &search_constant_type_c::lreal_type_name;
-                break;
-                
-            }
-            
-            
-            ERROR;
-        }
-        
-    }/*function_move*/
     break;
 
 /****
