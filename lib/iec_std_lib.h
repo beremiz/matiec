@@ -385,7 +385,7 @@ static inline STRING __insert(EN_ENO_PARAMS, STRING IN1, STRING IN2, __strlen_t 
     TEST_EN_COND(STRING, P < 0)
     res = __INIT_STRING;
 
-    to_copy = P > IN1.len ? IN1.len : P - 1;
+    to_copy = P > IN1.len ? IN1.len : P;
     memcpy(&res.body, &IN1.body , to_copy);
     P = res.len = to_copy;
 
