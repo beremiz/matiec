@@ -105,9 +105,17 @@ class generate_c_base_c: public iterator_visitor_c {
 
     void *print_striped_token(token_c *token, int offset = 0) {
       std::string str = "";
-      for (unsigned int i = offset; i < strlen(token->value); i++)
-        if (token->value[i] != '_')
+      bool leading_zero = true;
+      for (unsigned int i = offset; i < strlen(token->value); i++) {
+        if (leading_zero &&
+        	(token->value[i] != '0' ||
+        	 i == strlen(token->value) - 1 ||
+        	 token->value[i + 1] == '.'
+        	))
+          leading_zero = false;
+    	if (!leading_zero && token->value[i] != '_')
           str += token->value[i];
+      }
       return s4o.printupper(str);
     }
 
@@ -420,7 +428,7 @@ void *visit(duration_c *symbol) {
 
 
 /* SYM_TOKEN(fixed_point_c) */
-void *visit(fixed_point_c *symbol) {return print_token(symbol);}
+void *visit(fixed_point_c *symbol) {return print_striped_token(symbol);}
 
 
 /* SYM_REF2(days_c, days, hours) */
