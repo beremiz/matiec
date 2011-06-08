@@ -48,7 +48,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -84,7 +84,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -120,7 +120,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -156,7 +156,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -192,7 +192,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -228,7 +228,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -264,7 +264,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -300,7 +300,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -336,7 +336,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -372,7 +372,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -408,7 +408,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -444,7 +444,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -480,7 +480,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -516,7 +516,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -552,7 +552,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -588,7 +588,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -624,7 +624,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -660,7 +660,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -696,7 +696,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_real_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -732,7 +732,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -768,7 +768,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -804,7 +804,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -840,7 +840,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -876,7 +876,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -912,7 +912,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -948,7 +948,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -984,7 +984,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1020,7 +1020,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1056,7 +1056,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1092,7 +1092,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1128,7 +1128,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1164,7 +1164,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1200,7 +1200,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1236,7 +1236,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1272,7 +1272,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1308,7 +1308,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1344,7 +1344,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1380,7 +1380,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_sint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1416,7 +1416,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1452,7 +1452,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1488,7 +1488,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1524,7 +1524,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1560,7 +1560,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1596,7 +1596,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1632,7 +1632,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1668,7 +1668,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1704,7 +1704,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1740,7 +1740,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1776,7 +1776,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1812,7 +1812,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1848,7 +1848,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1884,7 +1884,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1920,7 +1920,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1956,7 +1956,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -1992,7 +1992,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2028,7 +2028,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2064,7 +2064,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2100,7 +2100,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2136,7 +2136,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2172,7 +2172,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2208,7 +2208,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2244,7 +2244,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2280,7 +2280,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2316,7 +2316,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2352,7 +2352,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2388,7 +2388,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2424,7 +2424,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2460,7 +2460,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2496,7 +2496,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2532,7 +2532,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2568,7 +2568,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2604,7 +2604,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2640,7 +2640,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2676,7 +2676,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2712,7 +2712,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2748,7 +2748,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2784,7 +2784,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2820,7 +2820,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2856,7 +2856,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2892,7 +2892,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2928,7 +2928,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -2964,7 +2964,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3000,7 +3000,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3036,7 +3036,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3072,7 +3072,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3108,7 +3108,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3144,7 +3144,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3180,7 +3180,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3216,7 +3216,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3252,7 +3252,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3288,7 +3288,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3324,7 +3324,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3360,7 +3360,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3396,7 +3396,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3432,7 +3432,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3468,7 +3468,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3504,7 +3504,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3540,7 +3540,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3576,7 +3576,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3612,7 +3612,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3648,7 +3648,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3684,7 +3684,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3720,7 +3720,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3756,7 +3756,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3792,7 +3792,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3828,7 +3828,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3864,7 +3864,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3900,7 +3900,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3936,7 +3936,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -3972,7 +3972,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dword_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4008,7 +4008,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4044,7 +4044,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4080,7 +4080,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4116,7 +4116,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4152,7 +4152,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4188,7 +4188,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4224,7 +4224,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4260,7 +4260,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4296,7 +4296,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4332,7 +4332,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4368,7 +4368,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4404,7 +4404,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4440,7 +4440,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4476,7 +4476,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4512,7 +4512,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_dt_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4548,7 +4548,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4584,7 +4584,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4620,7 +4620,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4656,7 +4656,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4692,7 +4692,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4728,7 +4728,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4764,7 +4764,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4800,7 +4800,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4836,7 +4836,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4872,7 +4872,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4908,7 +4908,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4944,7 +4944,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -4980,7 +4980,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5016,7 +5016,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5052,7 +5052,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_tod_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5088,7 +5088,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5124,7 +5124,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5160,7 +5160,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5196,7 +5196,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5232,7 +5232,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5268,7 +5268,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5304,7 +5304,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5340,7 +5340,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5376,7 +5376,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5412,7 +5412,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5448,7 +5448,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5484,7 +5484,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5520,7 +5520,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5556,7 +5556,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5592,7 +5592,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5628,7 +5628,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5664,7 +5664,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5700,7 +5700,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5736,7 +5736,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5772,7 +5772,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5808,7 +5808,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5844,7 +5844,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5880,7 +5880,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5916,7 +5916,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5952,7 +5952,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -5988,7 +5988,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6024,7 +6024,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6060,7 +6060,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6096,7 +6096,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6132,7 +6132,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6168,7 +6168,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6204,7 +6204,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6240,7 +6240,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6276,7 +6276,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6312,7 +6312,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6348,7 +6348,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6384,7 +6384,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6420,7 +6420,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_word_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6456,7 +6456,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6492,7 +6492,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6528,7 +6528,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6564,7 +6564,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6600,7 +6600,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6636,7 +6636,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6672,7 +6672,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6708,7 +6708,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6744,7 +6744,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6780,7 +6780,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6816,7 +6816,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6852,7 +6852,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6888,7 +6888,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6924,7 +6924,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6960,7 +6960,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -6996,7 +6996,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7032,7 +7032,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7068,7 +7068,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7104,7 +7104,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_string_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7140,7 +7140,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7176,7 +7176,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7212,7 +7212,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7248,7 +7248,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7284,7 +7284,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7320,7 +7320,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7356,7 +7356,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7392,7 +7392,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7428,7 +7428,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7464,7 +7464,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7500,7 +7500,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7536,7 +7536,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7572,7 +7572,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7608,7 +7608,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7644,7 +7644,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7680,7 +7680,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7716,7 +7716,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7752,7 +7752,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7788,7 +7788,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lword_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7824,7 +7824,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7860,7 +7860,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7896,7 +7896,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7932,7 +7932,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -7968,7 +7968,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8004,7 +8004,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8040,7 +8040,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8076,7 +8076,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8112,7 +8112,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8148,7 +8148,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8184,7 +8184,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8220,7 +8220,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8256,7 +8256,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8292,7 +8292,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8328,7 +8328,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8364,7 +8364,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8400,7 +8400,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8436,7 +8436,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8472,7 +8472,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8508,7 +8508,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8544,7 +8544,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8580,7 +8580,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8616,7 +8616,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8652,7 +8652,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8688,7 +8688,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8724,7 +8724,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8760,7 +8760,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8796,7 +8796,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8832,7 +8832,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8868,7 +8868,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8904,7 +8904,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8940,7 +8940,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -8976,7 +8976,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9012,7 +9012,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9048,7 +9048,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9084,7 +9084,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9120,7 +9120,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9156,7 +9156,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_lreal_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9192,7 +9192,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9228,7 +9228,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9264,7 +9264,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9300,7 +9300,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9336,7 +9336,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9372,7 +9372,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9408,7 +9408,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9444,7 +9444,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9480,7 +9480,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9516,7 +9516,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9552,7 +9552,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9588,7 +9588,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9624,7 +9624,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9660,7 +9660,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9696,7 +9696,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9732,7 +9732,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9768,7 +9768,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9804,7 +9804,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9840,7 +9840,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_byte_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9876,7 +9876,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9912,7 +9912,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9948,7 +9948,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -9984,7 +9984,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10020,7 +10020,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10056,7 +10056,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10092,7 +10092,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10128,7 +10128,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10164,7 +10164,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10200,7 +10200,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10236,7 +10236,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10272,7 +10272,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10308,7 +10308,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10344,7 +10344,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10380,7 +10380,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10416,7 +10416,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10452,7 +10452,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10488,7 +10488,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10524,7 +10524,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10560,7 +10560,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10596,7 +10596,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10632,7 +10632,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10668,7 +10668,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10704,7 +10704,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10740,7 +10740,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10776,7 +10776,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10812,7 +10812,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10848,7 +10848,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10884,7 +10884,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10920,7 +10920,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10956,7 +10956,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -10992,7 +10992,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11028,7 +11028,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11064,7 +11064,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11100,7 +11100,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11136,7 +11136,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11172,7 +11172,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11208,7 +11208,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11244,7 +11244,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11280,7 +11280,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11316,7 +11316,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11352,7 +11352,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11388,7 +11388,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11424,7 +11424,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11460,7 +11460,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11496,7 +11496,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11532,7 +11532,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11568,7 +11568,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11604,7 +11604,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11640,7 +11640,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11676,7 +11676,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11712,7 +11712,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11748,7 +11748,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11784,7 +11784,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11820,7 +11820,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11856,7 +11856,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11892,7 +11892,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bool_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11928,7 +11928,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -11964,7 +11964,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12000,7 +12000,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12036,7 +12036,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12072,7 +12072,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12108,7 +12108,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12144,7 +12144,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12180,7 +12180,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12216,7 +12216,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12252,7 +12252,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12288,7 +12288,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12324,7 +12324,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12360,7 +12360,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12396,7 +12396,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12432,7 +12432,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_time_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12468,7 +12468,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12504,7 +12504,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12540,7 +12540,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12576,7 +12576,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12612,7 +12612,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12648,7 +12648,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12684,7 +12684,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12720,7 +12720,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12756,7 +12756,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12792,7 +12792,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12828,7 +12828,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12864,7 +12864,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12900,7 +12900,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12936,7 +12936,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -12972,7 +12972,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13008,7 +13008,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13044,7 +13044,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13080,7 +13080,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13116,7 +13116,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_int_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13188,7 +13188,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bcd_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13224,7 +13224,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bcd_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13260,7 +13260,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bcd_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13296,7 +13296,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_bcd_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13332,7 +13332,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_udint_to_bcd :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13368,7 +13368,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_uint_to_bcd :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13404,7 +13404,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_usint_to_bcd :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13440,7 +13440,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_ulint_to_bcd :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13476,7 +13476,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_and_time_to_time_of_day :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -13512,7 +13512,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_date_and_time_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -16394,7 +16394,7 @@ void *search_expression_type_c::compute_standard_function_default(function_invoc
  */
     case function_len :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_param_name = (symbol_c *)(new identifier_c("IN"));
@@ -17090,7 +17090,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17116,7 +17116,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17142,7 +17142,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17168,7 +17168,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17194,7 +17194,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17220,7 +17220,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17246,7 +17246,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17272,7 +17272,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17298,7 +17298,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17324,7 +17324,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17350,7 +17350,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17376,7 +17376,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17402,7 +17402,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17428,7 +17428,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17454,7 +17454,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17480,7 +17480,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17506,7 +17506,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17532,7 +17532,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17558,7 +17558,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_real_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::real_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17584,7 +17584,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17610,7 +17610,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17636,7 +17636,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17662,7 +17662,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17688,7 +17688,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17714,7 +17714,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17740,7 +17740,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17766,7 +17766,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17792,7 +17792,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17818,7 +17818,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17844,7 +17844,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17870,7 +17870,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17896,7 +17896,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17922,7 +17922,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17948,7 +17948,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -17974,7 +17974,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18000,7 +18000,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18026,7 +18026,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18052,7 +18052,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_sint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::sint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18078,7 +18078,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18104,7 +18104,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18130,7 +18130,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18156,7 +18156,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18182,7 +18182,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18208,7 +18208,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18234,7 +18234,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18260,7 +18260,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18286,7 +18286,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18312,7 +18312,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18338,7 +18338,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18364,7 +18364,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18390,7 +18390,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18416,7 +18416,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18442,7 +18442,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18468,7 +18468,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18494,7 +18494,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18520,7 +18520,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18546,7 +18546,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18572,7 +18572,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18598,7 +18598,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18624,7 +18624,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18650,7 +18650,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18676,7 +18676,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18702,7 +18702,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18728,7 +18728,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18754,7 +18754,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18780,7 +18780,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18806,7 +18806,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18832,7 +18832,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18858,7 +18858,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18884,7 +18884,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18910,7 +18910,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18936,7 +18936,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18962,7 +18962,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -18988,7 +18988,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19014,7 +19014,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19040,7 +19040,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19066,7 +19066,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19092,7 +19092,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19118,7 +19118,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19144,7 +19144,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19170,7 +19170,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19196,7 +19196,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19222,7 +19222,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19248,7 +19248,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19274,7 +19274,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19300,7 +19300,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19326,7 +19326,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19352,7 +19352,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19378,7 +19378,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19404,7 +19404,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19430,7 +19430,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::date_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19456,7 +19456,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19482,7 +19482,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19508,7 +19508,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19534,7 +19534,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19560,7 +19560,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19586,7 +19586,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19612,7 +19612,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19638,7 +19638,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19664,7 +19664,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19690,7 +19690,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19716,7 +19716,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19742,7 +19742,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19768,7 +19768,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19794,7 +19794,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19820,7 +19820,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19846,7 +19846,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19872,7 +19872,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19898,7 +19898,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19924,7 +19924,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dword_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19950,7 +19950,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -19976,7 +19976,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20002,7 +20002,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20028,7 +20028,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20054,7 +20054,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20080,7 +20080,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20106,7 +20106,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20132,7 +20132,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20158,7 +20158,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20184,7 +20184,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20210,7 +20210,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20236,7 +20236,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20262,7 +20262,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20288,7 +20288,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20314,7 +20314,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_dt_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20340,7 +20340,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20366,7 +20366,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20392,7 +20392,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20418,7 +20418,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20444,7 +20444,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20470,7 +20470,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20496,7 +20496,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20522,7 +20522,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20548,7 +20548,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20574,7 +20574,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20600,7 +20600,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20626,7 +20626,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20652,7 +20652,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20678,7 +20678,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20704,7 +20704,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_tod_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::tod_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20730,7 +20730,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20756,7 +20756,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20782,7 +20782,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20808,7 +20808,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20834,7 +20834,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20860,7 +20860,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20886,7 +20886,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20912,7 +20912,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20938,7 +20938,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20964,7 +20964,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -20990,7 +20990,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21016,7 +21016,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21042,7 +21042,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21068,7 +21068,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21094,7 +21094,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21120,7 +21120,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21146,7 +21146,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21172,7 +21172,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21198,7 +21198,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21224,7 +21224,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21250,7 +21250,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21276,7 +21276,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21302,7 +21302,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21328,7 +21328,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21354,7 +21354,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21380,7 +21380,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21406,7 +21406,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21432,7 +21432,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21458,7 +21458,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21484,7 +21484,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21510,7 +21510,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21536,7 +21536,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21562,7 +21562,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21588,7 +21588,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21614,7 +21614,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21640,7 +21640,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21666,7 +21666,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21692,7 +21692,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_word_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21718,7 +21718,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21744,7 +21744,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21770,7 +21770,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21796,7 +21796,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21822,7 +21822,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21848,7 +21848,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21874,7 +21874,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21900,7 +21900,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21926,7 +21926,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21952,7 +21952,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -21978,7 +21978,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22004,7 +22004,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22030,7 +22030,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22056,7 +22056,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22082,7 +22082,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22108,7 +22108,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22134,7 +22134,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22160,7 +22160,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22186,7 +22186,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_string_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22212,7 +22212,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22238,7 +22238,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22264,7 +22264,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22290,7 +22290,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22316,7 +22316,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22342,7 +22342,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22368,7 +22368,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22394,7 +22394,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22420,7 +22420,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22446,7 +22446,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22472,7 +22472,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22498,7 +22498,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22524,7 +22524,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22550,7 +22550,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22576,7 +22576,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22602,7 +22602,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22628,7 +22628,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22654,7 +22654,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22680,7 +22680,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lword_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22706,7 +22706,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22732,7 +22732,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22758,7 +22758,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22784,7 +22784,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22810,7 +22810,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22836,7 +22836,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22862,7 +22862,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22888,7 +22888,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22914,7 +22914,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22940,7 +22940,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22966,7 +22966,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -22992,7 +22992,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23018,7 +23018,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23044,7 +23044,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23070,7 +23070,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23096,7 +23096,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23122,7 +23122,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23148,7 +23148,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23174,7 +23174,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23200,7 +23200,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23226,7 +23226,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23252,7 +23252,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23278,7 +23278,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23304,7 +23304,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23330,7 +23330,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23356,7 +23356,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23382,7 +23382,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23408,7 +23408,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23434,7 +23434,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23460,7 +23460,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23486,7 +23486,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23512,7 +23512,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23538,7 +23538,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23564,7 +23564,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23590,7 +23590,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23616,7 +23616,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23642,7 +23642,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23668,7 +23668,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_lreal_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lreal_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23694,7 +23694,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23720,7 +23720,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23746,7 +23746,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23772,7 +23772,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23798,7 +23798,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23824,7 +23824,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23850,7 +23850,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23876,7 +23876,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23902,7 +23902,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23928,7 +23928,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23954,7 +23954,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -23980,7 +23980,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24006,7 +24006,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24032,7 +24032,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24058,7 +24058,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24084,7 +24084,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24110,7 +24110,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24136,7 +24136,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24162,7 +24162,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_byte_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24188,7 +24188,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24214,7 +24214,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24240,7 +24240,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24266,7 +24266,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24292,7 +24292,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24318,7 +24318,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24344,7 +24344,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24370,7 +24370,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24396,7 +24396,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24422,7 +24422,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24448,7 +24448,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24474,7 +24474,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24500,7 +24500,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24526,7 +24526,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24552,7 +24552,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24578,7 +24578,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24604,7 +24604,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24630,7 +24630,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24656,7 +24656,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24682,7 +24682,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24708,7 +24708,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24734,7 +24734,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24760,7 +24760,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24786,7 +24786,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24812,7 +24812,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24838,7 +24838,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24864,7 +24864,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24890,7 +24890,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24916,7 +24916,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24942,7 +24942,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24968,7 +24968,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -24994,7 +24994,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25020,7 +25020,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25046,7 +25046,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25072,7 +25072,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25098,7 +25098,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25124,7 +25124,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25150,7 +25150,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25176,7 +25176,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25202,7 +25202,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25228,7 +25228,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25254,7 +25254,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25280,7 +25280,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25306,7 +25306,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25332,7 +25332,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25358,7 +25358,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25384,7 +25384,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25410,7 +25410,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25436,7 +25436,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25462,7 +25462,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25488,7 +25488,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25514,7 +25514,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25540,7 +25540,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25566,7 +25566,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25592,7 +25592,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25618,7 +25618,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25644,7 +25644,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bool_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::bool_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25670,7 +25670,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25696,7 +25696,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25722,7 +25722,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25748,7 +25748,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25774,7 +25774,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25800,7 +25800,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25826,7 +25826,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25852,7 +25852,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25878,7 +25878,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25904,7 +25904,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25930,7 +25930,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25956,7 +25956,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -25982,7 +25982,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26008,7 +26008,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26034,7 +26034,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_time_to_int :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::time_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26060,7 +26060,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_real :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26086,7 +26086,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_sint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26112,7 +26112,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_lint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26138,7 +26138,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_dint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26164,7 +26164,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26190,7 +26190,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_dword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26216,7 +26216,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_dt :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26242,7 +26242,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_tod :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26268,7 +26268,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26294,7 +26294,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_word :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26320,7 +26320,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_string :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26346,7 +26346,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_lword :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26372,7 +26372,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26398,7 +26398,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_lreal :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26424,7 +26424,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_byte :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26450,7 +26450,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26476,7 +26476,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26502,7 +26502,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_bool :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26528,7 +26528,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_int_to_time :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::int_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26580,7 +26580,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bcd_to_udint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26606,7 +26606,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bcd_to_uint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::word_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26632,7 +26632,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bcd_to_ulint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::lword_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26658,7 +26658,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_bcd_to_usint :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::byte_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26684,7 +26684,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_udint_to_bcd :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::udint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26710,7 +26710,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_uint_to_bcd :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::uint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26736,7 +26736,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_usint_to_bcd :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::usint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26762,7 +26762,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_ulint_to_bcd :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::ulint_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26788,7 +26788,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_and_time_to_time_of_day :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -26814,7 +26814,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_date_and_time_to_date :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::dt_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
@@ -29216,7 +29216,7 @@ void *search_expression_type_c::compute_standard_function_il(il_function_call_c 
  */
     case function_len :
     {
-        symbol_c *last_type_symbol = NULL;
+        symbol_c *last_type_symbol = &search_constant_type_c::string_type_name;
 
         {
             symbol_c *IN_type_symbol = param_data_type;
