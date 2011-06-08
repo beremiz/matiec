@@ -91,6 +91,8 @@ void yyerror (const char *error_msg);
 #include "stage1_2_priv.hh"
 
 
+#include "../absyntax_utils/add_en_eno_param_decl.hh"	/* required for  add_en_eno_param_decl_c */
+
 /* an ugly hack!!
  * We will probably not need it when we decide
  *  to cut down the abstract syntax down to size.
@@ -387,6 +389,8 @@ void print_err_msg(int first_line,
  * missing from the standard. However, their location in the annex B is 
  * relatively obvious, so they have been inserted in what seems to us their 
  * correct place in order to ease understanding of the parser...
+ *
+ * please read the comment above the definition of 'variable' in section B1.4 for details.
  */
 %token	EN
 %token	ENO
@@ -3234,18 +3238,53 @@ string_type_declaration_init:
 /*********************/
 /* NOTE: The standard is erroneous in it's definition of 'variable' because:
  *         - The standard considers 'ENO' as a keyword...
- *         - ...which means that it may never be parsed as an 'identifier'...
- *         - ...and therefore may never be used as the name of a variable inside an expression.
+ *         - ...=> which means that it may never be parsed as an 'identifier'...
+ *         - ...=> and therefore may never be used as the name of a variable inside an expression.
  *         - However, a function/FB must be able to assign the ENO parameter
  *           it's value, doing it in an assignment statement, and therefore using the 'ENO'
  *           character sequence as an identifier!
- *        The solution we found was to also allow the ENO keyword to be 
+ *        The obvious solution is to also allow the ENO keyword to be 
  *         used as the name of a variable. Note that this variable may be used
  *         even though it is not explicitly declared as a function/FB variable,
  *         as the standard requires us to define it implicitly in this case!
- *         We could not therefore handle the ENO as a normal variable that would
- *         go into the previously_declared_variable symbol table, as we may need to
- *         allow it to be used as a variable even though it is not declared as such!
+ *        There are three ways of achieving this:
+ *          (i) simply not define EN and ENO as keywords in flex (lexical analyser)
+ *              and let them be considered 'identifiers'. Aditionally, add some code
+ *              so that if they are not explicitly declared, we add them automatically to
+ *              the declaration of each Functions and FB, where they would then be parsed
+ *              as a previously_declared_variable.
+ *              This approach has the advantage the EN and ENO would automatically be valid
+ *              in every location where it needs to be valid, namely in the explicit declaration 
+ *              of these same variables, or when they are used within expressions.
+ *              However, this approach has the drawback that 
+ *              EN and ENO could then also be used anywhere a standard identifier is allowed,
+ *              including in the naming of Functions, FBs, Programs, Configurations, Resources, 
+ *              SFC Actions, SFC Steps, etc...
+ *              This would mean that we would then have to add a lexical analysis check
+ *              within the bison code (syntax analyser) to all the above constructs to make sure
+ *              that the identifier being used is not EN or ENO.
+ *         (ii) The other approach is to define EN and ENO as keywords / tokens in flex
+ *              (lexical analyser) and then change the syntax in bison to acomodate 
+ *              these tokens wherever they could correctly appear.
+ *              This has the drawback that we need to do some changes to the synax defintion.
+ *        (iii) Yet a another option is to mix the above two methods.
+ *              Define EN and ENO as tokens in flex, but change (only) the syntax for
+ *              variable declaration to allow these tokens to also be used in declaring variables.
+ *              From this point onwards these tokens are then considered a previously_declared_variable,
+ *              since flex will first check for this before even checking for tokens.
+ *
+ *              I (Mario) cuurretnly (2011) believe the cleanest method of achieving this goal
+ *              is to use option (iii)
+ *              However, considering that:
+ *                - I have already previously implemented option (ii);
+ *                - option (iii) requires that flex parse the previously_declared_variable
+ *                   before parsing any token. We already support this (remeber that this is 
+ *                   used mainly to allow some IL operators as well as PRIORITY, etc. tokens
+ *                   to be used as identifiers, since the standard does not define them as keywords),
+ *                   but this part of the code in flex is often commented out as usually people do not expect
+ *                   us to follow the standard in the strict sense, but rather consider those
+ *                   tokens as keywords;
+ *                considering the above, we currently carry on using option (ii).
  */
 variable:
   symbolic_variable
@@ -3379,7 +3418,10 @@ any_record_variable:
 ;
 
 
-field_selector: any_identifier;
+field_selector: 
+  any_identifier
+| eno_identifier
+;
 
 
 
@@ -3484,6 +3526,8 @@ edge_declaration:
  *       The semantic description of the languages clearly states that these may be
  *       used in several ways. One of them is to declare an EN input parameter.
  *       We have added the 'en_param_declaration' clause to cover for this.
+ *
+ *       Please read the comment above the definition of 'variable' in section B1.4 for details.
  */
 en_param_declaration:
   en_identifier ':' BOOL ASSIGN boolean_literal
@@ -3705,6 +3749,8 @@ output_declarations:
  *       as it does not allow a user defined 'ENO' output parameter. However,
  *       The semantic description of the languages clearly states that this is allowed.
  *       We have added the 'eno_param_declaration' clause to cover for this.
+ *
+ *       Please read the comment above the definition of 'variable' in section B1.4 for details.
  */
 var_output_init_decl:
   var_init_decl
@@ -3730,6 +3776,8 @@ var_output_init_decl_list:
  *       The semantic description of the languages clearly states that these may be
  *       used in several ways. One of them is to declare an ENO output parameter.
  *       We have added the 'eno_param_declaration' clause to cover for this.
+ *
+ *       Please read the comment above the definition of 'variable' in section B1.4 for details.
  */
 eno_param_declaration:
   eno_identifier ':' BOOL
@@ -4629,6 +4677,7 @@ function_declaration:
 /*  FUNCTION derived_function_name ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
   function_name_declaration ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
+	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
 	 if (allow_function_overloading) {
@@ -4651,6 +4700,7 @@ function_declaration:
 /* | FUNCTION derived_function_name ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
 | function_name_declaration ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
+	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
 	 if (allow_function_overloading) {
@@ -4861,6 +4911,7 @@ derived_function_block_name: identifier;
 function_block_declaration:
   FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
 	{$$ = new function_block_declaration_c($2, $3, $4, locloc(@$));
+	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 library_element_symtable.insert($2, prev_declared_derived_function_block_name_token);
 	 /* Clear the variable_name_symtable. Since
 	  * we have finished parsing the function block,
@@ -6827,6 +6878,9 @@ il_assign_out_operator:
  * The resulting abstract syntax tree is identical with or without this following rule,
  * as both the eno_identifier and the sendto_identifier are stored as
  * an identifier_c !!
+ *
+ * To understand why we must even explicitly consider the use of ENO here,  
+ * please read the comment above the definition of 'variable' in section B1.4 for details.
  */
 /*
 | eno_identifier SENDTO
@@ -6840,6 +6894,9 @@ il_assign_out_operator:
  * The resulting abstract syntax tree is identical with or without this following rule,
  * as both the eno_identifier and the sendto_identifier are stored as
  * an identifier_c !!
+ *
+ * To understand why we must even explicitly consider the use of ENO here,  
+ * please read the comment above the definition of 'variable' in section B1.4 for details.
  *
  * NOTE: Removing the following rule also removes a shift/reduce conflict from the parser.
  *       This conflict is not really an error/ambiguity in the syntax, but rather
@@ -7422,6 +7479,9 @@ param_assignment_formal:
  * The resulting abstract syntax tree is identical with or without this following rule,
  * as both the eno_identifier and the sendto_identifier are stored as
  * an identifier_c !!
+ *
+ * To understand why we must even explicitly consider the use of ENO here,  
+ * please read the comment above the definition of 'variable' in section B1.4 for details.
  */
 /*
 | eno_identifier SENDTO variable
@@ -7436,6 +7496,9 @@ param_assignment_formal:
  * The resulting abstract syntax tree is identical with or without this following rule,
  * as both the eno_identifier and the sendto_identifier are stored as
  * an identifier_c !!
+ *
+ * To understand why we must even explicitly consider the use of ENO here,  
+ * please read the comment above the definition of 'variable' in section B1.4 for details.
  */
 /*
 | NOT eno_identifier SENDTO variable

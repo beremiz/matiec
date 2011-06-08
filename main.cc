@@ -182,10 +182,12 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
 
   /* 2nd Pass */
-  absyntax_utils_init(tree_root);
-  add_en_eno_param_decl_c::add_to(tree_root);
+    /* basically loads some symbol tables to speed up look ups later on */
+  absyntax_utils_init(tree_root);  
+    /* moved to bison, although it could perfectly well still be here instead of in bison code. */
+  //add_en_eno_param_decl_c::add_to(tree_root);
 
-  /* not yet implemented... */
+  /* Only very simple (not yet complete) data type checking currently implemented... */
   if (stage3(tree_root) < 0)
     return EXIT_FAILURE;
   
@@ -195,6 +197,7 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
 
   /* 4th Pass */
+  /* Call gcc, g++, or whatever... */
   /* Currently implemented in the Makefile! */
 
   return 0;
