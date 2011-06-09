@@ -612,7 +612,28 @@ void *visit(function_declaration_c *symbol) {
     /* get the default value of this variable's type */
     symbol_c *default_value = (symbol_c *)symbol->type_name->accept(*type_initial_value_c::instance());
     if (default_value == NULL) ERROR;
-    default_value->accept(*this);
+    initialization_analyzer_c initialization_analyzer(default_value);
+    switch (initialization_analyzer.get_initialization_type()) {
+      case initialization_analyzer_c::struct_it:
+        {
+          generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
+          structure_initialization->init_structure_default(symbol->type_name);
+          structure_initialization->init_structure_values(default_value);
+          delete structure_initialization;
+        }
+    	break;
+      case initialization_analyzer_c::array_it:
+        {
+    	  generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
+    	  array_initialization->init_array_size(symbol->type_name);
+    	  array_initialization->init_array_values(default_value);
+    	  delete array_initialization;
+        }
+    	break;
+      default:
+        default_value->accept(*this);
+        break;
+    }
   }
   s4o.print(";\n\n");
   
