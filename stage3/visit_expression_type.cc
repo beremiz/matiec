@@ -946,6 +946,16 @@ void *visit_expression_type_c::visit(structured_variable_c *symbol) {
 
 
 
+/********************************/
+/* B 1.7 Configuration elements */
+/********************************/
+void *visit_expression_type_c::visit(configuration_declaration_c *symbol) {
+  // TODO !!!
+  /* for the moment we must return NULL so semantic analysis of remaining code is not interrupted! */
+  return NULL;
+}
+
+
 /****************************************/
 /* B.2 - Language IL (Instruction List) */
 /****************************************/

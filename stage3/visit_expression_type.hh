@@ -237,7 +237,12 @@ class visit_expression_type_c: public search_constant_type_c {
     void *visit(array_variable_c *symbol);
     void *visit(structured_variable_c *symbol);
 
-    /****************************************/
+    /********************************/
+    /* B 1.7 Configuration elements */
+    /********************************/
+    void *visit(configuration_declaration_c *symbol);
+
+/****************************************/
     /* B.2 - Language IL (Instruction List) */
     /****************************************/
     /***********************************/
