@@ -265,7 +265,6 @@ void *search_base_type_c::visit(initialized_structure_c *symbol)	{
 /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
 /* structure_element_declaration_list structure_element_declaration ';' */
 void *search_base_type_c::visit(structure_element_declaration_list_c *symbol)	{
-  if (NULL == this->current_type_name) ERROR;
   return (void *)symbol;
 }
 
