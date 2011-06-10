@@ -185,9 +185,9 @@ class visit_expression_type_c: public search_constant_type_c {
  */
     bool is_compatible_type(symbol_c *first_type, symbol_c *second_type);
 
-    void compute_input_operatores(symbol_c *symbol, const char *input_operator);
-    void check_formal_parameter(symbol_c *call_param_name, symbol_c *call_param_type, symbol_c *f_decl);
-
+    /* check semantics of FB call in the IL language using input operators */
+    /* e.g. CU, CLK, IN, PT, SR, ...                                       */
+    void check_il_fbcall(symbol_c *symbol, const char *input_operator);
     /* check the semantics of a FB or Function non-formal call */
     /* e.g. foo(1, 2, 3, 4);  */
     void check_nonformal_call(symbol_c *f_call, symbol_c *f_decl, bool use_il_defvar = false);

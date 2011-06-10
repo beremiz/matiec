@@ -47,11 +47,12 @@
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
 #define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
 
-#define STAGE3_ERROR(symbol1, symbol2, msg) {                                          \
-    fprintf(stderr, "%s:%d-%d..%d-%d: error : %s\n",                                   \
+#define STAGE3_ERROR(symbol1, symbol2, ...) {                                          \
+    fprintf(stderr, "%s:%d-%d..%d-%d: error : ",                                       \
            FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column, \
-                                                LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column,  \
-           msg);                                                                       \
+                                                LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column); \
+    fprintf(stderr, __VA_ARGS__);                                                      \
+    fprintf(stderr, "\n");                                                             \
     il_error = true;                                                                   \
     error_found = true;                                                                \
   }
@@ -749,10 +750,13 @@ void visit_expression_type_c::check_nonformal_call(symbol_c *f_call, symbol_c *f
 
   /* Iterating through the non-formal parameters of the function call */
   while((call_param_value = fcp_iterator.next_nf()) != NULL) {
-    /* Obtaining the type of the current parameter in the function call */
+    /* Obtaining the type of the value being passed in the function call */
     call_param_type = base_type((symbol_c*)call_param_value->accept(*this));
-    if (call_param_type == NULL) STAGE3_ERROR(call_param_value, call_param_value, "Could not determine data type of value being passed in function/FB call.");;
-
+    if (call_param_type == NULL) {
+      STAGE3_ERROR(call_param_value, call_param_value, "Could not determine data type of value being passed in function/FB call.");
+      continue;
+    }  
+    
     /* Iterate to the next parameter of the function being called.
      * Get the name of that parameter, and ignore if EN or ENO.
      */
@@ -764,59 +768,45 @@ void visit_expression_type_c::check_nonformal_call(symbol_c *f_call, symbol_c *f
 
     if(param_name != NULL) {
       /* Get the parameter type */
-      param_type = fp_iterator.param_type();
+      param_type = base_type(fp_iterator.param_type());
       /* If the declared parameter and the parameter from the function call do no have the same type */
       if(!is_valid_assignment(param_type, call_param_type)) STAGE3_ERROR(call_param_value, call_param_value, "Type mismatch in function/FB call parameter.");
     }
   }
 }
 
-void visit_expression_type_c::compute_input_operatores(symbol_c *symbol, const char *input_operator){
-  symbol_c *call_param_type;
+
+/* check semantics of FB call in the IL language using input operators */
+/* e.g. CU, CLK, IN, PT, SR, ...                                       */
+void visit_expression_type_c::check_il_fbcall(symbol_c *il_operator, const char *il_operator_str) {
+  symbol_c *call_param_type = il_default_variable_type;
   symbol_c *fb_decl = il_operand_type;
     /* The following should never occur. The function block must be defined, 
      * and the FB type being called MUST be in the symtable... 
      * This was all already checked at stage 2!
      */
-  if (NULL == fb_decl){ 
-    STAGE3_ERROR(symbol, symbol, "Parameter operator needs an instance of a function block operand.");
-    ERROR;
-  }
+  if (NULL == fb_decl) ERROR;
+  if (call_param_type == NULL) ERROR;
 
-   /* Iterating through the formal parameters of the function call */
-  identifier_c call_param_name(input_operator);
+  /* We also create an identifier_c object, so we can later use it to find the equivalent FB parameter */
+  /* Note however that this symbol does not have the correct location (file name and line numbers) 
+   * so any error messages must use the il_operator symbol to generate the error location
+   */
+  identifier_c call_param_name(il_operator_str);
 
   /* Obtaining the type of the value being passed in the function call */
-  call_param_type = il_default_variable_type;
-  if (call_param_type == NULL) {
-    STAGE3_ERROR(&call_param_name, &call_param_name, "Could not determine data type of value being passed in function/FB call.");
-    /* The data value being passed is possibly any enumerated type value.
-     * We do not yet handle semantic verification of enumerated types.
-     */
-    ERROR;
-  }
   call_param_type = base_type(call_param_type);
-  if (call_param_type == NULL) STAGE3_ERROR(&call_param_name, &call_param_name, "Could not determine data type of value being passed in function/FB call.");
-  
+  if (call_param_type == NULL) STAGE3_ERROR(il_operator, il_operator, "Could not determine data type of value being passed in FB call.");
 
-  check_formal_parameter(&call_param_name, call_param_type, fb_decl);
-//   return NULL;
-}
-
-void visit_expression_type_c::check_formal_parameter(symbol_c *call_param_name, symbol_c *call_param_type, symbol_c *f_decl) {
-  symbol_c *param_type;
-  identifier_c *param_name;
-  function_param_iterator_c       fp_iterator(f_decl);
- 
   /* Find the corresponding parameter of the function being called */
-  param_name = fp_iterator.search(call_param_name);
-  if(param_name == NULL) {
-    STAGE3_ERROR(call_param_name, call_param_name, "Invalid parameter in function/FB call.");
+  function_param_iterator_c fp_iterator(fb_decl);
+  if(fp_iterator.search(&call_param_name) == NULL) {
+    STAGE3_ERROR(il_operand, il_operand, "Called FB does not have an input parameter named %s.", il_operator_str);
   } else {
     /* Get the parameter type */
-    param_type = fp_iterator.param_type();
+    symbol_c *param_type = base_type(fp_iterator.param_type());
     /* If the declared parameter and the parameter from the function call have the same type */
-    if(!is_valid_assignment(param_type, call_param_type)) STAGE3_ERROR(call_param_name, call_param_name, "Type mismatch function/FB call parameter.");
+    if(!is_valid_assignment(param_type, call_param_type)) STAGE3_ERROR(il_operator, il_operator, "Type mismatch in FB call parameter.");
   }
 }
 
@@ -863,7 +853,7 @@ void visit_expression_type_c::check_formal_call(symbol_c *f_call, symbol_c *f_de
       STAGE3_ERROR(call_param_name, call_param_name, "Invalid parameter in function/FB call.");
     } else {
       /* Get the parameter type */
-      param_type = fp_iterator.param_type();
+      param_type = base_type(fp_iterator.param_type());
       /* If the declared parameter and the parameter from the function call have the same type */
       if(!is_valid_assignment(param_type, call_param_type)) STAGE3_ERROR(call_param_name, call_param_value, "Type mismatch function/FB call parameter.");
     }
@@ -1348,49 +1338,49 @@ void *visit_expression_type_c::visit(R_operator_c *symbol) {
 
 // SYM_REF0(S1_operator_c)
 void *visit_expression_type_c::visit(S1_operator_c *symbol){
-  compute_input_operatores(symbol, "S1");
+  check_il_fbcall(symbol, "S1");
   return NULL;
 }
 
 // SYM_REF0(R1_operator_c)
 void *visit_expression_type_c::visit(R1_operator_c *symbol) {
-  compute_input_operatores(symbol, "R1");
+  check_il_fbcall(symbol, "R1");
   return NULL;
 }
 
 // SYM_REF0(CLK_operator_c)
 void *visit_expression_type_c::visit(CLK_operator_c *symbol) {
-  compute_input_operatores(symbol, "CLK");
+  check_il_fbcall(symbol, "CLK");
   return NULL;
 }
 
 // SYM_REF0(CU_operator_c)
 void *visit_expression_type_c::visit(CU_operator_c *symbol) {
-  compute_input_operatores(symbol, "CU");
+  check_il_fbcall(symbol, "CU");
   return NULL;
 }
 
 // SYM_REF0(CD_operator_c)
 void *visit_expression_type_c::visit(CD_operator_c *symbol) {
-  compute_input_operatores(symbol, "CD");
+  check_il_fbcall(symbol, "CD");
   return NULL;
 }
 
 // SYM_REF0(PV_operator_c)
 void *visit_expression_type_c::visit(PV_operator_c *symbol) {
-  compute_input_operatores(symbol, "PV");
+  check_il_fbcall(symbol, "PV");
   return NULL;
 }
 
 // SYM_REF0(IN_operator_c)
 void *visit_expression_type_c::visit(IN_operator_c *symbol) {
-  compute_input_operatores(symbol, "IN");
+  check_il_fbcall(symbol, "IN");
   return NULL;
 }
 
 // SYM_REF0(PT_operator_c)
 void *visit_expression_type_c::visit(PT_operator_c *symbol) {
-  compute_input_operatores(symbol, "PT");
+  check_il_fbcall(symbol, "PT");
   return NULL;
 }
 
