@@ -231,7 +231,7 @@ void *search_expression_type_c::visit(symbolic_variable_c *symbol) {
   symbol_c *res;
   
   /* Nope, now we assume it is a variable, and determine its type... */
-  res = search_varfb_instance_type->get_type(symbol);
+  res = search_varfb_instance_type->get_basetype_decl(symbol);
   if (NULL != res) return res;
   
   return NULL;
@@ -244,7 +244,7 @@ void *search_expression_type_c::visit(direct_variable_c *symbol) {
   symbol_c *res;
   
   /* Nope, now we assume it is a variable, and determine its type... */
-  res = search_varfb_instance_type->get_type(symbol);
+  res = search_varfb_instance_type->get_basetype_decl(symbol);
   if (NULL != res) return res;
   
   return NULL;
@@ -258,7 +258,7 @@ void *search_expression_type_c::visit(array_variable_c *symbol) {
   symbol_c *res;
   
   /* Nope, now we assume it is a variable, and determine its type... */
-  res = search_varfb_instance_type->get_type(symbol);
+  res = search_varfb_instance_type->get_basetype_decl(symbol);
   if (NULL != res) return res;
   
   return NULL;
@@ -268,7 +268,7 @@ void *search_expression_type_c::visit(structured_variable_c *symbol) {
   symbol_c *res;
   
   /* Nope, now we assume it is a variable, and determine its type... */
-  res = search_varfb_instance_type->get_type(symbol);
+  res = search_varfb_instance_type->get_basetype_decl(symbol);
   if (NULL != res) return res;
   
   return NULL;

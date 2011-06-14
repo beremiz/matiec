@@ -312,7 +312,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
         case complextype_suffix_vg:
           symbol->subscripted_variable->accept(*this);
 
-          current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+          current_array_type = search_varfb_instance_type->get_type_id(symbol->subscripted_variable);
           if (current_array_type == NULL) ERROR;
 
           s4o.print(".table");

@@ -647,7 +647,7 @@ void *visit(array_variable_c *symbol) {
     case complextype_suffix_vg:
       symbol->subscripted_variable->accept(*this);
 
-      current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+      current_array_type = search_varfb_instance_type->get_type_id(symbol->subscripted_variable);
       if (current_array_type == NULL) ERROR;
 
       s4o.print(".table");
@@ -659,7 +659,7 @@ void *visit(array_variable_c *symbol) {
       if (this->is_variable_prefix_null()) {
         symbol->subscripted_variable->accept(*this);
 
-        current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+        current_array_type = search_varfb_instance_type->get_type_id(symbol->subscripted_variable);
         if (current_array_type == NULL) ERROR;
 
         s4o.print(".table");
@@ -1120,7 +1120,7 @@ void *visit(il_fb_call_c *symbol) {
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
-        symbol_c *param_type = search_varfb_instance_type->get_rawtype(param_value);
+        symbol_c *param_type = search_varfb_instance_type->get_type_id(param_value);
         s4o.print(";\n" + s4o.indent_spaces);
         if (this->is_variable_prefix_null()) {
           param_value->accept(*this);
@@ -1479,7 +1479,7 @@ void *visit(LDN_operator_c *symbol)	{
 }
 
 void *visit(ST_operator_c *symbol)	{
-  symbol_c *operand_type = search_varfb_instance_type->get_rawtype(this->current_operand);
+  symbol_c *operand_type = search_varfb_instance_type->get_type_id(this->current_operand);
   if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type) ||
   	  search_expression_type->is_literal_real_type(this->default_variable_name.current_type))
       this->default_variable_name.current_type = this->current_operand_type;
@@ -1496,7 +1496,7 @@ void *visit(ST_operator_c *symbol)	{
 }
 
 void *visit(STN_operator_c *symbol)	{
-  symbol_c *operand_type = search_varfb_instance_type->get_rawtype(this->current_operand);
+  symbol_c *operand_type = search_varfb_instance_type->get_type_id(this->current_operand);
   if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type))
 	this->default_variable_name.current_type = this->current_operand_type;
   

@@ -305,7 +305,7 @@ void *visit(array_variable_c *symbol) {
     case complextype_suffix_vg:
       symbol->subscripted_variable->accept(*this);
 
-      current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+      current_array_type = search_varfb_instance_type->get_type_id(symbol->subscripted_variable);
       if (current_array_type == NULL) ERROR;
 
       s4o.print(".table");
@@ -319,7 +319,7 @@ void *visit(array_variable_c *symbol) {
       if (this->is_variable_prefix_null()) {
     	symbol->subscripted_variable->accept(*this);
 
-    	current_array_type = search_varfb_instance_type->get_rawtype(symbol->subscripted_variable);
+    	current_array_type = search_varfb_instance_type->get_type_id(symbol->subscripted_variable);
     	if (current_array_type == NULL) ERROR;
 
     	s4o.print(".table");
@@ -789,7 +789,7 @@ void *visit(statement_list_c *symbol) {
 /* B 3.2.1 Assignment Statements */
 /*********************************/
 void *visit(assignment_statement_c *symbol) {
-  symbol_c *left_type = search_varfb_instance_type->get_rawtype(symbol->l_exp);
+  symbol_c *left_type = search_varfb_instance_type->get_type_id(symbol->l_exp);
   
   if (this->is_variable_prefix_null()) {
     symbol->l_exp->accept(*this);
@@ -893,7 +893,7 @@ void *visit(fb_invocation_c *symbol) {
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_out) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
-        symbol_c *param_type = search_varfb_instance_type->get_rawtype(param_value);
+        symbol_c *param_type = search_varfb_instance_type->get_type_id(param_value);
         s4o.print(";\n" + s4o.indent_spaces);
         if (this->is_variable_prefix_null()) {
           param_value->accept(*this);
