@@ -346,36 +346,36 @@ void *visit(array_type_declaration_c *symbol) {
   if (array_is_derived)
 	s4o_incl.print("__DECLARE_DERIVED_TYPE(");
   else
-    s4o_incl.print("__DECLARE_ARRAY_TYPE(");
+	s4o_incl.print("__DECLARE_ARRAY_TYPE(");
   current_basetypedeclaration = arraybasetypeincl_bd;
   symbol->array_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
   s4o_incl.print(",");
   symbol->identifier->accept(*basedecl);
   if (!array_is_derived) {
-    s4o_incl.print(",");
-    current_basetypedeclaration = arraysubrange_bd;
-    symbol->array_spec_init->accept(*this);
-    current_basetypedeclaration = none_bd;
+	s4o_incl.print(",");
+	current_basetypedeclaration = arraysubrange_bd;
+	symbol->array_spec_init->accept(*this);
+	current_basetypedeclaration = none_bd;
   }
   s4o_incl.print(")\n");
-  
+
   if (search_base_type.type_is_subrange(symbol->identifier)) {
-    s4o.print("#define __CHECK_");
-    symbol->identifier->accept(*this);
-    s4o.print(" __CHECK_");
-    current_basetypedeclaration = arraybasetype_bd;
-    symbol->array_spec_init->accept(*this);
-    current_basetypedeclaration = none_bd;
-    s4o.print("\n");
+	s4o.print("#define __CHECK_");
+	symbol->identifier->accept(*this);
+	s4o.print(" __CHECK_");
+	current_basetypedeclaration = arraybasetype_bd;
+	symbol->array_spec_init->accept(*this);
+	current_basetypedeclaration = none_bd;
+	s4o.print("\n");
   }
-  
+
   current_type_name = symbol->identifier;
   current_basetypedeclaration = arraytranslateindex_bd;
   symbol->array_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
   s4o.print("\n");
-  
+
   current_typedefinition = none_td;
 
   return NULL;
@@ -386,32 +386,33 @@ void *visit(array_type_declaration_c *symbol) {
 void *visit(array_spec_init_c *symbol) {
   TRACE("array_spec_init_c");
   
-  identifier_c *array_type_name;
-
-  switch (current_basetypedeclaration) {
-    case arrayderiveddeclaration_bd:
-      array_type_name = dynamic_cast<identifier_c *>(symbol->array_specification);
-      array_is_derived = array_type_name != NULL;
-      break;
-    case arraytranslateindex_bd:
-      if (!array_is_derived)
-    	symbol->array_specification->accept(*this);
-
-      s4o.print("#define __");
-      current_type_name->accept(*this);
-      s4o.print("_TRANSIDX(row, index) __");
-      if (array_is_derived)
-         symbol->array_specification->accept(*this);
-      else
-         current_type_name->accept(*this);
-      s4o.print("_TRANSIDX##row(index)");
-      break;
-    default:
-      if (array_is_derived)
-        symbol->array_specification->accept(*basedecl);
-      else
-        symbol->array_specification->accept(*this);
-      break;
+  if (current_typedefinition == array_td) {
+    switch (current_basetypedeclaration) {
+	  case arrayderiveddeclaration_bd:
+	    array_is_derived = dynamic_cast<identifier_c *>(symbol->array_specification) != NULL;
+	    break;
+	  case arraytranslateindex_bd:
+	    if (!array_is_derived)
+		  symbol->array_specification->accept(*this);
+	    s4o.print("#define __");
+	    current_type_name->accept(*this);
+	    s4o.print("_TRANSIDX(row, index) __");
+	    if (array_is_derived)
+		   symbol->array_specification->accept(*this);
+	    else
+		   current_type_name->accept(*this);
+	    s4o.print("_TRANSIDX##row(index)");
+	    break;
+	  default:
+	    if (array_is_derived)
+		  symbol->array_specification->accept(*basedecl);
+	    else
+		  symbol->array_specification->accept(*this);
+	    break;
+    }
+  }
+  else {
+	symbol->array_specification->accept(*basedecl);
   }
   return NULL;
 }
