@@ -37,13 +37,6 @@
  * A mixture of array element of a structure element of a structure element
  * of a .... is also suported!
  *
- * A reference to the relevant base type __definition__ is returned.
- * This means that if we find that the variable is of type MY_INT,
- * which was previously declared to be
- * TYPE MY_INT: INT := 9;
- * this class wil return INT, and __not__ MY_INT !!
- *
- *
  *  example:
  *    window.points[1].coordinate.x
  *    window.points[1].colour
@@ -51,7 +44,44 @@
  *
  * This class must be passed the scope within which the
  * variable was declared, and the variable name...
- */
+ *
+ *
+ *
+ *
+ *
+ * This class has several members, depending on the exact data the caller
+ * is looking for...
+ *
+ *    - item i: we can get either the name of the data type(A),
+ *              or it's declaration (B)
+ *             (notice however that some variables belong to a data type that does
+ *              not have a name, only a declaration as in
+ *              VAR a: ARRAY [1..3] of INT; END_VAR
+ *             )
+ *    - item ii: we can get either the direct data type (1), 
+ *               or the base type (2)
+ * 
+ *   By direct type, I mean the data type of the variable. By base type, I 
+ * mean the data type on which the direct type is based on. For example, in 
+ * a subrange on INT, the direct type is the subrange itself, while the 
+ * base type is INT.
+ * e.g.
+ *   This means that if we find that the variable is of type MY_INT,
+ *   which was previously declared to be
+ *   TYPE MY_INT: INT := 9;
+ *   option (1) will return MY_INT
+ *   option (2) will return INT
+ * 
+ *
+ * Member functions:
+ * ================
+ *   get_basetype_decl()  ---> returns 2B 
+ *   get_type_id()        ---> returns 1A
+ * 
+ *   Since we haven't yet needed them, we don't yet implement
+ *   get_basetype_id()    ----> would return 2A
+ *   get_type_decl()      ----> would return 1B
+ */ 
 
 
 /*
@@ -67,7 +97,7 @@ search_varfb_instance_type_c::search_varfb_instance_type_c(symbol_c *search_scop
   this->current_rawtype = NULL;
 }
 
-symbol_c *search_varfb_instance_type_c::get_type(symbol_c *variable_name) {
+symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_name) {
   this->current_structelement_name = NULL;
   this->current_rawtype = NULL;
   this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
@@ -140,8 +170,8 @@ unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) 
   return res;
 }
 
-symbol_c *search_varfb_instance_type_c::get_rawtype(symbol_c *variable_name) {
-  symbol_c *rawtype = this->get_type(variable_name);
+symbol_c *search_varfb_instance_type_c::get_type_id(symbol_c *variable_name) {
+  symbol_c *rawtype = this->get_basetype_decl(variable_name);
   if (this->current_rawtype != NULL)
     return this->current_rawtype;
   else

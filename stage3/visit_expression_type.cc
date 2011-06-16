@@ -900,7 +900,7 @@ void *visit_expression_type_c::visit(data_type_declaration_c *symbol) {
 /*********************/
 
 void *visit_expression_type_c::visit(symbolic_variable_c *symbol) {
-  return search_varfb_instance_type->get_type(symbol);
+  return search_varfb_instance_type->get_basetype_decl(symbol);
 }
 
 /********************************************/
@@ -927,11 +927,11 @@ void *visit_expression_type_c::visit(direct_variable_c *symbol) {
 /* B 1.4.2 - Multi-element variables */
 /*************************************/
 void *visit_expression_type_c::visit(array_variable_c *symbol) {
-  return search_varfb_instance_type->get_type(symbol);
+  return search_varfb_instance_type->get_basetype_decl(symbol);
 }
 
 void *visit_expression_type_c::visit(structured_variable_c *symbol) {
-  return search_varfb_instance_type->get_type(symbol);
+  return search_varfb_instance_type->get_basetype_decl(symbol);
 }
 
 
@@ -1120,12 +1120,12 @@ void *visit_expression_type_c::visit(il_fb_call_c *symbol) {
    *         fb1(...)
    *       End_Program
    *
-   *    search_varfb_instance_type->get_type( identifier_c("fb1") )
+   *    search_varfb_instance_type->get_basetype_decl( identifier_c("fb1") )
    *    in the scope of Program 'test'
    *    will return the fb declaration of foo_fb_type !!
    */
 #if 0
-  symbol_c *fb_decl_symbol = search_varfb_instance_type->get_type(symbol->fb_name);
+  symbol_c *fb_decl_symbol = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
     /* The following should never occur. The function block must be defined, 
      * and the FB type being called MUST be in the symtable... 
      * This was all already checked at stage 2!
@@ -1136,7 +1136,7 @@ void *visit_expression_type_c::visit(il_fb_call_c *symbol) {
     /* should never occur. ... */
   if (NULL == fb_decl) ERROR;
 #endif
-  symbol_c *fb_decl = search_varfb_instance_type->get_type(symbol->fb_name);
+  symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
     /* The following should never occur. The function block must be defined, 
      * and the FB type being called MUST be in the symtable... 
      * This was all already checked at stage 2!
@@ -2030,7 +2030,7 @@ void *visit_expression_type_c::visit(assignment_statement_c *symbol) {
 /* param_assignment_list -> may be NULL ! */
 // SYM_REF3(fb_invocation_c, fb_name, formal_param_list, nonformal_param_list)
 void *visit_expression_type_c::visit(fb_invocation_c *symbol) {
-  symbol_c *fb_decl = search_varfb_instance_type->get_type(symbol->fb_name);
+  symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
     /* The following should never occur. The function block must be defined, 
      * and the FB type being called MUST be in the symtable... 
      * This was all already checked at stage 2!
