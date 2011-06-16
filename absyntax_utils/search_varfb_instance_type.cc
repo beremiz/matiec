@@ -171,6 +171,7 @@ unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) 
 }
 
 symbol_c *search_varfb_instance_type_c::get_type_id(symbol_c *variable_name) {
+  this->current_rawtype = NULL;
   symbol_c *rawtype = this->get_basetype_decl(variable_name);
   if (this->current_rawtype != NULL)
     return this->current_rawtype;
