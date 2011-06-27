@@ -179,11 +179,11 @@ void *visit(subrange_type_declaration_c *symbol) {
   current_typedefinition = subrange_td;
 
   s4o_incl.print("__DECLARE_DERIVED_TYPE(");
+  symbol->subrange_type_name->accept(*basedecl);
+  s4o_incl.print(",");
   current_basetypedeclaration = subrangebasetype_bd;
   symbol->subrange_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
-  s4o_incl.print(",");
-  symbol->subrange_type_name->accept(*basedecl);
   s4o_incl.print(")\n");
   
   current_type_name = symbol->subrange_type_name;
@@ -297,13 +297,13 @@ void *visit(enumerated_type_declaration_c *symbol) {
   
   current_typedefinition = enumerated_td;
 
-  s4o_incl.print("typedef enum {\n");
+  s4o_incl.print("__DECLARE_ENUMERATED_TYPE(");
+  symbol->enumerated_type_name->accept(*basedecl);
+  s4o_incl.print(",\n");
   s4o_incl.indent_right();
   symbol->enumerated_spec_init->accept(*this);
   s4o_incl.indent_left();
-  s4o_incl.print("} ");
-  symbol->enumerated_type_name->accept(*basedecl);
-  s4o_incl.print(";\n");
+  s4o_incl.print(")\n");
 
   current_typedefinition = none_td;
 
@@ -347,11 +347,11 @@ void *visit(array_type_declaration_c *symbol) {
 	s4o_incl.print("__DECLARE_DERIVED_TYPE(");
   else
 	s4o_incl.print("__DECLARE_ARRAY_TYPE(");
+  symbol->identifier->accept(*basedecl);
+  s4o_incl.print(",");
   current_basetypedeclaration = arraybasetypeincl_bd;
   symbol->array_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
-  s4o_incl.print(",");
-  symbol->identifier->accept(*basedecl);
   if (!array_is_derived) {
 	s4o_incl.print(",");
 	current_basetypedeclaration = arraysubrange_bd;
@@ -474,9 +474,9 @@ void *visit(simple_type_declaration_c *symbol) {
   TRACE("simple_type_declaration_c");
 
   s4o_incl.print("__DECLARE_DERIVED_TYPE(");
-  symbol->simple_spec_init->accept(*this);
-  s4o_incl.print(",");
   symbol->simple_type_name->accept(*basedecl);
+  s4o_incl.print(",");
+  symbol->simple_spec_init->accept(*this);
   s4o_incl.print(")\n");
   return NULL;
 }
@@ -548,10 +548,10 @@ void *visit(structure_type_declaration_c *symbol) {
   current_typedefinition = struct_td;
 
   s4o_incl.print("__DECLARE_STRUCT_TYPE(");
-  symbol->structure_specification->accept(*this);
-  s4o_incl.print(",");
   symbol->structure_type_name->accept(*basedecl);
-  s4o_incl.print(");\n");
+  s4o_incl.print(",");
+  symbol->structure_specification->accept(*this);
+  s4o_incl.print(")\n");
 
   current_typedefinition = none_td;
 
@@ -575,7 +575,7 @@ void *visit(initialized_structure_c *symbol) {
 //SYM_LIST(structure_element_declaration_list_c)
 void *visit(structure_element_declaration_list_c *symbol) {
   TRACE("structure_element_declaration_list_c");
-  s4o_incl.print("struct {\n");
+  s4o_incl.print("\n");
   s4o_incl.indent_right();
   s4o_incl.print(s4o_incl.indent_spaces);
 
@@ -583,7 +583,6 @@ void *visit(structure_element_declaration_list_c *symbol) {
 
   s4o_incl.indent_left();
   s4o_incl.print(s4o_incl.indent_spaces);
-  s4o_incl.print("}");
   return NULL;
 }
 

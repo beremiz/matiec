@@ -32,7 +32,7 @@ typedef struct {\
   IEC_##type fvalue;\
 } __IEC_##type##_p;
 
-#define __DECLARE_DERIVED_TYPE(base, type)\
+#define __DECLARE_DERIVED_TYPE(type, base)\
 typedef base type;\
 typedef __IEC_##base##_t __IEC_##type##_t;
 
@@ -47,15 +47,23 @@ typedef struct {\
   IEC_BYTE flags;\
 } __IEC_##type##_p;
 
-#define __DECLARE_ARRAY_TYPE(base, type, size)\
+#define __DECLARE_ENUMERATED_TYPE(type, ...)\
+typedef enum {\
+  __VA_ARGS__\
+} type;\
+__DECLARE_COMPLEX_STRUCT(type)
+
+#define __DECLARE_ARRAY_TYPE(type, base, size)\
 typedef struct {\
   base table size;\
 } type;\
-__DECLARE_COMPLEX_STRUCT(type);
+__DECLARE_COMPLEX_STRUCT(type)
 
-#define __DECLARE_STRUCT_TYPE(elements, type)\
-typedef elements type;\
-__DECLARE_COMPLEX_STRUCT(type);
+#define __DECLARE_STRUCT_TYPE(type, elements)\
+typedef struct {\
+  elements\
+} type;\
+__DECLARE_COMPLEX_STRUCT(type)
 
 /* Those typdefs clash with windows.h */
 /* i.e. this file cannot be included aside windows.h */
