@@ -41,7 +41,15 @@
  */
 
 
+#include "../util/symtable.hh"
 #include "search_constant_type.hh"
+
+/* A symbol table with all values declared for enumerated type... */
+/* Note that if the value is defined multiple times the value
+ * is the null pointer.
+ */
+extern symbol_c null_symbol4;
+extern symtable_c<symbol_c *, &null_symbol4> enumerated_value_symtable;
 
 #define ERROR error_exit(__FILE__,__LINE__)
 /* function defined in main.cc */
@@ -117,6 +125,18 @@ void *search_constant_type_c::visit(date_c *symbol) {return (void *)(symbol->typ
 void *search_constant_type_c::visit(date_literal_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
 void *search_constant_type_c::visit(date_and_time_c *symbol) {return (void *)(symbol->type_name);}
 
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+void *search_constant_type_c::visit(enumerated_value_c *symbol) {
+	if (symbol->type != NULL)
+		return (void *)(symbol->type);
+
+	symbol_c *value_type = enumerated_value_symtable.find_value(symbol->value);
+	if (value_type == enumerated_value_symtable.end_value()) ERROR;
+
+	return (void *)value_type;
+}
 
 real_type_name_c     search_constant_type_c::real_type_name;
 sint_type_name_c     search_constant_type_c::sint_type_name;

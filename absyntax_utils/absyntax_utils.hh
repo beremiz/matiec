@@ -74,6 +74,11 @@ extern symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
 extern symbol_c null_symbol4;
 extern symtable_c<symbol_c *, &null_symbol4> type_symtable;
 
+/* A symbol table with all values declared for enumerated type... */
+/* Note that if the value is defined multiple times the value
+ * is the null pointer.
+ */
+extern symtable_c<symbol_c *, &null_symbol4> enumerated_value_symtable;
 
 
 /***********************************************************************/

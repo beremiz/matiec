@@ -7242,7 +7242,7 @@ non_negative_primary_expression:
 primary_expression:
   constant
 //| enumerated_value_without_identifier
-  enumerated_value
+| enumerated_value
 | variable
 | '(' expression ')'
 	{$$ = $2;}

@@ -121,6 +121,11 @@ symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
 symbol_c null_symbol4;
 symtable_c<symbol_c *, &null_symbol4> type_symtable;
 
+/* A symbol table with all values declared for enumerated type... */
+/* Note that if the value is defined multiple times the value
+ * is the null pointer.
+ */
+symtable_c<symbol_c *, &null_symbol4> enumerated_value_symtable;
 
 
 /***********************************************************************/
@@ -131,8 +136,13 @@ symtable_c<symbol_c *, &null_symbol4> type_symtable;
 
 class populate_symtables_c: public iterator_visitor_c {
 
+  private:
+	symbol_c *current_enumerated_type;
+
   public:
-    populate_symtables_c(void) {};
+    populate_symtables_c(void) {
+    	current_enumerated_type = NULL;
+    };
     virtual ~populate_symtables_c(void) {}
 
 
@@ -187,9 +197,32 @@ class populate_symtables_c: public iterator_visitor_c {
   void *visit(enumerated_type_declaration_c *symbol) {
     TRACE("enumerated_type_declaration_c");
     type_symtable.insert(symbol->enumerated_type_name, symbol->enumerated_spec_init);
+    current_enumerated_type = symbol->enumerated_type_name;
+    symbol->enumerated_spec_init->accept(*this);
+    current_enumerated_type = NULL;
     return NULL;
   }
 
+  /* enumerated_specification ASSIGN enumerated_value */
+  void *visit(enumerated_spec_init_c *symbol) {
+    return symbol->enumerated_specification->accept(*this);
+  }
+
+  /* [enumerated_type_name '#'] identifier */
+  void *visit(enumerated_value_c *symbol) {
+    if (current_enumerated_type != NULL) {
+      if (symbol->type != NULL) ERROR;
+
+      symbol_c *value_type = enumerated_value_symtable.find_value(symbol->value);
+      if (value_type == current_enumerated_type) ERROR;
+
+      if (value_type == enumerated_value_symtable.end_value())
+        enumerated_value_symtable.insert(symbol->value, current_enumerated_type);
+      else if (value_type != NULL)
+        enumerated_value_symtable.set(symbol->value, NULL);
+    }
+    return NULL;
+  }
 
   /*  identifier ':' array_spec_init */
   void *visit(array_type_declaration_c *symbol) {

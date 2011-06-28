@@ -32,6 +32,7 @@ class generate_c_typedecl_c: public generate_c_base_c {
     symbol_c* current_type_name;
     bool array_is_derived;
     search_base_type_c search_base_type;
+    search_constant_type_c search_constant_type;
 
     generate_c_base_c *basedecl;
 
@@ -39,11 +40,13 @@ class generate_c_typedecl_c: public generate_c_base_c {
     generate_c_typedecl_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr): generate_c_base_c(s4o_ptr), s4o_incl(*s4o_incl_ptr) {
       current_typedefinition = none_td;
       current_basetypedeclaration = none_bd;
+      current_type_name = NULL;
       basedecl = new generate_c_base_c(&s4o_incl);
     }
     generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_c(s4o_ptr), s4o_incl(*s4o_ptr) {
       current_typedefinition = none_td;
       current_basetypedeclaration = none_bd;
+      current_type_name = NULL;
       basedecl = new generate_c_base_c(&s4o_incl);
     }
     ~generate_c_typedecl_c(void) {
@@ -177,21 +180,21 @@ void *visit(subrange_type_declaration_c *symbol) {
   TRACE("subrange_type_declaration_c");  
   
   current_typedefinition = subrange_td;
+  current_type_name = symbol->subrange_type_name;
 
   s4o_incl.print("__DECLARE_DERIVED_TYPE(");
-  symbol->subrange_type_name->accept(*basedecl);
+  current_type_name->accept(*basedecl);
   s4o_incl.print(",");
   current_basetypedeclaration = subrangebasetype_bd;
   symbol->subrange_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
   s4o_incl.print(")\n");
   
-  current_type_name = symbol->subrange_type_name;
-  
   current_basetypedeclaration = subrangetest_bd;
   symbol->subrange_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
   
+  current_type_name = NULL;
   current_typedefinition = none_td;
 
   return NULL;
@@ -296,20 +299,23 @@ void *visit(enumerated_type_declaration_c *symbol) {
   TRACE("enumerated_type_declaration_c");
   
   current_typedefinition = enumerated_td;
+  current_type_name = symbol->enumerated_type_name;
 
   s4o_incl.print("__DECLARE_ENUMERATED_TYPE(");
-  symbol->enumerated_type_name->accept(*basedecl);
+  current_type_name->accept(*basedecl);
   s4o_incl.print(",\n");
   s4o_incl.indent_right();
   symbol->enumerated_spec_init->accept(*this);
   s4o_incl.indent_left();
   s4o_incl.print(")\n");
 
+  current_type_name = NULL;
   current_typedefinition = none_td;
 
   return NULL;
 }
 
+/* enumerated_specification ASSIGN enumerated_value */
 void *visit(enumerated_spec_init_c *symbol) {
   TRACE("enumerated_spec_init_c");
   if (current_typedefinition == enumerated_td)
@@ -328,6 +334,16 @@ void *visit(enumerated_value_list_c *symbol) {
 
 /* enumerated_type_name '#' identifier */
 void *visit(enumerated_value_c *symbol) {
+  symbol_c *value_type;
+  if (current_typedefinition == enumerated_td)
+    current_type_name->accept(*basedecl);
+  else {
+    value_type = (symbol_c *)symbol->accept(search_constant_type);
+    if (value_type == NULL) ERROR;
+
+    value_type->accept(*basedecl);
+  }
+  s4o_incl.print("_");
   symbol->value->accept(*basedecl);
   return NULL;
 }
@@ -337,6 +353,7 @@ void *visit(array_type_declaration_c *symbol) {
   TRACE("array_type_declaration_c");
   
   current_typedefinition = array_td;
+  current_type_name = symbol->identifier;
 
   array_is_derived = false;
   current_basetypedeclaration = arrayderiveddeclaration_bd;
@@ -347,7 +364,7 @@ void *visit(array_type_declaration_c *symbol) {
 	s4o_incl.print("__DECLARE_DERIVED_TYPE(");
   else
 	s4o_incl.print("__DECLARE_ARRAY_TYPE(");
-  symbol->identifier->accept(*basedecl);
+  current_type_name->accept(*basedecl);
   s4o_incl.print(",");
   current_basetypedeclaration = arraybasetypeincl_bd;
   symbol->array_spec_init->accept(*this);
@@ -362,7 +379,7 @@ void *visit(array_type_declaration_c *symbol) {
 
   if (search_base_type.type_is_subrange(symbol->identifier)) {
 	s4o.print("#define __CHECK_");
-	symbol->identifier->accept(*this);
+	current_type_name->accept(*this);
 	s4o.print(" __CHECK_");
 	current_basetypedeclaration = arraybasetype_bd;
 	symbol->array_spec_init->accept(*this);
@@ -370,12 +387,12 @@ void *visit(array_type_declaration_c *symbol) {
 	s4o.print("\n");
   }
 
-  current_type_name = symbol->identifier;
   current_basetypedeclaration = arraytranslateindex_bd;
   symbol->array_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
   s4o.print("\n");
 
+  current_type_name = NULL;
   current_typedefinition = none_td;
 
   return NULL;

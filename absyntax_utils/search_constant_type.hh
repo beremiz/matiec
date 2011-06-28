@@ -153,6 +153,11 @@ class search_constant_type_c: public search_visitor_c {
     void *visit(date_c *symbol);
     void *visit(date_literal_c *symbol);
     void *visit(date_and_time_c *symbol);
+
+    /********************************/
+    /* B 1.3.3 - Derived data types */
+    /********************************/
+    void *visit(enumerated_value_c *symbol);
 };  // search_constant_type_c
 
 
