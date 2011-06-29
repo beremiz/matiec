@@ -453,17 +453,6 @@ class generate_c_pous_c: public generate_c_typedecl_c {
       s4o.print(END_LABEL);
       s4o.print(":\n");
       s4o.indent_right();
-
-      /* since every label must be followed by at least one statement, and
-       * only the functions will introduce the return statement after this label,
-       * function blocks written in IL would result in invalid C++ code.
-       * To work around this we introduce the equivalent of a 'nop' operation
-       * to humour the compiler...
-       */
-      s4o.print(s4o.indent_spaces);
-      s4o.print("/* to humour the compiler, we insert a nop */\n");
-      s4o.print(s4o.indent_spaces);
-      s4o.print("if (0);\n\n");
     }
   
 
@@ -841,6 +830,7 @@ void *visit(function_block_declaration_c *symbol) {
   generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
   symbol->fblock_body->accept(generate_c_code);
   print_end_of_block_label();
+  s4o.print(s4o.indent_spaces + "return;\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
   symbol->fblock_name->accept(*this);
@@ -1002,6 +992,7 @@ void *visit(program_declaration_c *symbol) {
   generate_c_SFC_IL_ST_c generate_c_code(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
   symbol->function_block_body->accept(generate_c_code);
   print_end_of_block_label();
+  s4o.print(s4o.indent_spaces + "return;\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "} // ");
   symbol->program_type_name->accept(*this);
