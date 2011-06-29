@@ -343,7 +343,7 @@ void *visit(enumerated_value_c *symbol) {
 
     value_type->accept(*basedecl);
   }
-  s4o_incl.print("_");
+  s4o_incl.print("__");
   symbol->value->accept(*basedecl);
   return NULL;
 }
