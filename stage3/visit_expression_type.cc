@@ -2002,11 +2002,11 @@ void *visit_expression_type_c::visit(assignment_statement_c *symbol) {
     symbolic_variable_c *hi = dynamic_cast<symbolic_variable_c *>(symbol->l_exp);  
     if (hi != NULL) {
       identifier_c *hi1 = dynamic_cast<identifier_c *>(hi->var_name);  
-      if (hi1 != NULL) printf(hi1->value);
+      if (hi1 != NULL) printf("%s", hi1->value);
     }
     printf(" := ");
     hex_integer_c *hi2 = dynamic_cast<hex_integer_c *>(symbol->r_exp);  
-    if (hi2 != NULL) printf(hi2->value);
+    if (hi2 != NULL) printf("%s", hi2->value);
     printf("\n");
   } // if (debug)
   
