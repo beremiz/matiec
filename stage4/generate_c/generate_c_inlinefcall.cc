@@ -91,6 +91,12 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
             std::list<FUNCTION_PARAM*>::iterator pt;
 
       fcall_number++;
+      if (search_expression_type->is_literal_integer_type(function_type_prefix)) {
+    	function_type_prefix = (symbol_c *)&search_constant_type_c::lint_type_name;
+      }
+      else if (search_expression_type->is_literal_real_type(function_type_prefix)) {
+    	function_type_prefix = (symbol_c *)&search_constant_type_c::lreal_type_name;
+      }
 
       s4o.print(s4o.indent_spaces);
       s4o.print("inline ");
@@ -107,7 +113,15 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
       PARAM_LIST_ITERATOR() {
         if (PARAM_DIRECTION == function_param_iterator_c::direction_in) {
-          PARAM_TYPE->accept(*this);
+          if (search_expression_type->is_literal_integer_type(PARAM_TYPE)) {
+        	((symbol_c *)&search_constant_type_c::lint_type_name)->accept(*this);
+          }
+          else if (search_expression_type->is_literal_real_type(PARAM_TYPE)) {
+        	((symbol_c *)&search_constant_type_c::lreal_type_name)->accept(*this);
+          }
+          else {
+        	PARAM_TYPE->accept(*this);
+          }
           s4o.print(" ");
           PARAM_NAME->accept(*this);
           s4o.print(",\n" + s4o.indent_spaces);
