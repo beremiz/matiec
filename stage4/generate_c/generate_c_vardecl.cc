@@ -163,7 +163,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
         s4o.print("(");
         print_variable_prefix();
         symbol->elements[i]->accept(*this);
-        s4o.print(", temp);\n");
+        s4o.print(",temp);\n");
       }
       return NULL;
     }
@@ -918,6 +918,10 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
         	this->current_var_type_symbol->accept(*this);
             s4o.print(" ");
           }
+          else if (wanted_varformat == init_vf) {
+        	s4o.print(SET_VAR);
+        	s4o.print("(");
+          }
           print_variable_prefix();
           list->elements[i]->accept(*this);
           if (wanted_varformat != local_vf) {
@@ -953,6 +957,11 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
               s4o.print(s4o.indent_spaces);
               s4o.print("}\n");
             }
+        	else if (wanted_varformat == init_vf) {
+        	  s4o.print(",");
+        	  this->current_var_init_symbol->accept(*this);
+        	  s4o.print(");\n");
+        	}
         	else {
         	  if (this->current_var_init_symbol != NULL) {
                 s4o.print(" = ");
