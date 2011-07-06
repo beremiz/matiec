@@ -394,7 +394,7 @@ bool visit_expression_type_c::is_ANY_BOOL_compatible(symbol_c *type_symbol) {
 }
 
 
-#define is_type(type_name_symbol, type_name_class)  (typeid(*type_name_symbol) == typeid(type_name_class))
+#define is_type(type_name_symbol, type_name_class)  ((type_name_symbol == NULL) ? false : (typeid(*type_name_symbol) == typeid(type_name_class)))
 
 
 #define sizeoftype(symbol) get_sizeof_datatype_c::getsize(symbol)
