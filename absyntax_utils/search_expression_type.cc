@@ -191,6 +191,16 @@ symbol_c* search_expression_type_c::common_type(symbol_c *first_type, symbol_c *
   return NULL;
 }
 
+symbol_c *search_expression_type_c::default_literal_type(symbol_c* symbol) {
+  if (is_literal_integer_type(symbol)) {
+    return (symbol_c *)&search_constant_type_c::lint_type_name;
+  }
+  else if (is_literal_real_type(symbol)) {
+    return (symbol_c *)&search_constant_type_c::lreal_type_name;
+  }
+  return symbol;
+}
+
 
 integer_c search_expression_type_c::integer("1"); // what default value should we use here ???
 #include "search_type_code.c"
