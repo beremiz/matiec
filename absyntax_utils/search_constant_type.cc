@@ -43,13 +43,8 @@
 
 #include "../util/symtable.hh"
 #include "search_constant_type.hh"
+#include "absyntax_utils.hh"
 
-/* A symbol table with all values declared for enumerated type... */
-/* Note that if the value is defined multiple times the value
- * is the null pointer.
- */
-extern symbol_c null_symbol4;
-extern symtable_c<symbol_c *, &null_symbol4> enumerated_value_symtable;
 
 #define ERROR error_exit(__FILE__,__LINE__)
 /* function defined in main.cc */

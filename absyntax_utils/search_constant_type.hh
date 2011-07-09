@@ -43,6 +43,8 @@
 
 #include "../absyntax/visitor.hh"
 
+#ifndef _SEARCH_CONSTANT_TYPE_HH
+#define _SEARCH_CONSTANT_TYPE_HH
 
 class search_constant_type_c: public search_visitor_c {
 
@@ -162,3 +164,4 @@ class search_constant_type_c: public search_visitor_c {
 
 
 
+#endif /* ifndef _SEARCH_CONSTANT_TYPE_HH */
