@@ -28,7 +28,7 @@ all: stage4.o
 
 clean:
 	rm -f *.o
-	find . -depth -mindepth 2 -maxdepth 2 -name Makefile | sed 's/Makefile//g' | xargs -I {} make -C{} clean
+	find . -depth -mindepth 2 -maxdepth 2 -name Makefile | sed 's/Makefile//g' | xargs -I {} $(MAKE) -C{} clean
 
 
 CXXFLAGS += -I. -I../*
