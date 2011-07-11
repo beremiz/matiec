@@ -91,11 +91,9 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
             std::list<FUNCTION_PARAM*>::iterator pt;
 
       fcall_number++;
-      if (search_expression_type->is_literal_integer_type(function_type_prefix)) {
-    	function_type_prefix = (symbol_c *)&search_constant_type_c::lint_type_name;
-      }
-      else if (search_expression_type->is_literal_real_type(function_type_prefix)) {
-    	function_type_prefix = (symbol_c *)&search_constant_type_c::lreal_type_name;
+      function_type_prefix = search_expression_type->default_literal_type(function_type_prefix);
+      if (function_type_suffix) {
+        function_type_suffix = search_expression_type->default_literal_type(function_type_suffix);
       }
 
       s4o.print(s4o.indent_spaces);
@@ -105,23 +103,16 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       fbname->accept(*this);
       s4o.print("_");
       function_name->accept(*this);
-      if (function_type_suffix)
-        function_type_suffix->accept(*this);
+      if (function_type_suffix) {
+    	function_type_suffix->accept(*this);
+      }
       s4o.print_integer(fcall_number);
       s4o.print("(");
       s4o.indent_right();
 
       PARAM_LIST_ITERATOR() {
         if (PARAM_DIRECTION == function_param_iterator_c::direction_in) {
-          if (search_expression_type->is_literal_integer_type(PARAM_TYPE)) {
-        	((symbol_c *)&search_constant_type_c::lint_type_name)->accept(*this);
-          }
-          else if (search_expression_type->is_literal_real_type(PARAM_TYPE)) {
-        	((symbol_c *)&search_constant_type_c::lreal_type_name)->accept(*this);
-          }
-          else {
-        	PARAM_TYPE->accept(*this);
-          }
+          search_expression_type->default_literal_type(PARAM_TYPE)->accept(*this);
           s4o.print(" ");
           PARAM_NAME->accept(*this);
           s4o.print(",\n" + s4o.indent_spaces);
