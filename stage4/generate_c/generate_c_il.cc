@@ -897,7 +897,7 @@ void *visit(il_function_call_c *symbol) {
     s4o.print(")");
   }
   if (function_type_suffix != NULL) {
-  	function_type_suffix = search_expression_type->default_literal_type(function_type_prefix);
+  	function_type_suffix = search_expression_type->default_literal_type(function_type_suffix);
   }
   if (has_output_params) {
   	fcall_number++;
@@ -1265,7 +1265,7 @@ void *visit(il_formal_funct_call_c *symbol) {
     s4o.print(")");
   }
   if (function_type_suffix != NULL) {
-  	function_type_suffix = search_expression_type->default_literal_type(function_type_prefix);
+  	function_type_suffix = search_expression_type->default_literal_type(function_type_suffix);
   }
   if (has_output_params) {
 	fcall_number++;
