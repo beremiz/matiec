@@ -70,15 +70,26 @@ extern symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
 /* A symbol table with all user declared type definitions... */
 /* Note that function block types and program types have their
  * own symbol tables, so do not get placed in this symbol table!
+ *
+ * The symbol_c * associated to the value will point to the data type declaration.
  */
 extern symbol_c null_symbol4;
 extern symtable_c<symbol_c *, &null_symbol4> type_symtable;
 
 /* A symbol table with all values declared for enumerated type... */
-/* Note that if the value is defined multiple times the value
+/* Notes:
+ * - if the value is defined multiple times the value
  * is the null pointer.
+ *
+ * - The stored symbol_c * associated to the value points to the enumerated_type_name
+ * (i.e. the name of the enumerated data type) in which the the value/identifier
+ * is used/declared.
+ *
+ * - We could re-use the null_symbol4 object, but it is safer to use a distinct object
+ *   (i.e. it might make it easier to find strange bugs).
  */
-extern symtable_c<symbol_c *, &null_symbol4> enumerated_value_symtable;
+extern symbol_c null_symbol5;
+extern symtable_c<symbol_c *, &null_symbol5> enumerated_value_symtable;
 
 
 /***********************************************************************/
