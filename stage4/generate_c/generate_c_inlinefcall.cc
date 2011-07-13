@@ -245,14 +245,13 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
   private:
 
     /* A helper function... */
-	void *CMP_operator_result_type() {
+	void CMP_operator_result_type() {
 	  /* the data type resulting from this operation... */
 	  this->default_variable_name.current_type = &(this->bool_type);
-	  return NULL;
 	}
 
 	/* A helper function... */
-    void *BYTE_operator_result_type(void) {
+    void BYTE_operator_result_type(void) {
 	  if (search_expression_type->is_literal_integer_type(this->default_variable_name.current_type)) {
 		if (search_expression_type->is_literal_integer_type(this->current_operand_type))
 		  this->default_variable_name.current_type = &(this->lword_type);
@@ -261,11 +260,10 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 	  }
 	  else if (search_expression_type->is_literal_integer_type(this->current_operand_type))
 		  this->current_operand_type = this->default_variable_name.current_type;
-	  return NULL;
 	}
 
     /* A helper function... */
-    void *NUM_operator_result_type(void) {
+    void NUM_operator_result_type(void) {
 	  if (search_expression_type->is_literal_real_type(this->default_variable_name.current_type)) {
 		if (search_expression_type->is_literal_integer_type(this->current_operand_type) ||
 			search_expression_type->is_literal_real_type(this->current_operand_type))
@@ -284,7 +282,6 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 	  else if (search_expression_type->is_literal_integer_type(this->current_operand_type) ||
 			   search_expression_type->is_literal_real_type(this->current_operand_type))
 		this->current_operand_type = this->default_variable_name.current_type;
-	  return NULL;
 	}
 
     void *print_getter(symbol_c *symbol) {
@@ -778,13 +775,12 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
           search_expression_type->is_time_type(this->current_operand_type)) {
         /* the data type resulting from this operation... */
         this->default_variable_name.current_type = this->current_operand_type;
-        return NULL;
       }
-      if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+      else if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
           search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-        return NUM_operator_result_type();
+        NUM_operator_result_type();
       }
-      ERROR;
+      else {ERROR;}
       return NULL;
     }
 
@@ -793,93 +789,99 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
           search_expression_type->is_time_type(this->current_operand_type)) {
         /* the data type resulting from this operation... */
         this->default_variable_name.current_type = this->current_operand_type;
-        return NULL;
       }
-      if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+      else if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
           search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    	return NUM_operator_result_type();
+    	NUM_operator_result_type();
       }
-      ERROR;
+      else {ERROR;}
       return NULL;
     }
 
     void *visit(MUL_operator_c *symbol)	{
       if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
           search_expression_type->is_integer_type(this->current_operand_type)) {
-        return NULL;
+        /* the data type resulting from this operation is unchanged! */
       }
-      if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+      else if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
           search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    	return NUM_operator_result_type();
+    	NUM_operator_result_type();
       }
-      ERROR;
+      else {ERROR;}
       return NULL;
     }
 
     void *visit(DIV_operator_c *symbol)	{
       if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
           search_expression_type->is_integer_type(this->current_operand_type)) {
-        return NULL;
+        /* the data type resulting from this operation is unchanged! */
       }
-      if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+      else if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
           search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-        return NUM_operator_result_type();
+        NUM_operator_result_type();
       }
-      ERROR;
+      else {ERROR;}
       return NULL;
     }
 
     void *visit(MOD_operator_c *symbol)	{
       if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
           search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-        return NUM_operator_result_type();
+        NUM_operator_result_type();
       }
-      ERROR;
+      else {ERROR;}
       return NULL;
     }
 
     void *visit(GT_operator_c *symbol)	{
       if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-        return CMP_operator_result_type();
-      ERROR;
+          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+        CMP_operator_result_type();
+      }
+      else {ERROR;}
       return NULL;
     }
 
     void *visit(GE_operator_c *symbol)	{
       if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-        return CMP_operator_result_type();
-      ERROR;
+          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+        CMP_operator_result_type();
+      }
+      else {ERROR;}
       return NULL;
     }
 
     void *visit(EQ_operator_c *symbol)	{
-      if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-        return CMP_operator_result_type();
-      ERROR;
+      if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+        CMP_operator_result_type();
+      }
+      else {ERROR;}
       return NULL;
     }
 
     void *visit(LT_operator_c *symbol)	{
       if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-        return CMP_operator_result_type();
+          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+        CMP_operator_result_type();
+      }
+      else {ERROR;}
       return NULL;
     }
 
     void *visit(LE_operator_c *symbol)	{
       if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-        return CMP_operator_result_type();
-      ERROR;
+          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+        CMP_operator_result_type();
+      }
+      else {ERROR;}
       return NULL;
     }
 
     void *visit(NE_operator_c *symbol)	{
-      if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-        return CMP_operator_result_type();
-      ERROR;
+      if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+        CMP_operator_result_type();
+      }
+      else {ERROR;}
       return NULL;
     }
 
