@@ -770,6 +770,60 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       return NULL;
     }
 
+    void *visit(AND_operator_c *symbol)	{
+      if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    	BYTE_operator_result_type();
+      }
+      else {ERROR;}
+      return NULL;
+    }
+
+    void *visit(OR_operator_c *symbol)	{
+      if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    	BYTE_operator_result_type();
+      }
+      else {ERROR;}
+      return NULL;
+    }
+
+    void *visit(XOR_operator_c *symbol)	{
+      if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    	BYTE_operator_result_type();
+      }
+      else {ERROR;}
+      return NULL;
+    }
+
+    void *visit(ANDN_operator_c *symbol)	{
+      if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    	BYTE_operator_result_type();
+      }
+      else {ERROR;}
+      return NULL;
+    }
+
+    void *visit(ORN_operator_c *symbol)	{
+      if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    	BYTE_operator_result_type();
+      }
+      else {ERROR;}
+      return NULL;
+    }
+
+    void *visit(XORN_operator_c *symbol)	{
+      if (search_expression_type->is_binary_type(this->default_variable_name.current_type) &&
+          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    	BYTE_operator_result_type();
+      }
+      else {ERROR;}
+      return NULL;
+    }
+
     void *visit(ADD_operator_c *symbol)	{
       if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
           search_expression_type->is_time_type(this->current_operand_type)) {
