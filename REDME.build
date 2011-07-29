@@ -1,0 +1,28 @@
+
+-> Add new files to Makefile.am or add a new makefile
+$ autoreconf
+
+
+-> Prepare clean project
+$ make distclean
+
+
+-> Build 
+$ ./configure
+$ make
+
+
+
+
+
+
+- Remember to add these files to your .hgignore
+	Makefile
+	config.*
+	*.a
+	.deps
+
+
+- Send me TODO list to complete build system.
+	matteo.facchinetti@sirius-es.it
+

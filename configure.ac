@@ -1,0 +1,60 @@
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ([2.61])
+AC_INIT([matiec], [0.1], [matteo.facchinetti@sirius-es.it])
+AC_CONFIG_HEADERS([config/config.h])
+AC_CONFIG_AUX_DIR(config)
+
+AM_INIT_AUTOMAKE([foreign])
+
+# Before checking for CXX and CC, set CFLAGS and CXXFLAGS because they
+# are otherwise initialized to contain -g -O2
+if test "x$CFLAGS" = "x"; then
+CFLAGS=
+fi
+if test "x$CXXFLAGS" = "x"; then
+CXXFLAGS=
+fi
+
+# Checks for programs.
+AC_PROG_YACC
+AC_PROG_LEX
+AC_PROG_CXX
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+
+# Checks for header files.
+AC_CHECK_HEADERS([float.h limits.h stdint.h stdlib.h string.h strings.h sys/timeb.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_INLINE
+AC_TYPE_INT16_T
+AC_TYPE_INT32_T
+AC_TYPE_INT64_T
+AC_TYPE_INT8_T
+AC_TYPE_UINT16_T
+AC_TYPE_UINT32_T
+AC_TYPE_UINT64_T
+AC_TYPE_UINT8_T
+
+# Checks for library functions.
+AC_FUNC_MALLOC
+AC_FUNC_MKTIME
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([clock_gettime memset pow strcasecmp strdup strtoul strtoull])
+
+AC_CONFIG_MACRO_DIR([config])
+
+AC_CONFIG_FILES([Makefile \
+	absyntax/Makefile \
+	absyntax_utils/Makefile \
+	stage1_2/Makefile \
+	stage3/Makefile \
+	stage4/Makefile])
+AC_OUTPUT
+
+
