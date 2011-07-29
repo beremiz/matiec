@@ -814,9 +814,9 @@ incompl_location	%[IQM]\*
 			    fprintf(stderr, "Includes nested too deeply\n");
 			    exit( 1 );
 			  }
-        include_stack[include_stack_ptr].buffer_state = YY_CURRENT_BUFFER;
-        include_stack[include_stack_ptr].env = current_tracking;
-        include_stack[include_stack_ptr].filename = current_filename;
+			  include_stack[include_stack_ptr].buffer_state = YY_CURRENT_BUFFER;
+			  include_stack[include_stack_ptr].env = current_tracking;
+			  include_stack[include_stack_ptr].filename = current_filename;
 			  
 			  for (i = 0, yyin = NULL; (INCLUDE_DIRECTORIES[i] != NULL) && (yyin == NULL); i++) {
 			    char *full_name = strdup3(INCLUDE_DIRECTORIES[i], "/", yytext);

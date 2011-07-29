@@ -704,6 +704,32 @@ void *visit(var1_init_decl_c *symbol) {
 
 void *visit(var1_list_c *symbol) {return print_list(symbol, "", ", ");}
 
+/* | [var1_list ','] variable_name '..' */
+/* NOTE: This is an extension to the standard!!! */
+/* In order to be able to handle extensible standard functions
+ * (i.e. standard functions that may have a variable number of
+ * input parameters, such as AND(word#33, word#44, word#55, word#66),
+ * we have extended the acceptable syntax to allow var_name '..'
+ * in an input variable declaration.
+ *
+ * This allows us to parse the declaration of standard
+ * extensible functions and load their interface definition
+ * into the abstract syntax tree just like we do to other 
+ * user defined functions.
+ * This has the advantage that we can later do semantic
+ * checking of calls to functions (be it a standard or user defined
+ * function) in (almost) exactly the same way.
+ *
+ * Of course, we have a flag that disables this syntax when parsing user
+ * written code, so we only allow this extra syntax while parsing the 
+ * 'header' file that declares all the standard IEC 61131-3 functions.
+ */
+void *visit(extensible_input_parameter_c *symbol) {
+  symbol->var_name->accept(*this);
+  s4o.print(" .. ");
+  return NULL;
+}
+
 
 /* var1_list ':' array_spec_init */
 void *visit(array_var_init_decl_c *symbol) {
@@ -930,17 +956,25 @@ void *visit(single_byte_string_var_declaration_c *symbol) {
   return NULL;
 }
 
-/*  STRING ['[' integer ']'] [ASSIGN single_byte_character_string] */
-/* integer ->may be NULL ! */
+/*  single_byte_limited_len_string_spec [ASSIGN single_byte_character_string] */
 /* single_byte_character_string ->may be NULL ! */
 void *visit(single_byte_string_spec_c *symbol) {
-  s4o.print("STRING [");
-  if (symbol->integer != NULL)
-    symbol->integer->accept(*this);
-  s4o.print("]");
+  symbol->string_spec->accept(*this);
   if (symbol->single_byte_character_string != NULL) {
     s4o.print(" := ");
     symbol->single_byte_character_string->accept(*this);
+  }
+  return NULL;
+}
+
+/*  STRING ['[' integer ']'] */
+/* integer ->may be NULL ! */
+void *visit(single_byte_limited_len_string_spec_c *symbol) {
+  symbol->string_type_name->accept(*this);
+  if (symbol->character_string_len != NULL) {
+    s4o.print(" [");
+    symbol->character_string_len->accept(*this);
+    s4o.print("]");
   }
   return NULL;
 }
@@ -953,17 +987,26 @@ void *visit(double_byte_string_var_declaration_c *symbol) {
   return NULL;
 }
 
-/*  WSTRING ['[' integer ']'] [ASSIGN double_byte_character_string] */
+/*  double_byte_limited_len_string_spec [ASSIGN double_byte_character_string] */
 /* integer ->may be NULL ! */
 /* double_byte_character_string ->may be NULL ! */
 void *visit(double_byte_string_spec_c *symbol) {
-  s4o.print("WSTRING [");
-  if (symbol->integer != NULL)
-    symbol->integer->accept(*this);
-  s4o.print("]");
+  symbol->string_spec->accept(*this);
   if (symbol->double_byte_character_string != NULL) {
     s4o.print(" := ");
     symbol->double_byte_character_string->accept(*this);
+  }
+  return NULL;
+}
+
+/* WSTRING ['[' integer ']'] */
+/* integer ->may be NULL ! */
+void *visit(double_byte_limited_len_string_spec_c *symbol) {
+  symbol->string_type_name->accept(*this);
+  if (symbol->character_string_len != NULL) {
+    s4o.print(" [");
+    symbol->character_string_len->accept(*this);
+    s4o.print("]");
   }
   return NULL;
 }

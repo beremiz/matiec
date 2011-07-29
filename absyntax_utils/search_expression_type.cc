@@ -202,11 +202,6 @@ symbol_c *search_expression_type_c::default_literal_type(symbol_c* symbol) {
 }
 
 
-integer_c search_expression_type_c::integer("1"); // what default value should we use here ???
-#include "search_type_code.c"
-
-/*static bool_type_name_c bool_type_name;*/
-
 /* A helper function... */
 void *search_expression_type_c::compute_boolean_expression(symbol_c *left_type, symbol_c *right_type) {
   if (!is_same_type(left_type, right_type))
@@ -385,13 +380,8 @@ void *search_expression_type_c::visit(not_expression_c *symbol) {
 }
 
 void *search_expression_type_c::visit(function_invocation_c *symbol) {
-  function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
-  if (f_decl == function_symtable.end_value()) {
-    void *res = compute_standard_function_default(symbol);
-    if (res == NULL)
-       ERROR;
-    return res;
-  }
+  function_declaration_c *f_decl = (function_declaration_c *)symbol->called_function_declaration;
+  if (f_decl == NULL) ERROR;
   return base_type(f_decl->type_name);
 }
 

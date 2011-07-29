@@ -35,6 +35,9 @@
  */
 
 
+
+#include "../../util/strdup.hh"
+
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
@@ -434,7 +437,7 @@ void *visit(equ_expression_c *symbol) {
       ERROR;
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
-    return print_compare_function("__eq_", left_type, symbol->l_exp, symbol->r_exp);
+    return print_compare_function("EQ_", left_type, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " == ");
 }
 
@@ -445,7 +448,7 @@ void *visit(notequ_expression_c *symbol) {
       ERROR;
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
-    return print_compare_function("__ne_", left_type, symbol->l_exp, symbol->r_exp);
+    return print_compare_function("NE_", left_type, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " != ");
 }
 
@@ -456,7 +459,7 @@ void *visit(lt_expression_c *symbol) {
       ERROR;
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
-    return print_compare_function("__lt_", left_type, symbol->l_exp, symbol->r_exp);
+    return print_compare_function("LT_", left_type, symbol->l_exp, symbol->r_exp);
   if (!search_base_type.type_is_enumerated(left_type))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");
   ERROR;
@@ -470,7 +473,7 @@ void *visit(gt_expression_c *symbol) {
       ERROR;
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
-    return print_compare_function("__gt_", left_type, symbol->l_exp, symbol->r_exp);
+    return print_compare_function("GT_", left_type, symbol->l_exp, symbol->r_exp);
   if (!search_base_type.type_is_enumerated(left_type))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");
   ERROR;
@@ -484,7 +487,7 @@ void *visit(le_expression_c *symbol) {
       ERROR;
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
-    return print_compare_function("__le_", left_type, symbol->l_exp, symbol->r_exp);
+    return print_compare_function("LE_", left_type, symbol->l_exp, symbol->r_exp);
   if (!search_base_type.type_is_enumerated(left_type))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");
   ERROR;
@@ -498,7 +501,7 @@ void *visit(ge_expression_c *symbol) {
       ERROR;
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
-    return print_compare_function("__ge_", left_type, symbol->l_exp, symbol->r_exp);
+    return print_compare_function("GE_", left_type, symbol->l_exp, symbol->r_exp);
   if (!search_base_type.type_is_enumerated(left_type))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");
   ERROR;
@@ -511,7 +514,7 @@ void *visit(add_expression_c *symbol) {
 	if ((typeid(*left_type) == typeid(time_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
       (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
       (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)))
-    return print_binary_function("__TIME_ADD", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_add", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -529,7 +532,7 @@ void *visit(sub_expression_c *symbol) {
       (typeid(*left_type) == typeid(tod_type_name_c) && typeid(*right_type) == typeid(tod_type_name_c)) ||
       (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(time_type_name_c)) ||
       (typeid(*left_type) == typeid(dt_type_name_c) && typeid(*right_type) == typeid(dt_type_name_c)))
-    return print_binary_function("__TIME_SUB", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_sub", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -543,7 +546,7 @@ void *visit(mul_expression_c *symbol) {
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
   if ((typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_integer_type(right_type)) ||
       (typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_real_type(right_type)))
-    return print_binary_function("__TIME_MUL", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_mul", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -557,7 +560,7 @@ void *visit(div_expression_c *symbol) {
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
   if ((typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_integer_type(right_type)) ||
       (typeid(*left_type) == typeid(time_type_name_c) && search_expression_type->is_real_type(right_type)))
-    return print_binary_function("__TIME_DIV", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_div", symbol->l_exp, symbol->r_exp);
   if (!search_expression_type->is_same_type(left_type, right_type))
       ERROR;
   if (search_expression_type->is_integer_type(left_type) || search_expression_type->is_real_type(left_type))
@@ -614,71 +617,89 @@ void *visit(function_invocation_c *symbol) {
 
   function_call_param_iterator_c function_call_param_iterator(symbol);
 
-  function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
-  if (f_decl == function_symtable.end_value()) {
-    /* The function called is not in the symtable, so we test if it is a
-     * standard function defined in standard */
-
-    function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
-    if (current_function_type == function_none) ERROR;
-
-    symbol_c *function_return_type = search_expression_type->get_type(symbol);
-
-    int nb_param = ((list_c *)parameter_assignment_list)->n;
-
-    symbol_c *en_param_name = (symbol_c *)(new identifier_c("EN"));
-    /* Get the value from EN param */
-    symbol_c *EN_param_value = function_call_param_iterator.search_f(en_param_name);
-    if (EN_param_value == NULL)
-      EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
-    else
-      nb_param --;
-    ADD_PARAM_LIST(en_param_name, EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
-
-    symbol_c *eno_param_name = (symbol_c *)(new identifier_c("ENO"));
-    /* Get the value from ENO param */
-    symbol_c *ENO_param_value = function_call_param_iterator.search_f(eno_param_name);
-    if (ENO_param_value != NULL)
-      nb_param --;
-    ADD_PARAM_LIST(eno_param_name, ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
-
-    #include "st_code_gen.c"
-
-  }
-  else {
-	function_name = symbol->function_name;
-
-	/* loop through each function parameter, find the value we should pass
-     * to it, and then output the c equivalent...
-     */
-    function_param_iterator_c fp_iterator(f_decl);
-    identifier_c *param_name;
-    for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
-      
-      symbol_c *param_type = fp_iterator.param_type();
-      if (param_type == NULL) ERROR;
-
-      function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
-      
-      /* Get the value from a foo(<param_name> = <param_value>) style call */
-      symbol_c *param_value = function_call_param_iterator.search_f(param_name);
+  function_declaration_c *f_decl = (function_declaration_c *)symbol->called_function_declaration;
+  if (f_decl == NULL) ERROR;
   
-      /* Get the value from a foo(<param_value>) style call */
-      if (param_value == NULL) {
-        param_value = function_call_param_iterator.next_nf();
-        if (param_value != NULL && fp_iterator.is_en_eno_param_implicit()) ERROR;
-      }
-      
-      if (param_value == NULL && param_direction == function_param_iterator_c::direction_in) {
-        /* No value given for parameter, so we must use the default... */
-        /* First check whether default value specified in function declaration...*/
-        param_value = fp_iterator.default_value();
-      }
-      
-      ADD_PARAM_LIST(param_name, param_value, param_type, param_direction)
-    } /* for(...) */
-    // symbol->parameter_assignment->accept(*this);
-  }
+  function_name = symbol->function_name;
+  
+  /* loop through each function parameter, find the value we should pass
+   * to it, and then output the c equivalent...
+   */
+  function_param_iterator_c fp_iterator(f_decl);
+  identifier_c *param_name;
+    /* flag to cirreclty handle calls to extensible standard functions (i.e. functions with variable number of input parameters) */
+  bool found_first_extensible_parameter = false;  
+  for(int i = 1; (param_name = fp_iterator.next()) != NULL; i++) {
+    if (fp_iterator.is_extensible_param() && (!found_first_extensible_parameter)) {
+      /* We are calling an extensible function. Before passing the extensible
+       * parameters, we must add a dummy paramater value to tell the called
+       * function how many extensible parameters we will be passing.
+       *
+       * Note that stage 3 has already determined the number of extensible
+       * paramters, and stored that info in the abstract syntax tree. We simply
+       * re-use that value.
+       */
+      /* NOTE: we are not freeing the malloc'd memory. This is not really a bug.
+       *       Since we are writing a compiler, which runs to termination quickly,
+       *       we can consider this as just memory required for the compilation process
+       *       that will be free'd when the program terminates.
+       */
+      char *tmp = (char *)malloc(32); /* enough space for a call with 10^31 (larger than 2^64) input parameters! */
+      if (tmp == NULL) ERROR;
+      int res = snprintf(tmp, 32, "%d", symbol->extensible_param_count);
+      if ((res >= 32) || (res < 0)) ERROR;
+      identifier_c *param_value = new identifier_c(tmp);
+      uint_type_name_c *param_type  = new uint_type_name_c();
+      identifier_c *param_name = new identifier_c("");
+      ADD_PARAM_LIST(param_name, param_value, param_type, function_param_iterator_c::direction_in)
+      found_first_extensible_parameter = true;
+    }
+
+    if (fp_iterator.is_extensible_param()) {      
+      /* since we are handling an extensible parameter, we must add the index to the
+       * parameter name so we can go looking for the value passed to the correct
+       * extended parameter (e.g. IN1, IN2, IN3, IN4, ...)
+       */
+      char *tmp = (char *)malloc(32); /* enough space for a call with 10^31 (larger than 2^64) input parameters! */
+      int res = snprintf(tmp, 32, "%d", fp_iterator.extensible_param_index());
+      if ((res >= 32) || (res < 0)) ERROR;
+      param_name = new identifier_c(strdup2(param_name->value, tmp));
+      if (param_name->value == NULL) ERROR;
+    }
+    
+    symbol_c *param_type = fp_iterator.param_type();
+    if (param_type == NULL) ERROR;
+
+    function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
+    
+    symbol_c *param_value = NULL;
+    
+    /* Get the value from a foo(<param_name> = <param_value>) style call */
+    if (param_value == NULL)
+      param_value = function_call_param_iterator.search_f(param_name);
+
+    /* Get the value from a foo(<param_value>) style call */
+    if ((param_value == NULL) && !fp_iterator.is_en_eno_param_implicit()) {
+      param_value = function_call_param_iterator.next_nf();
+    }
+
+    /* if no more parameter values in function call, and the current parameter
+     * of the function declaration is an extensible parameter, we
+     * have reached the end, and should simply jump out of the for loop.
+     */
+    if ((param_value == NULL) && (fp_iterator.is_extensible_param())) {
+      break;
+    }
+    
+    if ((param_value == NULL) && (param_direction == function_param_iterator_c::direction_in)) {
+      /* No value given for parameter, so we must use the default... */
+      /* First check whether default value specified in function declaration...*/
+      param_value = fp_iterator.default_value();
+    }
+    
+    ADD_PARAM_LIST(param_name, param_value, param_type, param_direction)
+  } /* for(...) */
+  // symbol->parameter_assignment->accept(*this);
   
   if (function_call_param_iterator.next_nf() != NULL) ERROR;
 
@@ -686,15 +707,18 @@ void *visit(function_invocation_c *symbol) {
 
   if (!this->is_variable_prefix_null()) {
     PARAM_LIST_ITERATOR() {
-	  if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
-		   PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
-		  PARAM_VALUE != NULL) {
-	    if (!has_output_params) {
-		  has_output_params = true;
-		}
-	  }
+      if ((PARAM_DIRECTION == function_param_iterator_c::direction_out ||
+           PARAM_DIRECTION == function_param_iterator_c::direction_inout) &&
+           PARAM_VALUE != NULL) {
+        has_output_params = true;
+      }
     }
   }
+
+  /* Check whether we are calling an overloaded function! */
+  /* (fdecl_mutiplicity==2)  => calling overloaded function */
+  int fdecl_mutiplicity =  function_symtable.multiplicity(symbol->function_name);
+  if (fdecl_mutiplicity == 0) ERROR;
 
   if (function_type_prefix != NULL) {
     s4o.print("(");
@@ -702,20 +726,32 @@ void *visit(function_invocation_c *symbol) {
     s4o.print(")");
   }
   if (function_type_suffix != NULL) {
-	function_type_suffix = search_expression_type->default_literal_type(function_type_prefix);
+    function_type_suffix = search_expression_type->default_literal_type(function_type_prefix);
   }
   if (has_output_params) {
-	fcall_number++;
-	s4o.print("__");
+    fcall_number++;
+    s4o.print("__");
     fbname->accept(*this);
     s4o.print("_");
     function_name->accept(*this);
+    if (fdecl_mutiplicity == 2) {
+      /* function being called is overloaded! */
+      s4o.print("__");
+      print_function_parameter_data_types_c overloaded_func_suf(&s4o);
+      f_decl->accept(overloaded_func_suf);
+    }
     if (function_type_suffix != NULL)
       function_type_suffix->accept(*this);
     s4o.print_integer(fcall_number);
   }
   else {
     function_name->accept(*this);
+    if (fdecl_mutiplicity == 2) {
+      /* function being called is overloaded! */
+      s4o.print("__");
+      print_function_parameter_data_types_c overloaded_func_suf(&s4o);
+      f_decl->accept(overloaded_func_suf);
+    }
     if (function_type_suffix != NULL)
       function_type_suffix->accept(*this);
   }
@@ -845,7 +881,10 @@ void *visit(fb_invocation_c *symbol) {
     symbol_c *param_value = function_call_param_iterator.search_f(param_name);
 
     /* Get the value from a foo(<param_value>) style call */
-    if (param_value == NULL)
+    /* When using the informal invocation style, user can not pass values to EN or ENO parameters if these
+     * were implicitly defined!
+     */
+    if ((param_value == NULL) && !fp_iterator.is_en_eno_param_implicit())
       param_value = function_call_param_iterator.next_nf();
 
     symbol_c *param_type = fp_iterator.param_type();
@@ -889,7 +928,10 @@ void *visit(fb_invocation_c *symbol) {
     symbol_c *param_value = function_call_param_iterator.search_f(param_name);
 
     /* Get the value from a foo(<param_value>) style call */
-    if (param_value == NULL)
+    /* When using the informal invocation style, user can not pass values to EN or ENO parameters if these
+     * were implicitly defined!
+     */
+    if ((param_value == NULL) && !fp_iterator.is_en_eno_param_implicit())
       param_value = function_call_param_iterator.next_nf();
 
     /* now output the value assignment */

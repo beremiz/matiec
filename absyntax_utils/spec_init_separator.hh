@@ -101,4 +101,17 @@ class spec_init_sperator_c: public null_visitor_c {
   /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
   /* structure_initialization -> may be NULL ! */
   void *visit(fb_name_decl_c *symbol);
+  
+  /* STRING '[' integer ']' 
+   * STRING ASSIGN single_byte_character_string
+   * STRING '[' integer ']' ASSIGN single_byte_character_string
+   */
+  void *visit(single_byte_string_spec_c *symbol);
+
+  /* WSTRING '[' integer ']' 
+   * WSTRING ASSIGN double_byte_character_string
+   * WSTRING '[' integer ']' ASSIGN double_byte_character_string
+   */
+  void *visit(double_byte_string_spec_c *symbol);
+    
 };   /* class spec_init_sperator_c */

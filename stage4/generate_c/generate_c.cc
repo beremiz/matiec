@@ -158,11 +158,173 @@ extern void error_exit(const char *file_name, int line_no);
 /***********************************************************************/
 /***********************************************************************/
 
+
+#include "generate_c.hh"
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+/* A helper class that prints out the identifiers for function calls to overloaded functions */
+/* Given a function declaration of the function being called, it 
+ * will simply print out the returned data type,
+ * followed by the data types of all input, output, and in_out parameters.
+ *   for e.g.; 
+ *     SIN( REAL) : REAL      -> prints out ->  REAL__REAL
+ *     LEN( STRING) : INT     -> prints out ->  INT__STRING
+ *     MUL(TIME, INT) : TIME  -> prints out ->  TIME__TIME__INT
+ */
+class print_function_parameter_data_types_c: public generate_c_base_c {
+  private:
+    symbol_c *current_type;
+    bool_type_name_c tmp_bool;
+
+    void print_list(symbol_c *var_list, symbol_c *data_type) { 
+      if (data_type != NULL) {
+        /* print out the data type once for every variable! */
+        list_c *list = dynamic_cast<list_c *>(var_list);
+        if (list == NULL) ERROR;  
+        for (int i=0; i < list->n; i++) {
+          s4o.print("__");
+          data_type->accept(*this);
+        }  
+      }
+    }
+    
+  public:
+    print_function_parameter_data_types_c(stage4out_c *s4o_ptr): 
+      generate_c_base_c(s4o_ptr)
+      {current_type = NULL;}
+
+    /**************************************/
+    /* B.1.5 - Program organization units */
+    /**************************************/
+    /***********************/
+    /* B 1.5.1 - Functions */
+    /***********************/
+    /*   FUNCTION derived_function_name ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
+    /* | FUNCTION derived_function_name ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
+    void *visit(function_declaration_c *symbol) {
+      symbol->type_name->accept(*this); /* return type */
+      symbol->var_declarations_list->accept(*this);
+      return NULL;
+    }
+
+    /* already handled by iterator base class (note that generate_c_base_c inherits from iterator_c) */
+    //void *visit(var_declarations_list_c *symbol) {// iterate through list}
+    
+    /* already handled by iterator base class (note that generate_c_base_c inherits from iterator_c) */
+    //void *visit(input_declarations_c *symbol) {// iterate through list}
+        
+    /* already handled by iterator base class (note that generate_c_base_c inherits from iterator_c) */
+    //void *visit(input_declaration_list_c *symbol) {// iterate through list}
+
+    void *visit(edge_declaration_c *symbol) {
+      current_type = &tmp_bool; 
+      symbol->var1_list->accept(*this);
+      current_type = NULL; 
+      return NULL;
+    }
+    
+    /* We do NOT print out EN and ENO parameters! */
+    void *visit(en_param_declaration_c *symbol) {return NULL;}
+
+    /* already handled by iterator base class (note that generate_c_base_c inherits from iterator_c) */
+    //void *visit(output_declarations_c *symbol) {// iterate through list}    
+    
+    /* already handled by iterator base class (note that generate_c_base_c inherits from iterator_c) */
+    //void *visit(var_init_decl_list_c *symbol) {// iterate through list}
+
+    void *visit(simple_spec_init_c *symbol) {
+      /* return the data type */
+      return symbol->simple_specification; 
+    }
+
+    /* currently we do not support data types defined in the declaration itself */
+    /* For now, sugest the user define a TYPE .. END_TYPE */
+    /* NOTE: although this class may also sometimes point to a previously_declared_subrange_type_name
+     * we don't need this for now, so it is easier to just skip it allocation
+     */
+    void *visit(subrange_spec_init_c *symbol) {return NULL;}
+
+    /* currently we do not support data types defined in the declaration itself */
+    /* For now, sugest the user define a TYPE .. END_TYPE */
+    /* NOTE: although this class may also sometimes point to a previously_declared_enumerated_type_name
+     * we don't need this for now, so it is easier to just skip it allocation
+     */
+    void *visit(enumerated_spec_init_c *symbol) {return NULL;}
+
+    /* currently we do not support data types defined in the declaration itself */
+    /* For now, sugest the user define a TYPE .. END_TYPE */
+    /* NOTE: although this class may also sometimes point to a previously_declared_array_type_name
+     * we don't need this for now, so it is easier to just skip it allocation
+     */
+    void *visit(array_var_init_decl_c *symbol) {return NULL;}
+
+    /* currently we do not support data types defined in the declaration itself */
+    /* For now, sugest the user define a TYPE .. END_TYPE */
+    /* NOTE: although this class may also sometimes point to a previously_declared_structured_type_name
+     * we don't need this for now, so it is easier to just skip it allocation
+     */
+    void *visit(structured_var_init_decl_c *symbol) {return NULL;}
+
+    /* We do NOT print out EN and ENO parameters! */
+    void *visit(eno_param_declaration_c *symbol) {return NULL;}
+
+    /* already handled by iterator base class (note that generate_c_base_c inherits from iterator_c) */
+    //void *visit(input_output_declarations_c *symbol) {// iterate through list}    
+
+    /* already handled by iterator base class (note that generate_c_base_c inherits from iterator_c) */
+    //void *visit(var_declaration_list_c *symbol) {iterate through list}
+
+    void *visit(fb_name_decl_c *symbol) {
+      print_list(symbol->fb_name_list, symbol->function_block_type_name); 
+      return NULL;
+    }
+
+    void *visit(var1_init_decl_c *symbol) {
+      print_list(symbol->var1_list, (symbol_c *)symbol->spec_init->accept(*this));
+      return NULL;
+    }
+
+    /* currently we do not support data types defined in the declaration itself */
+    /* For now, sugest the user define a TYPE .. END_TYPE */
+    void *visit(array_var_declaration_c *symbol) {return NULL;}
+
+    void *visit(structured_var_declaration_c *symbol) {
+      current_type = symbol->structure_type_name; 
+      symbol->var1_list->accept(*this);
+      current_type = NULL; 
+      return NULL;
+    }
+
+    /* currently we do not support data types defined in the declaration itself */
+    /* For now, sugest the user define a TYPE .. END_TYPE */
+    /* Note that this class is used for fixed length strings...
+     *   STRING [ 42 ]
+     */
+    void *visit(single_byte_string_var_declaration_c *symbol) {return NULL;}
+
+    /* currently we do not support data types defined in the declaration itself */
+    /* For now, sugest the user define a TYPE .. END_TYPE */
+    /* Note that this class is used for fixed length strings...
+     *   WSTRING [ 42 ]
+     */
+    void *visit(double_byte_string_var_declaration_c *symbol) {return NULL;}
+};
+    
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+
 #include "generate_c_st.cc"
 #include "generate_c_il.cc"
 #include "generate_c_inlinefcall.cc"
-
-#include "generate_c.hh"
 
 /***********************************************************************/
 /***********************************************************************/

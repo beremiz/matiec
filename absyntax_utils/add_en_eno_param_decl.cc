@@ -150,8 +150,17 @@ void *add_en_eno_param_decl_c::visit(var_declarations_list_c *symbol) {
     en_declared  = false; 
     eno_declared = false; 
     iterate_list(symbol);
+    /* insert elements to begining of list! */
+    /* We want EN first, and then ENO.
+     * But, since we are insertin them into the head of the list, we must insert EN last so it will stay in the first position!
+     */
+    if(eno_declared == false) symbol->insert_element(build_eno_param());
+    if(en_declared  == false) symbol->insert_element(build_en_param());
+    /* append elements to end of list! */
+    /*
     if(en_declared  == false) symbol->add_element(build_en_param());
     if(eno_declared == false) symbol->add_element(build_eno_param());
+    */
     return NULL;
 }
 

@@ -76,10 +76,6 @@ class generate_c_typedecl_c: public generate_c_base_c {
     
     basetypedeclaration_t current_basetypedeclaration;
 
-    int extract_integer(symbol_c *integer) {
-      return atoi(((integer_c *)integer)->value);
-    }
-
     void print_integer(unsigned int integer) {
       char str[10];
       sprintf(str, "%d", integer);

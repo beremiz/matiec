@@ -55,9 +55,13 @@
 /* returns 0 if the names are equal!! Case is ignored. */
 int compare_identifiers(symbol_c *ident1, symbol_c *ident2);
 
+/* extract the value of an integer from an integer_c object !! */
+int extract_integer(symbol_c *integer);
+  
 /* A symbol table with all globally declared functions... */
 extern function_declaration_c null_symbol1;
-extern dsymtable_c<function_declaration_c *, &null_symbol1> function_symtable;
+typedef dsymtable_c<function_declaration_c *, &null_symbol1> function_symtable_t;
+extern function_symtable_t function_symtable;
 
 /* A symbol table with all globally declared functions block types... */
 extern function_block_declaration_c null_symbol2;

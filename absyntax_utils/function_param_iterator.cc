@@ -48,8 +48,11 @@
 
 
 
-#include "function_param_iterator.hh"
-#include "spec_init_separator.hh"
+#include "absyntax_utils.hh"  /* required for extract_integer() */
+// #include "function_param_iterator.hh"  /* no longer required, aready included by absyntax_utils.hh */
+// #include "spec_init_separator.hh"  /* no longer required, aready included by absyntax_utils.hh */
+#include <stdlib.h>  /* required for strtol() */
+#include <string.h>
 #include <strings.h>
 
 
@@ -67,6 +70,49 @@ extern void error_exit(const char *file_name, int line_no);
 
 
 
+/* compare the name of two __extensible__ function parameters.
+ * The usual use case is to have one of the parameters as used
+ * in the function declaration, and another as used in a formal function call.
+ *
+ * Will return:
+ *         < 0 : if two parameters are not compatible, or one is invalid
+ *        >= 0 : if both parameters ..........
+ */
+/*
+ *   ("in", "i0")      -> returns error (<0)
+ *   ("in1", "in")     -> returns error (<0)
+ *   ("in", "in")      -> returns error (<0)
+ *   ("in", "inw")     -> returns error (<0)
+ *   ("in", "in10.4")  -> returns error (<0)
+ *   ("in", "in10e")   -> returns error (<0)
+ *   ("in", "")        -> returns error (<0)
+ *   ("", "in10e")     -> returns error (<0)
+ *   ("in", "in0")     -> returns 0
+ *   ("in", "in9")     -> returns 9
+ *   ("in", "in42")    -> returns 42
+ *   ("in", "in-42")   -> returns -42 (error!)
+ */
+int function_param_iterator_c::cmp_extparam_names(const char* s1, const char* s2) {
+  int res;
+  char *endptr;
+  int len;
+
+  if ((s1 == NULL) || (s2 == NULL) || (*s1 == '\0') || (*s2 == '\0')) return -1;
+
+  len = strlen(s1);
+  if (strncasecmp(s1, s2, len)) return -2;
+
+  s1 = &s2[len];
+  if (*s1 == '\0') return -3;
+
+  res = strtol(s1, &endptr, 10);
+  if (*endptr != '\0') return -4;
+
+  return res;
+}
+
+
+
 void* function_param_iterator_c::handle_param_list(list_c *list) {
   switch (current_operation) {
     case iterate_op:
@@ -79,12 +125,27 @@ void* function_param_iterator_c::handle_param_list(list_c *list) {
 
     case search_op:
       for(int i = 0; i < list->n; i++) {
-        identifier_c *variable_name = dynamic_cast<identifier_c *>(list->elements[i]);
+        symbol_c *sym = list->elements[i];
+        extensible_input_parameter_c *extensible_parameter = dynamic_cast<extensible_input_parameter_c *>(sym);
+        if (extensible_parameter != NULL) {
+          sym = extensible_parameter->var_name;
+          current_param_is_extensible = true;
+          _first_extensible_param_index = extract_integer(extensible_parameter->first_index);
+        }
+        identifier_c *variable_name = dynamic_cast<identifier_c *>(sym);
         if (variable_name == NULL) ERROR;
-
-        if (strcasecmp(search_param_name->value, variable_name->value) == 0)
-          /* FOUND! This is the same parameter!! */
-          return (void *)variable_name;
+        
+        if (!current_param_is_extensible)
+          if (strcasecmp(search_param_name->value, variable_name->value) == 0)
+            /* FOUND! This is the same parameter!! */
+            return (void *)variable_name;
+  
+        if (current_param_is_extensible) {
+          current_extensible_param_index = cmp_extparam_names(variable_name->value, search_param_name->value);
+          if (current_extensible_param_index >= 0)
+            /* FOUND! This is a compatible extensible parameter!! */
+            return (void *)variable_name;
+        }  
       }
       break;
   } /* switch */
@@ -102,12 +163,26 @@ void* function_param_iterator_c::handle_single_param(symbol_c *var_name) {
       break;
 
     case search_op:
+      extensible_input_parameter_c *extensible_parameter = dynamic_cast<extensible_input_parameter_c *>(var_name);
+      if (extensible_parameter != NULL) {
+        var_name = extensible_parameter->var_name;
+        current_param_is_extensible = true;
+        _first_extensible_param_index = extract_integer(extensible_parameter->first_index);
+      }
       identifier_c *variable_name = dynamic_cast<identifier_c *>(var_name);
       if (variable_name == NULL) ERROR;
+      
+      if (!current_param_is_extensible)
+        if (strcasecmp(search_param_name->value, variable_name->value) == 0)
+          /* FOUND! This is the same parameter!! */
+          return (void *)variable_name;
 
-      if (strcasecmp(search_param_name->value, variable_name->value) == 0)
-        /* FOUND! This is the same parameter!! */
-        return (void *)variable_name;
+      if (current_param_is_extensible) {
+        current_extensible_param_index = cmp_extparam_names(variable_name->value, search_param_name->value);
+        if (current_extensible_param_index >= 0)
+          /* FOUND! This is a compatible extensible parameter!! */
+          return (void *)variable_name;
+      }  
       break;
   } /* switch */
 
@@ -128,6 +203,8 @@ void* function_param_iterator_c::iterate_list(list_c *list) {
 /* start off at the first parameter once again... */
 void function_param_iterator_c::reset(void) {
   next_param = param_count = 0;
+  _first_extensible_param_index = -1;
+  current_param_is_extensible = false;
   current_param_name = NULL;
   current_param_type = current_param_default_value = NULL;
 }
@@ -166,6 +243,11 @@ identifier_c *function_param_iterator_c::next(void) {
   void *res;
   identifier_c *identifier;
  
+  if (current_param_is_extensible) {
+    current_extensible_param_index++;
+    return current_param_name;
+  }
+  
   param_count = 0;
   en_eno_param_implicit = false;
   next_param++;
@@ -175,6 +257,13 @@ identifier_c *function_param_iterator_c::next(void) {
     return NULL;
 
   symbol_c *sym = (symbol_c *)res;
+  extensible_input_parameter_c *extensible_parameter = dynamic_cast<extensible_input_parameter_c *>(sym);
+  if (extensible_parameter != NULL) {
+    sym = extensible_parameter->var_name;
+    current_param_is_extensible = true;
+    _first_extensible_param_index = extract_integer(extensible_parameter->first_index);
+    current_extensible_param_index = _first_extensible_param_index;
+  }
   identifier = dynamic_cast<identifier_c *>(sym);
   if (identifier == NULL)
     ERROR;
@@ -187,6 +276,8 @@ identifier_c *function_param_iterator_c::search(symbol_c *param_name) {
   if (NULL == param_name) ERROR;
   search_param_name = dynamic_cast<identifier_c *>(param_name);
   if (NULL == search_param_name) ERROR;
+  en_eno_param_implicit = false;
+  current_param_is_extensible = false;
   current_operation = function_param_iterator_c::search_op;
   void *res = f_decl->accept(*this);
   identifier_c *res_param_name = dynamic_cast<identifier_c *>((symbol_c *)res);
@@ -210,6 +301,24 @@ bool function_param_iterator_c::is_en_eno_param_implicit(void) {
   return en_eno_param_implicit;
 }
 
+/* Returns if currently referenced parameter is an extensible parameter. */
+/* extensible paramters only occur in some standard functions, e.g. AND(word#34, word#44, word#65); */
+bool function_param_iterator_c::is_extensible_param(void) {
+  return current_param_is_extensible;
+}
+
+/* Returns the index of the current extensible parameter. */             
+/* If the current parameter is not an extensible paramter, returns -1 */
+int function_param_iterator_c::extensible_param_index(void) {
+  return (current_param_is_extensible? current_extensible_param_index : -1);
+}
+
+/* Returns the index of the first extensible parameter, or -1 if no extensible parameter found. */             
+/* WARNING: Will only return the correct value _after_ an extensible parameter has been found! */
+int function_param_iterator_c::first_extensible_param_index(void) {
+  return _first_extensible_param_index;
+}
+
 /* Returns the currently referenced parameter's data passing direction.
  * i.e. VAR_INPUT, VAR_OUTPUT or VAR_INOUT
  */
@@ -218,7 +327,7 @@ function_param_iterator_c::param_direction_t function_param_iterator_c::param_di
 }
 
 void *function_param_iterator_c::visit(implicit_definition_c *symbol) {
-	en_eno_param_implicit = current_operation == function_param_iterator_c::iterate_op;
+	en_eno_param_implicit = true;
 	return NULL;
 }
 
@@ -243,12 +352,15 @@ void *function_param_iterator_c::visit(en_param_declaration_c *symbol) {
    * variables will get overwritten when we visit the next
    * var1_init_decl_c list!
    */
-  symbol->method->accept(*this);
-
   current_param_default_value = symbol->value;
   current_param_type = symbol->type;
 
-  return handle_single_param(symbol->name);
+  void *res = handle_single_param(symbol->name);
+  
+    /* If we have found the parameter we will be returning, we set the en_eno_param_implicit to TRUE if implicitly defined */
+  if (res != NULL) symbol->method->accept(*this);
+  
+  return res;
 }
 
 /* var1_list ':' array_spec_init */
@@ -278,6 +390,7 @@ void *function_param_iterator_c::visit(output_declarations_c *symbol) {
   current_param_direction = direction_out;
   return symbol->var_init_decl_list->accept(*this);
 }
+
 void *function_param_iterator_c::visit(eno_param_declaration_c *symbol) {
   TRACE("eno_param_declaration_c");
   /* It is OK to store these values in the current_param_XXX
@@ -286,18 +399,23 @@ void *function_param_iterator_c::visit(eno_param_declaration_c *symbol) {
    * variables will get overwritten when we visit the next
    * var1_init_decl_c list!
    */
-  symbol->method->accept(*this);
-
   current_param_default_value = NULL;
   current_param_type = symbol->type;
 
-  return handle_single_param(symbol->name);
+  void *res = handle_single_param(symbol->name);
+  
+    /* If we have found the parameter we will be returning, we set the en_eno_param_implicit to TRUE if implicitly defined */
+  if (res != NULL) symbol->method->accept(*this);
+  
+  return res;
 }
+
 void *function_param_iterator_c::visit(input_output_declarations_c *symbol) {
   TRACE("input_output_declarations_c");
   current_param_direction = direction_inout;
   return symbol->var_declaration_list->accept(*this);
 }
+
 void *function_param_iterator_c::visit(var_declaration_list_c *symbol) {TRACE("var_declaration_list_c"); return iterate_list(symbol);}
 
 /*  var1_list ':' array_specification */
@@ -425,11 +543,11 @@ void *function_param_iterator_c::visit(var1_init_decl_c *symbol) {
 }
 
 
-
 void *function_param_iterator_c::visit(var1_list_c *symbol) {
   TRACE("var1_list_c");
   return handle_param_list(symbol);
 }
+
 
 void *function_param_iterator_c::visit(var_init_decl_list_c *symbol) {TRACE("var_init_decl_list_c"); return iterate_list(symbol);}
 

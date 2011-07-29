@@ -39,6 +39,6 @@
 {#include "pid_st.txt" }
 {#include "ramp_st.txt" }
 
-(* From later versions of the standard *)
+(* Not in the standard, but useful nonetheless. *)
 {#include "sema.txt" }
 

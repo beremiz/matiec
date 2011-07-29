@@ -50,6 +50,7 @@
 #include <typeinfo>
 #include <list>
 #include <strings.h>
+#include <stdlib.h>  /* required for atoi() */
 
 #include "../util/symtable.hh"
 #include "../util/dsymtable.hh"
@@ -93,6 +94,15 @@ int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
   return 1;
 }
 
+
+/* extract the value of an integer from an integer_c object !! */
+/* NOTE: it must ignore underscores! */
+int extract_integer(symbol_c *sym) {
+  integer_c *integer = dynamic_cast<integer_c *>(sym);  
+  if (integer == NULL) ERROR;
+  
+  return atoi(integer->value);
+}
 
 
 /***********************************************************************/

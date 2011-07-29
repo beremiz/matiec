@@ -75,10 +75,13 @@
 
 /* A macro for printing out internal parser errors... */
 #include <iostream> // required for std::cerr
-#define ERROR error_exit(__FILE__,__LINE__)
+
+
+#define ERROR          error_exit(__FILE__,__LINE__)
 void error_exit(const char *file_name, int line_no) {
-  std::cerr << "\nInternal program error in file " << file_name
-            << " at line " << line_no << "\n\n\n";
+  std::cerr << "\nInternal compiler error in file " << file_name
+            << " at line " << line_no << "\n";
+//   if (msg != NULL) std::cerr << message << "\n\n";
   exit(EXIT_FAILURE);
 }
 

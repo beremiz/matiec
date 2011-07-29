@@ -78,6 +78,7 @@ template<typename value_type, value_type null_value> class dsymtable_c {
 
   private:
     void reset(void); /* clear all entries... */
+    const char *symbol_to_string(const symbol_c *symbol);
 
   public:
     dsymtable_c(void) {};
@@ -85,12 +86,35 @@ template<typename value_type, value_type null_value> class dsymtable_c {
     void insert(const char *identifier_str, value_t value);
     void insert(const symbol_c *symbol, value_t value);
 
+    /* Determine how many entries are associated to key identifier_str */ 
+    /* returns:
+     *         0: if no entry is found
+     *         1: if 1 entry is found
+     *         2: if more than 1 entry is found 
+     */
+    int multiplicity(const char *identifier_str);
+    int multiplicity(const symbol_c *symbol)        {return multiplicity(symbol_to_string(symbol));}
+    
     /* Search for an entry. Will return end_value() if not found */
     value_t end_value(void) {return null_value;}
     value_t find_value(const char *identifier_str);
-    value_t find_value(const symbol_c *symbol);
+    value_t find_value(const symbol_c *symbol)       {return find_value(symbol_to_string(symbol));}
 
-    iterator find(const char *identifier_str) {return _base.find(identifier_str);}
+    /* Search for an entry associated with identifier_str. Will return end() if not found */
+    iterator find(const char *identifier_str)        {return _base.find(identifier_str);}
+    iterator find(const symbol_c *symbol)            {return find(symbol_to_string(symbol));}
+    
+    /* Search for the first entry associated with (i.e. with key ==) identifier_str. Will return end() if not found */
+    /* Basically, the same as find() */
+    iterator lower_bound(const char *identifier_str) {return _base.lower_bound(identifier_str);}
+    iterator lower_bound(const symbol_c *symbol)     {return lower_bound(symbol_to_string(symbol));}
+    
+    /* Search for the first entry with key greater than identifier_str. Will return end() if not found */
+    iterator upper_bound(const char *identifier_str) {return _base.upper_bound(identifier_str);}
+    iterator upper_bound(const symbol_c *symbol)     {return upper_bound(symbol_to_string(symbol));}
+
+    /* get the value to which an iterator is pointing to... */
+    value_t get_value(const iterator i) {return i->second;}
 
   /* iterators pointing to beg/end of map... */
     iterator begin() 			{return _base.begin();}
