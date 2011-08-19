@@ -890,7 +890,7 @@ void *visit(function_block_declaration_c *symbol) {
 
   /* (A.6) Function Block inline function declaration for function invocation */
   inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
-  inlinedecl->print(symbol->fblock_body);
+  symbol->fblock_body->accept(*inlinedecl);
   delete inlinedecl;
 
   /* (B) Constructor */
@@ -1080,7 +1080,7 @@ void *visit(program_declaration_c *symbol) {
 
   /* (A.6) Function Block inline function declaration for function invocation */
   inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
-  inlinedecl->print(symbol->function_block_body);
+  symbol->function_block_body->accept(*inlinedecl);
   delete inlinedecl;
 
   /* (B) Constructor */

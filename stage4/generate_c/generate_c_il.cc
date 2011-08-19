@@ -917,7 +917,7 @@ void *visit(il_function_call_c *symbol) {
     s4o.print(")");
   }
   if (function_type_suffix != NULL) {
-    function_type_suffix = search_expression_type->default_literal_type(function_type_prefix);
+  	function_type_suffix = search_expression_type->default_literal_type(function_type_suffix);
   }
   if (has_output_params) {
     fcall_number++;
@@ -1325,7 +1325,7 @@ void *visit(il_formal_funct_call_c *symbol) {
     s4o.print(")");
   }
   if (function_type_suffix != NULL) {
-    function_type_suffix = search_expression_type->default_literal_type(function_type_prefix);
+  	function_type_suffix = search_expression_type->default_literal_type(function_type_suffix);
   }
   if (has_output_params) {
     fcall_number++;
@@ -1734,17 +1734,15 @@ void *visit(ADD_operator_c *symbol)	{
     XXX_function("__time_add", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
-    return NULL;
   }
-  if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+  else if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
 	NUM_operator_result_type();
 	XXX_operator(&(this->default_variable_name), " += ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
-    return NULL;
   }
-  ERROR;
+  else {ERROR;}
   return NULL;
 }
 
@@ -1754,17 +1752,15 @@ void *visit(SUB_operator_c *symbol)	{
     XXX_function("__time_sub", &(this->default_variable_name), this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
-    return NULL;
   }
-  if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+  else if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
 	NUM_operator_result_type();
 	XXX_operator(&(this->default_variable_name), " -= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
-    return NULL;
   }
-  ERROR;
+  else {ERROR;}
   return NULL;
 }
 
@@ -1772,18 +1768,16 @@ void *visit(MUL_operator_c *symbol)	{
   if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
       search_expression_type->is_integer_type(this->current_operand_type)) {
     XXX_function("__time_mul", &(this->default_variable_name), this->current_operand);
-    /* the data type resulting from this operation... */
-    return NULL;
+    /* the data type resulting from this operation is unchanged! */
   }
-  if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+  else if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
 	NUM_operator_result_type();
     XXX_operator(&(this->default_variable_name), " *= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
-    return NULL;
   }
-  ERROR;
+  else {ERROR;}
   return NULL;
 }
 
@@ -1791,17 +1785,17 @@ void *visit(DIV_operator_c *symbol)	{
   if (search_expression_type->is_time_type(this->default_variable_name.current_type) &&
       search_expression_type->is_integer_type(this->current_operand_type)) {
     XXX_function("__time_div", &(this->default_variable_name), this->current_operand);
-    /* the data type resulting from this operation... */
-    return NULL;
+    /* the data type resulting from this operation is unchanged! */
   }
-  if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
+  else if (search_expression_type->is_num_type(this->default_variable_name.current_type) &&
       search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
 	NUM_operator_result_type();
 	XXX_operator(&(this->default_variable_name), " /= ", this->current_operand);
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
+    return NULL;
   }
-  ERROR;
+  else {ERROR;}
   return NULL;
 }
 
@@ -1813,53 +1807,65 @@ void *visit(MOD_operator_c *symbol)	{
     /* the data type resulting from this operation... */
     this->default_variable_name.current_type = this->current_operand_type;
   }
-  ERROR;
+  else {ERROR;}
   return NULL;
 }
 
 void *visit(GT_operator_c *symbol)	{
   if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-    return CMP_operator(this->current_operand, "GT_");
-  ERROR;
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    CMP_operator(this->current_operand, "GT_");
+  } else {
+    ERROR;
+  }
   return NULL;
 }
 
 void *visit(GE_operator_c *symbol)	{
   if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-    return CMP_operator(this->current_operand, "GE_");
-  ERROR;
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    CMP_operator(this->current_operand, "GE_");
+  } else {
+    ERROR;
+  }
   return NULL;
 }
 
 void *visit(EQ_operator_c *symbol)	{
-  if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-    return CMP_operator(this->current_operand, "EQ_");
-  ERROR;
+  if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    CMP_operator(this->current_operand, "EQ_");
+  } else {
+    ERROR;
+  }
   return NULL;
 }
 
 void *visit(LT_operator_c *symbol)	{
   if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-    return CMP_operator(this->current_operand, "LT_");
-  ERROR;
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    CMP_operator(this->current_operand, "LT_");
+  } else {
+    ERROR;
+  }
   return NULL;
 }
 
 void *visit(LE_operator_c *symbol)	{
   if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-    return CMP_operator(this->current_operand, "LE_");
-  ERROR;
+      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    CMP_operator(this->current_operand, "LE_");
+  } else {
+    ERROR;
+  }
   return NULL;
 }
 
 void *visit(NE_operator_c *symbol)	{
-  if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type))
-    return CMP_operator(this->current_operand, "NE_");
-  ERROR;
+  if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
+    CMP_operator(this->current_operand, "NE_");
+  } else {
+    ERROR;
+  }
   return NULL;
 }
 
