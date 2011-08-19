@@ -40,10 +40,10 @@
 /* !!! WARNING !!!
  *
  *       Whoever includes this file (stage1_2_priv.hh) will need
- *       to first inlcude iec.y.hh !!
+ *       to first inlcude iec_bison.h !!
  *
  *       Read other comments further down to understand why we don't
- *       include iec.y.hh in this file.
+ *       include iec_bison.h in this file.
  */
 
 
@@ -186,14 +186,14 @@ void rst_pop_state(void);
  *
  *       In essence, they are a data passing mechanism between Bison and Flex.
  */
-/* NOTE: BOGUS_TOKEN_ID is defined in the bison generated file iec.y.hh.
+/* NOTE: BOGUS_TOKEN_ID is defined in the bison generated file iec_bison.h.
  *       We need this constant defined before we can declare the symbol tables.
- *       However, we cannot #include "iec.y.hh" in this file (stage1_2_priv.hh) directly
+ *       However, we cannot #include "iec_bison.h" in this file (stage1_2_priv.hh) directly
  *       because of the way bison ver. 2.3 is copying all declarations in the prologue
- *       of iec.y to the iec.y.hh file (including an #include stage1_2_priv.hh).
- *       So, if we were to include "iec.y.hh" here, we would get a circular include.
+ *       of iec.y to the iec_bison.h file (including an #include stage1_2_priv.hh).
+ *       So, if we were to include "iec_bison.h" here, we would get a circular include.
  *       All this means that whoever includes this file (stage1_2_priv.hh) will need
- *       to take care to first inlcude iec.y.hh !!
+ *       to take care to first inlcude iec_bison.h !!
  */ 
 /* A symbol table to store all the library elements */
 /* e.g.: <function_name , function_decl>

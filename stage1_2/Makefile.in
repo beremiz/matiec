@@ -33,7 +33,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 DIST_COMMON = $(srcdir)/../common.mk $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+	$(srcdir)/Makefile.in iec_bison.cc iec_bison.h iec_flex.cc
 subdir = stage1_2
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -70,8 +70,9 @@ AR = ar
 ARFLAGS = cru
 libstage1_2_a_AR = $(AR) $(ARFLAGS)
 libstage1_2_a_LIBADD =
-am_libstage1_2_a_OBJECTS = libstage1_2_a-iec.flex.$(OBJEXT) \
-	libstage1_2_a-iec.y.$(OBJEXT) libstage1_2_a-stage1_2.$(OBJEXT)
+am_libstage1_2_a_OBJECTS = libstage1_2_a-iec_flex.$(OBJEXT) \
+	libstage1_2_a-iec_bison.$(OBJEXT) \
+	libstage1_2_a-stage1_2.$(OBJEXT)
 libstage1_2_a_OBJECTS = $(am_libstage1_2_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/config
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -82,6 +83,13 @@ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
+LEXCOMPILE = $(LEX) $(LFLAGS) $(AM_LFLAGS)
+YLWRAP = $(top_srcdir)/config/ylwrap
+YACCCOMPILE = $(YACC) $(YFLAGS) $(AM_YFLAGS)
+COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(libstage1_2_a_SOURCES)
 DIST_SOURCES = $(libstage1_2_a_SOURCES)
 ETAGS = etags
@@ -185,17 +193,24 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CXXFLAGS = -g -Wall -Wpointer-arith -Wwrite-strings -Wno-unused 
+AM_YFLAGS = -d
+AM_LFLAGS = -o$(LEX_OUTPUT_ROOT).c
+
+# Make sure this header file is generated first (by bison), as it is included
+# by other C++ code that will also be compiled.
+BUILT_SOURCES = iec_bison.h
 lib_LIBRARIES = libstage1_2.a
 libstage1_2_a_SOURCES = \
-	iec.flex.cc \
-	iec.y.cc \
+	iec_flex.ll \
+	iec_bison.yy \
 	stage1_2.cc 
 
 libstage1_2_a_CPPFLAGS = -DDEFAULT_LIBDIR='"lib"' -I../../absyntax
-all: all-am
+all: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .cc .o .obj
+.SUFFIXES: .cc .ll .o .obj .yy
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/../common.mk $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -258,6 +273,11 @@ uninstall-libLIBRARIES:
 
 clean-libLIBRARIES:
 	-test -z "$(lib_LIBRARIES)" || rm -f $(lib_LIBRARIES)
+iec_bison.h: iec_bison.cc
+	@if test ! -f $@; then \
+	  rm -f iec_bison.cc; \
+	  $(MAKE) $(AM_MAKEFLAGS) iec_bison.cc; \
+	else :; fi
 libstage1_2.a: $(libstage1_2_a_OBJECTS) $(libstage1_2_a_DEPENDENCIES) 
 	-rm -f libstage1_2.a
 	$(libstage1_2_a_AR) libstage1_2.a $(libstage1_2_a_OBJECTS) $(libstage1_2_a_LIBADD)
@@ -269,8 +289,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstage1_2_a-iec.flex.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstage1_2_a-iec.y.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstage1_2_a-iec_bison.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstage1_2_a-iec_flex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstage1_2_a-stage1_2.Po@am__quote@
 
 .cc.o:
@@ -287,33 +307,33 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-libstage1_2_a-iec.flex.o: iec.flex.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-iec.flex.o -MD -MP -MF $(DEPDIR)/libstage1_2_a-iec.flex.Tpo -c -o libstage1_2_a-iec.flex.o `test -f 'iec.flex.cc' || echo '$(srcdir)/'`iec.flex.cc
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstage1_2_a-iec.flex.Tpo $(DEPDIR)/libstage1_2_a-iec.flex.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iec.flex.cc' object='libstage1_2_a-iec.flex.o' libtool=no @AMDEPBACKSLASH@
+libstage1_2_a-iec_flex.o: iec_flex.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-iec_flex.o -MD -MP -MF $(DEPDIR)/libstage1_2_a-iec_flex.Tpo -c -o libstage1_2_a-iec_flex.o `test -f 'iec_flex.cc' || echo '$(srcdir)/'`iec_flex.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstage1_2_a-iec_flex.Tpo $(DEPDIR)/libstage1_2_a-iec_flex.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iec_flex.cc' object='libstage1_2_a-iec_flex.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-iec.flex.o `test -f 'iec.flex.cc' || echo '$(srcdir)/'`iec.flex.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-iec_flex.o `test -f 'iec_flex.cc' || echo '$(srcdir)/'`iec_flex.cc
 
-libstage1_2_a-iec.flex.obj: iec.flex.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-iec.flex.obj -MD -MP -MF $(DEPDIR)/libstage1_2_a-iec.flex.Tpo -c -o libstage1_2_a-iec.flex.obj `if test -f 'iec.flex.cc'; then $(CYGPATH_W) 'iec.flex.cc'; else $(CYGPATH_W) '$(srcdir)/iec.flex.cc'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstage1_2_a-iec.flex.Tpo $(DEPDIR)/libstage1_2_a-iec.flex.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iec.flex.cc' object='libstage1_2_a-iec.flex.obj' libtool=no @AMDEPBACKSLASH@
+libstage1_2_a-iec_flex.obj: iec_flex.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-iec_flex.obj -MD -MP -MF $(DEPDIR)/libstage1_2_a-iec_flex.Tpo -c -o libstage1_2_a-iec_flex.obj `if test -f 'iec_flex.cc'; then $(CYGPATH_W) 'iec_flex.cc'; else $(CYGPATH_W) '$(srcdir)/iec_flex.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstage1_2_a-iec_flex.Tpo $(DEPDIR)/libstage1_2_a-iec_flex.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iec_flex.cc' object='libstage1_2_a-iec_flex.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-iec.flex.obj `if test -f 'iec.flex.cc'; then $(CYGPATH_W) 'iec.flex.cc'; else $(CYGPATH_W) '$(srcdir)/iec.flex.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-iec_flex.obj `if test -f 'iec_flex.cc'; then $(CYGPATH_W) 'iec_flex.cc'; else $(CYGPATH_W) '$(srcdir)/iec_flex.cc'; fi`
 
-libstage1_2_a-iec.y.o: iec.y.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-iec.y.o -MD -MP -MF $(DEPDIR)/libstage1_2_a-iec.y.Tpo -c -o libstage1_2_a-iec.y.o `test -f 'iec.y.cc' || echo '$(srcdir)/'`iec.y.cc
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstage1_2_a-iec.y.Tpo $(DEPDIR)/libstage1_2_a-iec.y.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iec.y.cc' object='libstage1_2_a-iec.y.o' libtool=no @AMDEPBACKSLASH@
+libstage1_2_a-iec_bison.o: iec_bison.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-iec_bison.o -MD -MP -MF $(DEPDIR)/libstage1_2_a-iec_bison.Tpo -c -o libstage1_2_a-iec_bison.o `test -f 'iec_bison.cc' || echo '$(srcdir)/'`iec_bison.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstage1_2_a-iec_bison.Tpo $(DEPDIR)/libstage1_2_a-iec_bison.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iec_bison.cc' object='libstage1_2_a-iec_bison.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-iec.y.o `test -f 'iec.y.cc' || echo '$(srcdir)/'`iec.y.cc
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-iec_bison.o `test -f 'iec_bison.cc' || echo '$(srcdir)/'`iec_bison.cc
 
-libstage1_2_a-iec.y.obj: iec.y.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-iec.y.obj -MD -MP -MF $(DEPDIR)/libstage1_2_a-iec.y.Tpo -c -o libstage1_2_a-iec.y.obj `if test -f 'iec.y.cc'; then $(CYGPATH_W) 'iec.y.cc'; else $(CYGPATH_W) '$(srcdir)/iec.y.cc'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstage1_2_a-iec.y.Tpo $(DEPDIR)/libstage1_2_a-iec.y.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iec.y.cc' object='libstage1_2_a-iec.y.obj' libtool=no @AMDEPBACKSLASH@
+libstage1_2_a-iec_bison.obj: iec_bison.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-iec_bison.obj -MD -MP -MF $(DEPDIR)/libstage1_2_a-iec_bison.Tpo -c -o libstage1_2_a-iec_bison.obj `if test -f 'iec_bison.cc'; then $(CYGPATH_W) 'iec_bison.cc'; else $(CYGPATH_W) '$(srcdir)/iec_bison.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstage1_2_a-iec_bison.Tpo $(DEPDIR)/libstage1_2_a-iec_bison.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iec_bison.cc' object='libstage1_2_a-iec_bison.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-iec.y.obj `if test -f 'iec.y.cc'; then $(CYGPATH_W) 'iec.y.cc'; else $(CYGPATH_W) '$(srcdir)/iec.y.cc'; fi`
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-iec_bison.obj `if test -f 'iec_bison.cc'; then $(CYGPATH_W) 'iec_bison.cc'; else $(CYGPATH_W) '$(srcdir)/iec_bison.cc'; fi`
 
 libstage1_2_a-stage1_2.o: stage1_2.cc
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-stage1_2.o -MD -MP -MF $(DEPDIR)/libstage1_2_a-stage1_2.Tpo -c -o libstage1_2_a-stage1_2.o `test -f 'stage1_2.cc' || echo '$(srcdir)/'`stage1_2.cc
@@ -328,6 +348,12 @@ libstage1_2_a-stage1_2.obj: stage1_2.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='stage1_2.cc' object='libstage1_2_a-stage1_2.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-stage1_2.obj `if test -f 'stage1_2.cc'; then $(CYGPATH_W) 'stage1_2.cc'; else $(CYGPATH_W) '$(srcdir)/stage1_2.cc'; fi`
+
+.ll.cc:
+	$(am__skiplex) $(SHELL) $(YLWRAP) $< $(LEX_OUTPUT_ROOT).c $@ -- $(LEXCOMPILE)
+
+.yy.cc:
+	$(am__skipyacc) $(SHELL) $(YLWRAP) $< y.tab.c $@ y.tab.h $*.h y.output $*.output -- $(YACCCOMPILE)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -412,13 +438,15 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: check-am
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(LIBRARIES)
 installdirs:
 	for dir in "$(DESTDIR)$(libdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -443,6 +471,10 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-rm -f iec_bison.cc
+	-rm -f iec_bison.h
+	-rm -f iec_flex.cc
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
 clean-am: clean-generic clean-libLIBRARIES mostlyclean-am
@@ -512,7 +544,7 @@ ps-am:
 
 uninstall-am: uninstall-libLIBRARIES
 
-.MAKE: install-am install-strip
+.MAKE: all check install install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
 	clean-libLIBRARIES ctags distclean distclean-compile \
@@ -527,12 +559,6 @@ uninstall-am: uninstall-libLIBRARIES
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-libLIBRARIES
 
-
-iec.y.cc: iec.y
-	$(YACC) -d -v -o iec.y.cc iec.y
-
-iec.flex.cc: iec.flex
-	$(LEX) -o iec.flex.cc iec.flex
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
