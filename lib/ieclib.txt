@@ -26,7 +26,7 @@
 (* FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10) *)
 
 (* The standard functions *)
-(*{#include "standard_functions.txt" }*)
+{#include "standard_functions.txt" }
 
 (* The standard function blocks *)
 {#include "edge_detection.txt" }
