@@ -586,10 +586,14 @@ void *visit(mod_expression_c *symbol) {
   return NULL;
 }
 
-/* TODO: power expression... */
 void *visit(power_expression_c *symbol) {
-  ERROR; 
-  return print_binary_expression(symbol->l_exp, symbol->r_exp, " ** ");
+  /* Note that the called pow() function is defined in iec_std_lib.h !! */
+  s4o.print("(pow(");
+  symbol->l_exp->accept(*this);
+  s4o.print(", ");
+  symbol->r_exp->accept(*this);
+  s4o.print("))");
+  return NULL;
 }
 
 void *visit(neg_expression_c *symbol) {
