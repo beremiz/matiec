@@ -604,39 +604,6 @@ bool visit_expression_type_c::is_compatible_type(symbol_c *first_type, symbol_c 
 }
 
 
-#if 0
-#define is_num_type      is_ANY_NUM_compatible
-#define is_integer_type  is_ANY_INT_compatible
-#define is_real_type     is_ANY_REAL_compatible
-#define is_binary_type   is_ANY_BIT_compatible
- /* actually the ROR, ROL, SHL, and SHR function also accept boolean type! */
-#define is_nbinary_type  is_ANY_BIT_compatible
-#define compute_standard_function_default visit_expression_type_c::compute_standard_function_default
-#define compute_standard_function_il visit_expression_type_c::compute_standard_function_il
-#define search_expression_type_c visit_expression_type_c
-#define search(x) search_f(x)
-#define next() next_nf()
-//     #define search_constant_type_c::constant_int_type_name  search_expression_type_c::integer
-#define constant_int_type_name  integer
-#define is_same_type is_compatible_type
-#include "../absyntax_utils/search_type_code.c"
-#undef is_same_type
-#undef constant_int_type_name
-//     #undef search_constant_type_c::constant_int_type_name
-#undef next
-#undef search
-#undef compute_standard_function_default
-#undef compute_standard_function_il
-#undef search_expression_type_c
-#undef is_real_type
-#undef is_binary_type
-#undef is_nbinary_type
-#undef is_integer_type
-#undef is_num_type
-#endif
-
-
-
 
 
 /* A helper function... */
@@ -672,47 +639,6 @@ symbol_c *visit_expression_type_c::compute_expression(symbol_c *left_type,      
   else
     return common_type(left_type, right_type);
 }
-
-
-# if 0
-/* A helper function... */
-symbol_c *visit_expression_type_c::compute_numeric_expression(symbol_c *left_type, symbol_c *right_type,
-                                                              is_data_type_t is_data_type) {
-  bool error = false;
-
-  if (!(this->*is_data_type)(left_type)) {
-    STAGE3_ERROR(left_type, right_type, "Invalid data type of left operand.");
-    error = true;
-  }
-  if (!(this->*is_data_type)(right_type)) {
-    STAGE3_ERROR(left_type, right_type, "Invalid data type of right operand.");
-    error = true;
-  }
-  if (!is_compatible_type(left_type, right_type)) {
-    STAGE3_ERROR(left_type, right_type, "Type mismatch between operands.");
-    error = true;
-  }
-
-/*
-  if (is_literal_integer_type(left_type) || is_literal_real_type(left_type)) {
-    return right_type;
-  } else {
-    return left_type;
-  }
-*/
-
-  if (error)
-    return NULL;
-  else
-    return common_type(left_type, right_type);
-
-  /* humour the compiler... */
-/*
-  return NULL;
-*/
-}
-#endif
-
 
 
 
