@@ -87,7 +87,7 @@ void error_exit(const char *file_name, int line_no) {
 
 
 
-
+#include "config/config.h"
 #include "stage1_2/stage1_2.hh"
 #include "absyntax_utils/absyntax_utils.hh"
 
@@ -96,9 +96,10 @@ int stage4(symbol_c *tree_root, const char *builddir);
 
 
 static void printusage(const char *cmd) {
-  printf("syntax: %s [-h] [-f] [-s] [-I <include_directory>] [-T <target_directory>] <input_file>\n", cmd);
+  printf("syntax: %s [-h] [-v] [-f] [-s] [-I <include_directory>] [-T <target_directory>] <input_file>\n", cmd);
   printf("  h : show this help message\n");
-  printf("  f : full token location on error messages\n");
+  printf("  v : print version number\n");  
+  printf("  f : display full token location on error messages\n");
       /******************************************************/
       /* whether we are suporting safe extensions           */
       /* as defined in PLCopen - Technical Committee 5      */
@@ -110,7 +111,7 @@ static void printusage(const char *cmd) {
   printf("\n");
   printf("%s - Copyright (C) 2003-2011 \n"
          "This program comes with ABSOLUTELY NO WARRANTY!\n"
-         "This is free software licensed under GPL v3, and you are welcome to redistribute it under the conditions specified by this license.\n", cmd);
+         "This is free software licensed under GPL v3, and you are welcome to redistribute it under the conditions specified by this license.\n", PACKAGE_NAME);
 }
 
 
@@ -128,12 +129,14 @@ int main(int argc, char **argv) {
   /******************************************/
   /*   Parse command line options...        */
   /******************************************/
-  while ((optres = getopt(argc, argv, ":hfsI:T:")) != -1) {
+  while ((optres = getopt(argc, argv, ":hvfsI:T:")) != -1) {
     switch(optres) {
     case 'h':
       printusage(argv[0]);
       return 0;
-      break;
+    case 'v':
+      fprintf(stdout, "%s version %s\n", PACKAGE_NAME, PACKAGE_VERSION);      
+      return 0;        
     case 'f':
       stage1_2_options.full_token_loc = true;
       break;
@@ -172,6 +175,7 @@ int main(int argc, char **argv) {
   }
 
   if (errflg) {
+      printf("\n");
       printusage(argv[0]);
       return EXIT_FAILURE;
   }
