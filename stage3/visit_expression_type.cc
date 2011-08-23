@@ -661,7 +661,6 @@ symbol_c *visit_expression_type_c::compute_expression(symbol_c *left_type,      
     error = true;
   }
   if (!is_compatible_type(left_type, right_type)) {
-printf("visit_expression_type_c::compute_expression(): left_type & right_type are incompatible\n");
     if (debug) printf("visit_expression_type_c::compute_expression(): left_type & right_type are incompatible\n");
     if ((left_expr != NULL) && (right_expr != NULL))
       STAGE3_ERROR(left_expr, right_expr, "Type mismatch between operands.");
