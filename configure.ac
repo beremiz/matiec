@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.61])
-AC_INIT([matiec], [0.1], [matteo.facchinetti@sirius-es.it])
+AC_INIT([matiec], [0.1], [msousa@fe.up.pt, beremiz-devel@lists.sourceforge.net])
 AC_CONFIG_HEADERS([config/config.h])
 AC_CONFIG_AUX_DIR(config)
 
