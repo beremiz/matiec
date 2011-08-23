@@ -214,7 +214,7 @@ class visit_expression_type_c: public search_constant_type_c {
 //    symbol_c *compute_numeric_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
 //    symbol_c *compute_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
     symbol_c *compute_expression(symbol_c *left_type, symbol_c *right_type, is_data_type_t is_data_type,
-                                 symbol_c *left_expr=NULL, symbol_c *right_expr=NULL);
+                                 symbol_c *left_expr, symbol_c *right_expr);
 
 
     /* a helper function... */

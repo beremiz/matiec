@@ -661,6 +661,7 @@ symbol_c *visit_expression_type_c::compute_expression(symbol_c *left_type,      
     error = true;
   }
   if (!is_compatible_type(left_type, right_type)) {
+printf("visit_expression_type_c::compute_expression(): left_type & right_type are incompatible\n");
     if (debug) printf("visit_expression_type_c::compute_expression(): left_type & right_type are incompatible\n");
     if ((left_expr != NULL) && (right_expr != NULL))
       STAGE3_ERROR(left_expr, right_expr, "Type mismatch between operands.");
@@ -1686,7 +1687,8 @@ void *visit_expression_type_c::visit(DIV_operator_c *symbol) {
 // SYM_REF0(MOD_operator_c)
 void *visit_expression_type_c::visit(MOD_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_INT_compatible); 
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_INT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
@@ -1837,28 +1839,28 @@ void *visit_expression_type_c::visit(JMPCN_operator_c *symbol) {
 void *visit_expression_type_c::visit(or_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
 void *visit_expression_type_c::visit(xor_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
 void *visit_expression_type_c::visit(and_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
 void *visit_expression_type_c::visit(equ_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1866,7 +1868,7 @@ void *visit_expression_type_c::visit(equ_expression_c *symbol) {
 void *visit_expression_type_c::visit(notequ_expression_c *symbol)  {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1874,7 +1876,7 @@ void *visit_expression_type_c::visit(notequ_expression_c *symbol)  {
 void *visit_expression_type_c::visit(lt_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1882,7 +1884,7 @@ void *visit_expression_type_c::visit(lt_expression_c *symbol) {
 void *visit_expression_type_c::visit(gt_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1890,7 +1892,7 @@ void *visit_expression_type_c::visit(gt_expression_c *symbol) {
 void *visit_expression_type_c::visit(le_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1898,7 +1900,7 @@ void *visit_expression_type_c::visit(le_expression_c *symbol) {
 void *visit_expression_type_c::visit(ge_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1931,7 +1933,7 @@ void *visit_expression_type_c::visit(add_expression_c *symbol) {
   if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, safetime_type_name_c)) 
     return (void *)&safedt_type_name;
 
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
@@ -1990,7 +1992,7 @@ void *visit_expression_type_c::visit(sub_expression_c *symbol) {
   if (is_type(left_type, safedt_type_name_c) && is_type(right_type, safedt_type_name_c))
     return (void *)&safetime_type_name;
 
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
@@ -2010,7 +2012,7 @@ void *visit_expression_type_c::visit(mul_expression_c *symbol) {
   if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_compatible(right_type)) 
     return (void *)&safetime_type_name;
 
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
@@ -2030,14 +2032,14 @@ void *visit_expression_type_c::visit(div_expression_c *symbol) {
   if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_compatible(right_type)) 
     return (void *)&safetime_type_name;
 
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
 void *visit_expression_type_c::visit(mod_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_INT_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_INT_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
@@ -2064,7 +2066,7 @@ void *visit_expression_type_c::visit(neg_expression_c *symbol) {
 
 void *visit_expression_type_c::visit(not_expression_c *symbol) {
   symbol_c *type = base_type((symbol_c *)symbol->exp->accept(*this));
-  return compute_expression(type, type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  return compute_expression(type, type, &visit_expression_type_c::is_ANY_BIT_compatible, NULL, symbol->exp);
 }
 
 
