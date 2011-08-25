@@ -135,7 +135,8 @@ int main(int argc, char **argv) {
       printusage(argv[0]);
       return 0;
     case 'v':
-      fprintf(stdout, "%s version %s\n", PACKAGE_NAME, PACKAGE_VERSION);      
+      fprintf(stdout, "%s version %s\n"
+		      "changeset id: %s\n", PACKAGE_NAME, PACKAGE_VERSION, HGVERSION);      
       return 0;        
     case 'f':
       stage1_2_options.full_token_loc = true;
