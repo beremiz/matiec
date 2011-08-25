@@ -54,7 +54,9 @@ AC_CONFIG_FILES([Makefile \
 	absyntax_utils/Makefile \
 	stage1_2/Makefile \
 	stage3/Makefile \
-	stage4/Makefile])
+	stage4/Makefile \
+	stage4/generate_c/Makefile \
+	stage4/generate_iec/Makefile])
 AC_OUTPUT
 
 

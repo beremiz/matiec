@@ -1,16 +1,24 @@
 include common.mk
 
-bin_PROGRAMS = iec2c
+bin_PROGRAMS = iec2c iec2iec
 
 SUBDIRS = absyntax absyntax_utils stage1_2 stage3 stage4 
 
 ACLOCAL_AMFLAGS=-I config
 
-LDADD = stage1_2/libstage1_2.a \
+iec2c_LDADD = stage1_2/libstage1_2.a \
 	stage3/libstage3.a \
-	stage4/libstage4.a \
+	stage4/generate_c/libstage4_c.a \
 	absyntax/libabsyntax.a \
 	absyntax_utils/libabsyntax_utils.a 
 
-iec2c_SOURCES = main.cc 
+iec2iec_LDADD = stage1_2/libstage1_2.a \
+	stage3/libstage3.a \
+	stage4/generate_iec/libstage4_iec.a \
+	absyntax/libabsyntax.a \
+	absyntax_utils/libabsyntax_utils.a 
+
+iec2c_SOURCES = main.cc
+
+iec2iec_SOURCES = main.cc
 

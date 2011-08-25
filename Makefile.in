@@ -37,7 +37,7 @@ DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(top_srcdir)/config/config.h.in $(top_srcdir)/configure \
 	COPYING config/INSTALL config/depcomp config/install-sh \
 	config/ltmain.sh config/missing config/ylwrap
-bin_PROGRAMS = iec2c$(EXEEXT)
+bin_PROGRAMS = iec2c$(EXEEXT) iec2iec$(EXEEXT)
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -53,9 +53,13 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_iec2c_OBJECTS = main.$(OBJEXT)
 iec2c_OBJECTS = $(am_iec2c_OBJECTS)
-iec2c_LDADD = $(LDADD)
 iec2c_DEPENDENCIES = stage1_2/libstage1_2.a stage3/libstage3.a \
-	stage4/libstage4.a absyntax/libabsyntax.a \
+	stage4/generate_c/libstage4_c.a absyntax/libabsyntax.a \
+	absyntax_utils/libabsyntax_utils.a
+am_iec2iec_OBJECTS = main.$(OBJEXT)
+iec2iec_OBJECTS = $(am_iec2iec_OBJECTS)
+iec2iec_DEPENDENCIES = stage1_2/libstage1_2.a stage3/libstage3.a \
+	stage4/generate_iec/libstage4_iec.a absyntax/libabsyntax.a \
 	absyntax_utils/libabsyntax_utils.a
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/config
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -66,8 +70,8 @@ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
 	-o $@
-SOURCES = $(iec2c_SOURCES)
-DIST_SOURCES = $(iec2c_SOURCES)
+SOURCES = $(iec2c_SOURCES) $(iec2iec_SOURCES)
+DIST_SOURCES = $(iec2c_SOURCES) $(iec2iec_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -219,13 +223,20 @@ top_srcdir = @top_srcdir@
 AM_CXXFLAGS = -g -Wall -Wpointer-arith -Wwrite-strings -Wno-unused 
 SUBDIRS = absyntax absyntax_utils stage1_2 stage3 stage4 
 ACLOCAL_AMFLAGS = -I config
-LDADD = stage1_2/libstage1_2.a \
+iec2c_LDADD = stage1_2/libstage1_2.a \
 	stage3/libstage3.a \
-	stage4/libstage4.a \
+	stage4/generate_c/libstage4_c.a \
 	absyntax/libabsyntax.a \
 	absyntax_utils/libabsyntax_utils.a 
 
-iec2c_SOURCES = main.cc 
+iec2iec_LDADD = stage1_2/libstage1_2.a \
+	stage3/libstage3.a \
+	stage4/generate_iec/libstage4_iec.a \
+	absyntax/libabsyntax.a \
+	absyntax_utils/libabsyntax_utils.a 
+
+iec2c_SOURCES = main.cc
+iec2iec_SOURCES = main.cc
 all: all-recursive
 
 .SUFFIXES:
@@ -321,6 +332,9 @@ clean-binPROGRAMS:
 iec2c$(EXEEXT): $(iec2c_OBJECTS) $(iec2c_DEPENDENCIES) 
 	@rm -f iec2c$(EXEEXT)
 	$(CXXLINK) $(iec2c_OBJECTS) $(iec2c_LDADD) $(LIBS)
+iec2iec$(EXEEXT): $(iec2iec_OBJECTS) $(iec2iec_DEPENDENCIES) 
+	@rm -f iec2iec$(EXEEXT)
+	$(CXXLINK) $(iec2iec_OBJECTS) $(iec2iec_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

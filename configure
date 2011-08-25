@@ -1825,11 +1825,11 @@ else
        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 $ac_includes_default
+	     enum { N = $2 / 2 - 1 };
 int
 main ()
 {
-static int test_array [1 - 2 * !(enum { N = $2 / 2 - 1 };
-	     0 < ($ac_type) ((((($ac_type) 1 << N) << N) - 1) * 2 + 1))];
+static int test_array [1 - 2 * !(0 < ($ac_type) ((((($ac_type) 1 << N) << N) - 1) * 2 + 1))];
 test_array [0] = 0
 
   ;
@@ -1840,11 +1840,11 @@ if ac_fn_c_try_compile "$LINENO"; then :
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 $ac_includes_default
+	        enum { N = $2 / 2 - 1 };
 int
 main ()
 {
-static int test_array [1 - 2 * !(enum { N = $2 / 2 - 1 };
-		($ac_type) ((((($ac_type) 1 << N) << N) - 1) * 2 + 1)
+static int test_array [1 - 2 * !(($ac_type) ((((($ac_type) 1 << N) << N) - 1) * 2 + 1)
 		 < ($ac_type) ((((($ac_type) 1 << N) << N) - 1) * 2 + 2))];
 test_array [0] = 0
 
@@ -5690,7 +5690,7 @@ done
 
 
 
-ac_config_files="$ac_config_files Makefile absyntax/Makefile absyntax_utils/Makefile stage1_2/Makefile stage3/Makefile stage4/Makefile"
+ac_config_files="$ac_config_files Makefile absyntax/Makefile absyntax_utils/Makefile stage1_2/Makefile stage3/Makefile stage4/Makefile stage4/generate_c/Makefile stage4/generate_iec/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -6242,9 +6242,9 @@ esac
 
 cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
 # Files that config.status was made for.
-config_files="`echo $ac_config_files`"
-config_headers="`echo $ac_config_headers`"
-config_commands="`echo $ac_config_commands`"
+config_files="$ac_config_files"
+config_headers="$ac_config_headers"
+config_commands="$ac_config_commands"
 
 _ACEOF
 
@@ -6414,6 +6414,8 @@ do
     "stage1_2/Makefile") CONFIG_FILES="$CONFIG_FILES stage1_2/Makefile" ;;
     "stage3/Makefile") CONFIG_FILES="$CONFIG_FILES stage3/Makefile" ;;
     "stage4/Makefile") CONFIG_FILES="$CONFIG_FILES stage4/Makefile" ;;
+    "stage4/generate_c/Makefile") CONFIG_FILES="$CONFIG_FILES stage4/generate_c/Makefile" ;;
+    "stage4/generate_iec/Makefile") CONFIG_FILES="$CONFIG_FILES stage4/generate_iec/Makefile" ;;
 
   *) as_fn_error "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
