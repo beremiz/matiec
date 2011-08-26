@@ -124,11 +124,22 @@ symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_nam
    * decompose_var_instance_name->get_next() when and if required...
    */
   symbol_c *res = (symbol_c *)var_decl->accept(*this);
-  if (NULL == res) ERROR;
+  /* NOTE: A Null result is not really an internal compiler error, but rather an error in 
+   * the IEC 61131-3 source code being compiled. This means we cannot just abort the compiler with ERROR.
+   * //   if (NULL == res) ERROR;
+   */
+  if (NULL == res) return NULL;
 
   /* make sure that we have decomposed all structure elements of the variable name */
   symbol_c *var_name = decompose_var_instance_name->next_part();
-  if (NULL != var_name) ERROR;
+  /* NOTE: A non-NULL result is not really an internal compiler error, but rather an error in 
+   * the IEC 61131-3 source code being compiled. 
+   *  (for example, 'int_var.struct_elem' in the source code, when 'int_var' is a simple integer,
+   *   and not a structure, will result in this result being non-NULL!)
+   * This means we cannot just abort the compiler with ERROR.
+   * //   if (NULL != var_name) ERROR;
+   */
+  if (NULL != var_name) return NULL;
 
   return res;
 }

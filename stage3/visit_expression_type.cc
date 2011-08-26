@@ -2074,10 +2074,14 @@ void *visit_expression_type_c::visit(assignment_statement_c *symbol) {
     if (hi2 != NULL) printf("%s", hi2->value);
     printf("\n");
   } // if (debug)
-  
-  if (!is_valid_assignment(left_type, right_type))  {
-     STAGE3_ERROR(symbol, symbol, "data type mismatch in assignment statement!\n");
-  }
+
+  if        (NULL == left_type) {
+    STAGE3_ERROR(symbol->l_exp, symbol->l_exp, "Could not determine data type of expression (undefined variable or strcuture element?).\n");
+  } else if (NULL == right_type) {
+    STAGE3_ERROR(symbol->r_exp, symbol->r_exp, "Could not determine data type of expression (undefined variable or strcuture element?).\n");
+  } else if (!is_valid_assignment(left_type, right_type))
+    STAGE3_ERROR(symbol, symbol, "data type mismatch in assignment statement!\n");
+
   return NULL;
 }
 
