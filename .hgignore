@@ -1,12 +1,25 @@
+syntax: glob
+
 .project
+*~
+*.a
+.dep
+*.Po
+autom4te.cache
+Makefile
+config.log
+stamp-h1
+config.status
+
+
 
 syntax: regexp
+
 \.o$
-syntax: regexp
 ^iec2c$
-syntax: regexp
 ^iec2iec$
-syntax: regexp
 \.depend$
-syntax: regexp
-^stage1_2/iec\.(y|flex)\..*$
+^stage1_2/iec_bison.cc
+^stage1_2/iec_bison.h
+^stage1_2/iec_flex.cc
+^config/config.h
