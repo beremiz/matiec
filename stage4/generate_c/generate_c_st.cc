@@ -609,9 +609,7 @@ void *visit(not_expression_c *symbol) {
 }
 
 void *visit(function_invocation_c *symbol) {
-  symbol_c* function_type_prefix = NULL;
   symbol_c* function_name = NULL;
-  symbol_c* function_type_suffix = NULL;
   DECLARE_PARAM_LIST()
 
   symbol_c *parameter_assignment_list = NULL;
@@ -724,14 +722,6 @@ void *visit(function_invocation_c *symbol) {
   int fdecl_mutiplicity =  function_symtable.multiplicity(symbol->function_name);
   if (fdecl_mutiplicity == 0) ERROR;
 
-  if (function_type_prefix != NULL) {
-    s4o.print("(");
-    search_expression_type->default_literal_type(function_type_prefix)->accept(*this);
-    s4o.print(")");
-  }
-  if (function_type_suffix != NULL) {
-    function_type_suffix = search_expression_type->default_literal_type(function_type_suffix);
-  }
   if (has_output_params) {
     fcall_number++;
     s4o.print("__");
@@ -744,8 +734,6 @@ void *visit(function_invocation_c *symbol) {
       print_function_parameter_data_types_c overloaded_func_suf(&s4o);
       f_decl->accept(overloaded_func_suf);
     }
-    if (function_type_suffix != NULL)
-      function_type_suffix->accept(*this);
     s4o.print_integer(fcall_number);
   }
   else {
@@ -756,8 +744,6 @@ void *visit(function_invocation_c *symbol) {
       print_function_parameter_data_types_c overloaded_func_suf(&s4o);
       f_decl->accept(overloaded_func_suf);
     }
-    if (function_type_suffix != NULL)
-      function_type_suffix->accept(*this);
   }
   s4o.print("(");
   s4o.indent_right();
