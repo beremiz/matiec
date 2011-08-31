@@ -95,11 +95,13 @@ search_varfb_instance_type_c::search_varfb_instance_type_c(symbol_c *search_scop
   this->decompose_var_instance_name = NULL;
   this->current_structelement_name = NULL;
   this->current_typeid = NULL;
+  this->current_basetypeid = NULL;
 }
 
-symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_name) {
+symbol_c *search_varfb_instance_type_c::get_type_decl(symbol_c *variable_name) {
   this->current_structelement_name = NULL;
   this->current_typeid = NULL;
+  this->current_basetypeid = NULL;
   this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
   if (NULL == decompose_var_instance_name) ERROR;
 
@@ -112,10 +114,7 @@ symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_nam
 
   /* Now we try to find the variable instance declaration, to determine its type... */
   symbol_c *var_decl = search_var_instance_decl.get_decl(var_name_part);
-  if (NULL == var_decl) {
-    /* variable instance declaration not found! */
-      ERROR;
-  }
+  if (NULL == var_decl) ERROR;
 
   /* if it is a struct or function block, we must search the type
    * of the struct or function block member.
@@ -144,9 +143,18 @@ symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_nam
   return res;
 }
 
+
+symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_name) {
+  symbol_c *res = get_type_decl(variable_name);
+  if (NULL == res) return NULL;
+  return (symbol_c *)base_type(res);
+}  
+
+
 unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) {
   this->current_structelement_name = NULL;
   this->current_typeid = NULL;
+  this->current_basetypeid = NULL;
   this->is_complex = false;
   this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
   if (NULL == decompose_var_instance_name) ERROR;
@@ -183,7 +191,7 @@ unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) 
 
 symbol_c *search_varfb_instance_type_c::get_type_id(symbol_c *variable_name) {
   this->current_typeid = NULL;
-  symbol_c *vartype = this->get_basetype_decl(variable_name);
+  symbol_c *vartype = this->get_type_decl(variable_name);
   if (this->current_typeid != NULL)
     return this->current_typeid;
   else
@@ -219,7 +227,29 @@ void *search_varfb_instance_type_c::base_type(symbol_c *symbol)	{
  * of a function block type...
  */
 void *search_varfb_instance_type_c::visit(identifier_c *type_name) {
-  this->current_typeid = type_name;
+  /* we only store the new type id if none had been found yet.
+   * Since we will recursively carry on looking at the base type 
+   * to determine the base type declaration and id, we must only set this variable
+   * the first time.
+   * e.g. TYPE myint1_t : int    := 1;
+   *           myint2_t : int1_t := 2;
+   *           myint3_t : int2_t := 3;
+   *      END_TYPE;
+   *      VAR
+   *          myint1 : myint1_t;
+   *          myint2 : myint2_t;
+   *          myint3 : myint3_t;
+   *      END_VAR
+   *        
+   *     If we ask for typeid of     myint3, it must return myint3_t
+   *     If we ask for basetypeid of myint3, it must return int
+   *
+   *     When determining the data type of myint3, we will recursively go all the way
+   *     down to int, but we must still only store myint3_t as the base type id.
+   */
+  if (NULL == this->current_typeid)
+    this->current_typeid = type_name;
+  this->current_basetypeid = type_name;
 
   /* look up the type declaration... */
   symbol_c *fb_decl = function_block_type_symtable.find_value(type_name);
