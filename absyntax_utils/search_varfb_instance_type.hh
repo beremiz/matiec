@@ -91,7 +91,7 @@ class search_varfb_instance_type_c: public search_base_type_c {
     search_var_instance_decl_c search_var_instance_decl;
     decompose_var_instance_name_c *decompose_var_instance_name;
     symbol_c *current_structelement_name;
-    symbol_c *current_rawtype;
+    symbol_c *current_typeid;
     bool is_complex;
 
   public:
