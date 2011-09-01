@@ -76,6 +76,9 @@
 /* A macro for printing out internal parser errors... */
 #include <iostream> // required for std::cerr
 
+#ifndef HGVERSION
+#define HGVERSION ""
+#endif
 
 #define ERROR          error_exit(__FILE__,__LINE__)
 void error_exit(const char *file_name, int line_no) {
