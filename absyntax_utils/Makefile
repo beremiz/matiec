@@ -22,6 +22,7 @@ include ../Makefile.$(shell uname)
 SEARCH_UTIL_FILES  = absyntax_utils.o
 SEARCH_UTIL_FILES += search_expression_type.o
 SEARCH_UTIL_FILES += decompose_var_instance_name.o
+SEARCH_UTIL_FILES += case_element_iterator.o
 SEARCH_UTIL_FILES += function_call_iterator.o
 SEARCH_UTIL_FILES += function_call_param_iterator.o
 SEARCH_UTIL_FILES += function_param_iterator.o

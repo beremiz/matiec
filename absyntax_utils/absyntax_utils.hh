@@ -98,6 +98,7 @@ extern symtable_c<symbol_c *, &null_symbol5> enumerated_value_symtable;
 /***********************************************************************/
 
 #include "spec_init_separator.hh"
+#include "case_element_iterator.hh"
 #include "function_param_iterator.hh"
 #include "function_call_iterator.hh"
 #include "function_call_param_iterator.hh"

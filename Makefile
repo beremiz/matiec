@@ -53,6 +53,7 @@ LIBS += stage3/visit_expression_type.o
 LIBS += absyntax_utils/absyntax_utils.o
 LIBS += absyntax_utils/search_expression_type.o
 LIBS += absyntax_utils/decompose_var_instance_name.o
+LIBS += absyntax_utils/case_element_iterator.o
 LIBS += absyntax_utils/function_call_iterator.o
 LIBS += absyntax_utils/function_call_param_iterator.o
 LIBS += absyntax_utils/function_param_iterator.o

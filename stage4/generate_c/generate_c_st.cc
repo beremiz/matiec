@@ -52,6 +52,12 @@ class generate_c_st_c: public generate_c_typedecl_c {
       fparam_output_vg
     } variablegeneration_t;
 
+    typedef enum {
+      single_cg,
+      subrange_cg,
+      none_cg
+    } casegeneration_t;
+
   private:
     /* When calling a function block, we must first find it's type,
      * by searching through the declarations of the variables currently
@@ -88,7 +94,10 @@ class generate_c_st_c: public generate_c_typedecl_c {
     int fcall_number;
     symbol_c *fbname;
 
+    bool first_subrange_case_list;
+
     variablegeneration_t wanted_variablegeneration;
+    casegeneration_t wanted_casegeneration;
 
   public:
     generate_c_st_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
@@ -102,6 +111,7 @@ class generate_c_st_c: public generate_c_typedecl_c {
       fcall_number = 0;
       fbname = name;
       wanted_variablegeneration = expression_vg;
+      wanted_casegeneration = none_cg;
     }
 
     virtual ~generate_c_st_c(void) {
@@ -204,6 +214,24 @@ void *print_setter(symbol_c* symbol,
   }
   s4o.print(")");
   wanted_variablegeneration = expression_vg;
+  return NULL;
+}
+
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+/*  signed_integer DOTDOT signed_integer */
+void *visit(subrange_c *symbol) {
+  switch (wanted_casegeneration) {
+    case subrange_cg:
+      s4o.print("case_expression >= ");
+      symbol->lower_limit->accept(*this);
+      s4o.print(" && case_expression <= ");
+      symbol->upper_limit->accept(*this);
+      break;
+    default:
+      break;
+  }
   return NULL;
 }
 
@@ -1005,18 +1033,43 @@ void *visit(elseif_statement_c *symbol) {
 }
 
 void *visit(case_statement_c *symbol) {
-  s4o.print("switch(");
-  symbol->expression->accept(*this);
-  s4o.print(") {\n");
+  symbol_c *expression_type = search_expression_type->get_type(symbol->expression);
+  s4o.print("{\n");
   s4o.indent_right();
+  if (search_base_type.type_is_enumerated(expression_type)) {
+	s4o.print(s4o.indent_spaces);
+	expression_type->accept(*this);
+	s4o.print(" case_expression = ");
+  }
+  else {
+	s4o.print(s4o.indent_spaces + "IEC_LINT case_expression = (IEC_LINT)");
+  }
+  symbol->expression->accept(*this);
+  s4o.print(";\n" + s4o.indent_spaces + "switch (case_expression) {\n");
+  s4o.indent_right();
+  wanted_casegeneration = single_cg;
+  symbol->case_element_list->accept(*this);
+  wanted_casegeneration = subrange_cg;
+  s4o.print(s4o.indent_spaces + "default:\n");
+  s4o.indent_right();
+  first_subrange_case_list = true;
   symbol->case_element_list->accept(*this);
   if (symbol->statement_list != NULL) {
-    s4o.print(s4o.indent_spaces + "default:\n");
-    s4o.indent_right();
+	if (!first_subrange_case_list) {
+      s4o.print(s4o.indent_spaces + "else {\n");
+      s4o.indent_right();
+	}
     symbol->statement_list->accept(*this);
-    s4o.print(s4o.indent_spaces + "break;\n");
-    s4o.indent_left();
+    if (!first_subrange_case_list) {
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "}\n");
+    }
   }
+  s4o.print(s4o.indent_spaces + "break;\n");
+  s4o.indent_left();
+  wanted_casegeneration = none_cg;
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "}\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}");
   return NULL;
@@ -1026,17 +1079,68 @@ void *visit(case_statement_c *symbol) {
 void *visit(case_element_list_c *symbol) {return print_list(symbol);}
 
 void *visit(case_element_c *symbol) {
-  s4o.print(s4o.indent_spaces + "case ");
-  symbol->case_list->accept(*this);
-  s4o.print(" :\n");
-  s4o.indent_right();
-  symbol->statement_list->accept(*this);
-  s4o.print(s4o.indent_spaces + "break;\n");
-  s4o.indent_left();
+  case_element_iterator_c *case_element_iterator;
+  symbol_c* element = NULL;
+  bool first_element = true;
+
+  switch (wanted_casegeneration) {
+    case single_cg:
+      case_element_iterator = new case_element_iterator_c(symbol->case_list, case_element_iterator_c::element_single);
+      for (element = case_element_iterator->next(); element != NULL; element = case_element_iterator->next()) {
+        if (first_element) first_element = false;
+    	s4o.print(s4o.indent_spaces + "case ");
+        element->accept(*this);
+        s4o.print(":\n");
+      }
+      delete case_element_iterator;
+      break;
+
+    case subrange_cg:
+      case_element_iterator = new case_element_iterator_c(symbol->case_list, case_element_iterator_c::element_subrange);
+      for (element = case_element_iterator->next(); element != NULL; element = case_element_iterator->next()) {
+        if (first_element) {
+          if (first_subrange_case_list) {
+            s4o.print(s4o.indent_spaces + "if (");
+            first_subrange_case_list = false;
+          }
+          else {
+        	  s4o.print(s4o.indent_spaces + "else if (");
+          }
+          first_element = false;
+        }
+        else {
+          s4o.print(" && ");
+        }
+        element->accept(*this);
+      }
+      delete case_element_iterator;
+      if (!first_element) {
+        s4o.print(") {\n");
+      }
+      break;
+
+    default:
+      break;
+  }
+
+  if (!first_element) {
+    s4o.indent_right();
+    symbol->statement_list->accept(*this);
+    switch (wanted_casegeneration) {
+      case single_cg:
+        s4o.print(s4o.indent_spaces + "break;\n");
+        s4o.indent_left();
+        break;
+      case subrange_cg:
+    	s4o.indent_left();
+  	    s4o.print(s4o.indent_spaces + "}\n");
+  	    break;
+      default:
+        break;
+    }
+  }
   return NULL;
 }
-
-void *visit(case_list_c *symbol) {return print_list(symbol, "", ", ");}
 
 /********************************/
 /* B 3.2.4 Iteration Statements */
