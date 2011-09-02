@@ -1089,10 +1089,11 @@ ANY_REAL(__atan_)
   /*    EXPT    */
   /**************/
 #define __expt_(TYPENAME)\
-static inline TYPENAME __expt_##TYPENAME(EN_ENO_PARAMS, TYPENAME IN1, REAL IN2){\
+static inline TYPENAME __expt_##TYPENAME(EN_ENO_PARAMS, TYPENAME IN1, LREAL IN2){\
   TEST_EN(TYPENAME)\
   return pow(IN1, IN2);\
-}ANY_REAL(__expt_)
+}
+ANY_REAL(__expt_)
 
 /**************/
 /* Selection  */

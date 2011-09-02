@@ -17299,7 +17299,7 @@ switch(current_function_type){
                         if (IN2_type_symbol == NULL)
                           IN2_type_symbol = last_type_symbol;
                         ADD_PARAM_LIST(IN2_param_name, IN2_param_value, IN2_type_symbol, function_param_iterator_c::direction_in)
-                        symbol_c * return_type_symbol = last_type_symbol;
+                        symbol_c * return_type_symbol = IN1_type_symbol;
                         function_type_suffix = IN1_type_symbol;
                         break;
                         
