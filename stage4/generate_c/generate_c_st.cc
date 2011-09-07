@@ -611,10 +611,22 @@ void *visit(mod_expression_c *symbol) {
   return NULL;
 }
 
-/* TODO: power expression... */
 void *visit(power_expression_c *symbol) {
-  ERROR; 
-  return print_binary_expression(symbol->l_exp, symbol->r_exp, " ** ");
+  symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
+  symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
+  if (search_expression_type->is_real_type(left_type) && search_expression_type->is_num_type(right_type)) {
+	s4o.print("__expt_LREAL((BOOL)__BOOL_LITERAL(TRUE),\n");
+	s4o.indent_right();
+	s4o.print(s4o.indent_spaces + "NULL,\n");
+	s4o.print(s4o.indent_spaces + "(LREAL)(");
+	symbol->l_exp->accept(*this);
+	s4o.print("),\n");
+	s4o.print(s4o.indent_spaces + "(LREAL)(");
+	symbol->r_exp->accept(*this);
+	s4o.print("))");
+    return NULL;
+  }
+  ERROR;
 }
 
 void *visit(neg_expression_c *symbol) {
