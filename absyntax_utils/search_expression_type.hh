@@ -39,6 +39,18 @@
  *       etc...
  */
 
+/* WARNING   WARNING  WARNING
+ *
+ * When taking into consideration calls to functions, this search_expression_type_c
+ * class will use internal atributes (i.e. anotation) in the function_invocation_c symbol 
+ * in the abstract syntax tree.
+ *
+ * Since this anotation/atribute is only set/populated with the correct value
+ * during stage3 (semantic verification), this class will only work correctly
+ * after the semantic verification in stage 3 has been executed
+ * (to be more exact, the data type checking of stage 3).
+ */
+
 class search_expression_type_c: public search_constant_type_c {
 
   private:

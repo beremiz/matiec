@@ -605,39 +605,6 @@ bool visit_expression_type_c::is_compatible_type(symbol_c *first_type, symbol_c 
 
 
 
-#define is_num_type      is_ANY_NUM_compatible
-#define is_integer_type  is_ANY_INT_compatible
-#define is_real_type     is_ANY_REAL_compatible
-#define is_binary_type   is_ANY_BIT_compatible
- /* actually the ROR, ROL, SHL, and SHR function also accept boolean type! */
-#define is_nbinary_type  is_ANY_BIT_compatible
-#define compute_standard_function_default visit_expression_type_c::compute_standard_function_default
-#define compute_standard_function_il visit_expression_type_c::compute_standard_function_il
-#define search_expression_type_c visit_expression_type_c
-#define search(x) search_f(x)
-#define next() next_nf()
-//     #define search_constant_type_c::constant_int_type_name  search_expression_type_c::integer
-#define constant_int_type_name  integer
-#define is_same_type is_compatible_type
-#include "../absyntax_utils/search_type_code.c"
-#undef is_same_type
-#undef constant_int_type_name
-//     #undef search_constant_type_c::constant_int_type_name
-#undef next
-#undef search
-#undef compute_standard_function_default
-#undef compute_standard_function_il
-#undef search_expression_type_c
-#undef is_real_type
-#undef is_binary_type
-#undef is_nbinary_type
-#undef is_integer_type
-#undef is_num_type
-
-
-
-
-
 
 /* A helper function... */
 /*
@@ -674,58 +641,25 @@ symbol_c *visit_expression_type_c::compute_expression(symbol_c *left_type,      
 }
 
 
-# if 0
-/* A helper function... */
-symbol_c *visit_expression_type_c::compute_numeric_expression(symbol_c *left_type, symbol_c *right_type,
-                                                              is_data_type_t is_data_type) {
-  bool error = false;
-
-  if (!(this->*is_data_type)(left_type)) {
-    STAGE3_ERROR(left_type, right_type, "Invalid data type of left operand.");
-    error = true;
-  }
-  if (!(this->*is_data_type)(right_type)) {
-    STAGE3_ERROR(left_type, right_type, "Invalid data type of right operand.");
-    error = true;
-  }
-  if (!is_compatible_type(left_type, right_type)) {
-    STAGE3_ERROR(left_type, right_type, "Type mismatch between operands.");
-    error = true;
-  }
-
-/*
-  if (is_literal_integer_type(left_type) || is_literal_real_type(left_type)) {
-    return right_type;
-  } else {
-    return left_type;
-  }
-*/
-
-  if (error)
-    return NULL;
-  else
-    return common_type(left_type, right_type);
-
-  /* humour the compiler... */
-/*
-  return NULL;
-*/
-}
-#endif
-
-
-
 
 
 /* A helper function... */
 /* check the semantics of a FB or Function non-formal call */
 /* e.g. foo(1, 2, 3, 4);  */
-void visit_expression_type_c::check_nonformal_call(symbol_c *f_call, symbol_c *f_decl, bool use_il_defvar) {
+/* If error_count pointer is != NULL, we do not really print out the errors,
+ * but rather only count how many errors were found.
+ * This is used to support overloaded functions, where we have to check each possible
+ * function, one at a time, untill we find a function call without any errors.
+ */
+void visit_expression_type_c::check_nonformal_call(symbol_c *f_call, symbol_c *f_decl, bool use_il_defvar, int *error_count) {
   symbol_c *call_param_value, *call_param_type, *param_type;
   identifier_c *param_name;
   function_param_iterator_c       fp_iterator(f_decl);
   function_call_param_iterator_c fcp_iterator(f_call);
-
+  int extensible_parameter_highest_index = -1;
+  
+  /* reset error counter */
+  if (error_count != NULL) *error_count = 0;
   /* if use_il_defvar, then the first parameter for the call comes from the il_default_variable */
   if (use_il_defvar) {
     /* The first parameter of the function corresponds to the il_default_variable_type of the function call */
@@ -740,20 +674,48 @@ void visit_expression_type_c::check_nonformal_call(symbol_c *f_call, symbol_c *f
     } while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
     /* If the function does not have any parameters (param_name == NULL)
      * then we cannot compare its type with the il_default_variable_type.
+     *
+     * However, I (Mario) think this is invalid syntax, as it seems to me all functions must
+     * have at least one parameter.
+     * However, we will make this semantic verification consider it possible, as later
+     * versions of the standard may change that syntax.
+     * So, instead of generating a syntax error message, we simply check whether the call
+     * is passing any more parameters besides the default variable (the il default variable may be ignored
+     * in this case, and not consider it as being a parameter being passed to the function).
+     * If it does, then we have found a semantic error, otherwise the function call is 
+     * correct, and we simply return.
      */
-    if(param_name != NULL) {
+    if(param_name == NULL) {
+      if (fcp_iterator.next_nf() != NULL)
+        STAGE3_ERROR(f_call, f_call, "Too many parameters in function/FB call.");
+      return;
+    } else { 
+      /* param_name != NULL */
       param_type = fp_iterator.param_type();
-      if(!is_valid_assignment(param_type, il_default_variable_type)) 
-        STAGE3_ERROR(f_call, f_call, "In function/FB call, first parameter has invalid data type.");
+      if(!is_valid_assignment(param_type, il_default_variable_type)) {
+        if (error_count != NULL) (*error_count)++;
+        else STAGE3_ERROR(f_call, f_call, "In function/FB call, first parameter has invalid data type.");
+      }
+    }
+    
+    /* the fisrt parameter (il_def_variable) is correct */
+    if (extensible_parameter_highest_index < fp_iterator.extensible_param_index()) {
+      extensible_parameter_highest_index = fp_iterator.extensible_param_index();
     }
   } // if (use_il_defvar)
+  
+  
 
   /* Iterating through the non-formal parameters of the function call */
   while((call_param_value = fcp_iterator.next_nf()) != NULL) {
     /* Obtaining the type of the value being passed in the function call */
     call_param_type = base_type((symbol_c*)call_param_value->accept(*this));
     if (call_param_type == NULL) {
-      STAGE3_ERROR(call_param_value, call_param_value, "Could not determine data type of value being passed in function/FB call.");
+      if (error_count != NULL) (*error_count)++;
+      /* the following error will usually occur when ST code uses an identifier, that could refer to an enumerated constant,
+       * but was not actually used as a constant in any definitions of an enumerated data type
+       */
+      else STAGE3_ERROR(call_param_value, call_param_value, "Could not determine data type of value being passed in function/FB call.");
       continue;
     }  
     
@@ -762,17 +724,43 @@ void visit_expression_type_c::check_nonformal_call(symbol_c *f_call, symbol_c *f
      */
     do {
       param_name = fp_iterator.next();
-      /* If there is no parameter declared with that name */
-      if(param_name == NULL) {STAGE3_ERROR(f_call, f_call, "Too many parameters in function/FB call."); break;}
+      /* If there is no other parameter declared, then we are passing too many parameters... */
+      if(param_name == NULL) {
+        if (error_count != NULL) (*error_count)++;
+        /* Note: We don't want to print out the follwoing error message multiple times, so we return instead of continuing with 'break' */
+        else STAGE3_ERROR(f_call, f_call, "Too many parameters in function/FB call."); return;
+      }
     } while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
 
-    if(param_name != NULL) {
-      /* Get the parameter type */
-      param_type = base_type(fp_iterator.param_type());
-      /* If the declared parameter and the parameter from the function call do no have the same type */
-      if(!is_valid_assignment(param_type, call_param_type)) STAGE3_ERROR(call_param_value, call_param_value, "Type mismatch in function/FB call parameter.");
+    /* Get the parameter type */
+    param_type = base_type(fp_iterator.param_type());
+    /* If the declared parameter and the parameter from the function call do not have the same type */
+    if(!is_valid_assignment(param_type, call_param_type)) {
+      if (error_count != NULL) (*error_count)++;
+      else STAGE3_ERROR(call_param_value, call_param_value, "Type mismatch in function/FB call parameter.");
+    }
+
+    if (extensible_parameter_highest_index < fp_iterator.extensible_param_index()) {
+      extensible_parameter_highest_index = fp_iterator.extensible_param_index();
     }
   }
+  
+  /* The function call may not have any errors! */
+  /* In the case of a call to an extensible function, we store the highest index 
+   * of the extensible parameters this particular call uses, in the symbol_c object
+   * of the function call itself!
+   * In calls to non-extensible functions, this value will be set to -1.
+   * This information is later used in stage4 to correctly generate the
+   * output code.
+   */
+  int extensible_param_count = -1;
+  if (extensible_parameter_highest_index >=0) /* if call to extensible function */
+    extensible_param_count = 1 + extensible_parameter_highest_index - fp_iterator.first_extensible_param_index();
+  il_function_call_c     *il_function_call = dynamic_cast<il_function_call_c *>(f_call);
+  function_invocation_c  *function_invocation  = dynamic_cast<function_invocation_c  *>(f_call);
+  if      (il_function_call     != NULL) il_function_call   ->extensible_param_count = extensible_param_count;
+  else if (function_invocation  != NULL) function_invocation->extensible_param_count = extensible_param_count;
+  //   else ERROR;  /* this function is also called by Function Blocks, so this is not an error! */
 }
 
 
@@ -814,12 +802,22 @@ void visit_expression_type_c::check_il_fbcall(symbol_c *il_operator, const char 
 /* A helper function... */
 /* check the semantics of a FB or Function formal call */
 /* e.g. foo(IN1 := 1, OUT1 =>x, EN := true);  */
-void visit_expression_type_c::check_formal_call(symbol_c *f_call, symbol_c *f_decl) {
+/* If error_count pointer is != NULL, we do not really print out the errors,
+ * but rather only count how many errors were found.
+ * This is used to support overloaded functions, where we have to check each possible
+ * function, one at a time, untill we find a function call without any errors.
+ */
+void visit_expression_type_c::check_formal_call(symbol_c *f_call, symbol_c *f_decl, int *error_count) {
   symbol_c *call_param_value, *call_param_type, *call_param_name, *param_type;
   symbol_c *verify_duplicate_param;
   identifier_c *param_name;
   function_param_iterator_c       fp_iterator(f_decl);
   function_call_param_iterator_c fcp_iterator(f_call);
+  int extensible_parameter_highest_index = -1;
+  identifier_c *extensible_parameter_name;
+
+  /* reset error counter */
+  if (error_count != NULL) *error_count = 0;
 
   /* Iterating through the formal parameters of the function call */
   while((call_param_name = fcp_iterator.next_f()) != NULL) {
@@ -832,13 +830,15 @@ void visit_expression_type_c::check_formal_call(symbol_c *f_call, symbol_c *f_de
     /* Checking if there are duplicated parameter values */
     verify_duplicate_param = fcp_iterator.search_f(call_param_name);
     if(verify_duplicate_param != call_param_value){
-      STAGE3_ERROR(call_param_name, verify_duplicate_param, "Duplicated parameter values.");
+      if (error_count != NULL) (*error_count)++;
+      else STAGE3_ERROR(call_param_name, verify_duplicate_param, "Duplicated parameter values.");
     }   
 
     /* Obtaining the type of the value being passed in the function call */
     call_param_type = (symbol_c*)call_param_value->accept(*this);
     if (call_param_type == NULL) {
-      STAGE3_ERROR(call_param_name, call_param_value, "Could not determine data type of value being passed in function/FB call.");
+      if (error_count != NULL) (*error_count)++;
+      else STAGE3_ERROR(call_param_name, call_param_value, "Could not determine data type of value being passed in function/FB call.");
       /* The data value being passed is possibly any enumerated type value.
        * We do not yet handle semantic verification of enumerated types.
        */
@@ -850,14 +850,58 @@ void visit_expression_type_c::check_formal_call(symbol_c *f_call, symbol_c *f_de
     /* Find the corresponding parameter of the function being called */
     param_name = fp_iterator.search(call_param_name);
     if(param_name == NULL) {
-      STAGE3_ERROR(call_param_name, call_param_name, "Invalid parameter in function/FB call.");
+      if (error_count != NULL) (*error_count)++;
+      else STAGE3_ERROR(call_param_name, call_param_name, "Invalid parameter in function/FB call.");
     } else {
       /* Get the parameter type */
       param_type = base_type(fp_iterator.param_type());
       /* If the declared parameter and the parameter from the function call have the same type */
-      if(!is_valid_assignment(param_type, call_param_type)) STAGE3_ERROR(call_param_name, call_param_value, "Type mismatch function/FB call parameter.");
+      if(!is_valid_assignment(param_type, call_param_type)) {
+        if (error_count != NULL) (*error_count)++;
+        else STAGE3_ERROR(call_param_name, call_param_value, "Type mismatch function/FB call parameter.");
+      }
+      if (extensible_parameter_highest_index < fp_iterator.extensible_param_index()) {
+        extensible_parameter_highest_index = fp_iterator.extensible_param_index();
+        extensible_parameter_name = param_name;
+      }
     }
   }
+  
+  /* In the case of a call to an extensible function, we store the highest index 
+   * of the extensible parameters this particular call uses, in the symbol_c object
+   * of the function call itself!
+   * In calls to non-extensible functions, this value will be set to -1.
+   * This information is later used in stage4 to correctly generate the
+   * output code.
+   */
+  int extensible_param_count = -1;
+  if (extensible_parameter_highest_index >=0) /* if call to extensible function */
+    extensible_param_count = 1 + extensible_parameter_highest_index - fp_iterator.first_extensible_param_index();
+  il_formal_funct_call_c *il_formal_funct_call = dynamic_cast<il_formal_funct_call_c *>(f_call);
+  function_invocation_c  *function_invocation  = dynamic_cast<function_invocation_c  *>(f_call);
+  if      (il_formal_funct_call != NULL) il_formal_funct_call->extensible_param_count = extensible_param_count;
+  else if (function_invocation  != NULL) function_invocation->extensible_param_count  = extensible_param_count;
+//   else ERROR;  /* this function is also called by Function Blocks, so this is not an error! */
+
+  /* We have iterated through all the formal parameters of the function call,
+   * and everything seems fine. 
+   * If the function being called in an extensible function, we now check
+   * whether the extensible paramters in the formal invocation do not skip
+   * any indexes...
+   *
+   * f(in1:=0, in2:=0, in4:=0) --> ERROR!!
+   */
+  if (extensible_parameter_highest_index >=0) { /* if call to extensible function */
+    for (int i=fp_iterator.first_extensible_param_index(); i < extensible_parameter_highest_index; i++) {
+      char tmp[256];
+      if (snprintf(tmp, 256, "%s%d", extensible_parameter_name->value, i) >= 256) ERROR;
+      if (fcp_iterator.search_f(tmp) == NULL) {
+        /* error in invocation of extensible function */
+        if (error_count != NULL) (*error_count)++;
+        else STAGE3_ERROR(f_call, f_call, "Missing extensible parameters in call to extensible function.");
+      }  
+    }    
+  }  
 }
 
 
@@ -990,58 +1034,51 @@ void *visit_expression_type_c::visit(il_function_call_c *symbol) {
   if (il_error)
     return NULL;
 
-  /* First find the declaration of the function being called! */
-  function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
-
   symbol_c *return_data_type = NULL;
 
-  if (f_decl == function_symtable.end_value()) {
-    function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
-    if (current_function_type == function_none) ERROR;
-    /*  This code is for the functions that the user did not declare and that are
-     * part of the IL or ST languagem (built-in functions).
-     *  For now we won't do the semantics analysis for that kind of functions.
-    */
-    /*  
-    return_data_type = (symbol_c *)search_expression_type->compute_standard_function_default(NULL, symbol);
-    if (NULL == return_data_type) ERROR;
+  /* First find the declaration of the function being called! */
+  function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
+  function_symtable_t::iterator upper = function_symtable.upper_bound(symbol->function_name);
+  if (lower == function_symtable.end()) ERROR;
 
-    function_call_param_iterator_c fcp_iterator(symbol);
+  int error_count = 0; 
+  int *error_count_ptr = NULL;
 
-    int nb_param = 0;
-    if (symbol->il_param_list != NULL)
-      nb_param += ((list_c *)symbol->il_param_list)->n;
+  function_symtable_t::iterator second = lower;
+  second++;
+  if (second != upper) 
+    /* This is a call to an overloaded function... */  
+    error_count_ptr = &error_count;
 
-    identifier_c en_param_name("EN");*/
-    /* Get the value from EN param */
-    /*symbol_c *EN_param_value = fcp_iterator.search(&en_param_name);
-    if (EN_param_value == NULL)
-      EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
-    else
-      nb_param --;
-    ADD_PARAM_LIST(EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
-
-    identifier_c eno_param_name("EN0");*/
-    /* Get the value from ENO param */
-    /*symbol_c *ENO_param_value = fcp_iterator.search(&eno_param_name);
-    if (ENO_param_value != NULL)
-      nb_param --;
-    ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
+  for(; lower != upper; lower++) {
+    function_declaration_c *f_decl = function_symtable.get_value(lower);
     
-    #include "st_code_gen.c"
-    */
-  } else {
-    /* determine the base data type returned by the function being called... */
-    return_data_type = base_type(f_decl->type_name);
-    /* If the following occurs, then we must have some big bug in the syntax parser (stage 2)... */
-    if (NULL == return_data_type) ERROR;
-
-    /* check semantics of data passed in the function call... */
-    check_nonformal_call(symbol, f_decl, true);
-
-    /* set the new ddata type of the default variable for the following verifications... */
-    il_default_variable_type = return_data_type;
+    check_nonformal_call(symbol, f_decl, true, error_count_ptr);
+    
+    if (0 == error_count) {
+      /* Either: 
+       * (i) we have a call to a non-overloaded function (error_cnt_ptr is NULL!, so error_count won't change!)  
+       * (ii) we have a call to an overloaded function, with no errors!
+       */
+      
+      /* Store the pointer to the declaration of the function being called.
+       * This data will be used by stage 4 to call the correct function.
+       * Mostly needed to disambiguate overloaded functions...
+       * See comments in absyntax.def for more details
+       */
+      symbol->called_function_declaration = f_decl;
+      /* determine the base data type returned by the function being called... */
+      return_data_type = base_type(f_decl->type_name);
+      /* If the following occurs, then we must have some big bug in the syntax parser (stage 2)... */
+      if (NULL == return_data_type) ERROR;
+      /* set the new data type of the default variable for the following verifications... */
+      il_default_variable_type = return_data_type;
+      return NULL;
+    }
   }
+
+  /* No compatible function was found for this function call */
+  STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");
   return NULL;
 }
 
@@ -1161,58 +1198,55 @@ void *visit_expression_type_c::visit(il_formal_funct_call_c *symbol) {
   if (il_error)
     return NULL;
 
-  function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
-
   symbol_c *return_data_type = NULL;
-
-  if (f_decl == function_symtable.end_value()) {
+  function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
+  function_symtable_t::iterator upper = function_symtable.upper_bound(symbol->function_name);
+  
+  if (lower == function_symtable.end()) {
     function_type_t current_function_type = get_function_type((identifier_c *)symbol->function_name);
     if (current_function_type == function_none) ERROR;
-    
-    /*  This code is for the functions that the user did not declare and that are
-     * part of the IL or ST languagem (built-in functions).
-     *  For now we won't do the semantics analysis for that kind of functions.
-    */
-    #if 0
-    return_data_type = (symbol_c *)search_expression_type->compute_standard_function_default(NULL, symbol);
-    if (NULL == return_data_type) ERROR;
-    
-    function_call_param_iterator_c fcp_iterator(symbol);
-    
-    int nb_param = 0;
-    if (symbol->il_param_list != NULL)
-      nb_param += ((list_c *)symbol->il_param_list)->n;
-    
-    identifier_c en_param_name("EN");
-    /* Get the value from EN param */
-    symbol_c *EN_param_value = fcp_iterator.search(&en_param_name);
-    if (EN_param_value == NULL)
-      EN_param_value = (symbol_c*)(new boolean_literal_c((symbol_c*)(new bool_type_name_c()), new boolean_true_c()));
-    else
-      nb_param --;
-    ADD_PARAM_LIST(EN_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_in)
-    
-    identifier_c eno_param_name("EN0");
-    /* Get the value from ENO param */
-    symbol_c *ENO_param_value = fcp_iterator.search(&eno_param_name);
-    if (ENO_param_value != NULL)
-      nb_param --;
-    ADD_PARAM_LIST(ENO_param_value, (symbol_c*)(new bool_type_name_c()), function_param_iterator_c::direction_out)
-    
-    #include "st_code_gen.c"
-    #endif
-  } else {
-    /* determine the base data type returned by the function being called... */
-    return_data_type = base_type(f_decl->type_name);
-    /* the following should never occur. If it does, then we have a bug in the syntax parser (stage 2)... */
-    if (NULL == return_data_type) ERROR;
-
-    /* check semantics of data passed in the function call... */
-    check_formal_call(symbol, f_decl);
-
-    /* the data type of the data returned by the function, and stored in the il default variable... */
-    il_default_variable_type = return_data_type;
+    return NULL;
   }
+
+  int error_count = 0; 
+  int *error_count_ptr = NULL;
+
+  function_symtable_t::iterator second = lower;
+  second++;
+  if (second != upper) 
+    /* This is a call to an overloaded function... */  
+    error_count_ptr = &error_count;
+
+  for(; lower != upper; lower++) {
+    function_declaration_c *f_decl = function_symtable.get_value(lower);
+  
+    /* check semantics of data passed in the function call... */
+    check_formal_call(symbol, f_decl, error_count_ptr);
+
+    if (0 == error_count) {
+      /* Either: 
+       * (i) we have a call to a non-overloaded function (error_cnt_ptr is NULL!, so error_count won't change!)  
+       * (ii) we have a call to an overloaded function, with no errors!
+       */
+      
+      /* Store the pointer to the declaration of the function being called.
+       * This data will be used by stage 4 to call the correct function.
+       * Mostly needed to disambiguate overloaded functions...
+       * See comments in absyntax.def for more details
+       */
+      symbol->called_function_declaration = f_decl;
+      /* determine the base data type returned by the function being called... */
+      return_data_type = base_type(f_decl->type_name);
+      /* the following should never occur. If it does, then we have a bug in the syntax parser (stage 2)... */
+      if (NULL == return_data_type) ERROR;
+      /* the data type of the data returned by the function, and stored in the il default variable... */
+      il_default_variable_type = return_data_type;
+      return NULL;
+    }  
+  }
+  
+  /* No compatible function was found for this function call */
+  STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");
   return NULL;
 }
 
@@ -1578,7 +1612,8 @@ void *visit_expression_type_c::visit(DIV_operator_c *symbol) {
 // SYM_REF0(MOD_operator_c)
 void *visit_expression_type_c::visit(MOD_operator_c *symbol) {
   verify_null(symbol);
-  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_INT_compatible); 
+  il_default_variable_type = compute_expression(il_default_variable_type, il_operand_type, &visit_expression_type_c::is_ANY_INT_compatible,
+                                                symbol                  , il_operand);
   return NULL;
 }
 
@@ -1729,28 +1764,28 @@ void *visit_expression_type_c::visit(JMPCN_operator_c *symbol) {
 void *visit_expression_type_c::visit(or_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
 void *visit_expression_type_c::visit(xor_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
 void *visit_expression_type_c::visit(and_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_BIT_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
 void *visit_expression_type_c::visit(equ_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1758,7 +1793,7 @@ void *visit_expression_type_c::visit(equ_expression_c *symbol) {
 void *visit_expression_type_c::visit(notequ_expression_c *symbol)  {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1766,7 +1801,7 @@ void *visit_expression_type_c::visit(notequ_expression_c *symbol)  {
 void *visit_expression_type_c::visit(lt_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1774,7 +1809,7 @@ void *visit_expression_type_c::visit(lt_expression_c *symbol) {
 void *visit_expression_type_c::visit(gt_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1782,7 +1817,7 @@ void *visit_expression_type_c::visit(gt_expression_c *symbol) {
 void *visit_expression_type_c::visit(le_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1790,7 +1825,7 @@ void *visit_expression_type_c::visit(le_expression_c *symbol) {
 void *visit_expression_type_c::visit(ge_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1823,7 +1858,7 @@ void *visit_expression_type_c::visit(add_expression_c *symbol) {
   if (is_type(left_type, safedt_type_name_c)   && is_type(right_type, safetime_type_name_c)) 
     return (void *)&safedt_type_name;
 
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
@@ -1882,7 +1917,7 @@ void *visit_expression_type_c::visit(sub_expression_c *symbol) {
   if (is_type(left_type, safedt_type_name_c) && is_type(right_type, safedt_type_name_c))
     return (void *)&safetime_type_name;
 
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_MAGNITUDE_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
@@ -1902,7 +1937,7 @@ void *visit_expression_type_c::visit(mul_expression_c *symbol) {
   if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_compatible(right_type)) 
     return (void *)&safetime_type_name;
 
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
@@ -1922,14 +1957,14 @@ void *visit_expression_type_c::visit(div_expression_c *symbol) {
   if (is_type(left_type, safetime_type_name_c) && is_ANY_NUM_compatible(right_type)) 
     return (void *)&safetime_type_name;
 
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_NUM_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
 void *visit_expression_type_c::visit(mod_expression_c *symbol) {
   symbol_c *left_type  = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_INT_compatible);
+  return compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_INT_compatible, symbol->l_exp, symbol->r_exp);
 }
 
 
@@ -1956,27 +1991,57 @@ void *visit_expression_type_c::visit(neg_expression_c *symbol) {
 
 void *visit_expression_type_c::visit(not_expression_c *symbol) {
   symbol_c *type = base_type((symbol_c *)symbol->exp->accept(*this));
-  return compute_expression(type, type, &visit_expression_type_c::is_ANY_BIT_compatible);
+  return compute_expression(type, type, &visit_expression_type_c::is_ANY_BIT_compatible, NULL, symbol->exp);
 }
 
 
 void *visit_expression_type_c::visit(function_invocation_c *symbol) {
-  function_declaration_c *f_decl = function_symtable.find_value(symbol->function_name);
-  if (f_decl == function_symtable.end_value()) {
-    /* TODO: the following code is for standard library functions. We do not yet support this... */
-    void *res = compute_standard_function_default(symbol);
-    if (res != NULL) return res;
-    ERROR;
+  function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
+  function_symtable_t::iterator upper = function_symtable.upper_bound(symbol->function_name);
+  if (lower == function_symtable.end()) ERROR;
+
+  function_symtable_t::iterator second = lower;
+  second++;
+  if (second == upper) {
+    /* call to a function that is not overloaded. */	  
+    /* now check the semantics of the function call... */
+    /* If the syntax parser is working correctly, exactly one of the 
+     * following two symbols will be NULL, while the other is != NULL.
+     */
+    function_declaration_c *f_decl = function_symtable.get_value(lower);
+    if (symbol->   formal_param_list != NULL) check_formal_call   (symbol, f_decl);
+    if (symbol->nonformal_param_list != NULL) check_nonformal_call(symbol, f_decl);
+    /* Store the pointer to the declaration of the function being called.
+     * This data will be used by stage 4 to call the correct function.
+     * Mostly needed to disambiguate overloaded functions...
+     * See comments in absyntax.def for more details
+     */
+    symbol->called_function_declaration = f_decl;
+    return base_type(f_decl->type_name);
+  }  
+
+  /* This is a call to an overloaded function... */
+  if (debug) printf("visit_expression_type_c::visit(function_invocation_c *symbol): FOUND CALL TO OVERLOADED FUNCTION!!\n");
+  for(; lower != upper; lower++) {
+    if (debug) printf("visit_expression_type_c::visit(function_invocation_c *symbol): FOUND CALL TO OVERLOADED FUNCTION!! iterating...\n");
+    int error_count = 0; 
+    function_declaration_c *f_decl = function_symtable.get_value(lower);
+    if (symbol->   formal_param_list != NULL) check_formal_call   (symbol, f_decl, &error_count);
+    if (symbol->nonformal_param_list != NULL) check_nonformal_call(symbol, f_decl, false, &error_count);
+    if (0 == error_count) {
+      /* Store the pointer to the declaration of the function being called.
+       * This data will be used by stage 4 to call the correct function.
+       * Mostly needed to disambiguate overloaded functions...
+       * See comments in absyntax.def for more details
+       */
+      symbol->called_function_declaration = f_decl;
+      return base_type(f_decl->type_name);
+    }
   }
 
-  /* now check the semantics of the function call... */
-  /* If the syntax parser is working correctly, exactly one of the 
-   * following two symbols will be NULL, while the other is != NULL.
-   */
-  if (symbol->   formal_param_list != NULL) check_formal_call   (symbol, f_decl);
-  if (symbol->nonformal_param_list != NULL) check_nonformal_call(symbol, f_decl);
-
-  return base_type(f_decl->type_name);
+  /* No compatible function was found for this function call */
+  STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");
+  return NULL;
 }
 
 /********************/
@@ -2009,10 +2074,14 @@ void *visit_expression_type_c::visit(assignment_statement_c *symbol) {
     if (hi2 != NULL) printf("%s", hi2->value);
     printf("\n");
   } // if (debug)
-  
-  if (!is_valid_assignment(left_type, right_type))  {
-     STAGE3_ERROR(symbol, symbol, "data type mismatch in assignment statement!\n");
-  }
+
+  if        (NULL == left_type) {
+    STAGE3_ERROR(symbol->l_exp, symbol->l_exp, "Could not determine data type of expression (undefined variable or strcuture element?).\n");
+  } else if (NULL == right_type) {
+    STAGE3_ERROR(symbol->r_exp, symbol->r_exp, "Could not determine data type of expression (undefined variable or strcuture element?).\n");
+  } else if (!is_valid_assignment(left_type, right_type))
+    STAGE3_ERROR(symbol, symbol, "data type mismatch in assignment statement!\n");
+
   return NULL;
 }
 

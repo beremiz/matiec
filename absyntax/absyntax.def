@@ -538,6 +538,33 @@ SYM_REF2(var1_init_decl_c, var1_list, spec_init)
 /* | var1_list ',' variable_name */
 SYM_LIST(var1_list_c)
 
+/* | [var1_list ','] variable_name integer '..' */
+/* NOTE: This is an extension to the standard!!! */
+/* In order to be able to handle extensible standard functions
+ * (i.e. standard functions that may have a variable number of
+ * input parameters, such as AND(word#33, word#44, word#55, word#66),
+ * we have extended the acceptable syntax to allow var_name '..'
+ * in an input variable declaration.
+ *
+ * This allows us to parse the declaration of standard
+ * extensible functions and load their interface definition
+ * into the abstract syntax tree just like we do to other 
+ * user defined functions.
+ * This has the advantage that we can later do semantic
+ * checking of calls to functions (be it a standard or user defined
+ * function) in (almost) exactly the same way.
+ *
+ * The integer tells the compiler the number of the first parameter.
+ * for example, for ADD(IN1 := 11, IN2:=22), the index for IN starts off at 1.
+ * Some other standard library functions, such as MUX, has the extensible
+ * variable starting off from 0 (IN0, IN1, IN2, ...).
+ *
+ * Of course, we have a flag that disables this syntax when parsing user
+ * written code, so we only allow this extra syntax while parsing the 
+ * 'header' file that declares all the standard IEC 61131-3 functions.
+ */
+SYM_REF2(extensible_input_parameter_c, var_name, first_index)
+
 /* var1_list ':' array_spec_init */
 SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
 
@@ -632,7 +659,15 @@ SYM_REF2(single_byte_string_var_declaration_c, var1_list, single_byte_string_spe
 /*  STRING ['[' integer ']'] [ASSIGN single_byte_character_string] */
 /* integer ->may be NULL ! */
 /* single_byte_character_string ->may be NULL ! */
-SYM_REF2(single_byte_string_spec_c, integer, single_byte_character_string)
+SYM_REF2(single_byte_string_spec_c, string_spec, single_byte_character_string)
+
+/*   STRING ['[' integer ']'] */
+/* integer ->may be NULL ! */
+SYM_REF2(single_byte_limited_len_string_spec_c, string_type_name, character_string_len)
+
+/*  WSTRING ['[' integer ']'] */
+/* integer ->may be NULL ! */
+SYM_REF2(double_byte_limited_len_string_spec_c, string_type_name, character_string_len)
 
 /*  var1_list ':' double_byte_string_spec */
 SYM_REF2(double_byte_string_var_declaration_c, var1_list, double_byte_string_spec)
@@ -640,7 +675,7 @@ SYM_REF2(double_byte_string_var_declaration_c, var1_list, double_byte_string_spe
 /*  WSTRING ['[' integer ']'] [ASSIGN double_byte_character_string] */
 /* integer ->may be NULL ! */
 /* double_byte_character_string ->may be NULL ! */
-SYM_REF2(double_byte_string_spec_c, integer, double_byte_character_string)
+SYM_REF2(double_byte_string_spec_c, string_spec, double_byte_character_string)
 
 /*| VAR [RETAIN|NON_RETAIN] incompl_located_var_decl_list END_VAR */
 /* option ->may be NULL ! */
@@ -885,7 +920,10 @@ SYM_REF2(il_instruction_c, label, il_instruction)
 SYM_REF2(il_simple_operation_c, il_simple_operator, il_operand)
 
 /* | function_name [il_operand_list] */
-SYM_REF2(il_function_call_c, function_name, il_operand_list)
+/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4.
+ *       See the comment above function_invocation_c for more details 
+ */
+SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
 
 
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
@@ -904,7 +942,10 @@ SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list
 
 
 /* | function_name '(' eol_list [il_param_list] ')' */
-SYM_REF2(il_formal_funct_call_c, function_name, il_param_list)
+/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4.
+ *       See the comment above function_invocation_c for more details 
+ */
+SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
 
 /* | il_operand_list ',' il_operand */
 SYM_LIST(il_operand_list_c)
@@ -1004,7 +1045,17 @@ SYM_REF1(not_expression_c, exp)
 
 /*    formal_param_list -> may be NULL ! */
 /* nonformal_param_list -> may be NULL ! */
-SYM_REF3(function_invocation_c, function_name, formal_param_list, nonformal_param_list)
+/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4.
+ *       The IEC 61131-3 standard allows for overloaded standard functions. This means that some
+ *       function calls are not compeletely defined by the name of the function being called,
+ *       and need to be disambiguated with using the data types of the parameters being passed.
+ *       Stage 3 does this to verify semantic correctnes.
+ *       Stage 4 also needs to do this in order to determine which function to call.
+ *       It does not make sense to determine the exact function being called twice (once in stage 3,
+ *       and again in stage 4), so stage 3 will store this infor in the parameter called_function_declaration
+ *       for stage 4 to use it later on.
+ */
+SYM_REF3(function_invocation_c, function_name, formal_param_list, nonformal_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
 
 
 /********************/

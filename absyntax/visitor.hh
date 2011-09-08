@@ -78,31 +78,31 @@
 
 
 
-#define SYM_LIST(class_name_c)	\
+#define SYM_LIST(class_name_c, ...)	\
   virtual void *visit(class_name_c *symbol) = 0;
 
-#define SYM_TOKEN(class_name_c)	\
+#define SYM_TOKEN(class_name_c, ...)	\
   virtual void *visit(class_name_c *symbol) = 0;
 
-#define SYM_REF0(class_name_c)	\
+#define SYM_REF0(class_name_c, ...)	\
   virtual void *visit(class_name_c *symbol) = 0;
 
-#define SYM_REF1(class_name_c, ref1)		\
+#define SYM_REF1(class_name_c, ref1, ...)		\
   virtual void *visit(class_name_c *symbol) = 0;
 
-#define SYM_REF2(class_name_c, ref1, ref2)	\
+#define SYM_REF2(class_name_c, ref1, ref2, ...)	\
   virtual void *visit(class_name_c *symbol) = 0;
 
-#define SYM_REF3(class_name_c, ref1, ref2, ref3)	\
+#define SYM_REF3(class_name_c, ref1, ref2, ref3, ...)	\
   virtual void *visit(class_name_c *symbol) = 0;
 
-#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4)	\
+#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4, ...)	\
   virtual void *visit(class_name_c *symbol) = 0;
 
-#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5)		\
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)		\
   virtual void *visit(class_name_c *symbol) = 0;
 
-#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6)	\
+#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6, ...)	\
   virtual void *visit(class_name_c *symbol) = 0;
 
 class visitor_c {
@@ -127,31 +127,31 @@ class visitor_c {
 
 
 
-#define SYM_LIST(class_name_c)	\
+#define SYM_LIST(class_name_c, ...)	\
   virtual void *visit(class_name_c *symbol);
 
-#define SYM_TOKEN(class_name_c)	\
+#define SYM_TOKEN(class_name_c, ...)	\
   virtual void *visit(class_name_c *symbol);
 
-#define SYM_REF0(class_name_c)	\
+#define SYM_REF0(class_name_c, ...)	\
   virtual void *visit(class_name_c *symbol);
 
-#define SYM_REF1(class_name_c, ref1)		\
+#define SYM_REF1(class_name_c, ref1, ...)		\
   virtual void *visit(class_name_c *symbol);
 
-#define SYM_REF2(class_name_c, ref1, ref2)	\
+#define SYM_REF2(class_name_c, ref1, ref2, ...)	\
   virtual void *visit(class_name_c *symbol);
 
-#define SYM_REF3(class_name_c, ref1, ref2, ref3)	\
+#define SYM_REF3(class_name_c, ref1, ref2, ref3, ...)	\
   virtual void *visit(class_name_c *symbol);
 
-#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4)	\
+#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4, ...)	\
   virtual void *visit(class_name_c *symbol);
 
-#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5)		\
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)		\
   virtual void *visit(class_name_c *symbol);
 
-#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6)	\
+#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6, ...)	\
   virtual void *visit(class_name_c *symbol);
 
 

@@ -176,5 +176,35 @@ void *spec_init_sperator_c::visit(fb_name_decl_c *symbol) {
   return NULL;
 }
 
+
+/* STRING '[' integer ']' 
+ * STRING ASSIGN single_byte_character_string
+ * STRING '[' integer ']' ASSIGN single_byte_character_string
+ */
+void *spec_init_sperator_c::visit(single_byte_string_spec_c *symbol) {
+  TRACE("spec_init_sperator_c::single_byte_string_spec_c");
+  switch (search_what) {
+    case search_spec: return symbol->string_spec;
+    case search_init: return symbol->single_byte_character_string;
+  }
+  ERROR; /* should never occur */
+  return NULL;
+}
+
+/* WSTRING '[' integer ']' 
+ * WSTRING ASSIGN double_byte_character_string
+ * WSTRING '[' integer ']' ASSIGN double_byte_character_string
+ */
+void *spec_init_sperator_c::visit(double_byte_string_spec_c *symbol) {
+  TRACE("spec_init_sperator_c::double_byte_string_spec_c");
+  switch (search_what) {
+    case search_spec: return symbol->string_spec;
+    case search_init: return symbol->double_byte_character_string;
+  }
+  ERROR; /* should never occur */
+  return NULL;
+}
+
+
 spec_init_sperator_c *spec_init_sperator_c ::class_instance = NULL;
 spec_init_sperator_c::search_what_t spec_init_sperator_c::search_what;

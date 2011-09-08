@@ -90,6 +90,16 @@ class function_param_iterator_c : public null_visitor_c {
     symbol_c *current_param_default_value;
     param_direction_t current_param_direction;
     bool en_eno_param_implicit;
+    /* used when we reach an extensible parameter in the function declaration */
+    /* NOTE: this will handle syntax that is not in the standard.
+     *       It is used to handle the extensible standard functions
+     *       (e.g. AND(word#3, word#55, word#44); )
+     *       See absyntax.def or iec.y for more details.
+     */
+    bool current_param_is_extensible;
+    int  current_extensible_param_index;
+    int  _first_extensible_param_index;
+
     /* Which operation of the class was called...
      * Search a parameter, or iterate to the next parameter.
      */
@@ -97,6 +107,7 @@ class function_param_iterator_c : public null_visitor_c {
     operation_t current_operation;
 
   private:
+    int   cmp_extparam_names(const char* s1, const char* s2);
     void* handle_param_list(list_c *list);
     void* handle_single_param(symbol_c *var_name);
 
@@ -128,7 +139,8 @@ class function_param_iterator_c : public null_visitor_c {
     /* The seach() function does not in any way affect the internal state related 
      * to the iterate() function.
      * It will, however, affect the internal state necessary to correctly
-     * return the param_type() and default_value() of the found parameter.
+     * return the param_type(), default_value() and is_en_eno_param_implicit()
+     * of the found parameter.
      */
     identifier_c *search(symbol_c *param_name);
 
@@ -143,6 +155,16 @@ class function_param_iterator_c : public null_visitor_c {
     /* Returns if currently referenced parameter is an implicit defined EN/ENO parameter. */
     bool is_en_eno_param_implicit(void);
 
+    /* Returns if currently referenced parameter is an extensible parameter. */
+    /* extensible paramters only occur in some standard functions, e.g. AND(word#34, word#44, word#65); */
+    bool is_extensible_param(void);
+    /* Returns the index of the current extensible parameter. */             
+    /* If the current parameter is not an extensible paramter, returns -1 */
+    int extensible_param_index(void);
+    /* Returns the index of the first extensible parameter, or -1 if no extensible parameter found. */             
+    /* WARNING: Will only return the correct value _after_ an extensible parameter has been found! */
+    int first_extensible_param_index(void);
+    
     /* Returns the currently referenced parameter's data passing direction.
      * i.e. VAR_INPUT, VAR_OUTPUT or VAR_INOUT
      */

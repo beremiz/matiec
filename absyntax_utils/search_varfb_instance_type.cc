@@ -94,12 +94,14 @@
 search_varfb_instance_type_c::search_varfb_instance_type_c(symbol_c *search_scope): search_var_instance_decl(search_scope) {
   this->decompose_var_instance_name = NULL;
   this->current_structelement_name = NULL;
-  this->current_rawtype = NULL;
+  this->current_typeid = NULL;
+  this->current_basetypeid = NULL;
 }
 
-symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_name) {
+symbol_c *search_varfb_instance_type_c::get_type_decl(symbol_c *variable_name) {
   this->current_structelement_name = NULL;
-  this->current_rawtype = NULL;
+  this->current_typeid = NULL;
+  this->current_basetypeid = NULL;
   this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
   if (NULL == decompose_var_instance_name) ERROR;
 
@@ -112,10 +114,7 @@ symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_nam
 
   /* Now we try to find the variable instance declaration, to determine its type... */
   symbol_c *var_decl = search_var_instance_decl.get_decl(var_name_part);
-  if (NULL == var_decl) {
-    /* variable instance declaration not found! */
-      ERROR;
-  }
+  if (NULL == var_decl) ERROR;
 
   /* if it is a struct or function block, we must search the type
    * of the struct or function block member.
@@ -124,18 +123,38 @@ symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_nam
    * decompose_var_instance_name->get_next() when and if required...
    */
   symbol_c *res = (symbol_c *)var_decl->accept(*this);
-  if (NULL == res) ERROR;
+  /* NOTE: A Null result is not really an internal compiler error, but rather an error in 
+   * the IEC 61131-3 source code being compiled. This means we cannot just abort the compiler with ERROR.
+   * //   if (NULL == res) ERROR;
+   */
+  if (NULL == res) return NULL;
 
   /* make sure that we have decomposed all structure elements of the variable name */
   symbol_c *var_name = decompose_var_instance_name->next_part();
-  if (NULL != var_name) ERROR;
+  /* NOTE: A non-NULL result is not really an internal compiler error, but rather an error in 
+   * the IEC 61131-3 source code being compiled. 
+   *  (for example, 'int_var.struct_elem' in the source code, when 'int_var' is a simple integer,
+   *   and not a structure, will result in this result being non-NULL!)
+   * This means we cannot just abort the compiler with ERROR.
+   * //   if (NULL != var_name) ERROR;
+   */
+  if (NULL != var_name) return NULL;
 
   return res;
 }
 
+
+symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_name) {
+  symbol_c *res = get_type_decl(variable_name);
+  if (NULL == res) return NULL;
+  return (symbol_c *)base_type(res);
+}  
+
+
 unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) {
   this->current_structelement_name = NULL;
-  this->current_rawtype = NULL;
+  this->current_typeid = NULL;
+  this->current_basetypeid = NULL;
   this->is_complex = false;
   this->decompose_var_instance_name = new decompose_var_instance_name_c(variable_name);
   if (NULL == decompose_var_instance_name) ERROR;
@@ -171,12 +190,12 @@ unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) 
 }
 
 symbol_c *search_varfb_instance_type_c::get_type_id(symbol_c *variable_name) {
-  this->current_rawtype = NULL;
-  symbol_c *rawtype = this->get_basetype_decl(variable_name);
-  if (this->current_rawtype != NULL)
-    return this->current_rawtype;
+  this->current_typeid = NULL;
+  symbol_c *vartype = this->get_type_decl(variable_name);
+  if (this->current_typeid != NULL)
+    return this->current_typeid;
   else
-	return rawtype;
+    return vartype;
 }
 
 bool search_varfb_instance_type_c::type_is_complex(void) {
@@ -208,23 +227,40 @@ void *search_varfb_instance_type_c::base_type(symbol_c *symbol)	{
  * of a function block type...
  */
 void *search_varfb_instance_type_c::visit(identifier_c *type_name) {
+  /* we only store the new type id if none had been found yet.
+   * Since we will recursively carry on looking at the base type 
+   * to determine the base type declaration and id, we must only set this variable
+   * the first time.
+   * e.g. TYPE myint1_t : int    := 1;
+   *           myint2_t : int1_t := 2;
+   *           myint3_t : int2_t := 3;
+   *      END_TYPE;
+   *      VAR
+   *          myint1 : myint1_t;
+   *          myint2 : myint2_t;
+   *          myint3 : myint3_t;
+   *      END_VAR
+   *        
+   *     If we ask for typeid of     myint3, it must return myint3_t
+   *     If we ask for basetypeid of myint3, it must return int
+   *
+   *     When determining the data type of myint3, we will recursively go all the way
+   *     down to int, but we must still only store myint3_t as the base type id.
+   */
+  if (NULL == this->current_typeid)
+    this->current_typeid = type_name;
+  this->current_basetypeid = type_name;
+
   /* look up the type declaration... */
   symbol_c *fb_decl = function_block_type_symtable.find_value(type_name);
   if (fb_decl != function_block_type_symtable.end_value())
     /* Type declaration found!! */
     return fb_decl->accept(*this);
 
-  this->current_rawtype = type_name;
-
   /* No. It is not a function block, so we let
    * the base class take care of it...
    */
-  if (NULL == decompose_var_instance_name->next_part(false)) {
-    return base_type(type_name);
-  }
-  else {
-	return search_base_type_c::visit(type_name);
-  }
+  return search_base_type_c::visit(type_name);
 }
 
 /********************************/
@@ -251,8 +287,13 @@ void *search_varfb_instance_type_c::visit(array_specification_c *symbol) {
 }
 
 /*  structure_type_name ':' structure_specification */
+/* NOTE: this is only used inside a TYPE ... END_TYPE declaration. 
+ * It is never used directly when declaring a new variable! 
+ */
 void *search_varfb_instance_type_c::visit(structure_type_declaration_c *symbol) {
   this->is_complex = true;
+
+  if (NULL == current_structelement_name) ERROR;
   return symbol->structure_specification->accept(*this);
   /* NOTE: structure_specification will point to either a
    *       initialized_structure_c
@@ -264,9 +305,28 @@ void *search_varfb_instance_type_c::visit(structure_type_declaration_c *symbol) 
 /* structure_type_name ASSIGN structure_initialization */
 /* structure_initialization may be NULL ! */
 // SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
+/* NOTE: only the initialized structure is ever used when declaring a new variable instance */
 void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
   this->is_complex = true;
-  /* recursively find out the data type of var_name... */
+  if (NULL != current_structelement_name) ERROR;
+  
+  /* make sure that we have decomposed all strcuture elements of the variable name */
+  symbol_c *var_name = decompose_var_instance_name->next_part();
+  if (NULL == var_name) {
+    /* this is it... !
+     * No need to look any further...
+     * Note also that, unlike for the struct types, a function block may
+     * not be defined based on another (i.e. no inheritance is allowed),
+     * so this function block is already the most base type.
+     * We simply return it.
+     */
+    return (void *)symbol;
+   }
+
+  /* look for the var_name in the structure declaration */
+  current_structelement_name = var_name;
+
+  /* recursively find out the data type of current_structelement_name... */
   return symbol->structure_type_name->accept(*this);
 }
 
@@ -274,8 +334,7 @@ void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
 /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
 /* structure_element_declaration_list structure_element_declaration ';' */
 void *search_varfb_instance_type_c::visit(structure_element_declaration_list_c *symbol)	{
-  /* make sure that we have decomposed all structure elements of the variable name */
-  current_structelement_name = decompose_var_instance_name->next_part();
+  if (NULL == current_structelement_name) ERROR;
   /* now search the structure declaration */
   return visit_list(symbol);
 }
@@ -284,9 +343,14 @@ void *search_varfb_instance_type_c::visit(structure_element_declaration_list_c *
 void *search_varfb_instance_type_c::visit(structure_element_declaration_c *symbol) {
   if (NULL == current_structelement_name) ERROR;
 
-  if (compare_identifiers(symbol->structure_element_name, current_structelement_name) == 0)
+  if (compare_identifiers(symbol->structure_element_name, current_structelement_name) == 0) {
+    current_structelement_name = NULL;
+    /* found the type of the element we were looking for! */
     return symbol->spec_init->accept(*this);
+  }  
 
+  /* Did not find the type of the element we were looking for! */
+  /* Will keep looking... */
   return NULL;
 }
 
@@ -309,7 +373,6 @@ void *search_varfb_instance_type_c::visit(structure_element_initialization_c *sy
 // SYM_REF4(function_block_declaration_c, fblock_name, var_declarations, fblock_body, unused)
 void *search_varfb_instance_type_c::visit(function_block_declaration_c *symbol) {
   /* make sure that we have decomposed all strcuture elements of the variable name */
-
   symbol_c *var_name = decompose_var_instance_name->next_part();
   if (NULL == var_name) {
     /* this is it... !
@@ -329,7 +392,7 @@ void *search_varfb_instance_type_c::visit(function_block_declaration_c *symbol) 
      /* variable instance declaration not found! */
      return NULL;
    }
-
+#if 0
    /* We have found the declaration.
     * Should we look any further?
     */
@@ -342,4 +405,7 @@ void *search_varfb_instance_type_c::visit(function_block_declaration_c *symbol) 
   current_structelement_name = var_name;
   /* recursively find out the data type of var_name... */
   return symbol->var_declarations->accept(*this);
+#endif  
+  /* carry on recursively, in case the variable has more elements to be decomposed... */
+  return var_decl->accept(*this);
 }

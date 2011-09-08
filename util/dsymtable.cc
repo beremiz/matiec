@@ -91,6 +91,28 @@ void dsymtable_c<value_type, null_value>::insert_noduplicate(const symbol_c *sym
 #endif
 
 
+
+/* Determine how many entries are associated to key identifier_str */ 
+/* returns:
+ *         0: if no entry is found
+ *         1: if 1 entry is found
+ *         2: if more than 1 entry is found 
+ */
+template<typename value_type, value_type null_value>
+int dsymtable_c<value_type, null_value>::multiplicity(const char *identifier_str) {
+  iterator lower = _base.lower_bound(identifier_str);
+  if (lower == _base.end()) return 0;
+
+  iterator upper = _base.upper_bound(identifier_str);
+  iterator second = lower;
+  second++;
+  
+  if (second == upper) return 1;
+  
+  return 2;
+}
+
+
 /* returns null_value if not found! */
 template<typename value_type, value_type null_value>
 value_type dsymtable_c<value_type, null_value>::find_value(const char *identifier_str) {
@@ -104,11 +126,11 @@ value_type dsymtable_c<value_type, null_value>::find_value(const char *identifie
 
 
 template<typename value_type, value_type null_value>
-value_type dsymtable_c<value_type, null_value>::find_value(const symbol_c *symbol) {
+const char * dsymtable_c<value_type, null_value>::symbol_to_string(const symbol_c *symbol) {
   const token_c *name = dynamic_cast<const token_c *>(symbol);
   if (name == NULL)
     ERROR;
-  return find_value(name->value);
+  return name->value;
 }
 
 

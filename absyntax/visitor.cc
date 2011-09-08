@@ -82,19 +82,19 @@ null_visitor_c::~null_visitor_c(void) {return;}
 #define SYM_REF1(class_name_c, ref1)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF2(class_name_c, ref1, ref2)	\
+#define SYM_REF2(class_name_c, ref1, ref2, ...)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF3(class_name_c, ref1, ref2, ref3)	\
+#define SYM_REF3(class_name_c, ref1, ref2, ref3, ...)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4)	\
+#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4, ...)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5)	\
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6)	\
+#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6, ...)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
 
@@ -148,31 +148,31 @@ void *iterator_visitor_c::visit(class_name_c *symbol) {	\
   return NULL;						\
 }
 
-#define SYM_REF2(class_name_c, ref1, ref2)		\
+#define SYM_REF2(class_name_c, ref1, ref2, ...)		\
 void *iterator_visitor_c::visit(class_name_c *symbol) {	\
   if (symbol->ref1!=NULL) symbol->ref1->accept(*this);	\
   if (symbol->ref2!=NULL) symbol->ref2->accept(*this);	\
   return NULL;						\
 }
 
-#define SYM_REF3(class_name_c, ref1, ref2, ref3)	\
-void *iterator_visitor_c::visit(class_name_c *symbol) {	\
-  if (symbol->ref1) symbol->ref1->accept(*this);	\
-  if (symbol->ref2) symbol->ref2->accept(*this);	\
-  if (symbol->ref3) symbol->ref3->accept(*this);	\
-  return NULL;						\
+#define SYM_REF3(class_name_c, ref1, ref2, ref3, ...)			\
+void *iterator_visitor_c::visit(class_name_c *symbol) {			\
+  if (symbol->ref1) symbol->ref1->accept(*this);			\
+  if (symbol->ref2) symbol->ref2->accept(*this);			\
+  if (symbol->ref3) symbol->ref3->accept(*this);			\
+  return NULL;								\
 }
 
-#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4)	\
-void *iterator_visitor_c::visit(class_name_c *symbol) {	\
-  if (symbol->ref1) symbol->ref1->accept(*this);	\
-  if (symbol->ref2) symbol->ref2->accept(*this);	\
-  if (symbol->ref3) symbol->ref3->accept(*this);	\
-  if (symbol->ref4) symbol->ref4->accept(*this);	\
-  return NULL;						\
+#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4, ...)		\
+void *iterator_visitor_c::visit(class_name_c *symbol) {			\
+  if (symbol->ref1) symbol->ref1->accept(*this);			\
+  if (symbol->ref2) symbol->ref2->accept(*this);			\
+  if (symbol->ref3) symbol->ref3->accept(*this);			\
+  if (symbol->ref4) symbol->ref4->accept(*this);			\
+  return NULL;								\
 }
 
-#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5)		\
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)	\
 void *iterator_visitor_c::visit(class_name_c *symbol) {			\
   if (symbol->ref1) symbol->ref1->accept(*this);			\
   if (symbol->ref2) symbol->ref2->accept(*this);			\
@@ -182,7 +182,7 @@ void *iterator_visitor_c::visit(class_name_c *symbol) {			\
   return NULL;								\
 }
 
-#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6)	\
+#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6, ...)	\
 void *iterator_visitor_c::visit(class_name_c *symbol) {			\
   if (symbol->ref1) symbol->ref1->accept(*this);			\
   if (symbol->ref2) symbol->ref2->accept(*this);			\
@@ -250,7 +250,7 @@ void *search_visitor_c::visit(class_name_c *symbol) {		\
   return NULL;							\
 }
 
-#define SYM_REF2(class_name_c, ref1, ref2)			\
+#define SYM_REF2(class_name_c, ref1, ref2, ...)			\
 void *search_visitor_c::visit(class_name_c *symbol) {		\
   void *res = NULL;						\
   if (symbol->ref1) res =  symbol->ref1->accept(*this);		\
@@ -259,7 +259,7 @@ void *search_visitor_c::visit(class_name_c *symbol) {		\
   return NULL;							\
 }
 
-#define SYM_REF3(class_name_c, ref1, ref2, ref3)		\
+#define SYM_REF3(class_name_c, ref1, ref2, ref3, ...)		\
 void *search_visitor_c::visit(class_name_c *symbol) {		\
   void *res = NULL;						\
   if (symbol->ref1) res =  symbol->ref1->accept(*this);		\
@@ -270,7 +270,7 @@ void *search_visitor_c::visit(class_name_c *symbol) {		\
   return NULL;							\
 }
 
-#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4)		\
+#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4, ...)		\
 void *search_visitor_c::visit(class_name_c *symbol) {		\
   void *res = NULL;						\
   if (symbol->ref1) res =  symbol->ref1->accept(*this);		\
@@ -283,7 +283,7 @@ void *search_visitor_c::visit(class_name_c *symbol) {		\
   return NULL;							\
 }
 
-#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5)		\
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)		\
 void *search_visitor_c::visit(class_name_c *symbol) {			\
   void *res = NULL;							\
   if (symbol->ref1) res =  symbol->ref1->accept(*this);			\
@@ -298,7 +298,7 @@ void *search_visitor_c::visit(class_name_c *symbol) {			\
   return NULL;								\
 }
 
-#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6)	\
+#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6, ...)	\
 void *search_visitor_c::visit(class_name_c *symbol) {			\
   void *res = NULL;							\
   if (symbol->ref1) res =  symbol->ref1->accept(*this);			\

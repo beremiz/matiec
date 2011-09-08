@@ -104,6 +104,7 @@ class function_call_param_iterator_c : public null_visitor_c {
 
     /* Search for the value passed to the parameter named <param_name>...  */
     symbol_c *search_f(symbol_c *param_name);
+    symbol_c *search_f(const char *param_name);
 
     /* Returns the value being passed to the current parameter. */
     symbol_c *get_current_value(void);

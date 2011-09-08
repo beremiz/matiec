@@ -41,10 +41,11 @@
 //#include "../stage1_2/iec.hh" /* required for BOGUS_TOKEN_ID, etc... */
 #include "visitor.hh"
 
-#define ABORT(str) {printf("ERROR: %s\n", str); exit(0);}
+#define ERROR error_exit(__FILE__,__LINE__)
+/* function defined in main.cc */
+extern void error_exit(const char *file_name, int line_no);
 
-
-
+#define ABORT(str) {printf("ERROR: %s\n", str); ERROR;}
 
 
 
@@ -94,7 +95,7 @@ list_c::list_c(symbol_c *elem,
   add_element(elem);
 }
 
-/* insert a new element */
+/* append a new element to the end of the list */
 void list_c::add_element(symbol_c *elem) {
 //printf("list_c::add_element()\n");
   n++;
@@ -125,10 +126,24 @@ void list_c::add_element(symbol_c *elem) {
   }
 }
 
+/* insert a new element before position pos. */
+/* To insert into the begining of list, call with pos=0  */
+/* To insert into the end of list, call with pos=list->n */
+void list_c::insert_element(symbol_c *elem, int pos) {
+  int i;
+  if (pos > n) ERROR;
+  
+  /* add new element to end of list. Basically alocate required memory... */
+  /* will also increment n by 1 ! */
+  add_element(elem);
+  /* if not inserting into end position, shift all elements up one position, to open up a slot in pos for new element */
+  if (pos < (n-1)) for (i = n-2; i >= pos; i--) elements[i+1] = elements[i];
+  elements[pos] = elem;
+}
 
 
 
-#define SYM_LIST(class_name_c)									\
+#define SYM_LIST(class_name_c, ...)								\
 class_name_c::class_name_c(									\
                            int fl, int fc, const char *ffile, long int forder,			\
                            int ll, int lc, const char *lfile, long int lorder)			\
@@ -139,14 +154,14 @@ class_name_c::class_name_c(symbol_c *elem, 							\
 			:list_c(elem, fl, fc, ffile, forder, ll, lc, lfile, lorder) {}		\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
-#define SYM_TOKEN(class_name_c)									\
+#define SYM_TOKEN(class_name_c, ...)								\
 class_name_c::class_name_c(const char *value, 							\
                            int fl, int fc, const char *ffile, long int forder,			\
                            int ll, int lc, const char *lfile, long int lorder)			\
 			:token_c(value, fl, fc, ffile, forder, ll, lc, lfile, lorder) {}	\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
-#define SYM_REF0(class_name_c)									\
+#define SYM_REF0(class_name_c, ...)								\
 class_name_c::class_name_c(									\
                            int fl, int fc, const char *ffile, long int forder,			\
                            int ll, int lc, const char *lfile, long int lorder)			\
@@ -154,7 +169,7 @@ class_name_c::class_name_c(									\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
-#define SYM_REF1(class_name_c, ref1)								\
+#define SYM_REF1(class_name_c, ref1, ...)							\
 class_name_c::class_name_c(symbol_c *ref1,							\
                            int fl, int fc, const char *ffile, long int forder,			\
                            int ll, int lc, const char *lfile, long int lorder)			\
@@ -164,7 +179,7 @@ class_name_c::class_name_c(symbol_c *ref1,							\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
-#define SYM_REF2(class_name_c, ref1, ref2)							\
+#define SYM_REF2(class_name_c, ref1, ref2, ...)							\
 class_name_c::class_name_c(symbol_c *ref1,							\
 			   symbol_c *ref2,							\
                            int fl, int fc, const char *ffile, long int forder,			\
@@ -176,7 +191,7 @@ class_name_c::class_name_c(symbol_c *ref1,							\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
-#define SYM_REF3(class_name_c, ref1, ref2, ref3)						\
+#define SYM_REF3(class_name_c, ref1, ref2, ref3, ...)						\
 class_name_c::class_name_c(symbol_c *ref1,							\
 			   symbol_c *ref2,							\
 			   symbol_c *ref3,							\
@@ -190,7 +205,7 @@ class_name_c::class_name_c(symbol_c *ref1,							\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
-#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4)						\
+#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4, ...)					\
 class_name_c::class_name_c(symbol_c *ref1,							\
 			   symbol_c *ref2,							\
 			   symbol_c *ref3,							\
@@ -206,7 +221,7 @@ class_name_c::class_name_c(symbol_c *ref1,							\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
-#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5)					\
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)				\
 class_name_c::class_name_c(symbol_c *ref1,							\
 			   symbol_c *ref2,							\
 			   symbol_c *ref3,							\
@@ -225,7 +240,7 @@ void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
 
 
-#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6)				\
+#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6, ...)				\
 class_name_c::class_name_c(symbol_c *ref1,							\
 			   symbol_c *ref2,							\
 			   symbol_c *ref3,							\

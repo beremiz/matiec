@@ -190,10 +190,18 @@ class visit_expression_type_c: public search_constant_type_c {
     void check_il_fbcall(symbol_c *symbol, const char *input_operator);
     /* check the semantics of a FB or Function non-formal call */
     /* e.g. foo(1, 2, 3, 4);  */
-    void check_nonformal_call(symbol_c *f_call, symbol_c *f_decl, bool use_il_defvar = false);
+    /* If error_count pointer is NULL, print out error messages.
+     * If error_count pointer is != NULL, do not print out error messages, but tally up
+     * how many errors were found.
+     */
+    void check_nonformal_call(symbol_c *f_call, symbol_c *f_decl, bool use_il_defvar = false, int *error_count = NULL);
     /* check the semantics of a FB or Function formal call */
     /* e.g. foo(IN1 := 1, OUT1 =>x, EN := true);  */
-    void check_formal_call(symbol_c *f_call, symbol_c *f_decl);
+    /* If error_count pointer is NULL, print out error messages.
+     * If error_count pointer is != NULL, do not print out error messages, but tally up
+     * how many errors were found.
+     */
+    void check_formal_call(symbol_c *f_call, symbol_c *f_decl, int *error_count = NULL);
 
 
     void *compute_standard_function_default(function_invocation_c *st_symbol, il_formal_funct_call_c *il_symbol);
@@ -206,7 +214,7 @@ class visit_expression_type_c: public search_constant_type_c {
 //    symbol_c *compute_numeric_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
 //    symbol_c *compute_expression(symbol_c *left_exp, symbol_c *right_exp, is_data_type_t is_data_type);
     symbol_c *compute_expression(symbol_c *left_type, symbol_c *right_type, is_data_type_t is_data_type,
-                                 symbol_c *left_expr=NULL, symbol_c *right_expr=NULL);
+                                 symbol_c *left_expr, symbol_c *right_expr);
 
 
     /* a helper function... */

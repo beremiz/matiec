@@ -519,7 +519,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
               s4o.print("activated");
             }
             if (strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
-              s4o.print("active && __TIME_CMP(");
+              s4o.print("active && __time_cmp(");
               print_step_argument(current_step, "elapsed_time");
               s4o.print(", ");
               symbol->action_time->accept(*this);
@@ -640,7 +640,9 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       /* generate elapsed_time initializations */
       s4o.print(s4o.indent_spaces + "// Calculate elapsed_time\n");
       s4o.print(s4o.indent_spaces +"current_time = __CURRENT_TIME;\n");
-      s4o.print(s4o.indent_spaces +"elapsed_time = __time_sub(__BOOL_LITERAL(TRUE), NULL, current_time, ");
+//       s4o.print(s4o.indent_spaces +"elapsed_time = __time_sub(__BOOL_LITERAL(TRUE), NULL, current_time, ");
+//       s4o.print(s4o.indent_spaces +"elapsed_time = SUB_TIME(__BOOL_LITERAL(TRUE), NULL, current_time, ");
+      s4o.print(s4o.indent_spaces +"elapsed_time = __time_sub(current_time, ");
       print_variable_prefix();
       s4o.print("__lasttick_time);\n");
       s4o.print(s4o.indent_spaces);
@@ -686,7 +688,9 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("__step_list[i].elapsed_time = __time_add(__BOOL_LITERAL(TRUE), NULL, ");
+//      s4o.print("__step_list[i].elapsed_time = __time_add(__BOOL_LITERAL(TRUE), NULL, ");
+//      s4o.print("__step_list[i].elapsed_time = ADD_TIME(__BOOL_LITERAL(TRUE), NULL, ");
+      s4o.print("__step_list[i].elapsed_time = __time_add(");
       print_variable_prefix();
       s4o.print("__step_list[i].elapsed_time, elapsed_time);\n");
       s4o.indent_left();
@@ -710,17 +714,19 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       print_variable_prefix();
       s4o.print("__action_list[i].reset = 0;\n");
       s4o.print(s4o.indent_spaces + "if (");
-      s4o.print("__TIME_CMP(");
+      s4o.print("__time_cmp(");
       print_variable_prefix();
       s4o.print("__action_list[i].set_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0)) > 0) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("__action_list[i].set_remaining_time = __time_sub(__BOOL_LITERAL(TRUE), NULL, ");
+//       s4o.print("__action_list[i].set_remaining_time = __time_sub(__BOOL_LITERAL(TRUE), NULL, ");
+//       s4o.print("__action_list[i].set_remaining_time = SUB_TIME(__BOOL_LITERAL(TRUE), NULL, ");
+      s4o.print("__action_list[i].set_remaining_time = __time_sub(");
       print_variable_prefix();
       s4o.print("__action_list[i].set_remaining_time, elapsed_time);\n");
       s4o.print(s4o.indent_spaces + "if (");
-      s4o.print("__TIME_CMP(");
+      s4o.print("__time_cmp(");
       print_variable_prefix();
       s4o.print("__action_list[i].set_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0)) <= 0) {\n");
       s4o.indent_right();
@@ -735,17 +741,19 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
       s4o.print(s4o.indent_spaces + "if (");
-      s4o.print("__TIME_CMP(");
+      s4o.print("__time_cmp(");
       print_variable_prefix();
       s4o.print("__action_list[i].reset_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0)) > 0) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-      s4o.print("__action_list[i].reset_remaining_time = __time_sub(__BOOL_LITERAL(TRUE), NULL, ");
+//       s4o.print("__action_list[i].reset_remaining_time = __time_sub(__BOOL_LITERAL(TRUE), NULL, ");
+//       s4o.print("__action_list[i].reset_remaining_time = SUB_TIME(__BOOL_LITERAL(TRUE), NULL, ");
+      s4o.print("__action_list[i].reset_remaining_time = __time_sub(");
       print_variable_prefix();
       s4o.print("__action_list[i].reset_remaining_time, elapsed_time);\n");
       s4o.print(s4o.indent_spaces + "if (");
-      s4o.print("__TIME_CMP(");
+      s4o.print("__time_cmp(");
       print_variable_prefix();
       s4o.print("__action_list[i].reset_remaining_time, __time_to_timespec(1, 0, 0, 0, 0, 0)) <= 0) {\n");
       s4o.indent_right();

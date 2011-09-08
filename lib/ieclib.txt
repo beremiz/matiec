@@ -21,12 +21,12 @@
  * used in safety-critical situations without a full and competent review.
  *)
 
-(* This is the library conatining the standard function blocks defined in the standard. *)
+(* This is the library containing the standard function blocks defined in the standard. *)
 
 (* FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10) *)
 
 (* The standard functions *)
-(*{#include "standard_functions.txt" }*)
+{#include "standard_functions.txt" }
 
 (* The standard function blocks *)
 {#include "edge_detection.txt" }
@@ -39,6 +39,6 @@
 {#include "pid_st.txt" }
 {#include "ramp_st.txt" }
 
-(* From later versions of the standard *)
+(* Not in the standard, but useful nonetheless. *)
 {#include "sema.txt" }
 

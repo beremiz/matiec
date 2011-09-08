@@ -221,6 +221,13 @@ symbol_c *function_call_param_iterator_c::search_f(symbol_c *param_name) {
   return (symbol_c *)res;
 }
 
+/* Search for the value passed to the parameter named <param_name>...  */
+symbol_c *function_call_param_iterator_c::search_f(const char *param_name) {
+  identifier_c tmp_indentifier(param_name);
+  return search_f(&tmp_indentifier);
+}
+
+
 /* Returns the value being passed to the current parameter. */
 symbol_c *function_call_param_iterator_c::get_current_value(void) {
   return current_value;
