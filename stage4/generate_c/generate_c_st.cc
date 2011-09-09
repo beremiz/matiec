@@ -227,9 +227,9 @@ void *print_setter(symbol_c* symbol,
 void *visit(subrange_c *symbol) {
   switch (wanted_casegeneration) {
     case subrange_cg:
-      s4o.print("case_expression >= ");
+      s4o.print("__case_expression >= ");
       symbol->lower_limit->accept(*this);
-      s4o.print(" && case_expression <= ");
+      s4o.print(" && __case_expression <= ");
       symbol->upper_limit->accept(*this);
       break;
     default:
@@ -1077,16 +1077,16 @@ void *visit(case_statement_c *symbol) {
   symbol_c *expression_type = search_expression_type->get_type(symbol->expression);
   s4o.print("{\n");
   s4o.indent_right();
-  if (search_base_type.type_is_enumerated(expression_type)) {
-	s4o.print(s4o.indent_spaces);
-	expression_type->accept(*this);
-	s4o.print(" case_expression = ");
-  }
-  else {
-	s4o.print(s4o.indent_spaces + "IEC_LINT case_expression = (IEC_LINT)");
-  }
+  s4o.print(s4o.indent_spaces);
+  if (search_expression_type->is_literal_integer_type(expression_type))
+	search_expression_type->lint_type_name.accept(*this);
+  else if (search_expression_type->is_literal_real_type(expression_type))
+	search_expression_type->lreal_type_name.accept(*this);
+  else
+    expression_type->accept(*this);
+  s4o.print(" __case_expression = ");
   symbol->expression->accept(*this);
-  s4o.print(";\n" + s4o.indent_spaces + "switch (case_expression) {\n");
+  s4o.print(";\n" + s4o.indent_spaces + "switch (__case_expression) {\n");
   s4o.indent_right();
   wanted_casegeneration = single_cg;
   symbol->case_element_list->accept(*this);
