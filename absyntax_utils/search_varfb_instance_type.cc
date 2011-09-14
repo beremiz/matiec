@@ -269,20 +269,19 @@ void *search_varfb_instance_type_c::visit(identifier_c *type_name) {
 
 /*  identifier ':' array_spec_init */
 void *search_varfb_instance_type_c::visit(array_type_declaration_c *symbol) {
-  this->is_complex = true;
   return symbol->array_spec_init->accept(*this);
 }
     
 /* array_specification [ASSIGN array_initialization] */
 /* array_initialization may be NULL ! */
 void *search_varfb_instance_type_c::visit(array_spec_init_c *symbol) {
-  this->is_complex = true;
   return symbol->array_specification->accept(*this);
 }
 
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *search_varfb_instance_type_c::visit(array_specification_c *symbol) {
   this->is_complex = true;
+  this->current_typeid = symbol;
   return symbol->non_generic_type_name->accept(*this);
 }
 

@@ -70,10 +70,9 @@ class generate_c_typedecl_c: public generate_c_base_c {
       arrayderiveddeclaration_bd,
       arraybasetype_bd,
       arraybasetypeincl_bd,
-      arraysubrange_bd,
-      arraytranslateindex_bd
+      arraysubrange_bd
     } basetypedeclaration_t;
-    
+
     basetypedeclaration_t current_basetypedeclaration;
 
     void print_integer(unsigned int integer) {
@@ -373,21 +372,6 @@ void *visit(array_type_declaration_c *symbol) {
   }
   s4o_incl.print(")\n");
 
-  if (search_base_type.type_is_subrange(symbol->identifier)) {
-	s4o.print("#define __CHECK_");
-	current_type_name->accept(*this);
-	s4o.print(" __CHECK_");
-	current_basetypedeclaration = arraybasetype_bd;
-	symbol->array_spec_init->accept(*this);
-	current_basetypedeclaration = none_bd;
-	s4o.print("\n");
-  }
-
-  current_basetypedeclaration = arraytranslateindex_bd;
-  symbol->array_spec_init->accept(*this);
-  current_basetypedeclaration = none_bd;
-  s4o.print("\n");
-
   current_type_name = NULL;
   current_typedefinition = none_td;
 
@@ -403,18 +387,6 @@ void *visit(array_spec_init_c *symbol) {
     switch (current_basetypedeclaration) {
 	  case arrayderiveddeclaration_bd:
 	    array_is_derived = dynamic_cast<identifier_c *>(symbol->array_specification) != NULL;
-	    break;
-	  case arraytranslateindex_bd:
-	    if (!array_is_derived)
-		  symbol->array_specification->accept(*this);
-	    s4o.print("#define __");
-	    current_type_name->accept(*this);
-	    s4o.print("_TRANSIDX(row, index) __");
-	    if (array_is_derived)
-		   symbol->array_specification->accept(*this);
-	    else
-		   current_type_name->accept(*this);
-	    s4o.print("_TRANSIDX##row(index)");
 	    break;
 	  default:
 	    if (array_is_derived)
@@ -440,7 +412,6 @@ void *visit(array_specification_c *symbol) {
       symbol->non_generic_type_name->accept(*basedecl);
       break;
     case arraysubrange_bd:
-    case arraytranslateindex_bd:
       symbol->array_subrange_list->accept(*this);
       break;
     default:
@@ -452,19 +423,7 @@ void *visit(array_specification_c *symbol) {
 /* helper symbol for array_specification */
 /* array_subrange_list ',' subrange */
 void *visit(array_subrange_list_c *symbol) {
-  if (current_basetypedeclaration == arraytranslateindex_bd) {
-    for (int i = 0; i < symbol->n; i++) {
-      s4o.print("#define __");
-      current_type_name->accept(*this);
-      s4o.print("_TRANSIDX");
-      print_integer(i);
-      s4o.print("(index) (index) - ");
-      symbol->elements[i]->accept(*this);
-      s4o.print("\n");
-    }
-  }
-  else
-    print_list(symbol);
+  print_list(symbol);
   return NULL;
 }
 
@@ -491,6 +450,15 @@ void *visit(simple_type_declaration_c *symbol) {
   s4o_incl.print(",");
   symbol->simple_spec_init->accept(*this);
   s4o_incl.print(")\n");
+
+  if (search_base_type.type_is_subrange(symbol->simple_type_name)) {
+	s4o.print("#define __CHECK_");
+	current_type_name->accept(*this);
+	s4o.print(" __CHECK_");
+	symbol->simple_spec_init->accept(*this);
+	s4o.print("\n");
+  }
+
   return NULL;
 }
 

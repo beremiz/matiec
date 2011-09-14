@@ -3004,6 +3004,7 @@ array_initial_elements_list:
 array_initial_elements:
   array_initial_element
 | integer '(' ')'
+	{$$ = new array_initial_elements_c($1, NULL, locloc(@$));}
 | integer '(' array_initial_element ')'
 	{$$ = new array_initial_elements_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */

@@ -25,65 +25,156 @@
  *
  */
 
-typedef struct
-{
-  symbol_c *symbol;
-} SYMBOL;
-
-typedef enum {
-  none_lt,
-  input_lt,
-  output_lt,
-  memory_lt
-} locationtype_t;
 
 
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
 /***********************************************************************/
-
 
 class search_location_type_c: public iterator_visitor_c {
 
   public:
+    typedef enum {
+      none_lt,
+      input_lt,
+      output_lt,
+      memory_lt
+    } locationtype_t;
+
     locationtype_t current_location_type;
 
   public:
-	search_location_type_c(void) {}
+    search_location_type_c(void) {}
 
-	virtual ~search_location_type_c(void) {}
+    virtual ~search_location_type_c(void) {}
 
-	locationtype_t get_location_type(symbol_c *symbol) {
+    locationtype_t get_location_type(symbol_c *symbol) {
       current_location_type = none_lt;
       symbol->accept(*this);
       if (current_location_type == none_lt) ERROR;
       return current_location_type;
-	}
+    }
 
   private:
 
-	void *visit(incompl_location_c* symbol) {
+    void *visit(incompl_location_c* symbol) {
       if (symbol->value[1] == 'I')
         current_location_type = input_lt;
-	  else if (symbol->value[1] == 'Q')
+     else if (symbol->value[1] == 'Q')
         current_location_type = output_lt;
-	  else if (symbol->value[1] == 'M')
+     else if (symbol->value[1] == 'M')
         current_location_type = memory_lt;
       return NULL;
-	}
+    }
 
-	void *visit(direct_variable_c *symbol) {
+    void *visit(direct_variable_c *symbol) {
       if (symbol->value[1] == 'I')
         current_location_type = input_lt;
-	  else if (symbol->value[1] == 'Q')
+     else if (symbol->value[1] == 'Q')
         current_location_type = output_lt;
-	  else if (symbol->value[1] == 'M')
+     else if (symbol->value[1] == 'M')
         current_location_type = memory_lt;
       return NULL;
-	}
+    }
 };
 
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+
+class search_type_symbol_c: public iterator_visitor_c {
+
+  public:
+    typedef enum {
+      none_vtc,
+      variable_vtc,
+      array_vtc,
+      structure_vtc,
+      function_block_vtc
+    } vartypecategory_t;
+
+    vartypecategory_t current_var_type_category;
+
+  private:
+    symbol_c *current_var_type_symbol;
+    symbol_c *current_var_type_name;
+    search_base_type_c search_base_type;
+    search_fb_typedecl_c *search_fb_typedecl;
+
+  public:
+    search_type_symbol_c(symbol_c *scope) {
+      search_fb_typedecl = new search_fb_typedecl_c(scope);
+    }
+
+    virtual ~search_type_symbol_c(void) {
+      delete search_fb_typedecl;
+    }
+
+    symbol_c *get_type_symbol(symbol_c* symbol) {
+      this->current_var_type_category = variable_vtc;
+      this->current_var_type_symbol = NULL;
+      this->current_var_type_name = NULL;
+
+      symbol_c* var_type_symbol = spec_init_sperator_c::get_spec(symbol);
+      if (var_type_symbol == NULL) {
+        var_type_symbol = symbol;
+      }
+
+      var_type_symbol->accept(*this);
+
+      if (this->current_var_type_symbol == NULL)
+    	this->current_var_type_symbol = var_type_symbol;
+
+      return (this->current_var_type_symbol);
+    }
+
+    symbol_c *get_current_type_name(void) {
+      if (this->current_var_type_name == NULL)
+    	return (this->current_var_type_symbol);
+
+      return (this->current_var_type_name);
+    }
+
+    void *visit(identifier_c* symbol) {
+      if (this->current_var_type_name == NULL) {
+        this->current_var_type_name = symbol;
+
+        this->current_var_type_symbol = search_fb_typedecl->get_decl(this->current_var_type_name);
+        if (this->current_var_type_symbol != NULL)
+          this->current_var_type_category = function_block_vtc;
+
+        else {
+          this->current_var_type_symbol = (symbol_c *)(this->current_var_type_name->accept(search_base_type));
+          this->current_var_type_symbol->accept(*this);
+        }
+      }
+      return NULL;
+    }
+
+    void *visit(array_specification_c* symbol) {
+      this->current_var_type_category = array_vtc;
+
+      if (this->current_var_type_name == NULL)
+        this->current_var_type_name = symbol->non_generic_type_name;
+
+      return NULL;
+    }
+
+    void *visit(structure_element_declaration_list_c* symbol) {
+      this->current_var_type_category = structure_vtc;
+      return NULL;
+    }
+
+};
 
 /***********************************************************************/
 /***********************************************************************/
@@ -97,6 +188,11 @@ class search_location_type_c: public iterator_visitor_c {
 class generate_var_list_c: protected generate_c_typedecl_c {
   
   public:
+    typedef struct
+    {
+      symbol_c *symbol;
+    } SYMBOL;
+
     typedef enum {
       none_dt,
       programs_dt,
@@ -106,18 +202,14 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     declarationtype_t current_declarationtype;
     
     typedef enum {
-      none_vtc,
-      variable_vtc,
-      external_vtc,
-      located_input_vtc,
-      located_memory_vtc,
-      located_output_vtc,
-      array_vtc,
-      structure_vtc,
-      function_block_vtc
-    } vartypecategory_t;
-    
-    vartypecategory_t current_var_type_category;
+      none_vcc,
+      external_vcc,
+      located_input_vcc,
+      located_memory_vcc,
+      located_output_vcc,
+    } varclasscategory_t;
+
+    varclasscategory_t current_var_class_category;
     
   private:
     symbol_c *current_var_type_symbol;
@@ -128,49 +220,26 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     unsigned int action_number;
     bool configuration_defined;
     std::list<SYMBOL> current_symbol_list;
-    search_base_type_c search_base_type;
-    search_fb_typedecl_c *search_fb_typedecl;
+    search_type_symbol_c *search_type_symbol;
     
   public:
     generate_var_list_c(stage4out_c *s4o_ptr, symbol_c *scope)
     : generate_c_typedecl_c(s4o_ptr) {
-      search_fb_typedecl = new search_fb_typedecl_c(scope);
+      search_type_symbol = new search_type_symbol_c(scope);
       current_var_number = 0;
-      current_var_type_symbol = current_var_type_name = NULL;
+      current_var_type_symbol = NULL;
+      current_var_type_name = NULL;
       current_declarationtype = none_dt;
-      current_var_type_category = none_vtc;
+      current_var_class_category = none_vcc;
     }
     
     ~generate_var_list_c(void) {
-      delete search_fb_typedecl;
+      delete search_type_symbol;
     }
     
     void update_var_type_symbol(symbol_c *symbol) {
-      
-      this->current_var_type_name = spec_init_sperator_c::get_spec(symbol);
-      if (this->current_var_type_name == NULL) {
-        std::list<SYMBOL>::iterator pt;
-        for(pt = current_symbol_list.begin(); pt != current_symbol_list.end(); pt++) {
-          fprintf(stderr, "%s.", ((identifier_c*)(pt->symbol))->value);
-        }
-        ERROR;
-      }
-      
-      this->current_var_type_symbol = search_fb_typedecl->get_decl(this->current_var_type_name);
-      if (this->current_var_type_symbol != NULL)
-        this->current_var_type_category = function_block_vtc;
-      else {
-        this->current_var_type_symbol = (symbol_c *)(this->current_var_type_name->accept(search_base_type));
-        
-        structure_element_declaration_list_c *structure_symbol = dynamic_cast<structure_element_declaration_list_c *>(this->current_var_type_symbol);
-        if (structure_symbol != NULL)
-          this->current_var_type_category = structure_vtc;
-        else
-          this->current_var_type_category = variable_vtc;
-      }
-      
-      if (this->current_var_type_symbol == NULL)
-        ERROR;
+      this->current_var_type_symbol = search_type_symbol->get_type_symbol(symbol);
+      this->current_var_type_name = search_type_symbol->get_current_type_name();
     }
 
     void reset_var_type_symbol(void) {
@@ -209,39 +278,43 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     
     void declare_variable(symbol_c *symbol) {
       // Arrays and structures are not supported in debugging
-      switch (this->current_var_type_category) {
-      	case array_vtc:
-      	case structure_vtc:
+      switch (search_type_symbol->current_var_type_category) {
+          case search_type_symbol_c::array_vtc:
+          case search_type_symbol_c::structure_vtc:
           return;
-      	default:
-      	  break;
+          default:
+           break;
       }
       print_var_number();
       s4o.print(";");
-      switch (this->current_var_type_category) {
-        case external_vtc:
-          s4o.print("EXT");
-          break;
-        case located_input_vtc:
-          s4o.print("IN");
-          break;
-        case located_memory_vtc:
-          s4o.print("MEM");
-          break;
-        case located_output_vtc:
-          s4o.print("OUT");
-          break;
-        case array_vtc:
+      switch (search_type_symbol->current_var_type_category) {
+        case search_type_symbol_c::array_vtc:
           s4o.print("ARRAY");
           break;
-        case structure_vtc:
+        case search_type_symbol_c::structure_vtc:
           s4o.print("STRUCT");
           break;
-        case function_block_vtc:
+        case search_type_symbol_c::function_block_vtc:
           s4o.print("FB");
           break;
         default:
-          s4o.print("VAR");
+          switch (this->current_var_class_category) {
+            case external_vcc:
+             s4o.print("EXT");
+             break;
+            case located_input_vcc:
+             s4o.print("IN");
+             break;
+            case located_memory_vcc:
+             s4o.print("MEM");
+             break;
+            case located_output_vcc:
+             s4o.print("OUT");
+             break;
+            default:
+             s4o.print("VAR");
+             break;
+          }
           break;
       }
       s4o.print(";");
@@ -251,9 +324,9 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       print_symbol_list();
       symbol->accept(*this);
       s4o.print(";");
-      switch (this->current_var_type_category) {
-        case structure_vtc:
-        case function_block_vtc:
+      switch (search_type_symbol->current_var_type_category) {
+        case search_type_symbol_c::structure_vtc:
+        case search_type_symbol_c::function_block_vtc:
           this->current_var_type_name->accept(*this);
           s4o.print(";\n");
           SYMBOL *current_name;
@@ -263,7 +336,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
           this->current_var_type_symbol->accept(*this);
           current_symbol_list.pop_back();
           break;
-        case array_vtc:
+        case search_type_symbol_c::array_vtc:
           this->current_var_type_name->accept(*this);
           s4o.print(";\n");
           break;
@@ -321,20 +394,33 @@ class generate_var_list_c: protected generate_c_typedecl_c {
         update_var_type_symbol(symbol->located_var_spec_init);
         
         search_location_type_c search_location_type;
-        locationtype_t location_type = search_location_type.get_location_type(symbol->location);
-        if (location_type == input_lt)
-          this->current_var_type_category = located_input_vtc;
-        else if (location_type == memory_lt)
-          this->current_var_type_category = located_memory_vtc;
-        else if (location_type == output_lt)
-          this->current_var_type_category = located_output_vtc;
+        switch (search_location_type.get_location_type(symbol->location)) {
+          case search_location_type_c::input_lt:
+            this->current_var_class_category = located_input_vcc;
+            break;
+          case search_location_type_c::memory_lt:
+            this->current_var_class_category = located_memory_vcc;
+            break;
+          case search_location_type_c::output_lt:
+              this->current_var_class_category = located_output_vcc;
+              break;
+          default:
+            ERROR;
+            break;
+        }
 
         if (symbol->variable_name != NULL)
           declare_variable(symbol->variable_name);
         else
           declare_variable(symbol->location);
         
-        current_var_type_symbol = NULL;
+        this->current_var_class_category = none_vcc;
+
+        /* Values no longer in scope, and therefore no longer used.
+         * Make an effort to keep them set to NULL when not in use
+         * in order to catch bugs as soon as possible...
+         */
+        reset_var_type_symbol();
         return NULL;
     }
 
@@ -348,20 +434,33 @@ class generate_var_list_c: protected generate_c_typedecl_c {
         update_var_type_symbol(symbol->var_spec);
 
         search_location_type_c search_location_type;
-        locationtype_t location_type = search_location_type.get_location_type(symbol->incompl_location);
-        if (location_type == input_lt)
-          this->current_var_type_category = located_input_vtc;
-        else if (location_type == memory_lt)
-          this->current_var_type_category = located_memory_vtc;
-        else if (location_type == output_lt)
-          this->current_var_type_category = located_output_vtc;
+        switch (search_location_type.get_location_type(symbol->incompl_location)) {
+          case search_location_type_c::input_lt:
+            this->current_var_class_category = located_input_vcc;
+            break;
+          case search_location_type_c::memory_lt:
+            this->current_var_class_category = located_memory_vcc;
+            break;
+          case search_location_type_c::output_lt:
+            this->current_var_class_category = located_output_vcc;
+            break;
+          default:
+            ERROR;
+            break;
+        }
 
         if (symbol->variable_name != NULL)
           declare_variable(symbol->variable_name);
         else
           declare_variable(symbol->incompl_location);
 
-        current_var_type_symbol = NULL;
+        this->current_var_class_category = none_vcc;
+
+        /* Values no longer in scope, and therefore no longer used.
+        * Make an effort to keep them set to NULL when not in use
+        * in order to catch bugs as soon as possible...
+        */
+       reset_var_type_symbol();
         return NULL;
     }
     
@@ -374,7 +473,6 @@ class generate_var_list_c: protected generate_c_typedecl_c {
        */
       update_var_type_symbol(symbol->array_spec_init);
       
-      this->current_var_type_category = array_vtc;
       declare_variables(symbol->var1_list);
     
       /* Values no longer in scope, and therefore no longer used.
@@ -400,7 +498,6 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       update_var_type_symbol(symbol->initialized_structure);
     
       /* now to produce the c equivalent... */
-      this->current_var_type_category = structure_vtc;
       declare_variables(symbol->var1_list);
     
       /* Values no longer in scope, and therefore no longer used.
@@ -450,16 +547,18 @@ class generate_var_list_c: protected generate_c_typedecl_c {
        */
       update_var_type_symbol(symbol->specification);
       
+      this->current_var_class_category = external_vcc;
+
       /* now to produce the c equivalent... */
-      this->current_var_type_category = external_vtc;
       declare_variable(symbol->global_var_name);
       
+      this->current_var_class_category = none_vcc;
+
       /* Values no longer in scope, and therefore no longer used.
        * Make an effort to keep them set to NULL when not in use
        * in order to catch bugs as soon as possible...
        */
       reset_var_type_symbol();
-    
       return NULL;
     }
 
@@ -498,18 +597,28 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     // SYM_REF2(global_var_spec_c, global_var_name, location)
     void *visit(global_var_spec_c *symbol) {
       search_location_type_c search_location_type;
-	  locationtype_t location_type = search_location_type.get_location_type(symbol->location);
-	  if (location_type == input_lt)
-        this->current_var_type_category = located_input_vtc;
-      else if (location_type == memory_lt)
-        this->current_var_type_category = located_memory_vtc;
-      else if (location_type == output_lt)
-        this->current_var_type_category = located_output_vtc;
+	  switch (search_location_type.get_location_type(symbol->location)) {
+		case search_location_type_c::input_lt:
+		  this->current_var_class_category = located_input_vcc;
+		  break;
+		case search_location_type_c::memory_lt:
+		  this->current_var_class_category = located_memory_vcc;
+		  break;
+		case search_location_type_c::output_lt:
+		  this->current_var_class_category = located_output_vcc;
+		  break;
+		default:
+		  ERROR;
+	      break;
+	  }
 
       if (symbol->global_var_name != NULL)
         declare_variable(symbol->global_var_name);
       else
         declare_variable(symbol->location);
+
+      this->current_var_class_category = none_vcc;
+
       return NULL;
     }
     
@@ -539,7 +648,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       /* Start off by setting the current_var_type_symbol and
        * current_var_init_symbol private variables...
        */
-      this->current_var_type_symbol = symbol->type;
+      update_var_type_symbol(symbol->type);
 
       /* now to produce the c equivalent... */
       declare_variable(symbol->name);
@@ -559,7 +668,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       /* Start off by setting the current_var_type_symbol and
        * current_var_init_symbol private variables...
        */
-      this->current_var_type_symbol = symbol->type;
+      update_var_type_symbol(symbol->type);
 
       /* now to produce the c equivalent... */
       declare_variable(symbol->name);

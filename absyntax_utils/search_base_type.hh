@@ -52,6 +52,7 @@ class search_base_type_c: public null_visitor_c {
 
   private:
     symbol_c *current_type_name;
+    bool is_array;
     bool is_subrange;
     bool is_enumerated;
 

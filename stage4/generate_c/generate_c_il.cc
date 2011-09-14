@@ -548,6 +548,16 @@ TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 #endif
 
 
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+
+/* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+void *visit(array_specification_c *symbol) {
+  symbol->non_generic_type_name->accept(*this);
+  return NULL;
+}
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
@@ -676,15 +686,18 @@ void *visit(array_variable_c *symbol) {
 
 /* subscript_list ',' subscript */
 void *visit(subscript_list_c *symbol) {
+  array_dimension_iterator_c* array_dimension_iterator = new array_dimension_iterator_c(current_array_type);
   for (int i =  0; i < symbol->n; i++) {
-    s4o.print("[__");
-    current_array_type->accept(*this);
-    s4o.print("_TRANSIDX(");
-    print_integer(i);
-    s4o.print(",");
+    symbol_c* dimension = array_dimension_iterator->next();
+	if (dimension == NULL) ERROR;
+
+	s4o.print("[(");
     symbol->elements[i]->accept(*this);
+    s4o.print(") - (");
+    dimension->accept(*this);
     s4o.print(")]");
   }
+  delete array_dimension_iterator;
   return NULL;
 }
 

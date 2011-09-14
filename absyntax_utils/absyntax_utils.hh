@@ -102,6 +102,7 @@ extern symtable_c<symbol_c *, &null_symbol5> enumerated_value_symtable;
 /***********************************************************************/
 
 #include "spec_init_separator.hh"
+#include "array_dimension_iterator.hh"
 #include "case_element_iterator.hh"
 #include "function_param_iterator.hh"
 #include "function_call_iterator.hh"

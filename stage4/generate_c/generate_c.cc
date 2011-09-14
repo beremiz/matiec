@@ -27,6 +27,8 @@
 #include <sstream>
 #include <typeinfo>
 #include <list>
+#include <map>
+#include <sstream>
 #include <strings.h>
 
 #include "../../util/symtable.hh"
@@ -110,7 +112,6 @@ extern void error_exit(const char *file_name, int line_no);
 #define INIT_EXTERNAL "__INIT_EXTERNAL"
 #define INIT_LOCATED "__INIT_LOCATED"
 #define INIT_LOCATED_VALUE "__INIT_LOCATED_VALUE"
-
 
 /* Variable getter symbol for accessor macros */
 #define GET_VAR "__GET_VAR"
@@ -581,6 +582,370 @@ void *generate_c_SFC_IL_ST_c::visit(statement_list_c *symbol) {
 /***********************************************************************/
 
 
+class generate_c_datatypes_c: public generate_c_typedecl_c {
+  public:
+    typedef enum {
+      none_im,
+      arrayname_im,
+      arraydeclaration_im,
+    } inlinearray_mode_t;
+
+  private:
+    stage4out_c *s4o_ptr;
+    std::map<std::string, int> inline_array_defined;
+    std::string current_array_name;
+    inlinearray_mode_t current_mode;
+
+  public:
+    generate_c_datatypes_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
+      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {
+      generate_c_datatypes_c::s4o_ptr = s4o_ptr;
+      current_mode = none_im;
+    };
+    virtual ~generate_c_datatypes_c(void) {
+      while (!inline_array_defined.empty()) {
+    	inline_array_defined.erase(inline_array_defined.begin());
+      }
+    }
+
+    /*************************/
+    /* B.1 - Common elements */
+    /*************************/
+    /*******************************************/
+    /* B 1.1 - Letters, digits and identifiers */
+    /*******************************************/
+    void *visit(identifier_c *symbol) {
+      switch (current_mode) {
+        case arrayname_im:
+          current_array_name += symbol->value;
+          break;
+        case arraydeclaration_im:
+          s4o_incl.print(symbol->value);
+          break;
+        default:
+          return generate_c_base_c::visit(symbol);
+          break;
+      }
+      return NULL;
+    }
+
+    /**********************/
+    /* B.1.3 - Data types */
+    /**********************/
+    /***********************************/
+    /* B 1.3.1 - Elementary Data Types */
+    /***********************************/
+
+    #define HANDLE_ELEMENTARY_DATA_TYPE(datatype_symbol, datatype_name)\
+    void *visit(datatype_symbol *symbol) {\
+	  switch (current_mode) {\
+		case arrayname_im:\
+		  current_array_name += datatype_name;\
+		  break;\
+        case arraydeclaration_im:\
+          s4o_incl.print(datatype_name);\
+          break;\
+		default:\
+		  return generate_c_base_c::visit(symbol);\
+		  break;\
+	  }\
+	  return NULL;\
+	}
+
+    HANDLE_ELEMENTARY_DATA_TYPE(time_type_name_c, "TIME")
+    HANDLE_ELEMENTARY_DATA_TYPE(bool_type_name_c, "BOOL")
+    HANDLE_ELEMENTARY_DATA_TYPE(sint_type_name_c, "SINT")
+    HANDLE_ELEMENTARY_DATA_TYPE(int_type_name_c, "INT")
+    HANDLE_ELEMENTARY_DATA_TYPE(dint_type_name_c, "DINT")
+    HANDLE_ELEMENTARY_DATA_TYPE(lint_type_name_c, "LINT")
+    HANDLE_ELEMENTARY_DATA_TYPE(usint_type_name_c, "USINT")
+    HANDLE_ELEMENTARY_DATA_TYPE(uint_type_name_c, "UINT")
+    HANDLE_ELEMENTARY_DATA_TYPE(udint_type_name_c, "UDINT")
+    HANDLE_ELEMENTARY_DATA_TYPE(ulint_type_name_c, "ULINT")
+    HANDLE_ELEMENTARY_DATA_TYPE(real_type_name_c, "REAL")
+    HANDLE_ELEMENTARY_DATA_TYPE(lreal_type_name_c, "LREAL")
+    HANDLE_ELEMENTARY_DATA_TYPE(date_type_name_c, "DATE")
+    HANDLE_ELEMENTARY_DATA_TYPE(tod_type_name_c, "TOD")
+    HANDLE_ELEMENTARY_DATA_TYPE(dt_type_name_c, "DT")
+    HANDLE_ELEMENTARY_DATA_TYPE(byte_type_name_c, "BYTE")
+    HANDLE_ELEMENTARY_DATA_TYPE(word_type_name_c, "WORD")
+    HANDLE_ELEMENTARY_DATA_TYPE(dword_type_name_c, "DWORD")
+    HANDLE_ELEMENTARY_DATA_TYPE(lword_type_name_c, "LWORD")
+    HANDLE_ELEMENTARY_DATA_TYPE(string_type_name_c, "STRING")
+    HANDLE_ELEMENTARY_DATA_TYPE(wstring_type_name_c, "WSTRING")
+
+    HANDLE_ELEMENTARY_DATA_TYPE(safetime_type_name_c, "TIME")
+	HANDLE_ELEMENTARY_DATA_TYPE(safebool_type_name_c, "BOOL")
+	HANDLE_ELEMENTARY_DATA_TYPE(safesint_type_name_c, "SINT")
+	HANDLE_ELEMENTARY_DATA_TYPE(safeint_type_name_c, "INT")
+	HANDLE_ELEMENTARY_DATA_TYPE(safedint_type_name_c, "DINT")
+	HANDLE_ELEMENTARY_DATA_TYPE(safelint_type_name_c, "LINT")
+	HANDLE_ELEMENTARY_DATA_TYPE(safeusint_type_name_c, "USINT")
+	HANDLE_ELEMENTARY_DATA_TYPE(safeuint_type_name_c, "UINT")
+	HANDLE_ELEMENTARY_DATA_TYPE(safeudint_type_name_c, "UDINT")
+	HANDLE_ELEMENTARY_DATA_TYPE(safeulint_type_name_c, "ULINT")
+	HANDLE_ELEMENTARY_DATA_TYPE(safereal_type_name_c, "REAL")
+	HANDLE_ELEMENTARY_DATA_TYPE(safelreal_type_name_c, "LREAL")
+	HANDLE_ELEMENTARY_DATA_TYPE(safedate_type_name_c, "DATE")
+	HANDLE_ELEMENTARY_DATA_TYPE(safetod_type_name_c, "TOD")
+	HANDLE_ELEMENTARY_DATA_TYPE(safedt_type_name_c, "DT")
+	HANDLE_ELEMENTARY_DATA_TYPE(safebyte_type_name_c, "BYTE")
+	HANDLE_ELEMENTARY_DATA_TYPE(safeword_type_name_c, "WORD")
+	HANDLE_ELEMENTARY_DATA_TYPE(safedword_type_name_c, "DWORD")
+	HANDLE_ELEMENTARY_DATA_TYPE(safelword_type_name_c, "LWORD")
+	HANDLE_ELEMENTARY_DATA_TYPE(safestring_type_name_c, "STRING")
+	HANDLE_ELEMENTARY_DATA_TYPE(safewstring_type_name_c, "WSTRING")
+
+    /******************************************/
+    /* B 1.4.3 - Declaration & Initialization */
+    /******************************************/
+
+    void *visit(input_declarations_c *symbol) {
+      symbol->input_declaration_list->accept(*this);
+      return NULL;
+    }
+
+    void *visit(edge_declaration_c *symbol) {
+      return NULL;
+    }
+
+    void *visit(en_param_declaration_c *symbol) {
+      return NULL;
+    }
+
+    void *visit(eno_param_declaration_c *symbol) {
+      return NULL;
+    }
+
+    void *visit(var1_init_decl_c *symbol) {
+      return NULL;
+    }
+
+    /*  var1_list ':' array_spec_init */
+    // SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
+    void *visit(array_var_init_decl_c *symbol) {
+      current_mode = arrayname_im;
+      symbol->array_spec_init->accept(*this);
+      current_mode = none_im;
+      return NULL;
+    }
+
+    /* array_specification [ASSIGN array_initialization] */
+    /* array_initialization may be NULL ! */
+    void *visit(array_spec_init_c *symbol) {
+      switch (current_mode) {
+    	case arrayname_im:
+    	  {
+    	    array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
+            if (specification != NULL)
+              symbol->array_specification->accept(*this);
+          }
+          break;
+    	default:
+    	  return generate_c_typedecl_c::visit(symbol);
+          break;
+      }
+      return NULL;
+    }
+
+    /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+    void *visit(array_specification_c *symbol) {
+      switch (current_mode) {
+        case arrayname_im:
+          {
+            std::map<std::string,int>::iterator definition;
+            current_array_name = "__";
+            symbol->non_generic_type_name->accept(*this);
+            symbol->array_subrange_list->accept(*this);
+
+            definition = inline_array_defined.find(current_array_name);
+            if (definition == inline_array_defined.end()) {
+              current_mode = arraydeclaration_im;
+
+              s4o_incl.print("__DECLARE_ARRAY_TYPE(");
+              s4o_incl.print(current_array_name);
+              s4o_incl.print(",");
+              symbol->non_generic_type_name->accept(*this);
+              s4o_incl.print(",");
+              symbol->array_subrange_list->accept(*this);
+              s4o_incl.print(")\n\n");
+
+              inline_array_defined[current_array_name] = 0;
+            }
+          }
+          break;
+        default:
+          return generate_c_typedecl_c::visit(symbol);
+          break;
+      }
+      return NULL;
+    }
+
+    /*  signed_integer DOTDOT signed_integer */
+    //SYM_REF2(subrange_c, lower_limit, upper_limit)
+    void *visit(subrange_c *symbol) {
+      int dimension = extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
+      switch (current_mode) {
+        case arrayname_im:
+          current_array_name += "_";
+          {
+            std::stringstream ss;
+            ss << dimension;
+            current_array_name += ss.str();
+          }
+          break;
+        case arraydeclaration_im:
+          s4o_incl.print("[");
+          s4o_incl.print_integer(dimension);
+          s4o_incl.print("]");
+        default:
+          generate_c_typedecl_c::visit(symbol);
+          break;
+      }
+      return NULL;
+    }
+
+    /*  var1_list ':' initialized_structure */
+    // SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
+    void *visit(structured_var_init_decl_c *symbol) {
+      return NULL;
+    }
+
+    /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
+    /* structure_initialization -> may be NULL ! */
+    void *visit(fb_name_decl_c *symbol) {
+      return NULL;
+    }
+
+    /* VAR_OUTPUT [RETAIN | NON_RETAIN] var_init_decl_list END_VAR */
+    /* option -> may be NULL ! */
+    void *visit(output_declarations_c *symbol) {
+      symbol->var_init_decl_list->accept(*this);
+      return NULL;
+    }
+
+    /*  VAR_IN_OUT var_declaration_list END_VAR */
+    void *visit(input_output_declarations_c *symbol) {
+      symbol->var_declaration_list->accept(*this);
+      return NULL;
+    }
+
+    /*  var1_list ':' array_specification */
+    //SYM_REF2(array_var_declaration_c, var1_list, array_specification)
+    void *visit(array_var_declaration_c *symbol) {
+      array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
+	  if (specification != NULL) {
+        current_mode = arrayname_im;
+        symbol->array_specification->accept(*this);
+        current_mode = none_im;
+      }
+      return NULL;
+    }
+
+    /* VAR [CONSTANT] var_init_decl_list END_VAR */
+    /* option -> may be NULL ! */
+    /* helper symbol for input_declarations */
+    void *visit(var_declarations_c *symbol) {
+      symbol->var_init_decl_list->accept(*this);
+      return NULL;
+    }
+
+    /*  VAR RETAIN var_init_decl_list END_VAR */
+    void *visit(retentive_var_declarations_c *symbol) {
+      symbol->var_init_decl_list->accept(*this);
+      return NULL;
+    }
+
+    /*  VAR [CONSTANT|RETAIN|NON_RETAIN] located_var_decl_list END_VAR */
+    /* option -> may be NULL ! */
+    //SYM_REF2(located_var_declarations_c, option, located_var_decl_list)
+    void *visit(located_var_declarations_c *symbol) {
+      symbol->located_var_decl_list->accept(*this);
+      return NULL;
+    }
+
+    /*  [variable_name] location ':' located_var_spec_init */
+    /* variable_name -> may be NULL ! */
+    //SYM_REF4(located_var_decl_c, variable_name, location, located_var_spec_init, unused)
+    void *visit(located_var_decl_c *symbol) {
+      symbol->located_var_spec_init->accept(*this);
+      return NULL;
+    }
+
+    /*| VAR_EXTERNAL [CONSTANT] external_declaration_list END_VAR */
+    /* option -> may be NULL ! */
+    //SYM_REF2(external_var_declarations_c, option, external_declaration_list)
+    void *visit(external_var_declarations_c *symbol) {
+      symbol->external_declaration_list->accept(*this);
+      return NULL;
+    }
+
+    /*  global_var_name ':' (simple_specification|subrange_specification|enumerated_specification|array_specification|prev_declared_structure_type_name|function_block_type_name */
+    //SYM_REF2(external_declaration_c, global_var_name, specification)
+    void *visit(external_declaration_c *symbol) {
+      array_specification_c* array_specification = dynamic_cast<array_specification_c*>(symbol->specification);
+      if (array_specification != NULL) {
+        current_mode = arrayname_im;
+        symbol->specification->accept(*this);
+        current_mode = none_im;
+      }
+      return NULL;
+    }
+
+    /*| VAR_GLOBAL [CONSTANT|RETAIN] global_var_decl_list END_VAR */
+    /* option -> may be NULL ! */
+    // SYM_REF2(global_var_declarations_c, option, global_var_decl_list)
+    void *visit(global_var_declarations_c *symbol) {
+      symbol->global_var_decl_list->accept(*this);
+      return NULL;
+    }
+
+    /*| global_var_spec ':' [located_var_spec_init|function_block_type_name] */
+    /* type_specification ->may be NULL ! */
+    // SYM_REF2(global_var_decl_c, global_var_spec, type_specification)
+    void *visit(global_var_decl_c *symbol) {
+      array_spec_init_c* array_spec_init = dynamic_cast<array_spec_init_c*>(symbol->type_specification);
+      if (array_spec_init != NULL) {
+        current_mode = arrayname_im;
+        symbol->type_specification->accept(*this);
+        current_mode = none_im;
+      }
+      return NULL;
+    }
+
+    void *visit(function_var_decls_c *symbol) {
+      symbol->decl_list->accept(*this);
+      return NULL;
+    }
+
+    /*****************************/
+    /* B 1.5.2 - Function Blocks */
+    /*****************************/
+
+    /*  VAR_TEMP temp_var_decl_list END_VAR */
+    void *visit(temp_var_decls_c *symbol) {
+      symbol->var_decl_list->accept(*this);
+      return NULL;
+    }
+
+    /*  VAR NON_RETAIN var_init_decl_list END_VAR */
+    void *visit(non_retentive_var_decls_c *symbol) {
+      symbol->var_decl_list->accept(*this);
+      return NULL;
+    }
+
+};
+
+
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+
 class generate_c_pous_c: public generate_c_typedecl_c {
   private:
     stage4out_c *s4o_ptr;
@@ -772,15 +1137,15 @@ void *visit(function_declaration_c *symbol) {
           structure_initialization->init_structure_values(default_value);
           delete structure_initialization;
         }
-    	break;
+        break;
       case initialization_analyzer_c::array_it:
         {
-    	  generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
-    	  array_initialization->init_array_size(symbol->type_name);
-    	  array_initialization->init_array_values(default_value);
-    	  delete array_initialization;
+          generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
+          array_initialization->init_array_size(symbol->type_name);
+          array_initialization->init_array_values(default_value);
+          delete array_initialization;
         }
-    	break;
+        break;
       default:
         default_value->accept(*this);
         break;
@@ -1195,7 +1560,7 @@ class generate_c_config_c: public generate_c_typedecl_c {
       : generate_c_typedecl_c(s4o_ptr) {
       generate_c_config_c::s4o_ptr = s4o_ptr;
     };
-	
+
     virtual ~generate_c_config_c(void) {}
 
     typedef enum {
@@ -1240,6 +1605,7 @@ void *visit(configuration_declaration_c *symbol) {
   s4o.print("/*******************************************/\n\n");
   s4o.print("#include \"iec_std_lib.h\"\n\n");
   s4o.print("#include \"accessor.h\"\n\n"); 
+  s4o.print("#include \"POUS.h\"\n\n");
 
   /* (A) configuration declaration... */
   /* (A.1) configuration name in comment */
@@ -1435,17 +1801,17 @@ class generate_c_resources_c: public generate_c_typedecl_c {
     unsigned int current_varqualifier;
 
     void *print_retain(void) {
-	  s4o.print(",");
+      s4o.print(",");
       switch (current_varqualifier) {
-		case retain_vq:
+        case retain_vq:
           s4o.print("1");
           break;
         case non_retain_vq:
           s4o.print("0");
           break;
-		default:
-		  s4o.print("retain");
-		  break;
+        default:
+          s4o.print("retain");
+          break;
       }
       return NULL;
     }
@@ -1631,7 +1997,7 @@ END_RESOURCE
           break;
         case init_dt:
           if (symbol->retain_option != NULL)
-        	symbol->retain_option->accept(*this);
+            symbol->retain_option->accept(*this);
           s4o.print(s4o.indent_spaces);
           symbol->program_type_name->accept(*this);
           s4o.print(FB_INIT_SUFFIX);
@@ -1876,12 +2242,20 @@ END_RESOURCE
 /***********************************************************************/
 
 class generate_c_c: public iterator_visitor_c {
+  public:
+    typedef enum {
+      none_gm,
+      datatypes_gm,
+      pous_gm,
+    } generate_mode_t;
+
   protected:
     stage4out_c &s4o;
     stage4out_c pous_s4o;
     stage4out_c pous_incl_s4o;
     stage4out_c located_variables_s4o;
     stage4out_c variables_s4o;
+    generate_c_datatypes_c generate_c_datatypes;
     generate_c_pous_c generate_c_pous;
     
     symbol_c *current_configuration;
@@ -1891,6 +2265,8 @@ class generate_c_c: public iterator_visitor_c {
 
     unsigned long long common_ticktime;
 
+    generate_mode_t current_mode;
+
   public:
     generate_c_c(stage4out_c *s4o_ptr, const char *builddir): 
             s4o(*s4o_ptr),
@@ -1898,9 +2274,11 @@ class generate_c_c: public iterator_visitor_c {
             pous_incl_s4o(builddir, "POUS", "h"),
             located_variables_s4o(builddir, "LOCATED_VARIABLES","h"),
             variables_s4o(builddir, "VARIABLES","csv"),
+            generate_c_datatypes(&pous_s4o, &pous_incl_s4o),
             generate_c_pous(&pous_s4o, &pous_incl_s4o) {
       current_builddir = builddir;
       current_configuration = NULL;
+      current_mode = none_gm;
     }
             
     ~generate_c_c(void) {}
@@ -1934,9 +2312,17 @@ class generate_c_c: public iterator_visitor_c {
 /***************************/
     void *visit(library_c *symbol) {
       pous_incl_s4o.print("#ifndef __POUS_H\n#define __POUS_H\n\n#include \"accessor.h\"\n\n");
+
+      current_mode = datatypes_gm;
       for(int i = 0; i < symbol->n; i++) {
         symbol->elements[i]->accept(*this);
       }
+
+      current_mode = pous_gm;
+      for(int i = 0; i < symbol->n; i++) {
+        symbol->elements[i]->accept(*this);
+      }
+
       pous_incl_s4o.print("#endif //__POUS_H\n");
       
       generate_var_list_c generate_var_list(&variables_s4o, symbol);
@@ -1955,8 +2341,8 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.1 - Letters, digits and identifiers */
 /*******************************************/
     void *visit(identifier_c *symbol) {
-    	current_name = symbol->value;
-    	return NULL;
+        current_name = symbol->value;
+        return NULL;
     }
 
 /********************************/
@@ -1964,7 +2350,13 @@ class generate_c_c: public iterator_visitor_c {
 /********************************/
     /*  TYPE type_declaration_list END_TYPE */
     void *visit(data_type_declaration_c *symbol) {
-      symbol->accept(generate_c_pous);
+      switch (current_mode) {
+        case datatypes_gm:
+          symbol->accept(generate_c_datatypes);
+          break;
+        default:
+          break;
+      }
       return NULL;
     }
 
@@ -1975,24 +2367,51 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.5.1 - Functions */
 /***********************/
     void *visit(function_declaration_c *symbol) {
-    	symbol->accept(generate_c_pous);
-    	return NULL;
+      switch (current_mode) {
+        case datatypes_gm:
+          symbol->var_declarations_list->accept(generate_c_datatypes);
+          break;
+        case pous_gm:
+          symbol->accept(generate_c_pous);
+          break;
+        default:
+          break;
+      }
+      return NULL;
     }
     
 /*****************************/
 /* B 1.5.2 - Function Blocks */
 /*****************************/
     void *visit(function_block_declaration_c *symbol) {
-    	symbol->accept(generate_c_pous);
-    	return NULL;
+        switch (current_mode) {
+          case datatypes_gm:
+            symbol->var_declarations->accept(generate_c_datatypes);
+            break;
+          case pous_gm:
+            symbol->accept(generate_c_pous);
+            break;
+          default:
+            break;
+        }
+        return NULL;
     }
     
 /**********************/
 /* B 1.5.3 - Programs */
 /**********************/    
     void *visit(program_declaration_c *symbol) {
-    	symbol->accept(generate_c_pous);
-    	return NULL;
+        switch (current_mode) {
+          case datatypes_gm:
+            symbol->var_declarations->accept(generate_c_datatypes);
+            break;
+          case pous_gm:
+            symbol->accept(generate_c_pous);
+            break;
+          default:
+            break;
+        }
+        return NULL;
     }
     
 
@@ -2000,54 +2419,88 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.7 Configuration elements */
 /********************************/
     void *visit(configuration_declaration_c *symbol) {
-  	  static int configuration_count = 0;
-  
-      if (configuration_count++) {
-        /* the first configuration is the one we will use!! */
-        ERROR;
-      }
-      
-      current_configuration = symbol;
-      
-      calculate_common_ticktime_c calculate_common_ticktime;
-      symbol->accept(calculate_common_ticktime);
-      common_ticktime = calculate_common_ticktime.get_common_ticktime();
-      if (common_ticktime == 0) {
-        fprintf(stderr, "\nYou must at least define a periodic task to set cycle period!");
-        ERROR;
-      }
-      
-      symbol->configuration_name->accept(*this);
-      stage4out_c config_s4o(current_builddir, current_name, "c");
-      generate_c_config_c generate_c_config(&config_s4o);
-      symbol->accept(generate_c_config);
-        
-      config_s4o.print("unsigned long long common_ticktime__ = ");
-      config_s4o.print_long_long_integer(common_ticktime);
-      config_s4o.print("; /*ns*/\n");
-      config_s4o.print("unsigned long greatest_tick_count__ = ");
-      config_s4o.print_long_integer(calculate_common_ticktime.get_greatest_tick_count());
-      config_s4o.print("; /*tick*/\n");
-      
-      symbol->resource_declarations->accept(*this);
+      switch (current_mode) {
+        case datatypes_gm:
+          if (symbol->global_var_declarations != NULL)
+            symbol->global_var_declarations->accept(generate_c_datatypes);
+          break;
 
-      current_configuration = NULL;
-      
+        case pous_gm:
+          static int configuration_count = 0;
+
+          if (configuration_count++) {
+            /* the first configuration is the one we will use!! */
+            ERROR;
+          }
+
+          current_configuration = symbol;
+
+          {
+            calculate_common_ticktime_c calculate_common_ticktime;
+            symbol->accept(calculate_common_ticktime);
+            common_ticktime = calculate_common_ticktime.get_common_ticktime();
+            if (common_ticktime == 0) {
+              fprintf(stderr, "\nYou must at least define a periodic task to set cycle period!");
+              ERROR;
+            }
+
+            symbol->configuration_name->accept(*this);
+
+            stage4out_c config_s4o(current_builddir, current_name, "c");
+            generate_c_config_c generate_c_config(&config_s4o);
+            symbol->accept(generate_c_config);
+
+            config_s4o.print("unsigned long long common_ticktime__ = ");
+            config_s4o.print_long_long_integer(common_ticktime);
+            config_s4o.print("; /*ns*/\n");
+            config_s4o.print("unsigned long greatest_tick_count__ = ");
+            config_s4o.print_long_integer(calculate_common_ticktime.get_greatest_tick_count());
+            config_s4o.print("; /*tick*/\n");
+          }
+
+          symbol->resource_declarations->accept(*this);
+
+          current_configuration = NULL;
+          break;
+
+        default:
+          break;
+      }
       return NULL;
     }
 
     void *visit(resource_declaration_c *symbol) {
-      symbol->resource_name->accept(*this);
-      stage4out_c resources_s4o(current_builddir, current_name, "c");
-      generate_c_resources_c generate_c_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
-      symbol->accept(generate_c_resources);
+      switch (current_mode) {
+        case datatypes_gm:
+          if (symbol->global_var_declarations != NULL)
+            symbol->global_var_declarations->accept(generate_c_datatypes);
+          break;
+        case pous_gm:
+          symbol->resource_name->accept(*this);
+          {
+            stage4out_c resources_s4o(current_builddir, current_name, "c");
+            generate_c_resources_c generate_c_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
+            symbol->accept(generate_c_resources);
+          }
+          break;
+        default:
+          break;
+      }
       return NULL;
     }
 
     void *visit(single_resource_declaration_c *symbol) {
-      stage4out_c resources_s4o(current_builddir, "RESOURCE", "c");
-      generate_c_resources_c generate_c_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
-      symbol->accept(generate_c_resources);
+      switch (current_mode) {
+        case pous_gm:
+          {
+            stage4out_c resources_s4o(current_builddir, "RESOURCE", "c");
+            generate_c_resources_c generate_c_resources(&resources_s4o, current_configuration, symbol, common_ticktime);
+            symbol->accept(generate_c_resources);
+          }
+          break;
+        default:
+          break;
+      }
       return NULL;
     }
     

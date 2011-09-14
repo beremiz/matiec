@@ -227,7 +227,8 @@ void *search_base_type_c::visit(array_spec_init_c *symbol) {
 
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *search_base_type_c::visit(array_specification_c *symbol)	{
-  if (NULL == this->current_type_name) ERROR;
+  if (NULL == this->current_type_name)
+	this->current_type_name = symbol->non_generic_type_name;
   return symbol->non_generic_type_name->accept(*this);
 }
 

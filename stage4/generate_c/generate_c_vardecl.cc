@@ -105,7 +105,6 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
 
       current_mode = typedecl_am;
       array_specification->accept(*this);
-
       s4o.print(" temp = ");
 
       init_array_values(array_initialization);
@@ -188,14 +187,21 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
     
     /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
     void *visit(array_specification_c *symbol) {
-      symbol->array_subrange_list->accept(*this);
+      identifier_c* type_name;
       switch (current_mode) {
         case arraysize_am:
+          symbol->array_subrange_list->accept(*this);
           array_base_type = symbol->non_generic_type_name;
           array_default_value = (symbol_c *)symbol->non_generic_type_name->accept(*type_initial_value_c::instance());;
           if (array_default_value == NULL) ERROR;
           break;
+        case typedecl_am:
+          s4o.print("__");
+          symbol->non_generic_type_name->accept(*this);
+          symbol->array_subrange_list->accept(*this);
+          break;
         default:
+          symbol->array_subrange_list->accept(*this);
           break;
       } 
       return NULL;
@@ -204,9 +210,14 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
     /*  signed_integer DOTDOT signed_integer */
     //SYM_REF2(subrange_c, lower_limit, upper_limit)
     void *visit(subrange_c *symbol) {
+      int dimension = extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
       switch (current_mode) {
         case arraysize_am:
-          array_size *= extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
+          array_size *= dimension;
+          break;
+        case typedecl_am:
+          s4o.print("_");
+          s4o.print_integer(dimension);
           break;
         default:
           break;
@@ -1379,6 +1390,23 @@ void *visit(array_var_init_decl_c *symbol) {
   return NULL;
 }
 
+/* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+void *visit(array_specification_c *symbol) {
+  s4o.print("__");
+  symbol->non_generic_type_name->accept(*this);
+  symbol->array_subrange_list->accept(*this);
+  return NULL;
+}
+
+/*  signed_integer DOTDOT signed_integer */
+//SYM_REF2(subrange_c, lower_limit, upper_limit)
+void *visit(subrange_c *symbol) {
+  int dimension = extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
+  s4o.print("_");
+  print_integer(dimension);
+  return NULL;
+}
+
 /*  var1_list ':' initialized_structure */
 // SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
 void *visit(structured_var_init_decl_c *symbol) {
@@ -1521,7 +1549,7 @@ void *visit(array_var_declaration_c *symbol) {
 }
 
 void *visit(array_initial_elements_list_c *symbol) {
-  if (wanted_varformat == localinit_vf) {
+  if (wanted_varformat == localinit_vf || wanted_varformat == constructorinit_vf) {
 	generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
 	array_initialization->init_array_size(this->current_var_type_symbol);
 	array_initialization->init_array_values(this->current_var_init_symbol);
@@ -1952,12 +1980,15 @@ void *visit(global_var_spec_c *symbol) {
 	    s4o.print(nv->get());
 	    s4o.print(INIT_GLOBAL);
 	    s4o.print("(");
+	    this->current_var_type_symbol->accept(*this);
+	    s4o.print(",");
 	    if (symbol->global_var_name != NULL)
 		  symbol->global_var_name->accept(*this);
 	    else
 		  symbol->location->accept(*this);
-	    s4o.print(",");
+	    s4o.print(",__INITIAL_VALUE(");
 	    this->current_var_init_symbol->accept(*this);
+	    s4o.print(")");
 	    print_retain();
 	    s4o.print(")");
       }
@@ -2013,9 +2044,12 @@ void *visit(global_var_list_c *symbol) {
 
           s4o.print(INIT_GLOBAL);
           s4o.print("(");
-          list->elements[i]->accept(*this);
+          this->current_var_type_symbol->accept(*this);
           s4o.print(",");
+          list->elements[i]->accept(*this);
+          s4o.print(",__INITIAL_VALUE(");
           this->current_var_init_symbol->accept(*this);
+          s4o.print(")");
           print_retain();
           s4o.print(")");
 #if 0

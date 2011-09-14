@@ -1,6 +1,7 @@
 #ifndef __ACCESSOR_H
 #define __ACCESSOR_H
 
+#define __INITIAL_VALUE(...) __VA_ARGS__
 
 // variable declaration macros
 #define __DECLARE_VAR(type, name)\
@@ -45,9 +46,12 @@
 #define __INIT_VAR(name, initial, retained)\
 	name.value = initial;\
 	__INIT_RETAIN(name, retained)
-#define __INIT_GLOBAL(name, initial, retained)\
-	__INIT_GLOBAL_##name(initial);\
-	__INIT_RETAIN((*GLOBAL__##name), retained)
+#define __INIT_GLOBAL(type, name, initial, retained)\
+    {\
+	    static const type temp = initial;\
+	    __INIT_GLOBAL_##name(temp);\
+	    __INIT_RETAIN((*GLOBAL__##name), retained)\
+    }
 #define __INIT_GLOBAL_LOCATED(resource, name, location, retained)\
 	resource##__##name.value = location;\
 	__INIT_RETAIN(resource##__##name, retained)

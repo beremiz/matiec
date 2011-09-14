@@ -93,8 +93,8 @@ void case_element_iterator_c::reset(void) {
 }
 
 
-/* initialise the iterator object.
- * We must be given a reference to a case_list_c that will be analysed...
+/* initialize the iterator object.
+ * We must be given a reference to a case_list_c that will be analyzed...
  */
 case_element_iterator_c::case_element_iterator_c(symbol_c *list, case_element_t element_type) {
   /* do some consistency check... */
@@ -102,7 +102,7 @@ case_element_iterator_c::case_element_iterator_c(symbol_c *list, case_element_t 
 
   if (NULL == case_list) ERROR;
 
-  /* OK. Now initialise this object... */
+  /* OK. Now initialize this object... */
   this->case_list = list;
   this->wanted_element_type = element_type;
   reset();

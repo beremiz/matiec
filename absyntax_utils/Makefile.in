@@ -73,6 +73,7 @@ libabsyntax_utils_a_LIBADD =
 am_libabsyntax_utils_a_OBJECTS = absyntax_utils.$(OBJEXT) \
 	add_en_eno_param_decl.$(OBJEXT) \
 	decompose_var_instance_name.$(OBJEXT) \
+	array_dimension_iterator.$(OBJEXT) \
 	case_element_iterator.$(OBJEXT) \
 	function_call_iterator.$(OBJEXT) \
 	function_call_param_iterator.$(OBJEXT) \
@@ -205,6 +206,7 @@ libabsyntax_utils_a_SOURCES = \
 	absyntax_utils.cc \
 	add_en_eno_param_decl.cc \
 	decompose_var_instance_name.cc \
+	array_dimension_iterator.cc \
 	case_element_iterator.cc \
 	function_call_iterator.cc \
 	function_call_param_iterator.cc \
@@ -304,6 +306,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/absyntax_utils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/add_en_eno_param_decl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/array_dimension_iterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/case_element_iterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decompose_var_instance_name.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function_call_iterator.Po@am__quote@

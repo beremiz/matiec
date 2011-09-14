@@ -6,6 +6,7 @@ libabsyntax_utils_a_SOURCES = \
 	absyntax_utils.cc \
 	add_en_eno_param_decl.cc \
 	decompose_var_instance_name.cc \
+	array_dimension_iterator.cc \
 	case_element_iterator.cc \
 	function_call_iterator.cc \
 	function_call_param_iterator.cc \
