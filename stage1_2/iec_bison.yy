@@ -250,17 +250,9 @@ void print_err_msg(int first_line,
  * declared twice.
  * We therefore use the #if !defined YYLTYPE ...
  * to make sure only the first declaration is parsed by the C++ compiler.
- *
- * At first glance it seems that what we really should do is delcare the
- * YYLTYPE directly as an anonymous struct, thus:
- * #define YYLTYPE struct{ ...}
- * however, this also results in compilation errors.
- *
- * I (Mario) think this is kind of a hack. If you know how to
- * do this re-declaration of YYLTYPE properly, please let me know!
  */
 #if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
-  typedef struct {
+typedef struct YYLTYPE {
     int         first_line;
     int         first_column;
     const char *first_file;
@@ -269,9 +261,11 @@ void print_err_msg(int first_line,
     int         last_column;
     const char *last_file;
     long int    last_order;
-  } yyltype__local;
-  #define YYLTYPE yyltype__local
+} YYLTYPE;
+#define YYLTYPE_IS_DECLARED 1
+#define YYLTYPE_IS_TRIVIAL 1
 #endif
+
 }
 
 

@@ -171,8 +171,9 @@ extern const char *current_filename;
  * track of the locations, in order to give
  * more meaningful error messages!
  */
-extern YYLTYPE yylloc;
-
+/*
+ *extern YYLTYPE yylloc;
+b*/
 #define YY_INPUT(buf,result,max_size)  {\
     result = GetNextChar(buf, max_size);\
     if (  result <= 0  )\
@@ -207,7 +208,6 @@ static long int current_order = 0;
 	current_tracking->currentTokenStart = current_tracking->currentChar;	\
 	current_order++;							\
 	}
-
 
 /* Since this lexical parser we defined only works in ASCII based
  * systems, we might as well make sure it is being compiled on
