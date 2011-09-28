@@ -1511,6 +1511,8 @@ __ANY_DATE(__iec_)
 __iec_(TIME)
 #undef __iec_
 
+#define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
+
 /* Max for string data types */	
 __extrem_(MAX_STRING, STRING, __STR_CMP(op1,tmp) < 0) /* The explicitly typed standard functions */
 __extrem_(MAX__STRING__STRING, STRING, __STR_CMP(op1,tmp) < 0) /* Overloaded function */
@@ -1829,7 +1831,6 @@ __compare_string(NE__BOOL__STRING__STRING, != ) /* Overloaded function */
  */
  
 
-#define __STR_CMP(str1, str2) memcmp((char*)&str1.body,(char*)&str2.body, str1.len < str2.len ? str1.len : str2.len)
 
 
     /***************/
