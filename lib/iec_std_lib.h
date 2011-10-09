@@ -1876,59 +1876,49 @@ __ANY_INT(__iec_)
     /*     RIGHT     */
     /*****************/
 
-static inline STRING __right(STRING IN, __strlen_t L){
-    STRING res;
-    res = __INIT_STRING;
-    L = L < IN.len ? L : IN.len;
-    memcpy(&res.body, &IN.body[IN.len - L], L);
-    res.len = L;
-    return res;
-}
-
-
-#define __iec_(TYPENAME) \
-static inline STRING RIGHT__STRING__STRING__##TYPENAME(EN_ENO_PARAMS, STRING str, TYPENAME L){\
+#define __right(TYPENAME) \
+static inline STRING RIGHT__STRING__STRING__##TYPENAME(EN_ENO_PARAMS, STRING IN, TYPENAME L){\
+  STRING res;\
   TEST_EN_COND(STRING, L < 0)\
-  return (STRING)__right(str,L);\
+  res = __INIT_STRING;\
+  L = L < IN.len ? L : IN.len;\
+  memcpy(&res.body, &IN.body[IN.len - L], L);\
+  res.len = L;\
+  return res;\
 }
-__ANY_INT(__iec_)
-#undef __iec_
+__ANY_INT(__right)
 
 
     /***************/
     /*     MID     */
     /***************/
 
-static inline STRING __mid(STRING IN, __strlen_t L, __strlen_t P){
-    STRING res;
-    res = __INIT_STRING;
-    if(P <= IN.len){
-	    P -= 1; /* now can be used as [index]*/
-	    L = L + P <= IN.len ? L : IN.len - P;
-	    memcpy(&res.body, &IN.body[P] , L);
-        res.len = L;
-    }
-    return res;
-}
-
-#define __iec_(TYPENAME) \
-static inline STRING MID__STRING__STRING__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, STRING str, TYPENAME L, TYPENAME P){\
+#define __mid(TYPENAME) \
+static inline STRING MID__STRING__STRING__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, STRING IN, TYPENAME L, TYPENAME P){\
+  STRING res;\
   TEST_EN_COND(STRING, L < 0 || P < 0)\
-  return (STRING)__mid(str,L,P);\
+  res = __INIT_STRING;\
+  if(P <= IN.len){\
+	P -= 1; /* now can be used as [index]*/\
+	L = L + P <= IN.len ? L : IN.len - P;\
+	memcpy(&res.body, &IN.body[P] , L);\
+	  res.len = L;\
+  }\
+  return res;\
 }
-__ANY_INT(__iec_)
-#undef __iec_
+__ANY_INT(__mid)
 
 
     /******************/
     /*     CONCAT     */
     /******************/
 
-static inline STRING CONCAT__STRING__STRING(UINT param_count, ...){
+static inline STRING CONCAT(EN_ENO_PARAMS, UINT param_count, ...){
   UINT i;
   STRING res;
   va_list ap;
   __strlen_t charcount;
+  TEST_EN(STRING)
   charcount = 0;
   res = __INIT_STRING;
 
