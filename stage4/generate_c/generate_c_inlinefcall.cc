@@ -24,6 +24,7 @@
 
 
 #define INLINE_RESULT_TEMP_VAR "__res"
+#define INLINE_PARAM_COUNT "__PARAM_COUNT"
 
 class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
@@ -520,7 +521,7 @@ printf("generate_inline(): calling print_function_parameter_data_types_c !!!!!!!
           if ((res >= 32) || (res < 0)) ERROR;
           identifier_c *param_value = new identifier_c(tmp);
           uint_type_name_c *param_type  = new uint_type_name_c();
-          identifier_c *param_name = new identifier_c("");
+          identifier_c *param_name = new identifier_c(INLINE_PARAM_COUNT);
           ADD_PARAM_LIST(param_name, param_value, param_type, function_param_iterator_c::direction_in)
           found_first_extensible_parameter = true;
         }
@@ -702,7 +703,7 @@ printf("generate_inline(): calling print_function_parameter_data_types_c !!!!!!!
           if ((res >= 32) || (res < 0)) ERROR;
           identifier_c *param_value = new identifier_c(tmp);
           uint_type_name_c *param_type  = new uint_type_name_c();
-          identifier_c *param_name = new identifier_c("");
+          identifier_c *param_name = new identifier_c(INLINE_PARAM_COUNT);
           ADD_PARAM_LIST(param_name, param_value, param_type, function_param_iterator_c::direction_in)
           found_first_extensible_parameter = true;
         }
@@ -1068,7 +1069,7 @@ printf("generate_inline(): calling print_function_parameter_data_types_c !!!!!!!
           if ((res >= 32) || (res < 0)) ERROR;
           identifier_c *param_value = new identifier_c(tmp);
           uint_type_name_c *param_type  = new uint_type_name_c();
-          identifier_c *param_name = new identifier_c("");
+          identifier_c *param_name = new identifier_c(INLINE_PARAM_COUNT);
           ADD_PARAM_LIST(param_name, param_value, param_type, function_param_iterator_c::direction_in)
           found_first_extensible_parameter = true;
         }
