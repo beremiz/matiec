@@ -868,7 +868,12 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     /* variable_name -> may be NULL ! */
     //SYM_REF4(located_var_decl_c, variable_name, location, located_var_spec_init, unused)
     void *visit(located_var_decl_c *symbol) {
-      symbol->located_var_spec_init->accept(*this);
+      array_spec_init_c* array_spec_init = dynamic_cast<array_spec_init_c*>(symbol->located_var_spec_init);
+      if (array_spec_init != NULL) {
+    	current_mode = arrayname_im;
+    	symbol->located_var_spec_init->accept(*this);
+    	current_mode = none_im;
+      }
       return NULL;
     }
 
