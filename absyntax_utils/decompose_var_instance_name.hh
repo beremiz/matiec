@@ -52,6 +52,23 @@
 
 class decompose_var_instance_name_c: null_visitor_c {
 
+  public:
+    /***********************************/
+    /* B 1.2 - Operators               */
+    /***********************************/
+    static identifier_c     LD_operator_name;
+    static identifier_c     S_operator_name;
+    static identifier_c     R_operator_name;
+    static identifier_c     S1_operator_name;
+    static identifier_c     R1_operator_name;
+    static identifier_c     CLK_operator_name;
+    static identifier_c     CU_operator_name;
+    static identifier_c     CD_operator_name;
+    static identifier_c     PV_operator_name;
+    static identifier_c     IN_operator_name;
+    static identifier_c     PT_operator_name;
+
+
   private:
     symbol_c *variable_name;
     symbol_c *next_variable_name;
@@ -97,6 +114,21 @@ class decompose_var_instance_name_c: null_visitor_c {
    */
   //SYM_REF2(structured_variable_c, record_variable, field_selector)
     void *visit(structured_variable_c *symbol);
+
+    /********************************/
+    /* B 2.2 - Operators            */
+    /********************************/
+    void *visit(LD_operator_c *symbol);
+    void *visit(S_operator_c *symbol);
+    void *visit(R_operator_c *symbol);
+    void *visit(S1_operator_c *symbol);
+    void *visit(R1_operator_c *symbol);
+    void *visit(CLK_operator_c *symbol);
+    void *visit(CU_operator_c *symbol);
+    void *visit(CD_operator_c *symbol);
+    void *visit(PV_operator_c *symbol);
+    void *visit(IN_operator_c *symbol);
+    void *visit(PT_operator_c *symbol);
 
 }; // decompose_var_instance_name_c
 

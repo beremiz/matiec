@@ -309,7 +309,7 @@ void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
   this->is_complex = true;
   if (NULL != current_structelement_name) ERROR;
   
-  /* make sure that we have decomposed all strcuture elements of the variable name */
+  /* make sure that we have decomposed all structure elements of the variable name */
   symbol_c *var_name = decompose_var_instance_name->next_part();
   if (NULL == var_name) {
     /* this is it... !
@@ -320,7 +320,10 @@ void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
      * We simply return it.
      */
     return (void *)symbol;
-   }
+  }
+
+  /* reset current_type_id because of new structure element part */
+  this->current_typeid = NULL;
 
   /* look for the var_name in the structure declaration */
   current_structelement_name = var_name;
@@ -371,7 +374,7 @@ void *search_varfb_instance_type_c::visit(structure_element_initialization_c *sy
 /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
 // SYM_REF4(function_block_declaration_c, fblock_name, var_declarations, fblock_body, unused)
 void *search_varfb_instance_type_c::visit(function_block_declaration_c *symbol) {
-  /* make sure that we have decomposed all strcuture elements of the variable name */
+  /* make sure that we have decomposed all structure elements of the variable name */
   symbol_c *var_name = decompose_var_instance_name->next_part();
   if (NULL == var_name) {
     /* this is it... !
@@ -383,6 +386,9 @@ void *search_varfb_instance_type_c::visit(function_block_declaration_c *symbol) 
      */
     return (void *)symbol;
    }
+
+   /* reset current_type_id because of new structure element part */
+   this->current_typeid = NULL;
 
    /* now search the function block declaration for the variable... */
    search_var_instance_decl_c search_decl(symbol);
@@ -404,7 +410,7 @@ void *search_varfb_instance_type_c::visit(function_block_declaration_c *symbol) 
   current_structelement_name = var_name;
   /* recursively find out the data type of var_name... */
   return symbol->var_declarations->accept(*this);
-#endif  
+#endif
   /* carry on recursively, in case the variable has more elements to be decomposed... */
   return var_decl->accept(*this);
 }

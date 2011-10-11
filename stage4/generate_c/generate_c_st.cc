@@ -170,6 +170,7 @@ void *print_setter(symbol_c* symbol,
 		symbol_c* fb_value = NULL) {
   
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+  bool type_is_complex = search_varfb_instance_type->type_is_complex();
   if (vartype == search_var_instance_decl_c::external_vt) {
     symbolic_variable_c *variable = dynamic_cast<symbolic_variable_c *>(symbol);
     /* TODO Find a solution for forcing global complex variables */
@@ -197,20 +198,16 @@ void *print_setter(symbol_c* symbol,
     fb_symbol->accept(*this);
     s4o.print(".");
   }
-  else
+  else if (type_is_complex)
     wanted_variablegeneration = complextype_base_vg;
+  else
+    wanted_variablegeneration = assignment_vg;
   
   symbol->accept(*this);
   s4o.print(",");
   wanted_variablegeneration = expression_vg;
   print_check_function(type, value, fb_value);
-  /* We need to call search_varfb_instance_type->get_vartype() again, as it may have been called
-   * again since we called it in the beginning of this print_setter() function.
-   * This make sure the call to search_varfb_instance_type->type_is_complex() will return
-   * the correct value regarding our 'symbol'.
-   */
-  search_varfb_instance_type->get_vartype(symbol);
-  if (search_varfb_instance_type->type_is_complex()) {
+  if (type_is_complex) {
     s4o.print(",");
     wanted_variablegeneration = complextype_suffix_vg;
     symbol->accept(*this);
@@ -251,23 +248,29 @@ void *visit(array_specification_c *symbol) {
 /*********************/
 void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype;
-  if (wanted_variablegeneration == complextype_base_vg)
-         generate_c_base_c::visit(symbol);
-  else if (wanted_variablegeneration == complextype_suffix_vg)
-         return NULL;
-  else if (this->is_variable_prefix_null()) {
-         vartype = search_varfb_instance_type->get_vartype(symbol);
-         if (wanted_variablegeneration == fparam_output_vg) {
-           s4o.print("&(");
-           generate_c_base_c::visit(symbol);
-           s4o.print(")");
-         } 
-         else {
-           generate_c_base_c::visit(symbol);
-         }
+  switch (wanted_variablegeneration) {
+    case complextype_base_vg:
+    case assignment_vg:
+      generate_c_base_c::visit(symbol);
+      break;
+    case complextype_suffix_vg:
+      break;
+    default:
+      if (this->is_variable_prefix_null()) {
+        vartype = search_varfb_instance_type->get_vartype(symbol);
+        if (wanted_variablegeneration == fparam_output_vg) {
+          s4o.print("&(");
+          generate_c_base_c::visit(symbol);
+          s4o.print(")");
+        }
+        else {
+          generate_c_base_c::visit(symbol);
+        }
+      }
+      else
+        print_getter(symbol);
+      break;
   }
-  else
-      print_getter(symbol);
   return NULL;
 }
 
@@ -317,6 +320,7 @@ void *visit(structured_variable_c *symbol) {
       symbol->record_variable->accept(*this);
       break;
     case complextype_suffix_vg:
+    case assignment_vg:
       symbol->record_variable->accept(*this);
       s4o.print(".");
       symbol->field_selector->accept(*this);

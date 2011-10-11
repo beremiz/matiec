@@ -128,17 +128,38 @@ void *decompose_var_instance_name_c::visit(structured_variable_c *symbol) {
 
   /* The correct code, is therefore more complex... */
   if (next_variable_name == symbol) {
-    /* NOTE: field_selector is always an identifier_c,
-     * so we do not have to recursevily visit it again...
-     * return (void *)symbol->field_selector->accept(*this);  -> NOT REQUIRED!!
-     */
-	 return (void *)symbol->field_selector;
+    return (void *)symbol->field_selector->accept(*this);
   }
 
   current_recursive_variable_name = symbol;
   return symbol->record_variable->accept(*this);
 }
 
+/********************************/
+/* B 2.2 - Operators */
+/********************************/
+void *decompose_var_instance_name_c::visit(LD_operator_c *symbol) {return (void *)&LD_operator_name;}
+void *decompose_var_instance_name_c::visit(S_operator_c *symbol) {return (void *)&S_operator_name;}
+void *decompose_var_instance_name_c::visit(R_operator_c *symbol) {return (void *)&R_operator_name;}
+void *decompose_var_instance_name_c::visit(S1_operator_c *symbol) {return (void *)&S1_operator_name;}
+void *decompose_var_instance_name_c::visit(R1_operator_c *symbol) {return (void *)&R1_operator_name;}
+void *decompose_var_instance_name_c::visit(CLK_operator_c *symbol) {return (void *)&CLK_operator_name;}
+void *decompose_var_instance_name_c::visit(CU_operator_c *symbol) {return (void *)&CU_operator_name;}
+void *decompose_var_instance_name_c::visit(CD_operator_c *symbol) {return (void *)&CD_operator_name;}
+void *decompose_var_instance_name_c::visit(PV_operator_c *symbol) {return (void *)&PV_operator_name;}
+void *decompose_var_instance_name_c::visit(IN_operator_c *symbol) {return (void *)&IN_operator_name;}
+void *decompose_var_instance_name_c::visit(PT_operator_c *symbol) {return (void *)&PT_operator_name;}
 
+identifier_c     decompose_var_instance_name_c::LD_operator_name("LD");
+identifier_c     decompose_var_instance_name_c::S_operator_name("S");
+identifier_c     decompose_var_instance_name_c::R_operator_name("R");
+identifier_c     decompose_var_instance_name_c::S1_operator_name("S1");
+identifier_c     decompose_var_instance_name_c::R1_operator_name("R1");
+identifier_c     decompose_var_instance_name_c::CLK_operator_name("CLK");
+identifier_c     decompose_var_instance_name_c::CU_operator_name("CU");
+identifier_c     decompose_var_instance_name_c::CD_operator_name("CD");
+identifier_c     decompose_var_instance_name_c::PV_operator_name("PV");
+identifier_c     decompose_var_instance_name_c::IN_operator_name("IN");
+identifier_c     decompose_var_instance_name_c::PT_operator_name("PT");
 
 

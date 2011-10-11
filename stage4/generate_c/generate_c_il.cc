@@ -324,6 +324,11 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
 
     /* A helper function... */
     void *XXX_CAL_operator(const char *param_name, symbol_c *fb_name) {
+      if (wanted_variablegeneration != expression_vg) {
+        s4o.print(param_name);
+        return NULL;
+      }
+
       if (NULL == fb_name) ERROR;
       symbolic_variable_c *sv = dynamic_cast<symbolic_variable_c *>(fb_name);
       if (NULL == sv) ERROR;
@@ -462,6 +467,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     		symbol_c* fb_value = NULL,
     		bool negative = false) {
       unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+      bool type_is_complex = search_varfb_instance_type->type_is_complex();
       if (vartype == search_var_instance_decl_c::external_vt) {
         symbolic_variable_c *variable = dynamic_cast<symbolic_variable_c *>(symbol);
         /* TODO Find a solution for forcing global complex variables */
@@ -489,8 +495,11 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
         fb_symbol->accept(*this);
         s4o.print(".");
       }
-      else
+      else if (type_is_complex)
         wanted_variablegeneration = complextype_base_vg;
+      else
+        wanted_variablegeneration = assignment_vg;
+
       symbol->accept(*this);
       s4o.print(",");
       if (negative) {
@@ -501,7 +510,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       }
       wanted_variablegeneration = expression_vg;
       print_check_function(type, value, fb_value);
-      if (search_varfb_instance_type->type_is_complex()) {
+      if (type_is_complex) {
         s4o.print(",");
         wanted_variablegeneration = complextype_suffix_vg;
         symbol->accept(*this);
@@ -552,6 +561,12 @@ TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
 /* B 1.3.3 - Derived data types */
 /********************************/
 
+/*  signed_integer DOTDOT signed_integer */
+void *visit(subrange_c *symbol) {
+  symbol->lower_limit->accept(*this);
+  return NULL;
+}
+
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *visit(array_specification_c *symbol) {
   symbol->non_generic_type_name->accept(*this);
@@ -564,23 +579,29 @@ void *visit(array_specification_c *symbol) {
 
 void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype;
-  if (wanted_variablegeneration == complextype_base_vg)
-	generate_c_base_c::visit(symbol);
-  else if (wanted_variablegeneration == complextype_suffix_vg)
-	return NULL;
-  else if (this->is_variable_prefix_null()) {
-	vartype = search_varfb_instance_type->get_vartype(symbol);
-    if (wanted_variablegeneration == fparam_output_vg) {
-      s4o.print("&(");
+  switch (wanted_variablegeneration) {
+    case complextype_base_vg:
+    case assignment_vg:
       generate_c_base_c::visit(symbol);
-      s4o.print(")");
-    }
-    else {
-      generate_c_base_c::visit(symbol);
-    }
+      break;
+    case complextype_suffix_vg:
+	  break;
+    default:
+      if (this->is_variable_prefix_null()) {
+	    vartype = search_varfb_instance_type->get_vartype(symbol);
+        if (wanted_variablegeneration == fparam_output_vg) {
+          s4o.print("&(");
+          generate_c_base_c::visit(symbol);
+          s4o.print(")");
+        }
+        else {
+          generate_c_base_c::visit(symbol);
+        }
+      }
+      else
+        print_getter(symbol);
+      break;
   }
-  else
-    print_getter(symbol);
   return NULL;
 }
 
@@ -630,6 +651,7 @@ void *visit(structured_variable_c *symbol) {
       symbol->record_variable->accept(*this);
       break;
     case complextype_suffix_vg:
+    case assignment_vg:
       symbol->record_variable->accept(*this);
       s4o.print(".");
       symbol->field_selector->accept(*this);
@@ -1554,6 +1576,11 @@ void *visit(il_param_out_assignment_c *symbol) {ERROR; return NULL;} // should n
 /*******************/
 
 void *visit(LD_operator_c *symbol)	{
+  if (wanted_variablegeneration != expression_vg) {
+    s4o.print("LD");
+    return NULL;
+  }
+
   /* the data type resulting from this operation... */
   this->default_variable_name.current_type = this->current_operand_type;
   XXX_operator(&(this->default_variable_name), " = ", this->current_operand);
@@ -1617,6 +1644,11 @@ void *visit(NOT_operator_c *symbol)	{
 }
 
 void *visit(S_operator_c *symbol)	{
+  if (wanted_variablegeneration != expression_vg) {
+    s4o.print("LD");
+    return NULL;
+  }
+
   if ((NULL == this->current_operand) || (NULL == this->current_operand_type)) ERROR;
 
   C_modifier();
@@ -1635,6 +1667,11 @@ void *visit(S_operator_c *symbol)	{
 }
 
 void *visit(R_operator_c *symbol)	{
+  if (wanted_variablegeneration != expression_vg) {
+    s4o.print("LD");
+    return NULL;
+  }
+
   if ((NULL == this->current_operand) || (NULL == this->current_operand_type)) ERROR;
 
   C_modifier();

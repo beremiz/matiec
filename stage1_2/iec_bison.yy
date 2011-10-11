@@ -1220,6 +1220,7 @@ void print_err_msg(int first_line,
 %type  <leaf>	il_simple_operator_clash
 %type  <leaf>	il_simple_operator_clash1
 %type  <leaf>	il_simple_operator_clash2
+%type  <leaf>	il_simple_operator_clash3
 %type  <leaf>	il_simple_operator_noclash
 
 //%type  <leaf>	il_expr_operator
@@ -3405,12 +3406,16 @@ subscript:  expression;
 structured_variable:
   record_variable '.' field_selector
 	{$$ = new structured_variable_c($1, $3, locloc(@$));}
+| record_variable '.' il_simple_operator_clash3
+    {$$ = new structured_variable_c($1, $3, locloc(@$));}
 ;
 
 
 /* please see note above any_symbolic_variable */
 any_structured_variable:
   any_record_variable '.' field_selector
+	{$$ = new structured_variable_c($1, $3, locloc(@$));}
+| any_record_variable '.' il_simple_operator_clash3
 	{$$ = new structured_variable_c($1, $3, locloc(@$));}
 ;
 
@@ -6825,20 +6830,9 @@ il_simple_operator:
 
 
 il_simple_operator_noclash:
-  LD_operator
-| LDN_operator
+  LDN_operator
 | ST_operator
 | STN_operator
-| S_operator
-| R_operator
-| S1_operator
-| R1_operator
-| CLK_operator
-| CU_operator
-| CD_operator
-| PV_operator
-| IN_operator
-| PT_operator
 | il_expr_operator_noclash
 ;
 
@@ -6846,6 +6840,7 @@ il_simple_operator_noclash:
 il_simple_operator_clash:
   il_simple_operator_clash1
 | il_simple_operator_clash2
+| il_simple_operator_clash3
 ;
 
 il_simple_operator_clash1:
@@ -6856,6 +6851,19 @@ il_simple_operator_clash2:
   il_expr_operator_clash
 ;
 
+il_simple_operator_clash3:
+  LD_operator
+| S_operator
+| R_operator
+| S1_operator
+| R1_operator
+| CLK_operator
+| CU_operator
+| CD_operator
+| PV_operator
+| IN_operator
+| PT_operator
+;
 
 /*
 il_expr_operator:
