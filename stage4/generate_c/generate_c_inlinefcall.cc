@@ -160,7 +160,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       s4o.print("_");
       function_name->accept(*this);
       if (f_decl != NULL) {
-printf("generate_inline(): calling print_function_parameter_data_types_c !!!!!!!!!!!!!!!!!!!!!!\n");
+        /* function being called is overloaded! */
+        s4o.print("__");
         print_function_parameter_data_types_c overloaded_func_suf(&s4o);
         f_decl->accept(overloaded_func_suf);
       }	
@@ -212,7 +213,8 @@ printf("generate_inline(): calling print_function_parameter_data_types_c !!!!!!!
       s4o.print(" = ");
       function_name->accept(*this);
       if (f_decl != NULL) {
-printf("generate_inline(): calling print_function_parameter_data_types_c !!!!!!!!!!!!!!!!!!!!!!\n");
+    	/* function being called is overloaded! */
+    	s4o.print("__");
         print_function_parameter_data_types_c overloaded_func_suf(&s4o);
         f_decl->accept(overloaded_func_suf);
       }
