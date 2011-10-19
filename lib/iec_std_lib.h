@@ -1854,22 +1854,17 @@ __ANY_INT(__iec_)
     /*     LEFT     */
     /****************/
 
-static inline STRING __left(STRING IN, __strlen_t L){
-    STRING res;
-    res = __INIT_STRING;
-    L = L < IN.len ? L : IN.len;
-    memcpy(&res.body, &IN.body, L);
-    res.len = L;
-    return res;
+#define __left(TYPENAME) \
+static inline STRING LEFT__STRING__STRING__##TYPENAME(EN_ENO_PARAMS, STRING IN, TYPENAME L){\
+    STRING res;\
+    TEST_EN_COND(STRING, L < 0)\
+    res = __INIT_STRING;\
+    L = L < (TYPENAME)IN.len ? L : (TYPENAME)IN.len;\
+    memcpy(&res.body, &IN.body, L);\
+    res.len = L;\
+    return res;\
 }
-
-#define __iec_(TYPENAME) \
-static inline STRING LEFT__STRING__STRING__##TYPENAME(EN_ENO_PARAMS, STRING str, TYPENAME L){\
-  TEST_EN_COND(STRING, L < 0)\
-  return (STRING)__left(str,L);\
-}
-__ANY_INT(__iec_)
-#undef __iec_
+__ANY_INT(__left)
 
 
     /*****************/
@@ -1881,8 +1876,8 @@ static inline STRING RIGHT__STRING__STRING__##TYPENAME(EN_ENO_PARAMS, STRING IN,
   STRING res;\
   TEST_EN_COND(STRING, L < 0)\
   res = __INIT_STRING;\
-  L = L < IN.len ? L : IN.len;\
-  memcpy(&res.body, &IN.body[IN.len - L], L);\
+  L = L < (TYPENAME)IN.len ? L : (TYPENAME)IN.len;\
+  memcpy(&res.body, &IN.body[(TYPENAME)IN.len - L], L);\
   res.len = L;\
   return res;\
 }
@@ -1898,11 +1893,11 @@ static inline STRING MID__STRING__STRING__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS
   STRING res;\
   TEST_EN_COND(STRING, L < 0 || P < 0)\
   res = __INIT_STRING;\
-  if(P <= IN.len){\
+  if(P <= (TYPENAME)IN.len){\
 	P -= 1; /* now can be used as [index]*/\
-	L = L + P <= IN.len ? L : IN.len - P;\
+	L = L + P <= (TYPENAME)IN.len ? L : (TYPENAME)IN.len - P;\
 	memcpy(&res.body, &IN.body[P] , L);\
-	  res.len = L;\
+	res.len = L;\
   }\
   return res;\
 }
