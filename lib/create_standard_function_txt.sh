@@ -89,6 +89,7 @@ cpp <<"END" | sed "s/ FUNCTION/\nFUNCTION/g" | grep -v '#'
 /* NOTE on explicit typing of:
  *           - Table 25 - Standard bit shift functions
  *           - Table 29 - Character string Functions
+ *           - Table 27 - Standard selection functions (actually, just the MUX function)
  *
  *  In section 2.5.1.4 (Typing, overloading, and type conversion) of the IEC 61131-3 (version 2)
  *  of the standard, it is stated:
