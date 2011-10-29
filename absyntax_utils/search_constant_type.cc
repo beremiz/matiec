@@ -124,13 +124,13 @@ void *search_constant_type_c::visit(date_and_time_c *symbol) {return (void *)(sy
 /* B 1.3.3 - Derived data types */
 /********************************/
 void *search_constant_type_c::visit(enumerated_value_c *symbol) {
-	if (symbol->type != NULL)
-		return (void *)(symbol->type);
+  if (symbol->type != NULL)
+    return (void *)(symbol->type);
 
-	symbol_c *value_type = enumerated_value_symtable.find_value(symbol->value);
-	if (value_type == enumerated_value_symtable.end_value()) ERROR;
-
-	return (void *)value_type;
+  symbol_c *value_type = enumerated_value_symtable.find_value(symbol->value);
+  if (value_type == enumerated_value_symtable.end_value())
+    return NULL;
+  return (void *)value_type;
 }
 
 real_type_name_c     search_constant_type_c::real_type_name;
