@@ -100,6 +100,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 	symbol_c* current_array_type;
 
 	int fcall_number;
+	bool generating_inlinefunction;
 	symbol_c *fbname;
 
     search_expression_type_c *search_expression_type;
@@ -122,6 +123,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       fcall_number = 0;
       fbname = name;
       wanted_variablegeneration = expression_vg;
+      generating_inlinefunction = false;
     }
 
     virtual ~generate_c_inlinefcall_c(void) {
@@ -144,7 +146,9 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
             symbol_c *function_type_suffix,
             std::list<FUNCTION_PARAM*> param_list,
             function_declaration_c *f_decl = NULL) {
-            std::list<FUNCTION_PARAM*>::iterator pt;
+
+      std::list<FUNCTION_PARAM*>::iterator pt;
+      generating_inlinefunction = true;
 
       fcall_number++;
       function_type_prefix = search_expression_type->default_literal_type(function_type_prefix);
@@ -255,6 +259,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n\n");
+
+      generating_inlinefunction = false;
     }
 
   private:
@@ -366,12 +372,14 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     /*********************/
     void *visit(symbolic_variable_c *symbol) {
       unsigned int vartype;
-      if (wanted_variablegeneration == complextype_base_vg)
-        generate_c_base_c::visit(symbol);
-      else if (wanted_variablegeneration == complextype_suffix_vg)
-        return NULL;
-      else
-        print_getter(symbol);
+      if (generating_inlinefunction) {
+        if (wanted_variablegeneration == complextype_base_vg)
+          generate_c_base_c::visit(symbol);
+        else if (wanted_variablegeneration == complextype_suffix_vg)
+          return NULL;
+        else
+          print_getter(symbol);
+      }
       return NULL;
     }
 
@@ -381,13 +389,15 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     // direct_variable: direct_variable_token   {$$ = new direct_variable_c($1);};
     void *visit(direct_variable_c *symbol) {
       TRACE("direct_variable_c");
-      /* Do not use print_token() as it will change everything into uppercase */
-      if (strlen(symbol->value) == 0) ERROR;
-      s4o.print(GET_LOCATED);
-      s4o.print("(");
-      this->print_variable_prefix();
-      s4o.printlocation(symbol->value + 1);
-      s4o.print(")");
+      if (generating_inlinefunction) {
+        /* Do not use print_token() as it will change everything into uppercase */
+        if (strlen(symbol->value) == 0) ERROR;
+        s4o.print(GET_LOCATED);
+        s4o.print("(");
+        this->print_variable_prefix();
+        s4o.printlocation(symbol->value + 1);
+        s4o.print(")");
+      }
       return NULL;
     }
 
@@ -398,18 +408,20 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     // SYM_REF2(structured_variable_c, record_variable, field_selector)
     void *visit(structured_variable_c *symbol) {
       TRACE("structured_variable_c");
-      switch (wanted_variablegeneration) {
-        case complextype_base_vg:
-          symbol->record_variable->accept(*this);
-          break;
-        case complextype_suffix_vg:
-          symbol->record_variable->accept(*this);
-          s4o.print(".");
-          symbol->field_selector->accept(*this);
-          break;
-        default:
-          print_getter(symbol);
-          break;
+      if (generating_inlinefunction) {
+        switch (wanted_variablegeneration) {
+          case complextype_base_vg:
+            symbol->record_variable->accept(*this);
+            break;
+          case complextype_suffix_vg:
+            symbol->record_variable->accept(*this);
+            s4o.print(".");
+            symbol->field_selector->accept(*this);
+            break;
+          default:
+            print_getter(symbol);
+            break;
+        }
       }
       return NULL;
     }
@@ -417,24 +429,26 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     /*  subscripted_variable '[' subscript_list ']' */
     //SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
     void *visit(array_variable_c *symbol) {
-      switch (wanted_variablegeneration) {
-        case complextype_base_vg:
-          symbol->subscripted_variable->accept(*this);
-          break;
-        case complextype_suffix_vg:
-          symbol->subscripted_variable->accept(*this);
+      if (generating_inlinefunction) {
+        switch (wanted_variablegeneration) {
+          case complextype_base_vg:
+            symbol->subscripted_variable->accept(*this);
+            break;
+          case complextype_suffix_vg:
+            symbol->subscripted_variable->accept(*this);
 
-          current_array_type = search_varfb_instance_type->get_type_id(symbol->subscripted_variable);
-          if (current_array_type == NULL) ERROR;
+            current_array_type = search_varfb_instance_type->get_type_id(symbol->subscripted_variable);
+            if (current_array_type == NULL) ERROR;
 
-          s4o.print(".table");
-          symbol->subscript_list->accept(*this);
+            s4o.print(".table");
+            symbol->subscript_list->accept(*this);
 
-          current_array_type = NULL;
-          break;
-        default:
-          print_getter(symbol);
-          break;
+            current_array_type = NULL;
+            break;
+          default:
+            print_getter(symbol);
+            break;
+        }
       }
       return NULL;
     }
@@ -1150,6 +1164,39 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       return NULL;
     }
 
-};  /* generate_c_inlinefcall_c */
+	/*********************************************/
+	/* B.1.6  Sequential function chart elements */
+	/*********************************************/
 
+	void *visit(initial_step_c *symbol) {
+		return NULL;
+	}
+
+	void *visit(step_c *symbol) {
+		return NULL;
+	}
+
+	void *visit(transition_c *symbol) {
+		return symbol->transition_condition->accept(*this);
+	}
+
+	void *visit(transition_condition_c *symbol) {
+		// Transition condition is in IL
+		if (symbol->transition_condition_il != NULL) {
+			symbol->transition_condition_il->accept(*this);
+		}
+
+		// Transition condition is in ST
+		if (symbol->transition_condition_st != NULL) {
+			symbol->transition_condition_st->accept(*this);
+		}
+
+		return NULL;
+	}
+
+	void *visit(action_c *symbol) {
+		return symbol->function_block_body->accept(*this);
+	}
+
+};  /* generate_c_inlinefcall_c */
 
