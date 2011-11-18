@@ -440,6 +440,13 @@ bool visit_expression_type_c::is_literal_bool_type(symbol_c *type_symbol) {
   return false;
 }
 
+bool visit_expression_type_c::is_ANY_ELEMENTARY_OR_ENUMERATED_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (search_base_type.type_is_enumerated(type_symbol)) {return true;}
+  return is_ANY_ELEMENTARY_compatible(type_symbol);
+}
+
+
 /* Determine the common data type between two data types.
  * If no common data type found, return NULL.
  *
@@ -1785,7 +1792,7 @@ void *visit_expression_type_c::visit(and_expression_c *symbol) {
 void *visit_expression_type_c::visit(equ_expression_c *symbol) {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_OR_ENUMERATED_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
@@ -1793,7 +1800,7 @@ void *visit_expression_type_c::visit(equ_expression_c *symbol) {
 void *visit_expression_type_c::visit(notequ_expression_c *symbol)  {
   symbol_c *left_type = base_type((symbol_c *)symbol->l_exp->accept(*this));
   symbol_c *right_type = base_type((symbol_c *)symbol->r_exp->accept(*this));
-  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_compatible, symbol->l_exp, symbol->r_exp);
+  compute_expression(left_type, right_type, &visit_expression_type_c::is_ANY_ELEMENTARY_OR_ENUMERATED_compatible, symbol->l_exp, symbol->r_exp);
   return &search_expression_type_c::bool_type_name;
 }
 
