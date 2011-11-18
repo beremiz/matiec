@@ -120,6 +120,9 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       search_expression_type = new search_expression_type_c(scope);
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
       this->set_variable_prefix(variable_prefix);
+      current_operand = NULL;
+      current_operand_type = NULL;
+      il_default_variable_init_value = NULL;
       fcall_number = 0;
       fbname = name;
       wanted_variablegeneration = expression_vg;
@@ -330,27 +333,13 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     		symbol_c* type,
     		symbol_c* value) {
       unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-      if (vartype == search_var_instance_decl_c::external_vt) {
-        symbolic_variable_c *variable = dynamic_cast<symbolic_variable_c *>(symbol);
-        /* TODO Find a solution for forcing global complex variables */
-        if (variable != NULL) {
-          s4o.print(SET_EXTERNAL);
-          s4o.print("(");
-          variable->var_name->accept(*this);
-          s4o.print(",");
-        }
-        else {
-          s4o.print(SET_COMPLEX_EXTERNAL);
-          s4o.print("(");
-        }
-      }
-      else {
-        if (vartype == search_var_instance_decl_c::located_vt)
-          s4o.print(SET_LOCATED);
-        else
-          s4o.print(SET_VAR);
-        s4o.print("(");
-      }
+      if (vartype == search_var_instance_decl_c::external_vt)
+        s4o.print(SET_EXTERNAL);
+      else if (vartype == search_var_instance_decl_c::located_vt)
+        s4o.print(SET_LOCATED);
+      else
+        s4o.print(SET_VAR);
+      s4o.print("(,");
 
       wanted_variablegeneration = complextype_base_vg;
       symbol->accept(*this);
@@ -469,6 +458,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       }
       return NULL;
     }
+
     /* | il_simple_operator [il_operand] */
     //SYM_REF2(il_simple_operation_c, il_simple_operator, il_operand)
     void *visit(il_simple_operation_c *symbol) {

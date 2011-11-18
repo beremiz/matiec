@@ -250,7 +250,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(SET_VAR);
           s4o.print("(");
           print_variable_prefix();
-          s4o.print("__step_list[");
+          s4o.print(",__step_list[");
           s4o.print_integer(step_number);
           s4o.print("].state,1);\n");
           step_number++;

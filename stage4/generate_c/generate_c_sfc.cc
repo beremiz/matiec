@@ -96,8 +96,9 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       }
     }
 
-    void print_step_argument(symbol_c *step_name, const char* argument) {
+    void print_step_argument(symbol_c *step_name, const char* argument, bool setter=false) {
       print_variable_prefix();
+      if (setter) s4o.print(",");
       s4o.print("__step_list[");
       s4o.print(SFC_STEP_ACTION_PREFIX);
       step_name->accept(*this);
@@ -105,8 +106,9 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       s4o.print(argument);
     }
 
-    void print_action_argument(symbol_c *action_name, const char* argument) {
+    void print_action_argument(symbol_c *action_name, const char* argument, bool setter=false) {
       print_variable_prefix();
+      if (setter) s4o.print(",");
       s4o.print("__action_list[");
       s4o.print(SFC_STEP_ACTION_PREFIX);
       action_name->accept(*this);
@@ -122,7 +124,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       s4o.print(s4o.indent_spaces);
       s4o.print(SET_VAR);
       s4o.print("(");
-      print_step_argument(step_name, "state");
+      print_step_argument(step_name, "state", true);
       s4o.print(",0);\n");
     }
     
@@ -130,7 +132,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       s4o.print(s4o.indent_spaces);
       s4o.print(SET_VAR);
       s4o.print("(");
-      print_step_argument(step_name, "state");
+      print_step_argument(step_name, "state", true);
       s4o.print(",1);\n" + s4o.indent_spaces);
       print_step_argument(step_name, "elapsed_time");
       s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
@@ -283,7 +285,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
           s4o.print(SET_VAR);
           s4o.print("(");
           print_variable_prefix();
-          s4o.print("__transition_list[");
+          s4o.print(",__transition_list[");
           print_transition_number();
           s4o.print("],0);\n");
           s4o.indent_left();
@@ -337,6 +339,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print(SET_VAR);
             s4o.print("(");
             print_variable_prefix();
+            s4o.print(",");
             if (wanted_sfcgeneration == transitiontestdebug_sg)
               s4o.print("__debug_");
             else
@@ -345,6 +348,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             print_transition_number();
             s4o.print("],");
             generate_c_il->print_backup_variable();
+            generate_c_il->reset_default_variable_name();
             s4o.print(");\n");
           }
           // Transition condition is in ST
@@ -353,6 +357,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print(SET_VAR);
             s4o.print("(");
             print_variable_prefix();
+            s4o.print(",");
             if (wanted_sfcgeneration == transitiontestdebug_sg)
               s4o.print("__debug_");
             else
@@ -370,7 +375,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print(SET_VAR);
             s4o.print("(");
             print_variable_prefix();
-            s4o.print("__debug_transition_list[");
+            s4o.print(",__debug_transition_list[");
             print_transition_number();
             s4o.print("],");
             s4o.print(GET_VAR);
@@ -842,21 +847,16 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
             unsigned int vartype = search_var_instance_decl->get_vartype();
 
             s4o.print(s4o.indent_spaces);
-            if (vartype == search_var_instance_decl_c::external_vt) {
+            if (vartype == search_var_instance_decl_c::external_vt)
           	  s4o.print(SET_EXTERNAL);
-          	  s4o.print("(");
-          	  pt->symbol->accept(*this);
-              s4o.print(",");
-            }
-          	else {
-          	  if (vartype == search_var_instance_decl_c::located_vt)
-          	    s4o.print(SET_LOCATED);
-          	  else
-          	    s4o.print(SET_VAR);
-              s4o.print("(");
-          	}
-            print_variable_prefix();
-            pt->symbol->accept(*this);
+          	else if (vartype == search_var_instance_decl_c::located_vt)
+          	  s4o.print(SET_LOCATED);
+          	else
+          	  s4o.print(SET_VAR);
+            s4o.print("(");
+          	print_variable_prefix();
+          	s4o.print(",");
+          	pt->symbol->accept(*this);
             s4o.print(",");
             print_variable_prefix();
             s4o.print("__action_list[");
