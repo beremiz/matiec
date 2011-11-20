@@ -427,7 +427,9 @@ __ANY_NUM(__iec_)
   /**************/
   /*     SUB    */
   /**************/
-#define __iec_(TYPENAME) __arith_static(SUB, TYPENAME)
+#define __iec_(TYPENAME)\
+__function_2p(SUB_##TYPENAME, TYPENAME, IN1, TYPENAME, IN2, TYPENAME)  /* explicitly typed function */\
+__function_2p(SUB, TYPENAME, IN1, TYPENAME, IN2, TYPENAME)             /* overloaded function */ 
 __ANY_NUM(__iec_)
 #undef __iec_
 

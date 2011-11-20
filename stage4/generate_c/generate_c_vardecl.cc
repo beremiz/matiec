@@ -161,6 +161,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
         s4o.print(SET_VAR);
         s4o.print("(");
         print_variable_prefix();
+        s4o.print(",");
         symbol->elements[i]->accept(*this);
         s4o.print(",temp);\n");
       }
@@ -553,6 +554,7 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
         s4o.print(SET_VAR);
         s4o.print("(");
         print_variable_prefix();
+        s4o.print(",");
         symbol->elements[i]->accept(*this);
         s4o.print(",temp);\n");
       }
@@ -924,16 +926,19 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
         	  s4o.print(" ");
         	else
         	  s4o.print(",");
+        	print_variable_prefix();
           }
           else if (wanted_varformat == localinit_vf) {
         	this->current_var_type_symbol->accept(*this);
             s4o.print(" ");
+            print_variable_prefix();
           }
           else if (wanted_varformat == init_vf) {
         	s4o.print(SET_VAR);
         	s4o.print("(");
+        	print_variable_prefix();
+        	s4o.print(",");
           }
-          print_variable_prefix();
           list->elements[i]->accept(*this);
           if (wanted_varformat != local_vf) {
         	if (wanted_varformat == localinit_vf &&

@@ -51,6 +51,7 @@ class generate_c_st_c: public generate_c_typedecl_c {
       expression_vg,
       assignment_vg,
       complextype_base_vg,
+      complextype_base_assignment_vg,
       complextype_suffix_vg,
       fparam_output_vg
     } variablegeneration_t;
@@ -171,35 +172,21 @@ void *print_setter(symbol_c* symbol,
   
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
   bool type_is_complex = search_varfb_instance_type->type_is_complex();
-  if (vartype == search_var_instance_decl_c::external_vt) {
-    symbolic_variable_c *variable = dynamic_cast<symbolic_variable_c *>(symbol);
-    /* TODO Find a solution for forcing global complex variables */
-    if (variable != NULL) {
-      s4o.print(SET_EXTERNAL);
-      s4o.print("(");
-      variable->var_name->accept(*this);
-      s4o.print(",");
-    }
-    else {
-      s4o.print(SET_COMPLEX_EXTERNAL);
-      s4o.print("(");
-    }
-  }
-  else {
-    if (vartype == search_var_instance_decl_c::located_vt)
-      s4o.print(SET_LOCATED);
-    else
-      s4o.print(SET_VAR);
-    s4o.print("(");
-  }
+  if (vartype == search_var_instance_decl_c::external_vt)
+    s4o.print(SET_EXTERNAL);
+  else if (vartype == search_var_instance_decl_c::located_vt)
+    s4o.print(SET_LOCATED);
+  else
+    s4o.print(SET_VAR);
+  s4o.print("(");
 
   if (fb_symbol != NULL) {
     print_variable_prefix();
     fb_symbol->accept(*this);
-    s4o.print(".");
+    s4o.print(".,");
   }
   else if (type_is_complex)
-    wanted_variablegeneration = complextype_base_vg;
+    wanted_variablegeneration = complextype_base_assignment_vg;
   else
     wanted_variablegeneration = assignment_vg;
   
@@ -249,8 +236,13 @@ void *visit(array_specification_c *symbol) {
 void *visit(symbolic_variable_c *symbol) {
   unsigned int vartype;
   switch (wanted_variablegeneration) {
-    case complextype_base_vg:
+    case complextype_base_assignment_vg:
     case assignment_vg:
+      this->print_variable_prefix();
+      s4o.print(",");
+      symbol->var_name->accept(*this);
+      break;
+    case complextype_base_vg:
       generate_c_base_c::visit(symbol);
       break;
     case complextype_suffix_vg:
@@ -317,6 +309,7 @@ void *visit(structured_variable_c *symbol) {
   TRACE("structured_variable_c");
   switch (wanted_variablegeneration) {
     case complextype_base_vg:
+    case complextype_base_assignment_vg:
       symbol->record_variable->accept(*this);
       break;
     case complextype_suffix_vg:
@@ -343,6 +336,7 @@ void *visit(structured_variable_c *symbol) {
 void *visit(array_variable_c *symbol) {
   switch (wanted_variablegeneration) {
     case complextype_base_vg:
+    case complextype_base_assignment_vg:
       symbol->subscripted_variable->accept(*this);
       break;
     case complextype_suffix_vg:

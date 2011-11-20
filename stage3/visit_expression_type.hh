@@ -137,6 +137,8 @@ class visit_expression_type_c: public search_constant_type_c {
     bool is_literal_real_type           (symbol_c *type_symbol);
     bool is_literal_bool_type           (symbol_c *type_symbol);
 
+    bool is_ANY_ELEMENTARY_OR_ENUMERATED_compatible (symbol_c *type_symbol);
+
     /* Determine the common data type between two data types.
      * If no common data type found, return NULL.
      *

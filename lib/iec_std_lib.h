@@ -340,7 +340,7 @@ static inline STRING __bool_to_string(BOOL IN) {
 static inline STRING __bit_to_string(LWORD IN) {
     STRING res;
     res = __INIT_STRING;
-    res.len = snprintf((char*)res.body, STR_MAX_LEN, "16#%llx", IN);
+    res.len = snprintf((char*)res.body, STR_MAX_LEN, "16#%llx",(long long unsigned int)IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
@@ -354,14 +354,14 @@ static inline STRING __real_to_string(LREAL IN) {
 static inline STRING __sint_to_string(LINT IN) {
     STRING res;
     res = __INIT_STRING;
-    res.len = snprintf((char*)res.body, STR_MAX_LEN, "%lld", IN);
+    res.len = snprintf((char*)res.body, STR_MAX_LEN, "%lld", (long long int)IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
 static inline STRING __uint_to_string(ULINT IN) {
     STRING res;
     res = __INIT_STRING;
-    res.len = snprintf((char*)res.body, STR_MAX_LEN, "%llu", IN);
+    res.len = snprintf((char*)res.body, STR_MAX_LEN, "%llu", (long long unsigned int)IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }

@@ -124,7 +124,6 @@ extern void error_exit(const char *file_name, int line_no);
 /* Variable setter symbol for accessor macros */
 #define SET_VAR "__SET_VAR"
 #define SET_EXTERNAL "__SET_EXTERNAL"
-#define SET_COMPLEX_EXTERNAL "__SET_COMPLEX_EXTERNAL"
 #define SET_LOCATED "__SET_LOCATED"
 
 
@@ -1334,7 +1333,7 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print(SET_VAR);
   s4o.print("(");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print("->ENO,__BOOL_LITERAL(FALSE));\n");
+  s4o.print("->,ENO,__BOOL_LITERAL(FALSE));\n");
   s4o.print(s4o.indent_spaces + "return;\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n");
@@ -1344,7 +1343,7 @@ void *visit(function_block_declaration_c *symbol) {
   s4o.print(SET_VAR);
   s4o.print("(");
   s4o.print(FB_FUNCTION_PARAM);
-  s4o.print("->ENO,__BOOL_LITERAL(TRUE));\n");
+  s4o.print("->,ENO,__BOOL_LITERAL(TRUE));\n");
   s4o.indent_left();
   s4o.print(s4o.indent_spaces + "}\n");
 
@@ -1621,7 +1620,8 @@ void *visit(configuration_declaration_c *symbol) {
   /* (A.2) Global variables */
   vardecl = new generate_c_vardecl_c(&s4o,
                                      generate_c_vardecl_c::local_vf,
-                                     generate_c_vardecl_c::global_vt);
+                                     generate_c_vardecl_c::global_vt,
+                                     symbol->configuration_name);
   vardecl->print(symbol);
   delete vardecl;
   s4o.print("\n");
@@ -1894,6 +1894,7 @@ END_RESOURCE
       s4o.print("extern unsigned long long common_ticktime__;\n\n");
 
       s4o.print("#include \"accessor.h\"\n\n");
+      s4o.print("#include \"POUS.h\"\n\n");
 
       /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
@@ -1907,7 +1908,6 @@ END_RESOURCE
       }
       
       /* (A.3) POUs inclusion */
-      s4o.print("#include \"POUS.h\"\n\n");
       s4o.print("#include \"POUS.c\"\n\n");
       
       wanted_declaretype = declare_dt;
@@ -2098,33 +2098,29 @@ END_RESOURCE
           if (symbol->single_data_source != NULL) {
             symbol_c *config_var_decl = NULL;
             symbol_c *res_var_decl = NULL;
-            unsigned int vartype;
+            s4o.print(s4o.indent_spaces + "{");
             symbol_c *current_var_reference = ((global_var_reference_c *)(symbol->single_data_source))->global_var_name;
             res_var_decl = search_resource_instance->get_decl(current_var_reference);
             if (res_var_decl == NULL) {
               config_var_decl = search_config_instance->get_decl(current_var_reference);
               if (config_var_decl == NULL)
                 ERROR;
-              vartype = search_config_instance->get_vartype();
-              s4o.print(s4o.indent_spaces + "{extern ");
               config_var_decl->accept(*this);
-              s4o.print(" *");
-              symbol->single_data_source->accept(*this);
-              s4o.print("; ");
             }
             else {
-              vartype = search_resource_instance->get_vartype();
-              s4o.print(s4o.indent_spaces);
+              res_var_decl->accept(*this);
             }
+            s4o.print("* ");
+            symbol->single_data_source->accept(*this);
+            s4o.print(" = __GET_GLOBAL_");
+            symbol->single_data_source->accept(*this);
+            s4o.print("();");
             s4o.print(SET_VAR);
             s4o.print("(");
             current_task_name->accept(*this);
-            s4o.print("_R_TRIG.CLK, *__GET_GLOBAL_");
+            s4o.print("_R_TRIG.,CLK, *");
             symbol->single_data_source->accept(*this);
-            s4o.print("());");
-            if (config_var_decl != NULL)
-              s4o.print("}");
-            s4o.print("\n");
+            s4o.print(");}\n");
             s4o.print(s4o.indent_spaces + "R_TRIG");
             s4o.print(FB_FUNCTION_SUFFIX);
             s4o.print("(&");
