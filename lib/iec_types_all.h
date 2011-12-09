@@ -97,6 +97,7 @@ typedef struct {\
 typedef struct {\
   type *value;\
   IEC_BYTE flags;\
+  type fvalue;\
 } __IEC_##type##_p;
 
 #define __DECLARE_ENUMERATED_TYPE(type, ...)\

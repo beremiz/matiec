@@ -73,15 +73,15 @@
 #define __GET_VAR(name, ...)\
 	name.value __VA_ARGS__
 #define __GET_EXTERNAL(name, ...)\
-	((name.flags & __IEC_FORCE_FLAG) ? name.fvalue __VA_ARGS__ : *(name.value) __VA_ARGS__)
+	((name.flags & __IEC_FORCE_FLAG) ? name.fvalue __VA_ARGS__ : (*(name.value)) __VA_ARGS__)
 #define __GET_LOCATED(name, ...)\
-	((name.flags & __IEC_FORCE_FLAG) ? name.fvalue __VA_ARGS__ : *(name.value) __VA_ARGS__)
+	((name.flags & __IEC_FORCE_FLAG) ? name.fvalue __VA_ARGS__ : (*(name.value)) __VA_ARGS__)
 #define __GET_VAR_BY_REF(name, ...)\
 	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &(name.value __VA_ARGS__))
 #define __GET_EXTERNAL_BY_REF(name, ...)\
-	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &(*(name.value) __VA_ARGS__))
+	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &((*(name.value)) __VA_ARGS__))
 #define __GET_LOCATED_BY_REF(name, ...)\
-	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &(*(name.value) __VA_ARGS__))
+	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &((*(name.value)) __VA_ARGS__))
 
 // variable setting macros
 #define __SET_VAR(prefix, name, new_value, ...)\
