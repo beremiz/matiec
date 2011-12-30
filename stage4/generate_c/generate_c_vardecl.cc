@@ -811,7 +811,8 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
                   localinit_vf,
                   init_vf,
                   constructorinit_vf,
-                  globalinit_vf
+                  globalinit_vf,
+                  globalprototype_vf,
                  } varformat_t;
 
 
@@ -1991,14 +1992,29 @@ void *visit(global_var_spec_c *symbol) {
 		  symbol->global_var_name->accept(*this);
 	    else
 		  symbol->location->accept(*this);
-	    s4o.print(",__INITIAL_VALUE(");
+	    s4o.print(",");
+	    s4o.print(INITIAL_VALUE);
+	    s4o.print("(");
 	    this->current_var_init_symbol->accept(*this);
 	    s4o.print(")");
 	    print_retain();
 	    s4o.print(")");
       }
       break;
-
+    
+    case globalprototype_vf:
+      s4o.print(s4o.indent_spaces);
+      s4o.print(DECLARE_GLOBAL_PROTOTYPE);
+	  s4o.print("(");
+	  this->current_var_type_symbol->accept(*this);
+	  s4o.print(",");
+	  if (symbol->global_var_name != NULL)
+		symbol->global_var_name->accept(*this);
+	  else
+		symbol->location->accept(*this);
+	  s4o.print(")\n");
+      break;
+    
     default:
       ERROR;
   } /* switch() */
@@ -2052,7 +2068,9 @@ void *visit(global_var_list_c *symbol) {
           this->current_var_type_symbol->accept(*this);
           s4o.print(",");
           list->elements[i]->accept(*this);
-          s4o.print(",__INITIAL_VALUE(");
+          s4o.print(",");
+          s4o.print(INITIAL_VALUE);
+          s4o.print("(");
           this->current_var_init_symbol->accept(*this);
           s4o.print(")");
           print_retain();
@@ -2081,6 +2099,18 @@ void *visit(global_var_list_c *symbol) {
           s4o.print(";\n");
 #endif
         }
+      }
+      break;
+
+    case globalprototype_vf:
+      for(int i = 0; i < list->n; i++) {
+        s4o.print(s4o.indent_spaces);
+        s4o.print(DECLARE_GLOBAL_PROTOTYPE);
+        s4o.print("(");
+        this->current_var_type_symbol->accept(*this);
+        s4o.print(",");
+        list->elements[i]->accept(*this);
+        s4o.print(")\n");
       }
       break;
 

@@ -32,6 +32,8 @@
 	type* __GET_GLOBAL_##name(void) {\
 		return (*GLOBAL__##name).value;\
 	}
+#define __DECLARE_GLOBAL_PROTOTYPE(type, name)\
+    extern type* __GET_GLOBAL_##name();
 #define __DECLARE_EXTERNAL(type, name)\
 	__IEC_##type##_p name;
 #define __DECLARE_LOCATED(type, name)\
