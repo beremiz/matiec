@@ -1939,12 +1939,12 @@ END_RESOURCE
       s4o.print("extern unsigned long long common_ticktime__;\n\n");
 
       s4o.print("#include \"accessor.h\"\n");
+      s4o.print("#include \"POUS.h\"\n\n");
       s4o.print("#include \"");
       configuration_name = true;
       current_configuration->accept(*this);
       configuration_name = false;
       s4o.print(".h\"\n");
-      s4o.print("#include \"POUS.h\"\n\n");
 
       /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
@@ -2379,7 +2379,10 @@ class generate_c_c: public iterator_visitor_c {
       generate_var_list_c generate_var_list(&variables_s4o, symbol);
       generate_var_list.generate_programs(symbol);
       generate_var_list.generate_variables(symbol);
-      
+      variables_s4o.print("\n// Ticktime\n");
+      variables_s4o.print_long_long_integer(common_ticktime, false);
+      variables_s4o.print("\n");
+
       generate_location_list_c generate_location_list(&located_variables_s4o);
       symbol->accept(generate_location_list);
       return NULL;
