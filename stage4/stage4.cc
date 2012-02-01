@@ -127,15 +127,17 @@ void *stage4out_c::print_integer(int integer) {
   return NULL;
 }
 
-void *stage4out_c::print_long_integer(unsigned long l_integer) {
+void *stage4out_c::print_long_integer(unsigned long l_integer, bool suffix) {
   if (!allow_output) return NULL;
-  *out << l_integer << "UL";
+  *out << l_integer;
+  if (suffix) *out << "UL";
   return NULL;
 }
 
-void *stage4out_c::print_long_long_integer(unsigned long long ll_integer) {
+void *stage4out_c::print_long_long_integer(unsigned long long ll_integer, bool suffix) {
   if (!allow_output) return NULL;
-  *out << ll_integer << "ULL";
+  *out << ll_integer;
+  if (suffix) *out << "ULL";
   return NULL;
 }
 

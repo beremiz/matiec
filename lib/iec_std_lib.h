@@ -631,10 +631,9 @@ static inline LWORD __uint_to_bcd(ULINT IN){
 
 /* some helpful __move_[ANY] functions, used in the *_TO_** and MOVE  standard functions */
 /* e.g. __move_BOOL, __move_BYTE, __move_REAL, __move_TIME, ... */
-#define __iec_(TYPENAME)\
+#define __move_(TYPENAME)\
 static inline TYPENAME __move_##TYPENAME(TYPENAME op1) {return op1;}
-__ANY(__iec_)
-#undef __iec_
+__ANY(__move_)
 
 
 
@@ -692,6 +691,7 @@ __ANY(__iec_)
 /********************/
 
 #define EN_ENO_PARAMS BOOL EN, BOOL *ENO
+#define EN_ENO EN, ENO
 
 #define TEST_EN(TYPENAME)\
   if (!EN) {\
@@ -939,9 +939,14 @@ __ANY_NBIT(__to_anyuint_)
 
 
 #define __numeric(fname,TYPENAME, FUNC) \
+/* explicitly typed function */\
 static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
   TEST_EN(TYPENAME)\
   return FUNC(op);\
+}\
+/* overloaded function */\
+static inline TYPENAME fname##_##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, TYPENAME op) {\
+  return fname##TYPENAME(EN_ENO, op);\
 }
 
 /******************************************************************/
@@ -951,172 +956,108 @@ static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
   /**************/
   /*    ABS     */
   /**************/
-/* explicitly typed function */
-#define __iec_(TYPENAME) \
+#define __abs_signed(TYPENAME) \
+/* explicitly typed function */\
 static inline TYPENAME ABS_##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
   TEST_EN(TYPENAME)\
   if (op < 0)\
     return -op;\
   return op;\
+}\
+/* overloaded function */\
+static inline TYPENAME ABS__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, TYPENAME op) {\
+  return ABS_##TYPENAME(EN_ENO, op);\
 }
-__ANY_REAL(__iec_)
-__ANY_SINT(__iec_)
-#undef __iec_
 
-#define __iec_(TYPENAME) \
+#define __abs_unsigned(TYPENAME) \
+/* explicitly typed function */\
 static inline TYPENAME ABS_##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
   TEST_EN(TYPENAME)\
   return op;\
+}\
+/* overloaded function */\
+static inline TYPENAME ABS__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, TYPENAME op) {\
+  return ABS_##TYPENAME(EN_ENO, op);\
 }
-__ANY_UINT(__iec_)
-#undef __iec_
 
-/* overloaded function */
-#define __iec_(TYPENAME) \
-static inline TYPENAME ABS__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
-  TEST_EN(TYPENAME)\
-  if (op < 0)\
-    return -op;\
-  return op;\
-}
-__ANY_REAL(__iec_)
-__ANY_SINT(__iec_)
-#undef __iec_
-
-#define __iec_(TYPENAME) \
-static inline TYPENAME ABS__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, TYPENAME op){\
-  TEST_EN(TYPENAME)\
-  return op;\
-}
-__ANY_UINT(__iec_)
-#undef __iec_
+__ANY_REAL(__abs_signed)
+__ANY_SINT(__abs_signed)
+__ANY_UINT(__abs_unsigned)
 
 
   /**************/
   /*    SQRT    */
   /**************/
-/* explicitly typed function */
-#define __iec_(TYPENAME) \
-__numeric(SQRT_, TYPENAME, sqrt)                             /* explicitly typed function */\
-__numeric(SQRT__##TYPENAME##__, TYPENAME, sqrt)              /* overloaded function */
-__ANY_REAL(__iec_)
-#undef __iec_
+#define __sqrt(TYPENAME) __numeric(SQRT_, TYPENAME, sqrt)
+__ANY_REAL(__sqrt)
 
-  /**************/
+
+/**************/
   /*     LN     */
   /**************/
-#define __iec_(TYPENAME) \
-__numeric(LN_, TYPENAME, log)                             /* explicitly typed function */\
-__numeric(LN__##TYPENAME##__, TYPENAME, log)              /* overloaded function */
-__ANY_REAL(__iec_)
-#undef __iec_
+#define __ln(TYPENAME) __numeric(LN_, TYPENAME, log)
+__ANY_REAL(__ln)
 
 
   /**************/
   /*     LOG    */
   /**************/
-#define __iec_(TYPENAME) \
-__numeric(LOG_, TYPENAME, log10)                             /* explicitly typed function */\
-__numeric(LOG__##TYPENAME##__, TYPENAME, log10)              /* overloaded function */
-__ANY_REAL(__iec_)
-#undef __iec_
+#define __log(TYPENAME) __numeric(LOG_, TYPENAME, log10)
+__ANY_REAL(__log)
+
 
   /**************/
   /*     EXP    */
   /**************/
-#define __iec_(TYPENAME) \
-__numeric(EXP_, TYPENAME, exp)                             /* explicitly typed function */\
-__numeric(EXP__##TYPENAME##__, TYPENAME, exp)              /* overloaded function */
-__ANY_REAL(__iec_)
-#undef __iec_
+#define __exp(TYPENAME) __numeric(EXP_, TYPENAME, exp)
+__ANY_REAL(__exp)
 
 
   /**************/
   /*     SIN    */
   /**************/
-#define __iec_(TYPENAME) \
-__numeric(SIN_, TYPENAME, sin)                              /* explicitly typed function */\
-__numeric(SIN__##TYPENAME##__, TYPENAME, sin)               /* overloaded function */
-__ANY_REAL(__iec_)
-#undef __iec_
+#define __sin(TYPENAME) __numeric(SIN_, TYPENAME, sin)
+__ANY_REAL(__sin)
 
 
   /**************/
   /*     COS    */
   /**************/
-#define __iec_(TYPENAME) \
-__numeric(COS_, TYPENAME, cos)                             /* explicitly typed function */\
-__numeric(COS__##TYPENAME##__, TYPENAME, cos)              /* overloaded function */
-__ANY_REAL(__iec_)
-#undef __iec_
+#define __cos(TYPENAME) __numeric(COS_, TYPENAME, cos)
+__ANY_REAL(__cos)
 
   /**************/
   /*     TAN    */
   /**************/
-#define __iec_(TYPENAME) \
-__numeric(TAN_, TYPENAME, tan)                             /* explicitly typed function */\
-__numeric(TAN__##TYPENAME##__, TYPENAME, tan)              /* overloaded function */
-__ANY_REAL(__iec_)
-#undef __iec_
+#define __tan(TYPENAME) __numeric(TAN_, TYPENAME, tan)
+__ANY_REAL(__tan)
 
 
   /**************/
   /*    ASIN    */
   /**************/
-#define __iec_(TYPENAME) \
-__numeric(ASIN_, TYPENAME, asin)                             /* explicitly typed function */\
-__numeric(ASIN__##TYPENAME##__, TYPENAME, asin)              /* overloaded function */
-__ANY_REAL(__iec_)
-#undef __iec_
+#define __asin(TYPENAME) __numeric(ASIN_, TYPENAME, asin)
+__ANY_REAL(__asin)
 
   /**************/
   /*    ACOS    */
   /**************/
-#define __iec_(TYPENAME) \
-__numeric(ACOS_, TYPENAME, acos)                             /* explicitly typed function */\
-__numeric(ACOS__##TYPENAME##__, TYPENAME, acos)              /* overloaded function */
-__ANY_REAL(__iec_)
-#undef __iec_
+#define __acos(TYPENAME) __numeric(ACOS_, TYPENAME, acos)
+__ANY_REAL(__acos)
 
   /**************/
   /*    ATAN    */
   /**************/
-#define __iec_(TYPENAME) \
-__numeric(ATAN_, TYPENAME, atan)                             /* explicitly typed function */\
-__numeric(ATAN__##TYPENAME##__, TYPENAME, atan)              /* overloaded function */
-__ANY_REAL(__iec_)
-#undef __iec_
+#define __atan(TYPENAME) __numeric(ATAN_, TYPENAME, atan)
+__ANY_REAL(__atan)
 
 
 
 /*****************************************************/
 /***   Table 24 - Standard arithmetic functions    ***/
 /*****************************************************/
-/*
-   Unfortunately, the following does not work!!
-   
-#define NUMARGS(...) (sizeof((int[]){__VA_ARGS__})/sizeof(int))
 
-#define __arith_expand(fname,TYPENAME, OP) \
-#define fname(EN, ENO, ...) fname__(EN, ENO, NUMARGS(__VA_ARGS__), __VA_ARGS__)\
-static inline TYPENAME fname__(EN_ENO_PARAMS, UINT param_count, TYPENAME op1, ...){\
-  va_list ap;\
-  UINT i;\
-  TEST_EN(TYPENAME)\
-  \
-  va_start (ap, op1);         \
-  \
-  for (i = 0; i < param_count - 1; i++){\
-    op1 = op1 OP va_arg (ap, VA_ARGS_##TYPENAME);\
-  }\
-  \
-  va_end (ap);                  \
-  return op1;\
-}
-*/
-
-
-#define __arith_expand(fname,TYPENAME, OP) \
+#define __arith_expand(fname,TYPENAME, OP)\
 static inline TYPENAME fname(EN_ENO_PARAMS, UINT param_count, TYPENAME op1, ...){\
   va_list ap;\
   UINT i;\
@@ -1132,69 +1073,72 @@ static inline TYPENAME fname(EN_ENO_PARAMS, UINT param_count, TYPENAME op1, ...)
   return op1;\
 }
 
-#define __arith_static(fname,TYPENAME, OP) \
-static inline TYPENAME fname(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
+#define __arith_static(fname,TYPENAME, OP)\
+/* explicitly typed function */\
+static inline TYPENAME fname##TYPENAME(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
   TEST_EN(TYPENAME)\
   return op1 OP op2;\
+}\
+/* overloaded function */\
+static inline TYPENAME fname##_##TYPENAME##__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
+  return fname##TYPENAME(EN_ENO, op1, op2);\
 }
 
   /**************/
   /*     ADD    */
   /**************/
-#define __iec_(TYPENAME) \
+#define __add(TYPENAME) \
 __arith_expand(ADD_##TYPENAME, TYPENAME, +) 			 /* explicitly typed function */\
 __arith_expand(ADD__##TYPENAME##__##TYPENAME, TYPENAME, +)	 /* overloaded function */
-__ANY_NUM(__iec_)
-#undef __iec_
+__ANY_NUM(__add)
+
 
   /**************/
   /*     MUL    */
   /**************/
-#define __iec_(TYPENAME) \
+#define __mul(TYPENAME) \
 __arith_expand(MUL_##TYPENAME, TYPENAME, *) 			 /* explicitly typed function */\
 __arith_expand(MUL__##TYPENAME##__##TYPENAME, TYPENAME, *)	 /* overloaded function */
-__ANY_NUM(__iec_)
-#undef __iec_
+__ANY_NUM(__mul)
+
 
   /**************/
   /*     SUB    */
   /**************/
-#define __iec_(TYPENAME) \
-__arith_expand(SUB_##TYPENAME, TYPENAME, -) 			 /* explicitly typed function */\
-__arith_expand(SUB__##TYPENAME##__##TYPENAME##__##TYPENAME, TYPENAME, -)	 /* overloaded function */
-__ANY_NUM(__iec_)
-#undef __iec_
+#define __sub(TYPENAME) __arith_static(SUB_, TYPENAME, -)
+__ANY_NUM(__sub)
+
 
   /**************/
   /*     DIV    */
   /**************/
-/* The explicitly typed standard functions */
-#define __iec_(TYPENAME)\
+#define __div(TYPENAME)\
+/* The explicitly typed standard functions */\
 static inline TYPENAME DIV_##TYPENAME(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
   TEST_EN_COND(TYPENAME, op2 == 0)\
   return op1 / op2;\
-}
-__ANY_NUM(__iec_)
-#undef __iec_
-
-/* The overloaded standard functions */
-#define __iec_(TYPENAME)\
+}\
+/* The overloaded standard functions */\
 static inline TYPENAME DIV__##TYPENAME##__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
-  TEST_EN_COND(TYPENAME, op2 == 0)\
-  return op1 / op2;\
+  return DIV_##TYPENAME(EN_ENO, op1, op2);\
 }
-__ANY_NUM(__iec_)
-#undef __iec_
+__ANY_NUM(__div)
+
 
   /**************/
   /*     MOD    */
   /**************/
-/* The explicitly typed standard functions */
-#define __iec_(TYPENAME)\
-__arith_expand(MOD_##TYPENAME, TYPENAME, %) 			 /* explicitly typed function */\
-__arith_expand(MOD__##TYPENAME##__##TYPENAME##__##TYPENAME, TYPENAME, %)	 /* overloaded function */
-__ANY_INT(__iec_)
-#undef __iec_
+#define __mod(TYPENAME)\
+/* The explicitly typed standard functions */\
+static inline TYPENAME MOD_##TYPENAME(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
+  TEST_EN_COND(TYPENAME, op2 == 0)\
+  return op1 % op2;\
+}\
+/* The overloaded standard functions */\
+static inline TYPENAME MOD__##TYPENAME##__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
+  return DIV_##TYPENAME(EN_ENO, op1, op2);\
+}
+__ANY_INT(__mod)
 
   /**************/
   /*    EXPT    */

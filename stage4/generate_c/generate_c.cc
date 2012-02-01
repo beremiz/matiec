@@ -104,6 +104,7 @@ extern void error_exit(const char *file_name, int line_no);
 #define DECLARE_GLOBAL_LOCATED "__DECLARE_GLOBAL_LOCATED"
 #define DECLARE_EXTERNAL "__DECLARE_EXTERNAL"
 #define DECLARE_LOCATED "__DECLARE_LOCATED"
+#define DECLARE_GLOBAL_PROTOTYPE "__DECLARE_GLOBAL_PROTOTYPE"
 
 /* Variable declaration symbol for accessor macros */
 #define INIT_VAR "__INIT_VAR"
@@ -126,6 +127,8 @@ extern void error_exit(const char *file_name, int line_no);
 #define SET_EXTERNAL "__SET_EXTERNAL"
 #define SET_LOCATED "__SET_LOCATED"
 
+/* Variable initial value symbol for accessor macros */
+#define INITIAL_VALUE "__INITIAL_VALUE"
 
 /* Generate a name for a temporary variable.
  * Each new name generated is appended a different number,
@@ -1558,11 +1561,13 @@ void *visit(program_declaration_c *symbol) {
 class generate_c_config_c: public generate_c_typedecl_c {
     private:
     stage4out_c *s4o_ptr;
-
+    stage4out_c *s4o_incl_ptr;
+    
     public:
-    generate_c_config_c(stage4out_c *s4o_ptr)
-      : generate_c_typedecl_c(s4o_ptr) {
+    generate_c_config_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
+      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {
       generate_c_config_c::s4o_ptr = s4o_ptr;
+      generate_c_config_c::s4o_incl_ptr = s4o_incl_ptr;
     };
 
     virtual ~generate_c_config_c(void) {}
@@ -1581,8 +1586,17 @@ public:
 /********************/
 /* 2.1.6 - Pragmas  */
 /********************/
-void *visit(enable_code_generation_pragma_c * symbol)   {s4o_ptr->enable_output();  return NULL;}
-void *visit(disable_code_generation_pragma_c * symbol)  {s4o_ptr->disable_output(); return NULL;} 
+void *visit(enable_code_generation_pragma_c * symbol)   {
+    s4o_ptr->enable_output();
+    s4o_incl_ptr->enable_output();
+    return NULL;
+}
+
+void *visit(disable_code_generation_pragma_c * symbol)  {
+    s4o_ptr->disable_output();
+    s4o_incl_ptr->disable_output();    
+    return NULL;
+}
     
     
 /********************************/
@@ -1625,6 +1639,15 @@ void *visit(configuration_declaration_c *symbol) {
   vardecl->print(symbol);
   delete vardecl;
   s4o.print("\n");
+
+  /* (A.3) Declare global prototypes in include file */
+  vardecl = new generate_c_vardecl_c(&s4o_incl,
+                                     generate_c_vardecl_c::globalprototype_vf,
+                                     generate_c_vardecl_c::global_vt,
+                                     symbol->configuration_name);
+  vardecl->print(symbol);
+  delete vardecl;
+  s4o_incl.print("\n");
 
   /* (B) Initialisation Function */
   /* (B.1) Ressources initialisation protos... */
@@ -1755,20 +1778,24 @@ class generate_c_resources_c: public generate_c_typedecl_c {
 
   private:
     /* The name of the resource curretnly being processed... */
+    symbol_c *current_configuration;
     symbol_c *current_resource_name;
     symbol_c *current_task_name;
     symbol_c *current_global_vars;
+    bool configuration_name;
     stage4out_c *s4o_ptr;
 
   public:
     generate_c_resources_c(stage4out_c *s4o_ptr, symbol_c *config_scope, symbol_c *resource_scope, unsigned long time)
       : generate_c_typedecl_c(s4o_ptr) {
+      current_configuration = config_scope;
       search_config_instance   = new search_var_instance_decl_c(config_scope);
       search_resource_instance = new search_var_instance_decl_c(resource_scope);
       common_ticktime = time;
       current_resource_name = NULL;
       current_task_name = NULL;
       current_global_vars = NULL;
+      configuration_name = false;
       generate_c_resources_c::s4o_ptr = s4o_ptr;
     };
 
@@ -1821,6 +1848,20 @@ class generate_c_resources_c: public generate_c_typedecl_c {
       return NULL;
     }
 
+    /*************************/
+    /* B.1 - Common elements */
+    /*************************/
+    /*******************************************/
+    /* B 1.1 - Letters, digits and identifiers */
+    /*******************************************/
+    
+    void *visit(identifier_c *symbol) {
+        if (configuration_name)
+          s4o.print(symbol->value);
+        else
+          generate_c_base_c::visit(symbol);
+        return NULL;
+    }
 
     /********************/
     /* 2.1.6 - Pragmas  */
@@ -1848,9 +1889,13 @@ class generate_c_resources_c: public generate_c_typedecl_c {
       return NULL;
     }
 
-/********************************/
-/* B 1.7 Configuration elements */
-/********************************/
+    /********************************/
+    /* B 1.7 Configuration elements */
+    /********************************/
+
+    void *visit(configuration_declaration_c *symbol) {
+      return symbol->configuration_name->accept(*this);
+    }
 
 /*
 RESOURCE resource_name ON resource_type_name
@@ -1893,8 +1938,13 @@ END_RESOURCE
       
       s4o.print("extern unsigned long long common_ticktime__;\n\n");
 
-      s4o.print("#include \"accessor.h\"\n\n");
+      s4o.print("#include \"accessor.h\"\n");
       s4o.print("#include \"POUS.h\"\n\n");
+      s4o.print("#include \"");
+      configuration_name = true;
+      current_configuration->accept(*this);
+      configuration_name = false;
+      s4o.print(".h\"\n");
 
       /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
@@ -2329,7 +2379,10 @@ class generate_c_c: public iterator_visitor_c {
       generate_var_list_c generate_var_list(&variables_s4o, symbol);
       generate_var_list.generate_programs(symbol);
       generate_var_list.generate_variables(symbol);
-      
+      variables_s4o.print("\n// Ticktime\n");
+      variables_s4o.print_long_long_integer(common_ticktime, false);
+      variables_s4o.print("\n");
+
       generate_location_list_c generate_location_list(&located_variables_s4o);
       symbol->accept(generate_location_list);
       return NULL;
@@ -2446,9 +2499,10 @@ class generate_c_c: public iterator_visitor_c {
             }
 
             symbol->configuration_name->accept(*this);
-
+            
             stage4out_c config_s4o(current_builddir, current_name, "c");
-            generate_c_config_c generate_c_config(&config_s4o);
+            stage4out_c config_incl_s4o(current_builddir, current_name, "h");
+            generate_c_config_c generate_c_config(&config_s4o, &config_incl_s4o);
             symbol->accept(generate_c_config);
 
             config_s4o.print("unsigned long long common_ticktime__ = ");
