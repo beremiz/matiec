@@ -1735,6 +1735,19 @@ void *fill_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 	return NULL;
 }
 
+/*****************************************/
+/* B 3.2.2 Subprogram Control Statements */
+/*****************************************/
+void *fill_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
+	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+
+	if (NULL == fb_decl) ERROR;
+	if (symbol->   formal_param_list != NULL) match_formal_call(symbol, fb_decl);
+	if (symbol->nonformal_param_list != NULL) match_nonformal_call(symbol, fb_decl);
+	if (debug) std::cout << "FB [] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
+	return NULL;
+}
+
 
 
 /********************************/
