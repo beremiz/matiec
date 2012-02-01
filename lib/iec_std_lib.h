@@ -725,6 +725,23 @@ static inline to_TYPENAME from_TYPENAME##_TO_##to_TYPENAME(EN_ENO_PARAMS, from_T
   return (to_TYPENAME)oper(op);\
 }
 
+/******** [ANY_NUM | ANY_NBIT]_TO_BOOL   ************/
+#define __convert_num_to_bool(TYPENAME) \
+static inline BOOL TYPENAME##_TO_BOOL(EN_ENO_PARAMS, TYPENAME op){\
+  TEST_EN(BOOL)\
+  return op == 0 ? 0 : 1;\
+}
+__ANY_NUM(__convert_num_to_bool)
+__ANY_NBIT(__convert_num_to_bool)
+
+/******** [TIME | ANY_DATE]_TO_BOOL   ************/
+#define __convert_time_to_bool(TYPENAME) \
+static inline BOOL TYPENAME##_TO_BOOL(EN_ENO_PARAMS, TYPENAME op){\
+  TEST_EN(BOOL)\
+  return op.tv_sec == 0 && op.tv_nsec == 0 ? 0 : 1;\
+}
+__convert_time_to_bool(TIME)
+__ANY_DATE(__convert_time_to_bool)
 
 #define __to_anynum_(from_TYPENAME)   __ANY_NUM_1(__iec_,from_TYPENAME)
 #define __to_anyint_(from_TYPENAME)   __ANY_INT_1(__iec_,from_TYPENAME)
@@ -735,24 +752,24 @@ static inline to_TYPENAME from_TYPENAME##_TO_##to_TYPENAME(EN_ENO_PARAMS, from_T
 #define __to_anyreal_(from_TYPENAME) __ANY_REAL_1(__iec_,from_TYPENAME)
 #define __to_anydate_(from_TYPENAME) __ANY_DATE_1(__iec_,from_TYPENAME)
 
-/******** [ANY_BIT]_TO_[ANY_NUM | ANT_BIT]   ************/ 
+/******** [ANY_BIT]_TO_[ANY_NUM | ANT_NBIT]   ************/
 #define __iec_(to_TYPENAME,from_TYPENAME) __convert_type(from_TYPENAME, to_TYPENAME, __move_##to_TYPENAME)
 __ANY_BIT(__to_anynum_)
-__ANY_BIT(__to_anybit_)
+__ANY_BIT(__to_anynbit_)
 #undef __iec_
 
-/******** [ANY_INT]_TO_[ANY_NUM | ANT_BIT]   ************/ 
+/******** [ANY_INT]_TO_[ANY_NUM | ANT_NBIT]   ************/
 #define __iec_(to_TYPENAME,from_TYPENAME) __convert_type(from_TYPENAME, to_TYPENAME, __move_##to_TYPENAME)
 __ANY_INT(__to_anynum_)
-__ANY_INT(__to_anybit_)
+__ANY_INT(__to_anynbit_)
 #undef __iec_
 
-/******** [ANY_REAL]_TO_[ANY_BIT]   ************/ 
+/******** [ANY_REAL]_TO_[ANY_NBIT]   ************/
 #define __iec_(to_TYPENAME,from_TYPENAME) __convert_type(from_TYPENAME, to_TYPENAME, __real_to_bit)
-__ANY_REAL(__to_anybit_)
+__ANY_REAL(__to_anynbit_)
 #undef __iec_
 
-/******** [ANY_REAL]_TO_[ANY_INT]   ************/ 
+/******** [ANY_REAL]_TO_[ANY_NINT]   ************/
 #define __iec_(to_TYPENAME,from_TYPENAME) __convert_type(from_TYPENAME, to_TYPENAME, __real_to_sint)
 __ANY_REAL(__to_anysint_)
 #undef __iec_
@@ -786,9 +803,9 @@ __ANY_REAL(__to_anydate_)
 /******** [TIME | ANY_DATE]_TO_[ANY_BIT | ANY_INT]   ************/ 
 #define __iec_(to_TYPENAME,from_TYPENAME) __convert_type(from_TYPENAME, to_TYPENAME, __time_to_int)
 __to_anyint_(TIME)
-__to_anybit_(TIME)
+__to_anynbit_(TIME)
 __ANY_DATE(__to_anyint_)
-__ANY_DATE(__to_anybit_)
+__ANY_DATE(__to_anynbit_)
 #undef __iec_
 
 /******** [TIME | ANY_DATE]_TO_[ANY_REAL]   ************/ 
@@ -1131,12 +1148,13 @@ __ANY_NUM(__div)
 #define __mod(TYPENAME)\
 /* The explicitly typed standard functions */\
 static inline TYPENAME MOD_##TYPENAME(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
-  TEST_EN_COND(TYPENAME, op2 == 0)\
+  TEST_EN(TYPENAME)\
+  if (op2 == 0) return 0;\
   return op1 % op2;\
 }\
 /* The overloaded standard functions */\
 static inline TYPENAME MOD__##TYPENAME##__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
-  return DIV_##TYPENAME(EN_ENO, op1, op2);\
+  return MOD_##TYPENAME(EN_ENO, op1, op2);\
 }
 __ANY_INT(__mod)
 
@@ -1549,14 +1567,14 @@ static inline STRING LIMIT__STRING__STRING__STRING__STRING(EN_ENO_PARAMS, STRING
 /* The explicitly typed standard functions */
 #define __in1_anyint_(in2_TYPENAME)   __ANY_INT_1(__iec_,in2_TYPENAME)
 #define __iec_(in1_TYPENAME,in2_TYPENAME) \
-static inline in2_TYPENAME MUX__##in2_TYPENAME##__##in1_TYPENAME##__##in2_TYPENAME(EN_ENO_PARAMS, UINT param_count, in1_TYPENAME K, ...){\
+static inline in2_TYPENAME MUX__##in2_TYPENAME##__##in1_TYPENAME##__##in2_TYPENAME(EN_ENO_PARAMS, in1_TYPENAME K, UINT param_count, ...){\
   va_list ap;\
   UINT i;\
   in2_TYPENAME tmp;\
   TEST_EN_COND(in2_TYPENAME, K >= param_count)\
   tmp = __INIT_##in2_TYPENAME;\
   \
-  va_start (ap, K);         /* Initialize the argument list.  */\
+  va_start (ap, param_count);         /* Initialize the argument list.  */\
   \
   for (i = 0; i < param_count; i++){\
     if(K == i){\
@@ -1734,18 +1752,32 @@ __compare_string(LE__BOOL__STRING, <= ) /* Overloaded function */
     /**************/
     /*     NE     */
     /**************/
+
+#define __ne_num(fname, TYPENAME) \
+static inline BOOL fname(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
+  TEST_EN(BOOL)\
+  return op1 != op2 ? 1 : 0;\
+}
+
+#define __ne_time(fname, TYPENAME) \
+static inline BOOL fname(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
+  TEST_EN(BOOL)\
+  return __time_cmp(op1, op2) != 0 ? 1 : 0;\
+}
+
+
 /* Comparison for numerical data types */
 #define __iec_(TYPENAME) \
-__compare_num(NE_##TYPENAME, TYPENAME, != ) /* The explicitly typed standard functions */\
-__compare_num(NE__BOOL__##TYPENAME##__##TYPENAME, TYPENAME, != ) /* Overloaded function */
+__ne_num(NE_##TYPENAME, TYPENAME) /* The explicitly typed standard functions */\
+__ne_num(NE__BOOL__##TYPENAME##__##TYPENAME, TYPENAME) /* Overloaded function */
 __ANY_NBIT(__iec_)
 __ANY_NUM(__iec_)
 #undef __iec_
 
 /* Comparison for time data types */	
 #define __iec_(TYPENAME) \
-__compare_time(NE_##TYPENAME, TYPENAME, != ) /* The explicitly typed standard functions */\
-__compare_time(NE__BOOL__##TYPENAME##__##TYPENAME, TYPENAME, != ) /* Overloaded function */
+__ne_time(NE_##TYPENAME, TYPENAME) /* The explicitly typed standard functions */\
+__ne_time(NE__BOOL__##TYPENAME##__##TYPENAME, TYPENAME) /* Overloaded function */
 __ANY_DATE(__iec_)
 __iec_(TIME)
 #undef __iec_
