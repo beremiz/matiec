@@ -1,7 +1,7 @@
 /*
  *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
+ *  Copyright (C) 2003-2012  Mario de Sousa (msousa@fe.up.pt)
  *  Copyright (C) 2007-2011  Laurent Bessard and Edouard Tisserant
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -60,18 +60,27 @@ class search_base_type_c: public null_visitor_c {
     search_base_type_c(void);
 
   public:
-    void *visit(identifier_c *type_name);
+    symbol_c *get_basetype_decl(symbol_c *symbol);
+    symbol_c *get_basetype_id  (symbol_c *symbol);
     bool type_is_subrange(symbol_c* type_decl);
     bool type_is_enumerated(symbol_c* type_decl);
 
   public:
-    /*********************/
-    /* B 1.2 - Constants */
-    /*********************/
+  /*************************/
+  /* B.1 - Common elements */
+  /*************************/
+  /*******************************************/
+  /* B 1.1 - Letters, digits and identifiers */
+  /*******************************************/
+    void *visit(identifier_c *type_name);
 
-    /******************************/
-    /* B 1.2.1 - Numeric Literals */
-    /******************************/
+    
+  /*********************/
+  /* B 1.2 - Constants */
+  /*********************/
+  /******************************/
+  /* B 1.2.1 - Numeric Literals */
+  /******************************/
      /* Numeric literals without any explicit type cast have unknown data type, 
       * so we continue considering them as their own basic data types until
       * they can be resolved (for example, when using '30+x' where 'x' is a LINT variable, the

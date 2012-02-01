@@ -95,8 +95,24 @@ class search_constant_type_c: public search_visitor_c {
   static safetime_type_name_c     safetime_type_name;
   static safetod_type_name_c      safetod_type_name;
   static safedt_type_name_c       safedt_type_name;
-
-
+  static safedate_type_name_c     safedate_type_name;
+  static safereal_type_name_c     safereal_type_name;
+  static safesint_type_name_c     safesint_type_name;
+  static safelint_type_name_c     safelint_type_name;
+  static safedint_type_name_c     safedint_type_name;
+  static safedword_type_name_c    safedword_type_name;
+  static safeudint_type_name_c    safeudint_type_name;
+  static safeword_type_name_c     safeword_type_name;
+  static safewstring_type_name_c  safewstring_type_name;
+  static safestring_type_name_c   safestring_type_name;
+  static safelword_type_name_c    safelword_type_name;
+  static safeuint_type_name_c     safeuint_type_name;
+  static safelreal_type_name_c    safelreal_type_name;
+  static safebyte_type_name_c     safebyte_type_name;
+  static safeusint_type_name_c    safeusint_type_name;
+  static safeulint_type_name_c    safeulint_type_name;
+  static safebool_type_name_c     safebool_type_name;
+  static safeint_type_name_c      safeint_type_name;
 
   public:
     symbol_c *get_type(symbol_c *constant);
@@ -161,7 +177,6 @@ class search_constant_type_c: public search_visitor_c {
     /********************************/
     void *visit(enumerated_value_c *symbol);
 };  // search_constant_type_c
-
 
 
 #endif /* ifndef _SEARCH_CONSTANT_TYPE_HH */

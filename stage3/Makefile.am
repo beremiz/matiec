@@ -4,5 +4,8 @@ lib_LIBRARIES = libstage3.a
 
 libstage3_a_SOURCES = \
 	stage3.cc \
-	visit_expression_type.cc 
+	fill_candidate_datatypes.cc \
+	narrow_candidate_datatypes.cc \
+	print_datatypes_error.cc \
+	datatype_functions.cc
 

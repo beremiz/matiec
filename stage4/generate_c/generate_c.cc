@@ -2224,10 +2224,10 @@ END_RESOURCE
           if (var_decl == NULL)
             ERROR;
           else
-            vartype = search_config_instance->get_vartype();
+            vartype = search_config_instance->get_vartype(current_var_reference);
         }
         else
-          vartype = search_resource_instance->get_vartype();
+          vartype = search_resource_instance->get_vartype(current_var_reference);
         
         s4o.print(s4o.indent_spaces + "{extern ");
         var_decl->accept(*this);
@@ -2259,10 +2259,10 @@ END_RESOURCE
           if (var_decl == NULL)
             ERROR;
           else
-            vartype = search_config_instance->get_vartype();
+            vartype = search_config_instance->get_vartype(current_var_reference);
         }
         else
-          vartype = search_resource_instance->get_vartype();
+          vartype = search_resource_instance->get_vartype(current_var_reference);
         
         s4o.print(s4o.indent_spaces + "{extern ");
         var_decl->accept(*this);

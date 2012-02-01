@@ -844,7 +844,7 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
         for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
           symbol_c *var_decl = search_var_instance_decl->get_decl(pt->symbol);
           if (var_decl != NULL) {
-            unsigned int vartype = search_var_instance_decl->get_vartype();
+            unsigned int vartype = search_var_instance_decl->get_vartype(pt->symbol);
 
             s4o.print(s4o.indent_spaces);
             if (vartype == search_var_instance_decl_c::external_vt)

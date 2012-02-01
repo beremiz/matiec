@@ -31,19 +31,7 @@
  */
 
 
-// #include <stdio.h>  /* required for NULL */
-#include <string>
-#include <iostream>
-#include <sstream>
-#include <typeinfo>
-#include <list>
-#include <strings.h>
-
 #include "../util/symtable.hh"
-#include "../util/dsymtable.hh"
-#include "../absyntax/visitor.hh"
-
-#include "visit_expression_type.hh"
 
 
 int stage3(symbol_c *tree_root);

@@ -342,7 +342,7 @@ void *visit(array_variable_c *symbol) {
     case complextype_suffix_vg:
       symbol->subscripted_variable->accept(*this);
 
-      current_array_type = search_varfb_instance_type->get_type_id(symbol->subscripted_variable);
+      current_array_type = search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable);
       if (current_array_type == NULL) ERROR;
 
       s4o.print(".table");
@@ -356,7 +356,7 @@ void *visit(array_variable_c *symbol) {
       if (this->is_variable_prefix_null()) {
     	symbol->subscripted_variable->accept(*this);
 
-    	current_array_type = search_varfb_instance_type->get_type_id(symbol->subscripted_variable);
+    	current_array_type = search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable);
     	if (current_array_type == NULL) ERROR;
 
     	s4o.print(".table");

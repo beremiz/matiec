@@ -47,6 +47,7 @@
 
 
 #include <stdio.h> // required for NULL
+#include <vector>
 
 /* Forward declaration of the visitor interface
  * dclared in the visitor.hh file
@@ -76,6 +77,9 @@ class symbol_c {
     int last_column;
     const char *last_file;  /* filename referenced by last line/column */
     long int last_order;    /* relative order in which it is read by lexcial analyser */
+    symbol_c * datatype;    /* data type of the expression/literal/etc. Filled in stage3 by narrow_candidate_datatypes_c */
+    std::vector <symbol_c *> candidate_datatypes; /* All possible data types the expression/literal/etc. may take. Filled in stage3 by fill_candidate_datatypes_c class */
+
 
   public:
     /* default constructor */

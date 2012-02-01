@@ -155,16 +155,26 @@ bool_type_name_c     search_constant_type_c::bool_type_name;
 time_type_name_c     search_constant_type_c::time_type_name;
 int_type_name_c      search_constant_type_c::int_type_name;
 
-// safebool_type_name_c    search_constant_type_c::safebool_type_name;
-  /* The following is required because the expression (TOD_var - TOD_var) will result in a data type
-   *  (in this case, TIME) that is neither of the expression elements...
-   */
 safetime_type_name_c     search_constant_type_c::safetime_type_name;
 safetod_type_name_c      search_constant_type_c::safetod_type_name;
 safedt_type_name_c       search_constant_type_c::safedt_type_name;
+safedate_type_name_c     search_constant_type_c::safedate_type_name;
+safereal_type_name_c     search_constant_type_c::safereal_type_name;
+safesint_type_name_c     search_constant_type_c::safesint_type_name;
+safelint_type_name_c     search_constant_type_c::safelint_type_name;
+safedint_type_name_c     search_constant_type_c::safedint_type_name;
+safedword_type_name_c    search_constant_type_c::safedword_type_name;
+safeudint_type_name_c    search_constant_type_c::safeudint_type_name;
+safeword_type_name_c     search_constant_type_c::safeword_type_name;
+safewstring_type_name_c  search_constant_type_c::safewstring_type_name;
+safestring_type_name_c   search_constant_type_c::safestring_type_name;
+safelword_type_name_c    search_constant_type_c::safelword_type_name;
+safeuint_type_name_c     search_constant_type_c::safeuint_type_name;
+safelreal_type_name_c    search_constant_type_c::safelreal_type_name;
+safebyte_type_name_c     search_constant_type_c::safebyte_type_name;
+safeusint_type_name_c    search_constant_type_c::safeusint_type_name;
+safeulint_type_name_c    search_constant_type_c::safeulint_type_name;
+safebool_type_name_c     search_constant_type_c::safebool_type_name;
+safeint_type_name_c      search_constant_type_c::safeint_type_name;
 
 
-
-/* temporarily here until we remove the st_code_gen.c and il_code_gen.c files... */
-/* It should then move to search_expression_type_c                               */
-integer_c search_constant_type_c::integer("1");

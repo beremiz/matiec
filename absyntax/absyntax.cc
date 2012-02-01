@@ -61,6 +61,7 @@ symbol_c::symbol_c(
   this->last_line    = last_line;
   this->last_column  = last_column;
   this->last_order   = last_order;
+  this->datatype     = NULL;
 }
 
 

@@ -1,7 +1,7 @@
 /*
  *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
+ *  Copyright (C) 2003-2012  Mario de Sousa (msousa@fe.up.pt)
  *  Copyright (C) 2007-2011  Laurent Bessard and Edouard Tisserant
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -55,16 +55,29 @@ extern void error_exit(const char *file_name, int line_no);
 
 search_base_type_c::search_base_type_c(void) {current_type_name = NULL;}
 
-void *search_base_type_c::visit(identifier_c *type_name) {
-  this->current_type_name = type_name;
-  /* look up the type declaration... */
-  symbol_c *type_decl = type_symtable.find_value(type_name);
-  if (type_decl == type_symtable.end_value())
-    /* Type declaration not found!! */
-    ERROR;
 
-  return type_decl->accept(*this);
+
+
+symbol_c *search_base_type_c::get_basetype_decl(symbol_c *symbol) {
+  if (NULL == symbol)
+    return NULL;
+  
+  return (symbol_c *)symbol->accept(*this);
 }
+
+symbol_c *search_base_type_c::get_basetype_id  (symbol_c *symbol) {
+  if (NULL == symbol)
+    return NULL;
+  
+  current_type_name = NULL; /* just to be on the safe side... */
+  symbol->accept(*this);
+  return (symbol_c *)current_type_name;
+}
+
+
+/* Note by MJS: The following two functions definately do not belong in this class!! Maybe create a new utility class?
+ * I will need to clean this up when the opportunity arises!
+ */
 
 bool search_base_type_c::type_is_subrange(symbol_c* type_decl) {
   this->is_subrange = false;
@@ -77,6 +90,35 @@ bool search_base_type_c::type_is_enumerated(symbol_c* type_decl) {
   type_decl->accept(*this);
   return this->is_enumerated;
 }
+
+
+/*************************/
+/* B.1 - Common elements */
+/*************************/
+
+/*******************************************/
+/* B 1.1 - Letters, digits and identifiers */
+/*******************************************/
+void *search_base_type_c::visit(identifier_c *type_name) {
+  symbol_c *type_decl;
+
+  this->current_type_name = type_name;
+  
+  /* look up the type declaration... */
+  type_decl = type_symtable.find_value(type_name);
+  if (type_decl != type_symtable.end_value())
+    return type_decl->accept(*this);
+    
+  type_decl = function_block_type_symtable.find_value(type_name);
+  if (type_decl != function_block_type_symtable.end_value())
+    return type_decl->accept(*this);
+  
+  /* Type declaration not found!! */
+    ERROR;
+    
+  return NULL;
+}
+
 
 /*********************/
 /* B 1.2 - Constants */
@@ -205,8 +247,7 @@ void *search_base_type_c::visit(enumerated_spec_init_c *symbol) {
 /* helper symbol for enumerated_specification->enumerated_spec_init */
 /* enumerated_value_list ',' enumerated_value */
 void *search_base_type_c::visit(enumerated_value_list_c *symbol) {
-  if (NULL == this->current_type_name) ERROR;
-  return (void *)this->current_type_name;
+  return (void *)symbol;
 }
 
 /* enumerated_type_name '#' identifier */
@@ -222,14 +263,16 @@ void *search_base_type_c::visit(array_type_declaration_c *symbol) {
 /* array_specification [ASSIGN array_initialization} */
 /* array_initialization may be NULL ! */
 void *search_base_type_c::visit(array_spec_init_c *symbol) {
+  /* Note that the 'array_specification' may be either an identifier of a previsously defined array type, 
+   * or an array_specification_c, so we can not stop here and simply return a array_spec_init_c, 
+   * especially if we are looking for the base class!
+   */  
   return symbol->array_specification->accept(*this);
 }
 
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *search_base_type_c::visit(array_specification_c *symbol)	{
-  if (NULL == this->current_type_name)
-	this->current_type_name = symbol->non_generic_type_name;
-  return symbol->non_generic_type_name->accept(*this);
+  return symbol;
 }
 
 /* helper symbol for array_specification */

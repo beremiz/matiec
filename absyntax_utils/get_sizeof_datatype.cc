@@ -80,6 +80,7 @@
 /* tell stdint.h we want the definition of UINT64_MAX */
 #define __STDC_LIMIT_MACROS
 #include <stdint.h>  // get definition of uint64_t and UINT64_MAX
+#include <errno.h>
 
 
 #define ERROR error_exit(__FILE__,__LINE__)
@@ -158,8 +159,60 @@ get_sizeof_datatype_c::~get_sizeof_datatype_c(void) {
 /* NOTE: all integer_c and real_c tokens will always be positive (i.e. no leading '-')
  * due to the way the source code is parsed by iec.flex.
  */
+
+/*
+ * IEC6113-3 and C++ use IEC 60559 to rappresent floating point data types
+ * REAL  => float       => single precision 	32 bit
+ * LREAL => double      => double precision 	64 bit
+ * ????? => long double => quadruple precision 128 bit
+ */
 void *get_sizeof_datatype_c::visit(real_c *symbol) {
-  return _encode_int(32);
+  char *endp;
+  long double ld_test;
+  double d_test;
+  float  f_test;
+
+  /* copy the original string, but leave out any underscores... */
+  char *sval, *oval;
+  const char *pval;
+  oval = sval = (char *)malloc(strlen(symbol->value)+1);
+  if (NULL ==  sval) ERROR;
+  
+  for (pval = symbol->value, sval = oval; *pval != '\0'; pval++) {
+    if ('_' != *pval) {*sval = *pval; sval++;}
+  }  
+  *sval = '\0';  
+  
+  sval = oval;
+  if ('\0' == *sval) ERROR;
+
+  /* now do the conversion using the new string... */
+  f_test = strtof(sval, &endp);
+  if (*endp != '\0') ERROR;
+  if (ERANGE != errno) {
+    /* No overflow/underflow! => It fits in a float! */
+    free(oval);
+    return _encode_int(32);
+  }
+  
+  d_test = strtod(sval, &endp);
+  if (*endp != '\0') ERROR;
+  if (ERANGE != errno) {
+    /* No overflow/underflow! => It fits in a double! */
+    free(oval);
+    return _encode_int(64);
+  }
+  
+  ld_test = strtold(sval, &endp);
+  if (*endp != '\0') ERROR;
+  if (ERANGE != errno) {
+    /* No overflow/underflow! => It fits in a long double! */
+    free(oval);
+    return _encode_int(128);
+  }
+
+  free(oval);
+  return _encode_int(65535); /* a very large number!!! */
 }
 
 void *get_sizeof_datatype_c::visit(neg_real_c *symbol) {
@@ -282,7 +335,7 @@ void *get_sizeof_datatype_c::visit(binary_integer_c *symbol) {
     if (('0' != *sval) && ('1' != *sval) && ('_' != *sval))
       ERROR;
 
-    if ('_' != *sval) bitsize ++; /* 1 bits per binary digit */
+    if ('_' != *sval) bitsize++; /* 1 bits per binary digit */
   }
 
   /* special case... if (value == 0) <=> (bitsize == 0), return bit size of 1 ! */

@@ -1,8 +1,10 @@
 /*
  *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- *  Copyright (C) 2009-2011  Mario de Sousa (msousa@fe.up.pt)
+ *  Copyright (C) 2009-2012  Mario de Sousa (msousa@fe.up.pt)
  *  Copyright (C) 2007-2011  Laurent Bessard and Edouard Tisserant
+ *  Copyright (C) 2012       Manuele Conti (manuele.conti@sirius-es.it)
+ *  Copyright (C) 2012       Matteo Facchinetti (matteo.facchinetti@sirius-es.it)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,14 +34,20 @@
 
 #include "stage3.hh"
 
+#include "fill_candidate_datatypes.hh"
+#include "narrow_candidate_datatypes.hh"
+#include "print_datatypes_error.hh"
+
+
 int type_safety(symbol_c *tree_root){
-	visit_expression_type_c visit_expression_type(tree_root);
-
-	(*tree_root).accept(visit_expression_type);
-
-	if (visit_expression_type.get_error_found())
-	  return -1;
-	
+	fill_candidate_datatypes_c fill_candidate_datatypes(tree_root);
+	tree_root->accept(fill_candidate_datatypes);
+	narrow_candidate_datatypes_c narrow_candidate_datatypes(tree_root);
+	tree_root->accept(narrow_candidate_datatypes);
+	print_datatypes_error_c print_datatypes_error(tree_root);
+	tree_root->accept(print_datatypes_error);
+	if (print_datatypes_error.get_error_found())
+		return -1;
 	return 0;
 }
 
