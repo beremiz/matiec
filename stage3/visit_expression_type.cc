@@ -566,6 +566,31 @@ symbol_c *visit_expression_type_c::common_type(symbol_c *first_type, symbol_c *s
   return common_type__(first_type, second_type);
 }
 
+symbol_c *visit_expression_type_c::common_literal(symbol_c *first_type, symbol_c *second_type) {
+  printf("common_literal: %d == %d, %d == %d, %d == %d\n",
+		 (int)is_ANY_INT_compatible(first_type),
+		 (int)is_ANY_INT_compatible(second_type),
+		 (int)is_ANY_REAL_compatible(first_type),
+		 (int)is_ANY_REAL_compatible(second_type),
+		 (int)is_ANY_BIT_compatible(first_type),
+		 (int)is_ANY_BIT_compatible(second_type));
+  if ((is_ANY_INT_compatible(first_type) && is_ANY_INT_compatible(second_type)) ||
+	  (is_ANY_BIT_compatible(first_type) && is_ANY_BIT_compatible(second_type)))
+	 return &search_constant_type_c::integer;
+  else if (is_ANY_REAL_compatible(first_type) && is_ANY_REAL_compatible(second_type))
+	 return &search_constant_type_c::real;
+  return NULL;
+}
+
+symbol_c *visit_expression_type_c::overloaded_return_type(symbol_c *type) {
+  if (is_ANY_INT_compatible(type))
+	return &search_constant_type_c::ulint_type_name;
+  else if (is_ANY_REAL_compatible(type))
+	return &search_constant_type_c::lreal_type_name;
+  else if (is_ANY_BIT_compatible(type))
+  	return &search_constant_type_c::lword_type_name;
+  return NULL;
+}
 
 /* Return TRUE if the second (value) data type may be assigned to a variable of the first (variable) data type
  * such as: 
@@ -1042,6 +1067,8 @@ void *visit_expression_type_c::visit(il_function_call_c *symbol) {
     return NULL;
 
   symbol_c *return_data_type = NULL;
+  symbol_c* fdecl_return_type;
+  symbol->called_function_declaration = NULL;
 
   /* First find the declaration of the function being called! */
   function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
@@ -1067,25 +1094,40 @@ void *visit_expression_type_c::visit(il_function_call_c *symbol) {
        * (i) we have a call to a non-overloaded function (error_cnt_ptr is NULL!, so error_count won't change!)  
        * (ii) we have a call to an overloaded function, with no errors!
        */
+
+      fdecl_return_type = base_type(f_decl->type_name);
+
+      if (symbol->called_function_declaration == NULL) {
+      	/* Store the pointer to the declaration of the function being called.
+      	 * This data will be used by stage 4 to call the correct function.
+      	 * Mostly needed to disambiguate overloaded functions...
+      	 * See comments in absyntax.def for more details
+         */
+        symbol->called_function_declaration = f_decl;
+  		symbol->overloaded_return_type = NULL;
+
+  		/* determine the base data type returned by the function being called... */
+  	    return_data_type = fdecl_return_type;
+  	  }
+  	  else if (typeid(*return_data_type) != typeid(*fdecl_return_type)){
+  		if (symbol->overloaded_return_type == NULL)
+  		  symbol->overloaded_return_type = overloaded_return_type(return_data_type);
+  		return_data_type = common_literal(return_data_type, fdecl_return_type);
+  	  }
       
-      /* Store the pointer to the declaration of the function being called.
-       * This data will be used by stage 4 to call the correct function.
-       * Mostly needed to disambiguate overloaded functions...
-       * See comments in absyntax.def for more details
-       */
-      symbol->called_function_declaration = f_decl;
-      /* determine the base data type returned by the function being called... */
-      return_data_type = base_type(f_decl->type_name);
-      /* If the following occurs, then we must have some big bug in the syntax parser (stage 2)... */
       if (NULL == return_data_type) ERROR;
-      /* set the new data type of the default variable for the following verifications... */
-      il_default_variable_type = return_data_type;
-      return NULL;
     }
   }
 
-  /* No compatible function was found for this function call */
-  STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");
+  if (NULL == return_data_type) {
+    /* No compatible function was found for this function call */
+    STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");
+  }
+  else {
+    /* set the new data type of the default variable for the following verifications... */
+    il_default_variable_type = return_data_type;
+  }
+
   return NULL;
 }
 
@@ -1206,6 +1248,9 @@ void *visit_expression_type_c::visit(il_formal_funct_call_c *symbol) {
     return NULL;
 
   symbol_c *return_data_type = NULL;
+  symbol_c* fdecl_return_type;
+  symbol->called_function_declaration = NULL;
+
   function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
   function_symtable_t::iterator upper = function_symtable.upper_bound(symbol->function_name);
   
@@ -1235,25 +1280,42 @@ void *visit_expression_type_c::visit(il_formal_funct_call_c *symbol) {
        * (i) we have a call to a non-overloaded function (error_cnt_ptr is NULL!, so error_count won't change!)  
        * (ii) we have a call to an overloaded function, with no errors!
        */
-      
-      /* Store the pointer to the declaration of the function being called.
-       * This data will be used by stage 4 to call the correct function.
-       * Mostly needed to disambiguate overloaded functions...
-       * See comments in absyntax.def for more details
-       */
-      symbol->called_function_declaration = f_decl;
-      /* determine the base data type returned by the function being called... */
-      return_data_type = base_type(f_decl->type_name);
+
+      fdecl_return_type = base_type(f_decl->type_name);
+
+      if (symbol->called_function_declaration == NULL) {
+    	/* Store the pointer to the declaration of the function being called.
+    	 * This data will be used by stage 4 to call the correct function.
+    	 * Mostly needed to disambiguate overloaded functions...
+    	 * See comments in absyntax.def for more details
+         */
+        symbol->called_function_declaration = f_decl;
+		symbol->overloaded_return_type = NULL;
+
+		/* determine the base data type returned by the function being called... */
+		return_data_type = fdecl_return_type;
+	  }
+	  else if (typeid(*return_data_type) != typeid(*fdecl_return_type)){
+		if (symbol->overloaded_return_type == NULL)
+		  symbol->overloaded_return_type = overloaded_return_type(return_data_type);
+		return_data_type = common_literal(return_data_type, fdecl_return_type);
+	  }
+
       /* the following should never occur. If it does, then we have a bug in the syntax parser (stage 2)... */
       if (NULL == return_data_type) ERROR;
-      /* the data type of the data returned by the function, and stored in the il default variable... */
-      il_default_variable_type = return_data_type;
-      return NULL;
-    }  
+
+    }
   }
   
-  /* No compatible function was found for this function call */
-  STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");
+  if (NULL == return_data_type) {
+	/* No compatible function was found for this function call */
+	STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");
+  }
+  else {
+    /* the data type of the data returned by the function, and stored in the il default variable... */
+    il_default_variable_type = return_data_type;
+  }
+
   return NULL;
 }
 
@@ -2007,6 +2069,10 @@ void *visit_expression_type_c::visit(function_invocation_c *symbol) {
   function_symtable_t::iterator upper = function_symtable.upper_bound(symbol->function_name);
   if (lower == function_symtable.end()) ERROR;
 
+  symbol_c* return_data_type;
+  symbol_c* fdecl_return_type;
+  symbol->called_function_declaration = NULL;
+
   function_symtable_t::iterator second = lower;
   second++;
   if (second == upper) {
@@ -2024,6 +2090,7 @@ void *visit_expression_type_c::visit(function_invocation_c *symbol) {
      * See comments in absyntax.def for more details
      */
     symbol->called_function_declaration = f_decl;
+    symbol->overloaded_return_type = NULL;
     return base_type(f_decl->type_name);
   }  
 
@@ -2036,15 +2103,33 @@ void *visit_expression_type_c::visit(function_invocation_c *symbol) {
     if (symbol->   formal_param_list != NULL) check_formal_call   (symbol, f_decl, &error_count);
     if (symbol->nonformal_param_list != NULL) check_nonformal_call(symbol, f_decl, false, &error_count);
     if (0 == error_count) {
-      /* Store the pointer to the declaration of the function being called.
-       * This data will be used by stage 4 to call the correct function.
-       * Mostly needed to disambiguate overloaded functions...
-       * See comments in absyntax.def for more details
-       */
-      symbol->called_function_declaration = f_decl;
-      return base_type(f_decl->type_name);
+
+      fdecl_return_type = base_type(f_decl->type_name);
+
+      if (symbol->called_function_declaration == NULL) {
+        /* Store the pointer to the declaration of the function being called.
+         * This data will be used by stage 4 to call the correct function.
+         * Mostly needed to disambiguate overloaded functions...
+         * See comments in absyntax.def for more details
+         */
+        symbol->called_function_declaration = f_decl;
+        symbol->overloaded_return_type = NULL;
+
+        /* determine the base data type returned by the function being called... */
+        return_data_type = fdecl_return_type;
+      }
+      else if (typeid(*return_data_type) != typeid(*fdecl_return_type)){
+      	if (symbol->overloaded_return_type == NULL)
+      	  symbol->overloaded_return_type = overloaded_return_type(return_data_type);
+      	return_data_type = common_literal(return_data_type, fdecl_return_type);
+      }
+
+      if (NULL == return_data_type) ERROR;
     }
   }
+
+  if (return_data_type != NULL)
+	return return_data_type;
 
   /* No compatible function was found for this function call */
   STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");

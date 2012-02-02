@@ -156,6 +156,10 @@ class visit_expression_type_c: public search_constant_type_c {
      *  if no common data type is found.
      */
     symbol_c *common_type(symbol_c *first_type, symbol_c *second_type);
+
+    symbol_c *common_literal(symbol_c *first_type, symbol_c *second_type);
+    symbol_c *overloaded_return_type(symbol_c *type);
+
 /* Return TRUE if the second (value) data type may be assigned to a variable of the first (variable) data type
  * such as: 
  *     var_type     value_type

@@ -962,7 +962,7 @@ void *visit(il_function_call_c *symbol) {
     if (fdecl_mutiplicity == 2) {
       /* function being called is overloaded! */
       s4o.print("__");
-      print_function_parameter_data_types_c overloaded_func_suf(&s4o);
+      print_function_parameter_data_types_c overloaded_func_suf(&s4o, symbol->overloaded_return_type);
       f_decl->accept(overloaded_func_suf);
     }
     s4o.print_integer(fcall_number);
@@ -973,7 +973,7 @@ void *visit(il_function_call_c *symbol) {
           if (fdecl_mutiplicity == 2) {
             /* function being called is overloaded! */
             s4o.print("__");
-            print_function_parameter_data_types_c overloaded_func_suf(&s4o);
+            print_function_parameter_data_types_c overloaded_func_suf(&s4o, symbol->overloaded_return_type);
             f_decl->accept(overloaded_func_suf);
           }
     }	  
@@ -1370,7 +1370,7 @@ void *visit(il_formal_funct_call_c *symbol) {
     if (fdecl_mutiplicity == 2) {
       /* function being called is overloaded! */
       s4o.print("__");
-      print_function_parameter_data_types_c overloaded_func_suf(&s4o);
+      print_function_parameter_data_types_c overloaded_func_suf(&s4o, symbol->overloaded_return_type);
       f_decl->accept(overloaded_func_suf);
     }
     s4o.print_integer(fcall_number);
@@ -1381,7 +1381,7 @@ void *visit(il_formal_funct_call_c *symbol) {
       if (fdecl_mutiplicity == 2) {
         /* function being called is overloaded! */
         s4o.print("__");
-        print_function_parameter_data_types_c overloaded_func_suf(&s4o);
+        print_function_parameter_data_types_c overloaded_func_suf(&s4o, symbol->overloaded_return_type);
         f_decl->accept(overloaded_func_suf);
       }
     }  

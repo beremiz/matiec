@@ -168,3 +168,4 @@ safedt_type_name_c       search_constant_type_c::safedt_type_name;
 /* temporarily here until we remove the st_code_gen.c and il_code_gen.c files... */
 /* It should then move to search_expression_type_c                               */
 integer_c search_constant_type_c::integer("1");
+real_c search_constant_type_c::real("1.0");
