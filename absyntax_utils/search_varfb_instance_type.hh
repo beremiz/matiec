@@ -134,13 +134,14 @@ class search_varfb_instance_type_c : null_visitor_c {
 
 
   private:
-    /* We override the base class' visitor to identifier_c.
-     * This is so because the base class does not consider a function block
-     * to be a type, unlike this class that allows a variable instance
-     * of a function block type...
-     */
-//     void *visit(identifier_c *type_name);
-
+    /*************************/
+    /* B.1 - Common elements */
+    /*************************/
+    /*******************************************/
+    /* B 1.1 - Letters, digits and identifiers */
+    /*******************************************/
+    void *visit(identifier_c *variable_name);
+      
     /********************************/
     /* B 1.3.3 - Derived data types */
     /********************************/

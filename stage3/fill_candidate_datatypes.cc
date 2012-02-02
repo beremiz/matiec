@@ -63,7 +63,8 @@ symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, s
 	return NULL;
 }
 
-void fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *error_count) {
+/* returns true if compatible function/FB invocation, otherwise returns false */
+bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
 	symbol_c *call_param_value,  *param_type;
 	identifier_c *param_name;
 	function_param_iterator_c       fp_iterator(f_decl);
@@ -71,37 +72,34 @@ void fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 	int extensible_parameter_highest_index = -1;
 	unsigned int i;
 
-	/* reset error counter */
-	if (error_count != NULL) *error_count = 0;
 	/* Iterating through the non-formal parameters of the function call */
 	while((call_param_value = fcp_iterator.next_nf()) != NULL) {
-		/* Obtaining the type of the value being passed in the function call */
-		std::vector <symbol_c *>&call_param_types = call_param_value->candidate_datatypes;
 		/* Iterate to the next parameter of the function being called.
 		 * Get the name of that parameter, and ignore if EN or ENO.
 		 */
 		do {
 			param_name = fp_iterator.next();
 			/* If there is no other parameter declared, then we are passing too many parameters... */
-			if(param_name == NULL) {
-				(*error_count)++;
-				return;
-			}
+			if(param_name == NULL) return false;
 		} while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
 
 		/* Get the parameter type */
 		param_type = base_type(fp_iterator.param_type());
-		for(i = 0; i < call_param_types.size(); i++) {
-			/* If the declared parameter and the parameter from the function call do not have the same type */
-			if(is_type_equal(param_type, call_param_types[i])) {
-				break;
-			}
+		
+		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
+		for(i = 0; i < call_param_value->candidate_datatypes.size(); i++) {
+			/* If found (correct data type being passed), then stop the search */
+			if(is_type_equal(param_type, call_param_value->candidate_datatypes[i])) break;
 		}
-		if (i >= call_param_types.size()) (*error_count)++;
+		/* if we reached the end of the loop, and no compatible type found, then return false */
+		if (i >= call_param_value->candidate_datatypes.size()) return false;
 	}
+	/* call is compatible! */
+	return true;
 }
 
-void fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f_decl, int *error_count) {
+/* returns true if compatible function/FB invocation, otherwise returns false */
+bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f_decl) {
 	symbol_c *call_param_value, *call_param_name, *param_type;
 	symbol_c *verify_duplicate_param;
 	identifier_c *param_name;
@@ -110,9 +108,6 @@ void fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 	int extensible_parameter_highest_index = -1;
 	identifier_c *extensible_parameter_name;
 	unsigned int i;
-
-	/* reset error counter */
-	if (error_count != NULL) *error_count = 0;
 
 	/* Iterating through the formal parameters of the function call */
 	while((call_param_name = fcp_iterator.next_f()) != NULL) {
@@ -125,7 +120,7 @@ void fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 		/* Checking if there are duplicated parameter values */
 		verify_duplicate_param = fcp_iterator.search_f(call_param_name);
 		if(verify_duplicate_param != call_param_value)
-			(*error_count)++;
+			return false;
 
 		/* Obtaining the type of the value being passed in the function call */
 		std::vector <symbol_c *>&call_param_types = call_param_value->candidate_datatypes;
@@ -134,7 +129,7 @@ void fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 		/* Find the corresponding parameter in function declaration */
 		param_name = fp_iterator.search(call_param_name);
 		if(param_name == NULL) {
-			(*error_count)++;
+			return false;
 		} else {
 			/* Get the parameter type */
 			param_type = base_type(fp_iterator.param_type());
@@ -143,10 +138,11 @@ void fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 				if(is_type_equal(param_type, call_param_types[i]))
 					break;
 			}
-			if (i >= call_param_types.size()) (*error_count)++;
+			if (i >= call_param_types.size())
+				return false;;
 		}
 	}
-
+	return true;
 }
 
 /* a helper function... */
@@ -1667,7 +1663,7 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	function_declaration_c *f_decl;
 	list_c *parameter_list;
 	list_c *parameter_candidate_datatypes;
-	symbol_c *parameter_type;
+	symbol_c *returned_parameter_type;
 	function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
 	function_symtable_t::iterator upper = function_symtable.upper_bound(symbol->function_name);
 	/* If the name of the function being called is not found in the function symbol table, then this is an invalid call */
@@ -1683,21 +1679,25 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	if (debug) std::cout << "function()\n";
 	parameter_list->accept(*this);
 	for(; lower != upper; lower++) {
-		int error_count = 0;
+		bool compatible = false;
 		f_decl = function_symtable.get_value(lower);
 		/* Check if function declaration in symbol_table is compatible with parameters */
-		if (NULL != symbol->nonformal_param_list)  match_nonformal_call(symbol, f_decl, &error_count);
-		if (NULL != symbol->   formal_param_list)     match_formal_call(symbol, f_decl, &error_count);
-		if (0 == error_count) {
-			/* Add basetype matching function only if not present */
+		if (NULL != symbol->nonformal_param_list)  compatible=match_nonformal_call(symbol, f_decl);
+		if (NULL != symbol->   formal_param_list)  compatible=   match_formal_call(symbol, f_decl);
+		if (compatible) {
+			/* Add the data type returned by the called functions. 
+			 * However, only do this if this data type is not already present in the candidate_datatypes list_c
+			 */
 			unsigned int k;
-			parameter_type = base_type(f_decl->type_name);
+			returned_parameter_type = base_type(f_decl->type_name);
 			for(k = 0; k < symbol->candidate_datatypes.size(); k++) {
-				if (is_type_equal(parameter_type, symbol->candidate_datatypes[k]))
+				if (is_type_equal(returned_parameter_type, symbol->candidate_datatypes[k]))
 					break;
 			}
-			if (k >= symbol->candidate_datatypes.size())
-				symbol->candidate_datatypes.push_back(parameter_type);
+			if (k >= symbol->candidate_datatypes.size()) {
+				symbol->candidate_datatypes.push_back(returned_parameter_type);
+				symbol->candidate_functions.push_back(f_decl);
+			}
 		}
 	}
 	if (debug) std::cout << "end_function() [" << symbol->candidate_datatypes.size() << "] result.\n";
@@ -1738,11 +1738,18 @@ void *fill_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 /* B 3.2.2 Subprogram Control Statements */
 /*****************************************/
 void *fill_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
+	bool compatible = false;
 	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
-
+	
 	if (NULL == fb_decl) ERROR;
-	if (symbol->   formal_param_list != NULL) match_formal_call(symbol, fb_decl);
-	if (symbol->nonformal_param_list != NULL) match_nonformal_call(symbol, fb_decl);
+	if (symbol->   formal_param_list != NULL) {
+		symbol->formal_param_list->accept(*this);
+		compatible = match_formal_call(symbol, fb_decl);
+	}
+	if (symbol->nonformal_param_list != NULL) {
+		symbol->nonformal_param_list->accept(*this);
+		compatible = match_nonformal_call(symbol, fb_decl);
+	}
 	if (debug) std::cout << "FB [] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
 }

@@ -141,7 +141,28 @@ bool search_varfb_instance_type_c::type_is_complex(void) {
 
 
 
+/*************************/
+/* B.1 - Common elements */
+/*************************/
+/*******************************************/
+/* B 1.1 - Letters, digits and identifiers */
+/*******************************************/
+// SYM_TOKEN(identifier_c)
+void *search_varfb_instance_type_c::visit(identifier_c *variable_name) {
+  /* symbol should be a variable name!! */
+  /* Note: although the method is called get_decl(), it is getting the declaration of the variable, which for us is the type_id of that variable! */
+  current_type_id       = search_var_instance_decl.get_decl (variable_name);
+  current_basetype_decl = search_base_type.get_basetype_decl(current_type_id);
+  current_basetype_id   = search_base_type.get_basetype_id  (current_type_id);
+    
+  /* What if the variable has not been declared?  Then this should not be a compiler error! 
+   * However, currently stage 2 of the compiler already detects when variables have not been delcared,
+   * so if the variable's declaration is not found, then that means that we have an internal compiler error!
+   */
+  if (NULL == current_type_id) ERROR; 
 
+  return NULL;
+}
 
 
 
@@ -269,13 +290,7 @@ void *search_varfb_instance_type_c::visit(structure_element_initialization_c *sy
 /*********************/
 // SYM_REF1(symbolic_variable_c, var_name)
 void *search_varfb_instance_type_c::visit(symbolic_variable_c *symbol) {
-  /* Note: although the method is called get_decl(), it is getting the declaration of the variable, which for us is the type_id of that variable! */
-  current_type_id       = search_var_instance_decl.get_decl (symbol->var_name);
-  current_basetype_decl = search_base_type.get_basetype_decl(current_type_id);
-  current_basetype_id   = search_base_type.get_basetype_id  (current_type_id);
-    
-  if (NULL == current_type_id) ERROR; /* why should this be an error? what if the variable has not been declared? */
-
+  symbol->var_name->accept(*this);
   return NULL;
 }
 

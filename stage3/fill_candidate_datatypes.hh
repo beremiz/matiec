@@ -85,8 +85,8 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     virtual ~fill_candidate_datatypes_c(void);
 
     /* Match a function declaration with a function call through their parameters.*/
-    void match_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *error_count = NULL);
-    void match_formal_call(symbol_c *f_call, symbol_c *f_decl, int *error_count = NULL);
+    bool match_nonformal_call(symbol_c *f_call, symbol_c *f_decl);
+    bool match_formal_call   (symbol_c *f_call, symbol_c *f_decl);
 
     void *compute_standard_function_default(function_invocation_c *st_symbol, il_formal_funct_call_c *il_symbol);
     void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_data_type);

@@ -1045,7 +1045,9 @@ SYM_REF1(not_expression_c, exp)
 
 /*    formal_param_list -> may be NULL ! */
 /* nonformal_param_list -> may be NULL ! */
-/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4.
+/* NOTES:
+ *    The parameter 'called_function_declaration'... 
+ *       ...is used to pass data between the stage 3 and stage 4.
  *       The IEC 61131-3 standard allows for overloaded standard functions. This means that some
  *       function calls are not completely defined by the name of the function being called,
  *       and need to be disambiguated with using the data types of the parameters being passed.
@@ -1054,8 +1056,23 @@ SYM_REF1(not_expression_c, exp)
  *       It does not make sense to determine the exact function being called twice (once in stage 3,
  *       and again in stage 4), so stage 3 will store this info in the parameter called_function_declaration
  *       for stage 4 to use it later on.
+ *    The parameter 'candidate_functions'... 
+ *       ...is used to pass data between two passes within stage 3
+ *       (actually between fill_candidate_datatypes_c and narrow_candidate_datatypes_c).
+ *       It is used to store all the functions that may be legally called with the current parameters
+ *       being used in this function invocation. Note that the standard includes some standard functions
+ *       that have the exact same input parameter types, but return different data types.
+ *       In order to determine which of these functions should be called, we first create a list
+ *       of all possible functions, and then narrow down the list (hopefully down to 1 function)
+ *       once we know the data type that the function invocation must return (this will take into 
+ *       account the expression in which the function invocation is inserted/occurs).
+ *    The parameter 'extensible_param_count'... 
+ *       ...is used to pass data between the stage 3 and stage 4.
+ *       The IEC 61131-3 standard allows for extensible standard functions. This means that some
+ *       standard functions may be called with a variable number of paramters. Stage 3 will store
+ *       in extensible_param_count the number of parameters being passed to the extensible parameter.
  */
-SYM_REF3(function_invocation_c, function_name, formal_param_list, nonformal_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
+SYM_REF3(function_invocation_c, function_name, formal_param_list, nonformal_param_list, symbol_c *called_function_declaration; int extensible_param_count; std::vector <symbol_c *> candidate_functions;)
 
 
 /********************/
