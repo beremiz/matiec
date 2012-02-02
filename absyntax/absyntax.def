@@ -1066,6 +1066,8 @@ SYM_REF1(not_expression_c, exp)
  *       of all possible functions, and then narrow down the list (hopefully down to 1 function)
  *       once we know the data type that the function invocation must return (this will take into 
  *       account the expression in which the function invocation is inserted/occurs).
+ *       The 'called_function_declaration' will eventually be set (in stage 3) to one of
+ *       the functions in the 'candidate_functions' list!
  *    The parameter 'extensible_param_count'... 
  *       ...is used to pass data between the stage 3 and stage 4.
  *       The IEC 61131-3 standard allows for extensible standard functions. This means that some

@@ -65,15 +65,15 @@ bool narrow_candidate_datatypes_c::is_widening_compatible(symbol_c *left_type, s
 	return false;
 }
 
-void narrow_candidate_datatypes_c::narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
+void narrow_candidate_datatypes_c::narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count) {
 	symbol_c *call_param_value,  *param_type;
 	identifier_c *param_name;
 	function_param_iterator_c       fp_iterator(f_decl);
 	function_call_param_iterator_c fcp_iterator(f_call);
 	int extensible_parameter_highest_index = -1;
-	identifier_c *extensible_parameter_name;
 	unsigned int i;
 
+	if (NULL != ext_parm_count) *ext_parm_count = -1;
 
 	/* Iterating through the non-formal parameters of the function call */
 	while((call_param_value = fcp_iterator.next_nf()) != NULL) {
@@ -84,28 +84,33 @@ void narrow_candidate_datatypes_c::narrow_nonformal_call(symbol_c *f_call, symbo
 		do {
 			param_name = fp_iterator.next();
 			/* If there is no other parameter declared, then we are passing too many parameters... */
-			if(param_name == NULL) {
-				return;
-			}
+			/* This error should have been caught in fill_candidate_datatypes_c */
+			if(param_name == NULL) ERROR;
 		} while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
 
-		/* Get the parameter type */
+		/* Set the desired datatype for this parameter, and call it recursively. */
 		call_param_value->datatype = base_type(fp_iterator.param_type());
 		call_param_value->accept(*this);
-		if (extensible_parameter_highest_index < fp_iterator.extensible_param_index()) {
-			extensible_parameter_highest_index = fp_iterator.extensible_param_index();
-			extensible_parameter_name = param_name;
-		}
-	}
-    int extensible_param_count = -1;
-    if (extensible_parameter_highest_index >=0) /* if call to extensible function */
-      extensible_param_count = 1 + extensible_parameter_highest_index - fp_iterator.first_extensible_param_index();
-    function_invocation_c  *function_invocation  = dynamic_cast<function_invocation_c  *>(f_call);
-    if (function_invocation  != NULL) function_invocation->extensible_param_count = extensible_param_count;
 
+		if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
+			extensible_parameter_highest_index = fp_iterator.extensible_param_index();
+	}
+	/* call is compatible! */
+
+	/* In the case of a call to an extensible function, we store the highest index 
+	 * of the extensible parameters this particular call uses, in the symbol_c object
+	 * of the function call itself!
+	 * In calls to non-extensible functions, this value will be set to -1.
+	 * This information is later used in stage4 to correctly generate the
+	 * output code.
+	 */
+	if ((NULL != ext_parm_count) && (extensible_parameter_highest_index >=0) /* if call to extensible function */)
+		*ext_parm_count = 1 + extensible_parameter_highest_index - fp_iterator.first_extensible_param_index();
 }
 
-void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c *f_decl) {
+
+
+void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count) {
 	symbol_c *call_param_value, *call_param_name, *param_type;
 	symbol_c *verify_duplicate_param;
 	identifier_c *param_name;
@@ -115,6 +120,7 @@ void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c
 	identifier_c *extensible_parameter_name;
 	unsigned int i;
 
+	if (NULL != ext_parm_count) *ext_parm_count = -1;
 
 	/* Iterating through the formal parameters of the function call */
 	while((call_param_name = fcp_iterator.next_f()) != NULL) {
@@ -127,28 +133,27 @@ void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c
 		/* Find the corresponding parameter in function declaration */
 		param_name = fp_iterator.search(call_param_name);
 
-		/* Get the parameter type */
+		/* Set the desired datatype for this parameter, and call it recursively. */
 		call_param_name->datatype = base_type(fp_iterator.param_type());
 		call_param_name->accept(*this);
-	    /* the first parameter (il_def_variable) is correct */
-	    if (extensible_parameter_highest_index < fp_iterator.extensible_param_index()) {
-	      extensible_parameter_highest_index = fp_iterator.extensible_param_index();
-	    }
+
+		if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
+			extensible_parameter_highest_index = fp_iterator.extensible_param_index();
 	}
-	/* The function call may not have any errors! */
-	/* In the case of a call to an extensible function, we store the highest index
+	/* call is compatible! */
+
+	/* In the case of a call to an extensible function, we store the highest index 
 	 * of the extensible parameters this particular call uses, in the symbol_c object
 	 * of the function call itself!
 	 * In calls to non-extensible functions, this value will be set to -1.
 	 * This information is later used in stage4 to correctly generate the
 	 * output code.
 	 */
-	int extensible_param_count = -1;
-	if (extensible_parameter_highest_index >=0) /* if call to extensible function */
-		extensible_param_count = 1 + extensible_parameter_highest_index - fp_iterator.first_extensible_param_index();
-	function_invocation_c  *function_invocation  = dynamic_cast<function_invocation_c  *>(f_call);
-	if (function_invocation  != NULL) function_invocation->extensible_param_count = extensible_param_count;
+	if ((NULL != ext_parm_count) && (extensible_parameter_highest_index >=0) /* if call to extensible function */)
+		*ext_parm_count = 1 + extensible_parameter_highest_index - fp_iterator.first_extensible_param_index();
 }
+
+
 
 /* a helper function... */
 symbol_c *narrow_candidate_datatypes_c::base_type(symbol_c *symbol) {
@@ -986,33 +991,21 @@ void *narrow_candidate_datatypes_c::visit(not_expression_c *symbol) {
 
 
 void *narrow_candidate_datatypes_c::visit(function_invocation_c *symbol) {
-	function_declaration_c *f_decl;
-	list_c *parameter_list;
-	list_c *parameter_candidate_datatypes;
-	function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
-	function_symtable_t::iterator upper = function_symtable.upper_bound(symbol->function_name);
+	int  ext_parm_count;
 
-	if (NULL != symbol->formal_param_list)
-		parameter_list = (list_c *)symbol->formal_param_list;
-	else if (NULL != symbol->nonformal_param_list)
-		parameter_list = (list_c *)symbol->nonformal_param_list;
-	else ERROR;
-	for(; lower != upper; lower++) {
-		f_decl = function_symtable.get_value(lower);
-		symbol_c * return_type = base_type(f_decl->type_name);
-		if (return_type && typeid(*symbol->datatype) != typeid(*return_type))
-			continue;
-		/* We set which function declaration it'll use in STAGE4 */
-		symbol->called_function_declaration = f_decl;
-		/* Check if function declaration in symbol_table is compatible with parameters */
-		if (NULL != symbol->nonformal_param_list)
-			/* nonformal parameter function call */
-			narrow_nonformal_call(symbol, f_decl);
-		else
-			/* formal parameter function call */
-			narrow_formal_call (symbol, f_decl);
-		break;
+	/* set the called_function_declaration taking into account the datatype that we need to return */
+	symbol->called_function_declaration = NULL;
+	for(unsigned int i = 0; i < symbol->candidate_datatypes.size(); i++) {
+		if (is_type_equal(symbol->candidate_datatypes[i], symbol->datatype)) {
+			symbol->called_function_declaration = symbol->candidate_functions[i];
+			break;
+		}
 	}
+	if (NULL == symbol->called_function_declaration) ERROR;
+	
+	if (NULL != symbol->nonformal_param_list)  narrow_nonformal_call(symbol, symbol->called_function_declaration, &ext_parm_count);
+	if (NULL != symbol->   formal_param_list)     narrow_formal_call(symbol, symbol->called_function_declaration, &ext_parm_count);
+	symbol->extensible_param_count = ext_parm_count;
 
 	return NULL;
 }

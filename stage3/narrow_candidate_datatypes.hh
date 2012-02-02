@@ -50,8 +50,8 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
   public:
     narrow_candidate_datatypes_c(symbol_c *ignore);
     virtual ~narrow_candidate_datatypes_c(void);
-    void narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl);
-    void narrow_formal_call(symbol_c *f_call, symbol_c *f_decl);
+    void narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
+    void narrow_formal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
 
     symbol_c *base_type(symbol_c *symbol);
 

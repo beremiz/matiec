@@ -63,6 +63,9 @@ symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, s
 	return NULL;
 }
 
+
+
+
 /* returns true if compatible function/FB invocation, otherwise returns false */
 bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
 	symbol_c *call_param_value,  *param_type;
@@ -98,6 +101,8 @@ bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 	return true;
 }
 
+
+
 /* returns true if compatible function/FB invocation, otherwise returns false */
 bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f_decl) {
 	symbol_c *call_param_value, *call_param_name, *param_type;
@@ -128,22 +133,24 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 
 		/* Find the corresponding parameter in function declaration */
 		param_name = fp_iterator.search(call_param_name);
-		if(param_name == NULL) {
-			return false;
-		} else {
-			/* Get the parameter type */
-			param_type = base_type(fp_iterator.param_type());
-			for (i = 0; i < call_param_types.size(); i++) {
-				/* If the declared parameter and the parameter from the function call have the same type */
-				if(is_type_equal(param_type, call_param_types[i]))
-					break;
-			}
-			if (i >= call_param_types.size())
-				return false;;
+		if(param_name == NULL) return false;
+		/* Get the parameter type */
+		param_type = base_type(fp_iterator.param_type());
+		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
+		for (i = 0; i < call_param_types.size(); i++) {
+			/* If found (correct data type being passed), then stop the search */
+			if(is_type_equal(param_type, call_param_types[i])) break;
 		}
+		/* if we reached the end of the loop, and no compatible type found, then return false */
+		if (i >= call_param_types.size()) return false;
+
 	}
+	/* call is compatible! */
 	return true;
 }
+
+
+
 
 /* a helper function... */
 symbol_c *fill_candidate_datatypes_c::base_type(symbol_c *symbol) {
@@ -1680,6 +1687,7 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	parameter_list->accept(*this);
 	for(; lower != upper; lower++) {
 		bool compatible = false;
+		
 		f_decl = function_symtable.get_value(lower);
 		/* Check if function declaration in symbol_table is compatible with parameters */
 		if (NULL != symbol->nonformal_param_list)  compatible=match_nonformal_call(symbol, f_decl);
@@ -1703,6 +1711,8 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	if (debug) std::cout << "end_function() [" << symbol->candidate_datatypes.size() << "] result.\n";
 	return NULL;
 }
+
+
 
 /********************/
 /* B 3.2 Statements */
