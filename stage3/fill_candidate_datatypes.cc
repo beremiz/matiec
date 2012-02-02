@@ -1668,27 +1668,26 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	list_c *parameter_list;
 	list_c *parameter_candidate_datatypes;
 	symbol_c *parameter_type;
-	int error_count;
 	function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
 	function_symtable_t::iterator upper = function_symtable.upper_bound(symbol->function_name);
-
+	/* If the name of the function being called is not found in the function symbol table, then this is an invalid call */
+	/* Since the lexical parser already checks for this, then if this occurs then we have an internal compiler error. */
+	if (lower == function_symtable.end()) ERROR;
+	
 	if (NULL != symbol->formal_param_list)
 		parameter_list = (list_c *)symbol->formal_param_list;
 	else if (NULL != symbol->nonformal_param_list)
 		parameter_list = (list_c *)symbol->nonformal_param_list;
 	else ERROR;
+	
 	if (debug) std::cout << "function()\n";
 	parameter_list->accept(*this);
 	for(; lower != upper; lower++) {
+		int error_count = 0;
 		f_decl = function_symtable.get_value(lower);
-		error_count = 0;
 		/* Check if function declaration in symbol_table is compatible with parameters */
-		if (NULL != symbol->nonformal_param_list)
-			/* nonformal parameter function call */
-			match_nonformal_call(symbol, f_decl, &error_count);
-		else
-			/* formal parameter function call */
-			match_formal_call (symbol, f_decl, &error_count);
+		if (NULL != symbol->nonformal_param_list)  match_nonformal_call(symbol, f_decl, &error_count);
+		if (NULL != symbol->   formal_param_list)     match_formal_call(symbol, f_decl, &error_count);
 		if (0 == error_count) {
 			/* Add basetype matching function only if not present */
 			unsigned int k;
