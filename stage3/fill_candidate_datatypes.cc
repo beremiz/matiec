@@ -1770,16 +1770,6 @@ void *fill_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
 /* B 3.2.3 Selection Statements */
 /********************************/
 void *fill_candidate_datatypes_c::visit(if_statement_c *symbol) {
-	/* MANU:
-	 * IF statement accept only BOOL type. We intersect with BOOL type to validate current if condition
-	 * Example:
-	 * IF 1 THEN 		---> 	 ok
-	 * IF 5 THEN 		---> not ok
-	 * IF 1 OR 1 THEN	--->     ok
-	 * IF 1 OR 5 THEN   ---> not ok
-	 * IF SHL() THEN	---> 	 ok if shl return BOOL
-	 * IF INT_TO_REAL() ---> not ok
-	 */
 	symbol->expression->accept(*this);
 	if (NULL != symbol->statement_list)
 		symbol->statement_list->accept(*this);
