@@ -1016,24 +1016,27 @@ void *print_datatypes_error_c::visit(not_expression_c *symbol) {
 
 void *print_datatypes_error_c::visit(function_invocation_c *symbol) {
 	list_c *parameter_list;
-	function_declaration_c * f_decl;
 
-	if (NULL != symbol->datatype) return NULL;
 	if (NULL != symbol->formal_param_list)
 		parameter_list = (list_c *)symbol->formal_param_list;
 	else if (NULL != symbol->nonformal_param_list)
 		parameter_list = (list_c *)symbol->nonformal_param_list;
 	else ERROR;
+
 	parameter_list->accept(*this);
+
 	if (symbol->candidate_datatypes.size() == 0) {
-		identifier_c *fname = (identifier_c *)symbol->function_name;
-		f_decl = (function_declaration_c *)symbol->called_function_declaration;
-		/*
-		 * Manuele: In the future we have to test parameter number
-		 * and show a specific message.
-		 */
-		STAGE3_ERROR(symbol, symbol, "No matching overloaded '%s' function call.", fname->value);
+		/* No compatible function exists */
+		STAGE3_ERROR(symbol, symbol, "Invalid parameters in function invocation: %s\n", ((identifier_c *)symbol->function_name)->value);
+	} 
+#if 0	
+	else
+	if (NULL == symbol->datatype) {
+		/* One or compatible functions exists, but none chosen! */
+		STAGE3_ERROR(symbol, symbol, "Invalid parameters in function invocation: %s\n", f_name->value);
 	}
+#endif
+
 	return NULL;
 }
 
@@ -1054,6 +1057,42 @@ void *print_datatypes_error_c::visit(assignment_statement_c *symbol) {
 		STAGE3_ERROR(symbol, symbol, "Invalid data types for ':=' operation.");
 	return NULL;
 }
+
+
+/*****************************************/
+/* B 3.2.2 Subprogram Control Statements */
+/*****************************************/
+/* fb_name '(' [param_assignment_list] ')' */
+/*    formal_param_list -> may be NULL ! */
+/* nonformal_param_list -> may be NULL ! */
+/* NOTES:
+ *    The parameter 'called_fb_declaration'... 
+ *       ...is used to pass data between two passes of stage 3.
+ *       (actually set in fill_candidate_datatypes_c, and used in narrow_candidate_datatypes_c and print_datatypes_error_c).
+ *       This allows fill_candidate_datatypes_c to figure out whether it is a valid FB call,
+ *       and let the other classes handle it aproproately.
+ *       It could also be used in stage 4, if required.
+ */
+// SYM_REF3(fb_invocation_c, fb_name, formal_param_list, nonformal_param_list, symbol_c *called_fb_declaration;)
+void *print_datatypes_error_c::visit(fb_invocation_c *symbol) {
+	list_c *parameter_list;
+
+	if (NULL != symbol->formal_param_list)
+		parameter_list = (list_c *)symbol->formal_param_list;
+	else if (NULL != symbol->nonformal_param_list)
+		parameter_list = (list_c *)symbol->nonformal_param_list;
+	else ERROR;
+
+	parameter_list->accept(*this);
+
+	if (NULL == symbol->called_fb_declaration) {
+		/* Invalid parameters for FB call! */
+		STAGE3_ERROR(symbol, symbol, "Invalid parameters in FB invocation: %s\n", ((identifier_c *)symbol->fb_name)->value);
+	} 
+
+	return NULL;
+}
+
 
 /********************************/
 /* B 3.2.3 Selection Statements */

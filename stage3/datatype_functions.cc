@@ -148,27 +148,17 @@ const struct widen_entry widen_DIV_table[] = {
     { NULL, NULL, NULL },
 };
 
-/* NOTE on data type handling and literals...
- * ==========================================
- *
- * Literals that are explicitly type cast
- *   e.g.:   BYTE#42
- *           INT#65
- *           TIME#45h23m
- *               etc...
- *  are NOT considered literals in the following code.
- *  Since they are type cast, and their data type is fixed and well known,
- *  they are treated as a variable of that data type (except when determining lvalues)
- *  In other words, when calling search_constant_type_c on these constants, it returns
- *  a xxxxx_type_name_c, and not one of the xxxx_literal_c !
- *
- *  When the following code handles a literal, it is really a literal of unknown data type.
- *    e.g.   42, may be considered an int, a byte, a word, etc...
- *
- * NOTE: type_symbol == NULL is valid!
- *       This will occur, for example, when and undefined/undeclared symbolic_variable is used in the program.
- *       This will not be of any type, so we always return false.
+/* Search for a datatype inside a candidate_datatypes list.
+ * Returns: position of datatype in the list, or -1 if not found.
  */
+int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes) {
+	for(unsigned int i = 0; i < candidate_datatypes.size(); i++)
+		if (is_type_equal(datatype, candidate_datatypes[i]))
+			return i;
+	/* Not found ! */
+	return -1;
+}
+
 
 /* A helper function... */
 bool is_ANY_ELEMENTARY_type(symbol_c *type_symbol) {
@@ -332,7 +322,7 @@ bool is_ANY_INT_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_ANY_INT_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEINT_type(type_symbol))              {return true;}
-  if (is_literal_integer_type(type_symbol))          {return true;}
+//   if (is_literal_integer_type(type_symbol))          {return true;}
   return false;
 }
 
@@ -357,7 +347,7 @@ bool is_ANY_REAL_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_ANY_REAL_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEREAL_type(type_symbol))              {return true;}
-  if (is_literal_real_type(type_symbol))              {return true;}
+//   if (is_literal_real_type(type_symbol))              {return true;}
   return false;
 }
 
@@ -388,8 +378,8 @@ bool is_ANY_BIT_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_ANY_BIT_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEBIT_type(type_symbol))              {return true;}
-  if (is_nonneg_literal_integer_type(type_symbol))   {return true;}
-  if (is_literal_bool_type(type_symbol))             {return true;}
+//   if (is_nonneg_literal_integer_type(type_symbol))   {return true;}
+//   if (is_literal_bool_type(type_symbol))             {return true;}
   return false;
 }
 
@@ -412,10 +402,13 @@ bool is_ANY_BOOL_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_BOOL_type    (type_symbol))              {return true;}
   if (is_SAFEBOOL_type(type_symbol))              {return true;}
-  if (is_literal_bool_type(type_symbol))              {return true;}
+//   if (is_literal_bool_type(type_symbol))              {return true;}
   return false;
 }
 
+
+
+#if 0
 /* A helper function... */
 bool is_literal_integer_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
@@ -604,6 +597,7 @@ bool is_compatible_type(symbol_c *first_type, symbol_c *second_type) {
   if (first_type == NULL || second_type == NULL) {return false;}
   return (NULL != common_type(first_type, second_type));
 }
+#endif
 
 bool is_type_equal(symbol_c *first_type, symbol_c *second_type)
 {

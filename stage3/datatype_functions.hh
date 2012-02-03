@@ -46,6 +46,11 @@ extern const struct widen_entry widen_SUB_table[];
 extern const struct widen_entry widen_MUL_table[];
 extern const struct widen_entry widen_DIV_table[];
 
+/* Search for a datatype inside a candidate_datatypes list.
+ * Returns: position of datatype in the list, or -1 if not found.
+ */
+int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
+
 /* A helper function... */
 bool is_ANY_ELEMENTARY_type         (symbol_c *type_symbol);
 bool is_ANY_SAFEELEMENTARY_type     (symbol_c *type_symbol);
@@ -83,6 +88,7 @@ bool is_BOOL_type                   (symbol_c *type_symbol);
 bool is_SAFEBOOL_type               (symbol_c *type_symbol);
 bool is_ANY_BOOL_compatible         (symbol_c *type_symbol);
 
+#if 0
 bool is_nonneg_literal_integer_type (symbol_c *type_symbol);
 bool is_literal_integer_type        (symbol_c *type_symbol);
 bool is_literal_real_type           (symbol_c *type_symbol);
@@ -102,9 +108,11 @@ bool is_literal_bool_type           (symbol_c *type_symbol);
 symbol_c *common_type(symbol_c *first_type, symbol_c *second_type);
 bool is_valid_assignment(symbol_c *var_type, symbol_c *value_type);
 bool is_compatible_type(symbol_c *first_type, symbol_c *second_type);
+#endif
+
 bool is_type_equal(symbol_c *first_type, symbol_c *second_type);
 
-typedef bool (*helper_function_t) (symbol_c *type_symbol);  /* a pointer to a function! */
+// typedef bool (*helper_function_t) (symbol_c *type_symbol);  /* a pointer to a function! */
 
 
 

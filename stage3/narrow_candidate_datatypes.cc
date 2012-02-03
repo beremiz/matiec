@@ -54,6 +54,17 @@ narrow_candidate_datatypes_c::narrow_candidate_datatypes_c(symbol_c *ignore) {
 narrow_candidate_datatypes_c::~narrow_candidate_datatypes_c(void) {
 }
 
+
+/* Only set the symbol's desired datatype to 'datatype' if that datatype is in the candidate_datatype list */
+static void set_datatype(symbol_c *datatype, symbol_c *symbol) {
+	symbol->datatype = NULL;   
+	if (search_in_datatype_list(datatype, symbol->candidate_datatypes) >= 0)
+		symbol->datatype = datatype;  
+}
+
+
+
+
 bool narrow_candidate_datatypes_c::is_widening_compatible(symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, const struct widen_entry widen_table[]) {
 	for (int k = 0; NULL != widen_table[k].left;  k++) {
 		if        ((typeid(*left_type)   == typeid(*widen_table[k].left))
@@ -95,9 +106,11 @@ void narrow_candidate_datatypes_c::narrow_nonformal_call(symbol_c *f_call, symbo
 		/* Note that if the call has more parameters than those declared in the function/FB declaration,
 		 * we may be setting this to NULL!
 		 */
-		call_param_value->datatype = base_type(fp_iterator.param_type());
-		if ((NULL != param_name) && (NULL == call_param_value->datatype)) ERROR;
-		if ((NULL == param_name) && (NULL != call_param_value->datatype)) ERROR;
+		symbol_c *desired_datatype = base_type(fp_iterator.param_type());
+		if ((NULL != param_name) && (NULL == desired_datatype)) ERROR;
+		if ((NULL == param_name) && (NULL != desired_datatype)) ERROR;
+
+		set_datatype(desired_datatype, call_param_value);
 		call_param_value->accept(*this);
 
 		if (NULL != param_name) 
@@ -145,10 +158,11 @@ void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c
 		 *       an invalid FB call (call with parameters that do not exist on the FB declaration).
 		 *       For this reason, the param_name may come out as NULL!
 		 */
-		call_param_value->datatype = base_type(fp_iterator.param_type());
-		if ((NULL != param_name) && (NULL == call_param_value->datatype)) ERROR;
-		if ((NULL == param_name) && (NULL != call_param_value->datatype)) ERROR;
+		symbol_c *desired_datatype = base_type(fp_iterator.param_type());
+		if ((NULL != param_name) && (NULL == desired_datatype)) ERROR;
+		if ((NULL == param_name) && (NULL != desired_datatype)) ERROR;
 
+		set_datatype(desired_datatype, call_param_value);
 		call_param_value->accept(*this);
 
 		if (NULL != param_name) 
