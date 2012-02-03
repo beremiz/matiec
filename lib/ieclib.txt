@@ -38,6 +38,7 @@
 {#include "integral_st.txt" }
 {#include "pid_st.txt" }
 {#include "ramp_st.txt" }
+{#include "rtc.txt" }
 
 (* Not in the standard, but useful nonetheless. *)
 {#include "sema.txt" }
