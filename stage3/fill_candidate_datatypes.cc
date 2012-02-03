@@ -67,6 +67,7 @@ symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, s
 
 
 /* returns true if compatible function/FB invocation, otherwise returns false */
+/* Assumes that the candidate_datatype lists of all the parameters being passed haved already been filled in */
 bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
 	symbol_c *call_param_value,  *param_type;
 	identifier_c *param_name;
@@ -104,6 +105,7 @@ bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 
 
 /* returns true if compatible function/FB invocation, otherwise returns false */
+/* Assumes that the candidate_datatype lists of all the parameters being passed haved already been filled in */
 bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f_decl) {
 	symbol_c *call_param_value, *call_param_name, *param_type;
 	symbol_c *verify_duplicate_param;
@@ -129,7 +131,6 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 
 		/* Obtaining the type of the value being passed in the function call */
 		std::vector <symbol_c *>&call_param_types = call_param_value->candidate_datatypes;
-
 
 		/* Find the corresponding parameter in function declaration */
 		param_name = fp_iterator.search(call_param_name);
@@ -1671,6 +1672,9 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	list_c *parameter_list;
 	list_c *parameter_candidate_datatypes;
 	symbol_c *returned_parameter_type;
+
+	if (debug) std::cout << "function()\n";
+
 	function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
 	function_symtable_t::iterator upper = function_symtable.upper_bound(symbol->function_name);
 	/* If the name of the function being called is not found in the function symbol table, then this is an invalid call */
@@ -1683,8 +1687,12 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 		parameter_list = (list_c *)symbol->nonformal_param_list;
 	else ERROR;
 	
-	if (debug) std::cout << "function()\n";
+	/* Fill in the candidate_datatypes lists of all the expressions used in the function call parameters */
 	parameter_list->accept(*this);
+
+	/* Look for all compatible function declarations, and add their return datatypes 
+	 * to the candidate_datatype list of this function invocation. 
+	 */
 	for(; lower != upper; lower++) {
 		bool compatible = false;
 		
@@ -1750,8 +1758,9 @@ void *fill_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 void *fill_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
 	bool compatible = false;
 	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
-	
+	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
 	if (NULL == fb_decl) ERROR;
+
 	if (symbol->   formal_param_list != NULL) {
 		symbol->formal_param_list->accept(*this);
 		compatible = match_formal_call(symbol, fb_decl);
@@ -1760,6 +1769,10 @@ void *fill_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
 		symbol->nonformal_param_list->accept(*this);
 		compatible = match_nonformal_call(symbol, fb_decl);
 	}
+
+	if (compatible) 
+		symbol->called_fb_declaration = fb_decl;
+
 	if (debug) std::cout << "FB [] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
 }

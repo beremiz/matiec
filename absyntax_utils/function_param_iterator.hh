@@ -105,7 +105,10 @@ class function_param_iterator_c : public null_visitor_c {
      */
     typedef enum {iterate_op, search_op} operation_t;
     operation_t current_operation;
-
+    
+    /* the last parameter/value returned by search() or next() */
+    symbol_c *last_returned_parameter; 
+    
   private:
     int   cmp_extparam_names(const char* s1, const char* s2);
     void* handle_param_list(list_c *list);

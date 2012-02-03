@@ -84,20 +84,26 @@ void narrow_candidate_datatypes_c::narrow_nonformal_call(symbol_c *f_call, symbo
 		do {
 			param_name = fp_iterator.next();
 			/* If there is no other parameter declared, then we are passing too many parameters... */
-			/* This error should have been caught in fill_candidate_datatypes_c, but may occur here again when we handle FB invocations! */
-			if(param_name == NULL) return;
+			/* This error should have been caught in fill_candidate_datatypes_c, but may occur here again when we handle FB invocations! 
+			 * In this case, we carry on analysing the code in order to be able to provide relevant error messages
+			 * for that code too!
+			 */
+			if(param_name == NULL) break;
 		} while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
 
 		/* Set the desired datatype for this parameter, and call it recursively. */
+		/* Note that if the call has more parameters than those declared in the function/FB declaration,
+		 * we may be setting this to NULL!
+		 */
 		call_param_value->datatype = base_type(fp_iterator.param_type());
-		if (NULL == call_param_value->datatype) ERROR;
+		if ((NULL != param_name) && (NULL == call_param_value->datatype)) ERROR;
+		if ((NULL == param_name) && (NULL != call_param_value->datatype)) ERROR;
 		call_param_value->accept(*this);
 
-		if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
-			extensible_parameter_highest_index = fp_iterator.extensible_param_index();
+		if (NULL != param_name) 
+			if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
+				extensible_parameter_highest_index = fp_iterator.extensible_param_index();
 	}
-	/* call is compatible! */
-
 	/* In the case of a call to an extensible function, we store the highest index 
 	 * of the extensible parameters this particular call uses, in the symbol_c object
 	 * of the function call itself!
@@ -135,12 +141,19 @@ void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c
 		param_name = fp_iterator.search(call_param_name);
 
 		/* Set the desired datatype for this parameter, and call it recursively. */
+		/* NOTE: When handling a FB call, this narrow_formal_call() may be called to analyse
+		 *       an invalid FB call (call with parameters that do not exist on the FB declaration).
+		 *       For this reason, the param_name may come out as NULL!
+		 */
 		call_param_value->datatype = base_type(fp_iterator.param_type());
-		if (NULL == call_param_value->datatype) ERROR;
+		if ((NULL != param_name) && (NULL == call_param_value->datatype)) ERROR;
+		if ((NULL == param_name) && (NULL != call_param_value->datatype)) ERROR;
+
 		call_param_value->accept(*this);
 
-		if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
-			extensible_parameter_highest_index = fp_iterator.extensible_param_index();
+		if (NULL != param_name) 
+			if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
+				extensible_parameter_highest_index = fp_iterator.extensible_param_index();
 	}
 	/* call is compatible! */
 
@@ -996,15 +1009,38 @@ void *narrow_candidate_datatypes_c::visit(not_expression_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	int  ext_parm_count;
 
-	/* set the called_function_declaration taking into account the datatype that we need to return */
+	/* set the called_function_declaration. */
 	symbol->called_function_declaration = NULL;
-	for(unsigned int i = 0; i < symbol->candidate_datatypes.size(); i++) {
-		if (is_type_equal(symbol->candidate_datatypes[i], symbol->datatype)) {
-			symbol->called_function_declaration = symbol->candidate_functions[i];
-			break;
+	if (symbol->candidate_datatypes.size() == 1) {
+		/* If only one possible called function, then that is the function to call!
+		 * In this case we ignore the symbol->datatype value (that may even be NULL).
+		 * This helps in identifying potential errors in the expressions used inside this function call
+		 * even if there is a previous error, allowing us to make a more thorough analysis of the semantics
+		 * of the ST code, and providing as many relevant error messages as possible!
+		 * If symbol->datatype isn't NULL, then this chosen function should be returning the required datatype,
+		 * otherwise we have a bug in our stage3 code!
+		 */
+		symbol->called_function_declaration = symbol->candidate_functions[0];
+		if ((NULL != symbol->datatype) && (!is_type_equal(symbol->candidate_datatypes[0], symbol->datatype)))
+			ERROR;
+	}
+	else {
+		/* set the called_function_declaration taking into account the datatype that we need to return */
+		symbol->called_function_declaration = NULL;
+		for(unsigned int i = 0; i < symbol->candidate_datatypes.size(); i++) {
+			if (is_type_equal(symbol->candidate_datatypes[i], symbol->datatype)) {
+				symbol->called_function_declaration = symbol->candidate_functions[i];
+				break;
+			}
 		}
 	}
-	if (NULL == symbol->called_function_declaration) ERROR;
+	/* NOTE: If we can't figure out the declaration of the function being called, this is not 
+	 *       necessarily an internal compiler error. It could be because the symbol->datatype is NULL
+	 *       (because the ST code being analysed has an error _before_ this function invocation).
+	 *       However, we don't just give, up, we carry on recursivly analysing the code, so as to be
+	 *       able to print out any error messages related to underlying code that could be partially correct.
+	 */
+	/* if (NULL == symbol->called_function_declaration) ERROR; */
 	
 	if (NULL != symbol->nonformal_param_list)  narrow_nonformal_call(symbol, symbol->called_function_declaration, &ext_parm_count);
 	if (NULL != symbol->   formal_param_list)     narrow_formal_call(symbol, symbol->called_function_declaration, &ext_parm_count);
@@ -1039,7 +1075,16 @@ void *narrow_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 /*****************************************/
 
 void *narrow_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
+	/* Note: We do not use the symbol->called_fb_declaration value (set in fill_candidate_datatypes_c)
+	 *       because we try to identify any other datatype errors in the expressions used in the 
+	 *       parameters to the FB call (e.g.  fb_var(var1 * 56 + func(var * 43)) )
+	 *       even it the call to the FB is invalid. 
+	 *       This makes sense because it may be errors in those expressions which are
+	 *       making this an invalid call, so it makes sense to point them out to the user!
+	 */
 	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+
+	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
 	if (NULL == fb_decl) ERROR;
 	if (NULL != symbol->nonformal_param_list)  narrow_nonformal_call(symbol, fb_decl);
 	if (NULL != symbol->   formal_param_list)     narrow_formal_call(symbol, fb_decl);
