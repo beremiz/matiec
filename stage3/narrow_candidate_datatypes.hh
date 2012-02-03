@@ -196,6 +196,11 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /*********************************/
     void *visit(assignment_statement_c *symbol);
 
+    /*****************************************/
+    /* B 3.2.2 Subprogram Control Statements */
+    /*****************************************/
+    void *visit(fb_invocation_c *symbol);
+    
     /********************************/
     /* B 3.2.3 Selection Statements */
     /********************************/

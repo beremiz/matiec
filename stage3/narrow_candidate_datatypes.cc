@@ -84,12 +84,13 @@ void narrow_candidate_datatypes_c::narrow_nonformal_call(symbol_c *f_call, symbo
 		do {
 			param_name = fp_iterator.next();
 			/* If there is no other parameter declared, then we are passing too many parameters... */
-			/* This error should have been caught in fill_candidate_datatypes_c */
-			if(param_name == NULL) ERROR;
+			/* This error should have been caught in fill_candidate_datatypes_c, but may occur here again when we handle FB invocations! */
+			if(param_name == NULL) return;
 		} while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
 
 		/* Set the desired datatype for this parameter, and call it recursively. */
 		call_param_value->datatype = base_type(fp_iterator.param_type());
+		if (NULL == call_param_value->datatype) ERROR;
 		call_param_value->accept(*this);
 
 		if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
@@ -134,8 +135,9 @@ void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c
 		param_name = fp_iterator.search(call_param_name);
 
 		/* Set the desired datatype for this parameter, and call it recursively. */
-		call_param_name->datatype = base_type(fp_iterator.param_type());
-		call_param_name->accept(*this);
+		call_param_value->datatype = base_type(fp_iterator.param_type());
+		if (NULL == call_param_value->datatype) ERROR;
+		call_param_value->accept(*this);
 
 		if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
 			extensible_parameter_highest_index = fp_iterator.extensible_param_index();
@@ -160,7 +162,8 @@ symbol_c *narrow_candidate_datatypes_c::base_type(symbol_c *symbol) {
 	/* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used
 	 *       in the code.
 	 */
-	return NULL;
+	if (symbol == NULL) return NULL;
+	return (symbol_c *)symbol->accept(search_base_type);	
 }
 
 /*********************/
@@ -1034,6 +1037,16 @@ void *narrow_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 /*****************************************/
 /* B 3.2.2 Subprogram Control Statements */
 /*****************************************/
+
+void *narrow_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
+	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+	if (NULL == fb_decl) ERROR;
+	if (NULL != symbol->nonformal_param_list)  narrow_nonformal_call(symbol, fb_decl);
+	if (NULL != symbol->   formal_param_list)     narrow_formal_call(symbol, fb_decl);
+
+	return NULL;
+}
+
 
 /********************************/
 /* B 3.2.3 Selection Statements */
