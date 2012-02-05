@@ -225,7 +225,8 @@ function_param_iterator_c::function_param_iterator_c(symbol_c *pou_decl) {
   function_block_declaration_c *fb_decl = dynamic_cast<function_block_declaration_c *>(pou_decl);
   program_declaration_c        * p_decl = dynamic_cast<program_declaration_c        *>(pou_decl);
 
-  if ((NULL == f_decl) && (NULL == fb_decl) && (NULL == p_decl)) ERROR;
+  if ((NULL == f_decl) && (NULL == fb_decl) && (NULL == p_decl)) 
+    ERROR;
 
   /* OK. Now initialise this object... */
   this->f_decl = pou_decl;

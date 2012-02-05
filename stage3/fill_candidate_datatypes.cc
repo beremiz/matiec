@@ -1692,7 +1692,22 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 
 	/* Look for all compatible function declarations, and add their return datatypes 
 	 * to the candidate_datatype list of this function invocation. 
+	 *
+	 * If only one function exists, we add its return datatype to the candidate_datatype list,
+	 * even if the parameters passed to it are invalid.
+	 * This guarantees that the remainder of the expression in which the function call is inserted
+	 * is treated as if the function call returns correctly, and therefore does not generate
+	 * spurious error messages.
+	 * Even if the parameters to the function call are invalid, doing this is still safe, as the 
+	 * expressions inside the function call will themselves have erros and will  guarantee that 
+	 * compilation is aborted in stage3.
 	 */
+	if (function_symtable.multiplicity(symbol->function_name) == 1) {
+		f_decl = function_symtable.get_value(lower);
+		returned_parameter_type = base_type(f_decl->type_name);
+		symbol->candidate_functions.push_back(f_decl);
+		symbol->candidate_datatypes.push_back(returned_parameter_type);
+	}
 	for(; lower != upper; lower++) {
 		bool compatible = false;
 		

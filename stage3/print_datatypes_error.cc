@@ -470,8 +470,6 @@ void *print_datatypes_error_c::visit(LD_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(LDN_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -481,7 +479,6 @@ void *print_datatypes_error_c::visit(LDN_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(ST_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
 	/* MANU:
 	 * if prev_instruction is NULL we can print a message error or warning error like:
 	 * we can't use a ST like first instruction.
@@ -496,7 +493,6 @@ void *print_datatypes_error_c::visit(ST_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(STN_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
 	/* MANU:
 	 * if prev_instruction is NULL we can print a message error or warning error like:
 	 * we can't use a ST like first instruction.
@@ -516,8 +512,6 @@ void *print_datatypes_error_c::visit(NOT_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(S_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -527,8 +521,6 @@ void *print_datatypes_error_c::visit(S_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(R_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -538,8 +530,6 @@ void *print_datatypes_error_c::visit(R_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(S1_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -549,8 +539,6 @@ void *print_datatypes_error_c::visit(S1_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(R1_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -590,8 +578,6 @@ void *print_datatypes_error_c::visit(PT_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(AND_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -601,8 +587,6 @@ void *print_datatypes_error_c::visit(AND_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(OR_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -612,8 +596,6 @@ void *print_datatypes_error_c::visit(OR_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(XOR_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -623,8 +605,6 @@ void *print_datatypes_error_c::visit(XOR_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(ANDN_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -634,8 +614,6 @@ void *print_datatypes_error_c::visit(ANDN_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(ORN_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -645,8 +623,6 @@ void *print_datatypes_error_c::visit(ORN_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(XORN_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -656,8 +632,6 @@ void *print_datatypes_error_c::visit(XORN_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(ADD_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -667,8 +641,6 @@ void *print_datatypes_error_c::visit(ADD_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(SUB_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -678,8 +650,6 @@ void *print_datatypes_error_c::visit(SUB_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(MUL_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -689,8 +659,6 @@ void *print_datatypes_error_c::visit(MUL_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(DIV_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -700,8 +668,6 @@ void *print_datatypes_error_c::visit(DIV_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(MOD_operator_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -798,8 +764,6 @@ void *print_datatypes_error_c::visit(JMPCN_operator_c *symbol) {
 /***********************/
 
 void *print_datatypes_error_c::visit(or_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -811,8 +775,6 @@ void *print_datatypes_error_c::visit(or_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(xor_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -824,8 +786,6 @@ void *print_datatypes_error_c::visit(xor_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(and_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -837,8 +797,6 @@ void *print_datatypes_error_c::visit(and_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(equ_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -850,8 +808,6 @@ void *print_datatypes_error_c::visit(equ_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(notequ_expression_c *symbol)  {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -863,8 +819,6 @@ void *print_datatypes_error_c::visit(notequ_expression_c *symbol)  {
 
 
 void *print_datatypes_error_c::visit(lt_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -876,8 +830,6 @@ void *print_datatypes_error_c::visit(lt_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(gt_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -889,8 +841,6 @@ void *print_datatypes_error_c::visit(gt_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(le_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -902,8 +852,6 @@ void *print_datatypes_error_c::visit(le_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(ge_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -915,14 +863,12 @@ void *print_datatypes_error_c::visit(ge_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(add_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Current '+' result and operand not of same data type.");
+		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '+' expression.");
 
 	return NULL;
 }
@@ -930,58 +876,48 @@ void *print_datatypes_error_c::visit(add_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(sub_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-			STAGE3_ERROR(symbol, symbol, "Current '-' result and operand not of same data type.");
+			STAGE3_ERROR(symbol, symbol, "Data type mismatch for '-' expression.");
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(mul_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Current '*' result and operand not of same data type.");
+		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '*' expression.");
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(div_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Current '/' result and operand not of same data type.");
+		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '/' expression.");
 	return NULL;
 }
 
 
 void *print_datatypes_error_c::visit(mod_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Current 'MOD' result and operand not of same data type.");
+		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'MOD' expression.");
 	return NULL;
 }
 
 
 void *print_datatypes_error_c::visit(power_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -993,8 +929,6 @@ void *print_datatypes_error_c::visit(power_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(neg_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0)      &&
 		(symbol->exp->candidate_datatypes.size() > 0))
@@ -1004,8 +938,6 @@ void *print_datatypes_error_c::visit(neg_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(not_expression_c *symbol) {
-	if (NULL != symbol->datatype) return NULL;
-
 	symbol->exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0)      &&
 		(symbol->exp->candidate_datatypes.size() > 0))
@@ -1015,27 +947,35 @@ void *print_datatypes_error_c::visit(not_expression_c *symbol) {
 
 
 void *print_datatypes_error_c::visit(function_invocation_c *symbol) {
-	list_c *parameter_list;
+	symbol_c *param_value, *param_name;
+	function_call_param_iterator_c fcp_iterator(symbol);
+	bool function_invocation_error = false;
 
-	if (NULL != symbol->formal_param_list)
-		parameter_list = (list_c *)symbol->formal_param_list;
-	else if (NULL != symbol->nonformal_param_list)
-		parameter_list = (list_c *)symbol->nonformal_param_list;
-	else ERROR;
+	if ((NULL != symbol->formal_param_list) && (NULL != symbol->nonformal_param_list)) 
+		ERROR;
 
-	parameter_list->accept(*this);
+	if (NULL != symbol->formal_param_list) {
+		symbol->formal_param_list->accept(*this);
+		while ((param_name = fcp_iterator.next_f()) != NULL) {
+			param_value = fcp_iterator.get_current_value();
+			if (NULL == param_value->datatype) {
+				function_invocation_error = true;
+			}
+		}
+	}
+	if (NULL != symbol->nonformal_param_list) {
+		symbol->nonformal_param_list->accept(*this);
+		while ((param_value = fcp_iterator.next_nf()) != NULL) {
+			if (NULL == param_value->datatype) {
+				function_invocation_error = true;
+			}
+		}
+	}
 
-	if (symbol->candidate_datatypes.size() == 0) {
+	if (function_invocation_error) {
 		/* No compatible function exists */
 		STAGE3_ERROR(symbol, symbol, "Invalid parameters in function invocation: %s\n", ((identifier_c *)symbol->function_name)->value);
 	} 
-#if 0	
-	else
-	if (NULL == symbol->datatype) {
-		/* One or compatible functions exists, but none chosen! */
-		STAGE3_ERROR(symbol, symbol, "Invalid parameters in function invocation: %s\n", f_name->value);
-	}
-#endif
 
 	return NULL;
 }
@@ -1075,17 +1015,32 @@ void *print_datatypes_error_c::visit(assignment_statement_c *symbol) {
  */
 // SYM_REF3(fb_invocation_c, fb_name, formal_param_list, nonformal_param_list, symbol_c *called_fb_declaration;)
 void *print_datatypes_error_c::visit(fb_invocation_c *symbol) {
-	list_c *parameter_list;
+	symbol_c *param_value, *param_name;
+	function_call_param_iterator_c fcp_iterator(symbol);
+	bool function_invocation_error = false;
 
-	if (NULL != symbol->formal_param_list)
-		parameter_list = (list_c *)symbol->formal_param_list;
-	else if (NULL != symbol->nonformal_param_list)
-		parameter_list = (list_c *)symbol->nonformal_param_list;
-	else ERROR;
+	if ((NULL != symbol->formal_param_list) && (NULL != symbol->nonformal_param_list)) 
+		ERROR;
 
-	parameter_list->accept(*this);
+	if (NULL != symbol->formal_param_list) {
+		symbol->formal_param_list->accept(*this);
+		while ((param_name = fcp_iterator.next_f()) != NULL) {
+			param_value = fcp_iterator.get_current_value();
+			if (NULL == param_value->datatype) {
+				function_invocation_error = true;
+			}
+		}
+	}
+	if (NULL != symbol->nonformal_param_list) {
+		symbol->nonformal_param_list->accept(*this);
+		while ((param_value = fcp_iterator.next_nf()) != NULL) {
+			if (NULL == param_value->datatype) {
+				function_invocation_error = true;
+			}
+		}
+	}
 
-	if (NULL == symbol->called_fb_declaration) {
+	if (function_invocation_error) {
 		/* Invalid parameters for FB call! */
 		STAGE3_ERROR(symbol, symbol, "Invalid parameters in FB invocation: %s\n", ((identifier_c *)symbol->fb_name)->value);
 	} 

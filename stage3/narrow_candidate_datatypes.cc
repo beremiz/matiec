@@ -141,7 +141,6 @@ void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c
 	unsigned int i;
 
 	if (NULL != ext_parm_count) *ext_parm_count = -1;
-
 	/* Iterating through the formal parameters of the function call */
 	while((call_param_name = fcp_iterator.next_f()) != NULL) {
 
@@ -1025,6 +1024,7 @@ void *narrow_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 
 	/* set the called_function_declaration. */
 	symbol->called_function_declaration = NULL;
+#if 0
 	if (symbol->candidate_datatypes.size() == 1) {
 		/* If only one possible called function, then that is the function to call!
 		 * In this case we ignore the symbol->datatype value (that may even be NULL).
@@ -1037,10 +1037,10 @@ void *narrow_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 		symbol->called_function_declaration = symbol->candidate_functions[0];
 		if ((NULL != symbol->datatype) && (!is_type_equal(symbol->candidate_datatypes[0], symbol->datatype)))
 			ERROR;
-	}
-	else {
+	} else
+#endif	
+	{
 		/* set the called_function_declaration taking into account the datatype that we need to return */
-		symbol->called_function_declaration = NULL;
 		for(unsigned int i = 0; i < symbol->candidate_datatypes.size(); i++) {
 			if (is_type_equal(symbol->candidate_datatypes[i], symbol->datatype)) {
 				symbol->called_function_declaration = symbol->candidate_functions[i];
@@ -1052,10 +1052,27 @@ void *narrow_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	 *       necessarily an internal compiler error. It could be because the symbol->datatype is NULL
 	 *       (because the ST code being analysed has an error _before_ this function invocation).
 	 *       However, we don't just give, up, we carry on recursivly analysing the code, so as to be
-	 *       able to print out any error messages related to underlying code that could be partially correct.
+	 *       able to print out any error messages related to the parameters being passed in this function 
+	 *       invocation.
 	 */
 	/* if (NULL == symbol->called_function_declaration) ERROR; */
-	
+
+	if (symbol->candidate_datatypes.size() == 1) {
+		/* If only one function declaration, then we use that (even if symbol->datatypes == NULL)
+		 * so we can check for errors in the expressions used to pass parameters in this
+		 * function invocation.
+		 */
+		symbol->called_function_declaration = symbol->candidate_functions[0];
+	}
+	/* If an overloaded function is being invoked, and we cannot determine which version to use,
+	 * then we can not meaningfully verify the expressions used inside that function invocation.
+	 * We simply give up!
+	 */
+	if (NULL == symbol->called_function_declaration) {
+printf("giving up!\n");
+		return NULL;
+	}
+
 	if (NULL != symbol->nonformal_param_list)  narrow_nonformal_call(symbol, symbol->called_function_declaration, &ext_parm_count);
 	if (NULL != symbol->   formal_param_list)     narrow_formal_call(symbol, symbol->called_function_declaration, &ext_parm_count);
 	symbol->extensible_param_count = ext_parm_count;
