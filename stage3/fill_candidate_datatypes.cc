@@ -344,35 +344,55 @@ void *fill_candidate_datatypes_c::visit(hex_integer_c *symbol) {
 	return NULL;
 }
 
+// SYM_REF2(integer_literal_c, type, value)
 void *fill_candidate_datatypes_c::visit(integer_literal_c *symbol) {
-	symbol->candidate_datatypes.push_back(symbol->type);
+	symbol->value->accept(*this);
+	if (search_in_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
+		symbol->candidate_datatypes.push_back(symbol->type);
 	if (debug) std::cout << "INT_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(real_literal_c *symbol) {
-	symbol->candidate_datatypes.push_back(symbol->type);
+	symbol->value->accept(*this);
+	if (search_in_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
+		symbol->candidate_datatypes.push_back(symbol->type);
 	if (debug) std::cout << "REAL_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(bit_string_literal_c *symbol) {
-	symbol->candidate_datatypes.push_back(symbol->type);
+	symbol->value->accept(*this);
+	if (search_in_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
+		symbol->candidate_datatypes.push_back(symbol->type);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(boolean_literal_c *symbol) {
-	symbol->candidate_datatypes.push_back(&search_constant_type_c::bool_type_name);
+ 	symbol->value->accept(*this);
+ 	if (search_in_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
+		/* if an explicit datat type has been provided (e.g. SAFEBOOL#true), check whether
+		 * the possible datatypes of the value is consistent with the desired type.
+		 */
+		symbol->candidate_datatypes.push_back(symbol->type);
+	else {
+		/* Then only a literal TRUE or FALSE was given! */
+		/* In this case, symbol->type will be NULL!     */
+		symbol->candidate_datatypes.push_back(&search_constant_type_c::bool_type_name);
+		symbol->candidate_datatypes.push_back(&search_constant_type_c::safebool_type_name);
+	}
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(boolean_true_c *symbol) {
 	symbol->candidate_datatypes.push_back(&search_constant_type_c::bool_type_name);
+	symbol->candidate_datatypes.push_back(&search_constant_type_c::safebool_type_name);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(boolean_false_c *symbol) {
 	symbol->candidate_datatypes.push_back(&search_constant_type_c::bool_type_name);
+	symbol->candidate_datatypes.push_back(&search_constant_type_c::safebool_type_name);
 	return NULL;
 }
 

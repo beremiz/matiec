@@ -739,12 +739,13 @@ void *narrow_candidate_datatypes_c::visit(equ_expression_c *symbol) {
 
 	if (NULL != selected_type) {
 		symbol->l_exp->datatype = selected_type;
-		symbol->l_exp->accept(*this);
 		symbol->r_exp->datatype = selected_type;
-		symbol->r_exp->accept(*this);
 	}
 	else
 		ERROR;
+
+	symbol->l_exp->accept(*this);
+	symbol->r_exp->accept(*this);
 	return NULL;
 }
 

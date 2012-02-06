@@ -44,18 +44,98 @@
 #include <strings.h>
 
 
+
+/* A small helper class, to transform elementary data type to string.
+ * this allows us to generate more relevant error messages...
+ */
+
+class elementary_type_c: public null_visitor_c {
+  elementary_type_c(void) {};
+  ~elementary_type_c(void) {};
+  
+  private:
+    /* singleton class! */
+    static elementary_type_c *singleton;
+    
+  public:
+    static const char * to_string(symbol_c *symbol) {
+      if (NULL == singleton)    singleton = new elementary_type_c;
+      if (NULL == singleton)    ERROR;
+      const char *res           = (const char *)symbol->accept(*singleton);
+      if (NULL == res)          ERROR;
+      if (NULL == res)          ERROR;
+      return res;
+    }
+    
+    /***********************************/
+    /* B 1.3.1 - Elementary Data Types */
+    /***********************************/
+    void *visit(time_type_name_c *symbol)        {return (void *)"TIME";        };
+    void *visit(bool_type_name_c *symbol)        {return (void *)"BOOL";        };
+    void *visit(sint_type_name_c *symbol)        {return (void *)"SINT";        };
+    void *visit(int_type_name_c *symbol)         {return (void *)"INT";         };
+    void *visit(dint_type_name_c *symbol)        {return (void *)"DINT";        };
+    void *visit(lint_type_name_c *symbol)        {return (void *)"LINT";        };
+    void *visit(usint_type_name_c *symbol)       {return (void *)"USINT";       };
+    void *visit(uint_type_name_c *symbol)        {return (void *)"UINT";        };
+    void *visit(udint_type_name_c *symbol)       {return (void *)"UDINT";       };
+    void *visit(ulint_type_name_c *symbol)       {return (void *)"ULINT";       };
+    void *visit(real_type_name_c *symbol)        {return (void *)"REAL";        };
+    void *visit(lreal_type_name_c *symbol)       {return (void *)"LREAL";       };
+    void *visit(date_type_name_c *symbol)        {return (void *)"DATE";        };
+    void *visit(tod_type_name_c *symbol)         {return (void *)"TOD";         };
+    void *visit(dt_type_name_c *symbol)          {return (void *)"DT";          };
+    void *visit(byte_type_name_c *symbol)        {return (void *)"BYTE";        };
+    void *visit(word_type_name_c *symbol)        {return (void *)"WORD";        };
+    void *visit(lword_type_name_c *symbol)       {return (void *)"LWORD";       };
+    void *visit(dword_type_name_c *symbol)       {return (void *)"DWORD";       };
+    void *visit(string_type_name_c *symbol)      {return (void *)"STRING";      };
+    void *visit(wstring_type_name_c *symbol)     {return (void *)"WSTRING";     };
+    
+    void *visit(safetime_type_name_c *symbol)    {return (void *)"SAFETIME";    };
+    void *visit(safebool_type_name_c *symbol)    {return (void *)"SAFEBOOL";    };
+    void *visit(safesint_type_name_c *symbol)    {return (void *)"SAFESINT";    };
+    void *visit(safeint_type_name_c *symbol)     {return (void *)"SAFEINT";     };
+    void *visit(safedint_type_name_c *symbol)    {return (void *)"SAFEDINT";    };
+    void *visit(safelint_type_name_c *symbol)    {return (void *)"SAFELINT";    };
+    void *visit(safeusint_type_name_c *symbol)   {return (void *)"SAFEUSINT";   };
+    void *visit(safeuint_type_name_c *symbol)    {return (void *)"SAFEUINT";    };
+    void *visit(safeudint_type_name_c *symbol)   {return (void *)"SAFEUDINT";   };
+    void *visit(safeulint_type_name_c *symbol)   {return (void *)"SAFEULINT";   };
+    void *visit(safereal_type_name_c *symbol)    {return (void *)"SAFEREAL";    };
+    void *visit(safelreal_type_name_c *symbol)   {return (void *)"SAFELREAL";   };
+    void *visit(safedate_type_name_c *symbol)    {return (void *)"SAFEDATE";    };
+    void *visit(safetod_type_name_c *symbol)     {return (void *)"SAFETOD";     };
+    void *visit(safedt_type_name_c *symbol)      {return (void *)"SAFEDT";      };
+    void *visit(safebyte_type_name_c *symbol)    {return (void *)"SAFEBYTE";    };
+    void *visit(safeword_type_name_c *symbol)    {return (void *)"SAFEWORD";    };
+    void *visit(safelword_type_name_c *symbol)   {return (void *)"SAFELWORD";   };
+    void *visit(safedword_type_name_c *symbol)   {return (void *)"SAFEDWORD";   };
+    void *visit(safestring_type_name_c *symbol)  {return (void *)"SAFESTRING";  };
+    void *visit(safewstring_type_name_c *symbol) {return (void *)"SAFEWSTRING"; };
+};
+
+
+elementary_type_c *elementary_type_c::singleton = NULL;
+
+
+
+
+
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
 #define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
 
-#define STAGE3_ERROR(symbol1, symbol2, ...) {                                          \
-    fprintf(stderr, "%s:%d-%d..%d-%d: error : ",                                       \
-           FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column, \
-                                                LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column); \
-    fprintf(stderr, __VA_ARGS__);                                                      \
-    fprintf(stderr, "\n");                                                             \
-    il_error = true;                                                                   \
-    error_found = true;\
-  }
+#define STAGE3_ERROR(error_level, symbol1, symbol2, ...) {                                                                  \
+  if (current_display_error_level >= error_level) {                                                                         \
+    fprintf(stderr, "%s:%d-%d..%d-%d: error : ",                                                                            \
+            FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,\
+                                                 LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column);\
+    fprintf(stderr, __VA_ARGS__);                                                                                           \
+    fprintf(stderr, "\n");                                                                                                  \
+    il_error = true;                                                                                                        \
+    error_found = true;                                                                                                     \
+  }                                                                                                                         \
+}  
 
 
 /* set to 1 to see debug info during execution */
@@ -63,10 +143,10 @@ static int debug = 0;
 
 print_datatypes_error_c::print_datatypes_error_c(symbol_c *ignore) {
 	error_found = false;
+	current_display_error_level = error_level_default;
 }
 
 print_datatypes_error_c::~print_datatypes_error_c(void) {
-	error_found = false;
 }
 
 int print_datatypes_error_c::get_error_found() {
@@ -90,117 +170,117 @@ symbol_c *print_datatypes_error_c::base_type(symbol_c *symbol) {
 /******************************/
 void *print_datatypes_error_c::visit(real_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_REAL data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for ANY_REAL data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_REAL data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_REAL data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(integer_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_INT data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for ANY_INT data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_INT data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_INT data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(neg_real_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_REAL data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for ANY_REAL data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_REAL data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_REAL data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(neg_integer_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_INT data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for ANY_INT data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_INT data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_INT data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(binary_integer_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_INT data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for ANY_INT data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_INT data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_INT data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(octal_integer_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_INT data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for ANY_INT data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_INT data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_INT data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(hex_integer_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_INT data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for ANY_INT data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_INT data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_INT data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(integer_literal_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_INT data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for %s data type.", elementary_type_c::to_string(symbol->type));
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_INT data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_INT data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(real_literal_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_REAL data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for %s data type.", elementary_type_c::to_string(symbol->type));
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_REAL data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_REAL data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(bit_string_literal_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_BIT data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for %s data type.", elementary_type_c::to_string(symbol->type));
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_BIT data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_BIT data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(boolean_literal_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_BOOL data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Value is not valid for %s data type.", elementary_type_c::to_string(symbol->type));
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_BOOL data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_BOOL data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(boolean_true_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_BOOL data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Value is not valid for ANY_BOOL data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_BOOL data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_BOOL data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(boolean_false_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for ANY_BOOL data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Value is not valid for ANY_BOOL data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "ANY_BOOL data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "ANY_BOOL data type not valid in this location.");
 	}
 	return NULL;
 }
@@ -210,18 +290,18 @@ void *print_datatypes_error_c::visit(boolean_false_c *symbol) {
 /*******************************/
 void *print_datatypes_error_c::visit(double_byte_character_string_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for WSTRING data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for WSTRING data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "WSTRING data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "WSTRING data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(single_byte_character_string_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for STRING data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for STRING data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "STRING data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "STRING data type not valid in this location.");
 	}
 	return NULL;
 }
@@ -234,9 +314,9 @@ void *print_datatypes_error_c::visit(single_byte_character_string_c *symbol) {
 /************************/
 void *print_datatypes_error_c::visit(duration_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Invalid syntax for TIME data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid syntax for TIME data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "TIME data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "TIME data type not valid in this location.");
 	}
 	return NULL;
 }
@@ -246,27 +326,27 @@ void *print_datatypes_error_c::visit(duration_c *symbol) {
 /************************************/
 void *print_datatypes_error_c::visit(time_of_day_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Invalid syntax for TOD data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid syntax for TOD data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "TOD data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "TOD data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(date_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Invalid syntax for DATE data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid syntax for DATE data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "DATE data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "DATE data type not valid in this location.");
 	}
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(date_and_time_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(symbol, symbol, "Invalid syntax for DT data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid syntax for DT data type.");
 	} else if (NULL == symbol->datatype) {
-		STAGE3_ERROR(symbol, symbol, "DT data type not valid in this location.");
+		STAGE3_ERROR(4, symbol, symbol, "DT data type not valid in this location.");
 	}
 	return NULL;
 }
@@ -285,7 +365,7 @@ void *print_datatypes_error_c::visit(data_type_declaration_c *symbol) {
 
 void *print_datatypes_error_c::visit(enumerated_value_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0)
-		STAGE3_ERROR(symbol, symbol, "Ambiguous enumerate value or Variable not declared in this scope.");
+		STAGE3_ERROR(0, symbol, symbol, "Ambiguous enumerate value or Variable not declared in this scope.");
 	return NULL;
 }
 
@@ -295,7 +375,7 @@ void *print_datatypes_error_c::visit(enumerated_value_c *symbol) {
 /*********************/
 void *print_datatypes_error_c::visit(symbolic_variable_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0)
-		STAGE3_ERROR(symbol, symbol, "Variable not declared in this scope.");
+		STAGE3_ERROR(0, symbol, symbol, "Variable not declared in this scope.");
 	return NULL;
 }
 
@@ -304,7 +384,7 @@ void *print_datatypes_error_c::visit(symbolic_variable_c *symbol) {
 /********************************************/
 void *print_datatypes_error_c::visit(direct_variable_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0)
-		STAGE3_ERROR(symbol, symbol, "Numerical result exceeds range for located variable data type.");
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for located variable data type.");
 	return NULL;
 }
 
@@ -315,7 +395,7 @@ void *print_datatypes_error_c::visit(direct_variable_c *symbol) {
 // SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
 void *print_datatypes_error_c::visit(array_variable_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0)
-		STAGE3_ERROR(symbol, symbol, "Array variable not declared in this scope.");
+		STAGE3_ERROR(0, symbol, symbol, "Array variable not declared in this scope.");
 	
 	/* recursively call the subscript list to print any errors in the expressions used in the subscript...*/
 	symbol->subscript_list->accept(*this);
@@ -344,7 +424,7 @@ void *print_datatypes_error_c::visit(subscript_list_c *symbol) {
  */
 void *print_datatypes_error_c::visit(structured_variable_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0)
-		STAGE3_ERROR(symbol, symbol, "Structure variable not declared in this scope.");
+		STAGE3_ERROR(0, symbol, symbol, "Structure variable not declared in this scope.");
 	return NULL;
 }
 
@@ -473,7 +553,7 @@ void *print_datatypes_error_c::visit(LDN_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'LDN' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'LDN' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -487,7 +567,7 @@ void *print_datatypes_error_c::visit(ST_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'ST' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ST' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -501,7 +581,7 @@ void *print_datatypes_error_c::visit(STN_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'STN' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'STN' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -515,7 +595,7 @@ void *print_datatypes_error_c::visit(S_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'S' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'S' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -524,7 +604,7 @@ void *print_datatypes_error_c::visit(R_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'R' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'R' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -533,7 +613,7 @@ void *print_datatypes_error_c::visit(S1_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'S1' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'S1' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -542,7 +622,7 @@ void *print_datatypes_error_c::visit(R1_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'R1' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'R1' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -581,7 +661,7 @@ void *print_datatypes_error_c::visit(AND_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'AND' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'AND' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -590,7 +670,7 @@ void *print_datatypes_error_c::visit(OR_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'OR' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'OR' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -599,7 +679,7 @@ void *print_datatypes_error_c::visit(XOR_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'XOR' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'XOR' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -608,7 +688,7 @@ void *print_datatypes_error_c::visit(ANDN_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'ANDN' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ANDN' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -617,7 +697,7 @@ void *print_datatypes_error_c::visit(ORN_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'ORN' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ORN' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -626,7 +706,7 @@ void *print_datatypes_error_c::visit(XORN_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'ORN' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ORN' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -635,7 +715,7 @@ void *print_datatypes_error_c::visit(ADD_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'ADD' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ADD' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -644,7 +724,7 @@ void *print_datatypes_error_c::visit(SUB_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'SUB' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'SUB' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -653,7 +733,7 @@ void *print_datatypes_error_c::visit(MUL_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'MUL' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'MUL' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -662,7 +742,7 @@ void *print_datatypes_error_c::visit(DIV_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'DIV' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'DIV' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -671,7 +751,7 @@ void *print_datatypes_error_c::visit(MOD_operator_c *symbol) {
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'MOD' operator.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'MOD' operator.");
 	prev_il_instruction = symbol;
 	return NULL;
 }
@@ -769,7 +849,7 @@ void *print_datatypes_error_c::visit(or_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'OR' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'OR' expression.");
 	return NULL;
 }
 
@@ -780,7 +860,7 @@ void *print_datatypes_error_c::visit(xor_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'XOR' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'XOR' expression.");
 	return NULL;
 }
 
@@ -791,7 +871,7 @@ void *print_datatypes_error_c::visit(and_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'AND' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'AND' expression.");
 	return NULL;
 }
 
@@ -802,7 +882,7 @@ void *print_datatypes_error_c::visit(equ_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '=' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '=' expression.");
 	return NULL;
 }
 
@@ -813,7 +893,7 @@ void *print_datatypes_error_c::visit(notequ_expression_c *symbol)  {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '<>' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '<>' expression.");
 	return NULL;
 }
 
@@ -824,7 +904,7 @@ void *print_datatypes_error_c::visit(lt_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '<' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '<' expression.");
 	return NULL;
 }
 
@@ -835,7 +915,7 @@ void *print_datatypes_error_c::visit(gt_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '>' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '>' expression.");
 	return NULL;
 }
 
@@ -846,7 +926,7 @@ void *print_datatypes_error_c::visit(le_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '<=' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '<=' expression.");
 	return NULL;
 }
 
@@ -857,7 +937,7 @@ void *print_datatypes_error_c::visit(ge_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '>=' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '>=' expression.");
 	return NULL;
 }
 
@@ -868,7 +948,7 @@ void *print_datatypes_error_c::visit(add_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '+' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '+' expression.");
 
 	return NULL;
 }
@@ -881,7 +961,7 @@ void *print_datatypes_error_c::visit(sub_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-			STAGE3_ERROR(symbol, symbol, "Data type mismatch for '-' expression.");
+			STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '-' expression.");
 	return NULL;
 }
 
@@ -891,7 +971,7 @@ void *print_datatypes_error_c::visit(mul_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '*' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '*' expression.");
 	return NULL;
 }
 
@@ -901,7 +981,7 @@ void *print_datatypes_error_c::visit(div_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '/' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '/' expression.");
 	return NULL;
 }
 
@@ -912,7 +992,7 @@ void *print_datatypes_error_c::visit(mod_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for 'MOD' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'MOD' expression.");
 	return NULL;
 }
 
@@ -923,7 +1003,7 @@ void *print_datatypes_error_c::visit(power_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Data type mismatch for '**' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '**' expression.");
 	return NULL;
 }
 
@@ -932,7 +1012,7 @@ void *print_datatypes_error_c::visit(neg_expression_c *symbol) {
 	symbol->exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0)      &&
 		(symbol->exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Invalid data type for 'NEG' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'NEG' expression.");
 	return NULL;
 }
 
@@ -941,7 +1021,7 @@ void *print_datatypes_error_c::visit(not_expression_c *symbol) {
 	symbol->exp->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0)      &&
 		(symbol->exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Invalid data type for 'NOT' expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'NOT' expression.");
 	return NULL;
 }
 
@@ -960,21 +1040,23 @@ void *print_datatypes_error_c::visit(function_invocation_c *symbol) {
 			param_value = fcp_iterator.get_current_value();
 			if (NULL == param_value->datatype) {
 				function_invocation_error = true;
+				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter '%s' in function invocation: %s", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->function_name)->value);
 			}
 		}
 	}
 	if (NULL != symbol->nonformal_param_list) {
 		symbol->nonformal_param_list->accept(*this);
-		while ((param_value = fcp_iterator.next_nf()) != NULL) {
+		for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
 			if (NULL == param_value->datatype) {
 				function_invocation_error = true;
+				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter (position %d) in function invocation: %s", i, ((identifier_c *)symbol->function_name)->value);
 			}
 		}
 	}
 
 	if (function_invocation_error) {
 		/* No compatible function exists */
-		STAGE3_ERROR(symbol, symbol, "Invalid parameters in function invocation: %s\n", ((identifier_c *)symbol->function_name)->value);
+		STAGE3_ERROR(2, symbol, symbol, "Invalid parameters in function invocation: %s", ((identifier_c *)symbol->function_name)->value);
 	} 
 
 	return NULL;
@@ -994,7 +1076,7 @@ void *print_datatypes_error_c::visit(assignment_statement_c *symbol) {
 	    (NULL == symbol->r_exp->datatype) &&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(symbol, symbol, "Invalid data types for ':=' operation.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data types for ':=' operation.");
 	return NULL;
 }
 
@@ -1028,21 +1110,23 @@ void *print_datatypes_error_c::visit(fb_invocation_c *symbol) {
 			param_value = fcp_iterator.get_current_value();
 			if (NULL == param_value->datatype) {
 				function_invocation_error = true;
+				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter '%s' in function invocation: %s", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->fb_name)->value);
 			}
 		}
 	}
 	if (NULL != symbol->nonformal_param_list) {
 		symbol->nonformal_param_list->accept(*this);
-		while ((param_value = fcp_iterator.next_nf()) != NULL) {
+		for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
 			if (NULL == param_value->datatype) {
 				function_invocation_error = true;
+				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter (position %d) in function invocation: %s", i, ((identifier_c *)symbol->fb_name)->value);
 			}
 		}
 	}
 
 	if (function_invocation_error) {
 		/* Invalid parameters for FB call! */
-		STAGE3_ERROR(symbol, symbol, "Invalid parameters in FB invocation: %s\n", ((identifier_c *)symbol->fb_name)->value);
+		STAGE3_ERROR(2, symbol, symbol, "Invalid parameters in FB invocation: %s", ((identifier_c *)symbol->fb_name)->value);
 	} 
 
 	return NULL;
@@ -1057,7 +1141,7 @@ void *print_datatypes_error_c::visit(if_statement_c *symbol) {
 	symbol->expression->accept(*this);
 	if ((NULL == symbol->expression->datatype) &&
 		(symbol->expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(symbol, symbol, "Invalid data type for 'IF' condition.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'IF' condition.");
 	}
 	if (NULL != symbol->statement_list)
 		symbol->statement_list->accept(*this);
@@ -1072,7 +1156,7 @@ void *print_datatypes_error_c::visit(elseif_statement_c *symbol) {
 	symbol->expression->accept(*this);
 	if ((NULL == symbol->expression->datatype) &&
 		(symbol->expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(symbol, symbol, "Invalid data type for 'ELSIF' condition.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'ELSIF' condition.");
 	}
 	if (NULL != symbol->statement_list)
 		symbol->statement_list->accept(*this);
@@ -1084,7 +1168,7 @@ void *print_datatypes_error_c::visit(case_statement_c *symbol) {
 	symbol->expression->accept(*this);
 	if ((NULL == symbol->expression->datatype) &&
 		(symbol->expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(symbol, symbol, "'CASE' quantity not an integer or enumerated.");
+		STAGE3_ERROR(0, symbol, symbol, "'CASE' quantity not an integer or enumerated.");
 	}
 	symbol->case_element_list->accept(*this);
 	if (NULL != symbol->statement_list)
@@ -1103,23 +1187,23 @@ void *print_datatypes_error_c::visit(for_statement_c *symbol) {
 	/* Control variable */
 	if ((NULL == symbol->control_variable->datatype) &&
 		(symbol->control_variable->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(symbol, symbol, "Invalid data type for 'FOR' control variable.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'FOR' control variable.");
 	}
 	/* BEG expression */
 	if ((NULL == symbol->beg_expression->datatype) &&
 		(symbol->beg_expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(symbol, symbol, "Invalid data type for 'FOR' begin expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'FOR' begin expression.");
 	}
 	/* END expression */
 	if ((NULL == symbol->end_expression->datatype) &&
 		(symbol->end_expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(symbol, symbol, "Invalid data type for 'FOR' end expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'FOR' end expression.");
 	}
 	/* BY expression */
 	if ((NULL != symbol->by_expression) &&
 		(NULL == symbol->by_expression->datatype) &&
 		(symbol->end_expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(symbol, symbol, "Invalid data type for 'FOR' by expression.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'FOR' by expression.");
 	}
 	/* DO statement */
 	if (NULL != symbol->statement_list)
@@ -1131,7 +1215,7 @@ void *print_datatypes_error_c::visit(for_statement_c *symbol) {
 void *print_datatypes_error_c::visit(while_statement_c *symbol) {
 	symbol->expression->accept(*this);
 	if (symbol->candidate_datatypes.size() != 1) {
-		STAGE3_ERROR(symbol, symbol, "Invalid data type for 'WHILE' condition.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'WHILE' condition.");
 		return NULL;
 	}
 	if (NULL != symbol->statement_list)
@@ -1141,7 +1225,7 @@ void *print_datatypes_error_c::visit(while_statement_c *symbol) {
 
 void *print_datatypes_error_c::visit(repeat_statement_c *symbol) {
 	if (symbol->candidate_datatypes.size() != 1) {
-		STAGE3_ERROR(symbol, symbol, "Invalid data type for 'REPEAT' condition.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'REPEAT' condition.");
 		return NULL;
 	}
 	if (NULL != symbol->statement_list)
