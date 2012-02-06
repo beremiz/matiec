@@ -174,7 +174,7 @@ void *fill_candidate_datatypes_c::visit(real_c *symbol) {
 	calc_size = sizeoftype(symbol);
 	if (calc_size <= sizeoftype(&search_constant_type_c::real_type_name))
 		symbol->candidate_datatypes.push_back(&search_constant_type_c::real_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::real_type_name))
+	if (calc_size <= sizeoftype(&search_constant_type_c::lreal_type_name))
 		symbol->candidate_datatypes.push_back(&search_constant_type_c::lreal_type_name);
 	if (debug) std::cout << "ANY_REAL [" << symbol->candidate_datatypes.size() << "]" << std::endl;
 	return NULL;
