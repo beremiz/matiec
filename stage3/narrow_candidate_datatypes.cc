@@ -1025,30 +1025,15 @@ void *narrow_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 
 	/* set the called_function_declaration. */
 	symbol->called_function_declaration = NULL;
-#if 0
-	if (symbol->candidate_datatypes.size() == 1) {
-		/* If only one possible called function, then that is the function to call!
-		 * In this case we ignore the symbol->datatype value (that may even be NULL).
-		 * This helps in identifying potential errors in the expressions used inside this function call
-		 * even if there is a previous error, allowing us to make a more thorough analysis of the semantics
-		 * of the ST code, and providing as many relevant error messages as possible!
-		 * If symbol->datatype isn't NULL, then this chosen function should be returning the required datatype,
-		 * otherwise we have a bug in our stage3 code!
-		 */
-		symbol->called_function_declaration = symbol->candidate_functions[0];
-		if ((NULL != symbol->datatype) && (!is_type_equal(symbol->candidate_datatypes[0], symbol->datatype)))
-			ERROR;
-	} else
-#endif	
-	{
-		/* set the called_function_declaration taking into account the datatype that we need to return */
-		for(unsigned int i = 0; i < symbol->candidate_datatypes.size(); i++) {
-			if (is_type_equal(symbol->candidate_datatypes[i], symbol->datatype)) {
-				symbol->called_function_declaration = symbol->candidate_functions[i];
-				break;
-			}
+
+	/* set the called_function_declaration taking into account the datatype that we need to return */
+	for(unsigned int i = 0; i < symbol->candidate_datatypes.size(); i++) {
+		if (is_type_equal(symbol->candidate_datatypes[i], symbol->datatype)) {
+			symbol->called_function_declaration = symbol->candidate_functions[i];
+			break;
 		}
 	}
+
 	/* NOTE: If we can't figure out the declaration of the function being called, this is not 
 	 *       necessarily an internal compiler error. It could be because the symbol->datatype is NULL
 	 *       (because the ST code being analysed has an error _before_ this function invocation).
@@ -1057,7 +1042,6 @@ void *narrow_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	 *       invocation.
 	 */
 	/* if (NULL == symbol->called_function_declaration) ERROR; */
-
 	if (symbol->candidate_datatypes.size() == 1) {
 		/* If only one function declaration, then we use that (even if symbol->datatypes == NULL)
 		 * so we can check for errors in the expressions used to pass parameters in this
@@ -1065,14 +1049,13 @@ void *narrow_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 		 */
 		symbol->called_function_declaration = symbol->candidate_functions[0];
 	}
+
 	/* If an overloaded function is being invoked, and we cannot determine which version to use,
 	 * then we can not meaningfully verify the expressions used inside that function invocation.
 	 * We simply give up!
 	 */
-	if (NULL == symbol->called_function_declaration) {
-printf("giving up!\n");
+	if (NULL == symbol->called_function_declaration)
 		return NULL;
-	}
 
 	if (NULL != symbol->nonformal_param_list)  narrow_nonformal_call(symbol, symbol->called_function_declaration, &ext_parm_count);
 	if (NULL != symbol->   formal_param_list)     narrow_formal_call(symbol, symbol->called_function_declaration, &ext_parm_count);

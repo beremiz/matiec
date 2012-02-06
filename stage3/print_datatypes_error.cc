@@ -63,7 +63,6 @@ class elementary_type_c: public null_visitor_c {
       if (NULL == singleton)    ERROR;
       const char *res           = (const char *)symbol->accept(*singleton);
       if (NULL == res)          ERROR;
-      if (NULL == res)          ERROR;
       return res;
     }
     
