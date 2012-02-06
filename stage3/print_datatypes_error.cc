@@ -1033,29 +1033,45 @@ void *print_datatypes_error_c::visit(function_invocation_c *symbol) {
 	if ((NULL != symbol->formal_param_list) && (NULL != symbol->nonformal_param_list)) 
 		ERROR;
 
+	symbol_c *f_decl = symbol->called_function_declaration;
+	if (NULL == symbol->called_function_declaration) {
+		STAGE3_ERROR(0, symbol, symbol, "Unable to resolve which overloaded function '%s' is being invoked.", ((identifier_c *)symbol->function_name)->value);
+		/* we now try to find any function declaration with the same name, just so we can provide some relevant error messages */
+		function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
+		if (lower == function_symtable.end()) ERROR;
+		f_decl = function_symtable.get_value(lower);
+	}
+
 	if (NULL != symbol->formal_param_list) {
 		symbol->formal_param_list->accept(*this);
-		while ((param_name = fcp_iterator.next_f()) != NULL) {
-			param_value = fcp_iterator.get_current_value();
-			if (NULL == param_value->datatype) {
-				function_invocation_error = true;
-				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter '%s' in function invocation: %s", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->function_name)->value);
+		if (NULL != f_decl) {
+			function_param_iterator_c fp_iterator(f_decl);
+			while ((param_name = fcp_iterator.next_f()) != NULL) {
+				param_value = fcp_iterator.get_current_value();
+				/* Find the corresponding parameter in function declaration */
+				if (NULL == fp_iterator.search(param_name)) {
+					STAGE3_ERROR(0, symbol, symbol, "Invalid parameter '%s' when invoking function '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->function_name)->value);		  
+				} else if (NULL == param_value->datatype) {
+					function_invocation_error = true;
+					STAGE3_ERROR(0, symbol, symbol, "Data type incompatibility between parameter '%s' and value being passed, when invoking function '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->function_name)->value);
+				}
 			}
 		}
 	}
 	if (NULL != symbol->nonformal_param_list) {
 		symbol->nonformal_param_list->accept(*this);
-		for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
-			if (NULL == param_value->datatype) {
-				function_invocation_error = true;
-				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter (position %d) in function invocation: %s", i, ((identifier_c *)symbol->function_name)->value);
+		if (f_decl)
+			for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
+				if (NULL == param_value->datatype) {
+					function_invocation_error = true;
+					STAGE3_ERROR(0, symbol, symbol, "Data type incompatibility for value passed in position %d when invoking function '%s'", i, ((identifier_c *)symbol->function_name)->value);
+				}
 			}
-		}
 	}
 
 	if (function_invocation_error) {
 		/* No compatible function exists */
-		STAGE3_ERROR(2, symbol, symbol, "Invalid parameters in function invocation: %s", ((identifier_c *)symbol->function_name)->value);
+		STAGE3_ERROR(2, symbol, symbol, "Invalid parameters when invoking function '%s'", ((identifier_c *)symbol->function_name)->value);
 	} 
 
 	return NULL;
@@ -1109,7 +1125,7 @@ void *print_datatypes_error_c::visit(fb_invocation_c *symbol) {
 			param_value = fcp_iterator.get_current_value();
 			if (NULL == param_value->datatype) {
 				function_invocation_error = true;
-				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter '%s' in function invocation: %s", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->fb_name)->value);
+				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter '%s' in FB invocation: %s", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->fb_name)->value);
 			}
 		}
 	}
@@ -1118,7 +1134,7 @@ void *print_datatypes_error_c::visit(fb_invocation_c *symbol) {
 		for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
 			if (NULL == param_value->datatype) {
 				function_invocation_error = true;
-				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter (position %d) in function invocation: %s", i, ((identifier_c *)symbol->fb_name)->value);
+				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter (position %d) in FB invocation: %s", i, ((identifier_c *)symbol->fb_name)->value);
 			}
 		}
 	}
