@@ -294,7 +294,17 @@ class populate_symtables_c: public iterator_visitor_c {
   }
   
   
-  
+  /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
+  // SYM_REF4(string_type_declaration_c,	string_type_name,
+  //    					elementary_string_type_name,
+  //    					string_type_declaration_size,
+  //    					string_type_declaration_init) /* may be == NULL! */
+  void *visit(string_type_declaration_c *symbol)	{
+    TRACE("string_type_declaration_c");
+    type_symtable.insert(symbol->string_type_name, symbol);
+    return NULL;
+}
+
   /*********************/
   /* B 1.4 - Variables */
   /*********************/

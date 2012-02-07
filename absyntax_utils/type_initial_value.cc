@@ -366,12 +366,10 @@ void *type_initial_value_c::visit(structure_element_initialization_c *symbol)	{r
  * as would be expected!
  */
 /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
-#if 0
-SYM_REF4(string_type_declaration_c,	string_type_name,
-					elementary_string_type_name,
-					string_type_declaration_size,
-					string_type_declaration_init) /* may be == NULL! */
-#endif
+// SYM_REF4(string_type_declaration_c,	string_type_name,
+// 					elementary_string_type_name,
+// 					string_type_declaration_size,
+// 					string_type_declaration_init) /* may be == NULL! */
 void *type_initial_value_c::visit(string_type_declaration_c *symbol)	{
   return handle_type_spec(symbol->elementary_string_type_name, symbol->string_type_declaration_init);
 }

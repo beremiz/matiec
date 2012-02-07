@@ -279,12 +279,10 @@ class type_initial_value_c : public null_visitor_c {
      * as would be expected!
      */
     /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
-#if 0
-SYM_REF4(string_type_declaration_c,	string_type_name,
-					elementary_string_type_name,
-					string_type_declaration_size,
-					string_type_declaration_init) /* may be == NULL! */
-#endif
+     // SYM_REF4(string_type_declaration_c,	string_type_name,
+     //					elementary_string_type_name,
+     //					string_type_declaration_size,
+     // 				string_type_declaration_init) /* may be == NULL! */
     void *visit(string_type_declaration_c *symbol);
 }; // type_initial_value_c
 
