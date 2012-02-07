@@ -1720,7 +1720,7 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	 * spurious error messages.
 	 * Even if the parameters to the function call are invalid, doing this is still safe, as the 
 	 * expressions inside the function call will themselves have erros and will  guarantee that 
-	 * compilation is aborted in stage3.
+	 * compilation is aborted in stage3 (in print_datatypes_error_c).
 	 */
 	if (function_symtable.multiplicity(symbol->function_name) == 1) {
 		f_decl = function_symtable.get_value(lower);
@@ -1805,8 +1805,11 @@ void *fill_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
 		compatible = match_nonformal_call(symbol, fb_decl);
 	}
 
-	if (compatible) 
-		symbol->called_fb_declaration = fb_decl;
+	/* The print_datatypes_error_c does not rely on this called_fb_declaration pointer being != NULL to conclude that
+	 * we have a datat type incompatibility error, so setting it to the correct fb_decl is actually safe,
+	 * as the compiler will never reach the compilation stage!
+	 */
+	symbol->called_fb_declaration = fb_decl;
 
 	if (debug) std::cout << "FB [] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;

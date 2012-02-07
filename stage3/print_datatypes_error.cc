@@ -1034,7 +1034,7 @@ void *print_datatypes_error_c::visit(function_invocation_c *symbol) {
 		ERROR;
 
 	symbol_c *f_decl = symbol->called_function_declaration;
-	if (NULL == symbol->called_function_declaration) {
+	if (NULL == f_decl) {
 		STAGE3_ERROR(0, symbol, symbol, "Unable to resolve which overloaded function '%s' is being invoked.", ((identifier_c *)symbol->function_name)->value);
 		/* we now try to find any function declaration with the same name, just so we can provide some relevant error messages */
 		function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
@@ -1119,13 +1119,26 @@ void *print_datatypes_error_c::visit(fb_invocation_c *symbol) {
 	if ((NULL != symbol->formal_param_list) && (NULL != symbol->nonformal_param_list)) 
 		ERROR;
 
+	symbol_c *f_decl = symbol->called_fb_declaration;
+	if (NULL == f_decl) {
+		/* Due to the way the syntax analysis is buit (i.e. stage 2), this should never occur.
+		 * I.e., a FB invocation using an undefined FB variable is not possible in the current implementation of stage 2.
+		 */
+		ERROR;
+// 		STAGE3_ERROR(0, symbol, symbol, "Undefined FB variable '%s'", ((identifier_c *)symbol->fb_name)->value);
+	}
+
 	if (NULL != symbol->formal_param_list) {
 		symbol->formal_param_list->accept(*this);
+		function_param_iterator_c fp_iterator(f_decl);
 		while ((param_name = fcp_iterator.next_f()) != NULL) {
 			param_value = fcp_iterator.get_current_value();
-			if (NULL == param_value->datatype) {
+			/* Find the corresponding parameter in function declaration */
+			if (NULL == fp_iterator.search(param_name)) {
+				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter '%s' when invoking FB '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->fb_name)->value);		  
+			} else if (NULL == param_value->datatype) {
 				function_invocation_error = true;
-				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter '%s' in FB invocation: %s", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->fb_name)->value);
+				STAGE3_ERROR(0, symbol, symbol, "Data type incompatibility between parameter '%s' and value being passed, when invoking FB '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->fb_name)->value);
 			}
 		}
 	}
