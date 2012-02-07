@@ -25,6 +25,26 @@
 #include "datatype_functions.hh"
 #include "../absyntax_utils/absyntax_utils.hh"
 
+
+
+
+
+elementary_type_c *elementary_type_c::singleton = NULL;
+
+const char *elementary_type_c::to_string(symbol_c *symbol) {
+  if (NULL == singleton)    singleton = new elementary_type_c;
+  if (NULL == singleton)    ERROR;
+  const char *res           = (const char *)symbol->accept(*singleton);
+  if (NULL == res) {
+	  int i = 1;
+  }
+  return res;
+}
+
+
+
+
+
 /*
  * 2.5.1.5.6 Functions of time data types
  * Table 30 - page 64
