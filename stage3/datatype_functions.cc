@@ -333,7 +333,6 @@ bool is_ANY_STRING_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(string_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(wstring_type_name_c)) {return true;}
-// TODO literal_string ???
   return false;
 }
 
@@ -406,7 +405,6 @@ bool is_ANY_signed_INT_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_ANY_signed_INT_type    (type_symbol))              {return true;}
   if (is_ANY_signed_SAFEINT_type(type_symbol))              {return true;}
-//   if (is_literal_integer_type(type_symbol))          {return true;}
   return false;
 }
 
@@ -415,7 +413,6 @@ bool is_ANY_INT_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_ANY_INT_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEINT_type(type_symbol))              {return true;}
-//   if (is_literal_integer_type(type_symbol))          {return true;}
   return false;
 }
 
@@ -440,7 +437,6 @@ bool is_ANY_REAL_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_ANY_REAL_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEREAL_type(type_symbol))              {return true;}
-//   if (is_literal_real_type(type_symbol))              {return true;}
   return false;
 }
 
@@ -471,8 +467,6 @@ bool is_ANY_BIT_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_ANY_BIT_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEBIT_type(type_symbol))              {return true;}
-//   if (is_nonneg_literal_integer_type(type_symbol))   {return true;}
-//   if (is_literal_bool_type(type_symbol))             {return true;}
   return false;
 }
 
@@ -495,202 +489,12 @@ bool is_ANY_BOOL_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_BOOL_type    (type_symbol))              {return true;}
   if (is_SAFEBOOL_type(type_symbol))              {return true;}
-//   if (is_literal_bool_type(type_symbol))              {return true;}
   return false;
 }
 
 
 
-#if 0
-/* A helper function... */
-bool is_literal_integer_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {return false;}
-  if (typeid(*type_symbol) == typeid(neg_integer_c))        {return true;}
-  return is_nonneg_literal_integer_type(type_symbol);
-}
 
-
-/* A helper function... */
-bool is_nonneg_literal_integer_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {return false;}
-  if (typeid(*type_symbol) == typeid(integer_c))        {return true;}
-  if (typeid(*type_symbol) == typeid(binary_integer_c)) {return true;}
-  if (typeid(*type_symbol) == typeid(octal_integer_c))  {return true;}
-  if (typeid(*type_symbol) == typeid(hex_integer_c))    {return true;}
-  return false;
-}
-
-
-/* A helper function... */
-bool is_literal_real_type(symbol_c *type_symbol) {
-  if (type_symbol == NULL) {return false;}
-  if (typeid(*type_symbol) == typeid(real_c))     {return true;}
-  if (typeid(*type_symbol) == typeid(neg_real_c)) {return true;}
-  return false;
-}
-
-
-/* A helper function... */
-bool is_literal_bool_type(symbol_c *type_symbol) {
-  bool_type_name_c bool_t;
-
-  if (type_symbol == NULL) {return false;}
-  if (typeid(*type_symbol) == typeid(boolean_true_c))    {return true;}
-  if (typeid(*type_symbol) == typeid(boolean_false_c))   {return true;}
-  if (is_nonneg_literal_integer_type(type_symbol))
-    if (sizeoftype(&bool_t) >= sizeoftype(type_symbol))  {return true;}
-  return false;
-}
-
-/* Determine the common data type between two data types.
- * If no common data type found, return NULL.
- *
- * If data types are identical, return the first (actually any would do...).
- * If any of the data types is a literal, we confirm that
- *   the literal uses less bits than the fixed size data type.
- *   e.g. BYTE and 1024 returns NULL
- *        BYTE and 255  returns BYTE
- *
- * If two literals, then return the literal that requires more bits...
- */
-
-symbol_c *common_type(symbol_c *first_type, symbol_c *second_type) {
-  if (first_type == NULL && second_type == NULL) {return NULL;}
-  if (first_type == NULL)  {return second_type;}
-  if (second_type == NULL) {return first_type;}
-
-  if (is_literal_integer_type(first_type) && is_literal_integer_type(second_type))
-    {return ((sizeoftype(first_type) > sizeoftype(second_type))? first_type:second_type);}
-
-  if (is_literal_real_type(first_type) && is_literal_real_type(second_type))
-    {return ((sizeoftype(first_type) > sizeoftype(second_type))? first_type:second_type);}
-
-  if (is_literal_bool_type(first_type) && is_literal_bool_type(second_type))
-    {return first_type;}
-
-  /* The following check can only be made after the is_literal_XXXX checks */
-  /* When two literals of the same type, with identical typeid's are checked,
-   * we must return the one that occupies more bits... This is done above.
-   */
-  if (typeid(*first_type) == typeid(*second_type)) {return first_type;}
-
-  /* NOTE Although a BOOL is also an ANY_BIT, we must check it explicitly since some
-   *       literal bool values are not literal integers...
-   */
-  if (is_BOOL_type(first_type)        && is_literal_bool_type(second_type))    {return first_type;}
-  if (is_BOOL_type(second_type)       && is_literal_bool_type(first_type))     {return second_type;}
-
-  if (is_SAFEBOOL_type(first_type)    && is_literal_bool_type(second_type))    {return first_type;}
-  if (is_SAFEBOOL_type(second_type)   && is_literal_bool_type(first_type))     {return second_type;}
-
-  if (is_SAFEBOOL_type(first_type)    && is_BOOL_type(second_type))            {return second_type;}
-  if (is_SAFEBOOL_type(second_type)   && is_BOOL_type(first_type))             {return first_type;}
-
-  if (is_ANY_BIT_type(first_type)     && is_nonneg_literal_integer_type(second_type))
-    {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
-  if (is_ANY_BIT_type(second_type)    && is_nonneg_literal_integer_type(first_type))
-    {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
-
-  if (is_ANY_SAFEBIT_type(first_type)     && is_nonneg_literal_integer_type(second_type))
-    {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
-  if (is_ANY_SAFEBIT_type(second_type)    && is_nonneg_literal_integer_type(first_type))
-    {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
-
-  if  (is_ANY_SAFEBIT_type(first_type)    && is_ANY_BIT_type(second_type))
-    {return ((sizeoftype(first_type) == sizeoftype(second_type))? second_type:NULL);}
-  if  (is_ANY_SAFEBIT_type(second_type)   && is_ANY_BIT_type(first_type))
-    {return ((sizeoftype(first_type) == sizeoftype(second_type))? first_type :NULL);}
-
-  if (is_ANY_INT_type(first_type)     && is_literal_integer_type(second_type))
-    {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
-  if (is_ANY_INT_type(second_type)    && is_literal_integer_type(first_type))
-    {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
-
-  if (is_ANY_SAFEINT_type(first_type)     && is_literal_integer_type(second_type))
-    {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
-  if (is_ANY_SAFEINT_type(second_type)    && is_literal_integer_type(first_type))
-    {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
-
-  if  (is_ANY_SAFEINT_type(first_type)    && is_ANY_INT_type(second_type))
-    {return ((sizeoftype(first_type) == sizeoftype(second_type))? second_type:NULL);}
-  if  (is_ANY_SAFEINT_type(second_type)   && is_ANY_INT_type(first_type))
-    {return ((sizeoftype(first_type) == sizeoftype(second_type))? first_type :NULL);}
-
-  if (is_ANY_REAL_type(first_type)    && is_literal_real_type(second_type))
-    {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
-  if (is_ANY_REAL_type(second_type)   && is_literal_real_type(first_type))
-    {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
-
-  if (is_ANY_SAFEREAL_type(first_type)    && is_literal_real_type(second_type))
-    {return ((sizeoftype(first_type)  >= sizeoftype(second_type))? first_type :NULL);}
-  if (is_ANY_SAFEREAL_type(second_type)   && is_literal_real_type(first_type))
-    {return ((sizeoftype(second_type) >= sizeoftype(first_type)) ? second_type:NULL);}
-
-  if  (is_ANY_SAFEREAL_type(first_type)    && is_ANY_REAL_type(second_type))
-    {return ((sizeoftype(first_type) == sizeoftype(second_type))? second_type:NULL);}
-  if  (is_ANY_SAFEREAL_type(second_type)   && is_ANY_REAL_type(first_type))
-    {return ((sizeoftype(first_type) == sizeoftype(second_type))? first_type :NULL);}
-
-  /* the Time and Date types... */
-  if (is_type(first_type,  safetime_type_name_c) && is_type(second_type, time_type_name_c))  {return second_type;}
-  if (is_type(second_type, safetime_type_name_c) && is_type( first_type, time_type_name_c))  {return  first_type;}
-
-  if (is_type(first_type,  safedate_type_name_c) && is_type(second_type, date_type_name_c))  {return second_type;}
-  if (is_type(second_type, safedate_type_name_c) && is_type( first_type, date_type_name_c))  {return  first_type;}
-
-  if (is_type(first_type,  safedt_type_name_c)   && is_type(second_type, dt_type_name_c))    {return second_type;}
-  if (is_type(second_type, safedt_type_name_c)   && is_type( first_type, dt_type_name_c))    {return  first_type;}
-
-  if (is_type(first_type,  safetod_type_name_c)  && is_type(second_type, tod_type_name_c))   {return second_type;}
-  if (is_type(second_type, safetod_type_name_c)  && is_type( first_type, tod_type_name_c))   {return  first_type;}
-
-  /* no common type */
-  return NULL;
-}
-
-/* Return TRUE if the second (value) data type may be assigned to a variable of the first (variable) data type
- * such as:
- *     var_type     value_type
- *    BOOL           BYTE#7     -> returns false
- *    INT            INT#7      -> returns true
- *    INT            7          -> returns true
- *    REAL           7.89       -> returns true
- *    REAL           7          -> returns true
- *    INT            7.89       -> returns false
- *    SAFEBOOL       BOOL#1     -> returns false   !!!
- *   etc...
- *
- * NOTE: It is assumed that the var_type is the data type of an lvalue
- */
-bool is_valid_assignment(symbol_c *var_type, symbol_c *value_type) {
-  if (var_type == NULL)   {/* STAGE3_ERROR(value_type, value_type, "Var_type   == NULL"); */ return false;}
-  if (value_type == NULL) {/* STAGE3_ERROR(var_type,   var_type,   "Value_type == NULL"); */ return false;}
-
-  symbol_c *common_type_symbol = common_type(var_type, value_type);
-  if (NULL == common_type_symbol)
-    return false;
-  return (typeid(*var_type) == typeid(*common_type_symbol));
-}
-
-
-/* Return TRUE if there is a common data type, otherwise return FALSE
- * i.e., return TRUE if both data types may be used simultaneously in an expression
- * such as:
- *    BOOL#0     AND BYTE#7  -> returns false
- *    0          AND BYTE#7  -> returns true
- *    INT#10     AND INT#7   -> returns true
- *    INT#10     AND 7       -> returns true
- *    REAL#34.3  AND 7.89    -> returns true
- *    REAL#34.3  AND 7       -> returns true
- *    INT#10     AND 7.89    -> returns false
- *    SAFEBOOL#0 AND BOOL#1  -> returns true   !!!
- *   etc...
- */
-bool is_compatible_type(symbol_c *first_type, symbol_c *second_type) {
-  if (first_type == NULL || second_type == NULL) {return false;}
-  return (NULL != common_type(first_type, second_type));
-}
-#endif
 
 bool is_type_equal(symbol_c *first_type, symbol_c *second_type)
 {
