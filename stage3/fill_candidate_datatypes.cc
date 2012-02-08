@@ -416,6 +416,7 @@ void *fill_candidate_datatypes_c::visit(single_byte_character_string_c *symbol) 
 /* B 1.2.3.1 - Duration */
 /************************/
 void *fill_candidate_datatypes_c::visit(duration_c *symbol) {
+	/* TODO: check whether the literal follows the rules specified in section '2.2.3.1 Duration' of the standard! */
 	symbol->candidate_datatypes.push_back(symbol->type_name);
 	if (debug) std::cout << "TIME_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
@@ -551,9 +552,7 @@ void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
 	if (NULL != result) symbol->candidate_datatypes.push_back(result);
 	
 	/* recursively call the subscript list, so we can check the data types of the expressions used for the subscripts */
-if (debug) std::cout << "ARRAY_VAR XXX\n";		
 	symbol->subscript_list->accept(*this);
-if (debug) std::cout << "ARRAY_VAR YYY\n";		
 
 	if (debug) std::cout << "ARRAY_VAR [" << symbol->candidate_datatypes.size() << "]\n";	
 	return NULL;
