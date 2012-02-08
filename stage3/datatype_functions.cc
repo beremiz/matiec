@@ -220,6 +220,13 @@ bool is_ANY_MAGNITUDE_type(symbol_c *type_symbol) {
 }
 
 /* A helper function... */
+bool is_ANY_signed_MAGNITUDE_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(time_type_name_c)) {return true;}
+  return is_ANY_signed_NUM_type(type_symbol);
+}
+
+/* A helper function... */
 bool is_ANY_SAFEMAGNITUDE_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(safetime_type_name_c)) {return true;}
@@ -227,12 +234,26 @@ bool is_ANY_SAFEMAGNITUDE_type(symbol_c *type_symbol) {
 }
 
 /* A helper function... */
+bool is_ANY_signed_SAFEMAGNITUDE_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(safetime_type_name_c)) {return true;}
+  return is_ANY_signed_SAFENUM_type(type_symbol);
+}
+
+/* A helper function... */
 bool is_ANY_MAGNITUDE_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_ANY_MAGNITUDE_type    (type_symbol))              {return true;}
   if (is_ANY_SAFEMAGNITUDE_type(type_symbol))              {return true;}
-
   return is_ANY_NUM_compatible(type_symbol);
+}
+
+/* A helper function... */
+bool is_ANY_signed_MAGNITUDE_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_signed_MAGNITUDE_type    (type_symbol))       {return true;}
+  if (is_ANY_signed_SAFEMAGNITUDE_type(type_symbol))       {return true;}
+  return is_ANY_signed_NUM_compatible(type_symbol);
 }
 
 /* A helper function... */
@@ -244,6 +265,14 @@ bool is_ANY_NUM_type(symbol_c *type_symbol) {
 }
 
 /* A helper function... */
+bool is_ANY_signed_NUM_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_REAL_type(type_symbol))                       {return true;}
+  if (is_ANY_signed_INT_type(type_symbol))                 {return true;}
+  return false;
+}
+
+/* A helper function... */
 bool is_ANY_SAFENUM_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   return is_ANY_SAFEREAL_type(type_symbol)
@@ -251,10 +280,25 @@ bool is_ANY_SAFENUM_type(symbol_c *type_symbol) {
 }
 
 /* A helper function... */
+bool is_ANY_signed_SAFENUM_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  return is_ANY_SAFEREAL_type(type_symbol)
+      || is_ANY_signed_SAFEINT_type (type_symbol);
+}
+
+/* A helper function... */
 bool is_ANY_NUM_compatible(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (is_ANY_REAL_compatible(type_symbol))                       {return true;}
   if (is_ANY_INT_compatible(type_symbol))                        {return true;}
+  return false;
+}
+
+/* A helper function... */
+bool is_ANY_signed_NUM_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_REAL_compatible(type_symbol))                       {return true;}
+  if (is_ANY_signed_INT_compatible(type_symbol))                 {return true;}
   return false;
 }
 
@@ -324,6 +368,26 @@ bool is_ANY_INT_type(symbol_c *type_symbol) {
 }
 
 /* A helper function... */
+bool is_ANY_signed_INT_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(sint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(int_type_name_c))   {return true;}
+  if (typeid(*type_symbol) == typeid(dint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(lint_type_name_c))  {return true;}
+  return false;
+}
+
+/* A helper function... */
+bool is_ANY_signed_SAFEINT_type(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (typeid(*type_symbol) == typeid(safesint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safeint_type_name_c))   {return true;}
+  if (typeid(*type_symbol) == typeid(safedint_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safelint_type_name_c))  {return true;}
+  return false;
+}
+
+/* A helper function... */
 bool is_ANY_SAFEINT_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
   if (typeid(*type_symbol) == typeid(safesint_type_name_c))  {return true;}
@@ -334,6 +398,15 @@ bool is_ANY_SAFEINT_type(symbol_c *type_symbol) {
   if (typeid(*type_symbol) == typeid(safeuint_type_name_c))  {return true;}
   if (typeid(*type_symbol) == typeid(safeudint_type_name_c)) {return true;}
   if (typeid(*type_symbol) == typeid(safeulint_type_name_c)) {return true;}
+  return false;
+}
+
+/* A helper function... */
+bool is_ANY_signed_INT_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL) {return false;}
+  if (is_ANY_signed_INT_type    (type_symbol))              {return true;}
+  if (is_ANY_signed_SAFEINT_type(type_symbol))              {return true;}
+//   if (is_literal_integer_type(type_symbol))          {return true;}
   return false;
 }
 

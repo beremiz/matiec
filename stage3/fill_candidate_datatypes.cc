@@ -1666,9 +1666,33 @@ void *fill_candidate_datatypes_c::visit(power_expression_c *symbol) {
 
 
 void *fill_candidate_datatypes_c::visit(neg_expression_c *symbol) {
+  /* NOTE: The standard defines the syntax for this 'negation' operation, but
+   *       does not define the its semantics.
+   *
+   *       We could be tempted to consider that the semantics of the
+   *       'negation' operation are similar/identical to the semantics of the 
+   *       SUB expression/operation. This would include assuming that the
+   *       possible datatypes for the 'negation' operation is also
+   *       the same as those for the SUB expression/operation, namely ANY_MAGNITUDE.
+   *
+   *       However, this would then mean that the following ST code would be 
+   *       syntactically and semantically correct:
+   *       uint_var := - (uint_var);
+   *
+   *       According to the standard, the above code should result in a 
+   *       runtime error, when we try to apply a negative value to the
+   *       UINT typed variable 'uint_var'.
+   *
+   *       It is much easier for the compiler to detect this at compile time,
+   *       and it is probably safer to the resulting code too.
+   *
+   *       To detect these tyes of errors at compile time, the easisest solution
+   *       is to only allow ANY_NUM datatytpes that are signed.
+   *        So, that is what we do here!
+   */
 	symbol->exp->accept(*this);
 	for (unsigned int i = 0; i < symbol->exp->candidate_datatypes.size(); i++) {
-		if (is_ANY_MAGNITUDE_compatible(symbol->exp->candidate_datatypes[i]))
+		if (is_ANY_signed_MAGNITUDE_compatible(symbol->exp->candidate_datatypes[i]))
 			symbol->candidate_datatypes.push_back(symbol->exp->candidate_datatypes[i]);
 	}
 	if (debug) std::cout << "neg [" << symbol->exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";

@@ -133,6 +133,10 @@ bool is_ANY_MAGNITUDE_type          (symbol_c *type_symbol);
 bool is_ANY_SAFEMAGNITUDE_type      (symbol_c *type_symbol);
 bool is_ANY_MAGNITUDE_compatible    (symbol_c *type_symbol);
 
+bool is_ANY_signed_MAGNITUDE_type          (symbol_c *type_symbol);
+bool is_ANY_signed_SAFEMAGNITUDE_type      (symbol_c *type_symbol);
+bool is_ANY_signed_MAGNITUDE_compatible    (symbol_c *type_symbol);
+
 bool is_ANY_DATE_type               (symbol_c *type_symbol);
 bool is_ANY_SAFEDATE_type           (symbol_c *type_symbol);
 bool is_ANY_DATE_compatible         (symbol_c *type_symbol);
@@ -145,6 +149,10 @@ bool is_ANY_INT_type                (symbol_c *type_symbol);
 bool is_ANY_SAFEINT_type            (symbol_c *type_symbol);
 bool is_ANY_INT_compatible          (symbol_c *type_symbol);
 
+bool is_ANY_signed_INT_type                (symbol_c *type_symbol);
+bool is_ANY_signed_SAFEINT_type            (symbol_c *type_symbol);
+bool is_ANY_signed_INT_compatible          (symbol_c *type_symbol);
+
 bool is_ANY_REAL_type               (symbol_c *type_symbol);
 bool is_ANY_SAFEREAL_type           (symbol_c *type_symbol);
 bool is_ANY_REAL_compatible         (symbol_c *type_symbol);
@@ -152,6 +160,10 @@ bool is_ANY_REAL_compatible         (symbol_c *type_symbol);
 bool is_ANY_NUM_type                (symbol_c *type_symbol);
 bool is_ANY_SAFENUM_type            (symbol_c *type_symbol);
 bool is_ANY_NUM_compatible          (symbol_c *type_symbol);
+
+bool is_ANY_signed_NUM_type                (symbol_c *type_symbol);
+bool is_ANY_signed_SAFENUM_type            (symbol_c *type_symbol);
+bool is_ANY_signed_NUM_compatible          (symbol_c *type_symbol);
 
 bool is_ANY_BIT_type                (symbol_c *type_symbol);
 bool is_ANY_SAFEBIT_type            (symbol_c *type_symbol);
