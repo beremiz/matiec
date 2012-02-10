@@ -34,6 +34,7 @@
 
 
 #include "../absyntax_utils/absyntax_utils.hh"
+#include "datatype_functions.hh"
 
 class fill_candidate_datatypes_c: public iterator_visitor_c {
 
@@ -80,20 +81,20 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     symbol_c *il_operand;
     symbol_c *widening_conversion(symbol_c *left_type, symbol_c *right_type, const struct widen_entry widen_table[]);
 
-  public:
-    fill_candidate_datatypes_c(symbol_c *ignore);
-    virtual ~fill_candidate_datatypes_c(void);
-
     /* Match a function declaration with a function call through their parameters.*/
     /* returns true if compatible function/FB invocation, otherwise returns false */
     bool match_nonformal_call(symbol_c *f_call, symbol_c *f_decl);
     bool match_formal_call   (symbol_c *f_call, symbol_c *f_decl);
-
-    void *compute_standard_function_default(function_invocation_c *st_symbol, il_formal_funct_call_c *il_symbol);
-    void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_data_type);
+    void handle_function_call(symbol_c *fcall, generic_function_call_t fcall_data);
 
     /* a helper function... */
     symbol_c *base_type(symbol_c *symbol);
+    
+    
+  public:
+    fill_candidate_datatypes_c(symbol_c *ignore);
+    virtual ~fill_candidate_datatypes_c(void);
+
 
     /*********************/
     /* B 1.2 - Constants */

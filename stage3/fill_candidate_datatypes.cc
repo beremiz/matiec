@@ -91,6 +91,10 @@ bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 		param_type = base_type(fp_iterator.param_type());
 		
 		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
+			/* TODO
+			 * call  int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
+			 * instead of using for loop!
+			 */
 		for(i = 0; i < call_param_value->candidate_datatypes.size(); i++) {
 			/* If found (correct data type being passed), then stop the search */
 			if(is_type_equal(param_type, call_param_value->candidate_datatypes[i])) break;
@@ -138,6 +142,10 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 		/* Get the parameter type */
 		param_type = base_type(fp_iterator.param_type());
 		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
+			/* TODO
+			 * call  int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
+			 * instead of using for loop!
+			 */
 		for (i = 0; i < call_param_types.size(); i++) {
 			/* If found (correct data type being passed), then stop the search */
 			if(is_type_equal(param_type, call_param_types[i])) break;
@@ -149,6 +157,98 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 	/* call is compatible! */
 	return true;
 }
+
+
+
+
+/* Handle a generic function call!
+ * Assumes that the parameter_list containing the values being passed in this function invocation
+ * has already had all the candidate_datatype lists filled in!
+ *
+ * All parameters being passed to the called function MUST be in the parameter list to which f_call points to!
+ * This means that, for non formal function calls in IL, de current (default value) must be artificially added to the
+ * beginning of the parameter list BEFORE calling handle_function_call().
+ */
+/*
+typedef struct {
+  symbol_c *function_name,
+  symbol_c *nonformal_operand_list,
+  symbol_c *   formal_operand_list,
+
+  std::vector <symbol_c *> &candidate_functions,  
+  symbol_c &*called_function_declaration,
+  int      &extensible_param_count
+} generic_function_call_t;
+*/
+/*
+void narrow_candidate_datatypes_c::narrow_function_invocation(symbol_c *fcall, generic_function_call_t fcall_data) {
+void *fill_candidate_datatypes_c::handle_function_call(symbol_c *f_call, symbol_c *function_name, invocation_type_t invocation_type,
+                                                       std::vector <symbol_c *> *candidate_datatypes,
+                                                       std::vector <symbol_c *> *candidate_functions) {
+  */
+void fill_candidate_datatypes_c::handle_function_call(symbol_c *fcall, generic_function_call_t fcall_data) {
+	function_declaration_c *f_decl;
+	list_c *parameter_list;
+	list_c *parameter_candidate_datatypes;
+	symbol_c *returned_parameter_type;
+
+	if (debug) std::cout << "function()\n";
+
+	function_symtable_t::iterator lower = function_symtable.lower_bound(fcall_data.function_name);
+	function_symtable_t::iterator upper = function_symtable.upper_bound(fcall_data.function_name);
+	/* If the name of the function being called is not found in the function symbol table, then this is an invalid call */
+	/* Since the lexical parser already checks for this, then if this occurs then we have an internal compiler error. */
+	if (lower == function_symtable.end()) ERROR;
+	
+	/* Look for all compatible function declarations, and add their return datatypes 
+	 * to the candidate_datatype list of this function invocation. 
+	 *
+	 * If only one function exists, we add its return datatype to the candidate_datatype list,
+	 * even if the parameters passed to it are invalid.
+	 * This guarantees that the remainder of the expression in which the function call is inserted
+	 * is treated as if the function call returns correctly, and therefore does not generate
+	 * spurious error messages.
+	 * Even if the parameters to the function call are invalid, doing this is still safe, as the 
+	 * expressions inside the function call will themselves have erros and will  guarantee that 
+	 * compilation is aborted in stage3 (in print_datatypes_error_c).
+	 */
+	if (function_symtable.multiplicity(fcall_data.function_name) == 1) {
+		f_decl = function_symtable.get_value(lower);
+		returned_parameter_type = base_type(f_decl->type_name);
+		fcall_data.candidate_functions.push_back(f_decl);
+		fcall->    candidate_datatypes.push_back(returned_parameter_type);
+	}
+	for(; lower != upper; lower++) {
+		bool compatible = false;
+		
+		f_decl = function_symtable.get_value(lower);
+		/* Check if function declaration in symbol_table is compatible with parameters */
+		if (NULL != fcall_data.nonformal_operand_list) compatible=match_nonformal_call(fcall, f_decl);
+		if (NULL != fcall_data.   formal_operand_list) compatible=   match_formal_call(fcall, f_decl);
+		if (compatible) {
+			/* Add the data type returned by the called functions. 
+			 * However, only do this if this data type is not already present in the candidate_datatypes list_c
+			 */
+			/* TODO
+			 * call  int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
+			 * instead of using for loop!
+			 */
+			unsigned int k;
+			returned_parameter_type = base_type(f_decl->type_name);
+			for(k = 0; k < fcall->candidate_datatypes.size(); k++) {
+				if (is_type_equal(returned_parameter_type, fcall->candidate_datatypes[k]))
+					break;
+			}
+			if (k >= fcall->candidate_datatypes.size()) {
+				fcall->    candidate_datatypes.push_back(returned_parameter_type);
+				fcall_data.candidate_functions.push_back(f_decl);
+			}
+		}
+	}
+	if (debug) std::cout << "end_function() [" << fcall->candidate_datatypes.size() << "] result.\n";
+	return;
+}
+
 
 
 
@@ -667,15 +767,42 @@ void *fill_candidate_datatypes_c::visit(il_simple_operation_c *symbol) {
 	return NULL;
 }
 
+
+/* | function_name [il_operand_list] */
+/* NOTE: The parameters 'called_function_declaration' and 'extensible_param_count' are used to pass data between the stage 3 and stage 4. */
+// SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *fill_candidate_datatypes_c::visit(il_function_call_c *symbol) {
+	/* The first parameter of a non formal function call in IL will be the 'current value' (i.e. the prev_il_instruction)
+	 * In order to be able to handle this without coding special cases, we will simply prepend that symbol
+	 * to the il_operand_list, and remove it later (in the print_datatypes_error_c).
+	 *
+	 * However, if no further paramters are given, then il_operand_list will be NULL, and we will
+	 * need to create a new object to hold the pointer to prev_il_instruction.
+	 * This change will also be undone later in print_datatypes_error_c.
+	 */
+	if (NULL == symbol->il_operand_list)  symbol->il_operand_list = new il_operand_list_c;
+	if (NULL == symbol->il_operand_list)  ERROR;
+
+	symbol->il_operand_list->accept(*this);
+
+	if (NULL == prev_il_instruction)      return NULL;
+	((list_c *)symbol->il_operand_list)->insert_element(prev_il_instruction, 0);	
+
+	generic_function_call_t fcall_param = {
+	/* fcall_param.function_name               = */ symbol->function_name,
+	/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
+	/* fcall_param.formal_operand_list         = */ NULL,
+	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+	};
+	handle_function_call(symbol, fcall_param);
+
+	if (debug) std::cout << "il_function_call_c [" << symbol->candidate_datatypes.size() << "] result.\n";
+	return NULL;
 }
 
-/* MJS: Manuele, could you please not delete the following 2 lines of comments. They help me understand where this class is used
- *     and when it is created by bison - syntax parse, and how it can show up in the abstract syntax tree.
- *
- *       Actually, it could be helpful if we could have all the similar comments already present in visit_expression_type_c
- *       in the 3 new classes fill/narrow/print candidate datatype 
- */
+
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
 // SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
 void *fill_candidate_datatypes_c::visit(il_expression_c *symbol) {
@@ -717,8 +844,24 @@ void *fill_candidate_datatypes_c::visit(il_jump_operation_c *symbol) {
 void *fill_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
 }
 
+/* | function_name '(' eol_list [il_param_list] ')' */
+/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4. */
+// SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *fill_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
+	symbol->il_param_list->accept(*this);
 
+	generic_function_call_t fcall_param = {
+	/* fcall_param.function_name               = */ symbol->function_name,
+	/* fcall_param.nonformal_operand_list      = */ NULL,
+	/* fcall_param.formal_operand_list         = */ symbol->il_param_list,
+	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+	};
+	handle_function_call(symbol, fcall_param);
+
+	if (debug) std::cout << "il_formal_funct_call_c [" << symbol->candidate_datatypes.size() << "] result.\n";
+	return NULL;
 }
 
 /*
@@ -1711,70 +1854,21 @@ void *fill_candidate_datatypes_c::visit(not_expression_c *symbol) {
 
 
 void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
-	function_declaration_c *f_decl;
-	list_c *parameter_list;
-	list_c *parameter_candidate_datatypes;
-	symbol_c *returned_parameter_type;
-
-	if (debug) std::cout << "function()\n";
-
-	function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
-	function_symtable_t::iterator upper = function_symtable.upper_bound(symbol->function_name);
-	/* If the name of the function being called is not found in the function symbol table, then this is an invalid call */
-	/* Since the lexical parser already checks for this, then if this occurs then we have an internal compiler error. */
-	if (lower == function_symtable.end()) ERROR;
-	
-	if (NULL != symbol->formal_param_list)
-		parameter_list = (list_c *)symbol->formal_param_list;
-	else if (NULL != symbol->nonformal_param_list)
-		parameter_list = (list_c *)symbol->nonformal_param_list;
+	if      (NULL != symbol->formal_param_list)        symbol->   formal_param_list->accept(*this);
+	else if (NULL != symbol->nonformal_param_list)     symbol->nonformal_param_list->accept(*this);
 	else ERROR;
-	
-	/* Fill in the candidate_datatypes lists of all the expressions used in the function call parameters */
-	parameter_list->accept(*this);
 
-	/* Look for all compatible function declarations, and add their return datatypes 
-	 * to the candidate_datatype list of this function invocation. 
-	 *
-	 * If only one function exists, we add its return datatype to the candidate_datatype list,
-	 * even if the parameters passed to it are invalid.
-	 * This guarantees that the remainder of the expression in which the function call is inserted
-	 * is treated as if the function call returns correctly, and therefore does not generate
-	 * spurious error messages.
-	 * Even if the parameters to the function call are invalid, doing this is still safe, as the 
-	 * expressions inside the function call will themselves have erros and will  guarantee that 
-	 * compilation is aborted in stage3 (in print_datatypes_error_c).
-	 */
-	if (function_symtable.multiplicity(symbol->function_name) == 1) {
-		f_decl = function_symtable.get_value(lower);
-		returned_parameter_type = base_type(f_decl->type_name);
-		symbol->candidate_functions.push_back(f_decl);
-		symbol->candidate_datatypes.push_back(returned_parameter_type);
-	}
-	for(; lower != upper; lower++) {
-		bool compatible = false;
-		
-		f_decl = function_symtable.get_value(lower);
-		/* Check if function declaration in symbol_table is compatible with parameters */
-		if (NULL != symbol->nonformal_param_list)  compatible=match_nonformal_call(symbol, f_decl);
-		if (NULL != symbol->   formal_param_list)  compatible=   match_formal_call(symbol, f_decl);
-		if (compatible) {
-			/* Add the data type returned by the called functions. 
-			 * However, only do this if this data type is not already present in the candidate_datatypes list_c
-			 */
-			unsigned int k;
-			returned_parameter_type = base_type(f_decl->type_name);
-			for(k = 0; k < symbol->candidate_datatypes.size(); k++) {
-				if (is_type_equal(returned_parameter_type, symbol->candidate_datatypes[k]))
-					break;
-			}
-			if (k >= symbol->candidate_datatypes.size()) {
-				symbol->candidate_datatypes.push_back(returned_parameter_type);
-				symbol->candidate_functions.push_back(f_decl);
-			}
-		}
-	}
-	if (debug) std::cout << "end_function() [" << symbol->candidate_datatypes.size() << "] result.\n";
+	generic_function_call_t fcall_param = {
+	/* fcall_param.function_name               = */ symbol->function_name,
+	/* fcall_param.nonformal_operand_list      = */ symbol->nonformal_param_list,
+	/* fcall_param.formal_operand_list         = */ symbol->formal_param_list,
+	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+	};
+	handle_function_call(symbol, fcall_param);
+
+	if (debug) std::cout << "function_invocation_c [" << symbol->candidate_datatypes.size() << "] result.\n";
 	return NULL;
 }
 

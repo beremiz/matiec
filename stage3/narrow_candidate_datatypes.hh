@@ -34,6 +34,7 @@
 
 
 #include "../absyntax_utils/absyntax_utils.hh"
+#include "datatype_functions.hh"
 
 class narrow_candidate_datatypes_c: public iterator_visitor_c {
 
@@ -47,11 +48,13 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
 
     bool is_widening_compatible(symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, const struct widen_entry widen_table[]);
 
+    void narrow_function_invocation(symbol_c *f_call, generic_function_call_t fcall_data);
+    void narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
+    void narrow_formal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
+
   public:
     narrow_candidate_datatypes_c(symbol_c *ignore);
     virtual ~narrow_candidate_datatypes_c(void);
-    void narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
-    void narrow_formal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
 
     symbol_c *base_type(symbol_c *symbol);
 

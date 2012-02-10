@@ -920,10 +920,10 @@ SYM_REF2(il_instruction_c, label, il_instruction)
 SYM_REF2(il_simple_operation_c, il_simple_operator, il_operand)
 
 /* | function_name [il_operand_list] */
-/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4.
+/* NOTE: The parameter 'called_function_declaration', 'extensible_param_count' and 'candidate_functions' are used to pass data between the stage 3 and stage 4.
  *       See the comment above function_invocation_c for more details 
  */
-SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
+SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count; std::vector <symbol_c *> candidate_functions;)
 
 
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
@@ -942,10 +942,10 @@ SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list
 
 
 /* | function_name '(' eol_list [il_param_list] ')' */
-/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4.
- *       See the comment above function_invocation_c for more details 
+/* NOTE: The parameter 'called_function_declaration', 'extensible_param_count' and 'candidate_functions' are used to pass data between the stage 3 and stage 4.
+ *       See the comment above function_invocation_c for more details. 
  */
-SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
+SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count; std::vector <symbol_c *> candidate_functions;)
 
 /* | il_operand_list ',' il_operand */
 SYM_LIST(il_operand_list_c)

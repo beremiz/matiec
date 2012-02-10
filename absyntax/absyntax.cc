@@ -131,18 +131,27 @@ void list_c::add_element(symbol_c *elem) {
 /* To insert into the begining of list, call with pos=0  */
 /* To insert into the end of list, call with pos=list->n */
 void list_c::insert_element(symbol_c *elem, int pos) {
-  int i;
   if (pos > n) ERROR;
   
   /* add new element to end of list. Basically alocate required memory... */
   /* will also increment n by 1 ! */
   add_element(elem);
   /* if not inserting into end position, shift all elements up one position, to open up a slot in pos for new element */
-  if (pos < (n-1)) for (i = n-2; i >= pos; i--) elements[i+1] = elements[i];
+  if (pos < (n-1)) for (int i = n-2; i >= pos; i--) elements[i+1] = elements[i];
   elements[pos] = elem;
 }
 
 
+/* remove element at position pos. */
+void list_c::remove_element(int pos) {
+  if (pos > n) ERROR;
+  
+  /* Shift all elements down one position, starting at the entry to delete. */
+  for (int i = pos; i < n-1; i++) elements[i] = elements[i+1];
+  /* corrent the new size, and free unused memory */
+  n--;
+  elements = (symbol_c **)realloc(elements, n * sizeof(symbol_c *));
+}
 
 #define SYM_LIST(class_name_c, ...)								\
 class_name_c::class_name_c(									\

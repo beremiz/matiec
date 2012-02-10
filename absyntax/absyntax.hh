@@ -129,6 +129,8 @@ class list_c: public symbol_c {
      /* To insert into the begining of list, call with pos=0  */
      /* To insert into the end of list, call with pos=list->n */
     virtual void insert_element(symbol_c *elem, int pos = 0);
+     /* remove element at position pos. */
+    virtual void remove_element(int pos = 0);
 };
 
 

@@ -90,6 +90,76 @@ symbol_c *print_datatypes_error_c::base_type(symbol_c *symbol) {
 	return (symbol_c *)symbol->accept(search_base_type);
 }
 
+
+
+
+/*
+typedef struct {
+  symbol_c *function_name,
+  symbol_c *nonformal_operand_list,
+  symbol_c *   formal_operand_list,
+
+  std::vector <symbol_c *> &candidate_functions,  
+  symbol_c &*called_function_declaration,
+  int      &extensible_param_count
+} generic_function_call_t;
+*/
+void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generic_function_call_t fcall_data) {
+	symbol_c *param_value, *param_name;
+	function_call_param_iterator_c fcp_iterator(fcall);
+	bool function_invocation_error = false;
+
+	if ((NULL != fcall_data.formal_operand_list) && (NULL != fcall_data.nonformal_operand_list)) 
+		ERROR;
+
+	symbol_c *f_decl = fcall_data.called_function_declaration;
+	if (NULL == f_decl) {
+		STAGE3_ERROR(0, fcall, fcall, "Unable to resolve which overloaded function '%s' is being invoked.", ((identifier_c *)fcall_data.function_name)->value);
+		/* we now try to find any function declaration with the same name, just so we can provide some relevant error messages */
+		function_symtable_t::iterator lower = function_symtable.lower_bound(fcall_data.function_name);
+		if (lower == function_symtable.end()) ERROR;
+		f_decl = function_symtable.get_value(lower);
+	}
+
+	if (NULL != fcall_data.formal_operand_list) {
+		fcall_data.formal_operand_list->accept(*this);
+		if (NULL != f_decl) {
+			function_param_iterator_c fp_iterator(f_decl);
+			while ((param_name = fcp_iterator.next_f()) != NULL) {
+				param_value = fcp_iterator.get_current_value();
+				/* Find the corresponding parameter in function declaration */
+				if (NULL == fp_iterator.search(param_name)) {
+					STAGE3_ERROR(0, fcall, fcall, "Invalid parameter '%s' when invoking function '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)fcall_data.function_name)->value);		  
+				} else if (NULL == param_value->datatype) {
+					function_invocation_error = true;
+					STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility between parameter '%s' and value being passed, when invoking function '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)fcall_data.function_name)->value);
+				}
+			}
+		}
+	}
+	if (NULL != fcall_data.nonformal_operand_list) {
+		fcall_data.nonformal_operand_list->accept(*this);
+		if (f_decl)
+			for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
+				if (NULL == param_value->datatype) {
+					function_invocation_error = true;
+					STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility for value passed in position %d when invoking function '%s'", i, ((identifier_c *)fcall_data.function_name)->value);
+				}
+			}
+	}
+
+	if (function_invocation_error) {
+		/* No compatible function exists */
+		STAGE3_ERROR(2, fcall, fcall, "Invalid parameters when invoking function '%s'", ((identifier_c *)fcall_data.function_name)->value);
+	} 
+
+	return;
+}
+
+
+
+
+
 /*********************/
 /* B 1.2 - Constants */
 /*********************/
@@ -444,7 +514,33 @@ void *print_datatypes_error_c::visit(il_simple_operation_c *symbol) {
 	return NULL;
 }
 
+/* | function_name [il_operand_list] */
+/* NOTE: The parameters 'called_function_declaration' and 'extensible_param_count' are used to pass data between the stage 3 and stage 4. */
+// SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *print_datatypes_error_c::visit(il_function_call_c *symbol) {
+	generic_function_call_t fcall_param = {
+	/* fcall_param.function_name               = */ symbol->function_name,
+	/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
+	/* fcall_param.formal_operand_list         = */ NULL,
+	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+	};
+
+	handle_function_invocation(symbol, fcall_param);
+	
+	/* The first parameter of a non formal function call in IL will be the 'current value' (i.e. the prev_il_instruction)
+	 * In order to be able to handle this without coding special cases, we will simply prepend that symbol
+	 * to the il_operand_list. This is done in fill_candidate_datatypes_c.
+	 * We now undo those changes!
+	 */  
+	((list_c *)symbol->il_operand_list)->remove_element(0);
+	if (((list_c *)symbol->il_operand_list)->n == 0) {
+		/* if the list becomes empty, then that means that it did not exist before we made these changes, so we delete it! */
+		delete 	symbol->il_operand_list;
+		symbol->il_operand_list = NULL;
+	}
+
 	return NULL;
 }
 
@@ -456,7 +552,20 @@ void *print_datatypes_error_c::visit(il_fb_call_c *symbol) {
 	return NULL;
 }
 
+/* | function_name '(' eol_list [il_param_list] ')' */
+/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4. */
+// SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *print_datatypes_error_c::visit(il_formal_funct_call_c *symbol) {
+	generic_function_call_t fcall_param = {
+	/* fcall_param.function_name               = */ symbol->function_name,
+	/* fcall_param.nonformal_operand_list      = */ NULL,
+	/* fcall_param.formal_operand_list         = */ symbol->il_param_list,
+	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+	};
+  
+	handle_function_invocation(symbol, fcall_param);
 	return NULL;
 }
 

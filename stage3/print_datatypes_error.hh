@@ -34,6 +34,8 @@
 
 
 #include "../absyntax_utils/absyntax_utils.hh"
+#include "datatype_functions.hh"
+
 
 class print_datatypes_error_c: public iterator_visitor_c {
 
@@ -78,14 +80,15 @@ class print_datatypes_error_c: public iterator_visitor_c {
     symbol_c *il_operand_type;
     symbol_c *il_operand;
 
+    /* some helper functions... */
+    symbol_c *base_type(symbol_c *symbol);
+    void handle_function_invocation(symbol_c *fcall, generic_function_call_t fcall_data);
 
   public:
     print_datatypes_error_c(symbol_c *ignore);
     virtual ~print_datatypes_error_c(void);
     int get_error_found();
 
-    /* a helper function... */
-    symbol_c *base_type(symbol_c *symbol);
 
     /*********************/
     /* B 1.2 - Constants */

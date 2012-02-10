@@ -182,6 +182,59 @@ void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c
 }
 
 
+/*
+typedef struct {
+  symbol_c *function_name,
+  symbol_c *nonformal_operand_list,
+  symbol_c *   formal_operand_list,
+
+  std::vector <symbol_c *> &candidate_functions,  
+  symbol_c &*called_function_declaration,
+  int      &extensible_param_count
+} generic_function_call_t;
+*/
+void narrow_candidate_datatypes_c::narrow_function_invocation(symbol_c *fcall, generic_function_call_t fcall_data) {
+	/* set the called_function_declaration. */
+	fcall_data.called_function_declaration = NULL;
+
+	/* set the called_function_declaration taking into account the datatype that we need to return */
+	for(unsigned int i = 0; i < fcall->candidate_datatypes.size(); i++) {
+		if (is_type_equal(fcall->candidate_datatypes[i], fcall->datatype)) {
+			fcall_data.called_function_declaration = fcall_data.candidate_functions[i];
+			break;
+		}
+	}
+
+	/* NOTE: If we can't figure out the declaration of the function being called, this is not 
+	 *       necessarily an internal compiler error. It could be because the symbol->datatype is NULL
+	 *       (because the ST code being analysed has an error _before_ this function invocation).
+	 *       However, we don't just give, up, we carry on recursivly analysing the code, so as to be
+	 *       able to print out any error messages related to the parameters being passed in this function 
+	 *       invocation.
+	 */
+	/* if (NULL == symbol->called_function_declaration) ERROR; */
+	if (fcall->candidate_datatypes.size() == 1) {
+		/* If only one function declaration, then we use that (even if symbol->datatypes == NULL)
+		 * so we can check for errors in the expressions used to pass parameters in this
+		 * function invocation.
+		 */
+		fcall_data.called_function_declaration = fcall_data.candidate_functions[0];
+	}
+
+	/* If an overloaded function is being invoked, and we cannot determine which version to use,
+	 * then we can not meaningfully verify the expressions used inside that function invocation.
+	 * We simply give up!
+	 */
+	if (NULL == fcall_data.called_function_declaration)
+		return;
+
+	if (NULL != fcall_data.nonformal_operand_list)  narrow_nonformal_call(fcall, fcall_data.called_function_declaration, &(fcall_data.extensible_param_count));
+	if (NULL != fcall_data.   formal_operand_list)     narrow_formal_call(fcall, fcall_data.called_function_declaration, &(fcall_data.extensible_param_count));
+
+	return;
+}
+
+
 
 /* a helper function... */
 symbol_c *narrow_candidate_datatypes_c::base_type(symbol_c *symbol) {
@@ -324,7 +377,27 @@ void *narrow_candidate_datatypes_c::visit(il_simple_operation_c *symbol) {
 	return NULL;
 }
 
+/* | function_name [il_operand_list] */
+/* NOTE: The parameters 'called_function_declaration' and 'extensible_param_count' are used to pass data between the stage 3 and stage 4. */
+// SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
+	generic_function_call_t fcall_param = {
+	/* fcall_param.function_name               = */ symbol->function_name,
+	/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
+	/* fcall_param.formal_operand_list         = */ NULL,
+	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+	};
+
+	/* The first parameter of a non formal function call in IL will be the 'current value' (i.e. the prev_il_instruction)
+	 * In order to be able to handle this without coding special cases, we simply prepend that symbol
+	 * to the il_operand_list (done in fill_candidate_datatypes_c), and remove it later (in the print_datatypes_error_c).
+	 *
+	 * Since this class is executed after fill_candidate_datatypes_c, and before print_datatypes_error_c,
+	 * the following code is actually correct!
+	 */
+	narrow_function_invocation(symbol, fcall_param);
 	return NULL;
 }
 
@@ -345,7 +418,20 @@ void *narrow_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
 	return NULL;
 }
 
+/* | function_name '(' eol_list [il_param_list] ')' */
+/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4. */
+// SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *narrow_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
+	generic_function_call_t fcall_param = {
+	/* fcall_param.function_name               = */ symbol->function_name,
+	/* fcall_param.nonformal_operand_list      = */ NULL,
+	/* fcall_param.formal_operand_list         = */ symbol->il_param_list,
+	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+	};
+  
+	narrow_function_invocation(symbol, fcall_param);
 	return NULL;
 }
 
@@ -1020,47 +1106,22 @@ void *narrow_candidate_datatypes_c::visit(not_expression_c *symbol) {
 }
 
 
+
+/* NOTE: The parameter 'called_function_declaration', 'extensible_param_count' and 'candidate_functions' are used to pass data between the stage 3 and stage 4. */
+/*    formal_param_list -> may be NULL ! */
+/* nonformal_param_list -> may be NULL ! */
+// SYM_REF3(function_invocation_c, function_name, formal_param_list, nonformal_param_list, symbol_c *called_function_declaration; int extensible_param_count; std::vector <symbol_c *> candidate_functions;)
 void *narrow_candidate_datatypes_c::visit(function_invocation_c *symbol) {
-	int  ext_parm_count;
-
-	/* set the called_function_declaration. */
-	symbol->called_function_declaration = NULL;
-
-	/* set the called_function_declaration taking into account the datatype that we need to return */
-	for(unsigned int i = 0; i < symbol->candidate_datatypes.size(); i++) {
-		if (is_type_equal(symbol->candidate_datatypes[i], symbol->datatype)) {
-			symbol->called_function_declaration = symbol->candidate_functions[i];
-			break;
-		}
-	}
-
-	/* NOTE: If we can't figure out the declaration of the function being called, this is not 
-	 *       necessarily an internal compiler error. It could be because the symbol->datatype is NULL
-	 *       (because the ST code being analysed has an error _before_ this function invocation).
-	 *       However, we don't just give, up, we carry on recursivly analysing the code, so as to be
-	 *       able to print out any error messages related to the parameters being passed in this function 
-	 *       invocation.
-	 */
-	/* if (NULL == symbol->called_function_declaration) ERROR; */
-	if (symbol->candidate_datatypes.size() == 1) {
-		/* If only one function declaration, then we use that (even if symbol->datatypes == NULL)
-		 * so we can check for errors in the expressions used to pass parameters in this
-		 * function invocation.
-		 */
-		symbol->called_function_declaration = symbol->candidate_functions[0];
-	}
-
-	/* If an overloaded function is being invoked, and we cannot determine which version to use,
-	 * then we can not meaningfully verify the expressions used inside that function invocation.
-	 * We simply give up!
-	 */
-	if (NULL == symbol->called_function_declaration)
-		return NULL;
-
-	if (NULL != symbol->nonformal_param_list)  narrow_nonformal_call(symbol, symbol->called_function_declaration, &ext_parm_count);
-	if (NULL != symbol->   formal_param_list)     narrow_formal_call(symbol, symbol->called_function_declaration, &ext_parm_count);
-	symbol->extensible_param_count = ext_parm_count;
-
+	generic_function_call_t fcall_param = {
+	/* fcall_param.function_name               = */ symbol->function_name,
+	/* fcall_param.nonformal_operand_list      = */ symbol->nonformal_param_list,
+	/* fcall_param.formal_operand_list         = */ symbol->formal_param_list,
+	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+	};
+  
+	narrow_function_invocation(symbol, fcall_param);
 	return NULL;
 }
 

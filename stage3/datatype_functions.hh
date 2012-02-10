@@ -35,6 +35,21 @@
 
 
 
+
+typedef struct {
+  symbol_c *function_name;
+  symbol_c *nonformal_operand_list;
+  symbol_c *   formal_operand_list;
+
+//symbol_c &*datatype;
+//std::vector <symbol_c *> &candidate_datatypes;
+  std::vector <symbol_c *> &candidate_functions;
+  symbol_c *&called_function_declaration;
+  int      &extensible_param_count;
+} generic_function_call_t;
+
+
+
 /* A small helper class, to transform elementary data type to string.
  * this allows us to generate more relevant error messages...
  */
