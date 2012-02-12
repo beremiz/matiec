@@ -934,7 +934,7 @@ void *fill_candidate_datatypes_c::visit(ST_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type,operand_type))
+			if (is_type_equal(prev_instruction_type, operand_type))
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
@@ -951,7 +951,7 @@ void *fill_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BIT_compatible(il_operand->candidate_datatypes[i]))
+			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BIT_compatible(operand_type))
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
@@ -973,7 +973,7 @@ void *fill_candidate_datatypes_c::visit(S_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(il_operand->candidate_datatypes[i]))
+			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(operand_type))
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
@@ -990,7 +990,7 @@ void *fill_candidate_datatypes_c::visit(R_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(il_operand->candidate_datatypes[i]))
+			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(operand_type))
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
@@ -1007,7 +1007,7 @@ void *fill_candidate_datatypes_c::visit(S1_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(il_operand->candidate_datatypes[i]))
+			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(operand_type))
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
@@ -1024,7 +1024,7 @@ void *fill_candidate_datatypes_c::visit(R1_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(il_operand->candidate_datatypes[i]))
+			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(operand_type))
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
