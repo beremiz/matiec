@@ -41,6 +41,7 @@ typedef struct {
   symbol_c *nonformal_operand_list;
   symbol_c *   formal_operand_list;
 
+  enum {POU_FB, POU_function} POU_type;
 //symbol_c &*datatype;
 //std::vector <symbol_c *> &candidate_datatypes;
   std::vector <symbol_c *> &candidate_functions;

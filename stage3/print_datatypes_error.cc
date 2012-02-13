@@ -108,13 +108,23 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 	symbol_c *param_value, *param_name;
 	function_call_param_iterator_c fcp_iterator(fcall);
 	bool function_invocation_error = false;
+	const char *POU_str = NULL;
+
+	if (generic_function_call_t::POU_FB       == fcall_data.POU_type)  POU_str = "FB";
+	if (generic_function_call_t::POU_function == fcall_data.POU_type)  POU_str = "function";
+	if (NULL == POU_str) ERROR;
 
 	if ((NULL != fcall_data.formal_operand_list) && (NULL != fcall_data.nonformal_operand_list)) 
 		ERROR;
 
 	symbol_c *f_decl = fcall_data.called_function_declaration;
+	if ((NULL == f_decl) && (generic_function_call_t::POU_FB ==fcall_data.POU_type)) {
+		/* Due to the way the syntax analysis is buit (i.e. stage 2), this should never occur. */
+		/* I.e., a FB invocation using an undefined FB variable is not possible in the current implementation of stage 2. */
+		ERROR;
+	}
 	if (NULL == f_decl) {
-		STAGE3_ERROR(0, fcall, fcall, "Unable to resolve which overloaded function '%s' is being invoked.", ((identifier_c *)fcall_data.function_name)->value);
+		STAGE3_ERROR(0, fcall, fcall, "Unable to resolve which overloaded %s '%s' is being invoked.", POU_str, ((identifier_c *)fcall_data.function_name)->value);
 		/* we now try to find any function declaration with the same name, just so we can provide some relevant error messages */
 		function_symtable_t::iterator lower = function_symtable.lower_bound(fcall_data.function_name);
 		if (lower == function_symtable.end()) ERROR;
@@ -129,10 +139,10 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 				param_value = fcp_iterator.get_current_value();
 				/* Find the corresponding parameter in function declaration */
 				if (NULL == fp_iterator.search(param_name)) {
-					STAGE3_ERROR(0, fcall, fcall, "Invalid parameter '%s' when invoking function '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)fcall_data.function_name)->value);		  
+					STAGE3_ERROR(0, fcall, fcall, "Invalid parameter '%s' when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);		  
 				} else if (NULL == param_value->datatype) {
 					function_invocation_error = true;
-					STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility between parameter '%s' and value being passed, when invoking function '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)fcall_data.function_name)->value);
+					STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility between parameter '%s' and value being passed, when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
 				}
 			}
 		}
@@ -143,14 +153,14 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 			for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
 				if (NULL == param_value->datatype) {
 					function_invocation_error = true;
-					STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility for value passed in position %d when invoking function '%s'", i, ((identifier_c *)fcall_data.function_name)->value);
+					STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((identifier_c *)fcall_data.function_name)->value);
 				}
 			}
 	}
 
 	if (function_invocation_error) {
 		/* No compatible function exists */
-		STAGE3_ERROR(2, fcall, fcall, "Invalid parameters when invoking function '%s'", ((identifier_c *)fcall_data.function_name)->value);
+		STAGE3_ERROR(2, fcall, fcall, "Invalid parameters when invoking %s '%s'", POU_str, ((identifier_c *)fcall_data.function_name)->value);
 	} 
 
 	return;
@@ -519,12 +529,13 @@ void *print_datatypes_error_c::visit(il_simple_operation_c *symbol) {
 // SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *print_datatypes_error_c::visit(il_function_call_c *symbol) {
 	generic_function_call_t fcall_param = {
-	/* fcall_param.function_name               = */ symbol->function_name,
-	/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
-	/* fcall_param.formal_operand_list         = */ NULL,
-	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
-	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
-	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+		/* fcall_param.function_name               = */ symbol->function_name,
+		/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
+		/* fcall_param.formal_operand_list         = */ NULL,
+		/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_function,
+		/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+		/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+		/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
 	};
 
 	handle_function_invocation(symbol, fcall_param);
@@ -548,7 +559,28 @@ void *print_datatypes_error_c::visit(il_expression_c *symbol) {
 	return NULL;
 }
 
+/*   il_call_operator prev_declared_fb_name
+ * | il_call_operator prev_declared_fb_name '(' ')'
+ * | il_call_operator prev_declared_fb_name '(' eol_list ')'
+ * | il_call_operator prev_declared_fb_name '(' il_operand_list ')'
+ * | il_call_operator prev_declared_fb_name '(' eol_list il_param_list ')'
+ */
+/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
+// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 void *print_datatypes_error_c::visit(il_fb_call_c *symbol) {
+	int extensible_param_count;                      /* unused vairable! Needed for compilation only! */
+	std::vector <symbol_c *> candidate_functions;    /* unused vairable! Needed for compilation only! */
+	generic_function_call_t fcall_param = {
+		/* fcall_param.function_name               = */ symbol->fb_name,
+		/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
+		/* fcall_param.formal_operand_list         = */ symbol->il_param_list,
+		/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_FB,
+		/* fcall_param.candidate_functions         = */ candidate_functions,             /* will not be used, but must provide a reference to be able to compile */
+		/* fcall_param.called_function_declaration = */ symbol->called_fb_declaration,
+		/* fcall_param.extensible_param_count      = */ extensible_param_count           /* will not be used, but must provide a reference to be able to compile */
+	};
+  
+	handle_function_invocation(symbol, fcall_param);
 	return NULL;
 }
 
@@ -557,12 +589,13 @@ void *print_datatypes_error_c::visit(il_fb_call_c *symbol) {
 // SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *print_datatypes_error_c::visit(il_formal_funct_call_c *symbol) {
 	generic_function_call_t fcall_param = {
-	/* fcall_param.function_name               = */ symbol->function_name,
-	/* fcall_param.nonformal_operand_list      = */ NULL,
-	/* fcall_param.formal_operand_list         = */ symbol->il_param_list,
-	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
-	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
-	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+		/* fcall_param.function_name               = */ symbol->function_name,
+		/* fcall_param.nonformal_operand_list      = */ NULL,
+		/* fcall_param.formal_operand_list         = */ symbol->il_param_list,
+		/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_function,
+		/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+		/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+		/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
 	};
   
 	handle_function_invocation(symbol, fcall_param);
@@ -1062,58 +1095,26 @@ void *print_datatypes_error_c::visit(not_expression_c *symbol) {
 	return NULL;
 }
 
-
+/* NOTE: The parameter 'called_function_declaration', 'extensible_param_count' and 'candidate_functions' are used to pass data between the stage 3 and stage 4. */
+/*    formal_param_list -> may be NULL ! */
+/* nonformal_param_list -> may be NULL ! */
+// SYM_REF3(function_invocation_c, function_name, formal_param_list, nonformal_param_list, symbol_c *called_function_declaration; int extensible_param_count; std::vector <symbol_c *> candidate_functions;)
 void *print_datatypes_error_c::visit(function_invocation_c *symbol) {
-	symbol_c *param_value, *param_name;
-	function_call_param_iterator_c fcp_iterator(symbol);
-	bool function_invocation_error = false;
+	generic_function_call_t fcall_param = {
+		/* fcall_param.function_name               = */ symbol->function_name,
+		/* fcall_param.nonformal_operand_list      = */ symbol->nonformal_param_list,
+		/* fcall_param.formal_operand_list         = */ symbol->formal_param_list,
+		/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_function,
+		/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+		/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+		/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+	};
 
-	if ((NULL != symbol->formal_param_list) && (NULL != symbol->nonformal_param_list)) 
-		ERROR;
-
-	symbol_c *f_decl = symbol->called_function_declaration;
-	if (NULL == f_decl) {
-		STAGE3_ERROR(0, symbol, symbol, "Unable to resolve which overloaded function '%s' is being invoked.", ((identifier_c *)symbol->function_name)->value);
-		/* we now try to find any function declaration with the same name, just so we can provide some relevant error messages */
-		function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
-		if (lower == function_symtable.end()) ERROR;
-		f_decl = function_symtable.get_value(lower);
-	}
-
-	if (NULL != symbol->formal_param_list) {
-		symbol->formal_param_list->accept(*this);
-		if (NULL != f_decl) {
-			function_param_iterator_c fp_iterator(f_decl);
-			while ((param_name = fcp_iterator.next_f()) != NULL) {
-				param_value = fcp_iterator.get_current_value();
-				/* Find the corresponding parameter in function declaration */
-				if (NULL == fp_iterator.search(param_name)) {
-					STAGE3_ERROR(0, symbol, symbol, "Invalid parameter '%s' when invoking function '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->function_name)->value);		  
-				} else if (NULL == param_value->datatype) {
-					function_invocation_error = true;
-					STAGE3_ERROR(0, symbol, symbol, "Data type incompatibility between parameter '%s' and value being passed, when invoking function '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->function_name)->value);
-				}
-			}
-		}
-	}
-	if (NULL != symbol->nonformal_param_list) {
-		symbol->nonformal_param_list->accept(*this);
-		if (f_decl)
-			for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
-				if (NULL == param_value->datatype) {
-					function_invocation_error = true;
-					STAGE3_ERROR(0, symbol, symbol, "Data type incompatibility for value passed in position %d when invoking function '%s'", i, ((identifier_c *)symbol->function_name)->value);
-				}
-			}
-	}
-
-	if (function_invocation_error) {
-		/* No compatible function exists */
-		STAGE3_ERROR(2, symbol, symbol, "Invalid parameters when invoking function '%s'", ((identifier_c *)symbol->function_name)->value);
-	} 
-
+	handle_function_invocation(symbol, fcall_param);
 	return NULL;
 }
+
+
 
 /********************/
 /* B 3.2 Statements */
@@ -1143,51 +1144,19 @@ void *print_datatypes_error_c::visit(assignment_statement_c *symbol) {
 /* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
 // SYM_REF3(fb_invocation_c, fb_name, formal_param_list, nonformal_param_list, symbol_c *called_fb_declaration;)
 void *print_datatypes_error_c::visit(fb_invocation_c *symbol) {
-	symbol_c *param_value, *param_name;
-	function_call_param_iterator_c fcp_iterator(symbol);
-	bool function_invocation_error = false;
-
-	if ((NULL != symbol->formal_param_list) && (NULL != symbol->nonformal_param_list)) 
-		ERROR;
-
-	symbol_c *f_decl = symbol->called_fb_declaration;
-	if (NULL == f_decl) {
-		/* Due to the way the syntax analysis is buit (i.e. stage 2), this should never occur.
-		 * I.e., a FB invocation using an undefined FB variable is not possible in the current implementation of stage 2.
-		 */
-		ERROR;
-// 		STAGE3_ERROR(0, symbol, symbol, "Undefined FB variable '%s'", ((identifier_c *)symbol->fb_name)->value);
-	}
-
-	if (NULL != symbol->formal_param_list) {
-		symbol->formal_param_list->accept(*this);
-		function_param_iterator_c fp_iterator(f_decl);
-		while ((param_name = fcp_iterator.next_f()) != NULL) {
-			param_value = fcp_iterator.get_current_value();
-			/* Find the corresponding parameter in function declaration */
-			if (NULL == fp_iterator.search(param_name)) {
-				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter '%s' when invoking FB '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->fb_name)->value);		  
-			} else if (NULL == param_value->datatype) {
-				function_invocation_error = true;
-				STAGE3_ERROR(0, symbol, symbol, "Data type incompatibility between parameter '%s' and value being passed, when invoking FB '%s'", ((identifier_c *)param_name)->value, ((identifier_c *)symbol->fb_name)->value);
-			}
-		}
-	}
-	if (NULL != symbol->nonformal_param_list) {
-		symbol->nonformal_param_list->accept(*this);
-		for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
-			if (NULL == param_value->datatype) {
-				function_invocation_error = true;
-				STAGE3_ERROR(0, symbol, symbol, "Invalid parameter (position %d) in FB invocation: %s", i, ((identifier_c *)symbol->fb_name)->value);
-			}
-		}
-	}
-
-	if (function_invocation_error) {
-		/* Invalid parameters for FB call! */
-		STAGE3_ERROR(2, symbol, symbol, "Invalid parameters in FB invocation: %s", ((identifier_c *)symbol->fb_name)->value);
-	} 
-
+	int extensible_param_count;                      /* unused vairable! Needed for compilation only! */
+	std::vector <symbol_c *> candidate_functions;    /* unused vairable! Needed for compilation only! */
+	generic_function_call_t fcall_param = {
+		/* fcall_param.function_name               = */ symbol->fb_name,
+		/* fcall_param.nonformal_operand_list      = */ symbol->nonformal_param_list,
+		/* fcall_param.formal_operand_list         = */ symbol->formal_param_list,
+		/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_FB,
+		/* fcall_param.candidate_functions         = */ candidate_functions,             /* will not be used, but must provide a reference to be able to compile */
+		/* fcall_param.called_function_declaration = */ symbol->called_fb_declaration,
+		/* fcall_param.extensible_param_count      = */ extensible_param_count           /* will not be used, but must provide a reference to be able to compile */
+	};
+	
+	handle_function_invocation(symbol, fcall_param);
 	return NULL;
 }
 

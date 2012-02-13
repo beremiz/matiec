@@ -789,12 +789,13 @@ void *fill_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 	((list_c *)symbol->il_operand_list)->insert_element(prev_il_instruction, 0);	
 
 	generic_function_call_t fcall_param = {
-	/* fcall_param.function_name               = */ symbol->function_name,
-	/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
-	/* fcall_param.formal_operand_list         = */ NULL,
-	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
-	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
-	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+		/* fcall_param.function_name               = */ symbol->function_name,
+		/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
+		/* fcall_param.formal_operand_list         = */ NULL,
+		/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_function,
+		/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+		/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+		/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
 	};
 	handle_function_call(symbol, fcall_param);
 
@@ -883,12 +884,13 @@ void *fill_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
 	symbol->il_param_list->accept(*this);
 
 	generic_function_call_t fcall_param = {
-	/* fcall_param.function_name               = */ symbol->function_name,
-	/* fcall_param.nonformal_operand_list      = */ NULL,
-	/* fcall_param.formal_operand_list         = */ symbol->il_param_list,
-	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
-	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
-	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+		/* fcall_param.function_name               = */ symbol->function_name,
+		/* fcall_param.nonformal_operand_list      = */ NULL,
+		/* fcall_param.formal_operand_list         = */ symbol->il_param_list,
+		/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_function,
+		/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+		/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+		/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
 	};
 	handle_function_call(symbol, fcall_param);
 
@@ -1891,12 +1893,13 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	else ERROR;
 
 	generic_function_call_t fcall_param = {
-	/* fcall_param.function_name               = */ symbol->function_name,
-	/* fcall_param.nonformal_operand_list      = */ symbol->nonformal_param_list,
-	/* fcall_param.formal_operand_list         = */ symbol->formal_param_list,
-	/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
-	/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
-	/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+		/* fcall_param.function_name               = */ symbol->function_name,
+		/* fcall_param.nonformal_operand_list      = */ symbol->nonformal_param_list,
+		/* fcall_param.formal_operand_list         = */ symbol->formal_param_list,
+		/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_function,
+		/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+		/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+		/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
 	};
 	handle_function_call(symbol, fcall_param);
 
