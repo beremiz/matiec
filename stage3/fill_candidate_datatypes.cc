@@ -841,8 +841,40 @@ void *fill_candidate_datatypes_c::visit(il_jump_operation_c *symbol) {
   return NULL;
 }
 
+
+/*   il_call_operator prev_declared_fb_name
+ * | il_call_operator prev_declared_fb_name '(' ')'
+ * | il_call_operator prev_declared_fb_name '(' eol_list ')'
+ * | il_call_operator prev_declared_fb_name '(' il_operand_list ')'
+ * | il_call_operator prev_declared_fb_name '(' eol_list il_param_list ')'
+ */
+/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
+// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 void *fill_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
+	bool compatible = false;
+	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
+	if (NULL == fb_decl) ERROR;
+
+	if (symbol->  il_param_list != NULL) {
+		symbol->il_param_list->accept(*this);
+		compatible = match_formal_call(symbol, fb_decl);
+	}
+	if (symbol->il_operand_list != NULL) {
+		symbol->il_operand_list->accept(*this);
+		compatible = match_nonformal_call(symbol, fb_decl);
+	}
+
+	/* The print_datatypes_error_c does not rely on this called_fb_declaration pointer being != NULL to conclude that
+	 * we have a datat type incompatibility error, so setting it to the correct fb_decl is actually safe,
+	 * as the compiler will never reach the compilation stage!
+	 */
+	symbol->called_fb_declaration = fb_decl;
+
+	if (debug) std::cout << "FB [] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
+	return NULL;
 }
+
 
 /* | function_name '(' eol_list [il_param_list] ')' */
 /* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4. */

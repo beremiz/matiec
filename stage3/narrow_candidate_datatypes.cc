@@ -414,9 +414,39 @@ void *narrow_candidate_datatypes_c::visit(il_expression_c *symbol) {
 return NULL;
 }
 
+/*   il_call_operator prev_declared_fb_name
+ * | il_call_operator prev_declared_fb_name '(' ')'
+ * | il_call_operator prev_declared_fb_name '(' eol_list ')'
+ * | il_call_operator prev_declared_fb_name '(' il_operand_list ')'
+ * | il_call_operator prev_declared_fb_name '(' eol_list il_param_list ')'
+ */
+/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
+// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 void *narrow_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
+	/* Note: We do not use the symbol->called_fb_declaration value (set in fill_candidate_datatypes_c)
+	 *       because we try to identify any other datatype errors in the expressions used in the 
+	 *       parameters to the FB call. e.g.
+	 *          fb_var( 
+	 *             in1 := var1,
+	 *             in2 := (
+	 *                       LD 56
+	 *                       ADD 43
+	 *                    )
+	 *             )
+	 *       even it the call to the FB is invalid. 
+	 *       This makes sense because it may be errors in those expressions which are
+	 *       making this an invalid call, so it makes sense to point them out to the user!
+	 */
+	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+
+	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
+	if (NULL == fb_decl) ERROR;
+	if (NULL != symbol->il_operand_list)  narrow_nonformal_call(symbol, fb_decl);
+	if (NULL != symbol->  il_param_list)     narrow_formal_call(symbol, fb_decl);
+
 	return NULL;
 }
+
 
 /* | function_name '(' eol_list [il_param_list] ')' */
 /* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4. */

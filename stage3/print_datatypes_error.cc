@@ -1140,14 +1140,7 @@ void *print_datatypes_error_c::visit(assignment_statement_c *symbol) {
 /* fb_name '(' [param_assignment_list] ')' */
 /*    formal_param_list -> may be NULL ! */
 /* nonformal_param_list -> may be NULL ! */
-/* NOTES:
- *    The parameter 'called_fb_declaration'... 
- *       ...is used to pass data between two passes of stage 3.
- *       (actually set in fill_candidate_datatypes_c, and used in narrow_candidate_datatypes_c and print_datatypes_error_c).
- *       This allows fill_candidate_datatypes_c to figure out whether it is a valid FB call,
- *       and let the other classes handle it aproproately.
- *       It could also be used in stage 4, if required.
- */
+/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
 // SYM_REF3(fb_invocation_c, fb_name, formal_param_list, nonformal_param_list, symbol_c *called_fb_declaration;)
 void *print_datatypes_error_c::visit(fb_invocation_c *symbol) {
 	symbol_c *param_value, *param_name;
