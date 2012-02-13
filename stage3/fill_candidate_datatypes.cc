@@ -91,16 +91,8 @@ bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 		param_type = base_type(fp_iterator.param_type());
 		
 		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
-			/* TODO
-			 * call  int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
-			 * instead of using for loop!
-			 */
-		for(i = 0; i < call_param_value->candidate_datatypes.size(); i++) {
-			/* If found (correct data type being passed), then stop the search */
-			if(is_type_equal(param_type, call_param_value->candidate_datatypes[i])) break;
-		}
-		/* if we reached the end of the loop, and no compatible type found, then return false */
-		if (i >= call_param_value->candidate_datatypes.size()) return false;
+		if (search_in_datatype_list(param_type, call_param_value->candidate_datatypes) < 0)
+			return false; /* return false if param_type not in the list! */
 	}
 	/* call is compatible! */
 	return true;
@@ -142,17 +134,8 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 		/* Get the parameter type */
 		param_type = base_type(fp_iterator.param_type());
 		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
-			/* TODO
-			 * call  int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
-			 * instead of using for loop!
-			 */
-		for (i = 0; i < call_param_types.size(); i++) {
-			/* If found (correct data type being passed), then stop the search */
-			if(is_type_equal(param_type, call_param_types[i])) break;
-		}
-		/* if we reached the end of the loop, and no compatible type found, then return false */
-		if (i >= call_param_types.size()) return false;
-
+		if (search_in_datatype_list(param_type, call_param_types) < 0)
+			return false; /* return false if param_type not in the list! */
 	}
 	/* call is compatible! */
 	return true;
