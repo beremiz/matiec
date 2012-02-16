@@ -24,6 +24,7 @@
 
 #include "datatype_functions.hh"
 #include "../absyntax_utils/absyntax_utils.hh"
+#include <algorithm>
 
 
 
@@ -171,7 +172,7 @@ const struct widen_entry widen_DIV_table[] = {
 /* Search for a datatype inside a candidate_datatypes list.
  * Returns: position of datatype in the list, or -1 if not found.
  */
-int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes) {
+int search_in_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes) {
 	if (NULL == datatype) 
 		return -1;
 
@@ -192,9 +193,7 @@ int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candida
 void copy_candidate_datatype_list(symbol_c *from, symbol_c *to) {
 	if ((NULL == from) || (NULL == to))
 		return;
-
-	for(unsigned int i = 0; i < from->candidate_datatypes.size(); i++)
-		to->candidate_datatypes.push_back(from->candidate_datatypes[i]);
+	std::copy(from->candidate_datatypes.begin(), from->candidate_datatypes.end(), to->candidate_datatypes.begin());
 }
 
 

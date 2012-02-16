@@ -95,7 +95,7 @@ bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 		param_type = base_type(fp_iterator.param_type());
 		
 		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
-		if (search_in_datatype_list(param_type, call_param_value->candidate_datatypes) < 0)
+		if (search_in_candidate_datatype_list(param_type, call_param_value->candidate_datatypes) < 0)
 			return false; /* return false if param_type not in the list! */
 	}
 	/* call is compatible! */
@@ -138,7 +138,7 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 		/* Get the parameter type */
 		param_type = base_type(fp_iterator.param_type());
 		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
-		if (search_in_datatype_list(param_type, call_param_types) < 0)
+		if (search_in_candidate_datatype_list(param_type, call_param_types) < 0)
 			return false; /* return false if param_type not in the list! */
 	}
 	/* call is compatible! */
@@ -434,7 +434,7 @@ void *fill_candidate_datatypes_c::visit(hex_integer_c *symbol) {
 // SYM_REF2(integer_literal_c, type, value)
 void *fill_candidate_datatypes_c::visit(integer_literal_c *symbol) {
 	symbol->value->accept(*this);
-	if (search_in_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
+	if (search_in_candidate_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
 		symbol->candidate_datatypes.push_back(symbol->type);
 	if (debug) std::cout << "INT_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
@@ -442,7 +442,7 @@ void *fill_candidate_datatypes_c::visit(integer_literal_c *symbol) {
 
 void *fill_candidate_datatypes_c::visit(real_literal_c *symbol) {
 	symbol->value->accept(*this);
-	if (search_in_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
+	if (search_in_candidate_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
 		symbol->candidate_datatypes.push_back(symbol->type);
 	if (debug) std::cout << "REAL_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
@@ -450,14 +450,14 @@ void *fill_candidate_datatypes_c::visit(real_literal_c *symbol) {
 
 void *fill_candidate_datatypes_c::visit(bit_string_literal_c *symbol) {
 	symbol->value->accept(*this);
-	if (search_in_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
+	if (search_in_candidate_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
 		symbol->candidate_datatypes.push_back(symbol->type);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(boolean_literal_c *symbol) {
  	symbol->value->accept(*this);
- 	if (search_in_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
+ 	if (search_in_candidate_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
 		/* if an explicit datat type has been provided (e.g. SAFEBOOL#true), check whether
 		 * the possible datatypes of the value is consistent with the desired type.
 		 */

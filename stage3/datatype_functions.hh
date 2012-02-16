@@ -139,7 +139,7 @@ extern const struct widen_entry widen_DIV_table[];
 /* Search for a datatype inside a candidate_datatypes list.
  * Returns: position of datatype in the list, or -1 if not found.
  */
-int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
+int search_in_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
 
 /* Copy the elements in the candidate_datatype_list in one symbol (from)
  * into the candidate_datatype_list of another symbol (to)

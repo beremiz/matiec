@@ -58,7 +58,7 @@ narrow_candidate_datatypes_c::~narrow_candidate_datatypes_c(void) {
 /* Only set the symbol's desired datatype to 'datatype' if that datatype is in the candidate_datatype list */
 static void set_datatype(symbol_c *datatype, symbol_c *symbol) {
 	symbol->datatype = NULL;   
-	if (search_in_datatype_list(datatype, symbol->candidate_datatypes) >= 0)
+	if (search_in_candidate_datatype_list(datatype, symbol->candidate_datatypes) >= 0)
 		symbol->datatype = datatype;  
 }
 
@@ -288,7 +288,7 @@ void *narrow_candidate_datatypes_c::visit(subrange_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(simple_spec_init_c *symbol) {
 	symbol_c *datatype = base_type(symbol->simple_specification); 
 	if (NULL != symbol->constant) {
-		int typeoffset = search_in_datatype_list(datatype, symbol->constant->candidate_datatypes);
+		int typeoffset = search_in_candidate_datatype_list(datatype, symbol->constant->candidate_datatypes);
 		if (typeoffset >= 0)
 			symbol->constant->datatype = symbol->constant->candidate_datatypes[typeoffset];
 	}
