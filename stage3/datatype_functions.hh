@@ -141,6 +141,12 @@ extern const struct widen_entry widen_DIV_table[];
  */
 int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
 
+/* Copy the elements in the candidate_datatype_list in one symbol (from)
+ * into the candidate_datatype_list of another symbol (to)
+ */
+void copy_candidate_datatype_list(symbol_c *from, symbol_c *to);
+
+
 /* A helper function... */
 bool is_ANY_ELEMENTARY_type         (symbol_c *type_symbol);
 bool is_ANY_SAFEELEMENTARY_type     (symbol_c *type_symbol);

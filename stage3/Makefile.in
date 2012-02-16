@@ -71,6 +71,7 @@ ARFLAGS = cru
 libstage3_a_AR = $(AR) $(ARFLAGS)
 libstage3_a_LIBADD =
 am_libstage3_a_OBJECTS = stage3.$(OBJEXT) \
+	flow_control_analysis.$(OBJEXT) \
 	fill_candidate_datatypes.$(OBJEXT) \
 	narrow_candidate_datatypes.$(OBJEXT) \
 	print_datatypes_error.$(OBJEXT) datatype_functions.$(OBJEXT)
@@ -190,6 +191,7 @@ AM_CXXFLAGS = -g -Wall -Wpointer-arith -Wwrite-strings -Wno-unused
 lib_LIBRARIES = libstage3.a
 libstage3_a_SOURCES = \
 	stage3.cc \
+	flow_control_analysis.cc \
 	fill_candidate_datatypes.cc \
 	narrow_candidate_datatypes.cc \
 	print_datatypes_error.cc \
@@ -274,6 +276,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/datatype_functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fill_candidate_datatypes.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flow_control_analysis.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/narrow_candidate_datatypes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/print_datatypes_error.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stage3.Po@am__quote@

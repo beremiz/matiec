@@ -1,9 +1,7 @@
 /*
  *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- *  Copyright (C) 2009-2012  Mario de Sousa (msousa@fe.up.pt)
- *  Copyright (C) 2012       Manuele Conti (manuele.conti@sirius-es.it)
- *  Copyright (C) 2012       Matteo Facchinetti (matteo.facchinetti@sirius-es.it)
+ *  Copyright (C) 2012  Mario de Sousa (msousa@fe.up.pt)
  *
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -33,52 +31,29 @@
  */
 
 
-#include "../absyntax_utils/absyntax_utils.hh"
-#include "datatype_functions.hh"
+/*
+ *  Do flow control analysis of the IEC 61131-3 code.
+ *
+ *  We currently only do this for IL code.
+ *  This class will annotate the abstract syntax tree, by filling in the
+ *  prev_il_instruction variable in the il_instruction_c, so it points to
+ *  the previous il_instruction_c object in the instruction list instruction_list_c.
+ */
 
-class narrow_candidate_datatypes_c: public iterator_visitor_c {
+
+
+#include "../absyntax_utils/absyntax_utils.hh"
+
+
+class flow_control_analysis_c: public iterator_visitor_c {
 
   private:
     search_varfb_instance_type_c *search_varfb_instance_type;
-    search_base_type_c search_base_type;
-    symbol_c *il_operand;
     symbol_c *prev_il_instruction;
 
-    bool is_widening_compatible(symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, const struct widen_entry widen_table[]);
-
-    void narrow_function_invocation(symbol_c *f_call, generic_function_call_t fcall_data);
-    void narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
-    void narrow_formal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
-    
-    void *handle_il_instruction(symbol_c *symbol);
-
   public:
-    narrow_candidate_datatypes_c(symbol_c *ignore);
-    virtual ~narrow_candidate_datatypes_c(void);
-
-    symbol_c *base_type(symbol_c *symbol);
-
-    /**********************/
-    /* B 1.3 - Data types */
-    /**********************/
-    /********************************/
-    /* B 1.3.3 - Derived data types */
-    /********************************/
-    void *visit(subrange_c *symbol);
-    void *visit(simple_spec_init_c *symbol);
-
-    /*********************/
-    /* B 1.4 - Variables */
-    /*********************/
-    /********************************************/
-    /* B 1.4.1 - Directly Represented Variables */
-    /********************************************/
-    /*************************************/
-    /* B 1.4.2 - Multi-element variables */
-    /*************************************/
-    void *visit(array_variable_c *symbol);
-    void *visit(il_instruction_c *symbol);
-    void *visit(subscript_list_c *symbol);
+    flow_control_analysis_c(symbol_c *ignore);
+    virtual ~flow_control_analysis_c(void);
 
     /**************************************/
     /* B 1.5 - Program organization units */
@@ -102,6 +77,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /* B 1.7 Configuration elements */
     /********************************/
     void *visit(configuration_declaration_c *symbol);
+    
     /****************************************/
     /* B.2 - Language IL (Instruction List) */
     /****************************************/
@@ -109,11 +85,12 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /* B 2.1 Instructions and Operands */
     /***********************************/
     void *visit(instruction_list_c *symbol);
-    void *visit(il_simple_operation_c *symbol);
-    void *visit(il_function_call_c *symbol);
-    void *visit(il_expression_c *symbol);
-    void *visit(il_fb_call_c *symbol);
-    void *visit(il_formal_funct_call_c *symbol);
+    void *visit(il_instruction_c *symbol);
+//     void *visit(il_simple_operation_c *symbol);
+//     void *visit(il_function_call_c *symbol);
+//     void *visit(il_expression_c *symbol);
+//     void *visit(il_fb_call_c *symbol);
+//     void *visit(il_formal_funct_call_c *symbol);
     /*
         void *visit(il_operand_list_c *symbol);
         void *visit(simple_instr_list_c *symbol);
@@ -125,6 +102,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /*******************/
     /* B 2.2 Operators */
     /*******************/
+    /*
     void *visit(LD_operator_c *symbol);
     void *visit(LDN_operator_c *symbol);
     void *visit(ST_operator_c *symbol);
@@ -166,64 +144,13 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     void *visit(JMP_operator_c *symbol);
     void *visit(JMPC_operator_c *symbol);
     void *visit(JMPCN_operator_c *symbol);
+    */
     /* Symbol class handled together with function call checks */
     // void *visit(il_assign_operator_c *symbol, variable_name);
     /* Symbol class handled together with function call checks */
     // void *visit(il_assign_operator_c *symbol, option, variable_name);
-    /***************************************/
-    /* B.3 - Language ST (Structured Text) */
-    /***************************************/
-    /***********************/
-    /* B 3.1 - Expressions */
-    /***********************/
-    void *visit(or_expression_c *symbol);
-    void *visit(xor_expression_c *symbol);
-    void *visit(and_expression_c *symbol);
-    void *visit(equ_expression_c *symbol);
-    void *visit(notequ_expression_c *symbol);
-    void *visit(lt_expression_c *symbol);
-    void *visit(gt_expression_c *symbol);
-    void *visit(le_expression_c *symbol);
-    void *visit(ge_expression_c *symbol);
-    void *visit(add_expression_c *symbol);
-    void *visit(sub_expression_c *symbol);
-    void *visit(mul_expression_c *symbol);
-    void *visit(div_expression_c *symbol);
-    void *visit(mod_expression_c *symbol);
-    void *visit(power_expression_c *symbol);
-    void *visit(neg_expression_c *symbol);
-    void *visit(not_expression_c *symbol);
 
-    void *visit(function_invocation_c *symbol);
-
-    /*********************************/
-    /* B 3.2.1 Assignment Statements */
-    /*********************************/
-    void *visit(assignment_statement_c *symbol);
-
-    /*****************************************/
-    /* B 3.2.2 Subprogram Control Statements */
-    /*****************************************/
-    void *visit(fb_invocation_c *symbol);
-    
-    /********************************/
-    /* B 3.2.3 Selection Statements */
-    /********************************/
-    void *visit(if_statement_c *symbol);
-    void *visit(elseif_statement_c *symbol);
-    void *visit(case_statement_c *symbol);
-    void *visit(case_element_list_c *symbol);
-    void *visit(case_element_c *symbol);
-    void *visit(case_list_c *symbol);
-
-    /********************************/
-    /* B 3.2.4 Iteration Statements */
-    /********************************/
-    void *visit(for_statement_c *symbol);
-    void *visit(while_statement_c *symbol);
-    void *visit(repeat_statement_c *symbol);
-
-}; // narrow_candidate_datatypes_c
+}; // flow_control_analysis_c
 
 
 

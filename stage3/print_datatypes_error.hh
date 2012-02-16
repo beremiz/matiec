@@ -41,6 +41,7 @@ class print_datatypes_error_c: public iterator_visitor_c {
 
   private:
     /* The level of detail that the user wants us to display error messages. */
+//     #define error_level_default (1)
     #define error_level_default (1)
     #define error_level_nagging (4)
     unsigned int current_display_error_level;

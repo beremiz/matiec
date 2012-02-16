@@ -139,10 +139,10 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 				param_value = fcp_iterator.get_current_value();
 				/* Find the corresponding parameter in function declaration */
 				if (NULL == fp_iterator.search(param_name)) {
-					STAGE3_ERROR(0, fcall, fcall, "Invalid parameter '%s' when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);		  
+					STAGE3_ERROR(0, param_name, param_name, "Invalid parameter '%s' when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);		  
 				} else if (NULL == param_value->datatype) {
 					function_invocation_error = true;
-					STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility between parameter '%s' and value being passed, when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+					STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility between parameter '%s' and value being passed, when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
 				}
 			}
 		}
@@ -153,7 +153,7 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 			for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
 				if (NULL == param_value->datatype) {
 					function_invocation_error = true;
-					STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+					STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((identifier_c *)fcall_data.function_name)->value);
 				}
 			}
 	}

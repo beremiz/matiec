@@ -76,6 +76,11 @@ bool narrow_candidate_datatypes_c::is_widening_compatible(symbol_c *left_type, s
 	return false;
 }
 
+/*
+ * All parameters being passed to the called function MUST be in the parameter list to which f_call points to!
+ * This means that, for non formal function calls in IL, de current (default value) must be artificially added to the
+ * beginning of the parameter list BEFORE calling handle_function_call().
+ */
 void narrow_candidate_datatypes_c::narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count) {
 	symbol_c *call_param_value,  *param_type;
 	identifier_c *param_name;
@@ -110,6 +115,19 @@ void narrow_candidate_datatypes_c::narrow_nonformal_call(symbol_c *f_call, symbo
 		if ((NULL != param_name) && (NULL == desired_datatype)) ERROR;
 		if ((NULL == param_name) && (NULL != desired_datatype)) ERROR;
 
+		/* NOTE: When we are handling a nonformal function call made from IL, the first parameter is the 'default' or 'current'
+		 *       il value. However, a pointer to the prev_il_instruction is pre-pended into the operand list (done in fill_candidate_datatypes_c,
+		 *       and later undone in print_datatypes_error_c - this class is run after the first, and before the latter!), so 
+		 *       the call 
+		 *       call_param_value->accept(*this);
+		 *       may actually be calling an object of the il_instruction_c class.
+		 *       If that is the case, that same il_instruction_c object will be called again inside the for() loop
+		 *       of void *narrow_candidate_datatypes_c::visit(instruction_list_c *symbol);
+		 *       This is actually safe, as the narrow algorithm for all IL instructions is idem-potent.
+		 *       (It is easier to just let it be called twice than to hack the code to guarantee that it is 
+		 *       only called once - this would also make this hacked code ugly an un-elegant, so we leave
+		 *       it as it is for now...)
+		 */
 		set_datatype(desired_datatype, call_param_value);
 		call_param_value->accept(*this);
 
@@ -265,6 +283,17 @@ void *narrow_candidate_datatypes_c::visit(subrange_c *symbol) {
 	return NULL;
 }
 
+/* simple_specification ASSIGN constant */
+// SYM_REF2(simple_spec_init_c, simple_specification, constant)
+void *narrow_candidate_datatypes_c::visit(simple_spec_init_c *symbol) {
+	symbol_c *datatype = base_type(symbol->simple_specification); 
+	if (NULL != symbol->constant) {
+		int typeoffset = search_in_datatype_list(datatype, symbol->constant->candidate_datatypes);
+		if (typeoffset >= 0)
+			symbol->constant->datatype = symbol->constant->candidate_datatypes[typeoffset];
+	}
+	return NULL;
+}
 
 /*********************/
 /* B 1.4 - Variables */
@@ -309,10 +338,9 @@ void *narrow_candidate_datatypes_c::visit(subscript_list_c *symbol) {
 /*********************/
 void *narrow_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
+	symbol->var_declarations_list->accept(*this);
 	if (debug) printf("Narrowing candidate data types list in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
-	prev_il_instruction = NULL;
 	symbol->function_body->accept(*this);
-	prev_il_instruction = NULL;
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
 	return NULL;
@@ -323,10 +351,9 @@ void *narrow_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 /***************************/
 void *narrow_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
+	symbol->var_declarations->accept(*this);
 	if (debug) printf("Narrowing candidate data types list in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
-	prev_il_instruction = NULL;
 	symbol->fblock_body->accept(*this);
-	prev_il_instruction = NULL;
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
 	return NULL;
@@ -337,10 +364,9 @@ void *narrow_candidate_datatypes_c::visit(function_block_declaration_c *symbol) 
 /********************/
 void *narrow_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
+	symbol->var_declarations->accept(*this);
 	if (debug) printf("Narrowing candidate data types list in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
-	prev_il_instruction = NULL;
 	symbol->function_block_body->accept(*this);
-	prev_il_instruction = NULL;
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
 	return NULL;
@@ -351,10 +377,8 @@ void *narrow_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 /* B 1.7 Configuration elements */
 /********************************/
 void *narrow_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
-#if 0
 	// TODO !!!
 	/* for the moment we must return NULL so semantic analysis of remaining code is not interrupted! */
-#endif
 	return NULL;
 }
 
@@ -365,13 +389,38 @@ void *narrow_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
 /***********************************/
 /* B 2.1 Instructions and Operands */
 /***********************************/
+
+/*| instruction_list il_instruction */
+// SYM_LIST(instruction_list_c)
+void *narrow_candidate_datatypes_c::visit(instruction_list_c *symbol) {
+	/* We need to go through the instructions backwards, so we can not use the base class' visitor */
+	for(int i = symbol->n-1; i >= 0; i--) {
+		symbol->elements[i]->accept(*this);
+	}
+	return NULL;
+}
+
+/* | label ':' [il_incomplete_instruction] eol_list */
+// SYM_REF2(il_instruction_c, label, il_instruction)
+// void *visit(instruction_list_c *symbol);
+void *narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
+	if (NULL == symbol->il_instruction)
+		return NULL;
+
+	prev_il_instruction = symbol->prev_il_instruction;
+	/* Tell the il_instruction the datatype that it must generate - this was chosen by the next il_instruction (we iterate backwards!) */
+	symbol->il_instruction->datatype = symbol->datatype;
+	symbol->il_instruction->accept(*this);
+	return NULL;
+}
+
+
 // void *visit(instruction_list_c *symbol);
 void *narrow_candidate_datatypes_c::visit(il_simple_operation_c *symbol) {
-	il_operand = symbol->il_operand;
-	if (NULL != symbol->il_operand) {
-		symbol->il_operand->accept(*this);
-	}
+	/* Tell the il_simple_operator the datatype that it must generate - this was chosen by the next il_instruction (we iterate backwards!) */
+	symbol->il_simple_operator->datatype = symbol->datatype;
 	/* recursive call to see whether data types are compatible */
+	il_operand = symbol->il_operand;
 	symbol->il_simple_operator->accept(*this);
 	il_operand = NULL;
 	return NULL;
@@ -399,6 +448,8 @@ void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 	 * the following code is actually correct!
 	 */
 	narrow_function_invocation(symbol, fcall_param);
+	/* set the desired datatype of the previous il instruction */
+	prev_il_instruction->datatype = symbol->datatype;
 	return NULL;
 }
 
@@ -464,6 +515,8 @@ void *narrow_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
 	};
   
 	narrow_function_invocation(symbol, fcall_param);
+	/* set the desired datatype of the previous il instruction */
+	prev_il_instruction->datatype = symbol->datatype;
 	return NULL;
 }
 
@@ -479,28 +532,51 @@ void *narrow_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
 /*******************/
 /* B 2.2 Operators */
 /*******************/
-void *narrow_candidate_datatypes_c::visit(LD_operator_c *symbol) {
-	prev_il_instruction = symbol;
+
+void *narrow_candidate_datatypes_c::handle_il_instruction(symbol_c *symbol) {
+	if (NULL == symbol->datatype)
+		/* next IL instructions were unable to determine the datatype this instruction should produce */
+		return NULL;
+	/* set the datatype for the operand */
+	il_operand->datatype = symbol->datatype;
+	il_operand->accept(*this);
+	/* set the desired datatype of the previous il instruction */
+	prev_il_instruction->datatype = symbol->datatype;
 	return NULL;
 }
 
-void *narrow_candidate_datatypes_c::visit(LDN_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
+void *narrow_candidate_datatypes_c::visit(LD_operator_c *symbol)   {
+	if (NULL == symbol->datatype)
+		/* next IL instructions were unable to determine the datatype this instruction should produce */
 		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
+	/* set the datatype for the operand */
 	il_operand->datatype = symbol->datatype;
 	il_operand->accept(*this);
-	prev_il_instruction = symbol;
+	return NULL;
+}
+
+
+void *narrow_candidate_datatypes_c::visit(LDN_operator_c *symbol)  {
+	if (NULL == symbol->datatype)
+		/* next IL instructions were unable to determine the datatype this instruction should produce */
+		return NULL;
+	/* set the datatype for the operand */
+	il_operand->datatype = symbol->datatype;
+	il_operand->accept(*this);
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(ST_operator_c *symbol) {
+	if (debug) printf("narrow_candidate_datatypes_c::visit(ST_operator_c *symbol) called.\n");
 	if (symbol->candidate_datatypes.size() != 1)
 		return NULL;
 	symbol->datatype = symbol->candidate_datatypes[0];
+	/* set the datatype for the operand */
 	il_operand->datatype = symbol->datatype;
 	il_operand->accept(*this);
-	prev_il_instruction = symbol;
+	/* set the desired datatype of the previous il instruction */
+	prev_il_instruction->datatype = symbol->datatype;
+	if (debug) printf("narrow_candidate_datatypes_c::visit(ST_operator_c *symbol) returning. previous_il_instruction->datatype = %p\n", prev_il_instruction->datatype);
 	return NULL;
 }
 
@@ -508,9 +584,11 @@ void *narrow_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 	if (symbol->candidate_datatypes.size() != 1)
 		return NULL;
 	symbol->datatype = symbol->candidate_datatypes[0];
+	/* set the datatype for the operand */
 	il_operand->datatype = symbol->datatype;
 	il_operand->accept(*this);
-	prev_il_instruction = symbol;
+	/* set the desired datatype of the previous il instruction */
+	prev_il_instruction->datatype = symbol->datatype;
 	return NULL;
 }
 
@@ -519,233 +597,86 @@ void *narrow_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
 	return NULL;
 }
 
-void *narrow_candidate_datatypes_c::visit(S_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(R_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(S1_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(R1_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	prev_il_instruction = symbol;
-	return NULL;
-}
+void *narrow_candidate_datatypes_c::visit(S_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(R_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(S1_operator_c *symbol) {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(R1_operator_c *symbol) {return handle_il_instruction(symbol);}
 
 void *narrow_candidate_datatypes_c::visit(CLK_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(CU_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(CD_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(PV_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(IN_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(PT_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
-void *narrow_candidate_datatypes_c::visit(AND_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(OR_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(XOR_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(ANDN_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(ORN_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(XORN_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(ADD_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(SUB_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(MUL_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(DIV_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(MOD_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(GT_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(GE_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(EQ_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(LT_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(LE_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(NE_operator_c *symbol) {
-	prev_il_instruction = symbol;
-	return NULL;
-}
+void *narrow_candidate_datatypes_c::visit(AND_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(OR_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(XOR_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(ANDN_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(ORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(XORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(ADD_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(SUB_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(MUL_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(DIV_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(MOD_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(GT_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(GE_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(EQ_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(LT_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(LE_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(NE_operator_c *symbol)  {return handle_il_instruction(symbol);}
 
 void *narrow_candidate_datatypes_c::visit(CAL_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(CALC_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(CALCN_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(RET_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(RETC_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(RETCN_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(JMP_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(JMPC_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 

@@ -145,7 +145,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /* B 1.3.3 - Derived data types */
     /********************************/
     void *visit(subrange_c *symbol);
-    void *visit(data_type_declaration_c *symbol);
+//  void *visit(data_type_declaration_c *symbol);
     void *visit(enumerated_value_c *symbol);
 
     /*********************/
@@ -194,6 +194,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /* B 2.1 Instructions and Operands */
     /***********************************/
     // void *visit(instruction_list_c *symbol);
+    void *visit(il_instruction_c *symbol);
     void *visit(il_simple_operation_c *symbol);
     void *visit(il_function_call_c *symbol);
     void *visit(il_expression_c *symbol);

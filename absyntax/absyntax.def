@@ -913,7 +913,11 @@ SYM_REF2(fb_initialization_c, function_block_type_name, structure_initialization
 SYM_LIST(instruction_list_c)
 
 /* | label ':' [il_incomplete_instruction] eol_list */
-SYM_REF2(il_instruction_c, label, il_instruction)
+/* NOTE: The parameter 'prev_il_instruction' is used to point to all previous il instructions that may be executed imedaitely before this instruction.
+ *       In case of an il instruction preceded by a label, this will include all IL instructions that jump to this label!
+ *       It is filled in by the flow_control_analysis_c during stage 3.
+ */
+SYM_REF2(il_instruction_c, label, il_instruction, symbol_c *prev_il_instruction;)
 
 
 /* | il_simple_operator [il_operand] */

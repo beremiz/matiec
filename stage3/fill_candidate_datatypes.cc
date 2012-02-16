@@ -48,7 +48,6 @@
 static int debug = 0;
 
 fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
-
 }
 
 fill_candidate_datatypes_c::~fill_candidate_datatypes_c(void) {
@@ -68,6 +67,11 @@ symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, s
 
 /* returns true if compatible function/FB invocation, otherwise returns false */
 /* Assumes that the candidate_datatype lists of all the parameters being passed haved already been filled in */
+/*
+ * All parameters being passed to the called function MUST be in the parameter list to which f_call points to!
+ * This means that, for non formal function calls in IL, de current (default value) must be artificially added to the
+ * beginning of the parameter list BEFORE calling handle_function_call().
+ */
 bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
 	symbol_c *call_param_value,  *param_type;
 	identifier_c *param_name;
@@ -544,12 +548,15 @@ void *fill_candidate_datatypes_c::visit(subrange_c *symbol) {
 	return NULL;
 }
 
-
+/*  TYPE type_declaration_list END_TYPE */
+// SYM_REF1(data_type_declaration_c, type_declaration_list)
+/* NOTE: Not required. already handled by iterator_visitor_c base class */
+/*
 void *fill_candidate_datatypes_c::visit(data_type_declaration_c *symbol) {
-	// TODO !!!
-	/* for the moment we must return NULL so semantic analysis of remaining code is not interrupted! */
+	symbol->type_declaration_list->accept(*this);
 	return NULL;
 }
+*/
 
 void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 	symbol_c *enumerated_type;
@@ -678,9 +685,7 @@ void *fill_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 	symbol->var_declarations_list->accept(*this);
 	if (debug) printf("Filling candidate data types list in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
 	il_parenthesis_level = 0;
-	prev_il_instruction = NULL;
 	symbol->function_body->accept(*this);
-	prev_il_instruction = NULL;
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
 	return NULL;
@@ -694,9 +699,7 @@ void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 	symbol->var_declarations->accept(*this);
 	if (debug) printf("Filling candidate data types list in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
 	il_parenthesis_level = 0;
-	prev_il_instruction = NULL;
 	symbol->fblock_body->accept(*this);
-	prev_il_instruction = NULL;
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
 	return NULL;
@@ -710,9 +713,7 @@ void *fill_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 	symbol->var_declarations->accept(*this);
 	if (debug) printf("Filling candidate data types list in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
 	il_parenthesis_level = 0;
-	prev_il_instruction = NULL;
 	symbol->function_block_body->accept(*this);
-	prev_il_instruction = NULL;
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
 	return NULL;
@@ -737,7 +738,30 @@ void *fill_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
 /***********************************/
 /* B 2.1 Instructions and Operands */
 /***********************************/
+
+/*| instruction_list il_instruction */
+// SYM_LIST(instruction_list_c)
 // void *visit(instruction_list_c *symbol);
+
+
+/* | label ':' [il_incomplete_instruction] eol_list */
+// SYM_REF2(il_instruction_c, label, il_instruction)
+// void *visit(instruction_list_c *symbol);
+void *fill_candidate_datatypes_c::visit(il_instruction_c *symbol) {
+	if (NULL == symbol->il_instruction)
+		return NULL;
+
+	prev_il_instruction = symbol->prev_il_instruction;
+	symbol->il_instruction->accept(*this);
+	/* This object has (inherits) the same candidate datatypes as the il_instruction */
+	copy_candidate_datatype_list(symbol->il_instruction /*from*/, symbol /*to*/);	
+	prev_il_instruction = NULL;
+
+	return NULL;
+}
+
+
+
 void *fill_candidate_datatypes_c::visit(il_simple_operation_c *symbol) {
 	/* determine the data type of the operand */
 	if (NULL != symbol->il_operand) {
@@ -747,6 +771,8 @@ void *fill_candidate_datatypes_c::visit(il_simple_operation_c *symbol) {
 	il_operand = symbol->il_operand;
 	symbol->il_simple_operator->accept(*this);
 	il_operand = NULL;
+	/* This object has (inherits) the same candidate datatypes as the il_simple_operator */
+	copy_candidate_datatype_list(symbol->il_simple_operator /*from*/, symbol /*to*/);
 	return NULL;
 }
 
@@ -897,7 +923,6 @@ void *fill_candidate_datatypes_c::visit(LD_operator_c *symbol) {
 		symbol->candidate_datatypes.push_back(il_operand->candidate_datatypes[i]);
 	}
 	if (debug) std::cout << "LD [" <<  il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -907,7 +932,6 @@ void *fill_candidate_datatypes_c::visit(LDN_operator_c *symbol) {
 			symbol->candidate_datatypes.push_back(il_operand->candidate_datatypes[i]);
 	}
 	if (debug) std::cout << "LDN [" << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -924,7 +948,6 @@ void *fill_candidate_datatypes_c::visit(ST_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout << "ST [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -941,12 +964,10 @@ void *fill_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout << "STN [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -963,7 +984,6 @@ void *fill_candidate_datatypes_c::visit(S_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout << "S [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -980,7 +1000,6 @@ void *fill_candidate_datatypes_c::visit(R_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout << "R [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -997,7 +1016,6 @@ void *fill_candidate_datatypes_c::visit(S1_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout << "S1 [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1014,7 +1032,6 @@ void *fill_candidate_datatypes_c::visit(R1_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout << "R1 [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1022,7 +1039,6 @@ void *fill_candidate_datatypes_c::visit(CLK_operator_c *symbol) {
 	/* MANU:
 	 * How it works? I(MANU) don't know this function
 	 */
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1030,7 +1046,6 @@ void *fill_candidate_datatypes_c::visit(CU_operator_c *symbol) {
 	/* MANU:
 	 * How it works? I(MANU) don't know this function
 	 */
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1038,8 +1053,6 @@ void *fill_candidate_datatypes_c::visit(CD_operator_c *symbol) {
 	/* MANU:
 	 * How it works? I(MANU) don't know this function
 	 */
-
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1047,8 +1060,6 @@ void *fill_candidate_datatypes_c::visit(PV_operator_c *symbol) {
 	/* MANU:
 	 * How it works? I(MANU) don't know this function
 	 */
-
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1056,8 +1067,6 @@ void *fill_candidate_datatypes_c::visit(IN_operator_c *symbol) {
 	/* MANU:
 	 * How it works? I(MANU) don't know this function
 	 */
-
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1065,8 +1074,6 @@ void *fill_candidate_datatypes_c::visit(PT_operator_c *symbol) {
 	/* MANU:
 	 * How it works? I(MANU) don't know this function
 	 */
-
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1083,7 +1090,6 @@ void *fill_candidate_datatypes_c::visit(AND_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1100,7 +1106,6 @@ void *fill_candidate_datatypes_c::visit(OR_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1117,7 +1122,6 @@ void *fill_candidate_datatypes_c::visit(XOR_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1134,7 +1138,6 @@ void *fill_candidate_datatypes_c::visit(ANDN_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1151,7 +1154,6 @@ void *fill_candidate_datatypes_c::visit(ORN_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1168,7 +1170,6 @@ void *fill_candidate_datatypes_c::visit(XORN_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1192,7 +1193,6 @@ void *fill_candidate_datatypes_c::visit(ADD_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout <<  "ADD [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1215,7 +1215,6 @@ void *fill_candidate_datatypes_c::visit(SUB_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout <<  "SUB [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1238,7 +1237,6 @@ void *fill_candidate_datatypes_c::visit(MUL_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout <<  "MUL [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1261,7 +1259,6 @@ void *fill_candidate_datatypes_c::visit(DIV_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout <<  "DIV [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1279,7 +1276,6 @@ void *fill_candidate_datatypes_c::visit(MOD_operator_c *symbol) {
 		}
 	}
 	if (debug) std::cout <<  "MOD [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1297,7 +1293,6 @@ void *fill_candidate_datatypes_c::visit(GT_operator_c *symbol) {
 		}
 	}
 	if (found) symbol->candidate_datatypes.push_back(&search_constant_type_c::bool_type_name);
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1315,7 +1310,6 @@ void *fill_candidate_datatypes_c::visit(GE_operator_c *symbol) {
 		}
 	}
 	if (found) symbol->candidate_datatypes.push_back(&search_constant_type_c::bool_type_name);
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1333,7 +1327,6 @@ void *fill_candidate_datatypes_c::visit(EQ_operator_c *symbol) {
 		}
 	}
 	if (found) symbol->candidate_datatypes.push_back(&search_constant_type_c::bool_type_name);
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1351,7 +1344,6 @@ void *fill_candidate_datatypes_c::visit(LT_operator_c *symbol) {
 		}
 	}
 	if (found) symbol->candidate_datatypes.push_back(&search_constant_type_c::bool_type_name);
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1369,7 +1361,6 @@ void *fill_candidate_datatypes_c::visit(LE_operator_c *symbol) {
 		}
 	}
 	if (found) symbol->candidate_datatypes.push_back(&search_constant_type_c::bool_type_name);
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1387,7 +1378,6 @@ void *fill_candidate_datatypes_c::visit(NE_operator_c *symbol) {
 		}
 	}
 	if (found) symbol->candidate_datatypes.push_back(&search_constant_type_c::bool_type_name);
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1398,7 +1388,6 @@ void *fill_candidate_datatypes_c::visit(CAL_operator_c *symbol) {
 		symbol->candidate_datatypes.push_back(prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "CAL [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1409,7 +1398,6 @@ void *fill_candidate_datatypes_c::visit(CALC_operator_c *symbol) {
 			symbol->candidate_datatypes.push_back(prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "CALC [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1420,7 +1408,6 @@ void *fill_candidate_datatypes_c::visit(CALCN_operator_c *symbol) {
 			symbol->candidate_datatypes.push_back(prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "CALCN [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1431,7 +1418,6 @@ void *fill_candidate_datatypes_c::visit(RET_operator_c *symbol) {
 		symbol->candidate_datatypes.push_back(prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "RET [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1442,7 +1428,6 @@ void *fill_candidate_datatypes_c::visit(RETC_operator_c *symbol) {
 			symbol->candidate_datatypes.push_back(prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "RETC [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1453,7 +1438,6 @@ void *fill_candidate_datatypes_c::visit(RETCN_operator_c *symbol) {
 			symbol->candidate_datatypes.push_back(prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "RETCN [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1464,7 +1448,6 @@ void *fill_candidate_datatypes_c::visit(JMP_operator_c *symbol) {
 		symbol->candidate_datatypes.push_back(prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "JMP [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1474,7 +1457,6 @@ void *fill_candidate_datatypes_c::visit(JMPC_operator_c *symbol) {
 			symbol->candidate_datatypes.push_back(prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "JMPC [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -1484,7 +1466,6 @@ void *fill_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {
 			symbol->candidate_datatypes.push_back(prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "JMPCN [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	prev_il_instruction = symbol;
 	return NULL;
 }
 /* Symbol class handled together with function call checks */

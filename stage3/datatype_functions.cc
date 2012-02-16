@@ -172,12 +172,33 @@ const struct widen_entry widen_DIV_table[] = {
  * Returns: position of datatype in the list, or -1 if not found.
  */
 int search_in_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes) {
+	if (NULL == datatype) 
+		return -1;
+
 	for(unsigned int i = 0; i < candidate_datatypes.size(); i++)
 		if (is_type_equal(datatype, candidate_datatypes[i]))
 			return i;
 	/* Not found ! */
 	return -1;
 }
+
+
+
+
+
+/* Copy the elements in the candidate_datatype_list in one symbol (from)
+ * into the candidate_datatype_list of another symbol (to)
+ */
+void copy_candidate_datatype_list(symbol_c *from, symbol_c *to) {
+	if ((NULL == from) || (NULL == to))
+		return;
+
+	for(unsigned int i = 0; i < from->candidate_datatypes.size(); i++)
+		to->candidate_datatypes.push_back(from->candidate_datatypes[i]);
+}
+
+
+
 
 
 /* A helper function... */

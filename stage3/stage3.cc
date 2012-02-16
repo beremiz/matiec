@@ -34,23 +34,36 @@
 
 #include "stage3.hh"
 
+#include "flow_control_analysis.hh"
 #include "fill_candidate_datatypes.hh"
 #include "narrow_candidate_datatypes.hh"
 #include "print_datatypes_error.hh"
 
 
-int type_safety(symbol_c *tree_root){
+static int flow_control_analysis(symbol_c *tree_root){
+  flow_control_analysis_c flow_control_analysis(tree_root);
+  tree_root->accept(flow_control_analysis);
+  return 0;
+}
+
+/* Type safety analysis assumes that flow control analysis has already been completed,
+ * so be sure to call flow_control_analysis() before calling this function
+ */
+static int type_safety(symbol_c *tree_root){
 	fill_candidate_datatypes_c fill_candidate_datatypes(tree_root);
 	tree_root->accept(fill_candidate_datatypes);
 	narrow_candidate_datatypes_c narrow_candidate_datatypes(tree_root);
 	tree_root->accept(narrow_candidate_datatypes);
-	print_datatypes_error_c print_datatypes_error(tree_root);
+ 	print_datatypes_error_c print_datatypes_error(tree_root);
 	tree_root->accept(print_datatypes_error);
 	if (print_datatypes_error.get_error_found())
 		return -1;
 	return 0;
 }
 
+
+
 int stage3(symbol_c *tree_root){
+	flow_control_analysis(tree_root);
 	return type_safety(tree_root);
 }

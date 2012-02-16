@@ -35,4 +35,4 @@
 
 
 int stage3(symbol_c *tree_root);
-int type_safety(symbol_c *tree_root);
+
