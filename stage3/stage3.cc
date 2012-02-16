@@ -54,7 +54,7 @@ static int type_safety(symbol_c *tree_root){
 	tree_root->accept(fill_candidate_datatypes);
 	narrow_candidate_datatypes_c narrow_candidate_datatypes(tree_root);
 	tree_root->accept(narrow_candidate_datatypes);
- 	print_datatypes_error_c print_datatypes_error(tree_root);
+	print_datatypes_error_c print_datatypes_error(tree_root);
 	tree_root->accept(print_datatypes_error);
 	if (print_datatypes_error.get_error_found())
 		return -1;

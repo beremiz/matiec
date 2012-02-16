@@ -415,6 +415,36 @@ void *narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 }
 
 
+
+
+/*************************************************************************************************/
+/* Important NOTE:                                                                               */
+/*                                                                                               */
+/*   The visit() methods for all the IL instructions must be idem-potent, as they may            */
+/*   potentially be called twice to narrow the same object. In other words, they may be called   */
+/*   to narrow an object that has already been previously narrowed.                              */
+/*   This occurs when that IL instruction imediately precedes an IL non-formal function          */
+/*   invocation:                                                                                 */
+/*      LD 45.5                                                                                  */
+/*      SIN                                                                                      */
+/*                                                                                               */
+/*   In the above case, 'LD 45.5' will be narrowed once when the code that handles the           */
+/*   SIN function call                                                                           */
+/*                                                                                               */
+/*   narrow_nonformal_call(...), which is called by narrow_function_invocation(...), which is    */
+/*   in turn called by visit(il_function_call_c *)                                               */
+/*                                                                                               */
+/*   calls the call_param_value->accept(*this), where call_param_value will be a pointer         */
+/*   to the preceding IL instruction (in the above case, 'LD 45.5').                             */
+/*                                                                                               */
+/*   That same IL instruction will be again narrowed when called by the for() loop in            */
+/*   the visit(instruction_list_c *) visitor method.                                             */
+/*************************************************************************************************/
+ 
+
+
+
+
 // void *visit(instruction_list_c *symbol);
 void *narrow_candidate_datatypes_c::visit(il_simple_operation_c *symbol) {
 	/* Tell the il_simple_operator the datatype that it must generate - this was chosen by the next il_instruction (we iterate backwards!) */
