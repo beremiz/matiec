@@ -237,7 +237,44 @@ void fill_candidate_datatypes_c::handle_function_call(symbol_c *fcall, generic_f
 }
 
 
+/* handle implicit FB call in IL.
+ * e.g.  CLK ton_car
+ *        CU counter_var
+ *
+ * The algorithm will be to build a fake il_fb_call_c equivalent to the implicit IL FB call, and let 
+ * the visit(il_fb_call_c *) method handle it!
+ */
+void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
+	symbol_c *fb_type_id = search_varfb_instance_type->get_basetype_id(il_operand);
+	/* This is a call to a non-declared FB/Variable is a semantic error (which is currently caught by stage 2, so this should never occur)
+	 * or no operand was given (il_operand == NULL). In this case, we just give up!
+	 */
+	if (NULL == fb_type_id)
+		return;
 
+	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(fb_type_id);
+	if (function_block_type_symtable.end_value() == fb_decl)
+		/* The il_operand is not the name of a FB instance. Most probably it is the name of a variable of some other type.
+		 * this is a smeantic error, so there is no way we can evaluate the rest of the code. We simply give up, and leave
+		 * the candidate_datatype_list empty, and the called_fb_declaration pointing to NULL
+		 */
+		return;
+
+
+	identifier_c variable_name(param_name);
+	// SYM_REF1(il_assign_operator_c, variable_name)
+	il_assign_operator_c il_assign_operator(&variable_name);  
+	// SYM_REF3(il_param_assignment_c, il_assign_operator, il_operand, simple_instr_list)
+	il_param_assignment_c il_param_assignment(&il_assign_operator, prev_il_instruction/*il_operand*/, NULL);
+	il_param_list_c il_param_list;
+	il_param_list.add_element(&il_param_assignment);
+	// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
+	il_fb_call_c il_fb_call(NULL, il_operand, NULL, &il_param_list);
+	
+	il_fb_call.accept(*this);
+	copy_candidate_datatype_list(&il_fb_call/*from*/, il_instruction/*to*/);
+	called_fb_declaration = il_fb_call.called_fb_declaration;
+}
 
 
 /* a helper function... */
@@ -971,7 +1008,9 @@ void *fill_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
 	return NULL;
 }
 
+
 void *fill_candidate_datatypes_c::visit(S_operator_c *symbol) {
+  /* TODO: what if this is a FB call ?? */
 	symbol_c *prev_instruction_type, *operand_type;
 
 	if (NULL == prev_il_instruction) return NULL;
@@ -987,7 +1026,9 @@ void *fill_candidate_datatypes_c::visit(S_operator_c *symbol) {
 	return NULL;
 }
 
+
 void *fill_candidate_datatypes_c::visit(R_operator_c *symbol) {
+  /* TODO: what if this is a FB call ?? */
 	symbol_c *prev_instruction_type, *operand_type;
 
 	if (NULL == prev_il_instruction) return NULL;
@@ -1003,79 +1044,47 @@ void *fill_candidate_datatypes_c::visit(R_operator_c *symbol) {
 	return NULL;
 }
 
-void *fill_candidate_datatypes_c::visit(S1_operator_c *symbol) {
-	symbol_c *prev_instruction_type, *operand_type;
 
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(operand_type))
-				symbol->candidate_datatypes.push_back(prev_instruction_type);
-		}
-	}
-	if (debug) std::cout << "S1 [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
+void *fill_candidate_datatypes_c::visit(S1_operator_c *symbol) {
+	handle_implicit_il_fb_call(symbol, "S1", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(R1_operator_c *symbol) {
-	symbol_c *prev_instruction_type, *operand_type;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(operand_type))
-				symbol->candidate_datatypes.push_back(prev_instruction_type);
-		}
-	}
-	if (debug) std::cout << "R1 [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
+	handle_implicit_il_fb_call(symbol, "R1", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(CLK_operator_c *symbol) {
-	/* MANU:
-	 * How it works? I(MANU) don't know this function
-	 */
+	handle_implicit_il_fb_call(symbol, "CLK", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(CU_operator_c *symbol) {
-	/* MANU:
-	 * How it works? I(MANU) don't know this function
-	 */
+	handle_implicit_il_fb_call(symbol, "CU", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(CD_operator_c *symbol) {
-	/* MANU:
-	 * How it works? I(MANU) don't know this function
-	 */
+	handle_implicit_il_fb_call(symbol, "CD", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(PV_operator_c *symbol) {
-	/* MANU:
-	 * How it works? I(MANU) don't know this function
-	 */
+	handle_implicit_il_fb_call(symbol, "PV", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(IN_operator_c *symbol) {
-	/* MANU:
-	 * How it works? I(MANU) don't know this function
-	 */
+	handle_implicit_il_fb_call(symbol, "IN", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(PT_operator_c *symbol) {
-	/* MANU:
-	 * How it works? I(MANU) don't know this function
-	 */
+	handle_implicit_il_fb_call(symbol, "PT", symbol->called_fb_declaration);
 	return NULL;
 }
+
 
 void *fill_candidate_datatypes_c::visit(AND_operator_c *symbol) {
 	symbol_c *prev_instruction_type, *operand_type;

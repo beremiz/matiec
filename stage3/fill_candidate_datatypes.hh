@@ -86,9 +86,10 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     bool match_nonformal_call(symbol_c *f_call, symbol_c *f_decl);
     bool match_formal_call   (symbol_c *f_call, symbol_c *f_decl);
     void handle_function_call(symbol_c *fcall, generic_function_call_t fcall_data);
-
+    void handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration);
+    
     /* a helper function... */
-    symbol_c *base_type(symbol_c *symbol);
+    symbol_c *base_type(symbol_c *symbol);    
     
     
   public:
