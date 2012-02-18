@@ -290,6 +290,13 @@ identifier_c *function_param_iterator_c::search(symbol_c *param_name) {
   return res_param_name;
 }
 
+identifier_c *function_param_iterator_c::search(const char *param_name) {
+  identifier_c   param_name_id(param_name);
+  return search(&param_name_id);
+}
+
+
+
 /* Returns the currently referenced parameter's default value,
  * or NULL if none is specified in the function declrataion itself.
  */

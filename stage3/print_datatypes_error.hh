@@ -84,6 +84,7 @@ class print_datatypes_error_c: public iterator_visitor_c {
     /* some helper functions... */
     symbol_c *base_type(symbol_c *symbol);
     void handle_function_invocation(symbol_c *fcall, generic_function_call_t fcall_data);
+    void handle_implicit_il_fb_invocation(symbol_c *il_operator, const char *param_name, symbol_c *called_fb_declaration);  
 
   public:
     print_datatypes_error_c(symbol_c *ignore);

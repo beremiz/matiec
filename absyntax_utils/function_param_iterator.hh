@@ -146,6 +146,7 @@ class function_param_iterator_c : public null_visitor_c {
      * of the found parameter.
      */
     identifier_c *search(symbol_c *param_name);
+    identifier_c *search(const char *param_name);
 
     /* Returns the currently referenced parameter's default value,
      * or NULL if none is specified in the function declrataion itself.

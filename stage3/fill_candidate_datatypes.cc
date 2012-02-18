@@ -118,7 +118,7 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 
 	/* Iterating through the formal parameters of the function call */
 	while((call_param_name = fcp_iterator.next_f()) != NULL) {
-
+/* TODO: check whether direction (IN, OUT, IN_OUT) and assignment types (:= , =>) are compatible !!! */
 		/* Obtaining the value being passed in the function call */
 		call_param_value = fcp_iterator.get_current_value();
 		/* the following should never occur. If it does, then we have a bug in our code... */
@@ -238,13 +238,17 @@ void fill_candidate_datatypes_c::handle_function_call(symbol_c *fcall, generic_f
 
 
 /* handle implicit FB call in IL.
- * e.g.  CLK ton_car
+ * e.g.  CLK ton_var
  *        CU counter_var
  *
  * The algorithm will be to build a fake il_fb_call_c equivalent to the implicit IL FB call, and let 
  * the visit(il_fb_call_c *) method handle it!
  */
 void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
+	if (NULL == il_operand)
+		/* No FB to call was specified. There is nothing we can do... */
+		return;
+
 	symbol_c *fb_type_id = search_varfb_instance_type->get_basetype_id(il_operand);
 	/* This is a call to a non-declared FB/Variable is a semantic error (which is currently caught by stage 2, so this should never occur)
 	 * or no operand was given (il_operand == NULL). In this case, we just give up!
@@ -260,6 +264,13 @@ void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruc
 		 */
 		return;
 
+	if (NULL == prev_il_instruction) {
+		/* This IL implicit FB call (e.g. CLK ton_var) is not preceded by another IL instruction
+		 * (or list of instructions) that will set the IL current/default value.
+		 * We cannot proceed verifying type compatibility of something that does not ecist.
+		 */
+		return;
+	}
 
 	identifier_c variable_name(param_name);
 	// SYM_REF1(il_assign_operator_c, variable_name)
@@ -785,14 +796,17 @@ void *fill_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
 // SYM_REF2(il_instruction_c, label, il_instruction)
 // void *visit(instruction_list_c *symbol);
 void *fill_candidate_datatypes_c::visit(il_instruction_c *symbol) {
-	if (NULL == symbol->il_instruction)
-		return NULL;
+	if (NULL == symbol->il_instruction) {
+		/* This object has (inherits) the same candidate datatypes as the prev_il_instruction */
+		copy_candidate_datatype_list(symbol->prev_il_instruction /*from*/, symbol /*to*/);	
+	} else {
+		prev_il_instruction = symbol->prev_il_instruction;
+		symbol->il_instruction->accept(*this);
+		prev_il_instruction = NULL;
 
-	prev_il_instruction = symbol->prev_il_instruction;
-	symbol->il_instruction->accept(*this);
-	/* This object has (inherits) the same candidate datatypes as the il_instruction */
-	copy_candidate_datatype_list(symbol->il_instruction /*from*/, symbol /*to*/);	
-	prev_il_instruction = NULL;
+		/* This object has (inherits) the same candidate datatypes as the il_instruction */
+		copy_candidate_datatype_list(symbol->il_instruction /*from*/, symbol /*to*/);	
+	}
 
 	return NULL;
 }

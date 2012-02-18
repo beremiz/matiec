@@ -254,6 +254,54 @@ void narrow_candidate_datatypes_c::narrow_function_invocation(symbol_c *fcall, g
 
 
 
+
+/* narrow implicit FB call in IL.
+ * e.g.  CLK ton_var
+ *        CU counter_var
+ *
+ * The algorithm will be to build a fake il_fb_call_c equivalent to the implicit IL FB call, and let 
+ * the visit(il_fb_call_c *) method handle it!
+ */
+void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
+	if (NULL == called_fb_declaration)
+		/* The fill_candidate_datatypes_c was not able to determine which FB is being called!
+		 * This may be because the il_operand is not the name of a FB instance, or no operand was given. 
+		 * In that case, we just give up!
+		 */
+		return;
+	if (NULL == prev_il_instruction) {
+		/* This IL implicit FB call (e.g. CLK ton_var) is not preceded by another IL instruction
+		 * (or list of instructions) that will set the IL current/default value.
+		 * We cannot proceed verifying type compatibility of something that does not ecist.
+		 */
+		return;
+	}
+
+	identifier_c variable_name(param_name);
+	// SYM_REF1(il_assign_operator_c, variable_name)
+	il_assign_operator_c il_assign_operator(&variable_name);  
+	// SYM_REF3(il_param_assignment_c, il_assign_operator, il_operand, simple_instr_list)
+	il_param_assignment_c il_param_assignment(&il_assign_operator, prev_il_instruction/*il_operand*/, NULL);
+	il_param_list_c il_param_list;
+	il_param_list.add_element(&il_param_assignment);
+	// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
+	il_fb_call_c il_fb_call(NULL, il_operand, NULL, &il_param_list);
+	
+	/* A FB call does not return any datatype, but the IL instructions that come after this
+	 * FB call may require a specific datatype in the il current/default variable, 
+	 * so we must pass this information up to the IL instruction before the FB call, since it will
+	 * be that IL instruction that will be required to produce the desired dtataype.
+	 *
+	 * The above will be done by the visit(il_fb_call_c *) method, so we must make sure to
+	 * correctly set up the il_fb_call.datatype variable!
+	 */
+	copy_candidate_datatype_list(il_instruction/*from*/, &il_fb_call/*to*/);
+	il_fb_call.datatype = il_instruction->datatype;
+	il_fb_call.accept(*this);
+	il_instruction->datatype = il_fb_call.datatype;
+}
+
+
 /* a helper function... */
 symbol_c *narrow_candidate_datatypes_c::base_type(symbol_c *symbol) {
 	/* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used
@@ -404,13 +452,16 @@ void *narrow_candidate_datatypes_c::visit(instruction_list_c *symbol) {
 // SYM_REF2(il_instruction_c, label, il_instruction)
 // void *visit(instruction_list_c *symbol);
 void *narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
-	if (NULL == symbol->il_instruction)
-		return NULL;
-
-	prev_il_instruction = symbol->prev_il_instruction;
-	/* Tell the il_instruction the datatype that it must generate - this was chosen by the next il_instruction (we iterate backwards!) */
-	symbol->il_instruction->datatype = symbol->datatype;
-	symbol->il_instruction->accept(*this);
+	if (NULL == symbol->il_instruction) {
+		/* this empty/null il_instruction cannot generate the desired datatype. We pass on the request to the previous il instruction. */
+		if (NULL != symbol->prev_il_instruction)
+			symbol->prev_il_instruction->datatype = symbol->datatype;
+	} else {
+		prev_il_instruction = symbol->prev_il_instruction;
+		/* Tell the il_instruction the datatype that it must generate - this was chosen by the next il_instruction (remember: we are iterating backwards!) */
+		symbol->il_instruction->datatype = symbol->datatype;
+		symbol->il_instruction->accept(*this);
+	}
 	return NULL;
 }
 
@@ -505,6 +556,26 @@ return NULL;
 /* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
 // SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 void *narrow_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
+	/* set the desired datatype of the previous il instruction */
+	/* NOTE 1:
+	 * A FB call does not return any datatype, but the IL instructions that come after this
+	 * FB call may require a specific datatype in the il current/default variable, 
+	 * so we must pass this information up to the IL instruction before the FB call, since it will
+	 * be that IL instruction that will be required to produce the desired dtataype.
+	 * NOTE 2:
+	 * Copying the required datatype must be done before calling narrow_[non]formal_call().
+	 * Note that this visit(il_fb_call_c *) method will be called from narrow_implicit_il_fb_call().
+	 * This means that we must also be able to handle implicit IL FB calls (e.g. CU counter_var)
+	 * correctly in this visitor class.
+	 * When handling these implicit IL calls, the parameter_value being passed to the FB parameter
+	 * (in the previous example, the 'CU' parameter) is actually the prev_il_instruction.
+	 * In this case, the prev_il_instruction->datatype will be set by the arrow_[non]formal_call(),
+	 * using the prama_value pointer to this same object.
+	 * If we were to have the following line of code after calling arrow_[non]formal_call(),
+	 * we would then be overwriting the datatype with the wrong value!
+	 */
+	prev_il_instruction->datatype = symbol->datatype;
+
 	/* Note: We do not use the symbol->called_fb_declaration value (set in fill_candidate_datatypes_c)
 	 *       because we try to identify any other datatype errors in the expressions used in the 
 	 *       parameters to the FB call. e.g.
@@ -627,52 +698,76 @@ void *narrow_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
 	return NULL;
 }
 
-void *narrow_candidate_datatypes_c::visit(S_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(R_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(S1_operator_c *symbol) {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(R1_operator_c *symbol) {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(S_operator_c *symbol)  {
+  /* TODO: what if this is a FB call? */
+	return handle_il_instruction(symbol);
+}
+void *narrow_candidate_datatypes_c::visit(R_operator_c *symbol)  {
+  /* TODO: what if this is a FB call? */
+	return handle_il_instruction(symbol);
+}
+
+
+void *narrow_candidate_datatypes_c::visit(S1_operator_c *symbol) {
+	narrow_implicit_il_fb_call(symbol, "S1", symbol->called_fb_declaration);
+	return NULL;
+}
+
+void *narrow_candidate_datatypes_c::visit(R1_operator_c *symbol) {
+	narrow_implicit_il_fb_call(symbol, "R1", symbol->called_fb_declaration);
+	return NULL;
+}
 
 void *narrow_candidate_datatypes_c::visit(CLK_operator_c *symbol) {
+	narrow_implicit_il_fb_call(symbol, "CLK", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(CU_operator_c *symbol) {
+	narrow_implicit_il_fb_call(symbol, "CU", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(CD_operator_c *symbol) {
+	narrow_implicit_il_fb_call(symbol, "CD", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(PV_operator_c *symbol) {
+	narrow_implicit_il_fb_call(symbol, "PV", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(IN_operator_c *symbol) {
+	narrow_implicit_il_fb_call(symbol, "IN", symbol->called_fb_declaration);
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(PT_operator_c *symbol) {
+	narrow_implicit_il_fb_call(symbol, "PT", symbol->called_fb_declaration);
 	return NULL;
 }
 
-void *narrow_candidate_datatypes_c::visit(AND_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(OR_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(XOR_operator_c *symbol)  {return handle_il_instruction(symbol);}
+
+
+void *narrow_candidate_datatypes_c::visit(AND_operator_c  *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(OR_operator_c   *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(XOR_operator_c  *symbol)  {return handle_il_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(ANDN_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(ORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(ORN_operator_c  *symbol)  {return handle_il_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(XORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(ADD_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(SUB_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(MUL_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(DIV_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(MOD_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(GT_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(GE_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(EQ_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(LT_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(LE_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(NE_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(ADD_operator_c  *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(SUB_operator_c  *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(MUL_operator_c  *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(DIV_operator_c  *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(MOD_operator_c  *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(GT_operator_c   *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(GE_operator_c   *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(EQ_operator_c   *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(LT_operator_c   *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(LE_operator_c   *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(NE_operator_c   *symbol)  {return handle_il_instruction(symbol);}
+
 
 void *narrow_candidate_datatypes_c::visit(CAL_operator_c *symbol) {
 	return NULL;

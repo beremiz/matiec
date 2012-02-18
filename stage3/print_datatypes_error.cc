@@ -136,6 +136,15 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 		if (NULL != f_decl) {
 			function_param_iterator_c fp_iterator(f_decl);
 			while ((param_name = fcp_iterator.next_f()) != NULL) {
+#if 0
+/* TODO: check whether direction (IN, OUT, IN_OUT) and assignment types (:= , =>) are compatible !!! */
+
+
+/* TODO: Check if there are duplicat parameter values */
+		verify_duplicate_param = fcp_iterator.search_f(call_param_name);
+		if(verify_duplicate_param != call_param_value)
+			return false;
+#endif
 				param_value = fcp_iterator.get_current_value();
 				/* Find the corresponding parameter in function declaration */
 				if (NULL == fp_iterator.search(param_name)) {
@@ -166,8 +175,33 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 	return;
 }
 
+void print_datatypes_error_c::handle_implicit_il_fb_invocation(symbol_c *il_operator, const char *param_name, symbol_c *called_fb_declaration) {
+	if (NULL == il_operand) {
+		STAGE3_ERROR(0, il_operator, il_operator, "Missing operand for FB call operator '%s'.", param_name);
+		return;
+	}
+	if (NULL == called_fb_declaration) {
+		STAGE3_ERROR(0, il_operand, il_operand, "Operand of FB call operator '%s' is not a FB variable.", param_name);
+		return;
+	}
+	if (NULL == prev_il_instruction) {
+		STAGE3_ERROR(0, il_operator, il_operand, "FB invocation operator '%s' must be preceded by a 'LD' (or equivalent) operator.", param_name);	
+		return;
+	}
+	/* Find the corresponding parameter in function declaration */
+	function_param_iterator_c fp_iterator(called_fb_declaration);
+	if (NULL == fp_iterator.search(param_name)) {
+/* TODO: must also check whther it is an IN parameter!! */
+		STAGE3_ERROR(0, il_operator, il_operand, "FB called by '%s' operator does not have a parameter named '%s'", param_name, param_name);	
+		return;
+	}
+	if (NULL == prev_il_instruction->datatype) {
+		STAGE3_ERROR(0, il_operator, il_operand, "Data type incompatibility between parameter '%s' and value being passed, when invoking FB.", param_name);
+		return;
+	}
 
-
+	return;
+}
 
 
 /*********************/
@@ -432,7 +466,7 @@ void *print_datatypes_error_c::visit(subscript_list_c *symbol) {
  */
 void *print_datatypes_error_c::visit(structured_variable_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0)
-		STAGE3_ERROR(0, symbol, symbol, "Structure variable not declared in this scope.");
+		STAGE3_ERROR(0, symbol, symbol, "Undeclared structured/FB variable.");
 	return NULL;
 }
 
@@ -538,11 +572,16 @@ void *print_datatypes_error_c::visit(il_function_call_c *symbol) {
 		/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
 	};
 
+/* TODO: check what error message (if any) the compiler will give out if this function invocation
+ * is not preceded by a LD operator (or another equivalent operator or list of operators).
+ * I.e. if it is preceded by an operator or operator list that will set the 'current value'.
+ * I.e. if the prev_il_operand == NULL;
+ */
 	handle_function_invocation(symbol, fcall_param);
 	
 	/* The first parameter of a non formal function call in IL will be the 'current value' (i.e. the prev_il_instruction)
-	 * In order to be able to handle this without coding special cases, we will simply prepend that symbol
-	 * to the il_operand_list. This is done in fill_candidate_datatypes_c.
+	 * In order to be able to handle this without coding special cases, we simply prepend that symbol
+	 * to the il_operand_list. This was done in fill_candidate_datatypes_c.
 	 * We now undo those changes!
 	 */  
 	((list_c *)symbol->il_operand_list)->remove_element(0);
@@ -662,6 +701,7 @@ void *print_datatypes_error_c::visit(NOT_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(S_operator_c *symbol) {
+  /* TODO: what if this is a FB call ?? */
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -671,6 +711,7 @@ void *print_datatypes_error_c::visit(S_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(R_operator_c *symbol) {
+  /* TODO: what if this is a FB call ?? */
 	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
@@ -680,50 +721,42 @@ void *print_datatypes_error_c::visit(R_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(S1_operator_c *symbol) {
-	il_operand->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'S1' operator.");
-	prev_il_instruction = symbol;
+	handle_implicit_il_fb_invocation(symbol, "S1", symbol->called_fb_declaration);  
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(R1_operator_c *symbol) {
-	il_operand->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'R1' operator.");
-	prev_il_instruction = symbol;
+	handle_implicit_il_fb_invocation(symbol, "R1", symbol->called_fb_declaration);  
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(CLK_operator_c *symbol) {
-	prev_il_instruction = symbol;
+	handle_implicit_il_fb_invocation(symbol, "CLK", symbol->called_fb_declaration);  
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(CU_operator_c *symbol) {
-	prev_il_instruction = symbol;
+	handle_implicit_il_fb_invocation(symbol, "CU", symbol->called_fb_declaration);  
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(CD_operator_c *symbol) {
-	prev_il_instruction = symbol;
+	handle_implicit_il_fb_invocation(symbol, "CD", symbol->called_fb_declaration);  
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(PV_operator_c *symbol) {
-	prev_il_instruction = symbol;
+	handle_implicit_il_fb_invocation(symbol, "PV", symbol->called_fb_declaration);  
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(IN_operator_c *symbol) {
-	prev_il_instruction = symbol;
+	handle_implicit_il_fb_invocation(symbol, "IN", symbol->called_fb_declaration);  
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(PT_operator_c *symbol) {
-	prev_il_instruction = symbol;
+	handle_implicit_il_fb_invocation(symbol, "PT", symbol->called_fb_declaration);  
 	return NULL;
 }
 

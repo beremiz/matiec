@@ -112,8 +112,9 @@ void *flow_control_analysis_c::visit(configuration_declaration_c *symbol) {
 /*| instruction_list il_instruction */
 // SYM_LIST(instruction_list_c)
 void *flow_control_analysis_c::visit(instruction_list_c *symbol) {
-	for(int i = 1; i < symbol->n; i++) {
-		prev_il_instruction = symbol->elements[i-1];
+	for(int i = 0; i < symbol->n; i++) {
+		prev_il_instruction = NULL;
+		if (i > 0) prev_il_instruction = symbol->elements[i-1];
 		symbol->elements[i]->accept(*this);
 	}
 	return NULL;
