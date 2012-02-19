@@ -124,7 +124,6 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 		ERROR;
 	}
 	if (NULL == f_decl) {
-		STAGE3_ERROR(0, fcall, fcall, "Unable to resolve which overloaded %s '%s' is being invoked.", POU_str, ((identifier_c *)fcall_data.function_name)->value);
 		/* we now try to find any function declaration with the same name, just so we can provide some relevant error messages */
 		function_symtable_t::iterator lower = function_symtable.lower_bound(fcall_data.function_name);
 		if (lower == function_symtable.end()) ERROR;
@@ -136,22 +135,46 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 		if (NULL != f_decl) {
 			function_param_iterator_c fp_iterator(f_decl);
 			while ((param_name = fcp_iterator.next_f()) != NULL) {
-#if 0
-/* TODO: check whether direction (IN, OUT, IN_OUT) and assignment types (:= , =>) are compatible !!! */
-
-
-/* TODO: Check if there are duplicat parameter values */
-		verify_duplicate_param = fcp_iterator.search_f(call_param_name);
-		if(verify_duplicate_param != call_param_value)
-			return false;
-#endif
 				param_value = fcp_iterator.get_current_value();
+
+				/* Check if there are duplicate parameter values */
+				if(fcp_iterator.search_f(param_name) != param_value) {
+					function_invocation_error = true;
+					STAGE3_ERROR(0, param_name, param_name, "Duplicate parameter '%s' when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+					continue; /* jump to next parameter */
+				}
+
 				/* Find the corresponding parameter in function declaration */
 				if (NULL == fp_iterator.search(param_name)) {
-					STAGE3_ERROR(0, param_name, param_name, "Invalid parameter '%s' when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);		  
-				} else if (NULL == param_value->datatype) {
+					function_invocation_error = true;
+					STAGE3_ERROR(0, param_name, param_name, "Invalid parameter '%s' when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+					continue; /* jump to next parameter */
+				} 
+
+				/* check whether direction (IN, OUT, IN_OUT) and assignment types (:= , =>) are compatible !!! */
+				/* Obtaining the assignment direction:  := (assign_in) or => (assign_out) */
+				function_call_param_iterator_c::assign_direction_t call_param_dir = fcp_iterator.get_assign_direction();
+				/* Get the parameter direction: IN, OUT, IN_OUT */
+				function_param_iterator_c::param_direction_t param_dir = fp_iterator.param_direction();
+				if          (function_call_param_iterator_c::assign_in  == call_param_dir) {
+					if ((function_param_iterator_c::direction_in    != param_dir) &&
+					    (function_param_iterator_c::direction_inout != param_dir)) {
+						function_invocation_error = true;
+						STAGE3_ERROR(0, param_name, param_name, "Invalid assignment syntax ':=' used for parameter '%s', when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+						continue; /* jump to next parameter */
+					}
+				} else if   (function_call_param_iterator_c::assign_out == call_param_dir) {
+					if ((function_param_iterator_c::direction_out   != param_dir)) {
+						function_invocation_error = true;
+						STAGE3_ERROR(0, param_name, param_name, "Invalid assignment syntax '=>' used for parameter '%s', when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+						continue; /* jump to next parameter */
+					}
+				} else ERROR;
+
+				if (NULL == param_value->datatype) {
 					function_invocation_error = true;
 					STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility between parameter '%s' and value being passed, when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+					continue; /* jump to next parameter */
 				}
 			}
 		}
@@ -165,6 +188,11 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 					STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((identifier_c *)fcall_data.function_name)->value);
 				}
 			}
+	}
+
+	if (NULL == fcall_data.called_function_declaration) {
+		function_invocation_error = true;
+		STAGE3_ERROR(0, fcall, fcall, "Unable to resolve which overloaded %s '%s' is being invoked.", POU_str, ((identifier_c *)fcall_data.function_name)->value);
 	}
 
 	if (function_invocation_error) {

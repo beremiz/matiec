@@ -51,23 +51,6 @@
 class function_call_param_iterator_c : public null_visitor_c {
 
   private:
-      /* a pointer to the function call
-       * (or function block or program call!)
-       */
-    symbol_c *f_call;
-    int iterate_f_next_param, iterate_nf_next_param, param_count;
-    identifier_c *search_param_name;
-    symbol_c *current_value;
-
-    /* Which operation of the class was called:
-     *  - iterate to the next non-formal parameter. 
-     *  - iterate to the next formal parameter. 
-     *  - search a formal parameter, 
-     */
-    typedef enum {iterate_nf_op, iterate_f_op, search_f_op} operation_t;
-    operation_t current_operation;
-
-  private:
     void *search_list(list_c *list);
     void *handle_parameter_assignment(symbol_c *variable_name, symbol_c *expression) ;
 
@@ -108,8 +91,36 @@ class function_call_param_iterator_c : public null_visitor_c {
 
     /* Returns the value being passed to the current parameter. */
     symbol_c *get_current_value(void);
+    
+    /* A type to specify how the current parameter was assigned.
+     * param_name := var   -> assign_in
+     * param_name => var   -> assign_out
+     *                     -> assign_none  (used when handling non formal calls, when no assignment type is used)
+     */
+    typedef enum {assign_in, assign_out, assign_none} assign_direction_t ;
+    /* Returns the assignment direction of the current parameter. */
+    assign_direction_t get_assign_direction(void);
 
 
+  private:
+      /* a pointer to the function call
+       * (or function block or program call!)
+       */
+    symbol_c *f_call;
+    int iterate_f_next_param, iterate_nf_next_param, param_count;
+    identifier_c *search_param_name;
+    symbol_c *current_value;
+    assign_direction_t current_assign_direction;
+
+    /* Which operation of the class was called:
+     *  - iterate to the next non-formal parameter. 
+     *  - iterate to the next formal parameter. 
+     *  - search a formal parameter, 
+     */
+    typedef enum {iterate_nf_op, iterate_f_op, search_f_op} operation_t;
+    operation_t current_operation;
+
+    
   private:
   /********************************/
   /* B 1.7 Configuration elements */

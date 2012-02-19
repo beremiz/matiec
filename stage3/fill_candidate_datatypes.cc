@@ -73,7 +73,7 @@ symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, s
  * beginning of the parameter list BEFORE calling handle_function_call().
  */
 bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
-	symbol_c *call_param_value,  *param_type;
+	symbol_c *call_param_value,  *param_datatype;
 	identifier_c *param_name;
 	function_param_iterator_c       fp_iterator(f_decl);
 	function_call_param_iterator_c fcp_iterator(f_call);
@@ -92,10 +92,10 @@ bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 		} while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
 
 		/* Get the parameter type */
-		param_type = base_type(fp_iterator.param_type());
+		param_datatype = base_type(fp_iterator.param_type());
 		
 		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
-		if (search_in_candidate_datatype_list(param_type, call_param_value->candidate_datatypes) < 0)
+		if (search_in_candidate_datatype_list(param_datatype, call_param_value->candidate_datatypes) < 0)
 			return false; /* return false if param_type not in the list! */
 	}
 	/* call is compatible! */
@@ -107,7 +107,7 @@ bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 /* returns true if compatible function/FB invocation, otherwise returns false */
 /* Assumes that the candidate_datatype lists of all the parameters being passed haved already been filled in */
 bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f_decl) {
-	symbol_c *call_param_value, *call_param_name, *param_type;
+	symbol_c *call_param_value, *call_param_name, *param_datatype;
 	symbol_c *verify_duplicate_param;
 	identifier_c *param_name;
 	function_param_iterator_c       fp_iterator(f_decl);
@@ -118,11 +118,13 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 
 	/* Iterating through the formal parameters of the function call */
 	while((call_param_name = fcp_iterator.next_f()) != NULL) {
-/* TODO: check whether direction (IN, OUT, IN_OUT) and assignment types (:= , =>) are compatible !!! */
 		/* Obtaining the value being passed in the function call */
 		call_param_value = fcp_iterator.get_current_value();
 		/* the following should never occur. If it does, then we have a bug in our code... */
 		if (NULL == call_param_value) ERROR;
+
+		/* Obtaining the assignment direction:  := (assign_in) or => (assign_out) */
+		function_call_param_iterator_c::assign_direction_t call_param_dir = fcp_iterator.get_assign_direction();
 
 		/* Checking if there are duplicated parameter values */
 		verify_duplicate_param = fcp_iterator.search_f(call_param_name);
@@ -135,10 +137,23 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 		/* Find the corresponding parameter in function declaration */
 		param_name = fp_iterator.search(call_param_name);
 		if(param_name == NULL) return false;
-		/* Get the parameter type */
-		param_type = base_type(fp_iterator.param_type());
+		/* Get the parameter data type */
+		param_datatype = base_type(fp_iterator.param_type());
+		/* Get the parameter direction: IN, OUT, IN_OUT */
+		function_param_iterator_c::param_direction_t param_dir = fp_iterator.param_direction();
+
+		/* check whether direction (IN, OUT, IN_OUT) and assignment types (:= , =>) are compatible !!! */
+		if          (function_call_param_iterator_c::assign_in  == call_param_dir) {
+			if ((function_param_iterator_c::direction_in    != param_dir) &&
+			    (function_param_iterator_c::direction_inout != param_dir))
+				return false;
+		} else if   (function_call_param_iterator_c::assign_out == call_param_dir) {
+			if ((function_param_iterator_c::direction_out   != param_dir))
+				return false;
+		} else ERROR;
+		
 		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
-		if (search_in_candidate_datatype_list(param_type, call_param_types) < 0)
+		if (search_in_candidate_datatype_list(param_datatype, call_param_types) < 0)
 			return false; /* return false if param_type not in the list! */
 	}
 	/* call is compatible! */

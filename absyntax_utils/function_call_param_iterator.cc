@@ -184,6 +184,7 @@ function_call_param_iterator_c::function_call_param_iterator_c(symbol_c *f_call)
  */
 symbol_c *function_call_param_iterator_c::next_f(void) {
   current_value = NULL;
+  current_assign_direction = assign_none;
   param_count = 0;
   iterate_f_next_param++;
   current_operation = function_call_param_iterator_c::iterate_f_op;
@@ -201,6 +202,7 @@ symbol_c *function_call_param_iterator_c::next_f(void) {
  */
 symbol_c *function_call_param_iterator_c::next_nf(void) {
   current_value = NULL;
+  current_assign_direction = assign_none;
   param_count = 0;
   iterate_nf_next_param++;
   current_operation = function_call_param_iterator_c::iterate_nf_op;
@@ -212,6 +214,7 @@ symbol_c *function_call_param_iterator_c::next_nf(void) {
 /* Search for the value passed to the parameter named <param_name>...  */
 symbol_c *function_call_param_iterator_c::search_f(symbol_c *param_name) {
   current_value = NULL;
+  current_assign_direction = assign_none;
   if (NULL == param_name) ERROR;
   search_param_name = dynamic_cast<identifier_c *>(param_name);
   if (NULL == search_param_name) ERROR;
@@ -232,6 +235,12 @@ symbol_c *function_call_param_iterator_c::search_f(const char *param_name) {
 symbol_c *function_call_param_iterator_c::get_current_value(void) {
   return current_value;
 }
+
+/* Returns the value being passed to the current parameter. */
+function_call_param_iterator_c::assign_direction_t function_call_param_iterator_c::get_assign_direction(void) {
+  return current_assign_direction;
+}
+
 
 /********************************/
 /* B 1.7 Configuration elements */
@@ -339,6 +348,7 @@ void *function_call_param_iterator_c::visit(prog_cnxn_assign_c *symbol) {
   if (NULL == symb_var)
     ERROR;
 
+  current_assign_direction = assign_in;
   return handle_parameter_assignment(symb_var->var_name, symbol->prog_data_source);
 }
 
@@ -355,6 +365,7 @@ void *function_call_param_iterator_c::visit(prog_cnxn_sendto_c *symbol) {
   if (NULL == symb_var)
     ERROR;
 
+  current_assign_direction = assign_out;
   return handle_parameter_assignment(symb_var->var_name, symbol->data_sink);
 }
 
@@ -459,6 +470,7 @@ void *function_call_param_iterator_c::visit(il_param_assignment_c *symbol) {
   // since we do not yet support it, it is best to simply stop than to fail silently...
   if (NULL != symbol->simple_instr_list) ERROR;
 
+  current_assign_direction = assign_in;
   return handle_parameter_assignment((symbol_c *)symbol->il_assign_operator->accept(*this), symbol->il_operand);
 }
 
@@ -466,6 +478,7 @@ void *function_call_param_iterator_c::visit(il_param_assignment_c *symbol) {
 // SYM_REF2(il_param_out_assignment_c, il_assign_out_operator, variable);
 void *function_call_param_iterator_c::visit(il_param_out_assignment_c *symbol) {
   TRACE("il_param_out_assignment_c");
+  current_assign_direction = assign_out;
   return handle_parameter_assignment((symbol_c *)symbol->il_assign_out_operator->accept(*this), symbol->variable);
 }
 
@@ -564,6 +577,7 @@ void *function_call_param_iterator_c::visit(param_assignment_list_c *symbol) {
 // SYM_REF2(input_variable_param_assignment_c, variable_name, expression)
 void *function_call_param_iterator_c::visit(input_variable_param_assignment_c *symbol) {
   TRACE("input_variable_param_assignment_c");
+  current_assign_direction = assign_in;
   return handle_parameter_assignment(symbol->variable_name, symbol->expression);
 }
 
@@ -574,6 +588,7 @@ void *function_call_param_iterator_c::visit(output_variable_param_assignment_c *
   // TODO : Handle not_param !!!
   if (NULL != symbol->not_param) ERROR;  // we do not yet support it, so it is best to simply stop than to fail silently...
 
+  current_assign_direction = assign_out;
   return handle_parameter_assignment(symbol->variable_name, symbol->variable);
 }
 
