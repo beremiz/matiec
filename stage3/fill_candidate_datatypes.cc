@@ -287,11 +287,20 @@ void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruc
 		return;
 	}
 
+	/* The value being passed to the 'param_name' parameter is actually the prev_il_instruction.
+	 * However, we do not place that object directly in the fake il_param_list_c that we will be
+	 * creating, since the visit(il_fb_call_c *) method will recursively call every object in that list.
+	 * The il_prev_intruction object has already been visited. We DO NOT want to visit it again.
+	 * The easiest way to work around this is to simply use a new object, and copy the relevant details to that object!
+	 */
+	symbol_c param_value;
+	copy_candidate_datatype_list(prev_il_instruction/*from*/, &param_value/*to*/);
+	
 	identifier_c variable_name(param_name);
 	// SYM_REF1(il_assign_operator_c, variable_name)
 	il_assign_operator_c il_assign_operator(&variable_name);  
 	// SYM_REF3(il_param_assignment_c, il_assign_operator, il_operand, simple_instr_list)
-	il_param_assignment_c il_param_assignment(&il_assign_operator, prev_il_instruction/*il_operand*/, NULL);
+	il_param_assignment_c il_param_assignment(&il_assign_operator, &param_value/*il_operand*/, NULL);
 	il_param_list_c il_param_list;
 	il_param_list.add_element(&il_param_assignment);
 	// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
@@ -812,8 +821,11 @@ void *fill_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
 // void *visit(instruction_list_c *symbol);
 void *fill_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 	if (NULL == symbol->il_instruction) {
-		/* This object has (inherits) the same candidate datatypes as the prev_il_instruction */
-		copy_candidate_datatype_list(symbol->prev_il_instruction /*from*/, symbol /*to*/);	
+		/* This empty/null il_instruction does not change the value of the current/default IL variable.
+		 * So it inherits the candidate_datatypes from it's previous IL instructions!
+		 */
+		if (NULL != symbol->prev_il_instruction)
+			copy_candidate_datatype_list(symbol->prev_il_instruction /*from*/, symbol /*to*/);	
 	} else {
 		prev_il_instruction = symbol->prev_il_instruction;
 		symbol->il_instruction->accept(*this);
@@ -946,6 +958,9 @@ void *fill_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
 	 * as the compiler will never reach the compilation stage!
 	 */
 	symbol->called_fb_declaration = fb_decl;
+
+	/* This object has the same candidate datatypes as the prev_il_instruction, since it does not change the value stored in the current/default IL variable. */
+	copy_candidate_datatype_list(prev_il_instruction/*from*/, symbol/*to*/);
 
 	if (debug) std::cout << "FB [] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;

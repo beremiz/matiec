@@ -123,13 +123,13 @@ void narrow_candidate_datatypes_c::narrow_nonformal_call(symbol_c *f_call, symbo
 		 *       may actually be calling an object of the il_instruction_c class.
 		 *       If that is the case, that same il_instruction_c object will be called again inside the for() loop
 		 *       of void *narrow_candidate_datatypes_c::visit(instruction_list_c *symbol);
-		 *       This is actually safe, as the narrow algorithm for all IL instructions is idem-potent.
-		 *       (It is easier to just let it be called twice than to hack the code to guarantee that it is 
-		 *       only called once - this would also make this hacked code ugly an un-elegant, so we leave
-		 *       it as it is for now...)
+		 *       Since this is not safe (the prev_il_instruction variable will be overwritten with a wrong value!), 
+		 *       we only do the recursive call if this parameter does not point to a il_instruction_c object.
+		 *       Actually, it is easier to check whether it is not the same as the prev_il_instruction.
 		 */
 		set_datatype(desired_datatype, call_param_value);
-		call_param_value->accept(*this);
+		if (call_param_value != prev_il_instruction)
+			call_param_value->accept(*this);
 
 		if (NULL != param_name) 
 			if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
@@ -179,8 +179,15 @@ void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c
 		if ((NULL != param_name) && (NULL == desired_datatype)) ERROR;
 		if ((NULL == param_name) && (NULL != desired_datatype)) ERROR;
 
+		/* set the desired data type for this parameter */
 		set_datatype(desired_datatype, call_param_value);
-		call_param_value->accept(*this);
+		/* And recursively call that parameter/expression, so it can propagate that info */
+		/* However, when handling an implicit IL FB call, the first parameter is fake, and points to the prev_il_instruction.
+		 * In this case, we do not propagate this info down, as that prev_il_instruction will be called later
+		 * (remember, we iterate backwards through the IL instructions) by the for() loop in the instruction_list_c.
+		 */
+		if (call_param_value != prev_il_instruction)
+			call_param_value->accept(*this);
 
 		if (NULL != param_name) 
 			if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
@@ -441,7 +448,9 @@ void *narrow_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
 /*| instruction_list il_instruction */
 // SYM_LIST(instruction_list_c)
 void *narrow_candidate_datatypes_c::visit(instruction_list_c *symbol) {
-	/* We need to go through the instructions backwards, so we can not use the base class' visitor */
+	/* In order to execute the narrow algoritm correctly, we need to go through the instructions backwards,
+	 * so we can not use the base class' visitor 
+	 */
 	for(int i = symbol->n-1; i >= 0; i--) {
 		symbol->elements[i]->accept(*this);
 	}
@@ -457,41 +466,14 @@ void *narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 		if (NULL != symbol->prev_il_instruction)
 			symbol->prev_il_instruction->datatype = symbol->datatype;
 	} else {
-		prev_il_instruction = symbol->prev_il_instruction;
 		/* Tell the il_instruction the datatype that it must generate - this was chosen by the next il_instruction (remember: we are iterating backwards!) */
 		symbol->il_instruction->datatype = symbol->datatype;
+		prev_il_instruction = symbol->prev_il_instruction;
 		symbol->il_instruction->accept(*this);
+		prev_il_instruction = NULL;
 	}
 	return NULL;
 }
-
-
-
-
-/*************************************************************************************************/
-/* Important NOTE:                                                                               */
-/*                                                                                               */
-/*   The visit() methods for all the IL instructions must be idem-potent, as they may            */
-/*   potentially be called twice to narrow the same object. In other words, they may be called   */
-/*   to narrow an object that has already been previously narrowed.                              */
-/*   This occurs when that IL instruction imediately precedes an IL non-formal function          */
-/*   invocation:                                                                                 */
-/*      LD 45.5                                                                                  */
-/*      SIN                                                                                      */
-/*                                                                                               */
-/*   In the above case, 'LD 45.5' will be narrowed once when the code that handles the           */
-/*   SIN function call                                                                           */
-/*                                                                                               */
-/*   narrow_nonformal_call(...), which is called by narrow_function_invocation(...), which is    */
-/*   in turn called by visit(il_function_call_c *)                                               */
-/*                                                                                               */
-/*   calls the call_param_value->accept(*this), where call_param_value will be a pointer         */
-/*   to the preceding IL instruction (in the above case, 'LD 45.5').                             */
-/*                                                                                               */
-/*   That same IL instruction will be again narrowed when called by the for() loop in            */
-/*   the visit(instruction_list_c *) visitor method.                                             */
-/*************************************************************************************************/
- 
 
 
 
@@ -529,8 +511,7 @@ void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 	 * the following code is actually correct!
 	 */
 	narrow_function_invocation(symbol, fcall_param);
-	/* set the desired datatype of the previous il instruction */
-	prev_il_instruction->datatype = symbol->datatype;
+	/* The desired datatype of the previous il instruction was already set by narrow_function_invocation() */
 	return NULL;
 }
 
@@ -574,7 +555,8 @@ void *narrow_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
 	 * If we were to have the following line of code after calling arrow_[non]formal_call(),
 	 * we would then be overwriting the datatype with the wrong value!
 	 */
-	prev_il_instruction->datatype = symbol->datatype;
+	if (NULL != prev_il_instruction)
+		prev_il_instruction->datatype = symbol->datatype;
 
 	/* Note: We do not use the symbol->called_fb_declaration value (set in fill_candidate_datatypes_c)
 	 *       because we try to identify any other datatype errors in the expressions used in the 
@@ -597,6 +579,29 @@ void *narrow_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
 	if (NULL != symbol->il_operand_list)  narrow_nonformal_call(symbol, fb_decl);
 	if (NULL != symbol->  il_param_list)     narrow_formal_call(symbol, fb_decl);
 
+	/* NOTE:
+	 * When handling these implicit IL calls, the parameter_value being passed to the FB parameter
+	 * (in the previous example, the 'CU' parameter) is actually the prev_il_instruction.
+	 * In this case, the prev_il_instruction->datatype will be set by the narrow_[non]formal_call(),
+	 * using the param_value pointer to this same object.
+	 * 
+	 * We must check that the datatype required by the IL instructions following this FB call 
+	 * is the same as that required for the first parameter. If not, then we have a semantic error,
+	 * and we set it to NULL.
+	 *
+	 * However, we only do that if:
+	 *  - There really exists an il_prev_instruction 
+	 *     (if it does not exist, it will be a semantic error. But that will be caught by the print_datatypes_error_c)
+	 *  - The IL instruction that comes after this IL FB call actually asked this FB call for a specific 
+	 *     datatype in the current/default vairable, once this IL FB call returns.
+	 *     However, sometimes, (for e.g., this FB call is the last in the IL list) the subsequent FB to not aks this
+	 *     FB call for any datatype. In that case, then the datatype required to pass to the first parameter of the
+	 *     FB call must be left unchanged!
+	 */
+	if ((NULL != prev_il_instruction) && (NULL != symbol->datatype))
+		if (!is_type_equal(prev_il_instruction->datatype, symbol->datatype)) {
+			prev_il_instruction->datatype = NULL;
+		}
 	return NULL;
 }
 
@@ -616,8 +621,7 @@ void *narrow_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
 	};
   
 	narrow_function_invocation(symbol, fcall_param);
-	/* set the desired datatype of the previous il instruction */
-	prev_il_instruction->datatype = symbol->datatype;
+	/* The desired datatype of the previous il instruction was already set by narrow_function_invocation() */
 	return NULL;
 }
 
