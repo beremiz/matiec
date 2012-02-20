@@ -923,8 +923,9 @@ void *fill_candidate_datatypes_c::visit(il_expression_c *symbol) {
   il_parenthesis_level--;
   if (il_parenthesis_level < 0) ERROR;
 
+  
   /* Now check the if the data type semantics of operation are correct,  */
-  il_operand = prev_il_instruction;
+  il_operand = symbol->simple_instr_list;
   prev_il_instruction = prev_il_instruction_backup;
   symbol->il_expr_operator->accept(*this);
   il_operand = NULL;
@@ -998,9 +999,26 @@ void *fill_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
 	return NULL;
 }
 
+
+//     void *visit(il_operand_list_c *symbol);
+
+
+/* | simple_instr_list il_simple_instruction */
+/* This object is referenced by il_expression_c objects */
+void *fill_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
+  int i;
+  for(i = 0; i < symbol->n; i++)    
+    symbol->elements[i]->accept(*this);
+  /* This object has (inherits) the same candidate datatypes as the last il_instruction (if it exists!) */
+  if (i > 0)  
+    copy_candidate_datatype_list(symbol->elements[i-1] /*from*/, symbol /*to*/);	
+  
+  if (debug) std::cout << "simple_instr_list_c [" << symbol->candidate_datatypes.size() << "] result.\n";
+std::cout << "simple_instr_list_c [" << symbol->candidate_datatypes.size() << "] result.\n";
+  return NULL;
+}
+
 /*
-    void *visit(il_operand_list_c *symbol);
-    void *visit(simple_instr_list_c *symbol);
     void *visit(il_param_list_c *symbol);
     void *visit(il_param_assignment_c *symbol);
     void *visit(il_param_out_assignment_c *symbol);

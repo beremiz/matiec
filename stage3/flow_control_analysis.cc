@@ -133,7 +133,8 @@ void *flow_control_analysis_c::visit(il_instruction_c *symbol) {
 	 *        label4:
 	 *                LD I
 	 */
-
+	if (NULL != symbol->il_instruction)
+		symbol->il_instruction->accept(*this);
 return NULL;
 }
 
@@ -171,16 +172,25 @@ void *flow_control_analysis_c::visit(il_fb_call_c *symbol) {
 void *flow_control_analysis_c::visit(il_formal_funct_call_c *symbol) {
 	return NULL;
 }
+#endif
 
+
+//  void *visit(il_operand_list_c *symbol);
+
+void *flow_control_analysis_c::visit(simple_instr_list_c *symbol) {
+	for(int i = 0; i < symbol->n; i++) {
+		prev_il_instruction = NULL;
+		if (i > 0) prev_il_instruction = symbol->elements[i-1];
+		symbol->elements[i]->accept(*this);
+	}
+	return NULL;
+}
 
 /*
-    void *visit(il_operand_list_c *symbol);
-    void *visit(simple_instr_list_c *symbol);
     void *visit(il_param_list_c *symbol);
     void *visit(il_param_assignment_c *symbol);
     void *visit(il_param_out_assignment_c *symbol);
  */
 
 
-#endif
 

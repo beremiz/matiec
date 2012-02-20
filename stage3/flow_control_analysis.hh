@@ -91,13 +91,11 @@ class flow_control_analysis_c: public iterator_visitor_c {
 //     void *visit(il_expression_c *symbol);
 //     void *visit(il_fb_call_c *symbol);
 //     void *visit(il_formal_funct_call_c *symbol);
-    /*
-        void *visit(il_operand_list_c *symbol);
-        void *visit(simple_instr_list_c *symbol);
-        void *visit(il_param_list_c *symbol);
-        void *visit(il_param_assignment_c *symbol);
-        void *visit(il_param_out_assignment_c *symbol);
-     */
+//     void *visit(il_operand_list_c *symbol);
+       void *visit(simple_instr_list_c *symbol);
+//     void *visit(il_param_list_c *symbol);
+//     void *visit(il_param_assignment_c *symbol);
+//     void *visit(il_param_out_assignment_c *symbol);
 
     /*******************/
     /* B 2.2 Operators */

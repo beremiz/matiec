@@ -566,16 +566,18 @@ void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 	return NULL;
 }
 
-/* MJS: Manuele, could you please not delete the following 2 lines of comments. They help me understand where this class is used
- *     and when it is created by bison - syntax parse, and how it can show up in the abstract syntax tree.
- *
- *       Actually, it could be helpful if we could have all the similar comments already present in visit_expression_type_c
- *       in the 3 new classes fill/narrow/print candidate datatype 
- */
+
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
 // SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
 void *narrow_candidate_datatypes_c::visit(il_expression_c *symbol) {
-/* MJS: TODO... */
+  symbol_c *save_prev_il_instruction = prev_il_instruction;
+  
+  symbol->simple_instr_list->datatype = symbol->datatype;
+  symbol->simple_instr_list->accept(*this);
+
+  prev_il_instruction = save_prev_il_instruction;
+
+  /* TODO: finish this */
 return NULL;
 }
 
@@ -638,13 +640,21 @@ void *narrow_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
 }
 
 
-/*
-    void *visit(il_operand_list_c *symbol);
-    void *visit(simple_instr_list_c *symbol);
-    void *visit(il_param_list_c *symbol);
-    void *visit(il_param_assignment_c *symbol);
-    void *visit(il_param_out_assignment_c *symbol);
- */
+//     void *visit(il_operand_list_c *symbol);
+void *narrow_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
+	if (symbol->n > 0)
+		symbol->elements[symbol->n - 1]->datatype = symbol->datatype;
+
+	for(int i = symbol->n-1; i >= 0; i--) {
+		symbol->elements[i]->accept(*this);
+	}
+	return NULL;
+}
+
+//     void *visit(il_param_list_c *symbol);
+//     void *visit(il_param_assignment_c *symbol);
+//     void *visit(il_param_out_assignment_c *symbol);
+
 
 /*******************/
 /* B 2.2 Operators */
