@@ -116,20 +116,13 @@ void narrow_candidate_datatypes_c::narrow_nonformal_call(symbol_c *f_call, symbo
 		if ((NULL == param_name) && (NULL != desired_datatype)) ERROR;
 
 		/* NOTE: When we are handling a nonformal function call made from IL, the first parameter is the 'default' or 'current'
-		 *       il value. However, a pointer to the prev_il_instruction is pre-pended into the operand list (done in fill_candidate_datatypes_c,
-		 *       and later undone in print_datatypes_error_c - this class is run after the first, and before the latter!), so 
+		 *       il value. However, a pointer to a copy of the prev_il_instruction is pre-pended into the operand list, so 
 		 *       the call 
 		 *       call_param_value->accept(*this);
-		 *       may actually be calling an object of the il_instruction_c class.
-		 *       If that is the case, that same il_instruction_c object will be called again inside the for() loop
-		 *       of void *narrow_candidate_datatypes_c::visit(instruction_list_c *symbol);
-		 *       Since this is not safe (the prev_il_instruction variable will be overwritten with a wrong value!), 
-		 *       we only do the recursive call if this parameter does not point to a il_instruction_c object.
-		 *       Actually, it is easier to check whether it is not the same as the prev_il_instruction.
+		 *       may actually be calling an object of the base symbol_c .
 		 */
 		set_datatype(desired_datatype, call_param_value);
-		if (call_param_value != prev_il_instruction)
-			call_param_value->accept(*this);
+		call_param_value->accept(*this);
 
 		if (NULL != param_name) 
 			if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
@@ -182,12 +175,10 @@ void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c
 		/* set the desired data type for this parameter */
 		set_datatype(desired_datatype, call_param_value);
 		/* And recursively call that parameter/expression, so it can propagate that info */
-		/* However, when handling an implicit IL FB call, the first parameter is fake, and points to the prev_il_instruction.
-		 * In this case, we do not propagate this info down, as that prev_il_instruction will be called later
-		 * (remember, we iterate backwards through the IL instructions) by the for() loop in the instruction_list_c.
+		/* However, when handling an implicit IL FB call, the first parameter is fake (a copy of the prev_il_instruction).
+		 * so the call call_param_value->accept(*this) may actually be calling an object of the base symbol_c .
 		 */
-		if (call_param_value != prev_il_instruction)
-			call_param_value->accept(*this);
+		call_param_value->accept(*this);
 
 		if (NULL != param_name) 
 			if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
@@ -279,16 +270,27 @@ void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instr
 	if (NULL == prev_il_instruction) {
 		/* This IL implicit FB call (e.g. CLK ton_var) is not preceded by another IL instruction
 		 * (or list of instructions) that will set the IL current/default value.
-		 * We cannot proceed verifying type compatibility of something that does not ecist.
+		 * We cannot proceed verifying type compatibility of something that does not exist.
 		 */
 		return;
 	}
 
+	/* The value being passed to the 'param_name' parameter is actually the prev_il_instruction.
+	 * However, we do not place that object directly in the fake il_param_list_c that we will be
+	 * creating, since the visit(il_fb_call_c *) method will recursively call every object in that list.
+	 * The il_prev_intruction object will be visited once we have handled this implici IL FB call
+	 * (called from the instruction_list_c for() loop that works backwards). We DO NOT want to visit it twice.
+	 * (Anyway, if we let the visit(il_fb_call_c *) recursively visit the current prev_il_instruction, this pointer
+	 * would be changed to the IL instruction coming before the current prev_il_instruction! => things would get all messed up!)
+	 * The easiest way to work around this is to simply use a new object, and copy the relevant details to that object!
+	 */
+	symbol_c param_value = *prev_il_instruction;
+	
 	identifier_c variable_name(param_name);
 	// SYM_REF1(il_assign_operator_c, variable_name)
 	il_assign_operator_c il_assign_operator(&variable_name);  
 	// SYM_REF3(il_param_assignment_c, il_assign_operator, il_operand, simple_instr_list)
-	il_param_assignment_c il_param_assignment(&il_assign_operator, prev_il_instruction/*il_operand*/, NULL);
+	il_param_assignment_c il_param_assignment(&il_assign_operator, &param_value/*il_operand*/, NULL);
 	il_param_list_c il_param_list;
 	il_param_list.add_element(&il_param_assignment);
 	// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
@@ -303,9 +305,35 @@ void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instr
 	 * correctly set up the il_fb_call.datatype variable!
 	 */
 	copy_candidate_datatype_list(il_instruction/*from*/, &il_fb_call/*to*/);
-	il_fb_call.datatype = il_instruction->datatype;
 	il_fb_call.accept(*this);
-	il_instruction->datatype = il_fb_call.datatype;
+	
+	/* set the required datatype of the previous IL instruction! */
+	/* NOTE:
+	 * When handling these implicit IL calls, the parameter_value being passed to the FB parameter
+	 * is actually the prev_il_instruction.
+	 * 
+	 * However, since the FB call does not change the value in the current/default IL variable, this value
+	 * must also be used ny the IL instruction coming after this FB call.
+	 *
+	 * This means that we have two consumers/users for the same value. 
+	 * We must therefore check whether the datatype required by the IL instructions following this FB call 
+	 * is the same as that required for the first parameter. If not, then we have a semantic error,
+	 * and we set it to NULL.
+	 *
+	 * However, we only do that if:
+	 *  - The IL instruction that comes after this IL FB call actually asked this FB call for a specific 
+	 *     datatype in the current/default vairable, once this IL FB call returns.
+	 *     However, sometimes, (for e.g., this FB call is the last in the IL list) the subsequent FB to not aks this
+	 *     FB call for any datatype. In that case, then the datatype required to pass to the first parameter of the
+	 *     FB call must be left unchanged!
+	 */
+// 	if (NULL != prev_il_instruction) /* already checked above! */
+		if (is_type_equal(param_value.datatype, il_instruction->datatype)) {
+			prev_il_instruction->datatype = param_value.datatype;
+		} else {
+			prev_il_instruction->datatype = NULL;
+		}
+
 }
 
 
@@ -493,6 +521,26 @@ void *narrow_candidate_datatypes_c::visit(il_simple_operation_c *symbol) {
 /* NOTE: The parameters 'called_function_declaration' and 'extensible_param_count' are used to pass data between the stage 3 and stage 4. */
 // SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
+	/* The first parameter of a non formal function call in IL will be the 'current value' (i.e. the prev_il_instruction)
+	 * In order to be able to handle this without coding special cases, we will simply prepend that symbol
+	 * to the il_operand_list, and remove it after calling handle_function_call().
+	 * However, since handle_function_call() will be recursively calling all parameter, and we don't want
+	 * to do that for the prev_il_instruction (since it has already been visited by the fill_candidate_datatypes_c)
+	 * we create a new ____ symbol_c ____ object, and copy the relevant info to/from that object before/after
+	 * the call to handle_function_call().
+	 *
+	 * However, if no further paramters are given, then il_operand_list will be NULL, and we will
+	 * need to create a new object to hold the pointer to prev_il_instruction.
+	 * This change will also be undone later in print_datatypes_error_c.
+	 */
+	symbol_c param_value;
+	if (NULL == symbol->il_operand_list)  symbol->il_operand_list = new il_operand_list_c;
+	if (NULL == symbol->il_operand_list)  ERROR;
+
+	if (NULL != prev_il_instruction)
+		param_value = *prev_il_instruction;
+	((list_c *)symbol->il_operand_list)->insert_element(&param_value, 0);
+
 	generic_function_call_t fcall_param = {
 		/* fcall_param.function_name               = */ symbol->function_name,
 		/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
@@ -503,15 +551,18 @@ void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 		/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
 	};
 
-	/* The first parameter of a non formal function call in IL will be the 'current value' (i.e. the prev_il_instruction)
-	 * In order to be able to handle this without coding special cases, we simply prepend that symbol
-	 * to the il_operand_list (done in fill_candidate_datatypes_c), and remove it later (in the print_datatypes_error_c).
-	 *
-	 * Since this class is executed after fill_candidate_datatypes_c, and before print_datatypes_error_c,
-	 * the following code is actually correct!
-	 */
 	narrow_function_invocation(symbol, fcall_param);
-	/* The desired datatype of the previous il instruction was already set by narrow_function_invocation() */
+	if (NULL != prev_il_instruction)
+		prev_il_instruction->datatype = param_value.datatype;
+
+	/* Undo the changes to the abstract syntax tree we made above... */
+	((list_c *)symbol->il_operand_list)->remove_element(0);
+	if (((list_c *)symbol->il_operand_list)->n == 0) {
+		/* if the list becomes empty, then that means that it did not exist before we made these changes, so we delete it! */
+		delete 	symbol->il_operand_list;
+		symbol->il_operand_list = NULL;
+	}
+
 	return NULL;
 }
 
@@ -537,27 +588,6 @@ return NULL;
 /* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
 // SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 void *narrow_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
-	/* set the desired datatype of the previous il instruction */
-	/* NOTE 1:
-	 * A FB call does not return any datatype, but the IL instructions that come after this
-	 * FB call may require a specific datatype in the il current/default variable, 
-	 * so we must pass this information up to the IL instruction before the FB call, since it will
-	 * be that IL instruction that will be required to produce the desired dtataype.
-	 * NOTE 2:
-	 * Copying the required datatype must be done before calling narrow_[non]formal_call().
-	 * Note that this visit(il_fb_call_c *) method will be called from narrow_implicit_il_fb_call().
-	 * This means that we must also be able to handle implicit IL FB calls (e.g. CU counter_var)
-	 * correctly in this visitor class.
-	 * When handling these implicit IL calls, the parameter_value being passed to the FB parameter
-	 * (in the previous example, the 'CU' parameter) is actually the prev_il_instruction.
-	 * In this case, the prev_il_instruction->datatype will be set by the arrow_[non]formal_call(),
-	 * using the prama_value pointer to this same object.
-	 * If we were to have the following line of code after calling arrow_[non]formal_call(),
-	 * we would then be overwriting the datatype with the wrong value!
-	 */
-	if (NULL != prev_il_instruction)
-		prev_il_instruction->datatype = symbol->datatype;
-
 	/* Note: We do not use the symbol->called_fb_declaration value (set in fill_candidate_datatypes_c)
 	 *       because we try to identify any other datatype errors in the expressions used in the 
 	 *       parameters to the FB call. e.g.
@@ -579,29 +609,11 @@ void *narrow_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
 	if (NULL != symbol->il_operand_list)  narrow_nonformal_call(symbol, fb_decl);
 	if (NULL != symbol->  il_param_list)     narrow_formal_call(symbol, fb_decl);
 
-	/* NOTE:
-	 * When handling these implicit IL calls, the parameter_value being passed to the FB parameter
-	 * (in the previous example, the 'CU' parameter) is actually the prev_il_instruction.
-	 * In this case, the prev_il_instruction->datatype will be set by the narrow_[non]formal_call(),
-	 * using the param_value pointer to this same object.
-	 * 
-	 * We must check that the datatype required by the IL instructions following this FB call 
-	 * is the same as that required for the first parameter. If not, then we have a semantic error,
-	 * and we set it to NULL.
-	 *
-	 * However, we only do that if:
-	 *  - There really exists an il_prev_instruction 
-	 *     (if it does not exist, it will be a semantic error. But that will be caught by the print_datatypes_error_c)
-	 *  - The IL instruction that comes after this IL FB call actually asked this FB call for a specific 
-	 *     datatype in the current/default vairable, once this IL FB call returns.
-	 *     However, sometimes, (for e.g., this FB call is the last in the IL list) the subsequent FB to not aks this
-	 *     FB call for any datatype. In that case, then the datatype required to pass to the first parameter of the
-	 *     FB call must be left unchanged!
+	/* An IL FB call does not change the default value in the current/default IL variable, so we pass the
+	 * required datatype up to the previous IL instruction
 	 */
-	if ((NULL != prev_il_instruction) && (NULL != symbol->datatype))
-		if (!is_type_equal(prev_il_instruction->datatype, symbol->datatype)) {
-			prev_il_instruction->datatype = NULL;
-		}
+	if (NULL != prev_il_instruction)
+		prev_il_instruction->datatype = symbol->datatype;
 	return NULL;
 }
 

@@ -590,6 +590,19 @@ void *print_datatypes_error_c::visit(il_simple_operation_c *symbol) {
 /* NOTE: The parameters 'called_function_declaration' and 'extensible_param_count' are used to pass data between the stage 3 and stage 4. */
 // SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *print_datatypes_error_c::visit(il_function_call_c *symbol) {
+	/* The first parameter of a non formal function call in IL will be the 'current value' (i.e. the prev_il_instruction)
+	 * In order to be able to handle this without coding special cases, we will simply prepend that symbol
+	 * to the il_operand_list, and remove it after calling handle_function_call().
+	 *
+	 * However, if no further paramters are given, then il_operand_list will be NULL, and we will
+	 * need to create a new object to hold the pointer to prev_il_instruction.
+	 * This change will also be undone later in print_datatypes_error_c.
+	 */
+	if (NULL == symbol->il_operand_list)  symbol->il_operand_list = new il_operand_list_c;
+	if (NULL == symbol->il_operand_list)  ERROR;
+
+	((list_c *)symbol->il_operand_list)->insert_element(prev_il_instruction, 0);
+
 	generic_function_call_t fcall_param = {
 		/* fcall_param.function_name               = */ symbol->function_name,
 		/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,

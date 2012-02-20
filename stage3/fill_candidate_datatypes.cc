@@ -293,8 +293,7 @@ void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruc
 	 * The il_prev_intruction object has already been visited. We DO NOT want to visit it again.
 	 * The easiest way to work around this is to simply use a new object, and copy the relevant details to that object!
 	 */
-	symbol_c param_value;
-	copy_candidate_datatype_list(prev_il_instruction/*from*/, &param_value/*to*/);
+	symbol_c param_value = *prev_il_instruction;
 	
 	identifier_c variable_name(param_name);
 	// SYM_REF1(il_assign_operator_c, variable_name)
@@ -861,7 +860,7 @@ void *fill_candidate_datatypes_c::visit(il_simple_operation_c *symbol) {
 void *fill_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 	/* The first parameter of a non formal function call in IL will be the 'current value' (i.e. the prev_il_instruction)
 	 * In order to be able to handle this without coding special cases, we will simply prepend that symbol
-	 * to the il_operand_list, and remove it later (in the print_datatypes_error_c).
+	 * to the il_operand_list, and remove it after calling handle_function_call().
 	 *
 	 * However, if no further paramters are given, then il_operand_list will be NULL, and we will
 	 * need to create a new object to hold the pointer to prev_il_instruction.
@@ -872,20 +871,31 @@ void *fill_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 
 	symbol->il_operand_list->accept(*this);
 
-	if (NULL == prev_il_instruction)      return NULL;
-	((list_c *)symbol->il_operand_list)->insert_element(prev_il_instruction, 0);	
+	if (NULL != prev_il_instruction) {
+		((list_c *)symbol->il_operand_list)->insert_element(prev_il_instruction, 0);	
 
-	generic_function_call_t fcall_param = {
-		/* fcall_param.function_name               = */ symbol->function_name,
-		/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
-		/* fcall_param.formal_operand_list         = */ NULL,
-		/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_function,
-		/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
-		/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
-		/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
-	};
-	handle_function_call(symbol, fcall_param);
+		generic_function_call_t fcall_param = {
+			/* fcall_param.function_name               = */ symbol->function_name,
+			/* fcall_param.nonformal_operand_list      = */ symbol->il_operand_list,
+			/* fcall_param.formal_operand_list         = */ NULL,
+			/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_function,
+			/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
+			/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
+			/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+		};
+		handle_function_call(symbol, fcall_param);
 
+		/* Undo the changes to the abstract syntax tree we made above... */
+		((list_c *)symbol->il_operand_list)->remove_element(0);
+	}
+
+	/* Undo the changes to the abstract syntax tree we made above... */
+	if (((list_c *)symbol->il_operand_list)->n == 0) {
+		/* if the list becomes empty, then that means that it did not exist before we made these changes, so we delete it! */
+		delete 	symbol->il_operand_list;
+		symbol->il_operand_list = NULL;
+	}
+	
 	if (debug) std::cout << "il_function_call_c [" << symbol->candidate_datatypes.size() << "] result.\n";
 	return NULL;
 }
