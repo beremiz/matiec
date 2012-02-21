@@ -86,7 +86,8 @@ typedef struct {\
 
 #define __DECLARE_DERIVED_TYPE(type, base)\
 typedef base type;\
-typedef __IEC_##base##_t __IEC_##type##_t;
+typedef __IEC_##base##_t __IEC_##type##_t;\
+typedef __IEC_##base##_p __IEC_##type##_p;
 
 #define __DECLARE_COMPLEX_STRUCT(type)\
 typedef struct {\
