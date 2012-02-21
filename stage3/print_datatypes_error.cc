@@ -636,6 +636,7 @@ void *print_datatypes_error_c::visit(il_function_call_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(il_expression_c *symbol) {
+  /* TODO */
 	return NULL;
 }
 
@@ -683,13 +684,26 @@ void *print_datatypes_error_c::visit(il_formal_funct_call_c *symbol) {
 }
 
 
-/*
-    void *visit(il_operand_list_c *symbol);
-    void *visit(simple_instr_list_c *symbol);
-    void *visit(il_param_list_c *symbol);
-    void *visit(il_param_assignment_c *symbol);
-    void *visit(il_param_out_assignment_c *symbol);
- */
+//     void *visit(il_operand_list_c *symbol);
+
+
+/* | simple_instr_list il_simple_instruction */
+/* This object is referenced by il_expression_c objects */
+void *print_datatypes_error_c::visit(simple_instr_list_c *symbol) {
+  /* TODO */
+	return NULL;
+}
+
+// SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
+void *print_datatypes_error_c::visit(il_simple_instruction_c *symbol) {
+  /* TODO */
+	return NULL;
+}
+
+//     void *visit(simple_instr_list_c *symbol);
+//     void *visit(il_param_list_c *symbol);
+//     void *visit(il_param_assignment_c *symbol);
+//     void *visit(il_param_out_assignment_c *symbol);
 
 /*******************/
 /* B 2.2 Operators */

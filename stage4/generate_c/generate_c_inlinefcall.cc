@@ -826,6 +826,11 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 	  this->default_variable_back_name.current_type = this->default_variable_name.current_type;
 	  return NULL;
     }
+    
+    // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
+    void *visit(il_simple_instruction_c *symbol)	{
+      return symbol->il_simple_instruction->accept(*this);
+    }
 
     void *visit(LD_operator_c *symbol)	{
       /* the data type resulting from this operation... */

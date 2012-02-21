@@ -570,14 +570,15 @@ void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
 // SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
 void *narrow_candidate_datatypes_c::visit(il_expression_c *symbol) {
-  symbol_c *save_prev_il_instruction = prev_il_instruction;
-  
-  symbol->simple_instr_list->datatype = symbol->datatype;
+  /* first handle the operation (il_expr_operator) that will use the result coming from the parenthesised IL list (i.e. simple_instr_list) */
+  symbol->il_expr_operator->datatype = symbol->datatype;
+  il_operand = symbol->il_operand;
+  symbol->il_expr_operator->accept(*this);
+
+  /* now give the parenthesised IL list a chance to narrow the datatypes */
+  symbol_c *save_prev_il_instruction = prev_il_instruction; /*this is not really necessary, but lets play it safe */
   symbol->simple_instr_list->accept(*this);
-
   prev_il_instruction = save_prev_il_instruction;
-
-  /* TODO: finish this */
 return NULL;
 }
 
@@ -641,6 +642,10 @@ void *narrow_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
 
 
 //     void *visit(il_operand_list_c *symbol);
+
+
+/* | simple_instr_list il_simple_instruction */
+/* This object is referenced by il_expression_c objects */
 void *narrow_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
 	if (symbol->n > 0)
 		symbol->elements[symbol->n - 1]->datatype = symbol->datatype;
@@ -649,6 +654,16 @@ void *narrow_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
 		symbol->elements[i]->accept(*this);
 	}
 	return NULL;
+}
+
+
+// SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
+void *narrow_candidate_datatypes_c::visit(il_simple_instruction_c *symbol)	{
+  prev_il_instruction = symbol->prev_il_instruction;
+  symbol->il_simple_instruction->datatype = symbol->datatype;
+  symbol->il_simple_instruction->accept(*this);
+  prev_il_instruction = NULL;
+  return NULL;
 }
 
 //     void *visit(il_param_list_c *symbol);

@@ -1670,6 +1670,17 @@ void *visit(simple_instr_list_c *symbol) {
   return print_list(symbol,  s4o.indent_spaces, "\n" + s4o.indent_spaces, "\n");
 }
 
+
+/* il_simple_instruction:
+ *   il_simple_operation eol_list
+ * | il_expression eol_list
+ * | il_formal_funct_call eol_list
+ */
+void *visit(il_simple_instruction_c *symbol)	{
+  return symbol->il_simple_instruction->accept(*this);
+}
+
+
 /* | il_initial_param_list il_param_instruction */
 void *visit(il_param_list_c *symbol) {
 // return print_list(symbol);

@@ -6637,8 +6637,11 @@ simple_instr_list:
 
 il_simple_instruction:
   il_simple_operation eol_list
+	{$$ = new il_simple_instruction_c($1, locloc(@$));}
 | il_expression eol_list
+	{$$ = new il_simple_instruction_c($1, locloc(@$));}
 | il_formal_funct_call eol_list
+	{$$ = new il_simple_instruction_c($1, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | il_expression error
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "EOL missing after expression IL instruction."); yyerrok;}

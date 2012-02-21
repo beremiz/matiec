@@ -37,6 +37,72 @@
  *  This class will annotate the abstract syntax tree, by filling in the
  *  prev_il_instruction variable in the il_instruction_c, so it points to
  *  the previous il_instruction_c object in the instruction list instruction_list_c.
+ *
+ *  The result will essentially be a linked list of il_instruction_c objects, each 
+ *  pointing to the previous il_instruction_c object.
+ *
+ *  The reality is we will get several independent and isolated linked lists
+ *  (actually, once we process labels correctly, this will become a graph):
+ *  one for each block of IL code (e.g. inside a Function, FB or Program).
+ *  Additionally, when the IL code has an expression (expression_c object), we will actually
+ *  have one more isolated linked list for the IL code inside that expression.
+ *
+ *  e.g.
+ *       line_1:   LD 1
+ *       line_2:   ADD (42
+ *       line_3:        ADD B
+ *       line_4:        ADD C 
+ *       line_5:       )
+ *       line_6:   ADD D
+ *       line_7:   ST  E
+ * 
+ *     will result in two independent linked lists:
+ *       main list:  line_7 -> line_6 -> line2 -> line_1
+ *       expr list:  lin4_4 -> line_3 -> (operand of line_2, i.e. '42')
+ * 
+ * 
+ *     In the main list, each:
+ *        line_x: IL_operation IL_operand
+ *      is encoded as
+ *          il_instruction_c(label, il_incomplete_instruction)
+ *      these il_instruction_c objects will point back to the previous il_instruction_c object.
+ *
+ *     In the expr list, each 
+ *        line_x:        IL_operation IL_operand
+ *      is encoded as
+ *          il_simple_instruction_c(il_simple_instruction)
+ *      these il_simple_instruction_c objects will point back to the previous il_simple_instruction_c object,
+ *      except the for the first il_simple_instruction_c object in the list, which will point back to
+ *      the first il_operand (in the above example, '42'), or NULL is it does not exist.
+ *          
+ *
+ * label:
+ *   identifier_c  
+ *   
+ * il_incomplete_instruction:
+ *   il_simple_operation   (il_simple_operation_c, il_function_call_c)
+ * | il_expression         (il_expression_c)
+ * | il_jump_operation     (il_jump_operation_c)
+ * | il_fb_call            (il_fb_call_c)
+ * | il_formal_funct_call  (il_formal_funct_call_c)
+ * | il_return_operator    (RET_operator_c, RETC_operator_c, RETCN_operator_c)
+ *  
+ * 
+ * il_expression_c(il_expr_operator, il_operand, simple_instr_list)
+ * 
+ * il_operand:
+ *   variable            (symbolic_variable_c, direct_variable_c, array_variable_c, structured_variable_c)  
+ * | enumerated_value    (enumerated_value_c)
+ * | constant            (lots of literal classes _c)
+ * 
+ * simple_instr_list:
+ *   list of il_simple_instruction
+ * 
+ * il_simple_instruction:
+ *   il_simple_operation       (il_simple_operation_c)
+ * | il_expression             (il_expression_c)
+ * | il_formal_funct_call      (il_formal_funct_call_c)
+ * 
  */
 
 #include "flow_control_analysis.hh"
@@ -128,14 +194,19 @@ void *flow_control_analysis_c::visit(il_instruction_c *symbol) {
 	/* TODO: handle labels correctly!
 	 *
 	 *      Don't forget to handle multiple consecutive lables too!
-	 * 	  label2:
+	 *        label2:
 	 *        label3:
 	 *        label4:
 	 *                LD I
 	 */
+	/* NOTE: the following recursive call will mess up the value in the
+	 *       this->prev_il_instruction variable, so be sure not to use it
+	 *       after the return of symbol->il_instruction->accept(*this);
+	 */
+	/* check if it is an il_expression_c, and if so, handle it correctly */
 	if (NULL != symbol->il_instruction)
 		symbol->il_instruction->accept(*this);
-return NULL;
+	return NULL;
 }
 
 
@@ -146,13 +217,22 @@ return NULL;
 void *flow_control_analysis_c::visit(il_function_call_c *symbol) {
 	return NULL;
 }
+#endif
 
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
 // SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
 void *flow_control_analysis_c::visit(il_expression_c *symbol) {
-return NULL;
+	if(NULL == symbol->simple_instr_list) 
+		/* nothing to do... */
+		return NULL;
+  
+	prev_il_instruction = symbol->il_operand;
+	symbol->simple_instr_list->accept(*this);
+	return NULL;
 }
 
+
+#if 0
 /*   il_call_operator prev_declared_fb_name
  * | il_call_operator prev_declared_fb_name '(' ')'
  * | il_call_operator prev_declared_fb_name '(' eol_list ')'
@@ -176,15 +256,23 @@ void *flow_control_analysis_c::visit(il_formal_funct_call_c *symbol) {
 
 
 //  void *visit(il_operand_list_c *symbol);
-
 void *flow_control_analysis_c::visit(simple_instr_list_c *symbol) {
-	for(int i = 0; i < symbol->n; i++) {
-		prev_il_instruction = NULL;
-		if (i > 0) prev_il_instruction = symbol->elements[i-1];
+	/* The prev_il_instruction for element[0] was set in visit(il_expression_c *) */
+	for(int i = 1; i < symbol->n; i++) {
+		/* The prev_il_instruction for element[0] was set in visit(il_expression_c *) */
+		if (i>0) prev_il_instruction = symbol->elements[i-1];
 		symbol->elements[i]->accept(*this);
 	}
 	return NULL;
 }
+
+
+// SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
+void *flow_control_analysis_c::visit(il_simple_instruction_c*symbol) {
+	symbol->prev_il_instruction = prev_il_instruction;
+	return NULL;
+}
+
 
 /*
     void *visit(il_param_list_c *symbol);

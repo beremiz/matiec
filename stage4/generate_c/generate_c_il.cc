@@ -1556,6 +1556,12 @@ void *visit(simple_instr_list_c *symbol) {
   return NULL;
 }
 
+// SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
+void *visit(il_simple_instruction_c *symbol)	{
+  return symbol->il_simple_instruction->accept(*this);
+}
+
+
 /* | il_initial_param_list il_param_instruction */
 // SYM_LIST(il_param_list_c)
 void *visit(il_param_list_c *symbol) {ERROR; return NULL;} // should never get called!

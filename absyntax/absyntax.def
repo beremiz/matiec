@@ -958,6 +958,15 @@ SYM_LIST(il_operand_list_c)
 /* | simple_instr_list il_simple_instruction */
 SYM_LIST(simple_instr_list_c)
 
+
+/* il_simple_instruction:
+ *   il_simple_operation eol_list
+ * | il_expression eol_list
+ * | il_formal_funct_call eol_list
+ */
+/* NOTE: The parameter 'prev_il_instruction' is used to point to all previous il instructions that may be executed imedaitely before this instruction. */
+SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
+
 /* | il_initial_param_list il_param_instruction */
 SYM_LIST(il_param_list_c)
 

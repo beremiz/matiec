@@ -45,7 +45,7 @@
 #include <strings.h>
 
 /* set to 1 to see debug info during execution */
-static int debug = 0;
+static int debug = 1;
 
 fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
 }
@@ -904,25 +904,17 @@ void *fill_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
 // SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
 void *fill_candidate_datatypes_c::visit(il_expression_c *symbol) {
+  symbol_c *prev_il_instruction_backup = prev_il_instruction;
+  il_parenthesis_level++;
+  
   if (NULL != symbol->il_operand)
     symbol->il_operand->accept(*this);
-  
-  il_parenthesis_level++;
 
-  /* Note that prev_il_instruction will actually be used to get the current value store in the il_default_variable */
-  /* If a symbol->il_operand is provided, then that will be the result before executing the simple_instr_list.
-   * If this symbol is NULL, then the current result is also NULL, which is correct for what we want to do!
-   */
-  symbol_c *prev_il_instruction_backup = prev_il_instruction;
-  prev_il_instruction = symbol->il_operand;
-  
-  if(symbol->simple_instr_list != NULL) {
+  if(symbol->simple_instr_list != NULL)
     symbol->simple_instr_list->accept(*this);
-  }
 
   il_parenthesis_level--;
   if (il_parenthesis_level < 0) ERROR;
-
   
   /* Now check the if the data type semantics of operation are correct,  */
   il_operand = symbol->simple_instr_list;
@@ -1006,17 +998,32 @@ void *fill_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
 /* | simple_instr_list il_simple_instruction */
 /* This object is referenced by il_expression_c objects */
 void *fill_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
-  int i;
-  for(i = 0; i < symbol->n; i++)    
+std::cout << "simple_instr_list_c [filling starting]\n";
+  if (symbol->n <= 0)
+    return NULL;  /* List is empty! Nothing to do. */
+    
+  for(int i = 0; i < symbol->n; i++)
     symbol->elements[i]->accept(*this);
-  /* This object has (inherits) the same candidate datatypes as the last il_instruction (if it exists!) */
-  if (i > 0)  
-    copy_candidate_datatype_list(symbol->elements[i-1] /*from*/, symbol /*to*/);	
+
+  /* This object has (inherits) the same candidate datatypes as the last il_instruction */
+  copy_candidate_datatype_list(symbol->elements[symbol->n-1] /*from*/, symbol /*to*/);	
   
   if (debug) std::cout << "simple_instr_list_c [" << symbol->candidate_datatypes.size() << "] result.\n";
 std::cout << "simple_instr_list_c [" << symbol->candidate_datatypes.size() << "] result.\n";
   return NULL;
 }
+
+// SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
+void *fill_candidate_datatypes_c::visit(il_simple_instruction_c *symbol) {
+  prev_il_instruction = symbol->prev_il_instruction;
+  symbol->il_simple_instruction->accept(*this);
+  prev_il_instruction = NULL;
+
+  /* This object has (inherits) the same candidate datatypes as the il_simple_instruction it points to */
+  copy_candidate_datatype_list(symbol->il_simple_instruction /*from*/, symbol /*to*/);	
+  return NULL;
+}
+
 
 /*
     void *visit(il_param_list_c *symbol);
@@ -1171,6 +1178,7 @@ void *fill_candidate_datatypes_c::visit(AND_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
+	if (debug) std::cout <<  "AND [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
 }
 
@@ -1187,6 +1195,7 @@ void *fill_candidate_datatypes_c::visit(OR_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
+	if (debug) std::cout <<  "OR [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
 }
 
@@ -1203,6 +1212,7 @@ void *fill_candidate_datatypes_c::visit(XOR_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
+	if (debug) std::cout <<  "XOR [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
 }
 
@@ -1219,6 +1229,7 @@ void *fill_candidate_datatypes_c::visit(ANDN_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
+	if (debug) std::cout <<  "ANDN [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
 }
 
@@ -1235,6 +1246,7 @@ void *fill_candidate_datatypes_c::visit(ORN_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
+	if (debug) std::cout <<  "ORN [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
 }
 
@@ -1251,6 +1263,7 @@ void *fill_candidate_datatypes_c::visit(XORN_operator_c *symbol) {
 				symbol->candidate_datatypes.push_back(prev_instruction_type);
 		}
 	}
+	if (debug) std::cout <<  "XORN [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
 }
 
