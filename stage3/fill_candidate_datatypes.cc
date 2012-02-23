@@ -45,7 +45,7 @@
 #include <strings.h>
 
 /* set to 1 to see debug info during execution */
-static int debug = 1;
+static int debug = 0;
 
 fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
 }
@@ -921,6 +921,9 @@ void *fill_candidate_datatypes_c::visit(il_expression_c *symbol) {
   prev_il_instruction = prev_il_instruction_backup;
   symbol->il_expr_operator->accept(*this);
   il_operand = NULL;
+  
+  /* This object has the same candidate datatypes as the il_expr_operator. */
+  copy_candidate_datatype_list(symbol->il_expr_operator/*from*/, symbol/*to*/);
   return NULL;
 }
 
@@ -998,7 +1001,6 @@ void *fill_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
 /* | simple_instr_list il_simple_instruction */
 /* This object is referenced by il_expression_c objects */
 void *fill_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
-std::cout << "simple_instr_list_c [filling starting]\n";
   if (symbol->n <= 0)
     return NULL;  /* List is empty! Nothing to do. */
     
@@ -1009,7 +1011,6 @@ std::cout << "simple_instr_list_c [filling starting]\n";
   copy_candidate_datatype_list(symbol->elements[symbol->n-1] /*from*/, symbol /*to*/);	
   
   if (debug) std::cout << "simple_instr_list_c [" << symbol->candidate_datatypes.size() << "] result.\n";
-std::cout << "simple_instr_list_c [" << symbol->candidate_datatypes.size() << "] result.\n";
   return NULL;
 }
 

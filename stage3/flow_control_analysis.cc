@@ -99,7 +99,7 @@
  *   list of il_simple_instruction
  * 
  * il_simple_instruction:
- *   il_simple_operation       (il_simple_operation_c)
+ *   il_simple_operation       (il_simple_operation_c, il_function_call_c)
  * | il_expression             (il_expression_c)
  * | il_formal_funct_call      (il_formal_funct_call_c)
  * 
@@ -257,8 +257,7 @@ void *flow_control_analysis_c::visit(il_formal_funct_call_c *symbol) {
 
 //  void *visit(il_operand_list_c *symbol);
 void *flow_control_analysis_c::visit(simple_instr_list_c *symbol) {
-	/* The prev_il_instruction for element[0] was set in visit(il_expression_c *) */
-	for(int i = 1; i < symbol->n; i++) {
+	for(int i = 0; i < symbol->n; i++) {
 		/* The prev_il_instruction for element[0] was set in visit(il_expression_c *) */
 		if (i>0) prev_il_instruction = symbol->elements[i-1];
 		symbol->elements[i]->accept(*this);

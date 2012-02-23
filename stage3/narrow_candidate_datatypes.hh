@@ -77,7 +77,6 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /* B 1.4.2 - Multi-element variables */
     /*************************************/
     void *visit(array_variable_c *symbol);
-    void *visit(il_instruction_c *symbol);
     void *visit(subscript_list_c *symbol);
 
     /**************************************/
@@ -109,6 +108,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /* B 2.1 Instructions and Operands */
     /***********************************/
     void *visit(instruction_list_c *symbol);
+    void *visit(il_instruction_c *symbol);
     void *visit(il_simple_operation_c *symbol);
     void *visit(il_function_call_c *symbol);
     void *visit(il_expression_c *symbol);

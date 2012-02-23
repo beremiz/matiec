@@ -572,10 +572,11 @@ void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(il_expression_c *symbol) {
   /* first handle the operation (il_expr_operator) that will use the result coming from the parenthesised IL list (i.e. simple_instr_list) */
   symbol->il_expr_operator->datatype = symbol->datatype;
-  il_operand = symbol->il_operand;
+  il_operand = symbol->simple_instr_list; /* This is not a bug! The parenthesised expression will be used as the operator! */
   symbol->il_expr_operator->accept(*this);
 
   /* now give the parenthesised IL list a chance to narrow the datatypes */
+  /* The datatype that is must return was set by the call symbol->il_expr_operator->accept(*this) */
   symbol_c *save_prev_il_instruction = prev_il_instruction; /*this is not really necessary, but lets play it safe */
   symbol->simple_instr_list->accept(*this);
   prev_il_instruction = save_prev_il_instruction;
@@ -679,11 +680,26 @@ void *narrow_candidate_datatypes_c::handle_il_instruction(symbol_c *symbol) {
 	if (NULL == symbol->datatype)
 		/* next IL instructions were unable to determine the datatype this instruction should produce */
 		return NULL;
+	/* NOTE 1: the il_operand __may__ be pointing to a parenthesized list of IL instructions. 
+	 * e.g.  LD 33
+	 *       AND ( 45
+	 *            OR 56
+	 *            )
+	 *       When we handle the first 'AND' IL_operator, the il_operand will point to an simple_instr_list_c.
+	 *       In this case, when we call il_operand->accept(*this);, the prev_il_instruction pointer will be overwritten!
+	 *
+	 *       We must therefore set the prev_il_instruction->datatype = symbol->datatype;
+	 *       __before__ calling il_operand->accept(*this) !!
+	 *
+	 * NOTE 2: We do not need to call prev_il_instruction->accept(*this), as the object to which prev_il_instruction
+	 *         is pointing to will be later narrowed by the call from the for() loop of the instruction_list_c
+	 *         (or simple_instr_list_c), which iterates backwards.
+	 */
+	/* set the desired datatype of the previous il instruction */
+	prev_il_instruction->datatype = symbol->datatype;
 	/* set the datatype for the operand */
 	il_operand->datatype = symbol->datatype;
 	il_operand->accept(*this);
-	/* set the desired datatype of the previous il instruction */
-	prev_il_instruction->datatype = symbol->datatype;
 	return NULL;
 }
 
@@ -735,7 +751,6 @@ void *narrow_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 }
 
 void *narrow_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 

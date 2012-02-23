@@ -475,10 +475,7 @@ void *print_datatypes_error_c::visit(array_variable_c *symbol) {
 /* subscript_list ',' subscript */
 // SYM_LIST(subscript_list_c)
 /* NOTE: we inherit from iterator visitor, so we do not need to implement this method... */
-#if 0
-void *print_datatypes_error_c::visit(subscript_list_c *symbol) {
-}
-#endif
+// void *print_datatypes_error_c::visit(subscript_list_c *symbol)
 
 
 /*  record_variable '.' field_selector */
@@ -511,9 +508,7 @@ void *print_datatypes_error_c::visit(function_declaration_c *symbol) {
 	if (debug) printf("Print error data types list in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
 	il_parenthesis_level = 0;
 	il_error = false;
-	prev_il_instruction = NULL;
 	symbol->function_body->accept(*this);
-	prev_il_instruction = NULL;
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
 	return NULL;
@@ -529,9 +524,7 @@ void *print_datatypes_error_c::visit(function_block_declaration_c *symbol) {
 	if (debug) printf("Print error data types list in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
 	il_parenthesis_level = 0;
 	il_error = false;
-	prev_il_instruction = NULL;
 	symbol->fblock_body->accept(*this);
-	prev_il_instruction = NULL;
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
 	return NULL;
@@ -547,9 +540,7 @@ void *print_datatypes_error_c::visit(program_declaration_c *symbol) {
 	if (debug) printf("Print error data types list in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
 	il_parenthesis_level = 0;
 	il_error = false;
-	prev_il_instruction = NULL;
 	symbol->function_block_body->accept(*this);
-	prev_il_instruction = NULL;
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
 	return NULL;
@@ -574,7 +565,23 @@ void *print_datatypes_error_c::visit(configuration_declaration_c *symbol) {
 /***********************************/
 /* B 2.1 Instructions and Operands */
 /***********************************/
+
 // void *visit(instruction_list_c *symbol);
+
+/* | label ':' [il_incomplete_instruction] eol_list */
+// SYM_REF2(il_instruction_c, label, il_instruction)
+void *print_datatypes_error_c::visit(il_instruction_c *symbol) {
+	if (NULL != symbol->il_instruction) {
+		prev_il_instruction = symbol->prev_il_instruction;
+		symbol->il_instruction->accept(*this);
+		prev_il_instruction = NULL;
+	}
+
+	return NULL;
+}
+
+
+
 void *print_datatypes_error_c::visit(il_simple_operation_c *symbol) {
 	il_operand = symbol->il_operand;
 	if (NULL != symbol->il_operand) {
@@ -635,10 +642,22 @@ void *print_datatypes_error_c::visit(il_function_call_c *symbol) {
 	return NULL;
 }
 
+
+/* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
+// SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
 void *print_datatypes_error_c::visit(il_expression_c *symbol) {
-  /* TODO */
-	return NULL;
+  /* first give the parenthesised IL list a chance to print errors */
+  symbol_c *save_prev_il_instruction = prev_il_instruction;
+  symbol->simple_instr_list->accept(*this);
+  prev_il_instruction = save_prev_il_instruction;
+
+  /* Now handle the operation (il_expr_operator) that will use the result coming from the parenthesised IL list (i.e. simple_instr_list) */
+  il_operand = symbol->simple_instr_list; /* This is not a bug! The parenthesised expression will be used as the operator! */
+  symbol->il_expr_operator->accept(*this);
+
+return NULL;
 }
+
 
 /*   il_call_operator prev_declared_fb_name
  * | il_call_operator prev_declared_fb_name '(' ')'
@@ -685,22 +704,17 @@ void *print_datatypes_error_c::visit(il_formal_funct_call_c *symbol) {
 
 
 //     void *visit(il_operand_list_c *symbol);
-
-
-/* | simple_instr_list il_simple_instruction */
-/* This object is referenced by il_expression_c objects */
-void *print_datatypes_error_c::visit(simple_instr_list_c *symbol) {
-  /* TODO */
-	return NULL;
-}
+//     void *visit(simple_instr_list_c *symbol);
 
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
-void *print_datatypes_error_c::visit(il_simple_instruction_c *symbol) {
-  /* TODO */
-	return NULL;
+void *print_datatypes_error_c::visit(il_simple_instruction_c *symbol)	{
+  prev_il_instruction = symbol->prev_il_instruction;
+  symbol->il_simple_instruction->accept(*this);
+  prev_il_instruction = NULL;
+  return NULL;
 }
 
-//     void *visit(simple_instr_list_c *symbol);
+
 //     void *visit(il_param_list_c *symbol);
 //     void *visit(il_param_assignment_c *symbol);
 //     void *visit(il_param_out_assignment_c *symbol);
@@ -709,16 +723,13 @@ void *print_datatypes_error_c::visit(il_simple_instruction_c *symbol) {
 /* B 2.2 Operators */
 /*******************/
 void *print_datatypes_error_c::visit(LD_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(LDN_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'LDN' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -728,11 +739,9 @@ void *print_datatypes_error_c::visit(ST_operator_c *symbol) {
 	 * we can't use a ST like first instruction.
 	 * What do you think?
 	 */
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ST' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -742,36 +751,29 @@ void *print_datatypes_error_c::visit(STN_operator_c *symbol) {
 	 * we can't use a ST like first instruction.
 	 * What do you think?
 	 */
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'STN' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(NOT_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(S_operator_c *symbol) {
   /* TODO: what if this is a FB call ?? */
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'S' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(R_operator_c *symbol) {
   /* TODO: what if this is a FB call ?? */
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'R' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
@@ -816,176 +818,139 @@ void *print_datatypes_error_c::visit(PT_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(AND_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'AND' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(OR_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'OR' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(XOR_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'XOR' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(ANDN_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ANDN' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(ORN_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ORN' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(XORN_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ORN' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(ADD_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ADD' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(SUB_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'SUB' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(MUL_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'MUL' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(DIV_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'DIV' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(MOD_operator_c *symbol) {
-	il_operand->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'MOD' operator.");
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(GT_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(GE_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(EQ_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(LT_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(LE_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(NE_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(CAL_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(CALC_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(CALCN_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(RET_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(RETC_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(RETCN_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(JMP_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(JMPC_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(JMPCN_operator_c *symbol) {
-	prev_il_instruction = symbol;
 	return NULL;
 }
 

@@ -42,7 +42,7 @@ class print_datatypes_error_c: public iterator_visitor_c {
   private:
     /* The level of detail that the user wants us to display error messages. */
 //     #define error_level_default (1)
-    #define error_level_default (1)
+    #define error_level_default (4)
     #define error_level_nagging (4)
     unsigned int current_display_error_level;
     
@@ -187,14 +187,15 @@ class print_datatypes_error_c: public iterator_visitor_c {
     /***********************************/
     /* B 2.1 Instructions and Operands */
     /***********************************/
-    // void *visit(instruction_list_c *symbol);
+//  void *visit(instruction_list_c *symbol);
+    void *visit(il_instruction_c *symbol);
     void *visit(il_simple_operation_c *symbol);
     void *visit(il_function_call_c *symbol);
     void *visit(il_expression_c *symbol);
     void *visit(il_fb_call_c *symbol);
     void *visit(il_formal_funct_call_c *symbol);
 //  void *visit(il_operand_list_c *symbol);
-    void *visit(simple_instr_list_c *symbol);
+//  void *visit(simple_instr_list_c *symbol);
     void *visit(il_simple_instruction_c*symbol);
 //  void *visit(il_param_list_c *symbol);
 //  void *visit(il_param_assignment_c *symbol);
