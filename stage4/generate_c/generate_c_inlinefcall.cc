@@ -169,7 +169,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       if (f_decl != NULL) {
         /* function being called is overloaded! */
         s4o.print("__");
-        print_function_parameter_data_types_c overloaded_func_suf(&s4o, function_type_prefix);
+        print_function_parameter_data_types_c overloaded_func_suf(&s4o);
         f_decl->accept(overloaded_func_suf);
       }	
       if (function_type_suffix) {
@@ -222,7 +222,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       if (f_decl != NULL) {
     	/* function being called is overloaded! */
     	s4o.print("__");
-        print_function_parameter_data_types_c overloaded_func_suf(&s4o, function_type_prefix);
+        print_function_parameter_data_types_c overloaded_func_suf(&s4o);
         f_decl->accept(overloaded_func_suf);
       }
 
@@ -492,10 +492,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       
       /* determine the base data type returned by the function being called... */
       search_base_type_c search_base_type;
-      if (symbol->overloaded_return_type == NULL)
-        function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
-      else
-    	function_type_prefix = symbol->overloaded_return_type;
+      function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
       
       function_name = symbol->function_name;      
       
@@ -678,10 +675,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
       /* determine the base data type returned by the function being called... */
       search_base_type_c search_base_type;
-      if (symbol->overloaded_return_type == NULL)
-		function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
-      else
-		function_type_prefix = symbol->overloaded_return_type;
+      function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
       if (NULL == function_type_prefix) ERROR;
       
       function_name = symbol->function_name;
@@ -1050,10 +1044,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
       /* determine the base data type returned by the function being called... */
       search_base_type_c search_base_type;
-      if (symbol->overloaded_return_type == NULL)
-        function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
-      else
-        function_type_prefix = symbol->overloaded_return_type;
+      function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
       if (NULL == function_type_prefix) ERROR;
 
       /* loop through each function parameter, find the value we should pass

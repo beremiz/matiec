@@ -182,7 +182,6 @@ extern void error_exit(const char *file_name, int line_no);
 class print_function_parameter_data_types_c: public generate_c_base_c {
   private:
     symbol_c *current_type;
-    symbol_c *return_type;
     bool_type_name_c tmp_bool;
 
     void print_list(symbol_c *var_list, symbol_c *data_type) { 
@@ -198,10 +197,9 @@ class print_function_parameter_data_types_c: public generate_c_base_c {
     }
     
   public:
-    print_function_parameter_data_types_c(stage4out_c *s4o_ptr, symbol_c* return_type):
+    print_function_parameter_data_types_c(stage4out_c *s4o_ptr):
       generate_c_base_c(s4o_ptr) {
     	current_type = NULL;
-    	this->return_type = return_type;
       }
 
     /**************************************/
@@ -214,10 +212,7 @@ class print_function_parameter_data_types_c: public generate_c_base_c {
     /* | FUNCTION derived_function_name ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
     void *visit(function_declaration_c *symbol) {
       /* return type */
-      if (this->return_type == NULL)
-    	symbol->type_name->accept(*this);
-      else
-    	this->return_type->accept(*this);
+      symbol->type_name->accept(*this);
       symbol->var_declarations_list->accept(*this);
       return NULL;
     }
