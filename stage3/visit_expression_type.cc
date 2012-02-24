@@ -1069,6 +1069,7 @@ void *visit_expression_type_c::visit(il_function_call_c *symbol) {
   symbol_c *return_data_type = NULL;
   symbol_c* fdecl_return_type;
   symbol_c* overloaded_data_type = NULL;
+  int extensible_param_count = -1;
   symbol->called_function_declaration = NULL;
 
   /* First find the declaration of the function being called! */
@@ -1100,20 +1101,21 @@ void *visit_expression_type_c::visit(il_function_call_c *symbol) {
       fdecl_return_type = base_type(f_decl->type_name);
 
       if (symbol->called_function_declaration == NULL) {
-          /* Store the pointer to the declaration of the function being called.
-           * This data will be used by stage 4 to call the correct function.
-           * Mostly needed to disambiguate overloaded functions...
-           * See comments in absyntax.def for more details
+        /* Store the pointer to the declaration of the function being called.
+         * This data will be used by stage 4 to call the correct function.
+         * Mostly needed to disambiguate overloaded functions...
+         * See comments in absyntax.def for more details
          */
         symbol->called_function_declaration = f_decl;
+        extensible_param_count = symbol->extensible_param_count;
 
-          /* determine the base data type returned by the function being called... */
-          return_data_type = fdecl_return_type;
-        }
-        else if (typeid(*return_data_type) != typeid(*fdecl_return_type)){
-          return_data_type = common_literal(return_data_type, fdecl_return_type);
-          overloaded_data_type = overloaded_return_type(return_data_type);
-        }
+        /* determine the base data type returned by the function being called... */
+        return_data_type = fdecl_return_type;
+      }
+      else if (typeid(*return_data_type) != typeid(*fdecl_return_type)){
+        return_data_type = common_literal(return_data_type, fdecl_return_type);
+        overloaded_data_type = overloaded_return_type(return_data_type);
+      }
       
       if (NULL == return_data_type) ERROR;
     }
@@ -1137,6 +1139,7 @@ void *visit_expression_type_c::visit(il_function_call_c *symbol) {
            * See comments in absyntax.def for more details
            */
           symbol->called_function_declaration = f_decl;
+          extensible_param_count = symbol->extensible_param_count;
         }
       }
     }
@@ -1147,6 +1150,7 @@ void *visit_expression_type_c::visit(il_function_call_c *symbol) {
     STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");
   }
   else {
+    symbol->extensible_param_count = extensible_param_count;
     /* set the new data type of the default variable for the following verifications... */
     il_default_variable_type = return_data_type;
   }
@@ -1273,6 +1277,7 @@ void *visit_expression_type_c::visit(il_formal_funct_call_c *symbol) {
   symbol_c *return_data_type = NULL;
   symbol_c* fdecl_return_type;
   symbol_c *overloaded_data_type = NULL;
+  int extensible_param_count = -1;
   symbol->called_function_declaration = NULL;
 
   function_symtable_t::iterator lower = function_symtable.lower_bound(symbol->function_name);
@@ -1315,6 +1320,7 @@ void *visit_expression_type_c::visit(il_formal_funct_call_c *symbol) {
          * See comments in absyntax.def for more details
          */
         symbol->called_function_declaration = f_decl;
+        extensible_param_count = symbol->extensible_param_count;
 
         /* determine the base data type returned by the function being called... */
         return_data_type = fdecl_return_type;
@@ -1348,6 +1354,7 @@ void *visit_expression_type_c::visit(il_formal_funct_call_c *symbol) {
            * See comments in absyntax.def for more details
            */
           symbol->called_function_declaration = f_decl;
+          extensible_param_count = symbol->extensible_param_count;
         }
       }
     }
@@ -1358,6 +1365,7 @@ void *visit_expression_type_c::visit(il_formal_funct_call_c *symbol) {
     STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");
   }
   else {
+    symbol->extensible_param_count = extensible_param_count;
     /* the data type of the data returned by the function, and stored in the il default variable... */
     il_default_variable_type = return_data_type;
   }
@@ -2119,6 +2127,7 @@ void *visit_expression_type_c::visit(function_invocation_c *symbol) {
   symbol_c* return_data_type;
   symbol_c* fdecl_return_type;
   symbol_c* overloaded_data_type = NULL;
+  int extensible_param_count = -1;
   symbol->called_function_declaration = NULL;
 
   function_symtable_t::iterator second = lower;
@@ -2160,6 +2169,7 @@ void *visit_expression_type_c::visit(function_invocation_c *symbol) {
          * See comments in absyntax.def for more details
          */
         symbol->called_function_declaration = f_decl;
+        extensible_param_count = symbol->extensible_param_count;
 
         /* determine the base data type returned by the function being called... */
         return_data_type = fdecl_return_type;
@@ -2190,13 +2200,16 @@ void *visit_expression_type_c::visit(function_invocation_c *symbol) {
            * See comments in absyntax.def for more details
            */
           symbol->called_function_declaration = f_decl;
+          extensible_param_count = symbol->extensible_param_count;
         }
       }
     }
   }
 
-  if (return_data_type != NULL)
-    return return_data_type;
+  if (return_data_type != NULL) {
+	symbol->extensible_param_count = extensible_param_count;
+	return return_data_type;
+  }
 
   /* No compatible function was found for this function call */
   STAGE3_ERROR(symbol, symbol, "Call to an overloaded function with invalid parameter type.");
