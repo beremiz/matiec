@@ -91,6 +91,7 @@ bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 			if(param_name == NULL) return false;
 		} while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
 
+		/* TODO: verify if it is lvalue when INOUT or OUTPUT parameters! */
 		/* Get the parameter type */
 		param_datatype = base_type(fp_iterator.param_type());
 		
@@ -106,7 +107,7 @@ bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 
 /* returns true if compatible function/FB invocation, otherwise returns false */
 /* Assumes that the candidate_datatype lists of all the parameters being passed haved already been filled in */
-bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f_decl) {
+bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f_decl, symbol_c **first_param_datatype) {
 	symbol_c *call_param_value, *call_param_name, *param_datatype;
 	symbol_c *verify_duplicate_param;
 	identifier_c *param_name;
@@ -115,6 +116,7 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 	int extensible_parameter_highest_index = -1;
 	identifier_c *extensible_parameter_name;
 	unsigned int i;
+	bool is_first_param = true;
 
 	/* Iterating through the formal parameters of the function call */
 	while((call_param_name = fcp_iterator.next_f()) != NULL) {
@@ -155,6 +157,12 @@ bool fill_candidate_datatypes_c::match_formal_call(symbol_c *f_call, symbol_c *f
 		/* check whether one of the candidate_data_types of the value being passed is the same as the param_type */
 		if (search_in_candidate_datatype_list(param_datatype, call_param_types) < 0)
 			return false; /* return false if param_type not in the list! */
+		
+		/* If this is the first parameter, then copy the datatype to *first_param_datatype */
+		if (is_first_param)
+			if (NULL != first_param_datatype)
+				*first_param_datatype = param_datatype;
+		is_first_param = false;
 	}
 	/* call is compatible! */
 	return true;
@@ -255,59 +263,30 @@ void fill_candidate_datatypes_c::handle_function_call(symbol_c *fcall, generic_f
 /* handle implicit FB call in IL.
  * e.g.  CLK ton_var
  *        CU counter_var
- *
- * The algorithm will be to build a fake il_fb_call_c equivalent to the implicit IL FB call, and let 
- * the visit(il_fb_call_c *) method handle it!
  */
 void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
-	if (NULL == il_operand)
-		/* No FB to call was specified. There is nothing we can do... */
-		return;
-
 	symbol_c *fb_type_id = search_varfb_instance_type->get_basetype_id(il_operand);
-	/* This is a call to a non-declared FB/Variable is a semantic error (which is currently caught by stage 2, so this should never occur)
-	 * or no operand was given (il_operand == NULL). In this case, we just give up!
-	 */
-	if (NULL == fb_type_id)
-		return;
+  	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
+	if (NULL == fb_type_id) ERROR;
 
 	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(fb_type_id);
 	if (function_block_type_symtable.end_value() == fb_decl)
 		/* The il_operand is not the name of a FB instance. Most probably it is the name of a variable of some other type.
-		 * this is a smeantic error, so there is no way we can evaluate the rest of the code. We simply give up, and leave
-		 * the candidate_datatype_list empty, and the called_fb_declaration pointing to NULL
+		 * this is a semantic error.
 		 */
-		return;
-
-	if (NULL == prev_il_instruction) {
-		/* This IL implicit FB call (e.g. CLK ton_var) is not preceded by another IL instruction
-		 * (or list of instructions) that will set the IL current/default value.
-		 * We cannot proceed verifying type compatibility of something that does not ecist.
-		 */
-		return;
-	}
-
-	/* The value being passed to the 'param_name' parameter is actually the prev_il_instruction.
-	 * However, we do not place that object directly in the fake il_param_list_c that we will be
-	 * creating, since the visit(il_fb_call_c *) method will recursively call every object in that list.
-	 * The il_prev_intruction object has already been visited. We DO NOT want to visit it again.
-	 * The easiest way to work around this is to simply use a new object, and copy the relevant details to that object!
+		fb_decl = NULL;
+	
+	/* The narrow_candidate_datatypes_c does not rely on this called_fb_declaration pointer being == NULL to conclude that
+	 * we have a datatype incompatibility error, so we set it to fb_decl to allow the print_datatype_error_c to print out
+	 * more informative error messages!
 	 */
-	symbol_c param_value = *prev_il_instruction;
-	
-	identifier_c variable_name(param_name);
-	// SYM_REF1(il_assign_operator_c, variable_name)
-	il_assign_operator_c il_assign_operator(&variable_name);  
-	// SYM_REF3(il_param_assignment_c, il_assign_operator, il_operand, simple_instr_list)
-	il_param_assignment_c il_param_assignment(&il_assign_operator, &param_value/*il_operand*/, NULL);
-	il_param_list_c il_param_list;
-	il_param_list.add_element(&il_param_assignment);
-	// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
-	il_fb_call_c il_fb_call(NULL, il_operand, NULL, &il_param_list);
-	
-	il_fb_call.accept(*this);
-	copy_candidate_datatype_list(&il_fb_call/*from*/, il_instruction/*to*/);
-	called_fb_declaration = il_fb_call.called_fb_declaration;
+	called_fb_declaration = fb_decl;
+
+	/* This implicit FB call does not change the value stored in the current/default IL variable */
+	if (NULL != prev_il_instruction)
+		copy_candidate_datatype_list(prev_il_instruction/*from*/, il_instruction/*to*/);
+
+	if (debug) std::cout << "handle_implicit_il_fb_call() [" << prev_il_instruction->candidate_datatypes.size() << "] ==> " << il_instruction->candidate_datatypes.size() << " result.\n";
 }
 
 
@@ -723,10 +702,7 @@ void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
 /* subscript_list ',' subscript */
 // SYM_LIST(subscript_list_c)
 /* NOTE: we inherit from iterator visitor, so we do not need to implement this method... */
-#if 0
-void *fill_candidate_datatypes_c::visit(subscript_list_c *symbol) {
-}
-#endif
+// void *fill_candidate_datatypes_c::visit(subscript_list_c *symbol)
 
 
 /*  record_variable '.' field_selector */
@@ -796,10 +772,8 @@ void *fill_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 /* B 1.7 Configuration elements */
 /********************************/
 void *fill_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
-#if 0
 	// TODO !!!
 	/* for the moment we must return NULL so semantic analysis of remaining code is not interrupted! */
-#endif
 	return NULL;
 }
 
@@ -945,19 +919,24 @@ void *fill_candidate_datatypes_c::visit(il_jump_operation_c *symbol) {
 /* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
 // SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 void *fill_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
-	bool compatible = false;
-	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+	/* We do not call
+	 * fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+	 * because we want to make sure it is a FB instance, and not some other data type...
+	 */
+	symbol_c *fb_type_id = search_varfb_instance_type->get_basetype_id(symbol->fb_name);
+	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
+	if (NULL == fb_type_id) ERROR;
+
+ 	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(fb_type_id);
+	if (function_block_type_symtable.end_value() == fb_decl) 
+		/* The fb_name not the name of a FB instance. Most probably it is the name of a variable of some other type. */
+		fb_decl = NULL;
+
 	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
 	if (NULL == fb_decl) ERROR;
 
-	if (symbol->  il_param_list != NULL) {
-		symbol->il_param_list->accept(*this);
-		compatible = match_formal_call(symbol, fb_decl);
-	}
-	if (symbol->il_operand_list != NULL) {
-		symbol->il_operand_list->accept(*this);
-		compatible = match_nonformal_call(symbol, fb_decl);
-	}
+	if (symbol->  il_param_list != NULL) symbol->il_param_list->accept(*this);
+	if (symbol->il_operand_list != NULL) symbol->il_operand_list->accept(*this);
 
 	/* The print_datatypes_error_c does not rely on this called_fb_declaration pointer being != NULL to conclude that
 	 * we have a datat type incompatibility error, so setting it to the correct fb_decl is actually safe,
@@ -965,8 +944,15 @@ void *fill_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
 	 */
 	symbol->called_fb_declaration = fb_decl;
 
-	/* This object has the same candidate datatypes as the prev_il_instruction, since it does not change the value stored in the current/default IL variable. */
-	copy_candidate_datatype_list(prev_il_instruction/*from*/, symbol/*to*/);
+	/* Let the il_call_operator (CAL, CALC, or CALCN) determine the candidate datatypes of the il_fb_call_c... */
+	/* NOTE: We ignore whether the call is 'compatible' or not when filling in the candidate datatypes list.
+	 *       Even if it is not compatible, we fill in the candidate datatypes list correctly so that the following
+	 *       IL instructions may be handled correctly and debuged.
+	 *       Doing this is actually safe, as the parameter_list will still contain errors that will be found by
+	 *       print_datatypes_error_c, so the code will never reach stage 4!
+	 */
+	symbol->il_call_operator->accept(*this);
+	copy_candidate_datatype_list(symbol->il_call_operator/*from*/, symbol/*to*/);
 
 	if (debug) std::cout << "FB [] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
@@ -2002,19 +1988,20 @@ void *fill_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 /* B 3.2.2 Subprogram Control Statements */
 /*****************************************/
 void *fill_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
-	bool compatible = false;
-	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+	symbol_c *fb_type_id = search_varfb_instance_type->get_basetype_id(symbol->fb_name);
+	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
+	if (NULL == fb_type_id) ERROR;
+
+	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(fb_type_id);
+	if (function_block_type_symtable.end_value() == fb_decl) 
+		/* The fb_name not the name of a FB instance. Most probably it is the name of a variable of some other type. */
+		fb_decl = NULL;
+
 	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
 	if (NULL == fb_decl) ERROR;
-
-	if (symbol->   formal_param_list != NULL) {
-		symbol->formal_param_list->accept(*this);
-		compatible = match_formal_call(symbol, fb_decl);
-	}
-	if (symbol->nonformal_param_list != NULL) {
-		symbol->nonformal_param_list->accept(*this);
-		compatible = match_nonformal_call(symbol, fb_decl);
-	}
+	
+	if (symbol->   formal_param_list != NULL) symbol->formal_param_list->accept(*this);
+	if (symbol->nonformal_param_list != NULL) symbol->nonformal_param_list->accept(*this);
 
 	/* The print_datatypes_error_c does not rely on this called_fb_declaration pointer being != NULL to conclude that
 	 * we have a datat type incompatibility error, so setting it to the correct fb_decl is actually safe,

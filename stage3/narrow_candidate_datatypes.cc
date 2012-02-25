@@ -175,11 +175,10 @@ void narrow_candidate_datatypes_c::narrow_formal_call(symbol_c *f_call, symbol_c
 		/* set the desired data type for this parameter */
 		set_datatype(desired_datatype, call_param_value);
 		/* And recursively call that parameter/expression, so it can propagate that info */
-		/* However, when handling an implicit IL FB call, the first parameter is fake (a copy of the prev_il_instruction).
-		 * so the call call_param_value->accept(*this) may actually be calling an object of the base symbol_c .
-		 */
 		call_param_value->accept(*this);
 
+		/* set the extensible_parameter_highest_index, which will be needed in stage 4 */
+		/* This value says how many extensible parameters are being passed to the standard function */
 		if (NULL != param_name) 
 			if (extensible_parameter_highest_index < fp_iterator.extensible_param_index())
 				extensible_parameter_highest_index = fp_iterator.extensible_param_index();
@@ -261,12 +260,15 @@ void narrow_candidate_datatypes_c::narrow_function_invocation(symbol_c *fcall, g
  * the visit(il_fb_call_c *) method handle it!
  */
 void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
-	if (NULL == called_fb_declaration)
-		/* The fill_candidate_datatypes_c was not able to determine which FB is being called!
-		 * This may be because the il_operand is not the name of a FB instance, or no operand was given. 
-		 * In that case, we just give up!
-		 */
-		return;
+
+	/* set the datatype of the il_operand, this is, the FB being called! */
+	if (NULL != il_operand) {
+		/* only set it if it is in the candidate datatypes list! */  
+		set_datatype(called_fb_declaration, il_operand);
+		il_operand->accept(*this);
+	}
+	symbol_c *fb_decl = il_operand->datatype;
+
 	if (NULL == prev_il_instruction) {
 		/* This IL implicit FB call (e.g. CLK ton_var) is not preceded by another IL instruction
 		 * (or list of instructions) that will set the IL current/default value.
@@ -274,6 +276,15 @@ void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instr
 		 */
 		return;
 	}
+
+	if (NULL == fb_decl) {
+		/* the il_operand is a not FB instance */
+		/* so we simply pass on the required datatype to the prev_il_instruction */
+		/* The invalid FB invocation will be caught by the print_datatypes_error_c by analysing NULL value in il_operand->datatype! */
+		prev_il_instruction->datatype = il_instruction->datatype;
+		return;
+	}
+	
 
 	/* The value being passed to the 'param_name' parameter is actually the prev_il_instruction.
 	 * However, we do not place that object directly in the fake il_param_list_c that we will be
@@ -285,7 +296,7 @@ void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instr
 	 * The easiest way to work around this is to simply use a new object, and copy the relevant details to that object!
 	 */
 	symbol_c param_value = *prev_il_instruction;
-	
+        
 	identifier_c variable_name(param_name);
 	// SYM_REF1(il_assign_operator_c, variable_name)
 	il_assign_operator_c il_assign_operator(&variable_name);  
@@ -294,8 +305,9 @@ void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instr
 	il_param_list_c il_param_list;
 	il_param_list.add_element(&il_param_assignment);
 	// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
-	il_fb_call_c il_fb_call(NULL, il_operand, NULL, &il_param_list);
-	
+	CAL_operator_c CAL_operator;
+	il_fb_call_c il_fb_call(&CAL_operator, il_operand, NULL, &il_param_list);
+	        
 	/* A FB call does not return any datatype, but the IL instructions that come after this
 	 * FB call may require a specific datatype in the il current/default variable, 
 	 * so we must pass this information up to the IL instruction before the FB call, since it will
@@ -304,9 +316,10 @@ void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instr
 	 * The above will be done by the visit(il_fb_call_c *) method, so we must make sure to
 	 * correctly set up the il_fb_call.datatype variable!
 	 */
-	copy_candidate_datatype_list(il_instruction/*from*/, &il_fb_call/*to*/);
+// 	copy_candidate_datatype_list(il_instruction/*from*/, &il_fb_call/*to*/);
+	il_fb_call.called_fb_declaration = called_fb_declaration;
 	il_fb_call.accept(*this);
-	
+
 	/* set the required datatype of the previous IL instruction! */
 	/* NOTE:
 	 * When handling these implicit IL calls, the parameter_value being passed to the FB parameter
@@ -327,13 +340,11 @@ void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instr
 	 *     FB call for any datatype. In that case, then the datatype required to pass to the first parameter of the
 	 *     FB call must be left unchanged!
 	 */
-// 	if (NULL != prev_il_instruction) /* already checked above! */
-		if (is_type_equal(param_value.datatype, il_instruction->datatype)) {
-			prev_il_instruction->datatype = param_value.datatype;
-		} else {
-			prev_il_instruction->datatype = NULL;
-		}
-
+	if ((NULL == il_instruction->datatype) || (is_type_equal(param_value.datatype, il_instruction->datatype))) {
+		prev_il_instruction->datatype = param_value.datatype;
+	} else {
+		prev_il_instruction->datatype = NULL;
+	}
 }
 
 
@@ -592,32 +603,16 @@ return NULL;
 /* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
 // SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 void *narrow_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
-	/* Note: We do not use the symbol->called_fb_declaration value (set in fill_candidate_datatypes_c)
-	 *       because we try to identify any other datatype errors in the expressions used in the 
-	 *       parameters to the FB call. e.g.
-	 *          fb_var( 
-	 *             in1 := var1,
-	 *             in2 := (
-	 *                       LD 56
-	 *                       ADD 43
-	 *                    )
-	 *             )
-	 *       even it the call to the FB is invalid. 
-	 *       This makes sense because it may be errors in those expressions which are
-	 *       making this an invalid call, so it makes sense to point them out to the user!
-	 */
-	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
-
+	symbol_c *fb_decl = symbol->called_fb_declaration;
+	
 	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
 	if (NULL == fb_decl) ERROR;
 	if (NULL != symbol->il_operand_list)  narrow_nonformal_call(symbol, fb_decl);
 	if (NULL != symbol->  il_param_list)     narrow_formal_call(symbol, fb_decl);
 
-	/* An IL FB call does not change the default value in the current/default IL variable, so we pass the
-	 * required datatype up to the previous IL instruction
-	 */
-	if (NULL != prev_il_instruction)
-		prev_il_instruction->datatype = symbol->datatype;
+	/* Let the il_call_operator (CAL, CALC, or CALCN) set the datatype of prev_il_instruction... */
+	symbol->il_call_operator->datatype = symbol->datatype;
+	symbol->il_call_operator->accept(*this);
 	return NULL;
 }
 
@@ -825,40 +820,90 @@ void *narrow_candidate_datatypes_c::visit(LE_operator_c   *symbol)  {return hand
 void *narrow_candidate_datatypes_c::visit(NE_operator_c   *symbol)  {return handle_il_instruction(symbol);}
 
 
+// SYM_REF0(CAL_operator_c)
+/* called from il_fb_call_c (symbol->il_call_operator->accpet(*this) ) */
 void *narrow_candidate_datatypes_c::visit(CAL_operator_c *symbol) {
+	/* set the desired datatype of the previous il instruction */
+	/* This FB call does not change the value in the current/default IL variable, so we pass the required datatype to the previous IL instruction */
+	if (NULL != prev_il_instruction)
+		prev_il_instruction->datatype = symbol->datatype;
 	return NULL;
 }
 
+
+void *narrow_candidate_datatypes_c::narrow_conditional_flow_control_IL_instruction(symbol_c *symbol) {
+	/* if the next IL instructions needs us to provide a datatype other than a bool, 
+	 * then we have an internal compiler error - most likely in fill_candidate_datatypes_c 
+	 */
+	if ((NULL != symbol->datatype) && (!is_type(symbol->datatype, bool_type_name_c))) ERROR;
+	if (symbol->candidate_datatypes.size() > 1) ERROR;
+
+	/* NOTE: If there is not IL instruction following this CALC, CALCN, JMPC, JMPC, ..., instruction,
+	 *       we must still provide a bool_type_name_c datatype (if possible, i.e. if it exists in the candidate datatype list).
+	 *       If it is not possible, we set it to NULL
+	 */
+	if (symbol->candidate_datatypes.size() == 0)    symbol->datatype = NULL;
+	else    symbol->datatype = symbol->candidate_datatypes[0]; /* i.e. a bool_type_name_c! */
+	if ((NULL != symbol->datatype) && (!is_type(symbol->datatype, bool_type_name_c))) ERROR;
+
+	/* set the required datatype of the previous IL instruction, i.e. a bool_type_name_c! */
+	if (NULL != prev_il_instruction)    prev_il_instruction->datatype = symbol->datatype;
+	return NULL;
+}
+
+
+// SYM_REF0(CALC_operator_c)
+/* called from il_fb_call_c (symbol->il_call_operator->accpet(*this) ) */
 void *narrow_candidate_datatypes_c::visit(CALC_operator_c *symbol) {
-	return NULL;
+	return narrow_conditional_flow_control_IL_instruction(symbol);
 }
 
+
+// SYM_REF0(CALCN_operator_c)
+/* called from il_fb_call_c (symbol->il_call_operator->accpet(*this) ) */
 void *narrow_candidate_datatypes_c::visit(CALCN_operator_c *symbol) {
-	return NULL;
+	return narrow_conditional_flow_control_IL_instruction(symbol);
 }
+
 
 void *narrow_candidate_datatypes_c::visit(RET_operator_c *symbol) {
+	/* set the desired datatype of the previous il instruction */
+	/* This RET instruction does not change the value in the current/default IL variable, so we pass the required datatype to the previous IL instruction.
+	 * Actually this should always be NULL, otherwise we have a bug in the flow_control_analysis_c
+	 * However, since that class has not yet been completely finished, we do not yet check this assertion!
+	 */
+// 	if (NULL != symbol->datatype) ERROR;
+	if (NULL != prev_il_instruction)
+		prev_il_instruction->datatype = symbol->datatype;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(RETC_operator_c *symbol) {
-	return NULL;
+	return narrow_conditional_flow_control_IL_instruction(symbol);
 }
 
 void *narrow_candidate_datatypes_c::visit(RETCN_operator_c *symbol) {
-	return NULL;
+	return narrow_conditional_flow_control_IL_instruction(symbol);
 }
 
 void *narrow_candidate_datatypes_c::visit(JMP_operator_c *symbol) {
+	/* set the desired datatype of the previous il instruction */
+	/* This JMP instruction does not change the value in the current/default IL variable, so we pass the required datatype to the previous IL instruction.
+	 * Actually this should always be NULL, otherwise we have a bug in the flow_control_analysis_c
+	 * However, since that class has not yet been completely finished, we do not yet check this assertion!
+	 */
+// 	if (NULL != symbol->datatype) ERROR;
+	if (NULL != prev_il_instruction)
+		prev_il_instruction->datatype = symbol->datatype;
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(JMPC_operator_c *symbol) {
-	return NULL;
+	return narrow_conditional_flow_control_IL_instruction(symbol);
 }
 
 void *narrow_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {
-	return NULL;
+	return narrow_conditional_flow_control_IL_instruction(symbol);
 }
 
 /* Symbol class handled together with function call checks */

@@ -183,6 +183,8 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 		fcall_data.nonformal_operand_list->accept(*this);
 		if (f_decl)
 			for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
+		  		/* TODO: verify if it is lvalue when INOUT or OUTPUT parameters! */
+
 				if (NULL == param_value->datatype) {
 					function_invocation_error = true;
 					STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((identifier_c *)fcall_data.function_name)->value);
@@ -203,31 +205,57 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 	return;
 }
 
+
+
 void print_datatypes_error_c::handle_implicit_il_fb_invocation(symbol_c *il_operator, const char *param_name, symbol_c *called_fb_declaration) {
 	if (NULL == il_operand) {
 		STAGE3_ERROR(0, il_operator, il_operator, "Missing operand for FB call operator '%s'.", param_name);
 		return;
 	}
+	il_operand->accept(*this);
+	
 	if (NULL == called_fb_declaration) {
-		STAGE3_ERROR(0, il_operand, il_operand, "Operand of FB call operator '%s' is not a FB variable.", param_name);
+		STAGE3_ERROR(0, il_operator, il_operand, "Invalid FB call: operand is not a FB instance.");
 		return;
 	}
+
 	if (NULL == prev_il_instruction) {
 		STAGE3_ERROR(0, il_operator, il_operand, "FB invocation operator '%s' must be preceded by a 'LD' (or equivalent) operator.", param_name);	
 		return;
 	}
+
 	/* Find the corresponding parameter in function declaration */
 	function_param_iterator_c fp_iterator(called_fb_declaration);
 	if (NULL == fp_iterator.search(param_name)) {
-/* TODO: must also check whther it is an IN parameter!! */
+		/* TODO: must also check whther it is an IN parameter!! */
+		/* NOTE: although all standard FBs have the implicit FB calls defined as input parameters
+		*        (i.e., for all standard FBs, CLK, PT, IN, CU, CD, S1, R1, etc... is always an input parameter)
+		*        if a non-standard (i.e. a FB not defined in the standard library) FB is being called, then
+		*        this (CLK, PT, IN, CU, ...) parameter may just have been defined as OUT or INOUT,
+		*        which will not work for an implicit FB call!
+		*/
 		STAGE3_ERROR(0, il_operator, il_operand, "FB called by '%s' operator does not have a parameter named '%s'", param_name, param_name);	
 		return;
 	}
 	if (NULL == prev_il_instruction->datatype) {
-		STAGE3_ERROR(0, il_operator, il_operand, "Data type incompatibility between parameter '%s' and value being passed, when invoking FB.", param_name);
+		STAGE3_ERROR(0, il_operator, il_operand, "Data type incompatibility between parameter '%s' and value being passed.", param_name);
 		return;
 	}
+	
 
+	/* NOTE: The error_level currently being used for errors in variables/constants etc... is rather high.
+	 *       However, in the case of an implicit FB call, if the datatype of the operand == NULL, this may be
+	 *       the __only__ indication of an error! So we test it here again, to make sure thtis error will really
+	 *       be printed out!
+	 */
+	if (NULL == il_operand->datatype) {
+		/* Note: the case of (NULL == fb_declaration) was already caught above! */
+// 		if (NULL != fb_declaration) {
+			STAGE3_ERROR(0, il_operator, il_operator, "Invalid FB call: Datatype incompatibility between the FB's '%s' parameter and value being passed, or paramater '%s' is not a 'VAR_INPUT' parameter.", param_name, param_name);
+			return;
+// 		}
+	}
+// 
 	return;
 }
 
@@ -552,10 +580,8 @@ void *print_datatypes_error_c::visit(program_declaration_c *symbol) {
 /* B 1.7 Configuration elements */
 /********************************/
 void *print_datatypes_error_c::visit(configuration_declaration_c *symbol) {
-#if 0
 	// TODO !!!
 	/* for the moment we must return NULL so semantic analysis of remaining code is not interrupted! */
-#endif
 	return NULL;
 }
 
@@ -681,6 +707,8 @@ void *print_datatypes_error_c::visit(il_fb_call_c *symbol) {
 	};
   
 	handle_function_invocation(symbol, fcall_param);
+	/* check the semantics of the CALC, CALCN operators! */
+	symbol->il_call_operator->accept(*this);
 	return NULL;
 }
 
@@ -922,12 +950,19 @@ void *print_datatypes_error_c::visit(CAL_operator_c *symbol) {
 	return NULL;
 }
 
-void *print_datatypes_error_c::visit(CALC_operator_c *symbol) {
+
+void *print_datatypes_error_c::handle_conditional_flow_control_IL_instruction(symbol_c *symbol, const char *oper) {
+	if (NULL == symbol->datatype)
+		STAGE3_ERROR(0, symbol, symbol, "%s operator must be preceded by an IL instruction producing a BOOL value.", oper);
 	return NULL;
 }
 
+void *print_datatypes_error_c::visit(CALC_operator_c *symbol) {
+	return handle_conditional_flow_control_IL_instruction(symbol, "CALC");
+}
+
 void *print_datatypes_error_c::visit(CALCN_operator_c *symbol) {
-	return NULL;
+	return handle_conditional_flow_control_IL_instruction(symbol, "CALCN");
 }
 
 void *print_datatypes_error_c::visit(RET_operator_c *symbol) {
@@ -935,11 +970,11 @@ void *print_datatypes_error_c::visit(RET_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(RETC_operator_c *symbol) {
-	return NULL;
+	return handle_conditional_flow_control_IL_instruction(symbol, "RETC");
 }
 
 void *print_datatypes_error_c::visit(RETCN_operator_c *symbol) {
-	return NULL;
+	return handle_conditional_flow_control_IL_instruction(symbol, "RETCN");
 }
 
 void *print_datatypes_error_c::visit(JMP_operator_c *symbol) {
@@ -947,11 +982,11 @@ void *print_datatypes_error_c::visit(JMP_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(JMPC_operator_c *symbol) {
-	return NULL;
+	return handle_conditional_flow_control_IL_instruction(symbol, "JMPC");
 }
 
 void *print_datatypes_error_c::visit(JMPCN_operator_c *symbol) {
-	return NULL;
+	return handle_conditional_flow_control_IL_instruction(symbol, "JMPCN");
 }
 
 /* Symbol class handled together with function call checks */

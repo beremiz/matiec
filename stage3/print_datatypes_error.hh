@@ -42,7 +42,7 @@ class print_datatypes_error_c: public iterator_visitor_c {
   private:
     /* The level of detail that the user wants us to display error messages. */
 //     #define error_level_default (1)
-    #define error_level_default (4)
+    #define error_level_default (1)
     #define error_level_nagging (4)
     unsigned int current_display_error_level;
     
@@ -85,7 +85,8 @@ class print_datatypes_error_c: public iterator_visitor_c {
     symbol_c *base_type(symbol_c *symbol);
     void handle_function_invocation(symbol_c *fcall, generic_function_call_t fcall_data);
     void handle_implicit_il_fb_invocation(symbol_c *il_operator, const char *param_name, symbol_c *called_fb_declaration);  
-
+    void *handle_conditional_flow_control_IL_instruction(symbol_c *symbol, const char *oper);
+  
   public:
     print_datatypes_error_c(symbol_c *ignore);
     virtual ~print_datatypes_error_c(void);
