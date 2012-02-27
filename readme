@@ -145,13 +145,15 @@ Stage 3
      Pass 1: Analyses the possible data types each expression/literal/IL instruction/etc. may take 
              Implemented in -> stage3/fill_candidate_datatypes_c
              This will anotate the abstract syntax tree 
-             (Every object of in the abstract syntax tree that may have a data type, will have the variable 'candidate_datatypes' correctly filled in.)
-     Pass 2: Narrows all the possible data types each expression/literal/IL instruction/etc. may take down to a single data type 
+             (Every object of in the abstract syntax tree that may have a data type, will have the variable 'candidate_datatypes' correctly filled in.
+             Additionally, objects in the abstract syntax tree that represen function invocations will have the variable 
+              'candidate_functions' correctly filled in.)
+Pass 2: Narrows all the possible data types each expression/literal/IL instruction/etc. may take down to a single data type 
              Implemented in -> stage3/narrow_candidate_datatypes_c
              This will anotate the abstract syntax tree 
              (Every object of in the abstract syntax tree that may have a data type, will have the variable 'datatype' correctly filled in.
               Additionally, objects in the abstract syntax tree that represen function invocations will have the variables 
-              'called_function_declaration', 'extensible_param_count' and 'candidate_functions' correctly filled in.
+              'called_function_declaration' and 'extensible_param_count' correctly filled in.
               Additionally, objects in the abstract syntax tree that represen function block (FB) invocations will have the variable
               'called_fb_declaration' correctly filled in.)
      Pass 2: Prints error messages in the event of the IEC 61131-3 source code being analysed contains semantic data type incompatibility errors.

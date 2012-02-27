@@ -190,7 +190,7 @@ void *flow_control_analysis_c::visit(instruction_list_c *symbol) {
 // SYM_REF2(il_instruction_c, label, il_instruction)
 // void *visit(instruction_list_c *symbol);
 void *flow_control_analysis_c::visit(il_instruction_c *symbol) {
-	symbol->prev_il_instruction = prev_il_instruction;
+	symbol->prev_il_instruction.push_back(prev_il_instruction);
 	/* TODO: handle labels correctly!
 	 *
 	 *      Don't forget to handle multiple consecutive lables too!
@@ -268,7 +268,7 @@ void *flow_control_analysis_c::visit(simple_instr_list_c *symbol) {
 
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
 void *flow_control_analysis_c::visit(il_simple_instruction_c*symbol) {
-	symbol->prev_il_instruction = prev_il_instruction;
+	symbol->prev_il_instruction.push_back(prev_il_instruction);
 	return NULL;
 }
 

@@ -24,7 +24,8 @@
 
 #include "datatype_functions.hh"
 #include "../absyntax_utils/absyntax_utils.hh"
-#include <algorithm>
+#include <vector>
+// #include <algorithm>
 
 
 
@@ -71,14 +72,14 @@ const struct widen_entry widen_ADD_table[] = {
 
 
 const struct widen_entry widen_SUB_table[] = {
-	{ &search_constant_type_c::time_type_name,          &search_constant_type_c::time_type_name,            &search_constant_type_c::time_type_name     },
-	{ &search_constant_type_c::tod_type_name,           &search_constant_type_c::tod_type_name,             &search_constant_type_c::tod_type_name      },
-	{ &search_constant_type_c::dt_type_name,            &search_constant_type_c::dt_type_name,              &search_constant_type_c::dt_type_name       },
-	{ &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safetime_type_name,        &search_constant_type_c::safetime_type_name },
-	{ &search_constant_type_c::safetod_type_name,       &search_constant_type_c::safetod_type_name,         &search_constant_type_c::safetod_type_name  },
-	{ &search_constant_type_c::safedt_type_name,        &search_constant_type_c::safedt_type_name,          &search_constant_type_c::safedt_type_name   },
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::time_type_name,            &search_constant_type_c::time_type_name     },
+    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::tod_type_name,             &search_constant_type_c::tod_type_name      },
+    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::dt_type_name,              &search_constant_type_c::dt_type_name       },
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safetime_type_name,        &search_constant_type_c::safetime_type_name },
+    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::safetod_type_name,         &search_constant_type_c::safetod_type_name  },
+    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::safedt_type_name,          &search_constant_type_c::safedt_type_name   },
 
-	{ &search_constant_type_c::tod_type_name,           &search_constant_type_c::time_type_name,            &search_constant_type_c::tod_type_name      },
+    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::time_type_name,            &search_constant_type_c::tod_type_name      },
     { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::time_type_name,            &search_constant_type_c::tod_type_name      },
     { &search_constant_type_c::tod_type_name,           &search_constant_type_c::safetime_type_name,        &search_constant_type_c::tod_type_name      },
     { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::safetime_type_name,        &search_constant_type_c::safetod_type_name  },
@@ -136,7 +137,7 @@ const struct widen_entry widen_MUL_table[] = {
 };
 
 const struct widen_entry widen_DIV_table[] = {
-	{ &search_constant_type_c::time_type_name,          &search_constant_type_c::lreal_type_name,           &search_constant_type_c::time_type_name     },
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::lreal_type_name,           &search_constant_type_c::time_type_name     },
     { &search_constant_type_c::time_type_name,          &search_constant_type_c::real_type_name,            &search_constant_type_c::time_type_name     },
     { &search_constant_type_c::time_type_name,          &search_constant_type_c::dint_type_name,            &search_constant_type_c::time_type_name     },
     { &search_constant_type_c::time_type_name,          &search_constant_type_c::int_type_name,             &search_constant_type_c::time_type_name     },
@@ -200,6 +201,27 @@ void copy_candidate_datatype_list(symbol_c *from, symbol_c *to) {
 }
 
 
+
+/* Intersect two candidate_datatype_lists.
+ * Remove from list1 (origin, dest.) all elements that are not found in list2 (with).
+ * In essence, list1 will contain the result of the intersection of list1 with list2.
+ * In other words, modify list1 so it only contains the elelements that are simultaneously in list1 and list2!
+ */
+void intersect_candidate_datatype_list(symbol_c *list1 /*origin, dest.*/, symbol_c *list2 /*with*/) {
+	if ((NULL == list1) || (NULL == list2))
+		/* In principle, we should never call it with NULL values. Best to abort the compiler just in case! */
+		return;
+
+	for(std::vector<symbol_c *>::iterator i = list1->candidate_datatypes.begin(); i < list1->candidate_datatypes.end(); ) {
+		/* Note that we do _not_ increment i in the for() loop!
+		 * When we erase an element from position i, a new element will take it's place, that must also be tested! 
+		 */
+		if (search_in_candidate_datatype_list(*i, list2->candidate_datatypes) < 0)
+			/* remove this element! This will change the value of candidate_datatypes.size() */
+			list1->candidate_datatypes.erase(i);
+		else i++;
+	}
+}
 
 
 

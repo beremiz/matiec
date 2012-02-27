@@ -598,7 +598,10 @@ void *print_datatypes_error_c::visit(configuration_declaration_c *symbol) {
 // SYM_REF2(il_instruction_c, label, il_instruction)
 void *print_datatypes_error_c::visit(il_instruction_c *symbol) {
 	if (NULL != symbol->il_instruction) {
-		prev_il_instruction = symbol->prev_il_instruction;
+		if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
+		if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
+		else                                          prev_il_instruction = symbol->prev_il_instruction[0];
+
 		symbol->il_instruction->accept(*this);
 		prev_il_instruction = NULL;
 	}
@@ -736,7 +739,10 @@ void *print_datatypes_error_c::visit(il_formal_funct_call_c *symbol) {
 
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
 void *print_datatypes_error_c::visit(il_simple_instruction_c *symbol)	{
-  prev_il_instruction = symbol->prev_il_instruction;
+  if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
+  if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
+  else                                          prev_il_instruction = symbol->prev_il_instruction[0];
+
   symbol->il_simple_instruction->accept(*this);
   prev_il_instruction = NULL;
   return NULL;

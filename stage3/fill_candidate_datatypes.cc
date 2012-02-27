@@ -808,10 +808,16 @@ void *fill_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 		/* This empty/null il_instruction does not change the value of the current/default IL variable.
 		 * So it inherits the candidate_datatypes from it's previous IL instructions!
 		 */
-		if (NULL != symbol->prev_il_instruction)
-			copy_candidate_datatype_list(symbol->prev_il_instruction /*from*/, symbol /*to*/);	
+		if (!symbol->prev_il_instruction.empty()) {
+			copy_candidate_datatype_list(symbol->prev_il_instruction[0] /*from*/, symbol /*to*/);
+			for (unsigned int i = 1; i < symbol->prev_il_instruction.size(); i++) {
+				intersect_candidate_datatype_list(symbol /*origin, dest.*/, symbol->prev_il_instruction[i] /*with*/);
+			}
+		}
 	} else {
-		prev_il_instruction = symbol->prev_il_instruction;
+		if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
+		if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
+		else                                          prev_il_instruction = symbol->prev_il_instruction[0];
 		symbol->il_instruction->accept(*this);
 		prev_il_instruction = NULL;
 
@@ -1011,9 +1017,14 @@ void *fill_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
   return NULL;
 }
 
+
+
+
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
 void *fill_candidate_datatypes_c::visit(il_simple_instruction_c *symbol) {
-  prev_il_instruction = symbol->prev_il_instruction;
+  if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
+  if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
+  else                                          prev_il_instruction = symbol->prev_il_instruction[0];
   symbol->il_simple_instruction->accept(*this);
   prev_il_instruction = NULL;
 

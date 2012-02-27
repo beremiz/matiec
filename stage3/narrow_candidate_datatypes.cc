@@ -64,6 +64,13 @@ static void set_datatype(symbol_c *datatype, symbol_c *symbol) {
 
 
 
+/* Only set the symbol's desired datatype to 'datatype' if that datatype is in the candidate_datatype list */
+static void set_datatype_in_prev_il_instruction(symbol_c *datatype, il_instruction_c *symbol) {
+	for (unsigned int i = 0; i < symbol->prev_il_instruction.size(); i++)
+		set_datatype(datatype, symbol->prev_il_instruction[i]);
+}
+
+
 
 bool narrow_candidate_datatypes_c::is_widening_compatible(symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, const struct widen_entry widen_table[]) {
 	for (int k = 0; NULL != widen_table[k].left;  k++) {
@@ -503,12 +510,12 @@ void *narrow_candidate_datatypes_c::visit(instruction_list_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 	if (NULL == symbol->il_instruction) {
 		/* this empty/null il_instruction cannot generate the desired datatype. We pass on the request to the previous il instruction. */
-		if (NULL != symbol->prev_il_instruction)
-			symbol->prev_il_instruction->datatype = symbol->datatype;
+		set_datatype_in_prev_il_instruction(symbol->datatype, symbol);
 	} else {
 		/* Tell the il_instruction the datatype that it must generate - this was chosen by the next il_instruction (remember: we are iterating backwards!) */
-		symbol->il_instruction->datatype = symbol->datatype;
-		prev_il_instruction = symbol->prev_il_instruction;
+		if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
+		if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
+		else                                          prev_il_instruction = symbol->prev_il_instruction[0];
 		symbol->il_instruction->accept(*this);
 		prev_il_instruction = NULL;
 	}
@@ -657,7 +664,9 @@ void *narrow_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
 
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
 void *narrow_candidate_datatypes_c::visit(il_simple_instruction_c *symbol)	{
-  prev_il_instruction = symbol->prev_il_instruction;
+  if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
+  if (symbol->prev_il_instruction.size() == 0)   prev_il_instruction = NULL;
+  else                                           prev_il_instruction = symbol->prev_il_instruction[0];
   symbol->il_simple_instruction->datatype = symbol->datatype;
   symbol->il_simple_instruction->accept(*this);
   prev_il_instruction = NULL;

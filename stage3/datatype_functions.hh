@@ -146,6 +146,13 @@ int search_in_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c 
  */
 void copy_candidate_datatype_list(symbol_c *from, symbol_c *to);
 
+/* Intersect two candidate_datatype_lists.
+ * Remove from list1 (origin, dest.) all elements that are not found in list2 (with).
+ * In essence, list1 will contain the result of the intersection of list1 with list2.
+ * In other words, modify list1 so it only contains the elelements that are simultaneously in list1 and list2!
+ */
+void intersect_candidate_datatype_list(symbol_c *list1 /*origin, dest.*/, symbol_c *list2 /*with*/);
+
 
 /* A helper function... */
 bool is_ANY_ELEMENTARY_type         (symbol_c *type_symbol);
