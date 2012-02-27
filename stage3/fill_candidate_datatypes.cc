@@ -283,6 +283,17 @@ void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruc
 	called_fb_declaration = fb_decl;
 
 	/* This implicit FB call does not change the value stored in the current/default IL variable */
+	/* It does, however, require that the datatype be compatible with the input parameter of the FB being called. 
+	 * If we were to follow the filling & narrowing algorithm correctly (implemented in fill_candidate_datatypes_c
+	 * & narrow_candidate_datatypes_c respectively), we should be restricting the candidate_datatpes to the datatypes
+	 * that are compatible to the FB call. 
+	 * However, doing the above will often result in some very confusing error messages for the user, especially in the case
+	 * in which the FB call is wrong, so the resulting cadidate datatypes is an empty list. In this case, the user would see
+	 * many error messages related to the IL instructions that follow the FB call, even though those IL instructions may be perfectly
+	 * correct.
+	 * For now, we will simply let the narrow_candidate_datatypes_c verify if the datatypes are compatible (something that should be done
+	 * here).
+	 */
 	if (NULL != prev_il_instruction)
 		copy_candidate_datatype_list(prev_il_instruction/*from*/, il_instruction/*to*/);
 

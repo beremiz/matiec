@@ -259,7 +259,7 @@ void narrow_candidate_datatypes_c::narrow_function_invocation(symbol_c *fcall, g
  * The algorithm will be to build a fake il_fb_call_c equivalent to the implicit IL FB call, and let 
  * the visit(il_fb_call_c *) method handle it!
  */
-void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
+void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
 
 	/* set the datatype of the il_operand, this is, the FB being called! */
 	if (NULL != il_operand) {
@@ -274,7 +274,7 @@ void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instr
 		 * (or list of instructions) that will set the IL current/default value.
 		 * We cannot proceed verifying type compatibility of something that does not exist.
 		 */
-		return;
+		return NULL;
 	}
 
 	if (NULL == fb_decl) {
@@ -282,7 +282,7 @@ void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instr
 		/* so we simply pass on the required datatype to the prev_il_instruction */
 		/* The invalid FB invocation will be caught by the print_datatypes_error_c by analysing NULL value in il_operand->datatype! */
 		prev_il_instruction->datatype = il_instruction->datatype;
-		return;
+		return NULL;
 	}
 	
 
@@ -345,6 +345,7 @@ void narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_instr
 	} else {
 		prev_il_instruction->datatype = NULL;
 	}
+	return NULL;
 }
 
 
@@ -594,6 +595,7 @@ void *narrow_candidate_datatypes_c::visit(il_expression_c *symbol) {
 return NULL;
 }
 
+
 /*   il_call_operator prev_declared_fb_name
  * | il_call_operator prev_declared_fb_name '(' ')'
  * | il_call_operator prev_declared_fb_name '(' eol_list ')'
@@ -746,6 +748,7 @@ void *narrow_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 }
 
 void *narrow_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
+  /* TODO: ... */
 	return NULL;
 }
 
@@ -759,65 +762,33 @@ void *narrow_candidate_datatypes_c::visit(R_operator_c *symbol)  {
 }
 
 
-void *narrow_candidate_datatypes_c::visit(S1_operator_c *symbol) {
-	narrow_implicit_il_fb_call(symbol, "S1", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(R1_operator_c *symbol) {
-	narrow_implicit_il_fb_call(symbol, "R1", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(CLK_operator_c *symbol) {
-	narrow_implicit_il_fb_call(symbol, "CLK", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(CU_operator_c *symbol) {
-	narrow_implicit_il_fb_call(symbol, "CU", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(CD_operator_c *symbol) {
-	narrow_implicit_il_fb_call(symbol, "CD", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(PV_operator_c *symbol) {
-	narrow_implicit_il_fb_call(symbol, "PV", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(IN_operator_c *symbol) {
-	narrow_implicit_il_fb_call(symbol, "IN", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(PT_operator_c *symbol) {
-	narrow_implicit_il_fb_call(symbol, "PT", symbol->called_fb_declaration);
-	return NULL;
-}
+void *narrow_candidate_datatypes_c::visit(  S1_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "S1",  symbol->called_fb_declaration);}
+void *narrow_candidate_datatypes_c::visit(  R1_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "R1",  symbol->called_fb_declaration);}
+void *narrow_candidate_datatypes_c::visit( CLK_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "CLK", symbol->called_fb_declaration);}
+void *narrow_candidate_datatypes_c::visit(  CU_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "CU",  symbol->called_fb_declaration);}
+void *narrow_candidate_datatypes_c::visit(  CD_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "CD",  symbol->called_fb_declaration);}
+void *narrow_candidate_datatypes_c::visit(  PV_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "PV",  symbol->called_fb_declaration);}
+void *narrow_candidate_datatypes_c::visit(  IN_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "IN",  symbol->called_fb_declaration);}
+void *narrow_candidate_datatypes_c::visit(  PT_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "PT",  symbol->called_fb_declaration);}
 
 
-
-void *narrow_candidate_datatypes_c::visit(AND_operator_c  *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(OR_operator_c   *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(XOR_operator_c  *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit( AND_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(  OR_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit( XOR_operator_c *symbol)  {return handle_il_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(ANDN_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(ORN_operator_c  *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit( ORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(XORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(ADD_operator_c  *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(SUB_operator_c  *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(MUL_operator_c  *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(DIV_operator_c  *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(MOD_operator_c  *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(GT_operator_c   *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(GE_operator_c   *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(EQ_operator_c   *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(LT_operator_c   *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(LE_operator_c   *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(NE_operator_c   *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit( ADD_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit( SUB_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit( MUL_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit( DIV_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit( MOD_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(  GT_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(  GE_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(  EQ_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(  LT_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(  LE_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(  NE_operator_c *symbol)  {return handle_il_instruction(symbol);}
 
 
 // SYM_REF0(CAL_operator_c)
@@ -838,7 +809,7 @@ void *narrow_candidate_datatypes_c::narrow_conditional_flow_control_IL_instructi
 	if ((NULL != symbol->datatype) && (!is_type(symbol->datatype, bool_type_name_c))) ERROR;
 	if (symbol->candidate_datatypes.size() > 1) ERROR;
 
-	/* NOTE: If there is not IL instruction following this CALC, CALCN, JMPC, JMPC, ..., instruction,
+	/* NOTE: If there is no IL instruction following this CALC, CALCN, JMPC, JMPC, ..., instruction,
 	 *       we must still provide a bool_type_name_c datatype (if possible, i.e. if it exists in the candidate datatype list).
 	 *       If it is not possible, we set it to NULL
 	 */
@@ -853,17 +824,10 @@ void *narrow_candidate_datatypes_c::narrow_conditional_flow_control_IL_instructi
 
 
 // SYM_REF0(CALC_operator_c)
-/* called from il_fb_call_c (symbol->il_call_operator->accpet(*this) ) */
-void *narrow_candidate_datatypes_c::visit(CALC_operator_c *symbol) {
-	return narrow_conditional_flow_control_IL_instruction(symbol);
-}
-
-
 // SYM_REF0(CALCN_operator_c)
-/* called from il_fb_call_c (symbol->il_call_operator->accpet(*this) ) */
-void *narrow_candidate_datatypes_c::visit(CALCN_operator_c *symbol) {
-	return narrow_conditional_flow_control_IL_instruction(symbol);
-}
+/* called from visit(il_fb_call_c *) {symbol->il_call_operator->accpet(*this)} */
+void *narrow_candidate_datatypes_c::visit( CALC_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(CALCN_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
 
 
 void *narrow_candidate_datatypes_c::visit(RET_operator_c *symbol) {
@@ -878,13 +842,8 @@ void *narrow_candidate_datatypes_c::visit(RET_operator_c *symbol) {
 	return NULL;
 }
 
-void *narrow_candidate_datatypes_c::visit(RETC_operator_c *symbol) {
-	return narrow_conditional_flow_control_IL_instruction(symbol);
-}
-
-void *narrow_candidate_datatypes_c::visit(RETCN_operator_c *symbol) {
-	return narrow_conditional_flow_control_IL_instruction(symbol);
-}
+void *narrow_candidate_datatypes_c::visit( RETC_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(RETCN_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
 
 void *narrow_candidate_datatypes_c::visit(JMP_operator_c *symbol) {
 	/* set the desired datatype of the previous il instruction */
@@ -898,13 +857,8 @@ void *narrow_candidate_datatypes_c::visit(JMP_operator_c *symbol) {
 	return NULL;
 }
 
-void *narrow_candidate_datatypes_c::visit(JMPC_operator_c *symbol) {
-	return narrow_conditional_flow_control_IL_instruction(symbol);
-}
-
-void *narrow_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {
-	return narrow_conditional_flow_control_IL_instruction(symbol);
-}
+void *narrow_candidate_datatypes_c::visit( JMPC_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
 
 /* Symbol class handled together with function call checks */
 // void *visit(il_assign_operator_c *symbol, variable_name);

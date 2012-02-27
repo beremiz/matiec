@@ -46,10 +46,10 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
 
     bool is_widening_compatible(symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, const struct widen_entry widen_table[]);
 
-    void narrow_function_invocation(symbol_c *f_call, generic_function_call_t fcall_data);
-    void narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
-    void narrow_formal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
-    void narrow_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration);
+    void  narrow_function_invocation(symbol_c *f_call, generic_function_call_t fcall_data);
+    void  narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
+    void  narrow_formal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
+    void *narrow_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration);
     void *handle_il_instruction(symbol_c *symbol);
     void *narrow_conditional_flow_control_IL_instruction(symbol_c *symbol);
 
