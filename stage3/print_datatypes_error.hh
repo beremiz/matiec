@@ -74,6 +74,7 @@ class print_datatypes_error_c: public iterator_visitor_c {
     int  il_parenthesis_level;
     bool il_error;
     bool error_found;
+    bool warning_found;
 
     /* the current data type of the data stored in the IL stack, i.e. the default variable */
     symbol_c *prev_il_instruction;
@@ -86,7 +87,8 @@ class print_datatypes_error_c: public iterator_visitor_c {
     void handle_function_invocation(symbol_c *fcall, generic_function_call_t fcall_data);
     void handle_implicit_il_fb_invocation(symbol_c *il_operator, const char *param_name, symbol_c *called_fb_declaration);  
     void *handle_conditional_flow_control_IL_instruction(symbol_c *symbol, const char *oper);
-  
+    void check_used_operation_status(symbol_c *symbol, symbol_c *left, symbol_c *right,  const struct widen_entry widen_table[]);
+    
   public:
     print_datatypes_error_c(symbol_c *ignore);
     virtual ~print_datatypes_error_c(void);

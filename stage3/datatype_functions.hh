@@ -126,6 +126,7 @@ struct widen_entry {
 	symbol_c *left;
 	symbol_c *right;
 	symbol_c *result;
+	enum {ok, deprecated} status;
 };
 /*
  * 2.5.1.5.6 Functions of time data types
