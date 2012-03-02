@@ -92,6 +92,27 @@ int print_datatypes_error_c::get_error_found() {
 	return error_found;
 }
 
+
+
+
+
+/* Verify if the datatypes of all prev_il_instructions are valid and equal!  */
+static bool are_all_datatypes_of_prev_il_instructions_datatypes_equal(il_instruction_c *symbol) {
+	if (NULL == symbol) ERROR;
+	bool res;
+	
+	if (symbol->prev_il_instruction.size() > 0)
+		res = is_type_valid(symbol->prev_il_instruction[0]->datatype);
+
+	for (unsigned int i = 1; i < symbol->prev_il_instruction.size(); i++)
+		res &= is_type_equal(symbol->prev_il_instruction[i-1]->datatype, symbol->prev_il_instruction[i]->datatype);
+	
+	return res;
+}
+
+
+
+
 /* a helper function... */
 symbol_c *print_datatypes_error_c::base_type(symbol_c *symbol) {
 	/* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used
@@ -239,7 +260,7 @@ void print_datatypes_error_c::handle_implicit_il_fb_invocation(symbol_c *il_oper
 		return;
 	}
 
-	if (NULL == prev_il_instruction) {
+	if (fake_prev_il_instruction->prev_il_instruction.empty()) {
 		STAGE3_ERROR(0, il_operator, il_operand, "FB invocation operator '%s' must be preceded by a 'LD' (or equivalent) operator.", param_name);	
 		return;
 	}
@@ -257,7 +278,7 @@ void print_datatypes_error_c::handle_implicit_il_fb_invocation(symbol_c *il_oper
 		STAGE3_ERROR(0, il_operator, il_operand, "FB called by '%s' operator does not have a parameter named '%s'", param_name, param_name);	
 		return;
 	}
-	if (NULL == prev_il_instruction->datatype) {
+	if (!are_all_datatypes_of_prev_il_instructions_datatypes_equal(fake_prev_il_instruction)) {
 		STAGE3_ERROR(0, il_operator, il_operand, "Data type incompatibility between parameter '%s' and value being passed.", param_name);
 		return;
 	}
@@ -618,12 +639,29 @@ void *print_datatypes_error_c::visit(configuration_declaration_c *symbol) {
 // SYM_REF2(il_instruction_c, label, il_instruction)
 void *print_datatypes_error_c::visit(il_instruction_c *symbol) {
 	if (NULL != symbol->il_instruction) {
-		if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
-		if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
-		else                                          prev_il_instruction = symbol->prev_il_instruction[0];
-
+// #if 0
+		il_instruction_c tmp_prev_il_instruction(NULL, NULL);
+		/* the narrow algorithm will need access to the intersected candidate_datatype lists of all prev_il_instructions, as well as the 
+		 * list of the prev_il_instructions.
+		 * Instead of creating two 'global' (within the class) variables, we create a single il_instruction_c variable (fake_prev_il_instruction),
+		 * and shove that data into this single variable.
+		 */
+		tmp_prev_il_instruction.prev_il_instruction = symbol->prev_il_instruction;
+		intersect_prev_candidate_datatype_lists(&tmp_prev_il_instruction);
+		if (are_all_datatypes_of_prev_il_instructions_datatypes_equal(symbol))
+			if (symbol->prev_il_instruction.size() > 0)
+				tmp_prev_il_instruction.datatype = (symbol->prev_il_instruction[0])->datatype;
+		/* Tell the il_instruction the datatype that it must generate - this was chosen by the next il_instruction (remember: we are iterating backwards!) */
+		fake_prev_il_instruction = &tmp_prev_il_instruction;
 		symbol->il_instruction->accept(*this);
-		prev_il_instruction = NULL;
+		fake_prev_il_instruction = NULL;
+// #endif
+// 		if (symbol->prev_il_instruction.size() > 1) ERROR; /* only valid for now! */
+// 		if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
+// 		else                                          prev_il_instruction = symbol->prev_il_instruction[0];
+
+// 		symbol->il_instruction->accept(*this);
+// 		prev_il_instruction = NULL;
 	}
 
 	return NULL;
@@ -657,7 +695,7 @@ void *print_datatypes_error_c::visit(il_function_call_c *symbol) {
 	if (NULL == symbol->il_operand_list)  symbol->il_operand_list = new il_operand_list_c;
 	if (NULL == symbol->il_operand_list)  ERROR;
 
-	((list_c *)symbol->il_operand_list)->insert_element(prev_il_instruction, 0);
+	((list_c *)symbol->il_operand_list)->insert_element(fake_prev_il_instruction, 0);
 
 	generic_function_call_t fcall_param = {
 		/* fcall_param.function_name               = */ symbol->function_name,
@@ -671,16 +709,10 @@ void *print_datatypes_error_c::visit(il_function_call_c *symbol) {
 
 /* TODO: check what error message (if any) the compiler will give out if this function invocation
  * is not preceded by a LD operator (or another equivalent operator or list of operators).
- * I.e. if it is preceded by an operator or operator list that will set the 'current value'.
- * I.e. if the prev_il_operand == NULL;
  */
 	handle_function_invocation(symbol, fcall_param);
 	
-	/* The first parameter of a non formal function call in IL will be the 'current value' (i.e. the prev_il_instruction)
-	 * In order to be able to handle this without coding special cases, we simply prepend that symbol
-	 * to the il_operand_list. This was done in fill_candidate_datatypes_c.
-	 * We now undo those changes!
-	 */  
+	/* We now undo those changes to the abstract syntax tree made above! */
 	((list_c *)symbol->il_operand_list)->remove_element(0);
 	if (((list_c *)symbol->il_operand_list)->n == 0) {
 		/* if the list becomes empty, then that means that it did not exist before we made these changes, so we delete it! */
@@ -696,9 +728,9 @@ void *print_datatypes_error_c::visit(il_function_call_c *symbol) {
 // SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
 void *print_datatypes_error_c::visit(il_expression_c *symbol) {
   /* first give the parenthesised IL list a chance to print errors */
-  symbol_c *save_prev_il_instruction = prev_il_instruction;
+  il_instruction_c *save_fake_prev_il_instruction = fake_prev_il_instruction;
   symbol->simple_instr_list->accept(*this);
-  prev_il_instruction = save_prev_il_instruction;
+  fake_prev_il_instruction = save_fake_prev_il_instruction;
 
   /* Now handle the operation (il_expr_operator) that will use the result coming from the parenthesised IL list (i.e. simple_instr_list) */
   il_operand = symbol->simple_instr_list; /* This is not a bug! The parenthesised expression will be used as the operator! */
@@ -759,13 +791,31 @@ void *print_datatypes_error_c::visit(il_formal_funct_call_c *symbol) {
 
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
 void *print_datatypes_error_c::visit(il_simple_instruction_c *symbol)	{
-  if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
-  if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
-  else                                          prev_il_instruction = symbol->prev_il_instruction[0];
-
+  if (symbol->prev_il_instruction.size() > 1) ERROR; /* There should be no labeled insructions inside an IL expression! */
+    
+  il_instruction_c tmp_prev_il_instruction(NULL, NULL);
+  /* the print error algorithm will need access to the intersected candidate_datatype lists of all prev_il_instructions, as well as the 
+   * list of the prev_il_instructions.
+   * Instead of creating two 'global' (within the class) variables, we create a single il_instruction_c variable (fake_prev_il_instruction),
+   * and shove that data into this single variable.
+   */
+  if (symbol->prev_il_instruction.size() > 0)
+    tmp_prev_il_instruction.candidate_datatypes = symbol->prev_il_instruction[0]->candidate_datatypes;
+  tmp_prev_il_instruction.prev_il_instruction = symbol->prev_il_instruction;
+  
+   /* copy the candidate_datatypes list */
+  fake_prev_il_instruction = &tmp_prev_il_instruction;
   symbol->il_simple_instruction->accept(*this);
-  prev_il_instruction = NULL;
+  fake_prev_il_instruction = NULL;
   return NULL;
+  
+  
+//   if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
+//   else                                          prev_il_instruction = symbol->prev_il_instruction[0];
+
+//   symbol->il_simple_instruction->accept(*this);
+//   prev_il_instruction = NULL;
+//   return NULL;
 }
 
 

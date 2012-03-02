@@ -57,15 +57,38 @@ narrow_candidate_datatypes_c::~narrow_candidate_datatypes_c(void) {
 
 /* Only set the symbol's desired datatype to 'datatype' if that datatype is in the candidate_datatype list */
 static void set_datatype(symbol_c *datatype, symbol_c *symbol) {
-	symbol->datatype = NULL;   
-	if (search_in_candidate_datatype_list(datatype, symbol->candidate_datatypes) >= 0)
-		symbol->datatype = datatype;  
+  
+	/* If we are trying to set to the undefined type, and the symbol's datatype has already been set to something else, 
+	 * we abort the compoiler as I don't think this should ever occur. 
+	 * However, I (Mario) am not too sure of this, so if the compiler ever aborts here, please analyse the situation
+	 * carefully as it might be perfectly legal and something I have missed!
+	 */
+	if ((NULL == datatype) && (NULL != symbol->datatype)) ERROR;
+	
+	if ((NULL == datatype) && (NULL == symbol->datatype)) return;
+	
+	if (search_in_candidate_datatype_list(datatype, symbol->candidate_datatypes) < 0)
+		symbol->datatype = &(search_constant_type_c::invalid_type_name);   
+	else {
+		if (NULL == symbol->datatype)   
+			/* not yet set to anything, so we set it to the requested data type */
+			symbol->datatype = datatype; 
+		else {
+			/* had already been set previously to some data type. Let's check if they are the same! */
+			if (!is_type_equal(symbol->datatype, datatype))
+				symbol->datatype = &(search_constant_type_c::invalid_type_name);
+// 			else 
+				/* we leave it unchanged, as it is the same as the requested data type! */
+		}
+	}
 }
 
 
 
 /* Only set the symbol's desired datatype to 'datatype' if that datatype is in the candidate_datatype list */
-static void set_datatype_in_prev_il_instruction(symbol_c *datatype, il_instruction_c *symbol) {
+// static void set_datatype_in_prev_il_instructions(symbol_c *datatype, std::vector <symbol_c *> prev_il_instructions) {
+static void set_datatype_in_prev_il_instructions(symbol_c *datatype, il_instruction_c *symbol) {
+	if (NULL == symbol) ERROR;
 	for (unsigned int i = 0; i < symbol->prev_il_instruction.size(); i++)
 		set_datatype(datatype, symbol->prev_il_instruction[i]);
 }
@@ -276,7 +299,7 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 	}
 	symbol_c *fb_decl = il_operand->datatype;
 
-	if (NULL == prev_il_instruction) {
+	if (0 == fake_prev_il_instruction->prev_il_instruction.size()) {
 		/* This IL implicit FB call (e.g. CLK ton_var) is not preceded by another IL instruction
 		 * (or list of instructions) that will set the IL current/default value.
 		 * We cannot proceed verifying type compatibility of something that does not exist.
@@ -286,9 +309,9 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 
 	if (NULL == fb_decl) {
 		/* the il_operand is a not FB instance */
-		/* so we simply pass on the required datatype to the prev_il_instruction */
-		/* The invalid FB invocation will be caught by the print_datatypes_error_c by analysing NULL value in il_operand->datatype! */
-		prev_il_instruction->datatype = il_instruction->datatype;
+		/* so we simply pass on the required datatype to the prev_il_instructions */
+		/* The invalid FB invocation will be caught in the print_datatypes_error_c by analysing NULL value in il_operand->datatype! */
+		set_datatype_in_prev_il_instructions(il_instruction->datatype, fake_prev_il_instruction);
 		return NULL;
 	}
 	
@@ -302,8 +325,15 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 	 * would be changed to the IL instruction coming before the current prev_il_instruction! => things would get all messed up!)
 	 * The easiest way to work around this is to simply use a new object, and copy the relevant details to that object!
 	 */
-	symbol_c param_value = *prev_il_instruction;
-        
+printf("XX::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  fake_prev_il_instruction->candidate_datatypes.size() = %d\n",fake_prev_il_instruction->candidate_datatypes.size());
+printf("XX::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  fake_prev_il_instruction->candidate_datatypes[0] = %p\n",fake_prev_il_instruction->candidate_datatypes[0]);
+	symbol_c param_value = *fake_prev_il_instruction; /* copy the candidate_datatypes list ! */
+printf("XX::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.candidate_datatypes.size() = %d\n",param_value.candidate_datatypes.size());
+printf("XX::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.candidate_datatypes[0] = %p\n",param_value.candidate_datatypes[0]);
+printf("00::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  search_constant_type::time_type_name = %p\n", &search_constant_type_c::time_type_name);
+printf("00::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  search_constant_type::invalid_type_name = %p\n", &search_constant_type_c::invalid_type_name);
+
+printf("11::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.datatype = %p\n", param_value.datatype);
 	identifier_c variable_name(param_name);
 	// SYM_REF1(il_assign_operator_c, variable_name)
 	il_assign_operator_c il_assign_operator(&variable_name);  
@@ -314,6 +344,7 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 	// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 	CAL_operator_c CAL_operator;
 	il_fb_call_c il_fb_call(&CAL_operator, il_operand, NULL, &il_param_list);
+printf("22::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.datatype = %p\n", param_value.datatype);
 	        
 	/* A FB call does not return any datatype, but the IL instructions that come after this
 	 * FB call may require a specific datatype in the il current/default variable, 
@@ -326,6 +357,7 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 // 	copy_candidate_datatype_list(il_instruction/*from*/, &il_fb_call/*to*/);
 	il_fb_call.called_fb_declaration = called_fb_declaration;
 	il_fb_call.accept(*this);
+printf("33::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.datatype = %p\n", param_value.datatype);
 
 	/* set the required datatype of the previous IL instruction! */
 	/* NOTE:
@@ -338,7 +370,7 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 	 * This means that we have two consumers/users for the same value. 
 	 * We must therefore check whether the datatype required by the IL instructions following this FB call 
 	 * is the same as that required for the first parameter. If not, then we have a semantic error,
-	 * and we set it to NULL.
+	 * and we set it to invalid_type_name.
 	 *
 	 * However, we only do that if:
 	 *  - The IL instruction that comes after this IL FB call actually asked this FB call for a specific 
@@ -348,9 +380,11 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 	 *     FB call must be left unchanged!
 	 */
 	if ((NULL == il_instruction->datatype) || (is_type_equal(param_value.datatype, il_instruction->datatype))) {
-		prev_il_instruction->datatype = param_value.datatype;
+printf("44::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.datatype = %p\n", param_value.datatype);
+		set_datatype_in_prev_il_instructions(param_value.datatype, fake_prev_il_instruction);
 	} else {
-		prev_il_instruction->datatype = NULL;
+printf("55::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.datatype = %p\n", param_value.datatype);
+		set_datatype_in_prev_il_instructions(&search_constant_type_c::invalid_type_name, fake_prev_il_instruction);
 	}
 	return NULL;
 }
@@ -510,14 +544,21 @@ void *narrow_candidate_datatypes_c::visit(instruction_list_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 	if (NULL == symbol->il_instruction) {
 		/* this empty/null il_instruction cannot generate the desired datatype. We pass on the request to the previous il instruction. */
-		set_datatype_in_prev_il_instruction(symbol->datatype, symbol);
+		set_datatype_in_prev_il_instructions(symbol->datatype, symbol);
 	} else {
+		il_instruction_c tmp_prev_il_instruction(NULL, NULL);
+		/* the narrow algorithm will need access to the intersected candidate_datatype lists of all prev_il_instructions, as well as the 
+		 * list of the prev_il_instructions.
+		 * Instead of creating two 'global' (within the class) variables, we create a single il_instruction_c variable (fake_prev_il_instruction),
+		 * and shove that data into this single variable.
+		 */
+		tmp_prev_il_instruction.prev_il_instruction = symbol->prev_il_instruction;
+		intersect_prev_candidate_datatype_lists(&tmp_prev_il_instruction);
 		/* Tell the il_instruction the datatype that it must generate - this was chosen by the next il_instruction (remember: we are iterating backwards!) */
-		if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
-		if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
-		else                                          prev_il_instruction = symbol->prev_il_instruction[0];
+		fake_prev_il_instruction = &tmp_prev_il_instruction;
+		symbol->il_instruction->datatype = symbol->datatype;
 		symbol->il_instruction->accept(*this);
-		prev_il_instruction = NULL;
+		fake_prev_il_instruction = NULL;
 	}
 	return NULL;
 }
@@ -552,12 +593,10 @@ void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 	 * need to create a new object to hold the pointer to prev_il_instruction.
 	 * This change will also be undone later in print_datatypes_error_c.
 	 */
-	symbol_c param_value;
+	symbol_c param_value = *fake_prev_il_instruction; /* copy the candidate_datatypes list */
 	if (NULL == symbol->il_operand_list)  symbol->il_operand_list = new il_operand_list_c;
 	if (NULL == symbol->il_operand_list)  ERROR;
 
-	if (NULL != prev_il_instruction)
-		param_value = *prev_il_instruction;
 	((list_c *)symbol->il_operand_list)->insert_element(&param_value, 0);
 
 	generic_function_call_t fcall_param = {
@@ -571,8 +610,7 @@ void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 	};
 
 	narrow_function_invocation(symbol, fcall_param);
-	if (NULL != prev_il_instruction)
-		prev_il_instruction->datatype = param_value.datatype;
+	set_datatype_in_prev_il_instructions(param_value.datatype, fake_prev_il_instruction);
 
 	/* Undo the changes to the abstract syntax tree we made above... */
 	((list_c *)symbol->il_operand_list)->remove_element(0);
@@ -596,10 +634,10 @@ void *narrow_candidate_datatypes_c::visit(il_expression_c *symbol) {
 
   /* now give the parenthesised IL list a chance to narrow the datatypes */
   /* The datatype that is must return was set by the call symbol->il_expr_operator->accept(*this) */
-  symbol_c *save_prev_il_instruction = prev_il_instruction; /*this is not really necessary, but lets play it safe */
+  il_instruction_c *save_fake_prev_il_instruction = fake_prev_il_instruction; /*this is not really necessary, but lets play it safe */
   symbol->simple_instr_list->accept(*this);
-  prev_il_instruction = save_prev_il_instruction;
-return NULL;
+  fake_prev_il_instruction = save_fake_prev_il_instruction;
+  return NULL;
 }
 
 
@@ -664,12 +702,23 @@ void *narrow_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
 
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
 void *narrow_candidate_datatypes_c::visit(il_simple_instruction_c *symbol)	{
-  if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
-  if (symbol->prev_il_instruction.size() == 0)   prev_il_instruction = NULL;
-  else                                           prev_il_instruction = symbol->prev_il_instruction[0];
+  if (symbol->prev_il_instruction.size() > 1) ERROR; /* There should be no labeled insructions inside an IL expression! */
+    
+  il_instruction_c tmp_prev_il_instruction(NULL, NULL);
+  /* the narrow algorithm will need access to the intersected candidate_datatype lists of all prev_il_instructions, as well as the 
+   * list of the prev_il_instructions.
+   * Instead of creating two 'global' (within the class) variables, we create a single il_instruction_c variable (fake_prev_il_instruction),
+   * and shove that data into this single variable.
+   */
+  if (symbol->prev_il_instruction.size() > 0)
+    tmp_prev_il_instruction.candidate_datatypes = symbol->prev_il_instruction[0]->candidate_datatypes;
+  tmp_prev_il_instruction.prev_il_instruction = symbol->prev_il_instruction;
+  
+   /* copy the candidate_datatypes list */
+  fake_prev_il_instruction = &tmp_prev_il_instruction;
   symbol->il_simple_instruction->datatype = symbol->datatype;
   symbol->il_simple_instruction->accept(*this);
-  prev_il_instruction = NULL;
+  fake_prev_il_instruction = NULL;
   return NULL;
 }
 
@@ -702,7 +751,8 @@ void *narrow_candidate_datatypes_c::handle_il_instruction(symbol_c *symbol) {
 	 *         (or simple_instr_list_c), which iterates backwards.
 	 */
 	/* set the desired datatype of the previous il instruction */
-	prev_il_instruction->datatype = symbol->datatype;
+	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
+	  
 	/* set the datatype for the operand */
 	il_operand->datatype = symbol->datatype;
 	il_operand->accept(*this);
@@ -739,8 +789,7 @@ void *narrow_candidate_datatypes_c::visit(ST_operator_c *symbol) {
 	il_operand->datatype = symbol->datatype;
 	il_operand->accept(*this);
 	/* set the desired datatype of the previous il instruction */
-	prev_il_instruction->datatype = symbol->datatype;
-	if (debug) printf("narrow_candidate_datatypes_c::visit(ST_operator_c *symbol) returning. previous_il_instruction->datatype = %p\n", prev_il_instruction->datatype);
+	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
 	return NULL;
 }
 
@@ -752,7 +801,7 @@ void *narrow_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 	il_operand->datatype = symbol->datatype;
 	il_operand->accept(*this);
 	/* set the desired datatype of the previous il instruction */
-	prev_il_instruction->datatype = symbol->datatype;
+	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
 	return NULL;
 }
 
@@ -805,8 +854,7 @@ void *narrow_candidate_datatypes_c::visit(  NE_operator_c *symbol)  {return hand
 void *narrow_candidate_datatypes_c::visit(CAL_operator_c *symbol) {
 	/* set the desired datatype of the previous il instruction */
 	/* This FB call does not change the value in the current/default IL variable, so we pass the required datatype to the previous IL instruction */
-	if (NULL != prev_il_instruction)
-		prev_il_instruction->datatype = symbol->datatype;
+	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
 	return NULL;
 }
 
@@ -827,7 +875,7 @@ void *narrow_candidate_datatypes_c::narrow_conditional_flow_control_IL_instructi
 	if ((NULL != symbol->datatype) && (!is_type(symbol->datatype, bool_type_name_c))) ERROR;
 
 	/* set the required datatype of the previous IL instruction, i.e. a bool_type_name_c! */
-	if (NULL != prev_il_instruction)    prev_il_instruction->datatype = symbol->datatype;
+	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
 	return NULL;
 }
 
@@ -846,8 +894,7 @@ void *narrow_candidate_datatypes_c::visit(RET_operator_c *symbol) {
 	 * However, since that class has not yet been completely finished, we do not yet check this assertion!
 	 */
 // 	if (NULL != symbol->datatype) ERROR;
-	if (NULL != prev_il_instruction)
-		prev_il_instruction->datatype = symbol->datatype;
+	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
 	return NULL;
 }
 
@@ -861,8 +908,7 @@ void *narrow_candidate_datatypes_c::visit(JMP_operator_c *symbol) {
 	 * However, since that class has not yet been completely finished, we do not yet check this assertion!
 	 */
 // 	if (NULL != symbol->datatype) ERROR;
-	if (NULL != prev_il_instruction)
-		prev_il_instruction->datatype = symbol->datatype;
+	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
 	return NULL;
 }
 

@@ -565,7 +565,9 @@ void *fill_candidate_datatypes_c::visit(single_byte_character_string_c *symbol) 
 /************************/
 void *fill_candidate_datatypes_c::visit(duration_c *symbol) {
 	/* TODO: check whether the literal follows the rules specified in section '2.2.3.1 Duration' of the standard! */
-	symbol->candidate_datatypes.push_back(symbol->type_name);
+	
+	symbol->candidate_datatypes.push_back(&search_constant_type_c::time_type_name);
+// 	symbol->candidate_datatypes.push_back(symbol->type_name);
 	if (debug) std::cout << "TIME_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
 }
@@ -800,6 +802,7 @@ void *fill_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
 // void *visit(instruction_list_c *symbol);
 
 
+
 /* | label ':' [il_incomplete_instruction] eol_list */
 // SYM_REF2(il_instruction_c, label, il_instruction)
 // void *visit(instruction_list_c *symbol);
@@ -808,16 +811,14 @@ void *fill_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 		/* This empty/null il_instruction does not change the value of the current/default IL variable.
 		 * So it inherits the candidate_datatypes from it's previous IL instructions!
 		 */
-		if (!symbol->prev_il_instruction.empty()) {
-			copy_candidate_datatype_list(symbol->prev_il_instruction[0] /*from*/, symbol /*to*/);
-			for (unsigned int i = 1; i < symbol->prev_il_instruction.size(); i++) {
-				intersect_candidate_datatype_list(symbol /*origin, dest.*/, symbol->prev_il_instruction[i] /*with*/);
-			}
-		}
+		intersect_prev_candidate_datatype_lists(symbol);
 	} else {
-		if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
+// 		if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
+		il_instruction_c fake_prev_il_instruction = *symbol;
+		intersect_prev_candidate_datatype_lists(&fake_prev_il_instruction);
+
 		if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
-		else                                          prev_il_instruction = symbol->prev_il_instruction[0];
+		else                                          prev_il_instruction = &fake_prev_il_instruction;
 		symbol->il_instruction->accept(*this);
 		prev_il_instruction = NULL;
 
@@ -855,7 +856,6 @@ void *fill_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 	 *
 	 * However, if no further paramters are given, then il_operand_list will be NULL, and we will
 	 * need to create a new object to hold the pointer to prev_il_instruction.
-	 * This change will also be undone later in print_datatypes_error_c.
 	 */
 	if (NULL == symbol->il_operand_list)  symbol->il_operand_list = new il_operand_list_c;
 	if (NULL == symbol->il_operand_list)  ERROR;
@@ -1022,7 +1022,7 @@ void *fill_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
 
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
 void *fill_candidate_datatypes_c::visit(il_simple_instruction_c *symbol) {
-  if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
+  if (symbol->prev_il_instruction.size() > 1) ERROR; /* There should be no labeled insructions inside an IL expression! */
   if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
   else                                          prev_il_instruction = symbol->prev_il_instruction[0];
   symbol->il_simple_instruction->accept(*this);

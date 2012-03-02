@@ -42,7 +42,9 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     search_varfb_instance_type_c *search_varfb_instance_type;
     search_base_type_c search_base_type;
     symbol_c *il_operand;
-    symbol_c *prev_il_instruction;
+    il_instruction_c *fake_prev_il_instruction;
+    std::vector <symbol_c *> *prev_il_instructions;
+    std::vector <symbol_c *> *prev_il_instructions_intersected_datatypes;
 
     bool is_widening_compatible(symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, const struct widen_entry widen_table[]);
 

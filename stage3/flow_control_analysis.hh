@@ -48,8 +48,9 @@
 class flow_control_analysis_c: public iterator_visitor_c {
 
   private:
-    search_varfb_instance_type_c *search_varfb_instance_type;
+    search_il_label_c *search_il_label;
     symbol_c *prev_il_instruction;
+    symbol_c *curr_il_instruction;
 
   public:
     flow_control_analysis_c(symbol_c *ignore);
@@ -89,6 +90,7 @@ class flow_control_analysis_c: public iterator_visitor_c {
 //     void *visit(il_simple_operation_c *symbol);
 //     void *visit(il_function_call_c *symbol);
     void *visit(il_expression_c *symbol);
+    void *visit(il_jump_operation_c *symbol);
 //     void *visit(il_fb_call_c *symbol);
 //     void *visit(il_formal_funct_call_c *symbol);
 //     void *visit(il_operand_list_c *symbol);
@@ -101,49 +103,48 @@ class flow_control_analysis_c: public iterator_visitor_c {
     /*******************/
     /* B 2.2 Operators */
     /*******************/
-    /*
-    void *visit(LD_operator_c *symbol);
-    void *visit(LDN_operator_c *symbol);
-    void *visit(ST_operator_c *symbol);
-    void *visit(STN_operator_c *symbol);
-    void *visit(NOT_operator_c *symbol);
-    void *visit(S_operator_c *symbol);
-    void *visit(R_operator_c *symbol);
-    void *visit(S1_operator_c *symbol);
-    void *visit(R1_operator_c *symbol);
-    void *visit(CLK_operator_c *symbol);
-    void *visit(CU_operator_c *symbol);
-    void *visit(CD_operator_c *symbol);
-    void *visit(PV_operator_c *symbol);
-    void *visit(IN_operator_c *symbol);
-    void *visit(PT_operator_c *symbol);
-    void *visit(AND_operator_c *symbol);
-    void *visit(OR_operator_c *symbol);
-    void *visit(XOR_operator_c *symbol);
-    void *visit(ANDN_operator_c *symbol);
-    void *visit(ORN_operator_c *symbol);
-    void *visit(XORN_operator_c *symbol);
-    void *visit(ADD_operator_c *symbol);
-    void *visit(SUB_operator_c *symbol);
-    void *visit(MUL_operator_c *symbol);
-    void *visit(DIV_operator_c *symbol);
-    void *visit(MOD_operator_c *symbol);
-    void *visit(GT_operator_c *symbol);
-    void *visit(GE_operator_c *symbol);
-    void *visit(EQ_operator_c *symbol);
-    void *visit(LT_operator_c *symbol);
-    void *visit(LE_operator_c *symbol);
-    void *visit(NE_operator_c *symbol);
-    void *visit(CAL_operator_c *symbol);
-    void *visit(CALC_operator_c *symbol);
-    void *visit(CALCN_operator_c *symbol);
-    void *visit(RET_operator_c *symbol);
-    void *visit(RETC_operator_c *symbol);
-    void *visit(RETCN_operator_c *symbol);
-    void *visit(JMP_operator_c *symbol);
-    void *visit(JMPC_operator_c *symbol);
-    void *visit(JMPCN_operator_c *symbol);
-    */
+//     void *visit(   LD_operator_c *symbol);
+//     void *visit(  LDN_operator_c *symbol);
+//     void *visit(   ST_operator_c *symbol);
+//     void *visit(  STN_operator_c *symbol);
+//     void *visit(  NOT_operator_c *symbol);
+//     void *visit(    S_operator_c *symbol);
+//     void *visit(    R_operator_c *symbol);
+//     void *visit(   S1_operator_c *symbol);
+//     void *visit(   R1_operator_c *symbol);
+//     void *visit(  CLK_operator_c *symbol);
+//     void *visit(   CU_operator_c *symbol);
+//     void *visit(   CD_operator_c *symbol);
+//     void *visit(   PV_operator_c *symbol);
+//     void *visit(   IN_operator_c *symbol);
+//     void *visit(   PT_operator_c *symbol);
+//     void *visit(  AND_operator_c *symbol);
+//     void *visit(   OR_operator_c *symbol);
+//     void *visit(  XOR_operator_c *symbol);
+//     void *visit( ANDN_operator_c *symbol);
+//     void *visit(  ORN_operator_c *symbol);
+//     void *visit( XORN_operator_c *symbol);
+//     void *visit(  ADD_operator_c *symbol);
+//     void *visit(  SUB_operator_c *symbol);
+//     void *visit(  MUL_operator_c *symbol);
+//     void *visit(  DIV_operator_c *symbol);
+//     void *visit(  MOD_operator_c *symbol);
+//     void *visit(   GT_operator_c *symbol);
+//     void *visit(   GE_operator_c *symbol);
+//     void *visit(   EQ_operator_c *symbol);
+//     void *visit(   LT_operator_c *symbol);
+//     void *visit(   LE_operator_c *symbol);
+//     void *visit(   NE_operator_c *symbol);
+//     void *visit(  CAL_operator_c *symbol);
+//     void *visit( CALC_operator_c *symbol);
+//     void *visit(CALCN_operator_c *symbol);
+//     void *visit(  RET_operator_c *symbol);
+//     void *visit( RETC_operator_c *symbol);
+//     void *visit(RETCN_operator_c *symbol);
+//     void *visit(  JMP_operator_c *symbol);
+//     void *visit( JMPC_operator_c *symbol);
+//     void *visit(JMPCN_operator_c *symbol);
+
     /* Symbol class handled together with function call checks */
     // void *visit(il_assign_operator_c *symbol, variable_name);
     /* Symbol class handled together with function call checks */

@@ -154,6 +154,10 @@ void copy_candidate_datatype_list(symbol_c *from, symbol_c *to);
  */
 void intersect_candidate_datatype_list(symbol_c *list1 /*origin, dest.*/, symbol_c *list2 /*with*/);
 
+/* intersect the candidate_datatype lists of all prev_il_intructions, and set the local candidate_datatype list to the result! */
+void intersect_prev_candidate_datatype_lists(il_instruction_c *symbol);
+
+
 
 /* A helper function... */
 bool is_ANY_ELEMENTARY_type         (symbol_c *type_symbol);
@@ -206,8 +210,9 @@ bool is_ANY_BOOL_compatible         (symbol_c *type_symbol);
 
 
 bool is_type_equal(symbol_c *first_type, symbol_c *second_type);
+bool is_type_valid(symbol_c *type);
 
-// typedef bool (*helper_function_t) (symbol_c *type_symbol);  /* a pointer to a function! */
+
 
 
 #endif /* _HELPER_FUNCTIONS_HH_ */

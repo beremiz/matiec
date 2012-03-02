@@ -77,8 +77,12 @@ class print_datatypes_error_c: public iterator_visitor_c {
     bool warning_found;
 
     /* the current data type of the data stored in the IL stack, i.e. the default variable */
-    symbol_c *prev_il_instruction;
-    /* the current IL operand being analyzed - its symbol and its data type */
+    il_instruction_c *fake_prev_il_instruction;
+    /* the narrow algorithm will need access to the intersected candidate_datatype lists of all prev_il_instructions, as well as the 
+     * list of the prev_il_instructions.
+     * Instead of creating two 'global' (within the class) variables, we create a single il_instruction_c variable (fake_prev_il_instruction),
+     * and shove that data into this single variable.
+     */
     symbol_c *il_operand_type;
     symbol_c *il_operand;
 

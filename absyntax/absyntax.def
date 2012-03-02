@@ -97,6 +97,12 @@ SYM_REF0(en_param_c)
 SYM_REF0(eno_param_c)
 */
 
+/* A class used to identify an entry (literal, variable, etc...) in the abstract syntax tree with an invalid data type */
+/* This is only used from stage3 onwards. Stages 1 and 2 will never create any instances of invalid_type_name_c */
+SYM_REF0(invalid_type_name_c)
+
+
+
 /********************/
 /* 2.1.6 - Pragmas  */
 /********************/

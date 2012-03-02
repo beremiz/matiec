@@ -30,6 +30,14 @@
  *
  */
 
+/* NOTE: The use of this visitor class is now deprecated.
+ *       The new version of stage3 data type checking adds an entry to
+ *       every relevant object in the abstract syntax tree defining
+ *       the data type of that object. Please use that instead!
+ */
+
+
+
 /* Determine the data type of a specific constant or variable.
  * A reference to the relevant type definition is returned.
  *
@@ -49,6 +57,10 @@
 class search_constant_type_c: public search_visitor_c {
 
   public:
+  /* object used to identify an entry in the abstract syntax tree with an invalid data type */
+  /* This is only used from stage3 onwards. Stages 1 and 2 will never create any instances of invalid_type_name_c */
+  static invalid_type_name_c     invalid_type_name;
+
   /**********************/
   /* B.1.3 - Data types */
   /**********************/

@@ -113,6 +113,8 @@
 static int debug = 0;
 
 flow_control_analysis_c::flow_control_analysis_c(symbol_c *ignore) {
+  prev_il_instruction = NULL;
+  curr_il_instruction = NULL;
 }
 
 flow_control_analysis_c::~flow_control_analysis_c(void) {
@@ -127,11 +129,11 @@ flow_control_analysis_c::~flow_control_analysis_c(void) {
 /* B 1.5.1 Functions */
 /*********************/
 void *flow_control_analysis_c::visit(function_declaration_c *symbol) {
-	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
+	search_il_label = new search_il_label_c(symbol);
 	if (debug) printf("Doing flow control analysis in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
 	symbol->function_body->accept(*this);
-	delete search_varfb_instance_type;
-	search_varfb_instance_type = NULL;
+	delete search_il_label;
+	search_il_label = NULL;
 	return NULL;
 }
 
@@ -139,11 +141,11 @@ void *flow_control_analysis_c::visit(function_declaration_c *symbol) {
 /* B 1.5.2 Function blocks */
 /***************************/
 void *flow_control_analysis_c::visit(function_block_declaration_c *symbol) {
-	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
+	search_il_label = new search_il_label_c(symbol);
 	if (debug) printf("Doing flow control analysis in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
 	symbol->fblock_body->accept(*this);
-	delete search_varfb_instance_type;
-	search_varfb_instance_type = NULL;
+	delete search_il_label;
+	search_il_label = NULL;
 	return NULL;
 }
 
@@ -151,11 +153,11 @@ void *flow_control_analysis_c::visit(function_block_declaration_c *symbol) {
 /* B 1.5.3 Programs */
 /********************/
 void *flow_control_analysis_c::visit(program_declaration_c *symbol) {
-	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
+	search_il_label = new search_il_label_c(symbol);
 	if (debug) printf("Doing flow control analysis in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
 	symbol->function_block_body->accept(*this);
-	delete search_varfb_instance_type;
-	search_varfb_instance_type = NULL;
+	delete search_il_label;
+	search_il_label = NULL;
 	return NULL;
 }
 
@@ -181,7 +183,9 @@ void *flow_control_analysis_c::visit(instruction_list_c *symbol) {
 	for(int i = 0; i < symbol->n; i++) {
 		prev_il_instruction = NULL;
 		if (i > 0) prev_il_instruction = symbol->elements[i-1];
-		symbol->elements[i]->accept(*this);
+		curr_il_instruction = symbol->elements[i];
+		curr_il_instruction->accept(*this);
+		curr_il_instruction = NULL;
 	}
 	return NULL;
 }
@@ -190,34 +194,28 @@ void *flow_control_analysis_c::visit(instruction_list_c *symbol) {
 // SYM_REF2(il_instruction_c, label, il_instruction)
 // void *visit(instruction_list_c *symbol);
 void *flow_control_analysis_c::visit(il_instruction_c *symbol) {
-	symbol->prev_il_instruction.push_back(prev_il_instruction);
-	/* TODO: handle labels correctly!
-	 *
-	 *      Don't forget to handle multiple consecutive lables too!
-	 *        label2:
-	 *        label3:
-	 *        label4:
-	 *                LD I
-	 */
-	/* NOTE: the following recursive call will mess up the value in the
-	 *       this->prev_il_instruction variable, so be sure not to use it
-	 *       after the return of symbol->il_instruction->accept(*this);
-	 */
-	/* check if it is an il_expression_c, and if so, handle it correctly */
+	if (NULL != prev_il_instruction)
+		symbol->prev_il_instruction.push_back(prev_il_instruction);
+
+	/* check if it is an il_expression_c, or a JMP[C[N]] and if so, handle it correctly */
 	if (NULL != symbol->il_instruction)
 		symbol->il_instruction->accept(*this);
 	return NULL;
 }
 
 
-#if 0
+
+/* | il_simple_operator [il_operand] */
+// SYM_REF2(il_simple_operation_c, il_simple_operator, il_operand)
+// void *flow_control_analysis_c::visit(il_simple_operation_c *symbol)
+
+
+
 /* | function_name [il_operand_list] */
 /* NOTE: The parameters 'called_function_declaration' and 'extensible_param_count' are used to pass data between the stage 3 and stage 4. */
 // SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
-void *flow_control_analysis_c::visit(il_function_call_c *symbol) {
-	return NULL;
-}
-#endif
+// void *flow_control_analysis_c::visit(il_function_call_c *symbol) 
+
 
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
 // SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
@@ -226,13 +224,28 @@ void *flow_control_analysis_c::visit(il_expression_c *symbol) {
 		/* nothing to do... */
 		return NULL;
   
+	symbol_c *save_prev_il_instruction = prev_il_instruction;
 	prev_il_instruction = symbol->il_operand;
 	symbol->simple_instr_list->accept(*this);
+	prev_il_instruction = save_prev_il_instruction;
 	return NULL;
 }
 
 
-#if 0
+/*  il_jump_operator label */
+// SYM_REF2(il_jump_operation_c, il_jump_operator, label)
+void *flow_control_analysis_c::visit(il_jump_operation_c *symbol) {
+  /* search for the il_instruction_c containing the label */
+  il_instruction_c *destination = search_il_label->find_label(symbol->label);
+
+  /* TODO: for JMP and RET (unconditional) instructions, make sure the next IL instruction does not point back! */
+  /* add, to that il_instruction's list of prev_il_intsructions, the curr_il_instruction */
+  if (NULL != destination)
+    destination->prev_il_instruction.push_back(curr_il_instruction);
+  return NULL;
+}
+
+
 /*   il_call_operator prev_declared_fb_name
  * | il_call_operator prev_declared_fb_name '(' ')'
  * | il_call_operator prev_declared_fb_name '(' eol_list ')'
@@ -241,18 +254,14 @@ void *flow_control_analysis_c::visit(il_expression_c *symbol) {
  */
 /* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
 // SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
-void *flow_control_analysis_c::visit(il_fb_call_c *symbol) {
-	return NULL;
-}
+// void *flow_control_analysis_c::visit(il_fb_call_c *symbol)
 
 
 /* | function_name '(' eol_list [il_param_list] ')' */
 /* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4. */
 // SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
-void *flow_control_analysis_c::visit(il_formal_funct_call_c *symbol) {
-	return NULL;
-}
-#endif
+// void *flow_control_analysis_c::visit(il_formal_funct_call_c *symbol)
+
 
 
 //  void *visit(il_operand_list_c *symbol);
@@ -268,7 +277,8 @@ void *flow_control_analysis_c::visit(simple_instr_list_c *symbol) {
 
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
 void *flow_control_analysis_c::visit(il_simple_instruction_c*symbol) {
-	symbol->prev_il_instruction.push_back(prev_il_instruction);
+	if (NULL != prev_il_instruction)
+		symbol->prev_il_instruction.push_back(prev_il_instruction);
 	return NULL;
 }
 
@@ -280,4 +290,55 @@ void *flow_control_analysis_c::visit(il_simple_instruction_c*symbol) {
  */
 
 
+
+
+/*******************/
+/* B 2.2 Operators */
+/*******************/
+// void *visit(   LD_operator_c *symbol);
+// void *visit(  LDN_operator_c *symbol);
+// void *visit(   ST_operator_c *symbol);
+// void *visit(  STN_operator_c *symbol);
+// void *visit(  NOT_operator_c *symbol);
+// void *visit(    S_operator_c *symbol);
+// void *visit(    R_operator_c *symbol);
+// void *visit(   S1_operator_c *symbol);
+// void *visit(   R1_operator_c *symbol);
+// void *visit(  CLK_operator_c *symbol);
+// void *visit(   CU_operator_c *symbol);
+// void *visit(   CD_operator_c *symbol);
+// void *visit(   PV_operator_c *symbol);
+// void *visit(   IN_operator_c *symbol);
+// void *visit(   PT_operator_c *symbol);
+// void *visit(  AND_operator_c *symbol);
+// void *visit(   OR_operator_c *symbol);
+// void *visit(  XOR_operator_c *symbol);
+// void *visit( ANDN_operator_c *symbol);
+// void *visit(  ORN_operator_c *symbol);
+// void *visit( XORN_operator_c *symbol);
+// void *visit(  ADD_operator_c *symbol);
+// void *visit(  SUB_operator_c *symbol);
+// void *visit(  MUL_operator_c *symbol);
+// void *visit(  DIV_operator_c *symbol);
+// void *visit(  MOD_operator_c *symbol);
+// void *visit(   GT_operator_c *symbol);
+// void *visit(   GE_operator_c *symbol);
+// void *visit(   EQ_operator_c *symbol);
+// void *visit(   LT_operator_c *symbol);
+// void *visit(   LE_operator_c *symbol);
+// void *visit(   NE_operator_c *symbol);
+// void *visit(  CAL_operator_c *symbol);
+// void *visit( CALC_operator_c *symbol);
+// void *visit(CALCN_operator_c *symbol);
+// void *visit(  RET_operator_c *symbol);
+// void *visit( RETC_operator_c *symbol);
+// void *visit(RETCN_operator_c *symbol);
+// void *visit(  JMP_operator_c *symbol);
+// void *visit( JMPC_operator_c *symbol);
+// void *visit(JMPCN_operator_c *symbol);
+
+/* Symbol class handled together with function call checks */
+// void *visit(il_assign_operator_c *symbol, variable_name);
+/* Symbol class handled together with function call checks */
+// void *visit(il_assign_operator_c *symbol, option, variable_name);
 

@@ -120,7 +120,7 @@ extern symtable_c<symbol_c *, &null_symbol5> enumerated_value_symtable;
 #include "add_en_eno_param_decl.hh"
 #include "get_sizeof_datatype.hh"
 #include "get_function_type.h"
-
+#include "search_il_label.hh"
 
 /***********************************************************************/
 /***********************************************************************/

@@ -133,6 +133,12 @@ void *search_constant_type_c::visit(enumerated_value_c *symbol) {
   return (void *)value_type;
 }
 
+
+
+
+invalid_type_name_c  search_constant_type_c::invalid_type_name;
+
+
 real_type_name_c     search_constant_type_c::real_type_name;
 sint_type_name_c     search_constant_type_c::sint_type_name;
 lint_type_name_c     search_constant_type_c::lint_type_name;

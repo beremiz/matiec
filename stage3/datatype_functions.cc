@@ -228,6 +228,20 @@ void intersect_candidate_datatype_list(symbol_c *list1 /*origin, dest.*/, symbol
 
 
 
+/* intersect the candidate_datatype lists of all prev_il_intructions, and set the local candidate_datatype list to the result! */
+void intersect_prev_candidate_datatype_lists(il_instruction_c *symbol) {
+	if (symbol->prev_il_instruction.empty())
+		return;
+	
+	copy_candidate_datatype_list(symbol->prev_il_instruction[0] /*from*/, symbol /*to*/);
+	for (unsigned int i = 1; i < symbol->prev_il_instruction.size(); i++) {
+		intersect_candidate_datatype_list(symbol /*origin, dest.*/, symbol->prev_il_instruction[i] /*with*/);
+	}  
+}
+
+
+
+
 /* A helper function... */
 bool is_ANY_ELEMENTARY_type(symbol_c *type_symbol) {
   if (type_symbol == NULL) {return false;}
@@ -544,16 +558,30 @@ bool is_ANY_BOOL_compatible(symbol_c *type_symbol) {
 
 
 
-bool is_type_equal(symbol_c *first_type, symbol_c *second_type)
-{
-    if (first_type == NULL || second_type == NULL) {
-        return false;
-    }
-    if (is_ANY_ELEMENTARY_type(first_type)) {
-        if (typeid(*first_type) == typeid(*second_type))
-            return true;
-    } else   /* ANY_DERIVED */
-        return (first_type == second_type);
+bool is_type_equal(symbol_c *first_type, symbol_c *second_type) {
+  if ((NULL == first_type) || (NULL == second_type))
+      return false;
+  if (typeid(* first_type) == typeid(invalid_type_name_c))
+      return false;
+  if (typeid(*second_type) == typeid(invalid_type_name_c))
+      return false;
+    
+  if (is_ANY_ELEMENTARY_type(first_type)) {
+      if (typeid(*first_type) == typeid(*second_type))
+          return true;
+  } else   /* ANY_DERIVED */
+      return (first_type == second_type);
 
-    return false;
+  return false;
+}
+
+
+
+bool is_type_valid(symbol_c *type) {
+  if (NULL == type)
+      return false;
+  if (typeid(*type) == typeid(invalid_type_name_c))
+      return false;
+
+  return true;
 }

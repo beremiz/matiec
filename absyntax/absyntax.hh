@@ -77,8 +77,13 @@ class symbol_c {
     int last_column;
     const char *last_file;  /* filename referenced by last line/column */
     long int last_order;    /* relative order in which it is read by lexcial analyser */
-    symbol_c * datatype;    /* data type of the expression/literal/etc. Filled in stage3 by narrow_candidate_datatypes_c */
     std::vector <symbol_c *> candidate_datatypes; /* All possible data types the expression/literal/etc. may take. Filled in stage3 by fill_candidate_datatypes_c class */
+    /* Data type of the expression/literal/etc. Filled in stage3 by narrow_candidate_datatypes_c 
+     * If set to NULL, it means it has not yet been evaluated.
+     * If it points to an object of type invalid_type_name_c, it means it is invalid.
+     * Otherwise, it points to an object of the apropriate data type (e.g. int_type_name_c, bool_type_name_c, ...)
+     */
+    symbol_c *datatype;    
 
 
   public:
