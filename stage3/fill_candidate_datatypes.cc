@@ -566,6 +566,7 @@ void *fill_candidate_datatypes_c::visit(single_byte_character_string_c *symbol) 
 void *fill_candidate_datatypes_c::visit(duration_c *symbol) {
 	/* TODO: check whether the literal follows the rules specified in section '2.2.3.1 Duration' of the standard! */
 	
+	/* Either of the following two lines is correct. Each of them will have advantages and drawbacks during compiler debugging. Use whichever suits you best... */
 	symbol->candidate_datatypes.push_back(&search_constant_type_c::time_type_name);
 // 	symbol->candidate_datatypes.push_back(symbol->type_name);
 	if (debug) std::cout << "TIME_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
@@ -813,7 +814,6 @@ void *fill_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 		 */
 		intersect_prev_candidate_datatype_lists(symbol);
 	} else {
-// 		if (symbol->prev_il_instruction.size() > 1) ERROR; /* This assertion is only valid for now. Remove it once flow_control_analysis_c is complete */
 		il_instruction_c fake_prev_il_instruction = *symbol;
 		intersect_prev_candidate_datatype_lists(&fake_prev_il_instruction);
 
@@ -918,11 +918,14 @@ void *fill_candidate_datatypes_c::visit(il_expression_c *symbol) {
   return NULL;
 }
 
+
 void *fill_candidate_datatypes_c::visit(il_jump_operation_c *symbol) {
   /* recursive call to fill the candidate data types list */
   il_operand = NULL;
   symbol->il_jump_operator->accept(*this);
   il_operand = NULL;
+  /* This object has the same candidate datatypes as the il_jump_operator. */
+  copy_candidate_datatype_list(symbol->il_jump_operator/*from*/, symbol/*to*/);
   return NULL;
 }
 
