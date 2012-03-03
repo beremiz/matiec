@@ -325,15 +325,8 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 	 * would be changed to the IL instruction coming before the current prev_il_instruction! => things would get all messed up!)
 	 * The easiest way to work around this is to simply use a new object, and copy the relevant details to that object!
 	 */
-printf("XX::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  fake_prev_il_instruction->candidate_datatypes.size() = %d\n",fake_prev_il_instruction->candidate_datatypes.size());
-printf("XX::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  fake_prev_il_instruction->candidate_datatypes[0] = %p\n",fake_prev_il_instruction->candidate_datatypes[0]);
 	symbol_c param_value = *fake_prev_il_instruction; /* copy the candidate_datatypes list ! */
-printf("XX::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.candidate_datatypes.size() = %d\n",param_value.candidate_datatypes.size());
-printf("XX::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.candidate_datatypes[0] = %p\n",param_value.candidate_datatypes[0]);
-printf("00::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  search_constant_type::time_type_name = %p\n", &search_constant_type_c::time_type_name);
-printf("00::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  search_constant_type::invalid_type_name = %p\n", &search_constant_type_c::invalid_type_name);
 
-printf("11::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.datatype = %p\n", param_value.datatype);
 	identifier_c variable_name(param_name);
 	// SYM_REF1(il_assign_operator_c, variable_name)
 	il_assign_operator_c il_assign_operator(&variable_name);  
@@ -344,7 +337,6 @@ printf("11::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_v
 	// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 	CAL_operator_c CAL_operator;
 	il_fb_call_c il_fb_call(&CAL_operator, il_operand, NULL, &il_param_list);
-printf("22::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.datatype = %p\n", param_value.datatype);
 	        
 	/* A FB call does not return any datatype, but the IL instructions that come after this
 	 * FB call may require a specific datatype in the il current/default variable, 
@@ -357,7 +349,6 @@ printf("22::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_v
 // 	copy_candidate_datatype_list(il_instruction/*from*/, &il_fb_call/*to*/);
 	il_fb_call.called_fb_declaration = called_fb_declaration;
 	il_fb_call.accept(*this);
-printf("33::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.datatype = %p\n", param_value.datatype);
 
 	/* set the required datatype of the previous IL instruction! */
 	/* NOTE:
@@ -380,10 +371,8 @@ printf("33::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_v
 	 *     FB call must be left unchanged!
 	 */
 	if ((NULL == il_instruction->datatype) || (is_type_equal(param_value.datatype, il_instruction->datatype))) {
-printf("44::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.datatype = %p\n", param_value.datatype);
 		set_datatype_in_prev_il_instructions(param_value.datatype, fake_prev_il_instruction);
 	} else {
-printf("55::narrow_candidate_datatypes_c::narrow_implicit_il_fb_call():  param_value.datatype = %p\n", param_value.datatype);
 		set_datatype_in_prev_il_instructions(&search_constant_type_c::invalid_type_name, fake_prev_il_instruction);
 	}
 	return NULL;
