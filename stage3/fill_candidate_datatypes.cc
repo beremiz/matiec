@@ -800,7 +800,27 @@ void *fill_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
 
 /*| instruction_list il_instruction */
 // SYM_LIST(instruction_list_c)
-// void *visit(instruction_list_c *symbol);
+void *fill_candidate_datatypes_c::visit(instruction_list_c *symbol) {
+	/* In order to execute the narrow algoritm ll the data type candidates correctly
+	 * ĩn IL instruction lists containing JMPs to labels that come before the JMP instruction
+	 * itself, we need to run the fill candidate datatypes algorithm twice on the Instruction List.
+	 * e.g.:  ...
+	 *          ld 23
+	 *   label1:st byte_var
+	 *          ld 34
+	 *          JMP label1     
+	 *
+	 * Note that the second time we run the algorithm, most of the candidate datatypes are already filled
+	 * in, so it will be able to produce tha correct candidate datatypes for the IL instruction referenced
+	 * by the label, as in the 2nd pass we already know the candidate datatypes of the JMP instruction!
+	 */
+	for(int j = 0; j < 2; j++) {
+		for(int i = 0; i < symbol->n; i++) {
+			symbol->elements[i]->accept(*this);
+		}
+	}
+	return NULL;
+}
 
 
 

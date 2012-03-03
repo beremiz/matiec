@@ -194,7 +194,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /***********************************/
     /* B 2.1 Instructions and Operands */
     /***********************************/
-    // void *visit(instruction_list_c *symbol);
+    void *visit(instruction_list_c *symbol);
     void *visit(il_instruction_c *symbol);
     void *visit(il_simple_operation_c *symbol);
     void *visit(il_function_call_c *symbol);
