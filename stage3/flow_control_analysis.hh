@@ -51,6 +51,7 @@ class flow_control_analysis_c: public iterator_visitor_c {
     search_il_label_c *search_il_label;
     symbol_c *prev_il_instruction;
     symbol_c *curr_il_instruction;
+    bool      prev_il_instruction_is_JMP_or_RET;
 
   public:
     flow_control_analysis_c(symbol_c *ignore);
@@ -138,10 +139,10 @@ class flow_control_analysis_c: public iterator_visitor_c {
 //     void *visit(  CAL_operator_c *symbol);
 //     void *visit( CALC_operator_c *symbol);
 //     void *visit(CALCN_operator_c *symbol);
-//     void *visit(  RET_operator_c *symbol);
+     void *visit(  RET_operator_c *symbol);
 //     void *visit( RETC_operator_c *symbol);
 //     void *visit(RETCN_operator_c *symbol);
-//     void *visit(  JMP_operator_c *symbol);
+     void *visit(  JMP_operator_c *symbol);
 //     void *visit( JMPC_operator_c *symbol);
 //     void *visit(JMPCN_operator_c *symbol);
 

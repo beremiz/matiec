@@ -180,6 +180,7 @@ void *flow_control_analysis_c::visit(configuration_declaration_c *symbol) {
 /*| instruction_list il_instruction */
 // SYM_LIST(instruction_list_c)
 void *flow_control_analysis_c::visit(instruction_list_c *symbol) {
+	prev_il_instruction_is_JMP_or_RET = false;
 	for(int i = 0; i < symbol->n; i++) {
 		prev_il_instruction = NULL;
 		if (i > 0) prev_il_instruction = symbol->elements[i-1];
@@ -194,10 +195,11 @@ void *flow_control_analysis_c::visit(instruction_list_c *symbol) {
 // SYM_REF2(il_instruction_c, label, il_instruction)
 // void *visit(instruction_list_c *symbol);
 void *flow_control_analysis_c::visit(il_instruction_c *symbol) {
-	if (NULL != prev_il_instruction)
+	if ((NULL != prev_il_instruction) && (!prev_il_instruction_is_JMP_or_RET))
 		symbol->prev_il_instruction.push_back(prev_il_instruction);
 
-	/* check if it is an il_expression_c, or a JMP[C[N]] and if so, handle it correctly */
+	/* check if it is an il_expression_c, a JMP[C[N]], or a RET, and if so, handle it correctly */
+	prev_il_instruction_is_JMP_or_RET = false;
 	if (NULL != symbol->il_instruction)
 		symbol->il_instruction->accept(*this);
 	return NULL;
@@ -238,7 +240,8 @@ void *flow_control_analysis_c::visit(il_jump_operation_c *symbol) {
   /* search for the il_instruction_c containing the label */
   il_instruction_c *destination = search_il_label->find_label(symbol->label);
 
-  /* TODO: for JMP and RET (unconditional) instructions, make sure the next IL instruction does not point back! */
+  /* give the visit(JMP_operator *) an oportunity to set the prev_il_instruction_is_JMP_or_RET flag! */
+  symbol->il_jump_operator->accept(*this);
   /* add, to that il_instruction's list of prev_il_intsructions, the curr_il_instruction */
   if (NULL != destination)
     destination->prev_il_instruction.push_back(curr_il_instruction);
@@ -330,10 +333,22 @@ void *flow_control_analysis_c::visit(il_simple_instruction_c*symbol) {
 // void *visit(  CAL_operator_c *symbol);
 // void *visit( CALC_operator_c *symbol);
 // void *visit(CALCN_operator_c *symbol);
-// void *visit(  RET_operator_c *symbol);
+
+/* this next visit function will be called directly from visit(il_instruction_c *) */
+void *flow_control_analysis_c::visit(  RET_operator_c *symbol) {
+	prev_il_instruction_is_JMP_or_RET = true;
+	return NULL;
+}
+
 // void *visit( RETC_operator_c *symbol);
 // void *visit(RETCN_operator_c *symbol);
-// void *visit(  JMP_operator_c *symbol);
+
+/* this next visit function will be called from visit(il_jump_operation_c *) */
+void *flow_control_analysis_c::visit(  JMP_operator_c *symbol) {
+	prev_il_instruction_is_JMP_or_RET = true;
+	return NULL;
+}
+
 // void *visit( JMPC_operator_c *symbol);
 // void *visit(JMPCN_operator_c *symbol);
 
