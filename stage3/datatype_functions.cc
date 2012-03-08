@@ -190,18 +190,6 @@ int search_in_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c 
 
 
 
-/* Copy the elements in the candidate_datatype_list in one symbol (from)
- * into the candidate_datatype_list of another symbol (to)
- */
-void copy_candidate_datatype_list(symbol_c *from, symbol_c *to) {
-	if ((NULL == from) || (NULL == to))
-		return;
-	for(unsigned int i = 0; i < from->candidate_datatypes.size(); i++)
-		to->candidate_datatypes.push_back(from->candidate_datatypes[i]);
-	/* for some reason, the following alternative implementation results in a segmentation fault! I am not going to bother with this for now! */
-// 	std::copy(from->candidate_datatypes.begin(), from->candidate_datatypes.end(), to->candidate_datatypes.begin());
-}
-
 
 
 /* Intersect two candidate_datatype_lists.

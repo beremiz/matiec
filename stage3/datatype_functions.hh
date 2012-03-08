@@ -142,11 +142,6 @@ extern const struct widen_entry widen_DIV_table[];
  */
 int search_in_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
 
-/* Copy the elements in the candidate_datatype_list in one symbol (from)
- * into the candidate_datatype_list of another symbol (to)
- */
-void copy_candidate_datatype_list(symbol_c *from, symbol_c *to);
-
 /* Intersect two candidate_datatype_lists.
  * Remove from list1 (origin, dest.) all elements that are not found in list2 (with).
  * In essence, list1 will contain the result of the intersection of list1 with list2.

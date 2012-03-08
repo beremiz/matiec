@@ -301,7 +301,7 @@ void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruc
 	 * here).
 	 */
 	if (NULL != prev_il_instruction)
-		copy_candidate_datatype_list(prev_il_instruction/*from*/, il_instruction/*to*/);
+		il_instruction->candidate_datatypes = prev_il_instruction->candidate_datatypes; 
 
 	if (debug) std::cout << "handle_implicit_il_fb_call() [" << prev_il_instruction->candidate_datatypes.size() << "] ==> " << il_instruction->candidate_datatypes.size() << " result.\n";
 }
@@ -849,7 +849,7 @@ void *fill_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 		prev_il_instruction = NULL;
 
 		/* This object has (inherits) the same candidate datatypes as the il_instruction */
-		copy_candidate_datatype_list(symbol->il_instruction /*from*/, symbol /*to*/);	
+		symbol->candidate_datatypes = symbol->il_instruction->candidate_datatypes;
 	}
 
 	return NULL;
@@ -867,7 +867,7 @@ void *fill_candidate_datatypes_c::visit(il_simple_operation_c *symbol) {
 	symbol->il_simple_operator->accept(*this);
 	il_operand = NULL;
 	/* This object has (inherits) the same candidate datatypes as the il_simple_operator */
-	copy_candidate_datatype_list(symbol->il_simple_operator /*from*/, symbol /*to*/);
+	symbol->candidate_datatypes = symbol->il_simple_operator->candidate_datatypes;
 	return NULL;
 }
 
@@ -940,7 +940,7 @@ void *fill_candidate_datatypes_c::visit(il_expression_c *symbol) {
   il_operand = NULL;
   
   /* This object has the same candidate datatypes as the il_expr_operator. */
-  copy_candidate_datatype_list(symbol->il_expr_operator/*from*/, symbol/*to*/);
+  symbol->candidate_datatypes = symbol->il_expr_operator->candidate_datatypes;
   return NULL;
 }
 
@@ -951,7 +951,7 @@ void *fill_candidate_datatypes_c::visit(il_jump_operation_c *symbol) {
   symbol->il_jump_operator->accept(*this);
   il_operand = NULL;
   /* This object has the same candidate datatypes as the il_jump_operator. */
-  copy_candidate_datatype_list(symbol->il_jump_operator/*from*/, symbol/*to*/);
+  symbol->candidate_datatypes = symbol->il_jump_operator->candidate_datatypes;
   return NULL;
 }
 
@@ -998,7 +998,7 @@ void *fill_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
 	 *       print_datatypes_error_c, so the code will never reach stage 4!
 	 */
 	symbol->il_call_operator->accept(*this);
-	copy_candidate_datatype_list(symbol->il_call_operator/*from*/, symbol/*to*/);
+	symbol->candidate_datatypes = symbol->il_call_operator->candidate_datatypes;
 
 	if (debug) std::cout << "FB [] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
@@ -1040,7 +1040,7 @@ void *fill_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
     symbol->elements[i]->accept(*this);
 
   /* This object has (inherits) the same candidate datatypes as the last il_instruction */
-  copy_candidate_datatype_list(symbol->elements[symbol->n-1] /*from*/, symbol /*to*/);	
+  symbol->candidate_datatypes = symbol->elements[symbol->n-1]->candidate_datatypes;
   
   if (debug) std::cout << "simple_instr_list_c [" << symbol->candidate_datatypes.size() << "] result.\n";
   return NULL;
@@ -1058,7 +1058,7 @@ void *fill_candidate_datatypes_c::visit(il_simple_instruction_c *symbol) {
   prev_il_instruction = NULL;
 
   /* This object has (inherits) the same candidate datatypes as the il_simple_instruction it points to */
-  copy_candidate_datatype_list(symbol->il_simple_instruction /*from*/, symbol /*to*/);	
+  symbol->candidate_datatypes = symbol->il_simple_instruction->candidate_datatypes;
   return NULL;
 }
 

@@ -346,7 +346,6 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 	 * The above will be done by the visit(il_fb_call_c *) method, so we must make sure to
 	 * correctly set up the il_fb_call.datatype variable!
 	 */
-// 	copy_candidate_datatype_list(il_instruction/*from*/, &il_fb_call/*to*/);
 	il_fb_call.called_fb_declaration = called_fb_declaration;
 	il_fb_call.accept(*this);
 
