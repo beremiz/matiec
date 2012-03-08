@@ -60,11 +60,11 @@ static void set_datatype(symbol_c *datatype, symbol_c *symbol) {
   
 	/* If we are trying to set to the undefined type, and the symbol's datatype has already been set to something else, 
 	 * we abort the compoiler as I don't think this should ever occur. 
-	 * However, I (Mario) am not too sure of this, so if the compiler ever aborts here, please analyse the situation
-	 * carefully as it might be perfectly legal and something I have missed!
+	 * NOTE: In order to handle JMPs to labels that come before the JMP itself, we run the narrow algorithm twice.
+	 *       This means that this situation may legally occur, so we cannot abort the compiler here!
 	 */
-	if ((NULL == datatype) && (NULL != symbol->datatype)) ERROR;
-	
+// 	if ((NULL == datatype) && (NULL != symbol->datatype)) ERROR;
+ 	if ((NULL == datatype) && (NULL != symbol->datatype)) return;
 	if ((NULL == datatype) && (NULL == symbol->datatype)) return;
 	
 	if (search_in_candidate_datatype_list(datatype, symbol->candidate_datatypes) < 0)
@@ -521,8 +521,23 @@ void *narrow_candidate_datatypes_c::visit(instruction_list_c *symbol) {
 	/* In order to execute the narrow algoritm correctly, we need to go through the instructions backwards,
 	 * so we can not use the base class' visitor 
 	 */
-	for(int i = symbol->n-1; i >= 0; i--) {
-		symbol->elements[i]->accept(*this);
+	/* In order to execute the narrow algoritm correctly
+	 * in IL instruction lists containing JMPs to labels that come before the JMP instruction
+	 * itself, we need to run the narrow algorithm twice on the Instruction List.
+	 * e.g.:  ...
+	 *          ld 23
+	 *   label1:st byte_var
+	 *          ld 34
+	 *          JMP label1     
+	 *
+	 * Note that the second time we run the narrow, most of the datatypes are already filled
+	 * in, so it will be able to produce tha correct datatypes for the IL instruction referenced
+	 * by the label, as in the 2nd pass we already know the datatypes of the JMP instruction!
+	 */
+	for(int j = 0; j < 2; j++) {
+		for(int i = symbol->n-1; i >= 0; i--) {
+			symbol->elements[i]->accept(*this);
+		}
 	}
 	return NULL;
 }
@@ -628,6 +643,22 @@ void *narrow_candidate_datatypes_c::visit(il_expression_c *symbol) {
   fake_prev_il_instruction = save_fake_prev_il_instruction;
   return NULL;
 }
+
+
+
+
+/*  il_jump_operator label */
+void *narrow_candidate_datatypes_c::visit(il_jump_operation_c *symbol) {
+  /* recursive call to fill the datatype */
+  symbol->il_jump_operator->datatype = symbol->datatype;
+  symbol->il_jump_operator->accept(*this);
+  return NULL;
+}
+
+
+
+
+
 
 
 /*   il_call_operator prev_declared_fb_name

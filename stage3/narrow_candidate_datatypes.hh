@@ -116,6 +116,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     void *visit(il_simple_operation_c *symbol);
     void *visit(il_function_call_c *symbol);
     void *visit(il_expression_c *symbol);
+    void *visit(il_jump_operation_c *symbol);
     void *visit(il_fb_call_c *symbol);
     void *visit(il_formal_funct_call_c *symbol);
 //  void *visit(il_operand_list_c *symbol);
