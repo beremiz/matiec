@@ -60,7 +60,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
      * fill_candidate_datatypes_c::visit(case_statement_c *symbol) function to
      * fill_candidate_datatypes_c::visit(case_list_c *symbol) function.
      */
-    symbol_c *case_expression_type;
+//     symbol_c *case_expression_type;
 
     /* In IL code, once we find a type mismatch error, it is best to
      * ignore any further errors until the end of the logical operation,
@@ -71,8 +71,8 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
      * We therefore need a counter to know how deep inside a parenthesis
      * structure we are.
      */
-    int  il_parenthesis_level;
-    bool error_found;
+//     int  il_parenthesis_level;
+//     bool error_found;
 
     /* the current data type of the data stored in the IL stack, i.e. the default variable */
     symbol_c *prev_il_instruction;
@@ -90,6 +90,10 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     
     /* a helper function... */
     symbol_c *base_type(symbol_c *symbol);    
+    
+    /* add a data type to a candidate data type list, while guaranteeing no duplicate entries! */
+    /* Returns true if it really did add the datatype to the list, or false if it was already present in the list! */
+    bool add_datatype_to_candidate_list(symbol_c *symbol, symbol_c *datatype);
     
     
   public:
