@@ -825,7 +825,14 @@ void *narrow_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 }
 
 void *narrow_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
-  /* TODO: ... */
+	/* NOTE: the standard allows syntax in which the NOT operator is followed by an optional <il_operand>
+	 *              NOT [<il_operand>]
+	 *       However, it does not define the semantic of the NOT operation when the <il_operand> is specified.
+	 *       We therefore consider it an error if an il_operand is specified!
+	 */
+	/* We do not change the data type, we simply invert the bits in bit types! */
+	/* So, we set the desired datatype of the previous il instruction */
+	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
 	return NULL;
 }
 

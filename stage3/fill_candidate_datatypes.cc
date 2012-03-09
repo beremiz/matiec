@@ -1122,6 +1122,17 @@ void *fill_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 }
 
 void *fill_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
+	/* NOTE: the standard allows syntax in which the NOT operator is followed by an optional <il_operand>
+	 *              NOT [<il_operand>]
+	 *       However, it does not define the semantic of the NOT operation when the <il_operand> is specified.
+	 *       We therefore consider it an error if an il_operand is specified!
+	 */
+	if (NULL == prev_il_instruction) return NULL;
+	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
+		if (is_ANY_BIT_compatible(prev_il_instruction->candidate_datatypes[i]))
+			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
+	}
+	if (debug) std::cout <<  "NOT_operator [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
 }
 

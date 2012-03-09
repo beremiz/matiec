@@ -1640,6 +1640,12 @@ void *visit(STN_operator_c *symbol)	{
 }
 
 void *visit(NOT_operator_c *symbol)	{
+  /* NOTE: the standard allows syntax in which the NOT operator is followed by an optional <il_operand>
+   *              NOT [<il_operand>]
+   *       However, it does not define the semantic of the NOT operation when the <il_operand> is specified.
+   *       We therefore consider it an error if an il_operand is specified!
+   *       The error is caught in stage 3!
+   */  
   if ((NULL != this->current_operand) || (NULL != this->current_operand_type)) ERROR;
   XXX_operator(&(this->default_variable_name),
                search_expression_type->is_bool_type(this->default_variable_name.current_type)?" = !":" = ~",

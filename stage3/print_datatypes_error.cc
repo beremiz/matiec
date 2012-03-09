@@ -862,6 +862,15 @@ void *print_datatypes_error_c::visit(STN_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(NOT_operator_c *symbol) {
+	/* NOTE: the standard allows syntax in which the NOT operator is followed by an optional <il_operand>
+	 *              NOT [<il_operand>]
+	 *       However, it does not define the semantic of the NOT operation when the <il_operand> is specified.
+	 *       We therefore consider it an error if an il_operand is specified!
+	 */
+	if (il_operand != NULL)
+		STAGE3_ERROR(0, symbol, symbol, "'NOT' operator may not have an operand.");
+	if (symbol->candidate_datatypes.size() == 0)
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'NOT' operator.");
 	return NULL;
 }
 
