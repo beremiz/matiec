@@ -3401,7 +3401,7 @@ structured_variable:
   record_variable '.' field_selector
 	{$$ = new structured_variable_c($1, $3, locloc(@$));}
 | record_variable '.' il_simple_operator_clash3
-    {$$ = new structured_variable_c($1, $3, locloc(@$));}
+    {$$ = new structured_variable_c($1, il_operator_c_2_identifier_c($3), locloc(@$));}
 ;
 
 
