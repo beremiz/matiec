@@ -221,7 +221,7 @@ void intersect_prev_candidate_datatype_lists(il_instruction_c *symbol) {
 	if (symbol->prev_il_instruction.empty())
 		return;
 	
-	copy_candidate_datatype_list(symbol->prev_il_instruction[0] /*from*/, symbol /*to*/);
+	symbol->candidate_datatypes = symbol->prev_il_instruction[0]->candidate_datatypes;
 	for (unsigned int i = 1; i < symbol->prev_il_instruction.size(); i++) {
 		intersect_candidate_datatype_list(symbol /*origin, dest.*/, symbol->prev_il_instruction[i] /*with*/);
 	}  
