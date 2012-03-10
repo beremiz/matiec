@@ -1089,6 +1089,10 @@ void *fill_candidate_datatypes_c::visit(S_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
+			/* TODO: I believe the following is wrong! The data types of prev_instruction_type and operand_type DO NOT have to be equal.
+			 * the prev_instruction_type MUST be BOOL compatible.
+			 * I am not too sure about operand_type, does it have to be BOOL compatible, or can it be ANY_BIT compatible? Must check!
+			 */
 			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(operand_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 		}
@@ -1107,6 +1111,10 @@ void *fill_candidate_datatypes_c::visit(R_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
+			/* TODO: I believe the following is wrong! The data types of prev_instruction_type and operand_type DO NOT have to be equal.
+			 * the prev_instruction_type MUST be BOOL compatible.
+			 * I am not too sure about operand_type, does it have to be BOOL compatible, or can it be ANY_BIT compatible? Must check!
+			 */
 			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(operand_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 		}
