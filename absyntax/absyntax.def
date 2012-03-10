@@ -164,34 +164,15 @@ SYM_TOKEN(signed_real_c)
  *                OR
  *          neg_literal_c -> real_literal_c
  *
- *      In the semantic verification and code generation stages of the compiler,
- *      the integer_c is treated as a basic (undefined) data type, since an integer
- *      constant may be used as a BYTE, BOOLEAN, REAL, etc..., depending on the
- *      context in which it is used.
- *      However, an integer_c that is preceded by a '-' may not be used
- *      as an ANY_BIT data type (BYTE, BOOLEAN, WORD, ...).
- *      We must therefore be able to determine, holding a simple pointer
- *      to an integer_c, if that integer_c value is preceded by a '-'.
- *      However, since the neg_literal_c points to the integer_c, and not
- *      vice-versa, we can't determine that.
- *      There are 3 simple ways of working around this:
- *        - change the order of the pointers: 
- *              have the integer_c and real_c point to the neg_literal_c
- *        - maintain the order of the pointers, and
- *              add redundant info to the integer_c and real_c
+ *       However, this has since been changed to...
  *        - replace the neg_literal_c with two distinc classes
  *              (neg_integer_c and neg_real_c), one for each
- *              lietral type. This means that we can now treat
- *              each of these classes as an unknown data type
- *              just as we do with the integer_c and real_c.
+ *              lietral type. 
  *
- *      The second option is simply ugly.
- *      and the first has a serious drawback: when generating code it is
- *      easier to encapsulate the real or integer values inside prefix
- *      and postfix symbols (e.g. NEG(<value>) - with postfix ')' )
- *      if we keep the pointer order as is.
- *
- *      For the above reasoning, we use the third option.
+ *       This change was done in order to ease the writing of semantic verification (stage3) code.
+ *       However, that version of the code has since been replaced by a newer and better algoritm.
+ *       This means the above change can now be undone, but there is really no need to undo it,
+ *       so we leave it as it is.
  */  
 SYM_REF1(neg_real_c, exp)
 SYM_REF1(neg_integer_c, exp)
