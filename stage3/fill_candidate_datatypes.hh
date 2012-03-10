@@ -93,7 +93,8 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     
     /* add a data type to a candidate data type list, while guaranteeing no duplicate entries! */
     /* Returns true if it really did add the datatype to the list, or false if it was already present in the list! */
-    bool add_datatype_to_candidate_list(symbol_c *symbol, symbol_c *datatype);
+    bool add_datatype_to_candidate_list  (symbol_c *symbol, symbol_c *datatype);
+    bool add_2datatypes_to_candidate_list(symbol_c *symbol, symbol_c *datatype1, symbol_c *datatype2);
     
     
   public:
@@ -107,6 +108,8 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /******************************/
     /* B 1.2.1 - Numeric Literals */
     /******************************/
+    void *handle_any_integer(symbol_c *symbol);
+    
     void *visit(real_c *symbol);
     void *visit(integer_c *symbol);
     void *visit(neg_real_c *symbol);

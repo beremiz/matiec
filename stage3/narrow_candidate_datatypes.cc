@@ -889,7 +889,7 @@ void *narrow_candidate_datatypes_c::narrow_conditional_flow_control_IL_instructi
 	/* if the next IL instructions needs us to provide a datatype other than a bool, 
 	 * then we have an internal compiler error - most likely in fill_candidate_datatypes_c 
 	 */
-	if ((NULL != symbol->datatype) && (!is_type(symbol->datatype, bool_type_name_c))) ERROR;
+	if ((NULL != symbol->datatype) && (!is_ANY_BOOL_compatible(symbol->datatype))) ERROR;
 	if (symbol->candidate_datatypes.size() > 1) ERROR;
 
 	/* NOTE: If there is no IL instruction following this CALC, CALCN, JMPC, JMPC, ..., instruction,
@@ -898,7 +898,7 @@ void *narrow_candidate_datatypes_c::narrow_conditional_flow_control_IL_instructi
 	 */
 	if (symbol->candidate_datatypes.size() == 0)    symbol->datatype = NULL;
 	else    symbol->datatype = symbol->candidate_datatypes[0]; /* i.e. a bool_type_name_c! */
-	if ((NULL != symbol->datatype) && (!is_type(symbol->datatype, bool_type_name_c))) ERROR;
+	if ((NULL != symbol->datatype) && (!is_ANY_BOOL_compatible(symbol->datatype))) ERROR;
 
 	/* set the required datatype of the previous IL instruction, i.e. a bool_type_name_c! */
 	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
@@ -1400,7 +1400,7 @@ void *narrow_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
 
 void *narrow_candidate_datatypes_c::visit(if_statement_c *symbol) {
 	for(unsigned int i = 0; i < symbol->expression->candidate_datatypes.size(); i++) {
-		if (is_type(symbol->expression->candidate_datatypes[i], bool_type_name_c))
+		if (is_ANY_BOOL_compatible(symbol->expression->candidate_datatypes[i]))
 			symbol->expression->datatype = symbol->expression->candidate_datatypes[i];
 	}
 	symbol->expression->accept(*this);
@@ -1416,7 +1416,7 @@ void *narrow_candidate_datatypes_c::visit(if_statement_c *symbol) {
 
 void *narrow_candidate_datatypes_c::visit(elseif_statement_c *symbol) {
 	for (unsigned int i = 0; i < symbol->expression->candidate_datatypes.size(); i++) {
-		if (is_type(symbol->expression->candidate_datatypes[i], bool_type_name_c))
+		if (is_ANY_BOOL_compatible(symbol->expression->candidate_datatypes[i]))
 			symbol->expression->datatype = symbol->expression->candidate_datatypes[i];
 	}
 	symbol->expression->accept(*this);

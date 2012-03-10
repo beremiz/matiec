@@ -76,7 +76,11 @@ bool fill_candidate_datatypes_c::add_datatype_to_candidate_list(symbol_c *symbol
 }
     
     
-    
+bool fill_candidate_datatypes_c::add_2datatypes_to_candidate_list(symbol_c *symbol, symbol_c *datatype1, symbol_c *datatype2) {
+  add_datatype_to_candidate_list(symbol, datatype1);
+  add_datatype_to_candidate_list(symbol, datatype2);
+  return true;
+}
     
 
 /* returns true if compatible function/FB invocation, otherwise returns false */
@@ -322,183 +326,127 @@ symbol_c *fill_candidate_datatypes_c::base_type(symbol_c *symbol) {
 /******************************/
 /* B 1.2.1 - Numeric Literals */
 /******************************/
+#define sizeoftype(symbol) get_sizeof_datatype_c::getsize(symbol)
+
+void *fill_candidate_datatypes_c::handle_any_integer(symbol_c *symbol) {
+	int calc_size;
+
+	calc_size = sizeoftype(symbol);
+	if (calc_size <= sizeoftype(&search_constant_type_c::bool_type_name))
+	        add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
+	if (calc_size <= sizeoftype(&search_constant_type_c::byte_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::byte_type_name, &search_constant_type_c::safebyte_type_name);
+	if (calc_size <= sizeoftype(&search_constant_type_c::word_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::word_type_name, &search_constant_type_c::safeword_type_name);
+	if (calc_size <= sizeoftype(&search_constant_type_c::dword_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::dword_type_name, &search_constant_type_c::safedword_type_name);
+	if (calc_size <= sizeoftype(&search_constant_type_c::lword_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lword_type_name, &search_constant_type_c::safelword_type_name);
+
+	if (calc_size < sizeoftype(&search_constant_type_c::sint_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::sint_type_name, &search_constant_type_c::safesint_type_name);
+	if (calc_size < sizeoftype(&search_constant_type_c::int_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::int_type_name, &search_constant_type_c::safeint_type_name);
+	if (calc_size < sizeoftype(&search_constant_type_c::dint_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::dint_type_name, &search_constant_type_c::safedint_type_name);
+	if (calc_size < sizeoftype(&search_constant_type_c::lint_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lint_type_name, &search_constant_type_c::safelint_type_name);
+	if (calc_size <= sizeoftype(&search_constant_type_c::usint_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::usint_type_name, &search_constant_type_c::safeusint_type_name);
+	if (calc_size <= sizeoftype(&search_constant_type_c::uint_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::uint_type_name, &search_constant_type_c::safeuint_type_name);
+	if (calc_size <= sizeoftype(&search_constant_type_c::udint_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::udint_type_name, &search_constant_type_c::safeudint_type_name);
+	if (calc_size <= sizeoftype(&search_constant_type_c::ulint_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::ulint_type_name, &search_constant_type_c::safeulint_type_name);
+	return NULL;
+}
+
+
+
+
 void *fill_candidate_datatypes_c::visit(real_c *symbol) {
 	int calc_size;
 
 	calc_size = sizeoftype(symbol);
 	if (calc_size <= sizeoftype(&search_constant_type_c::real_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::real_type_name);
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::real_type_name,  &search_constant_type_c::safereal_type_name);
 	if (calc_size <= sizeoftype(&search_constant_type_c::lreal_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lreal_type_name);
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lreal_type_name, &search_constant_type_c::safelreal_type_name);
 	if (debug) std::cout << "ANY_REAL [" << symbol->candidate_datatypes.size() << "]" << std::endl;
 	return NULL;
 }
 
+
+
 void *fill_candidate_datatypes_c::visit(integer_c *symbol) {
-	int calc_size;
-
-	calc_size = sizeoftype(symbol);
-	if (calc_size <= sizeoftype(&search_constant_type_c::bool_type_name))
-	        add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::byte_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::word_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::dword_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::lword_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name);
-
-	if (calc_size < sizeoftype(&search_constant_type_c::sint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::sint_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::int_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::int_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::dint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::dint_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::lint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::usint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::usint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::uint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::uint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::udint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::udint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::ulint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::ulint_type_name);
+	handle_any_integer(symbol);
 	if (debug) std::cout << "ANY_INT [" << symbol->candidate_datatypes.size()<< "]" << std::endl;
 	return NULL;
 }
 
+
 void *fill_candidate_datatypes_c::visit(neg_real_c *symbol) {
-	if (sizeoftype(symbol) <= sizeoftype(&search_constant_type_c::real_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::real_type_name);
-	add_datatype_to_candidate_list(symbol, &search_constant_type_c::lreal_type_name);
+	int calc_size;
+
+	calc_size = sizeoftype(symbol);
+	if (calc_size <= sizeoftype(&search_constant_type_c::real_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::real_type_name, &search_constant_type_c::safereal_type_name);
+	if (calc_size <= sizeoftype(&search_constant_type_c::lreal_type_name))
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lreal_type_name, &search_constant_type_c::safelreal_type_name);
 	if (debug) std::cout << "neg ANY_REAL [" << symbol->candidate_datatypes.size() << "]" << std::endl;
 	return NULL;
 }
+
 
 void *fill_candidate_datatypes_c::visit(neg_integer_c *symbol) {
 	int calc_size;
 
 	calc_size = sizeoftype(symbol);
 	if (calc_size <= sizeoftype(&search_constant_type_c::int_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::int_type_name);
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::int_type_name, &search_constant_type_c::safeint_type_name);
 	if (calc_size <= sizeoftype(&search_constant_type_c::sint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::sint_type_name);
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::sint_type_name, &search_constant_type_c::safesint_type_name);
 	if (calc_size <= sizeoftype(&search_constant_type_c::dint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::dint_type_name);
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::dint_type_name, &search_constant_type_c::safedint_type_name);
 	if (calc_size <= sizeoftype(&search_constant_type_c::lint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lint_type_name);
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lint_type_name, &search_constant_type_c::safelint_type_name);
 	if (debug) std::cout << "neg ANY_INT [" << symbol->candidate_datatypes.size() << "]" << std::endl;
 	return NULL;
 }
 
-void *fill_candidate_datatypes_c::visit(binary_integer_c *symbol) {
-	int calc_size;
 
-	calc_size = sizeoftype(symbol);
-	if (calc_size <= sizeoftype(&search_constant_type_c::bool_type_name))
-	        add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::byte_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::word_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::dword_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::lword_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name);
-	
-	if (calc_size < sizeoftype(&search_constant_type_c::sint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::sint_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::int_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::int_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::dint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::dint_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::lint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::usint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::usint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::uint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::uint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::udint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::udint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::ulint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::ulint_type_name);
+void *fill_candidate_datatypes_c::visit(binary_integer_c *symbol) {
+	handle_any_integer(symbol);
 	if (debug) std::cout << "ANY_INT [" << symbol->candidate_datatypes.size()<< "]" << std::endl;
 	return NULL;
 }
+
+
 
 void *fill_candidate_datatypes_c::visit(octal_integer_c *symbol) {
-	int calc_size;
-
-	calc_size = sizeoftype(symbol);
-	if (calc_size <= sizeoftype(&search_constant_type_c::bool_type_name))
-	        add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::byte_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::word_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::dword_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::lword_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name);
-
-	if (calc_size < sizeoftype(&search_constant_type_c::sint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::sint_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::int_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::int_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::dint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::dint_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::lint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::usint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::usint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::uint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::uint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::udint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::udint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::ulint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::ulint_type_name);
+	handle_any_integer(symbol);
 	if (debug) std::cout << "ANY_INT [" << symbol->candidate_datatypes.size()<< "]" << std::endl;
 	return NULL;
 }
+
+
 
 void *fill_candidate_datatypes_c::visit(hex_integer_c *symbol) {
-	int calc_size;
-
-	calc_size = sizeoftype(symbol);
-	if (calc_size <= sizeoftype(&search_constant_type_c::bool_type_name))
-	        add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::byte_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::word_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::dword_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::lword_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name);
-
-	if (calc_size < sizeoftype(&search_constant_type_c::sint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::sint_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::int_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::int_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::dint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::dint_type_name);
-	if (calc_size < sizeoftype(&search_constant_type_c::lint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::usint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::usint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::uint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::uint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::udint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::udint_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::ulint_type_name))
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::ulint_type_name);
+	handle_any_integer(symbol);
 	if (debug) std::cout << "ANY_INT [" << symbol->candidate_datatypes.size()<< "]" << std::endl;
 	return NULL;
 }
 
+
 // SYM_REF2(integer_literal_c, type, value)
+/*
+ * integer_literal:
+ *   integer_type_name '#' signed_integer
+ * | integer_type_name '#' binary_integer
+ * | integer_type_name '#' octal_integer
+ * | integer_type_name '#' hex_integer
+ */
 void *fill_candidate_datatypes_c::visit(integer_literal_c *symbol) {
 	symbol->value->accept(*this);
 	if (search_in_candidate_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
@@ -532,21 +480,18 @@ void *fill_candidate_datatypes_c::visit(boolean_literal_c *symbol) {
 	else {
 		/* Then only a literal TRUE or FALSE was given! */
 		/* In this case, symbol->type will be NULL!     */
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::safebool_type_name);
+		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
 	}
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(boolean_true_c *symbol) {
-	add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	add_datatype_to_candidate_list(symbol, &search_constant_type_c::safebool_type_name);
+	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(boolean_false_c *symbol) {
-	add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	add_datatype_to_candidate_list(symbol, &search_constant_type_c::safebool_type_name);
+	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
 	return NULL;
 }
 
@@ -554,12 +499,12 @@ void *fill_candidate_datatypes_c::visit(boolean_false_c *symbol) {
 /* B.1.2.2   Character Strings */
 /*******************************/
 void *fill_candidate_datatypes_c::visit(double_byte_character_string_c *symbol) {
-	add_datatype_to_candidate_list(symbol, &search_constant_type_c::wstring_type_name);
+	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::wstring_type_name, &search_constant_type_c::safewstring_type_name);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(single_byte_character_string_c *symbol) {
-	add_datatype_to_candidate_list(symbol, &search_constant_type_c::string_type_name);
+	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::string_type_name, &search_constant_type_c::safestring_type_name);
 	return NULL;
 }
 
@@ -572,9 +517,7 @@ void *fill_candidate_datatypes_c::visit(single_byte_character_string_c *symbol) 
 void *fill_candidate_datatypes_c::visit(duration_c *symbol) {
 	/* TODO: check whether the literal follows the rules specified in section '2.2.3.1 Duration' of the standard! */
 	
-	/* Either of the following two lines is correct. Each of them will have advantages and drawbacks during compiler debugging. Use whichever suits you best... */
-	add_datatype_to_candidate_list(symbol, &search_constant_type_c::time_type_name);
-// 	symbol->candidate_datatypes.push_back(symbol->type_name);
+	add_datatype_to_candidate_list(symbol, symbol->type_name);
 	if (debug) std::cout << "TIME_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
 }
@@ -1537,7 +1480,7 @@ void *fill_candidate_datatypes_c::visit(CAL_operator_c *symbol) {
 void *fill_candidate_datatypes_c::visit(CALC_operator_c *symbol) {
 	if (NULL == prev_il_instruction) return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_type(prev_il_instruction->candidate_datatypes[i], bool_type_name_c))
+		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "CALC [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1547,7 +1490,7 @@ void *fill_candidate_datatypes_c::visit(CALC_operator_c *symbol) {
 void *fill_candidate_datatypes_c::visit(CALCN_operator_c *symbol) {
 	if (NULL == prev_il_instruction) return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_type(prev_il_instruction->candidate_datatypes[i], bool_type_name_c))
+		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "CALCN [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1567,7 +1510,7 @@ void *fill_candidate_datatypes_c::visit(RET_operator_c *symbol) {
 void *fill_candidate_datatypes_c::visit(RETC_operator_c *symbol) {
 	if (NULL == prev_il_instruction) return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_type(prev_il_instruction->candidate_datatypes[i], bool_type_name_c))
+		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "RETC [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1577,7 +1520,7 @@ void *fill_candidate_datatypes_c::visit(RETC_operator_c *symbol) {
 void *fill_candidate_datatypes_c::visit(RETCN_operator_c *symbol) {
 	if (NULL == prev_il_instruction) return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_type(prev_il_instruction->candidate_datatypes[i], bool_type_name_c))
+		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "RETCN [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1596,7 +1539,7 @@ void *fill_candidate_datatypes_c::visit(JMP_operator_c *symbol) {
 
 void *fill_candidate_datatypes_c::visit(JMPC_operator_c *symbol) {
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_type(prev_il_instruction->candidate_datatypes[i], bool_type_name_c))
+		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "JMPC [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1605,7 +1548,7 @@ void *fill_candidate_datatypes_c::visit(JMPC_operator_c *symbol) {
 
 void *fill_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_type(prev_il_instruction->candidate_datatypes[i], bool_type_name_c))
+		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "JMPCN [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";

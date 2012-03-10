@@ -30,10 +30,6 @@
 
 
 
-#define is_type(type_name_symbol, type_name_class)  ((type_name_symbol == NULL) ? false : (typeid(*type_name_symbol) == typeid(type_name_class)))
-#define sizeoftype(symbol) get_sizeof_datatype_c::getsize(symbol)
-
-
 
 
 typedef struct {
