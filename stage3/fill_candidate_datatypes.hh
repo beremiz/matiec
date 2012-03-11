@@ -79,7 +79,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /* the current IL operand being analyzed - its symbol and its data type */
     symbol_c *il_operand_type;
     symbol_c *il_operand;
-    symbol_c *widening_conversion(symbol_c *left_type, symbol_c *right_type, const struct widen_entry widen_table[]);
+    symbol_c *widening_conversion(symbol_c *left_type, symbol_c *right_type, const struct widen_entry widen_table[], bool &deprecated_operation);
 
     /* Match a function declaration with a function call through their parameters.*/
     /* returns true if compatible function/FB invocation, otherwise returns false */

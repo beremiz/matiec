@@ -124,16 +124,6 @@ symbol_c *print_datatypes_error_c::base_type(symbol_c *symbol) {
 
 
 
-
-void print_datatypes_error_c::check_used_operation_status(symbol_c *symbol, symbol_c *left, symbol_c *right,  const struct widen_entry widen_table[]) {
-	/* find a compatible entry in the widening table */
-	for (int k = 0; NULL != widen_table[k].left;  k++)
-		if (is_type_equal(left, widen_table[k].left) && is_type_equal(right, widen_table[k].right))
-			if  (widen_entry::deprecated == widen_table[k].status)
-				STAGE3_WARNING(symbol, symbol, "Deprecated operation.");
-}
-
-
 /*
 typedef struct {
   symbol_c *function_name,
@@ -973,34 +963,38 @@ void *print_datatypes_error_c::visit(XORN_operator_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(ADD_operator_c *symbol) {
-  /* TODO: print warning messages for deprecated operations! */
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ADD' operator.");
+        if (symbol->deprecated_operation)
+                STAGE3_WARNING(symbol, symbol, "Deprecated operation for 'ADD' operator.");
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(SUB_operator_c *symbol) {
-  /* TODO: print warning messages for deprecated operations! */
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'SUB' operator.");
+        if (symbol->deprecated_operation)
+                STAGE3_WARNING(symbol, symbol, "Deprecated operation for 'SUB' operator.");
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(MUL_operator_c *symbol) {
-  /* TODO: print warning messages for deprecated operations! */
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'MUL' operator.");
+        if (symbol->deprecated_operation)
+                STAGE3_WARNING(symbol, symbol, "Deprecated operation for 'MUL' operator.");
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(DIV_operator_c *symbol) {
-  /* TODO: print warning messages for deprecated operations! */
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(il_operand->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'DIV' operator.");
+        if (symbol->deprecated_operation)
+                STAGE3_WARNING(symbol, symbol, "Deprecated operation for 'DIV' operator.");
 	return NULL;
 }
 
@@ -1196,8 +1190,8 @@ void *print_datatypes_error_c::visit(add_expression_c *symbol) {
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '+' expression.");
-	
-	check_used_operation_status(symbol, symbol->l_exp->datatype,symbol->r_exp->datatype, widen_ADD_table);
+        if (symbol->deprecated_operation)
+                STAGE3_WARNING(symbol, symbol, "Deprecated operation for '+' expression.");	
 	return NULL;
 }
 
@@ -1209,8 +1203,9 @@ void *print_datatypes_error_c::visit(sub_expression_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-			STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '-' expression.");
-	check_used_operation_status(symbol, symbol->l_exp->datatype,symbol->r_exp->datatype, widen_SUB_table);
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '-' expression.");
+        if (symbol->deprecated_operation)
+                STAGE3_WARNING(symbol, symbol, "Deprecated operation for '-' expression.");
 	return NULL;
 }
 
@@ -1221,7 +1216,8 @@ void *print_datatypes_error_c::visit(mul_expression_c *symbol) {
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '*' expression.");
-	check_used_operation_status(symbol, symbol->l_exp->datatype,symbol->r_exp->datatype, widen_MUL_table);
+        if (symbol->deprecated_operation)
+                STAGE3_WARNING(symbol, symbol, "Deprecated operation for '*' expression.");
 	return NULL;
 }
 
@@ -1232,7 +1228,8 @@ void *print_datatypes_error_c::visit(div_expression_c *symbol) {
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '/' expression.");
-	check_used_operation_status(symbol, symbol->l_exp->datatype,symbol->r_exp->datatype, widen_DIV_table);
+        if (symbol->deprecated_operation)
+                STAGE3_WARNING(symbol, symbol, "Deprecated operation for '/' expression.");
 	return NULL;
 }
 

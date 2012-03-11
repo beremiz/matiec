@@ -53,12 +53,14 @@ fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
 fill_candidate_datatypes_c::~fill_candidate_datatypes_c(void) {
 }
 
-symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, symbol_c *right_type, const struct widen_entry widen_table[]) {
+symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, symbol_c *right_type, const struct widen_entry widen_table[], bool &deprecated_operation) {
 	int k;
 	/* find a widening table entry compatible */
 	for (k = 0; NULL != widen_table[k].left;  k++)
-		if ((typeid(*left_type) == typeid(*widen_table[k].left)) && (typeid(*right_type) == typeid(*widen_table[k].right)))
-			return widen_table[k].result;
+		if ((typeid(*left_type) == typeid(*widen_table[k].left)) && (typeid(*right_type) == typeid(*widen_table[k].right))) {
+		      deprecated_operation = (widen_table[k].status == widen_entry::deprecated);	
+                      return widen_table[k].result;
+                }
 	return NULL;
 }
 
@@ -1269,7 +1271,8 @@ void *fill_candidate_datatypes_c::visit(XORN_operator_c *symbol) {
 
 void *fill_candidate_datatypes_c::visit(ADD_operator_c *symbol) {
 	symbol_c *prev_instruction_type, *operand_type;
-
+        
+        symbol->deprecated_operation = false;
 	if (NULL == prev_il_instruction) return NULL;
 	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
@@ -1279,7 +1282,7 @@ void *fill_candidate_datatypes_c::visit(ADD_operator_c *symbol) {
 					is_ANY_NUM_compatible(prev_instruction_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 			else {
-				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_ADD_table);
+				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_ADD_table, symbol->deprecated_operation);
 				if (result)
 					add_datatype_to_candidate_list(symbol, result);
 
@@ -1293,6 +1296,7 @@ void *fill_candidate_datatypes_c::visit(ADD_operator_c *symbol) {
 void *fill_candidate_datatypes_c::visit(SUB_operator_c *symbol) {
 	symbol_c *prev_instruction_type, *operand_type;
 
+        symbol->deprecated_operation = false;
 	if (NULL == prev_il_instruction) return NULL;
 	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
@@ -1302,7 +1306,7 @@ void *fill_candidate_datatypes_c::visit(SUB_operator_c *symbol) {
 					is_ANY_NUM_compatible(prev_instruction_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 			else {
-				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_SUB_table);
+				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_SUB_table, symbol->deprecated_operation);
 				if (result)
 					add_datatype_to_candidate_list(symbol, result);
 			}
@@ -1315,6 +1319,7 @@ void *fill_candidate_datatypes_c::visit(SUB_operator_c *symbol) {
 void *fill_candidate_datatypes_c::visit(MUL_operator_c *symbol) {
 	symbol_c *prev_instruction_type, *operand_type;
 
+        symbol->deprecated_operation = false;
 	if (NULL == prev_il_instruction) return NULL;
 	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
@@ -1324,7 +1329,7 @@ void *fill_candidate_datatypes_c::visit(MUL_operator_c *symbol) {
 					is_ANY_NUM_compatible(prev_instruction_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 			else {
-				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_MUL_table);
+				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_MUL_table, symbol->deprecated_operation);
 				if (result)
 					add_datatype_to_candidate_list(symbol, result);
 			}
@@ -1337,6 +1342,7 @@ void *fill_candidate_datatypes_c::visit(MUL_operator_c *symbol) {
 void *fill_candidate_datatypes_c::visit(DIV_operator_c *symbol) {
 	symbol_c *prev_instruction_type, *operand_type;
 
+        symbol->deprecated_operation = false;
 	if (NULL == prev_il_instruction) return NULL;
 	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
@@ -1346,7 +1352,7 @@ void *fill_candidate_datatypes_c::visit(DIV_operator_c *symbol) {
 					is_ANY_NUM_compatible(prev_instruction_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 			else {
-				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_DIV_table);
+				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_DIV_table, symbol->deprecated_operation);
 				if (result)
 					add_datatype_to_candidate_list(symbol, result);
 			}
@@ -1758,6 +1764,7 @@ void *fill_candidate_datatypes_c::visit(add_expression_c *symbol) {
 	 */
 	symbol_c *left_type, *right_type;
 
+        symbol->deprecated_operation = false;
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
@@ -1767,7 +1774,7 @@ void *fill_candidate_datatypes_c::visit(add_expression_c *symbol) {
 			if (is_type_equal(left_type, right_type) && is_ANY_NUM_compatible(left_type))
 				add_datatype_to_candidate_list(symbol, left_type);
 			else {
-				symbol_c *result = widening_conversion(left_type, right_type, widen_ADD_table);
+				symbol_c *result = widening_conversion(left_type, right_type, widen_ADD_table, symbol->deprecated_operation);
 				if (result)
 					add_datatype_to_candidate_list(symbol, result);
 			}
@@ -1781,6 +1788,7 @@ void *fill_candidate_datatypes_c::visit(add_expression_c *symbol) {
 void *fill_candidate_datatypes_c::visit(sub_expression_c *symbol) {
 	symbol_c *left_type, *right_type;
 
+        symbol->deprecated_operation = false;
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
@@ -1790,7 +1798,7 @@ void *fill_candidate_datatypes_c::visit(sub_expression_c *symbol) {
 			if (is_type_equal(left_type, right_type) && is_ANY_NUM_compatible(left_type))
 				add_datatype_to_candidate_list(symbol, left_type);
 			else {
-				symbol_c *result = widening_conversion(left_type, right_type, widen_SUB_table);
+				symbol_c *result = widening_conversion(left_type, right_type, widen_SUB_table, symbol->deprecated_operation);
 				if (result)
 					add_datatype_to_candidate_list(symbol, result);
 			}
@@ -1804,6 +1812,7 @@ void *fill_candidate_datatypes_c::visit(sub_expression_c *symbol) {
 void *fill_candidate_datatypes_c::visit(mul_expression_c *symbol) {
 	symbol_c *left_type, *right_type;
 
+        symbol->deprecated_operation = false;
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
@@ -1813,7 +1822,7 @@ void *fill_candidate_datatypes_c::visit(mul_expression_c *symbol) {
 			if      (is_type_equal(left_type, right_type) && is_ANY_NUM_compatible(left_type))
 				add_datatype_to_candidate_list(symbol, left_type);
 			else {
-				symbol_c *result = widening_conversion(left_type, right_type, widen_MUL_table);
+				symbol_c *result = widening_conversion(left_type, right_type, widen_MUL_table, symbol->deprecated_operation);
 				if (result)
 					add_datatype_to_candidate_list(symbol, result);
 			}
@@ -1828,6 +1837,7 @@ void *fill_candidate_datatypes_c::visit(mul_expression_c *symbol) {
 void *fill_candidate_datatypes_c::visit(div_expression_c *symbol) {
 	symbol_c *left_type, *right_type;
 
+        symbol->deprecated_operation = false;
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
@@ -1837,7 +1847,7 @@ void *fill_candidate_datatypes_c::visit(div_expression_c *symbol) {
 			if      (is_type_equal(left_type, right_type) && is_ANY_NUM_type(left_type))
 				add_datatype_to_candidate_list(symbol, left_type);
 			else {
-				symbol_c *result = widening_conversion(left_type, right_type, widen_DIV_table);
+				symbol_c *result = widening_conversion(left_type, right_type, widen_DIV_table, symbol->deprecated_operation);
 				if (result)
 					add_datatype_to_candidate_list(symbol, result);
 			}
