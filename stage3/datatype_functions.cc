@@ -47,6 +47,41 @@ const char *elementary_type_c::to_string(symbol_c *symbol) {
 
 
 
+/* Macro that expand to subtypes */
+/* copied from matiec/lib/create_standard_functions_txt.sh */
+#define __ANY(DO)                 __ANY_DERIVED(DO) __ANY_ELEMENTARY(DO)
+#define __ANY_DERIVED(DO)
+#define __ANY_ELEMENTARY(DO)      __ANY_MAGNITUDE(DO) __ANY_BIT(DO) __ANY_STRING(DO) __ANY_DATE(DO)
+#define __ANY_MAGNITUDE(DO)       __ANY_NUM(DO) DO(TIME)
+#define __ANY_BIT(DO)             __ANY_NBIT(DO) DO(BOOL)
+#define __ANY_NBIT(DO)            DO(byte) DO(word) DO(dword) DO(lword)
+//#define __ANY_STRING(DO)          DO(string) DO(wstring)
+#define __ANY_STRING(DO)          DO(string)
+#define __ANY_DATE(DO)            DO(date) DO(tod) DO(dt)
+#define __ANY_NUM(DO)             __ANY_REAL(DO) __ANY_INT(DO)
+#define __ANY_REAL(DO)            DO(real) DO(lreal)
+#define __ANY_INT(DO)             __ANY_SINT(DO) __ANY_UINT(DO)
+#define __ANY_SINT(DO)            DO(sint) DO(int) DO(dint) DO(lint)
+#define __ANY_UINT(DO)            DO(usint) DO(uint) DO(udint) DO(ulint)
+
+#define __ANY_1(DO,P1)            __ANY_DERIVED_1(DO,P1) __ANY_ELEMENTARY_1(DO,P1)
+#define __ANY_DERIVED_1(DO,P1)
+#define __ANY_ELEMENTARY_1(DO,P1) __ANY_MAGNITUDE_1(DO,P1) __ANY_BIT_1(DO,P1) __ANY_STRING_1(DO,P1) __ANY_DATE_1(DO,P1)
+#define __ANY_MAGNITUDE_1(DO,P1)  __ANY_NUM_1(DO,P1) DO(TIME,P1)
+#define __ANY_BIT_1(DO,P1)        __ANY_NBIT_1(DO,P1) DO(BOOL,P1)
+#define __ANY_NBIT_1(DO,P1)       DO(byte,P1) DO(word,P1) DO(dword,P1) DO(lword,P1)
+// #define __ANY_STRING_1(DO,P1)     DO(string,P1) DO(wstring,P1)
+#define __ANY_STRING_1(DO,P1)     DO(string,P1)
+#define __ANY_DATE_1(DO,P1)       DO(date,P1) DO(tod,P1) DO(dt,P1)
+#define __ANY_NUM_1(DO,P1)        __ANY_REAL_1(DO,P1) __ANY_INT_1(DO,P1)
+#define __ANY_REAL_1(DO,P1)       DO(real,P1) DO(lreal,P1)
+#define __ANY_INT_1(DO,P1)        __ANY_SINT_1(DO,P1) __ANY_UINT_1(DO,P1)
+#define __ANY_SINT_1(DO,P1)       DO(sint,P1) DO(int,P1) DO(dint,P1) DO(lint,P1)
+#define __ANY_UINT_1(DO,P1)       DO(usint,P1) DO(uint,P1) DO(udint,P1) DO(ulint,P1)
+
+
+
+
 /*
  * 2.5.1.5.6 Functions of time data types
  * Table 30 - page 64
@@ -64,35 +99,35 @@ const struct widen_entry widen_ADD_table[] = {
     /*******************************/
     /* SAFE version on the left... */
     /*******************************/
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::time_type_name,            &search_constant_type_c::time_type_name, widen_entry::ok         },
-    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::time_type_name,            &search_constant_type_c::tod_type_name, widen_entry::deprecated },
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::time_type_name,            &search_constant_type_c::time_type_name,     widen_entry::ok         },
+    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::time_type_name,            &search_constant_type_c::tod_type_name,      widen_entry::deprecated },
     /* NOTE: the standard des not explicitly support the following semantics. However, since 'addition' is supposed to be commutative, we add it anyway... */
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::tod_type_name,             &search_constant_type_c::tod_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::time_type_name,            &search_constant_type_c::dt_type_name, widen_entry::deprecated },         
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::tod_type_name,             &search_constant_type_c::tod_type_name,      widen_entry::deprecated },
+    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::time_type_name,            &search_constant_type_c::dt_type_name,       widen_entry::deprecated },         
     /* NOTE: the standard des not explicitly support the following semantics. However, since 'addition' is supposed to be commutative, we add it anyway... */
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::dt_type_name,              &search_constant_type_c::dt_type_name, widen_entry::deprecated },         
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::dt_type_name,              &search_constant_type_c::dt_type_name,       widen_entry::deprecated },         
 
     /********************************/
     /* SAFE version on the right... */
     /********************************/
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::safetime_type_name,        &search_constant_type_c::time_type_name, widen_entry::ok         },
-    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::safetime_type_name,        &search_constant_type_c::tod_type_name, widen_entry::deprecated },
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::safetime_type_name,        &search_constant_type_c::time_type_name,     widen_entry::ok         },
+    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::safetime_type_name,        &search_constant_type_c::tod_type_name,      widen_entry::deprecated },
     /* NOTE: the standard des not explicitly support the following semantics. However, since 'addition' is supposed to be commutative, we add it anyway... */
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::safetod_type_name,         &search_constant_type_c::tod_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::safetime_type_name,        &search_constant_type_c::dt_type_name, widen_entry::deprecated },         
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::safetod_type_name,         &search_constant_type_c::tod_type_name,      widen_entry::deprecated },
+    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::safetime_type_name,        &search_constant_type_c::dt_type_name,       widen_entry::deprecated },         
     /* NOTE: the standard des not explicitly support the following semantics. However, since 'addition' is supposed to be commutative, we add it anyway... */
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::safedt_type_name,          &search_constant_type_c::dt_type_name, widen_entry::deprecated },         
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::safedt_type_name,          &search_constant_type_c::dt_type_name,       widen_entry::deprecated },         
 
     /*************************************/
     /* SAFE version on left and right... */
     /*************************************/
     { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safetime_type_name,        &search_constant_type_c::safetime_type_name, widen_entry::ok         },
-    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::safetime_type_name,        &search_constant_type_c::safetod_type_name, widen_entry::deprecated },
+    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::safetime_type_name,        &search_constant_type_c::safetod_type_name,  widen_entry::deprecated },
     /* NOTE: the standard des not explicitly support the following semantics. However, since 'addition' is supposed to be commutative, we add it anyway... */
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safetod_type_name,         &search_constant_type_c::safetod_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::safetime_type_name,        &search_constant_type_c::safedt_type_name, widen_entry::deprecated },         
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safetod_type_name,         &search_constant_type_c::safetod_type_name,  widen_entry::deprecated },
+    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::safetime_type_name,        &search_constant_type_c::safedt_type_name,   widen_entry::deprecated },         
     /* NOTE: the standard des not explicitly support the following semantics. However, since 'addition' is supposed to be commutative, we add it anyway... */
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safedt_type_name,          &search_constant_type_c::safedt_type_name, widen_entry::deprecated },
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safedt_type_name,          &search_constant_type_c::safedt_type_name,   widen_entry::deprecated },
    
     { NULL, NULL, NULL, widen_entry::ok },
 };
@@ -100,42 +135,45 @@ const struct widen_entry widen_ADD_table[] = {
 
 
 
+
+
+
 const struct widen_entry widen_SUB_table[] = {
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::time_type_name,            &search_constant_type_c::time_type_name, widen_entry::ok         },
-    { &search_constant_type_c::date_type_name,          &search_constant_type_c::date_type_name,            &search_constant_type_c::time_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::time_type_name,            &search_constant_type_c::tod_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::tod_type_name,             &search_constant_type_c::time_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::time_type_name,            &search_constant_type_c::dt_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::dt_type_name,              &search_constant_type_c::time_type_name, widen_entry::deprecated },        
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::time_type_name,            &search_constant_type_c::time_type_name,     widen_entry::ok         },
+    { &search_constant_type_c::date_type_name,          &search_constant_type_c::date_type_name,            &search_constant_type_c::time_type_name,     widen_entry::deprecated },
+    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::time_type_name,            &search_constant_type_c::tod_type_name,      widen_entry::deprecated },
+    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::tod_type_name,             &search_constant_type_c::time_type_name,     widen_entry::deprecated },
+    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::time_type_name,            &search_constant_type_c::dt_type_name,       widen_entry::deprecated },
+    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::dt_type_name,              &search_constant_type_c::time_type_name,     widen_entry::deprecated },        
 
     /*******************************/
     /* SAFE version on the left... */
     /*******************************/
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::time_type_name,            &search_constant_type_c::time_type_name, widen_entry::ok         },
-    { &search_constant_type_c::safedate_type_name,      &search_constant_type_c::date_type_name,            &search_constant_type_c::time_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::time_type_name,            &search_constant_type_c::tod_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::tod_type_name,             &search_constant_type_c::time_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::time_type_name,            &search_constant_type_c::dt_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::dt_type_name,              &search_constant_type_c::time_type_name, widen_entry::deprecated },        
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::time_type_name,            &search_constant_type_c::time_type_name,     widen_entry::ok         },
+    { &search_constant_type_c::safedate_type_name,      &search_constant_type_c::date_type_name,            &search_constant_type_c::time_type_name,     widen_entry::deprecated },
+    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::time_type_name,            &search_constant_type_c::tod_type_name,      widen_entry::deprecated },
+    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::tod_type_name,             &search_constant_type_c::time_type_name,     widen_entry::deprecated },
+    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::time_type_name,            &search_constant_type_c::dt_type_name,       widen_entry::deprecated },
+    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::dt_type_name,              &search_constant_type_c::time_type_name,     widen_entry::deprecated },        
 
     /********************************/
     /* SAFE version on the right... */
     /********************************/
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::safetime_type_name,            &search_constant_type_c::time_type_name, widen_entry::ok         },
-    { &search_constant_type_c::date_type_name,          &search_constant_type_c::safedate_type_name,            &search_constant_type_c::time_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::safetime_type_name,            &search_constant_type_c::tod_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::safetod_type_name,             &search_constant_type_c::time_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::safetime_type_name,            &search_constant_type_c::dt_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::safedt_type_name,              &search_constant_type_c::time_type_name, widen_entry::deprecated },        
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::safetime_type_name,            &search_constant_type_c::time_type_name,     widen_entry::ok         },
+    { &search_constant_type_c::date_type_name,          &search_constant_type_c::safedate_type_name,            &search_constant_type_c::time_type_name,     widen_entry::deprecated },
+    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::safetime_type_name,            &search_constant_type_c::tod_type_name,      widen_entry::deprecated },
+    { &search_constant_type_c::tod_type_name,           &search_constant_type_c::safetod_type_name,             &search_constant_type_c::time_type_name,     widen_entry::deprecated },
+    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::safetime_type_name,            &search_constant_type_c::dt_type_name,       widen_entry::deprecated },
+    { &search_constant_type_c::dt_type_name,            &search_constant_type_c::safedt_type_name,              &search_constant_type_c::time_type_name,     widen_entry::deprecated },        
 
     /*************************************/
     /* SAFE version on left and right... */
     /*************************************/
     { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safetime_type_name,            &search_constant_type_c::safetime_type_name, widen_entry::ok         },
     { &search_constant_type_c::safedate_type_name,      &search_constant_type_c::safedate_type_name,            &search_constant_type_c::safetime_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::safetime_type_name,            &search_constant_type_c::safetod_type_name, widen_entry::deprecated },
+    { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::safetime_type_name,            &search_constant_type_c::safetod_type_name,  widen_entry::deprecated },
     { &search_constant_type_c::safetod_type_name,       &search_constant_type_c::safetod_type_name,             &search_constant_type_c::safetime_type_name, widen_entry::deprecated },
-    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::safetime_type_name,            &search_constant_type_c::safedt_type_name, widen_entry::deprecated },
+    { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::safetime_type_name,            &search_constant_type_c::safedt_type_name,   widen_entry::deprecated },
     { &search_constant_type_c::safedt_type_name,        &search_constant_type_c::safedt_type_name,              &search_constant_type_c::safetime_type_name, widen_entry::deprecated },        
 
     { NULL, NULL, NULL, widen_entry::ok },
@@ -148,69 +186,35 @@ const struct widen_entry widen_SUB_table[] = {
 
 
 const struct widen_entry widen_MUL_table[] = {
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::lreal_type_name,           &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::real_type_name,            &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::dint_type_name,            &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::int_type_name,             &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::sint_type_name,            &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::ulint_type_name,           &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::udint_type_name,           &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::uint_type_name,            &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::usint_type_name,           &search_constant_type_c::time_type_name     , widen_entry::deprecated },
+#define __multime(TYPE)       \
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::TYPE##_type_name,           &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::TYPE##_type_name,           &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::safe##TYPE##_type_name,           &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safe##TYPE##_type_name,           &search_constant_type_c::safetime_type_name, widen_entry::deprecated }, \
+    /* NOTE: the standard des not explicitly support the following semantics. However, since 'multiplication' is supposed to be commutative, we add it anyway... */ \
+    { &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::time_type_name,           &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::time_type_name,           &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
+    { &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::safetime_type_name,           &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::safetime_type_name,           &search_constant_type_c::safetime_type_name, widen_entry::deprecated },
 
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::lreal_type_name,           &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::real_type_name,            &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::dint_type_name,            &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::int_type_name,             &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::sint_type_name,            &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::ulint_type_name,           &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::udint_type_name,           &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::uint_type_name,            &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::usint_type_name,           &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-                                                                                                                                                                                 
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safelreal_type_name,       &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safereal_type_name,        &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safedint_type_name,        &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safeint_type_name,         &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safesint_type_name,        &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safeulint_type_name,       &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safeudint_type_name,       &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safeuint_type_name,        &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safeusint_type_name,       &search_constant_type_c::safetime_type_name , widen_entry::ok         },
+    __ANY_NUM(__multime)
+#undef __multime
 
     { NULL, NULL, NULL, widen_entry::ok },
 };
 
-const struct widen_entry widen_DIV_table[] = {
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::lreal_type_name,           &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::real_type_name,            &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::dint_type_name,            &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::int_type_name,             &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::sint_type_name,            &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::ulint_type_name,           &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::udint_type_name,           &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::uint_type_name,            &search_constant_type_c::time_type_name     , widen_entry::deprecated },
-    { &search_constant_type_c::time_type_name,          &search_constant_type_c::usint_type_name,           &search_constant_type_c::time_type_name     , widen_entry::deprecated },
 
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::lreal_type_name,           &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::real_type_name,            &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::dint_type_name,            &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::int_type_name,             &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::sint_type_name,            &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::ulint_type_name,           &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::udint_type_name,           &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::uint_type_name,            &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::usint_type_name,           &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-                                                                                                                                                                                  
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safelreal_type_name,       &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safereal_type_name,        &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safedint_type_name,        &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safeint_type_name,         &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safesint_type_name,        &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safeulint_type_name,       &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safeudint_type_name,       &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safeuint_type_name,        &search_constant_type_c::safetime_type_name , widen_entry::ok         },
-    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safeusint_type_name,       &search_constant_type_c::safetime_type_name , widen_entry::ok         },
+
+
+
+const struct widen_entry widen_DIV_table[] = {
+#define __divtime(TYPE)       \
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::TYPE##_type_name,           &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::TYPE##_type_name,           &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
+    { &search_constant_type_c::time_type_name,          &search_constant_type_c::safe##TYPE##_type_name,           &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
+    { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safe##TYPE##_type_name,           &search_constant_type_c::safetime_type_name, widen_entry::deprecated },
+    __ANY_NUM(__divtime)
+#undef __divtime
 
     { NULL, NULL, NULL, widen_entry::ok },
  };
