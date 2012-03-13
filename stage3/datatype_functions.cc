@@ -238,7 +238,7 @@ const struct widen_entry widen_MUL_table[] = {
     { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
     { &search_constant_type_c::time_type_name,          &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
     { &search_constant_type_c::safetime_type_name,      &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::safetime_type_name, widen_entry::deprecated }, \
-    /* NOTE: the standard des not explicitly support the following semantics. However, since 'multiplication' is supposed to be commutative, we add it anyway... */ \
+    /* NOTE: the standard des not explicitly support the following semantics. However, since 'multiplication' is supposed to be commutative, we add it anyway... */                 \
     { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::time_type_name,            &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
     { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::time_type_name,            &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
     { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::safetime_type_name,        &search_constant_type_c::time_type_name,     widen_entry::deprecated }, \
@@ -278,6 +278,22 @@ const struct widen_entry widen_DIV_table[] = {
     { NULL, NULL, NULL, widen_entry::ok },
  };
 
+ 
+
+
+const struct widen_entry widen_MOD_table[] = {
+#define __mod(TYPE)       \
+    { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::safe##TYPE##_type_name, widen_entry::ok     },
+    __ANY_NUM(__mod)
+#undef __mod
+
+    { NULL, NULL, NULL, widen_entry::ok },
+};
+ 
+ 
  
  
 /* Search for a datatype inside a candidate_datatypes list.

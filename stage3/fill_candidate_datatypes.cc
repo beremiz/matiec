@@ -1213,24 +1213,9 @@ void *fill_candidate_datatypes_c::visit(ADD_operator_c *symbol) {return handle_b
 void *fill_candidate_datatypes_c::visit(SUB_operator_c *symbol) {return handle_binary_operator(widen_SUB_table, symbol, prev_il_instruction, il_operand);}
 void *fill_candidate_datatypes_c::visit(MUL_operator_c *symbol) {return handle_binary_operator(widen_MUL_table, symbol, prev_il_instruction, il_operand);}
 void *fill_candidate_datatypes_c::visit(DIV_operator_c *symbol) {return handle_binary_operator(widen_DIV_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(MOD_operator_c *symbol) {return handle_binary_operator(widen_MOD_table, symbol, prev_il_instruction, il_operand);}
 
 
-void *fill_candidate_datatypes_c::visit(MOD_operator_c *symbol) {
-	symbol_c *prev_instruction_type, *operand_type;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type, operand_type) &&
-					is_ANY_INT_compatible(prev_instruction_type))
-				add_datatype_to_candidate_list(symbol, prev_instruction_type);
-		}
-	}
-	if (debug) std::cout <<  "MOD [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
 
 void *fill_candidate_datatypes_c::visit(GT_operator_c *symbol) {
 	bool found = false;
@@ -1619,24 +1604,7 @@ void *fill_candidate_datatypes_c::visit(add_expression_c *symbol) {return handle
 void *fill_candidate_datatypes_c::visit(sub_expression_c *symbol) {return handle_binary_expression(widen_SUB_table, symbol, symbol->l_exp, symbol->r_exp);}
 void *fill_candidate_datatypes_c::visit(mul_expression_c *symbol) {return handle_binary_expression(widen_MUL_table, symbol, symbol->l_exp, symbol->r_exp);}
 void *fill_candidate_datatypes_c::visit(div_expression_c *symbol) {return handle_binary_expression(widen_DIV_table, symbol, symbol->l_exp, symbol->r_exp);}
-
-
-void *fill_candidate_datatypes_c::visit(mod_expression_c *symbol) {
-	symbol_c *left_type, *right_type;
-
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	for (unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			left_type = symbol->l_exp->candidate_datatypes[i];
-			right_type = symbol->r_exp->candidate_datatypes[j];
-			if (is_type_equal(left_type, right_type) && is_ANY_INT_compatible(left_type))
-				add_datatype_to_candidate_list(symbol, left_type);
-		}
-	}
-	if (debug) std::cout << "mod [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
+void *fill_candidate_datatypes_c::visit(mod_expression_c *symbol) {return handle_binary_expression(widen_MOD_table, symbol, symbol->l_exp, symbol->r_exp);}
 
 
 void *fill_candidate_datatypes_c::visit(power_expression_c *symbol) {
