@@ -83,10 +83,12 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
 
     /* Match a function declaration with a function call through their parameters.*/
     /* returns true if compatible function/FB invocation, otherwise returns false */
-    bool match_nonformal_call(symbol_c *f_call, symbol_c *f_decl);
-    bool match_formal_call   (symbol_c *f_call, symbol_c *f_decl, symbol_c **first_param_datatype = NULL);
-    void handle_function_call(symbol_c *fcall, generic_function_call_t fcall_data);
-    void handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration);
+    bool  match_nonformal_call(symbol_c *f_call, symbol_c *f_decl);
+    bool  match_formal_call   (symbol_c *f_call, symbol_c *f_decl, symbol_c **first_param_datatype = NULL);
+    void  handle_function_call(symbol_c *fcall, generic_function_call_t fcall_data);
+    void  handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration);
+    void *handle_binary_expression(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
+    void *handle_binary_operator  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
     
     /* a helper function... */
     symbol_c *base_type(symbol_c *symbol);    

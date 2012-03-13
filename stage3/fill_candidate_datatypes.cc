@@ -317,6 +317,33 @@ void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruc
 }
 
 
+
+
+/* handle a binary IL operator, like ADD, SUB, etc... */
+void *fill_candidate_datatypes_c::handle_binary_operator(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr) {
+	if (NULL == l_expr) /* if no prev_il_instruction */
+		return NULL; 
+
+	for(unsigned int i = 0; i < l_expr->candidate_datatypes.size(); i++)
+		for(unsigned int j = 0; j < r_expr->candidate_datatypes.size(); j++)
+			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
+			add_datatype_to_candidate_list(symbol, widening_conversion(l_expr->candidate_datatypes[i], r_expr->candidate_datatypes[j], widen_table));
+
+	if (debug) std::cout <<  "[" << l_expr->candidate_datatypes.size() << "," << r_expr->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
+	return NULL;
+}
+
+
+/* handle a binary ST expression, like '+', '-', etc... */
+void *fill_candidate_datatypes_c::handle_binary_expression(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr) {
+	l_expr->accept(*this);
+	r_expr->accept(*this);
+	return handle_binary_operator(widen_table, symbol, l_expr, r_expr);
+}
+
+
+
+
 /* a helper function... */
 symbol_c *fill_candidate_datatypes_c::base_type(symbol_c *symbol) {
 	/* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used
@@ -365,6 +392,8 @@ void *fill_candidate_datatypes_c::handle_any_integer(symbol_c *symbol) {
 		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::udint_type_name, &search_constant_type_c::safeudint_type_name);
 	if (calc_size <= sizeoftype(&search_constant_type_c::ulint_type_name))
 		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::ulint_type_name, &search_constant_type_c::safeulint_type_name);
+
+	if (debug) std::cout << "ANY_INT [" << symbol->candidate_datatypes.size()<< "]" << std::endl;
 	return NULL;
 }
 
@@ -380,14 +409,6 @@ void *fill_candidate_datatypes_c::visit(real_c *symbol) {
 	if (calc_size <= sizeoftype(&search_constant_type_c::lreal_type_name))
 		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lreal_type_name, &search_constant_type_c::safelreal_type_name);
 	if (debug) std::cout << "ANY_REAL [" << symbol->candidate_datatypes.size() << "]" << std::endl;
-	return NULL;
-}
-
-
-
-void *fill_candidate_datatypes_c::visit(integer_c *symbol) {
-	handle_any_integer(symbol);
-	if (debug) std::cout << "ANY_INT [" << symbol->candidate_datatypes.size()<< "]" << std::endl;
 	return NULL;
 }
 
@@ -422,27 +443,10 @@ void *fill_candidate_datatypes_c::visit(neg_integer_c *symbol) {
 }
 
 
-void *fill_candidate_datatypes_c::visit(binary_integer_c *symbol) {
-	handle_any_integer(symbol);
-	if (debug) std::cout << "ANY_INT [" << symbol->candidate_datatypes.size()<< "]" << std::endl;
-	return NULL;
-}
-
-
-
-void *fill_candidate_datatypes_c::visit(octal_integer_c *symbol) {
-	handle_any_integer(symbol);
-	if (debug) std::cout << "ANY_INT [" << symbol->candidate_datatypes.size()<< "]" << std::endl;
-	return NULL;
-}
-
-
-
-void *fill_candidate_datatypes_c::visit(hex_integer_c *symbol) {
-	handle_any_integer(symbol);
-	if (debug) std::cout << "ANY_INT [" << symbol->candidate_datatypes.size()<< "]" << std::endl;
-	return NULL;
-}
+void *fill_candidate_datatypes_c::visit(integer_c        *symbol) {return handle_any_integer(symbol);}
+void *fill_candidate_datatypes_c::visit(binary_integer_c *symbol) {return handle_any_integer(symbol);}
+void *fill_candidate_datatypes_c::visit(octal_integer_c  *symbol) {return handle_any_integer(symbol);}
+void *fill_candidate_datatypes_c::visit(hex_integer_c    *symbol) {return handle_any_integer(symbol);}
 
 
 // SYM_REF2(integer_literal_c, type, value)
@@ -531,20 +535,9 @@ void *fill_candidate_datatypes_c::visit(duration_c *symbol) {
 /************************************/
 /* B 1.2.3.2 - Time of day and Date */
 /************************************/
-void *fill_candidate_datatypes_c::visit(time_of_day_c *symbol) {
-	add_datatype_to_candidate_list(symbol, symbol->type_name);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(date_c *symbol) {
-	add_datatype_to_candidate_list(symbol, symbol->type_name);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(date_and_time_c *symbol) {
-	add_datatype_to_candidate_list(symbol, symbol->type_name);
-	return NULL;
-}
+void *fill_candidate_datatypes_c::visit(time_of_day_c   *symbol) {add_datatype_to_candidate_list(symbol, symbol->type_name); return NULL;}
+void *fill_candidate_datatypes_c::visit(date_c          *symbol) {add_datatype_to_candidate_list(symbol, symbol->type_name); return NULL;}
+void *fill_candidate_datatypes_c::visit(date_and_time_c *symbol) {add_datatype_to_candidate_list(symbol, symbol->type_name); return NULL;}
 
 /**********************/
 /* B 1.3 - Data types */
@@ -600,9 +593,7 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 /* B 1.4 - Variables */
 /*********************/
 void *fill_candidate_datatypes_c::visit(symbolic_variable_c *symbol) {
-	symbol_c *result = search_varfb_instance_type->get_basetype_decl(symbol);
-	if (NULL != result)
-		add_datatype_to_candidate_list(symbol, result);
+	add_datatype_to_candidate_list(symbol, search_varfb_instance_type->get_basetype_decl(symbol)); /* will only add if non NULL */
 	if (debug) std::cout << "VAR [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
 }
@@ -620,29 +611,13 @@ void *fill_candidate_datatypes_c::visit(direct_variable_c *symbol) {
 	 * if (symbol->value[1] == '\0') ERROR;
 	 */
 	switch (symbol->value[2]) {
-	case 'X': // bit - 1 bit
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-		break;
-
-	case 'B': // byte - 8 bits
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);
-		break;
-
-	case 'W': // word - 16 bits
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);
-		break;
-
-	case 'D': // double word - 32 bits
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name);
-		break;
-
-	case 'L': // long word - 64 bits
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name);
-		break;
-
-	default:  // if none of the above, then the empty string was used <=> boolean
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-		break;
+		case 'X': /* bit   -  1 bit  */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);  break;
+		case 'B': /* byte  -  8 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);  break;
+		case 'W': /* word  - 16 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);  break;
+		case 'D': /* dword - 32 bits */	add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name); break;
+		case 'L': /* lword - 64 bits */	add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name); break;
+        	          /* if none of the above, then the empty string was used <=> boolean */
+		default:                        add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);  break;
 	}
 	return NULL;
 }
@@ -685,8 +660,7 @@ void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
  * will do that for us. So we determine the candidate datatypes only for the full structured_variable.
  */
 void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
-	symbol_c *result = search_varfb_instance_type->get_basetype_decl(symbol);
-	if (NULL != result) add_datatype_to_candidate_list(symbol, result);
+	add_datatype_to_candidate_list(symbol, search_varfb_instance_type->get_basetype_decl(symbol));  /* will only add if non NULL */
 	return NULL;
 }
 
@@ -697,10 +671,9 @@ void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 /* B 1.5.1 Functions */
 /*********************/
 void *fill_candidate_datatypes_c::visit(function_declaration_c *symbol) {
+	if (debug) printf("Filling candidate data types list of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	symbol->var_declarations_list->accept(*this);
-	if (debug) printf("Filling candidate data types list in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
-// 	il_parenthesis_level = 0;
 	symbol->function_body->accept(*this);
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
@@ -711,10 +684,9 @@ void *fill_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 /* B 1.5.2 Function blocks */
 /***************************/
 void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
+	if (debug) printf("Filling candidate data types list of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	symbol->var_declarations->accept(*this);
-	if (debug) printf("Filling candidate data types list in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
-// 	il_parenthesis_level = 0;
 	symbol->fblock_body->accept(*this);
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
@@ -725,10 +697,9 @@ void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 /* B 1.5.3 - Programs */
 /**********************/
 void *fill_candidate_datatypes_c::visit(program_declaration_c *symbol) {
+	if (debug) printf("Filling candidate data types list in program %s\n", ((token_c *)(symbol->program_type_name))->value);
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	symbol->var_declarations->accept(*this);
-	if (debug) printf("Filling candidate data types list in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
-// 	il_parenthesis_level = 0;
 	symbol->function_block_body->accept(*this);
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
@@ -871,7 +842,6 @@ void *fill_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 // SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
 void *fill_candidate_datatypes_c::visit(il_expression_c *symbol) {
   symbol_c *prev_il_instruction_backup = prev_il_instruction;
-//   il_parenthesis_level++;
   
   if (NULL != symbol->il_operand)
     symbol->il_operand->accept(*this);
@@ -879,9 +849,6 @@ void *fill_candidate_datatypes_c::visit(il_expression_c *symbol) {
   if(symbol->simple_instr_list != NULL)
     symbol->simple_instr_list->accept(*this);
 
-//   il_parenthesis_level--;
-//   if (il_parenthesis_level < 0) ERROR;
-  
   /* Now check the if the data type semantics of operation are correct,  */
   il_operand = symbol->simple_instr_list;
   prev_il_instruction = prev_il_instruction_backup;
@@ -1130,45 +1097,14 @@ void *fill_candidate_datatypes_c::visit(R_operator_c *symbol) {
 }
 
 
-void *fill_candidate_datatypes_c::visit(S1_operator_c *symbol) {
-	handle_implicit_il_fb_call(symbol, "S1", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(R1_operator_c *symbol) {
-	handle_implicit_il_fb_call(symbol, "R1", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(CLK_operator_c *symbol) {
-	handle_implicit_il_fb_call(symbol, "CLK", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(CU_operator_c *symbol) {
-	handle_implicit_il_fb_call(symbol, "CU", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(CD_operator_c *symbol) {
-	handle_implicit_il_fb_call(symbol, "CD", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(PV_operator_c *symbol) {
-	handle_implicit_il_fb_call(symbol, "PV", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(IN_operator_c *symbol) {
-	handle_implicit_il_fb_call(symbol, "IN", symbol->called_fb_declaration);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(PT_operator_c *symbol) {
-	handle_implicit_il_fb_call(symbol, "PT", symbol->called_fb_declaration);
-	return NULL;
-}
+void *fill_candidate_datatypes_c::visit(S1_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "S1", symbol->called_fb_declaration); return NULL;}
+void *fill_candidate_datatypes_c::visit(R1_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "R1", symbol->called_fb_declaration); return NULL;}
+void *fill_candidate_datatypes_c::visit(CLK_operator_c *symbol) {handle_implicit_il_fb_call(symbol, "CLK", symbol->called_fb_declaration); return NULL;}
+void *fill_candidate_datatypes_c::visit(CU_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "CU", symbol->called_fb_declaration); return NULL;}
+void *fill_candidate_datatypes_c::visit(CD_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "CD", symbol->called_fb_declaration); return NULL;}
+void *fill_candidate_datatypes_c::visit(PV_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "PV", symbol->called_fb_declaration); return NULL;}
+void *fill_candidate_datatypes_c::visit(IN_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "IN", symbol->called_fb_declaration); return NULL;}
+void *fill_candidate_datatypes_c::visit(PT_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "PT", symbol->called_fb_declaration); return NULL;}
 
 
 void *fill_candidate_datatypes_c::visit(AND_operator_c *symbol) {
@@ -1273,73 +1209,11 @@ void *fill_candidate_datatypes_c::visit(XORN_operator_c *symbol) {
 	return NULL;
 }
 
-void *fill_candidate_datatypes_c::visit(ADD_operator_c *symbol) {
-	symbol_c *prev_instruction_type, *operand_type;
-        
-        symbol->deprecated_operation = false;
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
-			add_datatype_to_candidate_list(symbol, widening_conversion(prev_instruction_type, operand_type, widen_ADD_table));
-		}
-	}
-	if (debug) std::cout <<  "ADD [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
+void *fill_candidate_datatypes_c::visit(ADD_operator_c *symbol) {return handle_binary_operator(widen_ADD_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(SUB_operator_c *symbol) {return handle_binary_operator(widen_SUB_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(MUL_operator_c *symbol) {return handle_binary_operator(widen_MUL_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(DIV_operator_c *symbol) {return handle_binary_operator(widen_DIV_table, symbol, prev_il_instruction, il_operand);}
 
-void *fill_candidate_datatypes_c::visit(SUB_operator_c *symbol) {
-	symbol_c *prev_instruction_type, *operand_type;
-
-        symbol->deprecated_operation = false;
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
-			add_datatype_to_candidate_list(symbol, widening_conversion(prev_instruction_type, operand_type, widen_SUB_table));
-		}
-	}
-	if (debug) std::cout <<  "SUB [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(MUL_operator_c *symbol) {
-	symbol_c *prev_instruction_type, *operand_type;
-
-        symbol->deprecated_operation = false;
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
-			add_datatype_to_candidate_list(symbol, widening_conversion(prev_instruction_type, operand_type, widen_MUL_table));
-		}
-	}
-	if (debug) std::cout <<  "MUL [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(DIV_operator_c *symbol) {
-	symbol_c *prev_instruction_type, *operand_type;
-
-        symbol->deprecated_operation = false;
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
-			add_datatype_to_candidate_list(symbol, widening_conversion(prev_instruction_type, operand_type, widen_DIV_table));
-		}
-	}
-	if (debug) std::cout <<  "DIV [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
 
 void *fill_candidate_datatypes_c::visit(MOD_operator_c *symbol) {
 	symbol_c *prev_instruction_type, *operand_type;
@@ -1719,101 +1593,32 @@ void *fill_candidate_datatypes_c::visit(ge_expression_c *symbol) {
 	return NULL;
 }
 
-void *fill_candidate_datatypes_c::visit(add_expression_c *symbol) {
-	/* The following code is correct when handling the addition of 2 symbolic_variables
-	 * In this case, adding two variables (e.g. USINT_var1 + USINT_var2) will always yield
-	 * the same data type, even if the result of the adition could not fit inside the same
-	 * data type (due to overflowing)
-	 *
-	 * However, when adding two literals (e.g. USINT#42 + USINT#3)
-	 * we should be able to detect overflows of the result, and therefore not consider
-	 * that the result may be of type USINT.
-	 * Currently we do not yet detect these overflows, and allow handling the sum of two USINTs
-	 * as always resulting in an USINT, even in the following expression
-	 * (USINT#65535 + USINT#2).
-	 *
-	 * In the future we can add some code to reduce
-	 * all the expressions that are based on literals into the resulting literal
-	 * value (maybe some visitor class that will run before or after data type
-	 * checking). Since this class will have to be very careful to make sure it implements the same mathematical
-	 * details (e.g. how to round and truncate numbers) as defined in IEC 61131-3, we will leave this to the future.
-	 * Also, the question will arise if we should also replace calls to standard
-	 * functions if the input parameters are all literals (e.g. ADD(42, 42)). This
-	 * means this class will be more difficult than it appears at first.
-	 */
-	symbol_c *left_type, *right_type;
 
-        symbol->deprecated_operation = false;
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			left_type = symbol->l_exp->candidate_datatypes[i];
-			right_type = symbol->r_exp->candidate_datatypes[j];
-			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
-			add_datatype_to_candidate_list(symbol, widening_conversion(left_type, right_type, widen_ADD_table));
-		}
-	}
-	if (debug) std::cout <<  "+ [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-
-void *fill_candidate_datatypes_c::visit(sub_expression_c *symbol) {
-	symbol_c *left_type, *right_type;
-
-        symbol->deprecated_operation = false;
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			left_type = symbol->l_exp->candidate_datatypes[i];
-			right_type = symbol->r_exp->candidate_datatypes[j];
-			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
-			add_datatype_to_candidate_list(symbol, widening_conversion(left_type, right_type, widen_SUB_table));
-		}
-	}
-	if (debug) std::cout <<  "- [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-
-void *fill_candidate_datatypes_c::visit(mul_expression_c *symbol) {
-	symbol_c *left_type, *right_type;
-
-        symbol->deprecated_operation = false;
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			left_type = symbol->l_exp->candidate_datatypes[i];
-			right_type = symbol->r_exp->candidate_datatypes[j];
-			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
-			add_datatype_to_candidate_list(symbol, widening_conversion(left_type, right_type, widen_MUL_table));
-		}
-	}
-	if (debug) std::cout << "* [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(div_expression_c *symbol) {
-	symbol_c *left_type, *right_type;
-
-        symbol->deprecated_operation = false;
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			left_type = symbol->l_exp->candidate_datatypes[i];
-			right_type = symbol->r_exp->candidate_datatypes[j];
-			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
-			add_datatype_to_candidate_list(symbol, widening_conversion(left_type, right_type, widen_DIV_table));
-		}
-	}
-	if (debug) std::cout << "/ [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
+/* The following code is correct when handling the addition of 2 symbolic_variables
+ * In this case, adding two variables (e.g. USINT_var1 + USINT_var2) will always yield
+ * the same data type, even if the result of the adition could not fit inside the same
+ * data type (due to overflowing)
+ *
+ * However, when adding two literals (e.g. USINT#42 + USINT#3)
+ * we should be able to detect overflows of the result, and therefore not consider
+ * that the result may be of type USINT.
+ * Currently we do not yet detect these overflows, and allow handling the sum of two USINTs
+ * as always resulting in an USINT, even in the following expression
+ * (USINT#65535 + USINT#2).
+ *
+ * In the future we can add some code to reduce
+ * all the expressions that are based on literals into the resulting literal
+ * value (maybe some visitor class that will run before or after data type
+ * checking). Since this class will have to be very careful to make sure it implements the same mathematical
+ * details (e.g. how to round and truncate numbers) as defined in IEC 61131-3, we will leave this to the future.
+ * Also, the question will arise if we should also replace calls to standard
+ * functions if the input parameters are all literals (e.g. ADD(42, 42)). This
+ * means this class will be more difficult than it appears at first.
+ */
+void *fill_candidate_datatypes_c::visit(add_expression_c *symbol) {return handle_binary_expression(widen_ADD_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(sub_expression_c *symbol) {return handle_binary_expression(widen_SUB_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(mul_expression_c *symbol) {return handle_binary_expression(widen_MUL_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(div_expression_c *symbol) {return handle_binary_expression(widen_DIV_table, symbol, symbol->l_exp, symbol->r_exp);}
 
 
 void *fill_candidate_datatypes_c::visit(mod_expression_c *symbol) {
