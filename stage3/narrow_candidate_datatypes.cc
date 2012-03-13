@@ -95,11 +95,12 @@ static void set_datatype_in_prev_il_instructions(symbol_c *datatype, il_instruct
 
 
 
-bool narrow_candidate_datatypes_c::is_widening_compatible(symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, const struct widen_entry widen_table[]) {
+bool narrow_candidate_datatypes_c::is_widening_compatible(const struct widen_entry widen_table[], symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, bool &deprecated_status) {
 	for (int k = 0; NULL != widen_table[k].left;  k++) {
 		if        ((typeid(*left_type)   == typeid(*widen_table[k].left))
 		        && (typeid(*right_type)  == typeid(*widen_table[k].right))
-				&& (typeid(*result_type) == typeid(*widen_table[k].result))) {
+			&& (typeid(*result_type) == typeid(*widen_table[k].result))) {
+			deprecated_status = (widen_table[k].status == widen_entry::deprecated);
 			return true;
 		}
 	}
@@ -749,6 +750,54 @@ void *narrow_candidate_datatypes_c::visit(il_simple_instruction_c *symbol)	{
 /*******************/
 /* B 2.2 Operators */
 /*******************/
+void *narrow_candidate_datatypes_c::handle_il_instruction_widen(symbol_c *symbol, bool &deprecated_operation, const struct widen_entry widen_table[]) {
+	symbol_c *prev_instruction_type, *operand_type;
+	int count = 0;
+	bool deprecated_status;
+
+	if (NULL == symbol->datatype)
+		/* next IL instructions were unable to determine the datatype this instruction should produce */
+		return NULL;
+
+	/* NOTE 1: the il_operand __may__ be pointing to a parenthesized list of IL instructions. 
+	 * e.g.  LD 33
+	 *       AND ( 45
+	 *            OR 56
+	 *            )
+	 *       When we handle the first 'AND' IL_operator, the il_operand will point to an simple_instr_list_c.
+	 *       In this case, when we call il_operand->accept(*this);, the prev_il_instruction pointer will be overwritten!
+	 *
+	 *       We must therefore set the prev_il_instruction->datatype = symbol->datatype;
+	 *       __before__ calling il_operand->accept(*this) !!
+	 *
+	 * NOTE 2: We do not need to call prev_il_instruction->accept(*this), as the object to which prev_il_instruction
+	 *         is pointing to will be later narrowed by the call from the for() loop of the instruction_list_c
+	 *         (or simple_instr_list_c), which iterates backwards.
+	 */
+        deprecated_operation = false;
+	for(unsigned int i = 0; i < fake_prev_il_instruction->candidate_datatypes.size(); i++) {
+		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
+			prev_instruction_type = fake_prev_il_instruction->candidate_datatypes[i];
+			operand_type = il_operand->candidate_datatypes[j];
+			if (is_widening_compatible(widen_table, prev_instruction_type, operand_type, symbol->datatype, deprecated_operation)) {
+				/* set the desired datatype of the previous il instruction */
+				set_datatype_in_prev_il_instructions(prev_instruction_type, fake_prev_il_instruction);
+				/* set the datatype for the operand */
+				il_operand->datatype = operand_type;
+				
+				count ++;
+			}
+		}
+	}
+
+// 	if (count > 1) ERROR; /* Since we also support SAFE data types, this assertion is not necessarily always tru! */
+	if (is_type_valid(symbol->datatype) && (count <= 0)) ERROR;
+
+	il_operand->accept(*this);
+	return NULL;
+}
+
+
 
 void *narrow_candidate_datatypes_c::handle_il_instruction(symbol_c *symbol) {
 	if (NULL == symbol->datatype)
@@ -777,6 +826,9 @@ void *narrow_candidate_datatypes_c::handle_il_instruction(symbol_c *symbol) {
 	il_operand->accept(*this);
 	return NULL;
 }
+
+
+
 
 void *narrow_candidate_datatypes_c::visit(LD_operator_c *symbol)   {
 	if (NULL == symbol->datatype)
@@ -862,10 +914,10 @@ void *narrow_candidate_datatypes_c::visit( XOR_operator_c *symbol)  {return hand
 void *narrow_candidate_datatypes_c::visit(ANDN_operator_c *symbol)  {return handle_il_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit( ORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(XORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit( ADD_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit( SUB_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit( MUL_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit( DIV_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit( ADD_operator_c *symbol)  {return handle_il_instruction_widen(symbol, symbol->deprecated_operation, widen_ADD_table);}
+void *narrow_candidate_datatypes_c::visit( SUB_operator_c *symbol)  {return handle_il_instruction_widen(symbol, symbol->deprecated_operation, widen_SUB_table);}
+void *narrow_candidate_datatypes_c::visit( MUL_operator_c *symbol)  {return handle_il_instruction_widen(symbol, symbol->deprecated_operation, widen_MUL_table);}
+void *narrow_candidate_datatypes_c::visit( DIV_operator_c *symbol)  {return handle_il_instruction_widen(symbol, symbol->deprecated_operation, widen_DIV_table);}
 void *narrow_candidate_datatypes_c::visit( MOD_operator_c *symbol)  {return handle_il_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(  GT_operator_c *symbol)  {return handle_il_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(  GE_operator_c *symbol)  {return handle_il_instruction(symbol);}
@@ -1178,29 +1230,26 @@ void *narrow_candidate_datatypes_c::visit(ge_expression_c *symbol) {
 }
 
 void *narrow_candidate_datatypes_c::visit(add_expression_c *symbol) {
+	symbol_c *left_type, *right_type;
 	int count = 0;
+	bool deprecated_status;
 
-	if (is_ANY_NUM_compatible(symbol->datatype)) {
-		symbol->l_exp->datatype = symbol->datatype;
-		symbol->r_exp->datatype = symbol->datatype;
-		count++;
-	} else {
-		/* TIME data type */
-		for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-			for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-				/* test widening compatibility */
-				if (is_widening_compatible(symbol->l_exp->candidate_datatypes[i],
-						symbol->r_exp->candidate_datatypes[j],
-						symbol->datatype, widen_ADD_table)) {
-					symbol->l_exp->datatype = symbol->l_exp->candidate_datatypes[i];
-					symbol->r_exp->datatype = symbol->r_exp->candidate_datatypes[j];
-					count ++;
-				}
+	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
+		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
+			/* test widening compatibility */
+			left_type  = symbol->l_exp->candidate_datatypes[i];
+			right_type = symbol->r_exp->candidate_datatypes[j];
+			if (is_widening_compatible(widen_ADD_table, left_type, right_type, symbol->datatype, deprecated_status)) {
+				symbol->l_exp->datatype = left_type;
+				symbol->r_exp->datatype = right_type;
+				symbol->deprecated_operation = deprecated_status;
+				count ++;
 			}
 		}
 	}
-	if (count > 1)
-		ERROR;
+// 	if (count > 1) ERROR; /* Since we also support SAFE data types, this assertion is not necessarily always tru! */
+	if (is_type_valid(symbol->datatype) && (count <= 0)) ERROR;
+	
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	return NULL;
@@ -1209,91 +1258,89 @@ void *narrow_candidate_datatypes_c::visit(add_expression_c *symbol) {
 
 
 void *narrow_candidate_datatypes_c::visit(sub_expression_c *symbol) {
+	symbol_c *left_type, *right_type;
 	int count = 0;
+	bool deprecated_status;
 
-	if (is_ANY_NUM_compatible(symbol->datatype)) {
-		symbol->l_exp->datatype = symbol->datatype;
-		symbol->r_exp->datatype = symbol->datatype;
-		count++;
-	} else {
-		/* TIME data type */
-		for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-			for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-				/* test widening compatibility */
-				if (is_widening_compatible(symbol->l_exp->candidate_datatypes[i],
-						symbol->r_exp->candidate_datatypes[j],
-						symbol->datatype, widen_SUB_table)) {
-					symbol->l_exp->datatype = symbol->l_exp->candidate_datatypes[i];
-					symbol->r_exp->datatype = symbol->r_exp->candidate_datatypes[j];
-					count ++;
-				}
+	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
+		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
+			/* test widening compatibility */
+			left_type  = symbol->l_exp->candidate_datatypes[i];
+			right_type = symbol->r_exp->candidate_datatypes[j];
+			if (is_widening_compatible(widen_SUB_table, left_type, right_type, symbol->datatype, deprecated_status)) {
+				symbol->l_exp->datatype = left_type;
+				symbol->r_exp->datatype = right_type;
+				symbol->deprecated_operation = deprecated_status;
+				count ++;
 			}
 		}
 	}
-	if (count > 1)
-		ERROR;
+// 	if (count > 1) ERROR; /* Since we also support SAFE data types, this assertion is not necessarily always tru! */
+	if (is_type_valid(symbol->datatype) && (count <= 0)) ERROR;
+	
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	return NULL;
 }
+
+
 
 void *narrow_candidate_datatypes_c::visit(mul_expression_c *symbol) {
+	symbol_c *left_type, *right_type;
 	int count = 0;
+	bool deprecated_status;
 
-	if (is_ANY_NUM_compatible(symbol->datatype)) {
-		symbol->l_exp->datatype = symbol->datatype;
-		symbol->r_exp->datatype = symbol->datatype;
-		count++;
-	} else {
-		/* TIME data type */
-		for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-			for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-				/* test widening compatibility */
-				if (is_widening_compatible(symbol->l_exp->candidate_datatypes[i],
-						symbol->r_exp->candidate_datatypes[j],
-						symbol->datatype, widen_MUL_table)) {
-					symbol->l_exp->datatype = symbol->l_exp->candidate_datatypes[i];
-					symbol->r_exp->datatype = symbol->r_exp->candidate_datatypes[j];
-					count ++;
-				}
+	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
+		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
+			/* test widening compatibility */
+			left_type  = symbol->l_exp->candidate_datatypes[i];
+			right_type = symbol->r_exp->candidate_datatypes[j];
+			if (is_widening_compatible(widen_MUL_table, left_type, right_type, symbol->datatype, deprecated_status)) {
+				symbol->l_exp->datatype = left_type;
+				symbol->r_exp->datatype = right_type;
+				symbol->deprecated_operation = deprecated_status;
+				count ++;
 			}
 		}
 	}
-	if (count > 1)
-		ERROR;
+// 	if (count > 1) ERROR; /* Since we also support SAFE data types, this assertion is not necessarily always tru! */
+	if (is_type_valid(symbol->datatype) && (count <= 0)) ERROR;
+	
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	return NULL;
 }
+
+
+
 
 void *narrow_candidate_datatypes_c::visit(div_expression_c *symbol) {
+	symbol_c *left_type, *right_type;
 	int count = 0;
+	bool deprecated_status;
 
-	if (is_ANY_NUM_compatible(symbol->datatype)) {
-		symbol->l_exp->datatype = symbol->datatype;
-		symbol->r_exp->datatype = symbol->datatype;
-		count++;
-	} else {
-		/* TIME data type */
-		for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-			for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-				/* test widening compatibility */
-				if (is_widening_compatible(symbol->l_exp->candidate_datatypes[i],
-						symbol->r_exp->candidate_datatypes[j],
-						symbol->datatype, widen_DIV_table)) {
-					symbol->l_exp->datatype = symbol->l_exp->candidate_datatypes[i];
-					symbol->r_exp->datatype = symbol->r_exp->candidate_datatypes[j];
-					count ++;
-				}
+	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
+		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
+			/* test widening compatibility */
+			left_type  = symbol->l_exp->candidate_datatypes[i];
+			right_type = symbol->r_exp->candidate_datatypes[j];
+			if (is_widening_compatible(widen_DIV_table, left_type, right_type, symbol->datatype, deprecated_status)) {
+				symbol->l_exp->datatype = left_type;
+				symbol->r_exp->datatype = right_type;
+				symbol->deprecated_operation = deprecated_status;
+				count ++;
 			}
 		}
 	}
-	if (count > 1)
-		ERROR;
+// 	if (count > 1) ERROR; /* Since we also support SAFE data types, this assertion is not necessarily always tru! */
+	if (is_type_valid(symbol->datatype) && (count <= 0)) ERROR;
+	
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	return NULL;
 }
+
+
 
 
 void *narrow_candidate_datatypes_c::visit(mod_expression_c *symbol) {

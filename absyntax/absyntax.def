@@ -972,7 +972,7 @@ SYM_REF2(il_param_out_assignment_c, il_assign_out_operator, variable)
 /*******************/
 /* NOTE: The parameter 'called_fb_declaration' is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
 /* NOTE: The parameter 'deprecated_operation' indicates that the operation, with the specific data types being used, is currently defined
- *       in the standard as being deprecated. This variable is filled in with the correct value in stage 3 (fill_candidate_datatypes_c) 
+ *       in the standard as being deprecated. This variable is filled in with the correct value in stage 3 (narrow_candidate_datatypes_c) 
  *       and currently only used in stage 3 (print_datatypes_error_c).
  */ 
 SYM_REF0(LD_operator_c)

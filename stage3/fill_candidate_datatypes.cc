@@ -53,14 +53,12 @@ fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
 fill_candidate_datatypes_c::~fill_candidate_datatypes_c(void) {
 }
 
-symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, symbol_c *right_type, const struct widen_entry widen_table[], bool &deprecated_operation) {
+symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, symbol_c *right_type, const struct widen_entry widen_table[]) {
 	int k;
 	/* find a widening table entry compatible */
 	for (k = 0; NULL != widen_table[k].left;  k++)
-		if ((typeid(*left_type) == typeid(*widen_table[k].left)) && (typeid(*right_type) == typeid(*widen_table[k].right))) {
-		      deprecated_operation = (widen_table[k].status == widen_entry::deprecated);	
+		if ((typeid(*left_type) == typeid(*widen_table[k].left)) && (typeid(*right_type) == typeid(*widen_table[k].right)))
                       return widen_table[k].result;
-                }
 	return NULL;
 }
 
@@ -68,6 +66,12 @@ symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, s
 /* add a data type to a candidate data type list, while guaranteeing no duplicate entries! */
 /* Returns true if it really did add the datatype to the list, or false if it was already present in the list! */
 bool fill_candidate_datatypes_c::add_datatype_to_candidate_list(symbol_c *symbol, symbol_c *datatype) {
+  /* If it is an invalid data type, do not insert!
+   * NOTE: it reduces overall code size to do this test here, instead of doing every time before calling the add_datatype_to_candidate_list() function. 
+   */
+  if (!is_type_valid(datatype)) /* checks for NULL and invalid_type_name_c */
+    return false;
+
   if (search_in_candidate_datatype_list(datatype, symbol->candidate_datatypes) >= 0) 
     /* already in the list, Just return! */
     return false;
@@ -1278,15 +1282,8 @@ void *fill_candidate_datatypes_c::visit(ADD_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type, operand_type) &&
-					is_ANY_NUM_compatible(prev_instruction_type))
-				add_datatype_to_candidate_list(symbol, prev_instruction_type);
-			else {
-				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_ADD_table, symbol->deprecated_operation);
-				if (result)
-					add_datatype_to_candidate_list(symbol, result);
-
-			}
+			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
+			add_datatype_to_candidate_list(symbol, widening_conversion(prev_instruction_type, operand_type, widen_ADD_table));
 		}
 	}
 	if (debug) std::cout <<  "ADD [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1302,14 +1299,8 @@ void *fill_candidate_datatypes_c::visit(SUB_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type, operand_type) &&
-					is_ANY_NUM_compatible(prev_instruction_type))
-				add_datatype_to_candidate_list(symbol, prev_instruction_type);
-			else {
-				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_SUB_table, symbol->deprecated_operation);
-				if (result)
-					add_datatype_to_candidate_list(symbol, result);
-			}
+			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
+			add_datatype_to_candidate_list(symbol, widening_conversion(prev_instruction_type, operand_type, widen_SUB_table));
 		}
 	}
 	if (debug) std::cout <<  "SUB [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1325,14 +1316,8 @@ void *fill_candidate_datatypes_c::visit(MUL_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type, operand_type) &&
-					is_ANY_NUM_compatible(prev_instruction_type))
-				add_datatype_to_candidate_list(symbol, prev_instruction_type);
-			else {
-				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_MUL_table, symbol->deprecated_operation);
-				if (result)
-					add_datatype_to_candidate_list(symbol, result);
-			}
+			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
+			add_datatype_to_candidate_list(symbol, widening_conversion(prev_instruction_type, operand_type, widen_MUL_table));
 		}
 	}
 	if (debug) std::cout <<  "MUL [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1348,14 +1333,8 @@ void *fill_candidate_datatypes_c::visit(DIV_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type, operand_type) &&
-					is_ANY_NUM_compatible(prev_instruction_type))
-				add_datatype_to_candidate_list(symbol, prev_instruction_type);
-			else {
-				symbol_c *result = widening_conversion(prev_instruction_type, operand_type, widen_DIV_table, symbol->deprecated_operation);
-				if (result)
-					add_datatype_to_candidate_list(symbol, result);
-			}
+			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
+			add_datatype_to_candidate_list(symbol, widening_conversion(prev_instruction_type, operand_type, widen_DIV_table));
 		}
 	}
 	if (debug) std::cout <<  "DIV [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1771,13 +1750,8 @@ void *fill_candidate_datatypes_c::visit(add_expression_c *symbol) {
 		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
 			left_type = symbol->l_exp->candidate_datatypes[i];
 			right_type = symbol->r_exp->candidate_datatypes[j];
-			if (is_type_equal(left_type, right_type) && is_ANY_NUM_compatible(left_type))
-				add_datatype_to_candidate_list(symbol, left_type);
-			else {
-				symbol_c *result = widening_conversion(left_type, right_type, widen_ADD_table, symbol->deprecated_operation);
-				if (result)
-					add_datatype_to_candidate_list(symbol, result);
-			}
+			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
+			add_datatype_to_candidate_list(symbol, widening_conversion(left_type, right_type, widen_ADD_table));
 		}
 	}
 	if (debug) std::cout <<  "+ [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1795,13 +1769,8 @@ void *fill_candidate_datatypes_c::visit(sub_expression_c *symbol) {
 		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
 			left_type = symbol->l_exp->candidate_datatypes[i];
 			right_type = symbol->r_exp->candidate_datatypes[j];
-			if (is_type_equal(left_type, right_type) && is_ANY_NUM_compatible(left_type))
-				add_datatype_to_candidate_list(symbol, left_type);
-			else {
-				symbol_c *result = widening_conversion(left_type, right_type, widen_SUB_table, symbol->deprecated_operation);
-				if (result)
-					add_datatype_to_candidate_list(symbol, result);
-			}
+			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
+			add_datatype_to_candidate_list(symbol, widening_conversion(left_type, right_type, widen_SUB_table));
 		}
 	}
 	if (debug) std::cout <<  "- [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1819,14 +1788,8 @@ void *fill_candidate_datatypes_c::visit(mul_expression_c *symbol) {
 		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
 			left_type = symbol->l_exp->candidate_datatypes[i];
 			right_type = symbol->r_exp->candidate_datatypes[j];
-			if      (is_type_equal(left_type, right_type) && is_ANY_NUM_compatible(left_type))
-				add_datatype_to_candidate_list(symbol, left_type);
-			else {
-				symbol_c *result = widening_conversion(left_type, right_type, widen_MUL_table, symbol->deprecated_operation);
-				if (result)
-					add_datatype_to_candidate_list(symbol, result);
-			}
-
+			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
+			add_datatype_to_candidate_list(symbol, widening_conversion(left_type, right_type, widen_MUL_table));
 		}
 	}
 	if (debug) std::cout << "* [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1844,14 +1807,8 @@ void *fill_candidate_datatypes_c::visit(div_expression_c *symbol) {
 		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
 			left_type = symbol->l_exp->candidate_datatypes[i];
 			right_type = symbol->r_exp->candidate_datatypes[j];
-			if      (is_type_equal(left_type, right_type) && is_ANY_NUM_type(left_type))
-				add_datatype_to_candidate_list(symbol, left_type);
-			else {
-				symbol_c *result = widening_conversion(left_type, right_type, widen_DIV_table, symbol->deprecated_operation);
-				if (result)
-					add_datatype_to_candidate_list(symbol, result);
-			}
-
+			/* NOTE: add_datatype_to_candidate_list() will only really add the datatype if it is != NULL !!! */
+			add_datatype_to_candidate_list(symbol, widening_conversion(left_type, right_type, widen_DIV_table));
 		}
 	}
 	if (debug) std::cout << "/ [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
