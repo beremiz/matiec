@@ -238,21 +238,21 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 
 
 
-void print_datatypes_error_c::handle_implicit_il_fb_invocation(symbol_c *il_operator, const char *param_name, symbol_c *called_fb_declaration) {
+void *print_datatypes_error_c::handle_implicit_il_fb_invocation(const char *param_name, symbol_c *il_operator, symbol_c *called_fb_declaration) {
 	if (NULL == il_operand) {
 		STAGE3_ERROR(0, il_operator, il_operator, "Missing operand for FB call operator '%s'.", param_name);
-		return;
+		return NULL;
 	}
 	il_operand->accept(*this);
 	
 	if (NULL == called_fb_declaration) {
 		STAGE3_ERROR(0, il_operator, il_operand, "Invalid FB call: operand is not a FB instance.");
-		return;
+		return NULL;
 	}
 
 	if (fake_prev_il_instruction->prev_il_instruction.empty()) {
 		STAGE3_ERROR(0, il_operator, il_operand, "FB invocation operator '%s' must be preceded by a 'LD' (or equivalent) operator.", param_name);	
-		return;
+		return NULL;
 	}
 
 	/* Find the corresponding parameter in function declaration */
@@ -266,11 +266,11 @@ void print_datatypes_error_c::handle_implicit_il_fb_invocation(symbol_c *il_oper
 		*        which will not work for an implicit FB call!
 		*/
 		STAGE3_ERROR(0, il_operator, il_operand, "FB called by '%s' operator does not have a parameter named '%s'", param_name, param_name);	
-		return;
+		return NULL;
 	}
 	if (!are_all_datatypes_of_prev_il_instructions_datatypes_equal(fake_prev_il_instruction)) {
 		STAGE3_ERROR(0, il_operator, il_operand, "Data type incompatibility between parameter '%s' and value being passed.", param_name);
-		return;
+		return NULL;
 	}
 	
 
@@ -283,11 +283,11 @@ void print_datatypes_error_c::handle_implicit_il_fb_invocation(symbol_c *il_oper
 		/* Note: the case of (NULL == fb_declaration) was already caught above! */
 // 		if (NULL != fb_declaration) {
 			STAGE3_ERROR(0, il_operator, il_operator, "Invalid FB call: Datatype incompatibility between the FB's '%s' parameter and value being passed, or paramater '%s' is not a 'VAR_INPUT' parameter.", param_name, param_name);
-			return;
+			return NULL;
 // 		}
 	}
-// 
-	return;
+
+	return NULL;
 }
 
 
@@ -816,6 +816,17 @@ void *print_datatypes_error_c::visit(il_simple_instruction_c *symbol)	{
 /*******************/
 /* B 2.2 Operators */
 /*******************/
+void *print_datatypes_error_c::print_binary_operator_errors(const char *il_operator, symbol_c *symbol, bool deprecated_operation) {
+	if ((symbol->candidate_datatypes.size() == 0) && (il_operand->candidate_datatypes.size() > 0)) {
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '%s' operator.", il_operator);
+	} else if (NULL == symbol->datatype) {
+		STAGE3_WARNING(symbol, symbol, "Result of '%s' operation is never used.", il_operator);
+	} else if (deprecated_operation)
+		STAGE3_WARNING(symbol, symbol, "Deprecated operation for '%s' operator.", il_operator);
+	return NULL;
+}
+
+
 void *print_datatypes_error_c::visit(LD_operator_c *symbol) {
 	return NULL;
 }
@@ -880,66 +891,18 @@ void *print_datatypes_error_c::visit(R_operator_c *symbol) {
 	return NULL;
 }
 
-void *print_datatypes_error_c::visit(S1_operator_c *symbol) {
-	handle_implicit_il_fb_invocation(symbol, "S1", symbol->called_fb_declaration);  
-	return NULL;
-}
+void *print_datatypes_error_c::visit( S1_operator_c *symbol) {return handle_implicit_il_fb_invocation( "S1", symbol, symbol->called_fb_declaration);}
+void *print_datatypes_error_c::visit( R1_operator_c *symbol) {return handle_implicit_il_fb_invocation( "R1", symbol, symbol->called_fb_declaration);}
+void *print_datatypes_error_c::visit(CLK_operator_c *symbol) {return handle_implicit_il_fb_invocation("CLK", symbol, symbol->called_fb_declaration);}
+void *print_datatypes_error_c::visit( CU_operator_c *symbol) {return handle_implicit_il_fb_invocation( "CU", symbol, symbol->called_fb_declaration);}
+void *print_datatypes_error_c::visit( CD_operator_c *symbol) {return handle_implicit_il_fb_invocation( "CD", symbol, symbol->called_fb_declaration);}
+void *print_datatypes_error_c::visit( PV_operator_c *symbol) {return handle_implicit_il_fb_invocation( "PV", symbol, symbol->called_fb_declaration);}
+void *print_datatypes_error_c::visit( IN_operator_c *symbol) {return handle_implicit_il_fb_invocation( "IN", symbol, symbol->called_fb_declaration);}
+void *print_datatypes_error_c::visit( PT_operator_c *symbol) {return handle_implicit_il_fb_invocation( "PT", symbol, symbol->called_fb_declaration);}
 
-void *print_datatypes_error_c::visit(R1_operator_c *symbol) {
-	handle_implicit_il_fb_invocation(symbol, "R1", symbol->called_fb_declaration);  
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(CLK_operator_c *symbol) {
-	handle_implicit_il_fb_invocation(symbol, "CLK", symbol->called_fb_declaration);  
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(CU_operator_c *symbol) {
-	handle_implicit_il_fb_invocation(symbol, "CU", symbol->called_fb_declaration);  
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(CD_operator_c *symbol) {
-	handle_implicit_il_fb_invocation(symbol, "CD", symbol->called_fb_declaration);  
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(PV_operator_c *symbol) {
-	handle_implicit_il_fb_invocation(symbol, "PV", symbol->called_fb_declaration);  
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(IN_operator_c *symbol) {
-	handle_implicit_il_fb_invocation(symbol, "IN", symbol->called_fb_declaration);  
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(PT_operator_c *symbol) {
-	handle_implicit_il_fb_invocation(symbol, "PT", symbol->called_fb_declaration);  
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(AND_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'AND' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(OR_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'OR' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(XOR_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'XOR' operator.");
-	return NULL;
-}
+void *print_datatypes_error_c::visit(AND_operator_c *symbol) {return print_binary_operator_errors("AND", symbol);}
+void *print_datatypes_error_c::visit( OR_operator_c *symbol) {return print_binary_operator_errors( "OR", symbol);}
+void *print_datatypes_error_c::visit(XOR_operator_c *symbol) {return print_binary_operator_errors("XOR", symbol);}
 
 void *print_datatypes_error_c::visit(ANDN_operator_c *symbol) {
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
@@ -962,48 +925,11 @@ void *print_datatypes_error_c::visit(XORN_operator_c *symbol) {
 	return NULL;
 }
 
-void *print_datatypes_error_c::visit(ADD_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ADD' operator.");
-        if (symbol->deprecated_operation)
-                STAGE3_WARNING(symbol, symbol, "Deprecated operation for 'ADD' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(SUB_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'SUB' operator.");
-        if (symbol->deprecated_operation)
-                STAGE3_WARNING(symbol, symbol, "Deprecated operation for 'SUB' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(MUL_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'MUL' operator.");
-        if (symbol->deprecated_operation)
-                STAGE3_WARNING(symbol, symbol, "Deprecated operation for 'MUL' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(DIV_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'DIV' operator.");
-        if (symbol->deprecated_operation)
-                STAGE3_WARNING(symbol, symbol, "Deprecated operation for 'DIV' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(MOD_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'MOD' operator.");
-	return NULL;
-}
+void *print_datatypes_error_c::visit(ADD_operator_c *symbol) {return print_binary_operator_errors("ADD", symbol, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit(SUB_operator_c *symbol) {return print_binary_operator_errors("SUB", symbol, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit(MUL_operator_c *symbol) {return print_binary_operator_errors("MUL", symbol, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit(DIV_operator_c *symbol) {return print_binary_operator_errors("DIV", symbol, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit(MOD_operator_c *symbol) {return print_binary_operator_errors("MOD", symbol);}
 
 void *print_datatypes_error_c::visit(GT_operator_c *symbol) {
 	return NULL;
