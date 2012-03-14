@@ -2,8 +2,8 @@
  *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
  *  Copyright (C) 2009-2011  Mario de Sousa (msousa@fe.up.pt)
- *  Copyright (C) 20011-2012 Manuele Conti (manuele.conti@sirius-es.it)
- *  Copyright (C) 20011-2012 Matteo Facchinetti (matteo.facchinetti@sirius-es.it)
+ *  Copyright (C) 2011-2012 Manuele Conti (manuele.conti@sirius-es.it)
+ *  Copyright (C) 2011-2012 Matteo Facchinetti (matteo.facchinetti@sirius-es.it)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -629,8 +629,27 @@ void *print_datatypes_error_c::visit(configuration_declaration_c *symbol) {
 // SYM_REF2(il_instruction_c, label, il_instruction)
 void *print_datatypes_error_c::visit(il_instruction_c *symbol) {
 	if (NULL != symbol->il_instruction) {
-// #if 0
 		il_instruction_c tmp_prev_il_instruction(NULL, NULL);
+		/* When handling a il function call, this fake_prev_il_instruction may be used as a standard function call parameter, so it is important that 
+		 * it contain some valid location info so error messages make sense.
+		 */
+		if (symbol->prev_il_instruction.size() > 0) {
+			/* since we don't want to copy all that data one variable at a time, we copy it all at once */
+			/* This has the advantage that, if we ever add some more data to the base symbol_c later on, we will not need to
+			 * change the following line to guarantee that the data is copied correctly!
+			 * However, it does have the drawback of copying more data than what we want!
+			 * In order to only copy the data in the base class symbol_c, we use the tmp_symbol pointer!
+			 * I (mario) have checked with a debugger, and it is working as intended!
+			 */
+			symbol_c *tmp_symbol1 = symbol->prev_il_instruction[0];
+			symbol_c *tmp_symbol2 = &tmp_prev_il_instruction;
+			*tmp_symbol2 = *tmp_symbol1;
+			/* we do not want to copy the datatype variable, so we reset it to NULL */
+			tmp_prev_il_instruction.datatype = NULL;
+			/* We don't need to worry about the candidate_datatype list (which we don't want to copy just yet), since that will 
+			 * be reset to the correct value when we call intersect_prev_candidate_datatype_lists() later on...
+			 */
+		}
 		/* the narrow algorithm will need access to the intersected candidate_datatype lists of all prev_il_instructions, as well as the 
 		 * list of the prev_il_instructions.
 		 * Instead of creating two 'global' (within the class) variables, we create a single il_instruction_c variable (fake_prev_il_instruction),
@@ -641,17 +660,11 @@ void *print_datatypes_error_c::visit(il_instruction_c *symbol) {
 		if (are_all_datatypes_of_prev_il_instructions_datatypes_equal(symbol))
 			if (symbol->prev_il_instruction.size() > 0)
 				tmp_prev_il_instruction.datatype = (symbol->prev_il_instruction[0])->datatype;
+		
 		/* Tell the il_instruction the datatype that it must generate - this was chosen by the next il_instruction (remember: we are iterating backwards!) */
 		fake_prev_il_instruction = &tmp_prev_il_instruction;
 		symbol->il_instruction->accept(*this);
 		fake_prev_il_instruction = NULL;
-// #endif
-// 		if (symbol->prev_il_instruction.size() > 1) ERROR; /* only valid for now! */
-// 		if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
-// 		else                                          prev_il_instruction = symbol->prev_il_instruction[0];
-
-// 		symbol->il_instruction->accept(*this);
-// 		prev_il_instruction = NULL;
 	}
 
 	return NULL;

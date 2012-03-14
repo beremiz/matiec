@@ -38,11 +38,19 @@
  *  prev_il_instruction variable in the il_instruction_c, so it points to
  *  the previous il_instruction_c object in the instruction list instruction_list_c.
  *
- *  The result will essentially be a linked list of il_instruction_c objects, each 
+ *  Since IL code can contain jumps (JMP), the same il_instruction may effectively have
+ *  several previous il_instructions. In order to accommodate this, each il_instruction
+ *  will maintain a vector (i..e an array) of pointers to all the previous il_instructions.
+ *  We do however attempt to guarantee that the first element in the vector (array) will preferentially
+ *  point to the il instruction that is right before / imediately preceding the current il instructions, 
+ *  i.e. the first element in the array will tend to point to the previous il_instruction
+ *  that is not a jump JMP IL instruction!
+ *
+ *  The result will essentially be a graph of il_instruction_c objects, each 
  *  pointing to the previous il_instruction_c object.
  *
  *  The reality is we will get several independent and isolated linked lists
- *  (actually, once we process labels correctly, this will become a graph):
+ *  (actually, since we now process labels correctly, this is really a graph):
  *  one for each block of IL code (e.g. inside a Function, FB or Program).
  *  Additionally, when the IL code has an expression (expression_c object), we will actually
  *  have one more isolated linked list for the IL code inside that expression.
@@ -196,7 +204,10 @@ void *flow_control_analysis_c::visit(instruction_list_c *symbol) {
 // void *visit(instruction_list_c *symbol);
 void *flow_control_analysis_c::visit(il_instruction_c *symbol) {
 	if ((NULL != prev_il_instruction) && (!prev_il_instruction_is_JMP_or_RET))
-		symbol->prev_il_instruction.push_back(prev_il_instruction);
+		/* We try to guarantee that the previous il instruction that is in the previous line, will occupy the first element of the vector.
+		 * In order to do that, we use insert() instead of push_back()
+		 */
+		symbol->prev_il_instruction.insert(symbol->prev_il_instruction.begin() , prev_il_instruction);
 
 	/* check if it is an il_expression_c, a JMP[C[N]], or a RET, and if so, handle it correctly */
 	prev_il_instruction_is_JMP_or_RET = false;
@@ -281,7 +292,10 @@ void *flow_control_analysis_c::visit(simple_instr_list_c *symbol) {
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
 void *flow_control_analysis_c::visit(il_simple_instruction_c*symbol) {
 	if (NULL != prev_il_instruction)
-		symbol->prev_il_instruction.push_back(prev_il_instruction);
+		/* We try to guarantee that the previous il instruction that is in the previous line, will occupy the first element of the vector.
+		 * In order to do that, we use insert() instead of push_back()
+		 */
+		symbol->prev_il_instruction.insert(symbol->prev_il_instruction.begin() , prev_il_instruction);
 	return NULL;
 }
 
