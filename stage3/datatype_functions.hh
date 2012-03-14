@@ -133,6 +133,9 @@ extern const struct widen_entry widen_SUB_table[];
 extern const struct widen_entry widen_MUL_table[];
 extern const struct widen_entry widen_DIV_table[];
 extern const struct widen_entry widen_MOD_table[];
+extern const struct widen_entry widen_AND_table[];
+extern const struct widen_entry widen_OR_table[];
+extern const struct widen_entry widen_XOR_table[];
 
 /* Search for a datatype inside a candidate_datatypes list.
  * Returns: position of datatype in the list, or -1 if not found.

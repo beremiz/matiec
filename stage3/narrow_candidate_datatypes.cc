@@ -911,9 +911,9 @@ void *narrow_candidate_datatypes_c::visit(  IN_operator_c *symbol)  {return narr
 void *narrow_candidate_datatypes_c::visit(  PT_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "PT",  symbol->called_fb_declaration);}
 
 
-void *narrow_candidate_datatypes_c::visit( AND_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(  OR_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit( XOR_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit( AND_operator_c *symbol)  {return narrow_binary_operator(widen_AND_table, symbol);}
+void *narrow_candidate_datatypes_c::visit(  OR_operator_c *symbol)  {return narrow_binary_operator( widen_OR_table, symbol);}
+void *narrow_candidate_datatypes_c::visit( XOR_operator_c *symbol)  {return narrow_binary_operator(widen_XOR_table, symbol);}
 void *narrow_candidate_datatypes_c::visit(ANDN_operator_c *symbol)  {return handle_il_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit( ORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(XORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
@@ -1036,73 +1036,10 @@ void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_
 }
 
 
-void *narrow_candidate_datatypes_c::visit(or_expression_c *symbol) {
-	symbol_c * selected_type = NULL;
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (is_type_equal(symbol->l_exp->candidate_datatypes[i], symbol->r_exp->candidate_datatypes[j])) {
-				selected_type = symbol->l_exp->candidate_datatypes[i];
-				break;
-			}
-		}
-	}
 
-	if (NULL != selected_type) {
-		symbol->l_exp->datatype = selected_type;
-		symbol->l_exp->accept(*this);
-		symbol->r_exp->datatype = selected_type;
-		symbol->r_exp->accept(*this);
-	}
-	else
-		ERROR;
-	return NULL;
-}
-
-
-void *narrow_candidate_datatypes_c::visit(xor_expression_c *symbol) {
-	symbol_c * selected_type = NULL;
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (is_type_equal(symbol->l_exp->candidate_datatypes[i], symbol->r_exp->candidate_datatypes[j])) {
-				selected_type = symbol->l_exp->candidate_datatypes[i];
-				break;
-			}
-		}
-	}
-
-	if (NULL != selected_type) {
-		symbol->l_exp->datatype = selected_type;
-		symbol->l_exp->accept(*this);
-		symbol->r_exp->datatype = selected_type;
-		symbol->r_exp->accept(*this);
-	}
-	else
-		ERROR;
-	return NULL;
-}
-
-
-void *narrow_candidate_datatypes_c::visit(and_expression_c *symbol) {
-	symbol_c * selected_type = NULL;
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (typeid(*symbol->l_exp->candidate_datatypes[i]) == typeid(*symbol->r_exp->candidate_datatypes[j])) {
-				selected_type = symbol->l_exp->candidate_datatypes[i];
-				break;
-			}
-		}
-	}
-
-	if (NULL != selected_type) {
-		symbol->l_exp->datatype = selected_type;
-		symbol->l_exp->accept(*this);
-		symbol->r_exp->datatype = selected_type;
-		symbol->r_exp->accept(*this);
-	}
-	else
-		ERROR;
-	return NULL;
-}
+void *narrow_candidate_datatypes_c::visit( or_expression_c *symbol) {return narrow_binary_expression( widen_OR_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(xor_expression_c *symbol) {return narrow_binary_expression(widen_XOR_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(and_expression_c *symbol) {return narrow_binary_expression(widen_AND_table, symbol, symbol->l_exp, symbol->r_exp);}
 
 
 void *narrow_candidate_datatypes_c::visit(equ_expression_c *symbol) {

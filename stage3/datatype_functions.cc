@@ -53,7 +53,7 @@ const char *elementary_type_c::to_string(symbol_c *symbol) {
 #define __ANY_DERIVED(DO)
 #define __ANY_ELEMENTARY(DO)      __ANY_MAGNITUDE(DO) __ANY_BIT(DO) __ANY_STRING(DO) __ANY_DATE(DO)
 #define __ANY_MAGNITUDE(DO)       __ANY_NUM(DO) DO(TIME)
-#define __ANY_BIT(DO)             __ANY_NBIT(DO) DO(BOOL)
+#define __ANY_BIT(DO)             __ANY_NBIT(DO) DO(bool)
 #define __ANY_NBIT(DO)            DO(byte) DO(word) DO(dword) DO(lword)
 //#define __ANY_STRING(DO)          DO(string) DO(wstring)
 #define __ANY_STRING(DO)          DO(string)
@@ -294,8 +294,59 @@ const struct widen_entry widen_MOD_table[] = {
 };
  
  
- 
- 
+
+
+/**************************************************************/
+/**************************************************************/
+/**************************************************************/
+/*******                                                *******/
+/*******  TABLE 26: Standard bitwise Boolean functions  *******/
+/*******                                                *******/
+/**************************************************************/
+/**************************************************************/
+/**************************************************************/
+
+const struct widen_entry widen_AND_table[] = {
+#define __and(TYPE)       \
+    { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::safe##TYPE##_type_name, widen_entry::ok     },
+    __ANY_BIT(__and)
+#undef __and
+
+    { NULL, NULL, NULL, widen_entry::ok },
+};
+
+
+const struct widen_entry widen_OR_table[] = {
+#define __or(TYPE)       \
+    { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::safe##TYPE##_type_name, widen_entry::ok     },
+    __ANY_BIT(__or)
+#undef __or
+
+    { NULL, NULL, NULL, widen_entry::ok },
+};
+
+
+
+const struct widen_entry widen_XOR_table[] = {
+#define __xor(TYPE)       \
+    { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::safe##TYPE##_type_name, widen_entry::ok     },
+    __ANY_BIT(__xor)
+#undef __xor
+
+    { NULL, NULL, NULL, widen_entry::ok },
+};
+
+
+
 /* Search for a datatype inside a candidate_datatypes list.
  * Returns: position of datatype in the list, or -1 if not found.
  */
