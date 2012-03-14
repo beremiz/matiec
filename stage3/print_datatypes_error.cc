@@ -912,30 +912,14 @@ void *print_datatypes_error_c::visit( MUL_operator_c *symbol) {return print_bina
 void *print_datatypes_error_c::visit( DIV_operator_c *symbol) {return print_binary_operator_errors("DIV" , symbol, symbol->deprecated_operation);}
 void *print_datatypes_error_c::visit( MOD_operator_c *symbol) {return print_binary_operator_errors("MOD" , symbol);}
 
-void *print_datatypes_error_c::visit(GT_operator_c *symbol) {
-	return NULL;
-}
+void *print_datatypes_error_c::visit(  GT_operator_c *symbol) {return print_binary_operator_errors( "GT" , symbol);}
+void *print_datatypes_error_c::visit(  GE_operator_c *symbol) {return print_binary_operator_errors( "GE" , symbol);}
+void *print_datatypes_error_c::visit(  EQ_operator_c *symbol) {return print_binary_operator_errors( "EQ" , symbol);}
+void *print_datatypes_error_c::visit(  LT_operator_c *symbol) {return print_binary_operator_errors( "LT" , symbol);}
+void *print_datatypes_error_c::visit(  LE_operator_c *symbol) {return print_binary_operator_errors( "LE" , symbol);}
+void *print_datatypes_error_c::visit(  NE_operator_c *symbol) {return print_binary_operator_errors( "NE" , symbol);}
 
-void *print_datatypes_error_c::visit(GE_operator_c *symbol) {
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(EQ_operator_c *symbol) {
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(LT_operator_c *symbol) {
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(LE_operator_c *symbol) {
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(NE_operator_c *symbol) {
-	return NULL;
-}
-
+  
 void *print_datatypes_error_c::visit(CAL_operator_c *symbol) {
 	return NULL;
 }

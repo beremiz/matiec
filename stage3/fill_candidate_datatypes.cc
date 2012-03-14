@@ -1119,109 +1119,14 @@ void *fill_candidate_datatypes_c::visit(MUL_operator_c *symbol) {return handle_b
 void *fill_candidate_datatypes_c::visit(DIV_operator_c *symbol) {return handle_binary_operator(widen_DIV_table, symbol, prev_il_instruction, il_operand);}
 void *fill_candidate_datatypes_c::visit(MOD_operator_c *symbol) {return handle_binary_operator(widen_MOD_table, symbol, prev_il_instruction, il_operand);}
 
+void *fill_candidate_datatypes_c::visit( GT_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( GE_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( EQ_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( LT_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( LE_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( NE_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
 
 
-void *fill_candidate_datatypes_c::visit(GT_operator_c *symbol) {
-	bool found = false;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			if (is_type_equal(prev_il_instruction->candidate_datatypes[i], il_operand->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(prev_il_instruction->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found) add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(GE_operator_c *symbol) {
-	bool found = false;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			if (is_type_equal(prev_il_instruction->candidate_datatypes[i], il_operand->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(prev_il_instruction->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found) add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(EQ_operator_c *symbol) {
-	bool found = false;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			if (is_type_equal(prev_il_instruction->candidate_datatypes[i], il_operand->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(prev_il_instruction->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found) add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(LT_operator_c *symbol) {
-	bool found = false;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			if (is_type_equal(prev_il_instruction->candidate_datatypes[i], il_operand->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(prev_il_instruction->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found) add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(LE_operator_c *symbol) {
-	bool found = false;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			if (is_type_equal(prev_il_instruction->candidate_datatypes[i], il_operand->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(prev_il_instruction->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found) add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(NE_operator_c *symbol) {
-	bool found = false;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for(unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			if (is_type_equal(prev_il_instruction->candidate_datatypes[i], il_operand->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(prev_il_instruction->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found) add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
 
 void *fill_candidate_datatypes_c::visit(CAL_operator_c *symbol) {
 	if (NULL == prev_il_instruction) return NULL;
@@ -1321,126 +1226,16 @@ void *fill_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
-void *fill_candidate_datatypes_c::visit(or_expression_c  *symbol) {return handle_binary_expression(widen_OR_table,  symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(xor_expression_c *symbol) {return handle_binary_expression(widen_XOR_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(and_expression_c *symbol) {return handle_binary_expression(widen_AND_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   or_expression_c  *symbol) {return handle_binary_expression(widen_OR_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   xor_expression_c *symbol) {return handle_binary_expression(widen_XOR_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   and_expression_c *symbol) {return handle_binary_expression(widen_AND_table, symbol, symbol->l_exp, symbol->r_exp);}
 
-
-void *fill_candidate_datatypes_c::visit(equ_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	bool found = false;
-
-	for (unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for (unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (is_type_equal(symbol->l_exp->candidate_datatypes[i], symbol->r_exp->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(symbol->l_exp->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found) add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
-
-
-void *fill_candidate_datatypes_c::visit(notequ_expression_c *symbol)  {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	bool found = false;
-
-	for (unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for (unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (is_type_equal(symbol->l_exp->candidate_datatypes[i], symbol->r_exp->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(symbol->l_exp->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found)
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
-
-
-void *fill_candidate_datatypes_c::visit(lt_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	bool found = false;
-
-	for (unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for (unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (is_type_equal(symbol->l_exp->candidate_datatypes[i], symbol->r_exp->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(symbol->l_exp->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found)
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
-
-
-void *fill_candidate_datatypes_c::visit(gt_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	bool found = false;
-
-	for (unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for (unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (is_type_equal(symbol->l_exp->candidate_datatypes[i], symbol->r_exp->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(symbol->l_exp->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found)
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(le_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	bool found = false;
-
-	for (unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for (unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (is_type_equal(symbol->l_exp->candidate_datatypes[i], symbol->r_exp->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(symbol->l_exp->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found)
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(ge_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	bool found = false;
-
-	for (unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for (unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (is_type_equal(symbol->l_exp->candidate_datatypes[i], symbol->r_exp->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_compatible(symbol->l_exp->candidate_datatypes[i])) {
-				found = true;
-				break;
-			}
-		}
-	}
-	if (found)
-		add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-	return NULL;
-}
+void *fill_candidate_datatypes_c::visit(   equ_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(notequ_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(    lt_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(    gt_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(    le_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(    ge_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
 
 
 /* The following code is correct when handling the addition of 2 symbolic_variables

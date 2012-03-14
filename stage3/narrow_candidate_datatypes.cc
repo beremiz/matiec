@@ -910,7 +910,6 @@ void *narrow_candidate_datatypes_c::visit(  PV_operator_c *symbol)  {return narr
 void *narrow_candidate_datatypes_c::visit(  IN_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "IN",  symbol->called_fb_declaration);}
 void *narrow_candidate_datatypes_c::visit(  PT_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "PT",  symbol->called_fb_declaration);}
 
-
 void *narrow_candidate_datatypes_c::visit( AND_operator_c *symbol)  {return narrow_binary_operator(widen_AND_table, symbol);}
 void *narrow_candidate_datatypes_c::visit(  OR_operator_c *symbol)  {return narrow_binary_operator( widen_OR_table, symbol);}
 void *narrow_candidate_datatypes_c::visit( XOR_operator_c *symbol)  {return narrow_binary_operator(widen_XOR_table, symbol);}
@@ -922,12 +921,12 @@ void *narrow_candidate_datatypes_c::visit( SUB_operator_c *symbol)  {return narr
 void *narrow_candidate_datatypes_c::visit( MUL_operator_c *symbol)  {return narrow_binary_operator(widen_MUL_table, symbol, &(symbol->deprecated_operation));}
 void *narrow_candidate_datatypes_c::visit( DIV_operator_c *symbol)  {return narrow_binary_operator(widen_DIV_table, symbol, &(symbol->deprecated_operation));}
 void *narrow_candidate_datatypes_c::visit( MOD_operator_c *symbol)  {return narrow_binary_operator(widen_MOD_table, symbol);}
-void *narrow_candidate_datatypes_c::visit(  GT_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(  GE_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(  EQ_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(  LT_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(  LE_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(  NE_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(  GT_operator_c *symbol)  {return narrow_binary_operator(widen_CMP_table, symbol);}
+void *narrow_candidate_datatypes_c::visit(  GE_operator_c *symbol)  {return narrow_binary_operator(widen_CMP_table, symbol);}
+void *narrow_candidate_datatypes_c::visit(  EQ_operator_c *symbol)  {return narrow_binary_operator(widen_CMP_table, symbol);}
+void *narrow_candidate_datatypes_c::visit(  LT_operator_c *symbol)  {return narrow_binary_operator(widen_CMP_table, symbol);}
+void *narrow_candidate_datatypes_c::visit(  LE_operator_c *symbol)  {return narrow_binary_operator(widen_CMP_table, symbol);}
+void *narrow_candidate_datatypes_c::visit(  NE_operator_c *symbol)  {return narrow_binary_operator(widen_CMP_table, symbol);}
 
 
 // SYM_REF0(CAL_operator_c)
@@ -1037,170 +1036,22 @@ void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_
 
 
 
-void *narrow_candidate_datatypes_c::visit( or_expression_c *symbol) {return narrow_binary_expression( widen_OR_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *narrow_candidate_datatypes_c::visit(xor_expression_c *symbol) {return narrow_binary_expression(widen_XOR_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *narrow_candidate_datatypes_c::visit(and_expression_c *symbol) {return narrow_binary_expression(widen_AND_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(    or_expression_c *symbol) {return narrow_binary_expression( widen_OR_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(   xor_expression_c *symbol) {return narrow_binary_expression(widen_XOR_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(   and_expression_c *symbol) {return narrow_binary_expression(widen_AND_table, symbol, symbol->l_exp, symbol->r_exp);}
 
+void *narrow_candidate_datatypes_c::visit(   equ_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(notequ_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(    lt_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(    gt_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(    le_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(    ge_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
 
-void *narrow_candidate_datatypes_c::visit(equ_expression_c *symbol) {
-	/* Here symbol->datatype has already assigned to BOOL
-	 * In conditional symbols like =, <>, =<, <, >, >= we have to set
-	 * l_exp and r_exp expression matched with compatible type.
-	 * Example:
-	 * 		INT#14 = INT#81
-	 * 		equ_expression_c symbol->datatype = BOOL from top visit
-	 * 		symbol->l_exp->datatype => INT
-	 * 		symbol->r_exp->datatype => INT
-	 */
-	symbol_c * selected_type = NULL;
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (typeid(*symbol->l_exp->candidate_datatypes[i]) == typeid(*symbol->r_exp->candidate_datatypes[j])) {
-				/*
-				 * We do not need to check whether the type is an ANY_ELEMENTARY here.
-				 * That was already done in fill_candidate_datatypes_c.
-				 */
-				selected_type = symbol->l_exp->candidate_datatypes[i];
-				break;
-			}
-		}
-	}
-
-	if (NULL != selected_type) {
-		symbol->l_exp->datatype = selected_type;
-		symbol->r_exp->datatype = selected_type;
-	}
-	else
-		ERROR;
-
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(notequ_expression_c *symbol)  {
-	symbol_c * selected_type = NULL;
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (typeid(*symbol->l_exp->candidate_datatypes[i]) == typeid(*symbol->r_exp->candidate_datatypes[j])) {
-				selected_type = symbol->l_exp->candidate_datatypes[i];
-				break;
-			}
-		}
-	}
-
-	if (NULL != selected_type) {
-		symbol->l_exp->datatype = selected_type;
-		symbol->l_exp->accept(*this);
-		symbol->r_exp->datatype = selected_type;
-		symbol->r_exp->accept(*this);
-	}
-	else
-		ERROR;
-	return NULL;
-}
-
-
-void *narrow_candidate_datatypes_c::visit(lt_expression_c *symbol) {
-	symbol_c * selected_type = NULL;
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (typeid(*symbol->l_exp->candidate_datatypes[i]) == typeid(*symbol->r_exp->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_type(symbol->l_exp->candidate_datatypes[i])) {
-				selected_type = symbol->l_exp->candidate_datatypes[i];
-				break;
-			}
-		}
-	}
-
-	if (NULL != selected_type) {
-		symbol->l_exp->datatype = selected_type;
-		symbol->l_exp->accept(*this);
-		symbol->r_exp->datatype = selected_type;
-		symbol->r_exp->accept(*this);
-	}
-	else
-		ERROR;
-	return NULL;
-}
-
-
-void *narrow_candidate_datatypes_c::visit(gt_expression_c *symbol) {
-	symbol_c * selected_type = NULL;
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (typeid(*symbol->l_exp->candidate_datatypes[i]) == typeid(*symbol->r_exp->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_type(symbol->l_exp->candidate_datatypes[i])) {
-				selected_type = symbol->l_exp->candidate_datatypes[i];
-				break;
-			}
-		}
-	}
-
-	if (NULL != selected_type) {
-		symbol->l_exp->datatype = selected_type;
-		symbol->l_exp->accept(*this);
-		symbol->r_exp->datatype = selected_type;
-		symbol->r_exp->accept(*this);
-	}
-	else
-		ERROR;
-	return NULL;
-}
-
-
-void *narrow_candidate_datatypes_c::visit(le_expression_c *symbol) {
-	symbol_c * selected_type = NULL;
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (typeid(*symbol->l_exp->candidate_datatypes[i]) == typeid(*symbol->r_exp->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_type(symbol->l_exp->candidate_datatypes[i])) {
-				selected_type = symbol->l_exp->candidate_datatypes[i];
-				break;
-			}
-		}
-	}
-
-	if (NULL != selected_type) {
-		symbol->l_exp->datatype = selected_type;
-		symbol->l_exp->accept(*this);
-		symbol->r_exp->datatype = selected_type;
-		symbol->r_exp->accept(*this);
-	}
-	else
-		ERROR;
-	return NULL;
-}
-
-
-void *narrow_candidate_datatypes_c::visit(ge_expression_c *symbol) {
-	symbol_c * selected_type = NULL;
-	for(unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-			if (typeid(*symbol->l_exp->candidate_datatypes[i]) == typeid(*symbol->r_exp->candidate_datatypes[j])
-					&& is_ANY_ELEMENTARY_type(symbol->l_exp->candidate_datatypes[i])) {
-				selected_type = symbol->l_exp->candidate_datatypes[i];
-				break;
-			}
-		}
-	}
-
-	if (NULL != selected_type) {
-		symbol->l_exp->datatype = selected_type;
-		symbol->l_exp->accept(*this);
-		symbol->r_exp->datatype = selected_type;
-		symbol->r_exp->accept(*this);
-	}
-	else
-		ERROR;
-	return NULL;
-}
-
-void *narrow_candidate_datatypes_c::visit(add_expression_c *symbol) {return narrow_binary_expression(widen_ADD_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
-void *narrow_candidate_datatypes_c::visit(sub_expression_c *symbol) {return narrow_binary_expression(widen_SUB_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
-void *narrow_candidate_datatypes_c::visit(mul_expression_c *symbol) {return narrow_binary_expression(widen_MUL_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
-void *narrow_candidate_datatypes_c::visit(div_expression_c *symbol) {return narrow_binary_expression(widen_DIV_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
-void *narrow_candidate_datatypes_c::visit(mod_expression_c *symbol) {return narrow_binary_expression(widen_MOD_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(   add_expression_c *symbol) {return narrow_binary_expression(widen_ADD_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
+void *narrow_candidate_datatypes_c::visit(   sub_expression_c *symbol) {return narrow_binary_expression(widen_SUB_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
+void *narrow_candidate_datatypes_c::visit(   mul_expression_c *symbol) {return narrow_binary_expression(widen_MUL_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
+void *narrow_candidate_datatypes_c::visit(   div_expression_c *symbol) {return narrow_binary_expression(widen_DIV_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
+void *narrow_candidate_datatypes_c::visit(   mod_expression_c *symbol) {return narrow_binary_expression(widen_MOD_table, symbol, symbol->l_exp, symbol->r_exp);}
 
 
 

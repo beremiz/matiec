@@ -52,7 +52,7 @@ const char *elementary_type_c::to_string(symbol_c *symbol) {
 #define __ANY(DO)                 __ANY_DERIVED(DO) __ANY_ELEMENTARY(DO)
 #define __ANY_DERIVED(DO)
 #define __ANY_ELEMENTARY(DO)      __ANY_MAGNITUDE(DO) __ANY_BIT(DO) __ANY_STRING(DO) __ANY_DATE(DO)
-#define __ANY_MAGNITUDE(DO)       __ANY_NUM(DO) DO(TIME)
+#define __ANY_MAGNITUDE(DO)       __ANY_NUM(DO) DO(time)
 #define __ANY_BIT(DO)             __ANY_NBIT(DO) DO(bool)
 #define __ANY_NBIT(DO)            DO(byte) DO(word) DO(dword) DO(lword)
 //#define __ANY_STRING(DO)          DO(string) DO(wstring)
@@ -67,8 +67,8 @@ const char *elementary_type_c::to_string(symbol_c *symbol) {
 #define __ANY_1(DO,P1)            __ANY_DERIVED_1(DO,P1) __ANY_ELEMENTARY_1(DO,P1)
 #define __ANY_DERIVED_1(DO,P1)
 #define __ANY_ELEMENTARY_1(DO,P1) __ANY_MAGNITUDE_1(DO,P1) __ANY_BIT_1(DO,P1) __ANY_STRING_1(DO,P1) __ANY_DATE_1(DO,P1)
-#define __ANY_MAGNITUDE_1(DO,P1)  __ANY_NUM_1(DO,P1) DO(TIME,P1)
-#define __ANY_BIT_1(DO,P1)        __ANY_NBIT_1(DO,P1) DO(BOOL,P1)
+#define __ANY_MAGNITUDE_1(DO,P1)  __ANY_NUM_1(DO,P1) DO(time,P1)
+#define __ANY_BIT_1(DO,P1)        __ANY_NBIT_1(DO,P1) DO(bool,P1)
 #define __ANY_NBIT_1(DO,P1)       DO(byte,P1) DO(word,P1) DO(dword,P1) DO(lword,P1)
 // #define __ANY_STRING_1(DO,P1)     DO(string,P1) DO(wstring,P1)
 #define __ANY_STRING_1(DO,P1)     DO(string,P1)
@@ -345,6 +345,27 @@ const struct widen_entry widen_XOR_table[] = {
     { NULL, NULL, NULL, widen_entry::ok },
 };
 
+/**************************************************************/
+/**************************************************************/
+/**************************************************************/
+/*******                                                *******/
+/*******  TABLE 28: Standard comparison functions       *******/
+/*******                                                *******/
+/**************************************************************/
+/**************************************************************/
+/**************************************************************/
+/* table used by GT, GE, EQ, LE, LT, and NE  operators, and equivalent ST expressions. */
+const struct widen_entry widen_CMP_table[] = {
+#define __cmp(TYPE)       \
+    { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::bool_type_name,         widen_entry::ok     }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::bool_type_name,         widen_entry::ok     }, \
+    { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::bool_type_name,         widen_entry::ok     }, \
+    { &search_constant_type_c::safe##TYPE##_type_name,  &search_constant_type_c::safe##TYPE##_type_name,    &search_constant_type_c::safebool_type_name,     widen_entry::ok     },
+    __ANY_ELEMENTARY(__cmp)
+#undef __cmp
+
+    { NULL, NULL, NULL, widen_entry::ok },
+};
 
 
 /* Search for a datatype inside a candidate_datatypes list.
