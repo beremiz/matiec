@@ -975,165 +975,33 @@ void *print_datatypes_error_c::visit(JMPCN_operator_c *symbol) {
 /* B 3.1 - Expressions */
 /***********************/
 
-void *print_datatypes_error_c::visit(or_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
+void *print_datatypes_error_c::print_binary_expression_errors(const char *operation, symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool deprecated_operation) {
+	l_expr->accept(*this);
+	r_expr->accept(*this);
 	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'OR' expression.");
+		(l_expr->candidate_datatypes.size() > 0)	&&
+		(r_expr->candidate_datatypes.size() > 0))
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '%s' expression.", operation);
+        if (deprecated_operation)
+                STAGE3_WARNING(symbol, symbol, "Deprecated operation for '%s' expression.", operation);
 	return NULL;
 }
 
 
-void *print_datatypes_error_c::visit(xor_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'XOR' expression.");
-	return NULL;
-}
-
-
-void *print_datatypes_error_c::visit(and_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'AND' expression.");
-	return NULL;
-}
-
-
-void *print_datatypes_error_c::visit(equ_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '=' expression.");
-	return NULL;
-}
-
-
-void *print_datatypes_error_c::visit(notequ_expression_c *symbol)  {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '<>' expression.");
-	return NULL;
-}
-
-
-void *print_datatypes_error_c::visit(lt_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '<' expression.");
-	return NULL;
-}
-
-
-void *print_datatypes_error_c::visit(gt_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '>' expression.");
-	return NULL;
-}
-
-
-void *print_datatypes_error_c::visit(le_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '<=' expression.");
-	return NULL;
-}
-
-
-void *print_datatypes_error_c::visit(ge_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '>=' expression.");
-	return NULL;
-}
-
-
-void *print_datatypes_error_c::visit(add_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '+' expression.");
-        if (symbol->deprecated_operation)
-                STAGE3_WARNING(symbol, symbol, "Deprecated operation for '+' expression.");	
-	return NULL;
-}
-
-
-
-void *print_datatypes_error_c::visit(sub_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '-' expression.");
-        if (symbol->deprecated_operation)
-                STAGE3_WARNING(symbol, symbol, "Deprecated operation for '-' expression.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(mul_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '*' expression.");
-        if (symbol->deprecated_operation)
-                STAGE3_WARNING(symbol, symbol, "Deprecated operation for '*' expression.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(div_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '/' expression.");
-        if (symbol->deprecated_operation)
-                STAGE3_WARNING(symbol, symbol, "Deprecated operation for '/' expression.");
-	return NULL;
-}
-
-
-void *print_datatypes_error_c::visit(mod_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'MOD' expression.");
-	return NULL;
-}
+void *print_datatypes_error_c::visit(    or_expression_c *symbol) {return print_binary_expression_errors( "OR", symbol, symbol->l_exp, symbol->r_exp);}
+void *print_datatypes_error_c::visit(   xor_expression_c *symbol) {return print_binary_expression_errors("XOR", symbol, symbol->l_exp, symbol->r_exp);}
+void *print_datatypes_error_c::visit(   and_expression_c *symbol) {return print_binary_expression_errors("AND", symbol, symbol->l_exp, symbol->r_exp);}
+void *print_datatypes_error_c::visit(   equ_expression_c *symbol) {return print_binary_expression_errors( "=" , symbol, symbol->l_exp, symbol->r_exp);}
+void *print_datatypes_error_c::visit(notequ_expression_c *symbol) {return print_binary_expression_errors( "<>", symbol, symbol->l_exp, symbol->r_exp);}
+void *print_datatypes_error_c::visit(    lt_expression_c *symbol) {return print_binary_expression_errors( "<" , symbol, symbol->l_exp, symbol->r_exp);}
+void *print_datatypes_error_c::visit(    gt_expression_c *symbol) {return print_binary_expression_errors( ">" , symbol, symbol->l_exp, symbol->r_exp);}
+void *print_datatypes_error_c::visit(    le_expression_c *symbol) {return print_binary_expression_errors( "<=", symbol, symbol->l_exp, symbol->r_exp);}
+void *print_datatypes_error_c::visit(    ge_expression_c *symbol) {return print_binary_expression_errors( ">=", symbol, symbol->l_exp, symbol->r_exp);}
+void *print_datatypes_error_c::visit(   add_expression_c *symbol) {return print_binary_expression_errors( "+" , symbol, symbol->l_exp, symbol->r_exp, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit(   sub_expression_c *symbol) {return print_binary_expression_errors( "-" , symbol, symbol->l_exp, symbol->r_exp, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit(   mul_expression_c *symbol) {return print_binary_expression_errors( "*" , symbol, symbol->l_exp, symbol->r_exp, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit(   div_expression_c *symbol) {return print_binary_expression_errors( "/" , symbol, symbol->l_exp, symbol->r_exp, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit(   mod_expression_c *symbol) {return print_binary_expression_errors("MOD", symbol, symbol->l_exp, symbol->r_exp);}
 
 
 void *print_datatypes_error_c::visit(power_expression_c *symbol) {

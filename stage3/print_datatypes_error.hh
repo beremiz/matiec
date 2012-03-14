@@ -92,8 +92,8 @@ class print_datatypes_error_c: public iterator_visitor_c {
     void *handle_implicit_il_fb_invocation(const char *param_name, symbol_c *il_operator, symbol_c *called_fb_declaration);  
     void *handle_conditional_flow_control_IL_instruction(symbol_c *symbol, const char *oper);
 
-    void *print_binary_operator_errors(const char *il_operator, symbol_c *symbol, bool deprecated_operation = false);
-
+    void *print_binary_operator_errors  (const char *il_operator, symbol_c *symbol,                                     bool deprecated_operation = false);
+    void *print_binary_expression_errors(const char *operation  , symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool deprecated_operation = false);
 
     
   public:
