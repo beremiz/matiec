@@ -900,36 +900,17 @@ void *print_datatypes_error_c::visit( PV_operator_c *symbol) {return handle_impl
 void *print_datatypes_error_c::visit( IN_operator_c *symbol) {return handle_implicit_il_fb_invocation( "IN", symbol, symbol->called_fb_declaration);}
 void *print_datatypes_error_c::visit( PT_operator_c *symbol) {return handle_implicit_il_fb_invocation( "PT", symbol, symbol->called_fb_declaration);}
 
-void *print_datatypes_error_c::visit(AND_operator_c *symbol) {return print_binary_operator_errors("AND", symbol);}
-void *print_datatypes_error_c::visit( OR_operator_c *symbol) {return print_binary_operator_errors( "OR", symbol);}
-void *print_datatypes_error_c::visit(XOR_operator_c *symbol) {return print_binary_operator_errors("XOR", symbol);}
-
-void *print_datatypes_error_c::visit(ANDN_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ANDN' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(ORN_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ORN' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(XORN_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ORN' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(ADD_operator_c *symbol) {return print_binary_operator_errors("ADD", symbol, symbol->deprecated_operation);}
-void *print_datatypes_error_c::visit(SUB_operator_c *symbol) {return print_binary_operator_errors("SUB", symbol, symbol->deprecated_operation);}
-void *print_datatypes_error_c::visit(MUL_operator_c *symbol) {return print_binary_operator_errors("MUL", symbol, symbol->deprecated_operation);}
-void *print_datatypes_error_c::visit(DIV_operator_c *symbol) {return print_binary_operator_errors("DIV", symbol, symbol->deprecated_operation);}
-void *print_datatypes_error_c::visit(MOD_operator_c *symbol) {return print_binary_operator_errors("MOD", symbol);}
+void *print_datatypes_error_c::visit( AND_operator_c *symbol) {return print_binary_operator_errors("AND" , symbol);}
+void *print_datatypes_error_c::visit(  OR_operator_c *symbol) {return print_binary_operator_errors( "OR" , symbol);}
+void *print_datatypes_error_c::visit( XOR_operator_c *symbol) {return print_binary_operator_errors("XOR" , symbol);}
+void *print_datatypes_error_c::visit(ANDN_operator_c *symbol) {return print_binary_operator_errors("ANDN", symbol);}
+void *print_datatypes_error_c::visit( ORN_operator_c *symbol) {return print_binary_operator_errors( "ORN", symbol);}
+void *print_datatypes_error_c::visit(XORN_operator_c *symbol) {return print_binary_operator_errors("XORN", symbol);}
+void *print_datatypes_error_c::visit( ADD_operator_c *symbol) {return print_binary_operator_errors("ADD" , symbol, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit( SUB_operator_c *symbol) {return print_binary_operator_errors("SUB" , symbol, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit( MUL_operator_c *symbol) {return print_binary_operator_errors("MUL" , symbol, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit( DIV_operator_c *symbol) {return print_binary_operator_errors("DIV" , symbol, symbol->deprecated_operation);}
+void *print_datatypes_error_c::visit( MOD_operator_c *symbol) {return print_binary_operator_errors("MOD" , symbol);}
 
 void *print_datatypes_error_c::visit(GT_operator_c *symbol) {
 	return NULL;

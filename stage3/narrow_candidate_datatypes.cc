@@ -914,9 +914,9 @@ void *narrow_candidate_datatypes_c::visit(  PT_operator_c *symbol)  {return narr
 void *narrow_candidate_datatypes_c::visit( AND_operator_c *symbol)  {return narrow_binary_operator(widen_AND_table, symbol);}
 void *narrow_candidate_datatypes_c::visit(  OR_operator_c *symbol)  {return narrow_binary_operator( widen_OR_table, symbol);}
 void *narrow_candidate_datatypes_c::visit( XOR_operator_c *symbol)  {return narrow_binary_operator(widen_XOR_table, symbol);}
-void *narrow_candidate_datatypes_c::visit(ANDN_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit( ORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
-void *narrow_candidate_datatypes_c::visit(XORN_operator_c *symbol)  {return handle_il_instruction(symbol);}
+void *narrow_candidate_datatypes_c::visit(ANDN_operator_c *symbol)  {return narrow_binary_operator(widen_AND_table, symbol);}
+void *narrow_candidate_datatypes_c::visit( ORN_operator_c *symbol)  {return narrow_binary_operator( widen_OR_table, symbol);}
+void *narrow_candidate_datatypes_c::visit(XORN_operator_c *symbol)  {return narrow_binary_operator(widen_XOR_table, symbol);}
 void *narrow_candidate_datatypes_c::visit( ADD_operator_c *symbol)  {return narrow_binary_operator(widen_ADD_table, symbol, &(symbol->deprecated_operation));}
 void *narrow_candidate_datatypes_c::visit( SUB_operator_c *symbol)  {return narrow_binary_operator(widen_SUB_table, symbol, &(symbol->deprecated_operation));}
 void *narrow_candidate_datatypes_c::visit( MUL_operator_c *symbol)  {return narrow_binary_operator(widen_MUL_table, symbol, &(symbol->deprecated_operation));}

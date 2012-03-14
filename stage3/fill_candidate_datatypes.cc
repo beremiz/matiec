@@ -1106,61 +1106,12 @@ void *fill_candidate_datatypes_c::visit(PV_operator_c  *symbol) {handle_implicit
 void *fill_candidate_datatypes_c::visit(IN_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "IN", symbol->called_fb_declaration); return NULL;}
 void *fill_candidate_datatypes_c::visit(PT_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "PT", symbol->called_fb_declaration); return NULL;}
 
-void *fill_candidate_datatypes_c::visit(AND_operator_c *symbol) {return handle_binary_operator(widen_AND_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit(OR_operator_c  *symbol) {return handle_binary_operator(widen_OR_table,  symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit(XOR_operator_c *symbol) {return handle_binary_operator(widen_XOR_table, symbol, prev_il_instruction, il_operand);}
-
-
-void *fill_candidate_datatypes_c::visit(ANDN_operator_c *symbol) {
-	symbol_c *prev_instruction_type, *operand_type;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type, operand_type) &&
-					is_ANY_BIT_compatible(operand_type))
-				add_datatype_to_candidate_list(symbol, prev_instruction_type);
-		}
-	}
-	if (debug) std::cout <<  "ANDN [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(ORN_operator_c *symbol) {
-	symbol_c *prev_instruction_type, *operand_type;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type, operand_type) &&
-					is_ANY_BIT_compatible(operand_type))
-				add_datatype_to_candidate_list(symbol, prev_instruction_type);
-		}
-	}
-	if (debug) std::cout <<  "ORN [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(XORN_operator_c *symbol) {
-	symbol_c *prev_instruction_type, *operand_type;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type, operand_type) &&
-					is_ANY_BIT_compatible(operand_type))
-				add_datatype_to_candidate_list(symbol, prev_instruction_type);
-		}
-	}
-	if (debug) std::cout <<  "XORN [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
+void *fill_candidate_datatypes_c::visit( AND_operator_c *symbol) {return handle_binary_operator(widen_AND_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( OR_operator_c  *symbol) {return handle_binary_operator( widen_OR_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( XOR_operator_c *symbol) {return handle_binary_operator(widen_XOR_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(ANDN_operator_c *symbol) {return handle_binary_operator(widen_AND_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( ORN_operator_c *symbol) {return handle_binary_operator( widen_OR_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(XORN_operator_c *symbol) {return handle_binary_operator(widen_XOR_table, symbol, prev_il_instruction, il_operand);}
 
 void *fill_candidate_datatypes_c::visit(ADD_operator_c *symbol) {return handle_binary_operator(widen_ADD_table, symbol, prev_il_instruction, il_operand);}
 void *fill_candidate_datatypes_c::visit(SUB_operator_c *symbol) {return handle_binary_operator(widen_SUB_table, symbol, prev_il_instruction, il_operand);}

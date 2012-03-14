@@ -305,7 +305,7 @@ const struct widen_entry widen_MOD_table[] = {
 /**************************************************************/
 /**************************************************************/
 /**************************************************************/
-
+/* table used by AND and ANDN operators, and and_expression */
 const struct widen_entry widen_AND_table[] = {
 #define __and(TYPE)       \
     { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
@@ -318,7 +318,7 @@ const struct widen_entry widen_AND_table[] = {
     { NULL, NULL, NULL, widen_entry::ok },
 };
 
-
+/* table used by OR and ORN operators, and or_expression */
 const struct widen_entry widen_OR_table[] = {
 #define __or(TYPE)       \
     { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
@@ -332,7 +332,7 @@ const struct widen_entry widen_OR_table[] = {
 };
 
 
-
+/* table used by XOR and XORN operators, and xor_expression */
 const struct widen_entry widen_XOR_table[] = {
 #define __xor(TYPE)       \
     { &search_constant_type_c::TYPE##_type_name,        &search_constant_type_c::TYPE##_type_name,          &search_constant_type_c::TYPE##_type_name,       widen_entry::ok     }, \
