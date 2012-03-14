@@ -89,6 +89,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     void  handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration);
     void *handle_binary_expression(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
     void *handle_binary_operator  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
+    void *handle_conditional_il_flow_control_operator(symbol_c *symbol);
     
     /* a helper function... */
     symbol_c *base_type(symbol_c *symbol);    

@@ -1128,93 +1128,28 @@ void *fill_candidate_datatypes_c::visit( NE_operator_c *symbol) {return handle_b
 
 
 
-void *fill_candidate_datatypes_c::visit(CAL_operator_c *symbol) {
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-	        /* does not need to be bool type !! */
-		add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
-	}
-	if (debug) std::cout <<  "CAL [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(CALC_operator_c *symbol) {
+void *fill_candidate_datatypes_c::handle_conditional_il_flow_control_operator(symbol_c *symbol) {
 	if (NULL == prev_il_instruction) return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
 		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
 	}
-	if (debug) std::cout <<  "CALC [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
 }
 
-void *fill_candidate_datatypes_c::visit(CALCN_operator_c *symbol) {
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
-			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
-	}
-	if (debug) std::cout <<  "CALCN [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
+void *fill_candidate_datatypes_c::visit(  CAL_operator_c *symbol) {if (NULL == prev_il_instruction) return NULL; symbol->candidate_datatypes = prev_il_instruction->candidate_datatypes; return NULL;}
+void *fill_candidate_datatypes_c::visit(  RET_operator_c *symbol) {if (NULL == prev_il_instruction) return NULL; symbol->candidate_datatypes = prev_il_instruction->candidate_datatypes; return NULL;}
+void *fill_candidate_datatypes_c::visit(  JMP_operator_c *symbol) {if (NULL == prev_il_instruction) return NULL; symbol->candidate_datatypes = prev_il_instruction->candidate_datatypes; return NULL;}
+void *fill_candidate_datatypes_c::visit( CALC_operator_c *symbol) {return handle_conditional_il_flow_control_operator(symbol);}
+void *fill_candidate_datatypes_c::visit(CALCN_operator_c *symbol) {return handle_conditional_il_flow_control_operator(symbol);}
+void *fill_candidate_datatypes_c::visit( RETC_operator_c *symbol) {return handle_conditional_il_flow_control_operator(symbol);}
+void *fill_candidate_datatypes_c::visit(RETCN_operator_c *symbol) {return handle_conditional_il_flow_control_operator(symbol);}
+void *fill_candidate_datatypes_c::visit( JMPC_operator_c *symbol) {return handle_conditional_il_flow_control_operator(symbol);}
+void *fill_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return handle_conditional_il_flow_control_operator(symbol);}
 
-void *fill_candidate_datatypes_c::visit(RET_operator_c *symbol) {
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-	        /* does not need to be bool type !! */
-		add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
-	}
-	if (debug) std::cout <<  "RET [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
 
-void *fill_candidate_datatypes_c::visit(RETC_operator_c *symbol) {
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
-			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
-	}
-	if (debug) std::cout <<  "RETC [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
 
-void *fill_candidate_datatypes_c::visit(RETCN_operator_c *symbol) {
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
-			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
-	}
-	if (debug) std::cout <<  "RETCN [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
 
-void *fill_candidate_datatypes_c::visit(JMP_operator_c *symbol) {
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-	        /* does not need to be bool type !! */
-		add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
-	}
-	if (debug) std::cout <<  "JMP [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(JMPC_operator_c *symbol) {
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
-			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
-	}
-	if (debug) std::cout <<  "JMPC [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
-			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
-	}
-	if (debug) std::cout <<  "JMPCN [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
 /* Symbol class handled together with function call checks */
 // void *visit(il_assign_operator_c *symbol, variable_name);
 /* Symbol class handled together with function call checks */

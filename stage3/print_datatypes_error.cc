@@ -933,9 +933,6 @@ void *print_datatypes_error_c::visit(  LE_operator_c *symbol) {return print_bina
 void *print_datatypes_error_c::visit(  NE_operator_c *symbol) {return print_binary_operator_errors( "NE" , symbol);}
 
   
-void *print_datatypes_error_c::visit(CAL_operator_c *symbol) {
-	return NULL;
-}
 
 
 void *print_datatypes_error_c::handle_conditional_flow_control_IL_instruction(symbol_c *symbol, const char *oper) {
@@ -944,37 +941,17 @@ void *print_datatypes_error_c::handle_conditional_flow_control_IL_instruction(sy
 	return NULL;
 }
 
-void *print_datatypes_error_c::visit(CALC_operator_c *symbol) {
-	return handle_conditional_flow_control_IL_instruction(symbol, "CALC");
-}
+void *print_datatypes_error_c::visit(  CAL_operator_c *symbol) {return NULL;}
+void *print_datatypes_error_c::visit( CALC_operator_c *symbol) {return handle_conditional_flow_control_IL_instruction(symbol, "CALC" );}
+void *print_datatypes_error_c::visit(CALCN_operator_c *symbol) {return handle_conditional_flow_control_IL_instruction(symbol, "CALCN");}
+void *print_datatypes_error_c::visit(  RET_operator_c *symbol) {return NULL;}
+void *print_datatypes_error_c::visit( RETC_operator_c *symbol) {return handle_conditional_flow_control_IL_instruction(symbol, "RETC" );}
+void *print_datatypes_error_c::visit(RETCN_operator_c *symbol) {return handle_conditional_flow_control_IL_instruction(symbol, "RETCN");}
+void *print_datatypes_error_c::visit(  JMP_operator_c *symbol) {return NULL;}
+void *print_datatypes_error_c::visit( JMPC_operator_c *symbol) {return handle_conditional_flow_control_IL_instruction(symbol, "JMPC" );}
+void *print_datatypes_error_c::visit(JMPCN_operator_c *symbol) {return handle_conditional_flow_control_IL_instruction(symbol, "JMPCN");}
 
-void *print_datatypes_error_c::visit(CALCN_operator_c *symbol) {
-	return handle_conditional_flow_control_IL_instruction(symbol, "CALCN");
-}
 
-void *print_datatypes_error_c::visit(RET_operator_c *symbol) {
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(RETC_operator_c *symbol) {
-	return handle_conditional_flow_control_IL_instruction(symbol, "RETC");
-}
-
-void *print_datatypes_error_c::visit(RETCN_operator_c *symbol) {
-	return handle_conditional_flow_control_IL_instruction(symbol, "RETCN");
-}
-
-void *print_datatypes_error_c::visit(JMP_operator_c *symbol) {
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(JMPC_operator_c *symbol) {
-	return handle_conditional_flow_control_IL_instruction(symbol, "JMPC");
-}
-
-void *print_datatypes_error_c::visit(JMPCN_operator_c *symbol) {
-	return handle_conditional_flow_control_IL_instruction(symbol, "JMPCN");
-}
 
 /* Symbol class handled together with function call checks */
 // void *visit(il_assign_operator_c *symbol, variable_name);

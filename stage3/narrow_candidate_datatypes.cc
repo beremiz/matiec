@@ -929,14 +929,6 @@ void *narrow_candidate_datatypes_c::visit(  LE_operator_c *symbol)  {return narr
 void *narrow_candidate_datatypes_c::visit(  NE_operator_c *symbol)  {return narrow_binary_operator(widen_CMP_table, symbol);}
 
 
-// SYM_REF0(CAL_operator_c)
-/* called from il_fb_call_c (symbol->il_call_operator->accpet(*this) ) */
-void *narrow_candidate_datatypes_c::visit(CAL_operator_c *symbol) {
-	/* set the desired datatype of the previous il instruction */
-	/* This FB call does not change the value in the current/default IL variable, so we pass the required datatype to the previous IL instruction */
-	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
-	return NULL;
-}
 
 
 void *narrow_candidate_datatypes_c::narrow_conditional_flow_control_IL_instruction(symbol_c *symbol) {
@@ -960,38 +952,19 @@ void *narrow_candidate_datatypes_c::narrow_conditional_flow_control_IL_instructi
 }
 
 
+// SYM_REF0(CAL_operator_c)
 // SYM_REF0(CALC_operator_c)
 // SYM_REF0(CALCN_operator_c)
 /* called from visit(il_fb_call_c *) {symbol->il_call_operator->accpet(*this)} */
+/* NOTE: The CAL, JMP and RET instructions simply set the desired datatype of the previous il instruction since they do not change the value in the current/default IL variable */
+/* called from il_fb_call_c (symbol->il_call_operator->accpet(*this) ) */
+void *narrow_candidate_datatypes_c::visit(  CAL_operator_c *symbol) {set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction); return NULL;}
+void *narrow_candidate_datatypes_c::visit(  RET_operator_c *symbol) {set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction); return NULL;}
+void *narrow_candidate_datatypes_c::visit(  JMP_operator_c *symbol) {set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction); return NULL;}
 void *narrow_candidate_datatypes_c::visit( CALC_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(CALCN_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
-
-
-void *narrow_candidate_datatypes_c::visit(RET_operator_c *symbol) {
-	/* set the desired datatype of the previous il instruction */
-	/* This RET instruction does not change the value in the current/default IL variable, so we pass the required datatype to the previous IL instruction.
-	 * Actually this should always be NULL, otherwise we have a bug in the flow_control_analysis_c
-	 * However, since that class has not yet been completely finished, we do not yet check this assertion!
-	 */
-// 	if (NULL != symbol->datatype) ERROR;
-	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
-	return NULL;
-}
-
 void *narrow_candidate_datatypes_c::visit( RETC_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(RETCN_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
-
-void *narrow_candidate_datatypes_c::visit(JMP_operator_c *symbol) {
-	/* set the desired datatype of the previous il instruction */
-	/* This JMP instruction does not change the value in the current/default IL variable, so we pass the required datatype to the previous IL instruction.
-	 * Actually this should always be NULL, otherwise we have a bug in the flow_control_analysis_c
-	 * However, since that class has not yet been completely finished, we do not yet check this assertion!
-	 */
-// 	if (NULL != symbol->datatype) ERROR;
-	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
-	return NULL;
-}
-
 void *narrow_candidate_datatypes_c::visit( JMPC_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
 void *narrow_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return narrow_conditional_flow_control_IL_instruction(symbol);}
 
