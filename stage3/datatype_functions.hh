@@ -133,6 +133,7 @@ extern const struct widen_entry widen_SUB_table[];
 extern const struct widen_entry widen_MUL_table[];
 extern const struct widen_entry widen_DIV_table[];
 extern const struct widen_entry widen_MOD_table[];
+extern const struct widen_entry widen_EXPT_table[];
 extern const struct widen_entry widen_AND_table[];
 extern const struct widen_entry widen_OR_table[];
 extern const struct widen_entry widen_XOR_table[];

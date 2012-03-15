@@ -992,17 +992,7 @@ void *print_datatypes_error_c::visit(   sub_expression_c *symbol) {return print_
 void *print_datatypes_error_c::visit(   mul_expression_c *symbol) {return print_binary_expression_errors( "*" , symbol, symbol->l_exp, symbol->r_exp, symbol->deprecated_operation);}
 void *print_datatypes_error_c::visit(   div_expression_c *symbol) {return print_binary_expression_errors( "/" , symbol, symbol->l_exp, symbol->r_exp, symbol->deprecated_operation);}
 void *print_datatypes_error_c::visit(   mod_expression_c *symbol) {return print_binary_expression_errors("MOD", symbol, symbol->l_exp, symbol->r_exp);}
-
-
-void *print_datatypes_error_c::visit(power_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
-		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '**' expression.");
-	return NULL;
-}
+void *print_datatypes_error_c::visit( power_expression_c *symbol) {return print_binary_expression_errors( "**", symbol, symbol->l_exp, symbol->r_exp);}
 
 
 void *print_datatypes_error_c::visit(neg_expression_c *symbol) {

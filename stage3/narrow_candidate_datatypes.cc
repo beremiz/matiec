@@ -1024,19 +1024,7 @@ void *narrow_candidate_datatypes_c::visit(   sub_expression_c *symbol) {return n
 void *narrow_candidate_datatypes_c::visit(   mul_expression_c *symbol) {return narrow_binary_expression(widen_MUL_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
 void *narrow_candidate_datatypes_c::visit(   div_expression_c *symbol) {return narrow_binary_expression(widen_DIV_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
 void *narrow_candidate_datatypes_c::visit(   mod_expression_c *symbol) {return narrow_binary_expression(widen_MOD_table, symbol, symbol->l_exp, symbol->r_exp);}
-
-
-
-
-void *narrow_candidate_datatypes_c::visit(power_expression_c *symbol) {
-	symbol->l_exp->datatype = symbol->datatype;
-	symbol->l_exp->accept(*this);
-	if (! symbol->r_exp->candidate_datatypes.size()){
-		symbol->r_exp->datatype = symbol->r_exp->candidate_datatypes[0];
-		symbol->r_exp->accept(*this);
-	}
-	return NULL;
-}
+void *narrow_candidate_datatypes_c::visit( power_expression_c *symbol) {return narrow_binary_expression(widen_EXPT_table,symbol, symbol->l_exp, symbol->r_exp);}
 
 
 void *narrow_candidate_datatypes_c::visit(neg_expression_c *symbol) {

@@ -80,12 +80,16 @@ const char *elementary_type_c::to_string(symbol_c *symbol) {
 #define __ANY_UINT_1(DO,P1)       DO(usint,P1) DO(uint,P1) DO(udint,P1) DO(ulint,P1)
 
 
+/**************************************************************/
+/**************************************************************/
+/**************************************************************/
+/*******  TABLE 24: Standard arithmetic functions       *******/
+/*******    merged with                                 *******/
+/*******  TABLE 30: Functions of time data types        *******/
+/**************************************************************/
+/**************************************************************/
+/**************************************************************/
 
-
-/*
- * 2.5.1.5.6 Functions of time data types
- * Table 30 - page 64
- */
 
 const struct widen_entry widen_ADD_table[] = {
 #define __add(TYPE)       \
@@ -294,6 +298,21 @@ const struct widen_entry widen_MOD_table[] = {
 };
  
  
+
+
+const struct widen_entry widen_EXPT_table[] = {
+#define __expt(IN2TYPE, IN1TYPE)       \
+    { &search_constant_type_c::IN1TYPE##_type_name,        &search_constant_type_c::IN2TYPE##_type_name,          &search_constant_type_c::IN1TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::safe##IN1TYPE##_type_name,  &search_constant_type_c::IN2TYPE##_type_name,          &search_constant_type_c::IN1TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::IN1TYPE##_type_name,        &search_constant_type_c::safe##IN2TYPE##_type_name,    &search_constant_type_c::IN1TYPE##_type_name,       widen_entry::ok     }, \
+    { &search_constant_type_c::safe##IN1TYPE##_type_name,  &search_constant_type_c::safe##IN2TYPE##_type_name,    &search_constant_type_c::safe##IN1TYPE##_type_name, widen_entry::ok     },
+#define __IN2_anynum_(IN1_TYPENAME)   __ANY_NUM_1(__expt,IN1_TYPENAME)
+    __ANY_REAL(__IN2_anynum_)
+#undef __expt
+#undef __IN2_anynum_
+    { NULL, NULL, NULL, widen_entry::ok },
+};
+
 
 
 /**************************************************************/

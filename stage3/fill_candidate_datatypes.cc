@@ -1171,43 +1171,12 @@ void *fill_candidate_datatypes_c::visit(    ge_expression_c *symbol) {return han
  * functions if the input parameters are all literals (e.g. ADD(42, 42)). This
  * means this class will be more difficult than it appears at first.
  */
-void *fill_candidate_datatypes_c::visit(add_expression_c *symbol) {return handle_binary_expression(widen_ADD_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(sub_expression_c *symbol) {return handle_binary_expression(widen_SUB_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(mul_expression_c *symbol) {return handle_binary_expression(widen_MUL_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(div_expression_c *symbol) {return handle_binary_expression(widen_DIV_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(mod_expression_c *symbol) {return handle_binary_expression(widen_MOD_table, symbol, symbol->l_exp, symbol->r_exp);}
-
-
-void *fill_candidate_datatypes_c::visit(power_expression_c *symbol) {
-	symbol_c *left_type, *right_type;
-	bool check_ok;
-
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	check_ok = false;
-	for (unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		left_type = symbol->l_exp->candidate_datatypes[i];
-		if (is_ANY_REAL_compatible(left_type)) {
-			check_ok = true;
-			break;
-		}
-	}
-	if (! check_ok) return NULL;
-	check_ok = false;
-	for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
-		right_type = symbol->r_exp->candidate_datatypes[j];
-		if (is_ANY_NUM_compatible(right_type)) {
-			check_ok = true;
-			break;
-		}
-	}
-	if (! check_ok) return NULL;
-	for (unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
-		add_datatype_to_candidate_list(symbol, symbol->l_exp->candidate_datatypes[i]);
-	}
-	if (debug) std::cout << "** [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
+void *fill_candidate_datatypes_c::visit(  add_expression_c *symbol) {return handle_binary_expression(widen_ADD_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(  sub_expression_c *symbol) {return handle_binary_expression(widen_SUB_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(  mul_expression_c *symbol) {return handle_binary_expression(widen_MUL_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(  div_expression_c *symbol) {return handle_binary_expression(widen_DIV_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(  mod_expression_c *symbol) {return handle_binary_expression(widen_MOD_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(power_expression_c *symbol) {return handle_binary_expression(widen_EXPT_table, symbol, symbol->l_exp, symbol->r_exp);}
 
 
 void *fill_candidate_datatypes_c::visit(neg_expression_c *symbol) {
