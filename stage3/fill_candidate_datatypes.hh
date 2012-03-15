@@ -112,6 +112,8 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /* B 1.2.1 - Numeric Literals */
     /******************************/
     void *handle_any_integer(symbol_c *symbol);
+    void *handle_any_real   (symbol_c *symbol);
+    void *handle_any_literal(symbol_c *symbol, symbol_c *symbol_value, symbol_c *symbol_type);
     
     void *visit(real_c *symbol);
     void *visit(integer_c *symbol);

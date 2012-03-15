@@ -362,9 +362,8 @@ symbol_c *fill_candidate_datatypes_c::base_type(symbol_c *symbol) {
 #define sizeoftype(symbol) get_sizeof_datatype_c::getsize(symbol)
 
 void *fill_candidate_datatypes_c::handle_any_integer(symbol_c *symbol) {
-	int calc_size;
+	int calc_size = sizeoftype(symbol);
 
-	calc_size = sizeoftype(symbol);
 	if (calc_size <= sizeoftype(&search_constant_type_c::bool_type_name))
 	        add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
 	if (calc_size <= sizeoftype(&search_constant_type_c::byte_type_name))
@@ -399,11 +398,9 @@ void *fill_candidate_datatypes_c::handle_any_integer(symbol_c *symbol) {
 
 
 
+void *fill_candidate_datatypes_c::handle_any_real(symbol_c *symbol) {
+	int calc_size = sizeoftype(symbol);
 
-void *fill_candidate_datatypes_c::visit(real_c *symbol) {
-	int calc_size;
-
-	calc_size = sizeoftype(symbol);
 	if (calc_size <= sizeoftype(&search_constant_type_c::real_type_name))
 		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::real_type_name,  &search_constant_type_c::safereal_type_name);
 	if (calc_size <= sizeoftype(&search_constant_type_c::lreal_type_name))
@@ -413,23 +410,25 @@ void *fill_candidate_datatypes_c::visit(real_c *symbol) {
 }
 
 
-void *fill_candidate_datatypes_c::visit(neg_real_c *symbol) {
-	int calc_size;
 
-	calc_size = sizeoftype(symbol);
-	if (calc_size <= sizeoftype(&search_constant_type_c::real_type_name))
-		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::real_type_name, &search_constant_type_c::safereal_type_name);
-	if (calc_size <= sizeoftype(&search_constant_type_c::lreal_type_name))
-		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lreal_type_name, &search_constant_type_c::safelreal_type_name);
-	if (debug) std::cout << "neg ANY_REAL [" << symbol->candidate_datatypes.size() << "]" << std::endl;
+void *fill_candidate_datatypes_c::handle_any_literal(symbol_c *symbol, symbol_c *symbol_value, symbol_c *symbol_type) {
+	symbol_value->accept(*this);
+	if (search_in_candidate_datatype_list(symbol_type, symbol_value->candidate_datatypes) >= 0)
+		add_datatype_to_candidate_list(symbol, symbol_type);
+	if (debug) std::cout << "XXX_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
 }
 
 
-void *fill_candidate_datatypes_c::visit(neg_integer_c *symbol) {
-	int calc_size;
 
-	calc_size = sizeoftype(symbol);
+void *fill_candidate_datatypes_c::visit(    real_c *symbol) {return handle_any_real(symbol);}
+void *fill_candidate_datatypes_c::visit(neg_real_c *symbol) {return handle_any_real(symbol);}
+
+
+
+void *fill_candidate_datatypes_c::visit(neg_integer_c *symbol) {
+	int calc_size = sizeoftype(symbol);
+
 	if (calc_size <= sizeoftype(&search_constant_type_c::int_type_name))
 		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::int_type_name, &search_constant_type_c::safeint_type_name);
 	if (calc_size <= sizeoftype(&search_constant_type_c::sint_type_name))
@@ -443,10 +442,12 @@ void *fill_candidate_datatypes_c::visit(neg_integer_c *symbol) {
 }
 
 
+
 void *fill_candidate_datatypes_c::visit(integer_c        *symbol) {return handle_any_integer(symbol);}
 void *fill_candidate_datatypes_c::visit(binary_integer_c *symbol) {return handle_any_integer(symbol);}
 void *fill_candidate_datatypes_c::visit(octal_integer_c  *symbol) {return handle_any_integer(symbol);}
 void *fill_candidate_datatypes_c::visit(hex_integer_c    *symbol) {return handle_any_integer(symbol);}
+
 
 
 // SYM_REF2(integer_literal_c, type, value)
@@ -457,43 +458,18 @@ void *fill_candidate_datatypes_c::visit(hex_integer_c    *symbol) {return handle
  * | integer_type_name '#' octal_integer
  * | integer_type_name '#' hex_integer
  */
-void *fill_candidate_datatypes_c::visit(integer_literal_c *symbol) {
+void *fill_candidate_datatypes_c::visit(   integer_literal_c *symbol) {return handle_any_literal(symbol, symbol->value, symbol->type);}
+void *fill_candidate_datatypes_c::visit(      real_literal_c *symbol) {return handle_any_literal(symbol, symbol->value, symbol->type);}
+void *fill_candidate_datatypes_c::visit(bit_string_literal_c *symbol) {return handle_any_literal(symbol, symbol->value, symbol->type);}
+
+void *fill_candidate_datatypes_c::visit(   boolean_literal_c *symbol) {
+	if (NULL != symbol->type) return handle_any_literal(symbol, symbol->value, symbol->type);
+
 	symbol->value->accept(*this);
-	if (search_in_candidate_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
-		add_datatype_to_candidate_list(symbol, symbol->type);
-	if (debug) std::cout << "INT_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
+	symbol->candidate_datatypes = symbol->value->candidate_datatypes;
 	return NULL;
 }
 
-void *fill_candidate_datatypes_c::visit(real_literal_c *symbol) {
-	symbol->value->accept(*this);
-	if (search_in_candidate_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
-		add_datatype_to_candidate_list(symbol, symbol->type);
-	if (debug) std::cout << "REAL_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(bit_string_literal_c *symbol) {
-	symbol->value->accept(*this);
-	if (search_in_candidate_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
-		add_datatype_to_candidate_list(symbol, symbol->type);
-	return NULL;
-}
-
-void *fill_candidate_datatypes_c::visit(boolean_literal_c *symbol) {
- 	symbol->value->accept(*this);
- 	if (search_in_candidate_datatype_list(symbol->type, symbol->value->candidate_datatypes) >= 0)
-		/* if an explicit datat type has been provided (e.g. SAFEBOOL#true), check whether
-		 * the possible datatypes of the value is consistent with the desired type.
-		 */
-		add_datatype_to_candidate_list(symbol, symbol->type);
-	else {
-		/* Then only a literal TRUE or FALSE was given! */
-		/* In this case, symbol->type will be NULL!     */
-		add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
-	}
-	return NULL;
-}
 
 void *fill_candidate_datatypes_c::visit(boolean_true_c *symbol) {
 	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
