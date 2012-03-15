@@ -280,7 +280,7 @@ void fill_candidate_datatypes_c::handle_function_call(symbol_c *fcall, generic_f
  * e.g.  CLK ton_var
  *        CU counter_var
  */
-void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
+void *fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
 	symbol_c *fb_type_id = search_varfb_instance_type->get_basetype_id(il_operand);
   	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
 	if (NULL == fb_type_id) ERROR;
@@ -314,6 +314,7 @@ void fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruc
 		il_instruction->candidate_datatypes = prev_il_instruction->candidate_datatypes; 
 
 	if (debug) std::cout << "handle_implicit_il_fb_call() [" << prev_il_instruction->candidate_datatypes.size() << "] ==> " << il_instruction->candidate_datatypes.size() << " result.\n";
+	return NULL;
 }
 
 
@@ -1073,34 +1074,34 @@ void *fill_candidate_datatypes_c::visit(R_operator_c *symbol) {
 }
 
 
-void *fill_candidate_datatypes_c::visit(S1_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "S1", symbol->called_fb_declaration); return NULL;}
-void *fill_candidate_datatypes_c::visit(R1_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "R1", symbol->called_fb_declaration); return NULL;}
-void *fill_candidate_datatypes_c::visit(CLK_operator_c *symbol) {handle_implicit_il_fb_call(symbol, "CLK", symbol->called_fb_declaration); return NULL;}
-void *fill_candidate_datatypes_c::visit(CU_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "CU", symbol->called_fb_declaration); return NULL;}
-void *fill_candidate_datatypes_c::visit(CD_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "CD", symbol->called_fb_declaration); return NULL;}
-void *fill_candidate_datatypes_c::visit(PV_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "PV", symbol->called_fb_declaration); return NULL;}
-void *fill_candidate_datatypes_c::visit(IN_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "IN", symbol->called_fb_declaration); return NULL;}
-void *fill_candidate_datatypes_c::visit(PT_operator_c  *symbol) {handle_implicit_il_fb_call(symbol,  "PT", symbol->called_fb_declaration); return NULL;}
+void *fill_candidate_datatypes_c::visit( S1_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "S1", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit( R1_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "R1", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit( CLK_operator_c *symbol) {return handle_implicit_il_fb_call(symbol, "CLK", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit( CU_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "CU", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit( CD_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "CD", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit( PV_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "PV", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit( IN_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "IN", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit( PT_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "PT", symbol->called_fb_declaration);}
 
 void *fill_candidate_datatypes_c::visit( AND_operator_c *symbol) {return handle_binary_operator(widen_AND_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit( OR_operator_c  *symbol) {return handle_binary_operator( widen_OR_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(  OR_operator_c *symbol) {return handle_binary_operator( widen_OR_table, symbol, prev_il_instruction, il_operand);}
 void *fill_candidate_datatypes_c::visit( XOR_operator_c *symbol) {return handle_binary_operator(widen_XOR_table, symbol, prev_il_instruction, il_operand);}
 void *fill_candidate_datatypes_c::visit(ANDN_operator_c *symbol) {return handle_binary_operator(widen_AND_table, symbol, prev_il_instruction, il_operand);}
 void *fill_candidate_datatypes_c::visit( ORN_operator_c *symbol) {return handle_binary_operator( widen_OR_table, symbol, prev_il_instruction, il_operand);}
 void *fill_candidate_datatypes_c::visit(XORN_operator_c *symbol) {return handle_binary_operator(widen_XOR_table, symbol, prev_il_instruction, il_operand);}
 
-void *fill_candidate_datatypes_c::visit(ADD_operator_c *symbol) {return handle_binary_operator(widen_ADD_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit(SUB_operator_c *symbol) {return handle_binary_operator(widen_SUB_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit(MUL_operator_c *symbol) {return handle_binary_operator(widen_MUL_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit(DIV_operator_c *symbol) {return handle_binary_operator(widen_DIV_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit(MOD_operator_c *symbol) {return handle_binary_operator(widen_MOD_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( ADD_operator_c *symbol) {return handle_binary_operator(widen_ADD_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( SUB_operator_c *symbol) {return handle_binary_operator(widen_SUB_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( MUL_operator_c *symbol) {return handle_binary_operator(widen_MUL_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( DIV_operator_c *symbol) {return handle_binary_operator(widen_DIV_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit( MOD_operator_c *symbol) {return handle_binary_operator(widen_MOD_table, symbol, prev_il_instruction, il_operand);}
 
-void *fill_candidate_datatypes_c::visit( GT_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit( GE_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit( EQ_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit( LT_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit( LE_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
-void *fill_candidate_datatypes_c::visit( NE_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(  GT_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(  GE_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(  EQ_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(  LT_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(  LE_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
+void *fill_candidate_datatypes_c::visit(  NE_operator_c *symbol) {return handle_binary_operator(widen_CMP_table, symbol, prev_il_instruction, il_operand);}
 
 
 
@@ -1113,9 +1114,9 @@ void *fill_candidate_datatypes_c::handle_conditional_il_flow_control_operator(sy
 	return NULL;
 }
 
-void *fill_candidate_datatypes_c::visit(  CAL_operator_c *symbol) {if (NULL == prev_il_instruction) return NULL; symbol->candidate_datatypes = prev_il_instruction->candidate_datatypes; return NULL;}
-void *fill_candidate_datatypes_c::visit(  RET_operator_c *symbol) {if (NULL == prev_il_instruction) return NULL; symbol->candidate_datatypes = prev_il_instruction->candidate_datatypes; return NULL;}
-void *fill_candidate_datatypes_c::visit(  JMP_operator_c *symbol) {if (NULL == prev_il_instruction) return NULL; symbol->candidate_datatypes = prev_il_instruction->candidate_datatypes; return NULL;}
+void *fill_candidate_datatypes_c::visit(  CAL_operator_c *symbol) {if (NULL != prev_il_instruction) symbol->candidate_datatypes = prev_il_instruction->candidate_datatypes; return NULL;}
+void *fill_candidate_datatypes_c::visit(  RET_operator_c *symbol) {if (NULL != prev_il_instruction) symbol->candidate_datatypes = prev_il_instruction->candidate_datatypes; return NULL;}
+void *fill_candidate_datatypes_c::visit(  JMP_operator_c *symbol) {if (NULL != prev_il_instruction) symbol->candidate_datatypes = prev_il_instruction->candidate_datatypes; return NULL;}
 void *fill_candidate_datatypes_c::visit( CALC_operator_c *symbol) {return handle_conditional_il_flow_control_operator(symbol);}
 void *fill_candidate_datatypes_c::visit(CALCN_operator_c *symbol) {return handle_conditional_il_flow_control_operator(symbol);}
 void *fill_candidate_datatypes_c::visit( RETC_operator_c *symbol) {return handle_conditional_il_flow_control_operator(symbol);}

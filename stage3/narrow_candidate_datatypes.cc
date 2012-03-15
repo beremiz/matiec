@@ -855,7 +855,6 @@ void *narrow_candidate_datatypes_c::visit(LDN_operator_c *symbol)  {
 }
 
 void *narrow_candidate_datatypes_c::visit(ST_operator_c *symbol) {
-	if (debug) printf("narrow_candidate_datatypes_c::visit(ST_operator_c *symbol) called.\n");
 	if (symbol->candidate_datatypes.size() != 1)
 		return NULL;
 	symbol->datatype = symbol->candidate_datatypes[0];
