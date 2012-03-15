@@ -1047,7 +1047,7 @@ void *print_datatypes_error_c::visit(assignment_statement_c *symbol) {
 	    (NULL == symbol->r_exp->datatype) &&
 		(symbol->l_exp->candidate_datatypes.size() > 0)	&&
 		(symbol->r_exp->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data types for ':=' operation.");
+		STAGE3_ERROR(0, symbol, symbol, "Incompatible data types for ':=' operation.");
 	return NULL;
 }
 
