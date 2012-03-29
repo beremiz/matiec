@@ -712,8 +712,8 @@ __ANY_ELEMENTARY(__iec_)
 /* Should be for: ANY_ELEMENTARY, but we currently do not support WSTRING yet... */
 /* However, we can call __ANY_ELEMENTARY since the __ANY_STRING macro does not call DO(WSTRING) */
 #define __iec_(TYPENAME) \
-__function_1e(NE, BOOL, IN, TYPENAME, 1)             /* overloaded function */ \
-__function_1e(NE_##TYPENAME, BOOL, IN, TYPENAME, 1)  /* explicitly typed function */ 
+__function_2p(NE, BOOL, IN1, TYPENAME, IN2, TYPENAME)            /* overloaded function */ \
+__function_2p(NE_##TYPENAME, BOOL, IN1, TYPENAME, IN2, TYPENAME) /* explicitly typed function */
 __ANY_ELEMENTARY(__iec_)
 #undef __iec_
 
