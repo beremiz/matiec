@@ -711,6 +711,13 @@ __ANY_ELEMENTARY(__iec_)
     /**************/
 /* Should be for: ANY_ELEMENTARY, but we currently do not support WSTRING yet... */
 /* However, we can call __ANY_ELEMENTARY since the __ANY_STRING macro does not call DO(WSTRING) */
+/* NOTE (by mjs) : The following declaration is worng, as it assumes that only 2 parameter may be used!
+ *                 The NE function is actually an extensible function, that may be called with more than 2 parameters!
+ *                 This needs to be fixed!!
+ *       The correct definition is:
+ *   __function_1e(NE, BOOL, IN, TYPENAME, 1)             
+ *   __function_1e(NE_##TYPENAME, BOOL, IN, TYPENAME, 1) 
+ */
 #define __iec_(TYPENAME) \
 __function_2p(NE, BOOL, IN1, TYPENAME, IN2, TYPENAME)            /* overloaded function */ \
 __function_2p(NE_##TYPENAME, BOOL, IN1, TYPENAME, IN2, TYPENAME) /* explicitly typed function */
