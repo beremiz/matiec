@@ -216,7 +216,50 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 			for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
 		  		/* TODO: verify if it is lvalue when INOUT or OUTPUT parameters! */
 
-				if (NULL == param_value->datatype) {
+				/* This handle_function_invocation() will be called to handle IL function calls, where the first parameter comes from the previous IL instruction.
+				 * In this case, the previous IL instruction will be artifically (and temporarily) added to the begining ot the parameter list
+				 * so we (in this function) can handle this situation like all the other function calls.
+				 * However, 
+				 *     a) if NO previous IL function exists, then we get a fake previous IL function, with no location data (i.e. not found anywhere in the source code.
+				 *     b) the function call may actually have several prev IL instructions (if several JMP instructions jump directly to the il function call).
+				 * In order to handle these situations gracefully, we first check whether the first parameter is really an IL istruction!
+				 */
+				il_instruction_c *il_instruction_symbol = dynamic_cast<il_instruction_c *>(param_value);
+				if ((NULL != il_instruction_symbol) && (i == 1)) {
+					/* We are in a situation where an IL function call is passed the first parameter, which is actually the previous IL instruction */
+					/* However, this is really a fake previous il instruction (see visit(il_instruction_c *) )
+					 * We will iterate through all the real previous IL instructions, and analyse each of them one by one */
+					if (il_instruction_symbol->prev_il_instruction.size() == 0) {
+						function_invocation_error = true;
+						STAGE3_ERROR(0, fcall, fcall, "No available data to pass to first parameter of IL function %s. Missing a previous LD instruction?", ((identifier_c *)fcall_data.function_name)->value);
+					}
+#if 0
+					/* NOTE: We currently comment out this code...
+					 * This does not currently work, since the narrow operation is currently done on the intersection 
+					 * of all the previous IL instructions, so we currently either accept them all, or none at all.
+					 * In order to be able to produce these user freindly error messages, we will need to update the 
+					 * narrow algorithm. We leave this untill somebody aks for it...
+					 * So, for now, we simply comment out this code.
+					 */
+					for (unsigned int p = 0; p < il_instruction_symbol->prev_il_instruction.size(); p++) {
+						symbol_c *value = il_instruction_symbol->prev_il_instruction[p];  
+						if (!is_type_valid(value->datatype)) {
+							function_invocation_error = true;
+							STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility for value passed to first parameter when invoking function '%s'", ((identifier_c *)fcall_data.function_name)->value);
+							STAGE3_ERROR(0, value, value, "This is the IL instruction producing the incompatible data type to first parameter of function '%s'", ((identifier_c *)fcall_data.function_name)->value);
+						}
+					}
+#else
+					if (!is_type_valid(il_instruction_symbol->datatype)) {
+						function_invocation_error = true;
+						STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility between value in IL 'accumulator' and first parameter of function '%s'", ((identifier_c *)fcall_data.function_name)->value);
+					}
+#endif
+					if (function_invocation_error)
+						/* when handling a IL function call, and an error is found in the first parameter, then we bug out and do not print out any more error messages. */
+						return;
+				}
+				else if (!is_type_valid(param_value->datatype)) {
 					function_invocation_error = true;
 					STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((identifier_c *)fcall_data.function_name)->value);
 				}
@@ -630,6 +673,10 @@ void *print_datatypes_error_c::visit(configuration_declaration_c *symbol) {
 void *print_datatypes_error_c::visit(il_instruction_c *symbol) {
 	if (NULL != symbol->il_instruction) {
 		il_instruction_c tmp_prev_il_instruction(NULL, NULL);
+#if 0
+		/* NOTE: The following is currently no longer needed. Since the following code is actually cool, 
+		 * we don't delete it, but simply comment it out. It might just come in handy later on...
+		 */
 		/* When handling a il function call, this fake_prev_il_instruction may be used as a standard function call parameter, so it is important that 
 		 * it contain some valid location info so error messages make sense.
 		 */
@@ -650,7 +697,8 @@ void *print_datatypes_error_c::visit(il_instruction_c *symbol) {
 			 * be reset to the correct value when we call intersect_prev_candidate_datatype_lists() later on...
 			 */
 		}
-		/* the narrow algorithm will need access to the intersected candidate_datatype lists of all prev_il_instructions, as well as the 
+#endif
+		/* the print error algorithm will need access to the intersected candidate_datatype lists of all prev_il_instructions, as well as the 
 		 * list of the prev_il_instructions.
 		 * Instead of creating two 'global' (within the class) variables, we create a single il_instruction_c variable (fake_prev_il_instruction),
 		 * and shove that data into this single variable.
