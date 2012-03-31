@@ -170,14 +170,19 @@ void *print_setter(symbol_c* symbol,
 		symbol_c* fb_symbol = NULL,
 		symbol_c* fb_value = NULL) {
   
-  unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-  bool type_is_complex = search_varfb_instance_type->type_is_complex();
-  if (vartype == search_var_instance_decl_c::external_vt)
-    s4o.print(SET_EXTERNAL);
-  else if (vartype == search_var_instance_decl_c::located_vt)
-    s4o.print(SET_LOCATED);
+  bool type_is_complex = false;
+  if (fb_symbol == NULL) {
+	unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+    type_is_complex = search_varfb_instance_type->type_is_complex();
+    if (vartype == search_var_instance_decl_c::external_vt)
+      s4o.print(SET_EXTERNAL);
+    else if (vartype == search_var_instance_decl_c::located_vt)
+      s4o.print(SET_LOCATED);
+    else
+      s4o.print(SET_VAR);
+  }
   else
-    s4o.print(SET_VAR);
+	s4o.print(SET_VAR);
   s4o.print("(");
 
   if (fb_symbol != NULL) {

@@ -57,7 +57,6 @@
 	__INIT_RETAIN(domain##__##name, retained)
 #define __INIT_EXTERNAL(type, global, name, retained)\
     {\
-        type* __GET_GLOBAL_##global();\
 		name.value = __GET_GLOBAL_##global();\
 		__INIT_RETAIN(name, retained)\
     }
