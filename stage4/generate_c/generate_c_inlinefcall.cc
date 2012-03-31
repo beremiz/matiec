@@ -1183,7 +1183,11 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
 		// Transition condition is in ST
 		if (symbol->transition_condition_st != NULL) {
-			symbol->transition_condition_st->accept(*this);
+			function_call_iterator_c fc_iterator(symbol->transition_condition_st);
+			symbol_c* function_call;
+			while ((function_call = fc_iterator.next()) != NULL) {
+				function_call->accept(*this);
+			}
 		}
 
 		return NULL;
