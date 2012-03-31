@@ -912,6 +912,7 @@ SYM_REF2(il_simple_operation_c, il_simple_operator, il_operand)
 
 /* | function_name [il_operand_list] */
 /* NOTE: The parameter 'called_function_declaration', 'extensible_param_count' and 'candidate_functions' are used to pass data between the stage 3 and stage 4.
+ *       data between the stage 3 and stage 4.
  *       See the comment above function_invocation_c for more details 
  */
 SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count; std::vector <symbol_c *> candidate_functions;)
