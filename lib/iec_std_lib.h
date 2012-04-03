@@ -1752,11 +1752,6 @@ __compare_string(LE__BOOL__STRING, <= ) /* Overloaded function */
     /**************/
     /*     NE     */
     /**************/
-
-/* NOTE (by mjs) : The following declaration is worng, as it assumes that only 2 parameter may be used!
- *                 The NE function is actually an extensible function, that may be called with more than 2 parameters!
- *                 This needs to be fixed!!
- */
 #define __ne_num(fname, TYPENAME) \
 static inline BOOL fname(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
   TEST_EN(BOOL)\
