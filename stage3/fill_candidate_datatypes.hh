@@ -157,6 +157,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /********************************/
     /* B 1.3.3 - Derived data types */
     /********************************/
+    void *visit(simple_spec_init_c *symbol);
     void *visit(subrange_c *symbol);
 //  void *visit(data_type_declaration_c *symbol);
     void *visit(enumerated_value_c *symbol);
@@ -176,6 +177,14 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /*************************************/
     void *visit(array_variable_c *symbol);
     void *visit(structured_variable_c *symbol);
+
+    /******************************************/
+    /* B 1.4.3 - Declaration & Initialisation */
+    /******************************************/
+    void *visit(var1_list_c *symbol);
+    void *visit(location_c *symbol);
+    void *visit(located_var_decl_c *symbol);
+
 
     /**************************************/
     /* B 1.5 - Program organization units */

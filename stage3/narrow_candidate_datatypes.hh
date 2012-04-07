@@ -87,6 +87,13 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     void *visit(array_variable_c *symbol);
     void *visit(subscript_list_c *symbol);
 
+    /******************************************/
+    /* B 1.4.3 - Declaration & Initialisation */
+    /******************************************/
+    void *visit(var1_list_c *symbol);
+    void *visit(location_c *symbol);
+    void *visit(located_var_decl_c *symbol);
+
     /**************************************/
     /* B 1.5 - Program organization units */
     /**************************************/

@@ -529,6 +529,20 @@ void *print_datatypes_error_c::visit(date_and_time_c *symbol) {
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/
+void *print_datatypes_error_c::visit(simple_spec_init_c *symbol) {
+	if (!is_type_valid(symbol->simple_specification->datatype)) {
+		STAGE3_ERROR(0, symbol->simple_specification, symbol->simple_specification, "Invalid data type.");
+	} else if (NULL != symbol->constant) {
+		if (!is_type_valid(symbol->constant->datatype))
+			STAGE3_ERROR(0, symbol->constant, symbol->constant, "Initial value has incompatible data type.");
+	} else if (!is_type_valid(symbol->datatype)) {
+		ERROR; /* If we have an error here, then we must also have an error in one of
+		        * the two previous tests. If we reach this point, some strange error is ocurring!
+			*/
+	}
+	return NULL;
+}
+
 void *print_datatypes_error_c::visit(data_type_declaration_c *symbol) {
 	// TODO !!!
 	/* for the moment we must return NULL so semantic analysis of remaining code is not interrupted! */
@@ -555,8 +569,9 @@ void *print_datatypes_error_c::visit(symbolic_variable_c *symbol) {
 /* B 1.4.1 - Directly Represented Variables */
 /********************************************/
 void *print_datatypes_error_c::visit(direct_variable_c *symbol) {
-	if (symbol->candidate_datatypes.size() == 0)
-		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for located variable data type.");
+	if (symbol->candidate_datatypes.size() == 0) ERROR;
+	if (!is_type_valid(symbol->datatype))
+		STAGE3_ERROR(4, symbol, symbol, "Direct variable has incompatible data type with expression.");
 	return NULL;
 }
 
@@ -596,6 +611,33 @@ void *print_datatypes_error_c::visit(structured_variable_c *symbol) {
 		STAGE3_ERROR(0, symbol, symbol, "Undeclared structured/FB variable.");
 	return NULL;
 }
+
+
+
+/******************************************/
+/* B 1.4.3 - Declaration & Initialisation */
+/******************************************/
+
+/*  AT direct_variable */
+// SYM_REF1(location_c, direct_variable)
+void *print_datatypes_error_c::visit(location_c *symbol) {
+	symbol->direct_variable->accept(*this);
+	return NULL;
+}
+
+
+/*  [variable_name] location ':' located_var_spec_init */
+/* variable_name -> may be NULL ! */
+// SYM_REF3(located_var_decl_c, variable_name, location, located_var_spec_init)
+void *print_datatypes_error_c::visit(located_var_decl_c *symbol) {
+  symbol->located_var_spec_init->accept(*this);
+  /* It does not make sense to call symbol->location->accept(*this). The check is done right here if the following if() */
+  // symbol->location->accept(*this); 
+  if ((is_type_valid(symbol->located_var_spec_init->datatype)) && (!is_type_valid(symbol->location->datatype)))
+    STAGE3_ERROR(0, symbol, symbol, "Location is incompatible with data type.");
+  return NULL;
+}  
+
 
 /************************************/
 /* B 1.5 Program organization units */
@@ -638,7 +680,7 @@ void *print_datatypes_error_c::visit(function_block_declaration_c *symbol) {
 void *print_datatypes_error_c::visit(program_declaration_c *symbol) {
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	/* We do not check for data type errors in variable declarations, Skip this for now... */
-// 	symbol->var_declarations->accept(*this);
+	symbol->var_declarations->accept(*this);
 	if (debug) printf("Print error data types list in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
 	il_parenthesis_level = 0;
 	il_error = false;

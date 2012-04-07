@@ -522,6 +522,22 @@ void *fill_candidate_datatypes_c::visit(date_and_time_c *symbol) {add_datatype_t
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/
+
+/* simple_specification ASSIGN constant */
+// SYM_REF2(simple_spec_init_c, simple_specification, constant)
+void *fill_candidate_datatypes_c::visit(simple_spec_init_c *symbol) {
+	if (NULL != symbol->constant) symbol->constant->accept(*this);
+	add_datatype_to_candidate_list(symbol->simple_specification, base_type(symbol->simple_specification));
+	symbol->candidate_datatypes = symbol->simple_specification->candidate_datatypes;
+	/* NOTE: Even if the constant and the type are of incompatible data types, we let the
+	 *       simple_spec_init_c object inherit the data type of the type declaration (simple_specification)
+	 *       This will let us produce more informative error messages when checking data type compatibility
+	 *       with located variables (AT %QW3.4 : WORD).
+	 */
+	// if (NULL != symbol->constant) intersect_candidate_datatype_list(symbol /*origin, dest.*/, symbol->constant /*with*/);
+	return NULL;
+}
+
 /*  signed_integer DOTDOT signed_integer */
 // SYM_REF2(subrange_c, lower_limit, upper_limit)
 void *fill_candidate_datatypes_c::visit(subrange_c *symbol) {
@@ -575,6 +591,7 @@ void *fill_candidate_datatypes_c::visit(symbolic_variable_c *symbol) {
 	return NULL;
 }
 
+
 /********************************************/
 /* B 1.4.1 - Directly Represented Variables */
 /********************************************/
@@ -588,11 +605,11 @@ void *fill_candidate_datatypes_c::visit(direct_variable_c *symbol) {
 	 * if (symbol->value[1] == '\0') ERROR;
 	 */
 	switch (symbol->value[2]) {
-		case 'X': /* bit   -  1 bit  */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);  break;
-		case 'B': /* byte  -  8 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);  break;
-		case 'W': /* word  - 16 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);  break;
-		case 'D': /* dword - 32 bits */	add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name); break;
-		case 'L': /* lword - 64 bits */	add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name); break;
+		case 'x': case 'X': /* bit   -  1 bit  */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);  break;
+		case 'b': case 'B': /* byte  -  8 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);  break;
+		case 'w': case 'W': /* word  - 16 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);  break;
+		case 'd': case 'D': /* dword - 32 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name); break;
+		case 'l': case 'L': /* lword - 64 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name); break;
         	          /* if none of the above, then the empty string was used <=> boolean */
 		default:                        add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);  break;
 	}
@@ -640,6 +657,46 @@ void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 	add_datatype_to_candidate_list(symbol, search_varfb_instance_type->get_basetype_decl(symbol));  /* will only add if non NULL */
 	return NULL;
 }
+
+
+
+/******************************************/
+/* B 1.4.3 - Declaration & Initialisation */
+/******************************************/
+
+void *fill_candidate_datatypes_c::visit(var1_list_c *symbol) {
+#if 0   /* We don't really need to set the datatype of each variable. We just check the declaration itself! */
+  for(int i = 0; i < symbol->n; i++) {
+    add_datatype_to_candidate_list(symbol->elements[i], search_varfb_instance_type->get_basetype_decl(symbol->elements[i])); /* will only add if non NULL */
+  }
+#endif
+  return NULL;
+}  
+
+
+/*  AT direct_variable */
+// SYM_REF1(location_c, direct_variable)
+void *fill_candidate_datatypes_c::visit(location_c *symbol) {
+	symbol->direct_variable->accept(*this);
+	symbol->candidate_datatypes = symbol->direct_variable->candidate_datatypes;
+	return NULL;
+}
+
+
+/*  [variable_name] location ':' located_var_spec_init */
+/* variable_name -> may be NULL ! */
+// SYM_REF3(located_var_decl_c, variable_name, location, located_var_spec_init)
+void *fill_candidate_datatypes_c::visit(located_var_decl_c *symbol) {
+  symbol->located_var_spec_init->accept(*this);
+  symbol->location->accept(*this);
+  symbol->variable_name->candidate_datatypes = symbol->location->candidate_datatypes;
+  intersect_candidate_datatype_list(symbol->variable_name /*origin, dest.*/, symbol->located_var_spec_init /*with*/);
+  return NULL;
+}  
+
+
+
+
 
 /************************************/
 /* B 1.5 Program organization units */

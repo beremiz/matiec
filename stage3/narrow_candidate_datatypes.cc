@@ -399,6 +399,24 @@ symbol_c *narrow_candidate_datatypes_c::base_type(symbol_c *symbol) {
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/
+/* simple_specification ASSIGN constant */
+// SYM_REF2(simple_spec_init_c, simple_specification, constant)
+void *narrow_candidate_datatypes_c::visit(simple_spec_init_c *symbol) {
+	if (symbol->candidate_datatypes.size() == 1)
+	  symbol->datatype = symbol->candidate_datatypes[0];
+	  
+	if (symbol->simple_specification->candidate_datatypes.size() == 1)
+	  symbol->simple_specification->datatype = symbol->simple_specification->candidate_datatypes[0];
+
+	if (NULL != symbol->constant) {
+		set_datatype(symbol->datatype, symbol->constant);
+		symbol->constant->accept(*this);
+	}
+	return NULL;
+}
+
+
+
 /*  signed_integer DOTDOT signed_integer */
 // SYM_REF2(subrange_c, lower_limit, upper_limit)
 void *narrow_candidate_datatypes_c::visit(subrange_c *symbol) {
@@ -409,17 +427,6 @@ void *narrow_candidate_datatypes_c::visit(subrange_c *symbol) {
 	return NULL;
 }
 
-/* simple_specification ASSIGN constant */
-// SYM_REF2(simple_spec_init_c, simple_specification, constant)
-void *narrow_candidate_datatypes_c::visit(simple_spec_init_c *symbol) {
-	symbol_c *datatype = base_type(symbol->simple_specification); 
-	if (NULL != symbol->constant) {
-		int typeoffset = search_in_candidate_datatype_list(datatype, symbol->constant->candidate_datatypes);
-		if (typeoffset >= 0)
-			symbol->constant->datatype = symbol->constant->candidate_datatypes[typeoffset];
-	}
-	return NULL;
-}
 
 /*********************/
 /* B 1.4 - Variables */
@@ -454,6 +461,47 @@ void *narrow_candidate_datatypes_c::visit(subscript_list_c *symbol) {
 	return NULL;  
 }
 
+
+
+
+/******************************************/
+/* B 1.4.3 - Declaration & Initialisation */
+/******************************************/
+
+void *narrow_candidate_datatypes_c::visit(var1_list_c *symbol) {
+#if 0   /* We don't really need to set the datatype of each variable. We just check the declaration itself! */
+  for(int i = 0; i < symbol->n; i++) {
+    if (symbol->elements[i]->candidate_datatypes.size() == 1)
+      symbol->elements[i]->datatype = symbol->elements[i]->candidate_datatypes[0];
+  }
+#endif
+  return NULL;
+}  
+
+
+/*  AT direct_variable */
+// SYM_REF1(location_c, direct_variable)
+void *narrow_candidate_datatypes_c::visit(location_c *symbol) {
+  set_datatype(symbol->datatype, symbol->direct_variable);
+  symbol->direct_variable->accept(*this); /* currently does nothing! */
+  return NULL;
+}
+
+
+/*  [variable_name] location ':' located_var_spec_init */
+/* variable_name -> may be NULL ! */
+// SYM_REF3(located_var_decl_c, variable_name, location, located_var_spec_init)
+void *narrow_candidate_datatypes_c::visit(located_var_decl_c *symbol) {
+  /* let the var_spec_init set its own symbol->datatype value */
+  symbol->located_var_spec_init->accept(*this);
+  
+  if (NULL != symbol->variable_name)
+    set_datatype(symbol->located_var_spec_init->datatype, symbol->variable_name);
+    
+  set_datatype(symbol->located_var_spec_init->datatype, symbol->location);
+  symbol->location->accept(*this);
+  return NULL;
+}
 
 
 /************************************/
