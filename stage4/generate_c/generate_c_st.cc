@@ -135,7 +135,7 @@ class generate_c_st_c: public generate_c_typedecl_c {
 void *print_getter(symbol_c *symbol) {
   unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
   if (wanted_variablegeneration == fparam_output_vg) {
-  	if (vartype == search_var_instance_decl_c::external_vt)
+    if (vartype == search_var_instance_decl_c::external_vt)
       s4o.print(GET_EXTERNAL_BY_REF);
     else if (vartype == search_var_instance_decl_c::located_vt)
       s4o.print(GET_LOCATED_BY_REF);
@@ -143,12 +143,12 @@ void *print_getter(symbol_c *symbol) {
       s4o.print(GET_VAR_BY_REF);
   }
   else {
-	if (vartype == search_var_instance_decl_c::external_vt)
-	  s4o.print(GET_EXTERNAL);
-	else if (vartype == search_var_instance_decl_c::located_vt)
-	  s4o.print(GET_LOCATED);
-	else
-	  s4o.print(GET_VAR);
+    if (vartype == search_var_instance_decl_c::external_vt)
+      s4o.print(GET_EXTERNAL);
+    else if (vartype == search_var_instance_decl_c::located_vt)
+      s4o.print(GET_LOCATED);
+    else
+      s4o.print(GET_VAR);
   }
   s4o.print("(");
 
@@ -239,7 +239,6 @@ void *visit(array_specification_c *symbol) {
 /* B 1.4 - Variables */
 /*********************/
 void *visit(symbolic_variable_c *symbol) {
-  unsigned int vartype;
   switch (wanted_variablegeneration) {
     case complextype_base_assignment_vg:
     case assignment_vg:
@@ -254,7 +253,6 @@ void *visit(symbolic_variable_c *symbol) {
       break;
     default:
       if (this->is_variable_prefix_null()) {
-        vartype = search_varfb_instance_type->get_vartype(symbol);
         if (wanted_variablegeneration == fparam_output_vg) {
           s4o.print("&(");
           generate_c_base_c::visit(symbol);
