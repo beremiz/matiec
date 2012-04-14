@@ -8,5 +8,6 @@ libstage3_a_SOURCES = \
 	fill_candidate_datatypes.cc \
 	narrow_candidate_datatypes.cc \
 	print_datatypes_error.cc \
-	datatype_functions.cc
+	datatype_functions.cc \
+	lvalue_check.cc
 

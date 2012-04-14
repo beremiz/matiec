@@ -38,7 +38,7 @@
 #include "fill_candidate_datatypes.hh"
 #include "narrow_candidate_datatypes.hh"
 #include "print_datatypes_error.hh"
-
+#include "lvalue_check.hh"
 
 static int flow_control_analysis(symbol_c *tree_root){
   flow_control_analysis_c flow_control_analysis(tree_root);
@@ -57,6 +57,10 @@ static int type_safety(symbol_c *tree_root){
 	print_datatypes_error_c print_datatypes_error(tree_root);
 	tree_root->accept(print_datatypes_error);
 	if (print_datatypes_error.get_error_found())
+		return -1;
+	lvalue_check_c lvalue_check(tree_root);
+	tree_root->accept(lvalue_check);
+	if (lvalue_check.get_error_found())
 		return -1;
 	return 0;
 }
