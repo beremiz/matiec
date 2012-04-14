@@ -2238,7 +2238,7 @@ END_RESOURCE
         s4o.print(".");
         symbol->symbolic_variable->accept(*this);
         s4o.print(" = ");
-        if (vartype || search_var_instance_decl_c::global_vt)
+        if (vartype == search_var_instance_decl_c::global_vt)
           s4o.print("*");
         symbol->prog_data_source->accept(*this);
         s4o.print(";}\n");
@@ -2269,7 +2269,7 @@ END_RESOURCE
         s4o.print(" *");
         symbol->data_sink->accept(*this);
         s4o.print("; ");
-        if (vartype || search_var_instance_decl_c::global_vt)
+        if (vartype == search_var_instance_decl_c::global_vt)
           s4o.print("*");
         symbol->data_sink->accept(*this);
         s4o.print(" = ");
