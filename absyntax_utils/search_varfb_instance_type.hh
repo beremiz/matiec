@@ -110,14 +110,10 @@ class search_varfb_instance_type_c : null_visitor_c {
 //     symbol_c *get_type_decl(symbol_c *variable_name);
     symbol_c *get_type_id(symbol_c *variable_name);
 
-    /* NOTE: I have a feeling that this function should be remvoed/deleted.
-     *       However, it is currently used in stage 4, and before deleting it
-     *       requires that the stage4 code be analysed and fixed (i.e. replace by 
-     *       a call to one of the above functions get_basetype_decl(), 
-     *       get_type_decl(), get_type_id().
+    /* NOTE: The following function should be moved to its own independent visitor class.
+     *       In other words, it will be removed from this class in the future. 
      */
-    unsigned int get_vartype(symbol_c *variable_name);
-    bool type_is_complex(void);
+    bool type_is_complex(symbol_c *variable_name);
 
   private:
     /* a helper function... */

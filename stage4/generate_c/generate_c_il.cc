@@ -232,6 +232,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     search_fb_instance_decl_c *search_fb_instance_decl;
 
     search_varfb_instance_type_c *search_varfb_instance_type;
+    search_var_instance_decl_c   *search_var_instance_decl;
 
     search_base_type_c search_base_type;
 
@@ -252,6 +253,8 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       search_expression_type = new search_expression_type_c(scope);
       search_fb_instance_decl = new search_fb_instance_decl_c(scope);
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
+      search_var_instance_decl   = new search_var_instance_decl_c(scope);
+      
       current_operand = NULL;
       current_operand_type = NULL;
       il_default_variable_init_value = NULL;
@@ -267,6 +270,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       delete search_fb_instance_decl;
       delete search_expression_type;
       delete search_varfb_instance_type;
+      delete search_var_instance_decl;
     }
 
     void generate(instruction_list_c *il) {
@@ -435,7 +439,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     }
 
     void *print_getter(symbol_c *symbol) {
-      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+      unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
       if (wanted_variablegeneration == fparam_output_vg) {
       	if (vartype == search_var_instance_decl_c::external_vt)
           s4o.print(GET_EXTERNAL_BY_REF);
@@ -457,7 +461,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       variablegeneration_t old_wanted_variablegeneration = wanted_variablegeneration;
       wanted_variablegeneration = complextype_base_vg;
       symbol->accept(*this);
-      if (search_varfb_instance_type->type_is_complex())
+      if (search_varfb_instance_type->type_is_complex(symbol))
         s4o.print(",");
       wanted_variablegeneration = complextype_suffix_vg;
       symbol->accept(*this);
@@ -475,8 +479,8 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
 
       bool type_is_complex = false;
       if (fb_symbol == NULL) {
-        unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-        type_is_complex = search_varfb_instance_type->type_is_complex();
+        unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
+        type_is_complex = search_varfb_instance_type->type_is_complex(symbol);
         if (vartype == search_var_instance_decl_c::external_vt)
           s4o.print(SET_EXTERNAL);
         else if (vartype == search_var_instance_decl_c::located_vt)
@@ -591,7 +595,7 @@ void *visit(symbolic_variable_c *symbol) {
 	  break;
     default:
       if (this->is_variable_prefix_null()) {
-	    vartype = search_varfb_instance_type->get_vartype(symbol);
+	    vartype = search_var_instance_decl->get_vartype(symbol);
         if (wanted_variablegeneration == fparam_output_vg) {
           s4o.print("&(");
           generate_c_base_c::visit(symbol);

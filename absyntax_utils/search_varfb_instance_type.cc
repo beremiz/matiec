@@ -125,16 +125,9 @@ symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_nam
 
 
 
-
-
-unsigned int search_varfb_instance_type_c::get_vartype(symbol_c *variable_name) {
+bool search_varfb_instance_type_c::type_is_complex(symbol_c *variable_name) {
   this->init();
-  return search_var_instance_decl.get_vartype(variable_name);
-}
-
-
-
-bool search_varfb_instance_type_c::type_is_complex(void) {
+  variable_name->accept(*this);
   return this->is_complex;
 }
 
