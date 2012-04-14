@@ -232,21 +232,31 @@ search_var_instance_decl_c::search_var_instance_decl_c(symbol_c *search_scope) {
   this->search_scope = search_scope;
   this->search_name = NULL;
   this->current_type_decl = NULL;
+  this->current_option = none_opt;
 }
 
 symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable) {
   this->current_vartype = none_vt;
+  this->current_option  = none_opt;
   this->search_name = get_var_name_c::get_name(variable);
   return (symbol_c *)search_scope->accept(*this);
 }
 
 unsigned int search_var_instance_decl_c::get_vartype(symbol_c *variable) {
   this->current_vartype = none_vt;
+  this->current_option  = none_opt;
   this->search_name = get_var_name_c::get_name(variable);
   search_scope->accept(*this);
-  return current_vartype;
+  return this->current_vartype;
 }
 
+unsigned int search_var_instance_decl_c::get_option(symbol_c *variable) {
+  this->current_vartype = none_vt;
+  this->current_option  = none_opt;
+  this->search_name = get_var_name_c::get_name(variable);
+  search_scope->accept(*this);
+  return this->current_option;
+}
 
 /***************************/
 /* B 0 - Programming Model */
@@ -267,12 +277,30 @@ void *search_var_instance_decl_c::visit(library_c *symbol) {
 /* edge -> The F_EDGE or R_EDGE directive */
 // SYM_REF2(edge_declaration_c, edge, var1_list)
 // TODO
+void *search_var_instance_decl_c::visit(constant_option_c *symbol) {
+  current_option = constant_opt;
+  return NULL;
+}
+
+void *search_var_instance_decl_c::visit(retain_option_c *symbol) {
+  current_option = retain_opt;
+  return NULL;
+}
+
+void *search_var_instance_decl_c::visit(non_retain_option_c *symbol) {
+  current_option = non_retain_opt;
+  return NULL;
+}
 
 void *search_var_instance_decl_c::visit(input_declarations_c *symbol) {
   current_vartype = input_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)  
+    symbol->option->accept(*this);
   void *res = symbol->input_declaration_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option  = none_opt;
   }
   return res;
 }
@@ -281,9 +309,13 @@ void *search_var_instance_decl_c::visit(input_declarations_c *symbol) {
 /* option -> may be NULL ! */
 void *search_var_instance_decl_c::visit(output_declarations_c *symbol) {
   current_vartype = output_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)
+    symbol->option->accept(*this);
   void *res = symbol->var_init_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option  = none_opt;
   }
   return res;
 }
@@ -291,6 +323,7 @@ void *search_var_instance_decl_c::visit(output_declarations_c *symbol) {
 /*  VAR_IN_OUT var_declaration_list END_VAR */
 void *search_var_instance_decl_c::visit(input_output_declarations_c *symbol) {
   current_vartype = inoutput_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
   void *res = symbol->var_declaration_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
@@ -311,9 +344,13 @@ void *search_var_instance_decl_c::visit(eno_param_declaration_c *symbol) {
 /* helper symbol for input_declarations */
 void *search_var_instance_decl_c::visit(var_declarations_c *symbol) {
   current_vartype = private_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)
+    symbol->option->accept(*this);
   void *res = symbol->var_init_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option = none_opt;
   }
   return res;
 }
@@ -321,9 +358,11 @@ void *search_var_instance_decl_c::visit(var_declarations_c *symbol) {
 /*  VAR RETAIN var_init_decl_list END_VAR */
 void *search_var_instance_decl_c::visit(retentive_var_declarations_c *symbol) {
   current_vartype = private_vt;
+  current_option  = retain_opt;
   void *res = symbol->var_init_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option = none_opt;
   }
   return res;
 }
@@ -333,9 +372,13 @@ void *search_var_instance_decl_c::visit(retentive_var_declarations_c *symbol) {
 //SYM_REF2(located_var_declarations_c, option, located_var_decl_list)
 void *search_var_instance_decl_c::visit(located_var_declarations_c *symbol) {
   current_vartype = located_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)
+    symbol->option->accept(*this);
   void *res = symbol->located_var_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option  = none_opt;
   }
   return res;
 }
@@ -345,9 +388,13 @@ void *search_var_instance_decl_c::visit(located_var_declarations_c *symbol) {
 //SYM_REF2(external_var_declarations_c, option, external_declaration_list)
 void *search_var_instance_decl_c::visit(external_var_declarations_c *symbol) {
   current_vartype = external_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)
+    symbol->option->accept(*this);
   void *res = symbol->external_declaration_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option = none_opt;
   }
   return res;
 }
@@ -357,9 +404,13 @@ void *search_var_instance_decl_c::visit(external_var_declarations_c *symbol) {
 //SYM_REF2(global_var_declarations_c, option, global_var_decl_list)
 void *search_var_instance_decl_c::visit(global_var_declarations_c *symbol) {
   current_vartype = global_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)
+    symbol->option->accept(*this);
   void *res = symbol->global_var_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option = none_opt;
   }
   return res;
 }
