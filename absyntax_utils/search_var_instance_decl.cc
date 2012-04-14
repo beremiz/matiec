@@ -30,27 +30,51 @@
  *
  */
 
-/* Determine the data type of a specific variable instance, including
- * function block instances.
- * A reference to the relevant variable declaration is returned.
- * The variable instance may NOT be a member of a structure of a member
+/* Search in a VAR* END_VAR declaration for the delcration of the specified variable instance. 
+ * Will return:
+ *     - the declaration itself (get_decl() )
+ *     - the type of declaration in which the variable was declared (get_vartype() )
+ *
+ * The variable instance may NOT be a member of a structure of a memeber
  * of a structure of an element of an array of ...
  *
- * example:
+ * For example, considering the following 'variables':
  *    window.points[1].coordinate.x
  *    window.points[1].colour
- *    etc... ARE NOT ALLOWED!
+ *    offset[99]
+ *
+ *   passing a reference to 'points', 'points[1]', 'points[1].colour', 'colour'
+ *    ARE NOT ALLOWED!
  *
  * This class must only be passed the name of the variable that will appear
  * in the variable declaration. In the above examples, this would be
- *   'window' !!
+ *   'window.points[1].coordinate.x'
+ *   'window.points[1].coordinate'
+ *   'window.points[1]'
+ *   'window'
+ *   'window.points[1].colour'
+ *   'offset'
+ *   'offset[99]'
  *
  *
- * If you need to pass a complete name of a variable instance (such as
- * 'window.points[1].coordinate.x') use the search_varfb_instance_type_c instead!
+ */
+ 
+/* Note: 
+ * Determining the declaration type of a specific variable instance (including
+ * function block instances) really means determining whether the variable was declared in a
+ *  VAR_INPUT
+ *  VAR_OUTPUT
+ *  VAR_IN_OUT
+ *  VAR
+ *  VAR_TEMP
+ *  VAR_EXTERNAL
+ *  VAR_GLOBAL
+ *  VAR <var_name> AT <location>   -> Located variable!
+ * 
  */
 
-/* Note that current_type_decl that this class returns may reference the
+/* Note:
+ *  The current_type_decl that this class returns may reference the
  * name of a type, or the type declaration itself!
  * For an example of the first, consider a variable declared as ...
  * x : AAA;
@@ -61,7 +85,146 @@
  * If it is the first, we will return a reference to the name, if the second
  * we return a reference to the declaration!!
  */
+
+
 #include "absyntax_utils.hh"
+
+
+
+
+/**********************************************/
+/*  A small helper visitor class, that will   */
+/*  return the name of a variable, as it will */
+/*  appear in the variable declaration.       */
+/**********************************************/
+/*  For ex.:
+ *       VAR
+ *          A : int;
+ *          B : ARRAY [1..9] of int;
+ *          C : some_struct_t;
+ *       END_VAR
+ *
+ *          A    := 56;
+ *          B[8] := 99;
+ *          C.e  := 77;
+ *
+ *       Calling this visitor class with symbolic_variable_c instance referencing 'A' in
+ *       the line 'A := 56', will return the string "A".
+ *
+ *       Calling this visitor class with array_variable_c instance referencing 'B[8]' in
+ *       the line 'B[8] := 99', will return the string "B".
+ *
+ *       Calling this visitor class with array_variable_c instance referencing 'C.e' in
+ *       the line 'C.e := 77', will return the string "C".
+ */
+class get_var_name_c : public search_visitor_c {
+  private:
+    static get_var_name_c *singleton_instance_;
+  public:
+    get_var_name_c(void)  {};
+    ~get_var_name_c(void) {};
+    
+    static token_c *get_name(symbol_c *symbol) {
+      if (NULL == singleton_instance_) singleton_instance_ = new get_var_name_c(); 
+      if (NULL == singleton_instance_) ERROR; 
+      
+      return (token_c *)(symbol->accept(*singleton_instance_));
+    }
+    
+  private:  
+    /*************************/
+    /* B.1 - Common elements */
+    /*************************/
+    /*******************************************/
+    /* B 1.1 - Letters, digits and identifiers */
+    /*******************************************/
+    // SYM_TOKEN(identifier_c)
+    void *visit(identifier_c *symbol);
+
+    /*********************/
+    /* B 1.4 - Variables */
+    /*********************/
+    // SYM_REF2(symbolic_variable_c, var_name, unused)
+    void *visit(symbolic_variable_c *symbol);
+
+    /********************************************/
+    /* B.1.4.1   Directly Represented Variables */
+    /********************************************/
+    // SYM_TOKEN(direct_variable_c)
+    // void *visit(direct_variable_c *symbol);
+
+    /*************************************/
+    /* B.1.4.2   Multi-element Variables */
+    /*************************************/
+    /*  subscripted_variable '[' subscript_list ']' */
+    // SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
+    void *visit(array_variable_c *symbol);
+
+    /* subscript_list ',' subscript */
+    // SYM_LIST(subscript_list_c)
+    // void *visit(subscript_list_c *symbol);
+
+    /*  record_variable '.' field_selector */
+    /*  WARNING: input and/or output variables of function blocks
+     *           may be accessed as fields of a tructured variable!
+     *           Code handling a structured_variable_c must take
+     *           this into account!
+     */
+    // SYM_REF2(structured_variable_c, record_variable, field_selector)
+    void *visit(structured_variable_c *symbol);
+};
+
+get_var_name_c *get_var_name_c::singleton_instance_ = NULL;
+
+
+
+/*************************/
+/* B.1 - Common elements */
+/*************************/
+/*******************************************/
+/* B 1.1 - Letters, digits and identifiers */
+/*******************************************/
+// SYM_TOKEN(identifier_c)
+void *get_var_name_c::visit(identifier_c *symbol) {return (void *)symbol;}
+
+/*********************/
+/* B 1.4 - Variables */
+/*********************/
+// SYM_REF2(symbolic_variable_c, var_name, unused)
+void *get_var_name_c::visit(symbolic_variable_c *symbol) {return symbol->var_name->accept(*this);}
+
+/********************************************/
+/* B.1.4.1   Directly Represented Variables */
+/********************************************/
+// SYM_TOKEN(direct_variable_c)
+
+/*************************************/
+/* B.1.4.2   Multi-element Variables */
+/*************************************/
+/*  subscripted_variable '[' subscript_list ']' */
+// SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
+void *get_var_name_c::visit(array_variable_c *symbol) {return symbol->subscripted_variable->accept(*this);}
+
+/* subscript_list ',' subscript */
+// SYM_LIST(subscript_list_c)
+
+/*  record_variable '.' field_selector */
+/*  WARNING: input and/or output variables of function blocks
+ *           may be accessed as fields of a tructured variable!
+ *           Code handling a structured_variable_c must take
+ *           this into account!
+ */
+// SYM_REF2(structured_variable_c, record_variable, field_selector)
+void *get_var_name_c::visit(structured_variable_c *symbol) {return symbol->record_variable->accept(*this);}
+
+
+
+
+
+
+
+
+
 
 
 search_var_instance_decl_c::search_var_instance_decl_c(symbol_c *search_scope) {
@@ -71,15 +234,15 @@ search_var_instance_decl_c::search_var_instance_decl_c(symbol_c *search_scope) {
   this->current_type_decl = NULL;
 }
 
-symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable_instance_name) {
+symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable) {
   this->current_vartype = none_vt;
-  this->search_name = variable_instance_name;
+  this->search_name = get_var_name_c::get_name(variable);
   return (symbol_c *)search_scope->accept(*this);
 }
 
-unsigned int search_var_instance_decl_c::get_vartype(symbol_c *variable_instance_name) {
+unsigned int search_var_instance_decl_c::get_vartype(symbol_c *variable) {
   this->current_vartype = none_vt;
-  this->search_name = variable_instance_name;
+  this->search_name = get_var_name_c::get_name(variable);
   search_scope->accept(*this);
   return current_vartype;
 }
@@ -236,7 +399,7 @@ void *search_var_instance_decl_c::visit(fb_name_list_c *symbol) {
   list_c *list = symbol;
   for(int i = 0; i < list->n; i++) {
     if (compare_identifiers(list->elements[i], search_name) == 0)
-  /* by now, current_fb_declaration should be != NULL */
+    /* by now, current_fb_declaration should be != NULL */
       return current_type_decl;
   }
   return NULL;
@@ -473,35 +636,3 @@ void *search_var_instance_decl_c::visit(single_resource_declaration_c *symbol) {
   return NULL;
 }
 
-#if 0
-/*********************/
-/* B 1.4 - Variables */
-/*********************/
-SYM_REF2(symbolic_variable_c, var_name, unused)
-
-/********************************************/
-/* B.1.4.1   Directly Represented Variables */
-/********************************************/
-SYM_TOKEN(direct_variable_c)
-
-/*************************************/
-/* B.1.4.2   Multi-element Variables */
-/*************************************/
-/*  subscripted_variable '[' subscript_list ']' */
-SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
-
-/* subscript_list ',' subscript */
-SYM_LIST(subscript_list_c)
-
-/*  record_variable '.' field_selector */
-/*  WARNING: input and/or output variables of function blocks
- *           may be accessed as fields of a tructured variable!
- *           Code handling a structured_variable_c must take
- *           this into account!
- */
-SYM_REF2(structured_variable_c, record_variable, field_selector)
-
-
-
-};
-#endif

@@ -31,26 +31,51 @@
  */
 
 
-/* Determine the data type of a specific variable instance, including
- * function block instances.
- * A reference to the relevant variable declaration is returned.
+/* Search in a VAR* END_VAR declaration for the delcration of the specified variable instance. 
+ * Will return:
+ *     - the declaration itself (get_decl() )
+ *     - the type of declaration in which the variable was declared (get_vartype() )
+ *
  * The variable instance may NOT be a member of a structure of a memeber
  * of a structure of an element of an array of ...
  *
- * example:
+ * For example, considering the following 'variables':
  *    window.points[1].coordinate.x
  *    window.points[1].colour
- *    etc... ARE NOT ALLOWED!
+ *    offset[99]
+ *
+ *   passing a reference to 'points', 'points[1]', 'points[1].colour', 'colour'
+ *    ARE NOT ALLOWED!
  *
  * This class must only be passed the name of the variable that will appear
  * in the variable declaration. In the above examples, this would be
- *   'window' !!
+ *   'window.points[1].coordinate.x'
+ *   'window.points[1].coordinate'
+ *   'window.points[1]'
+ *   'window'
+ *   'window.points[1].colour'
+ *   'offset'
+ *   'offset[99]'
  *
  *
- * If you need to pass a complete name of a variable instance (such as
- * 'window.points[1].coordinate.x') use the search_varfb_instance_type_c instead!
  */
-/* Note that current_type_decl that this class returns may reference the
+ 
+/* Note: 
+ * Determining the declaration type of a specific variable instance (including
+ * function block instances) really means determining whether the variable was declared in a
+ *  VAR_INPUT
+ *  VAR_OUTPUT
+ *  VAR_IN_OUT
+ *  VAR
+ *  VAR_TEMP
+ *  VAR_EXTERNAL
+ *  VAR_GLOBAL
+ *  VAR <var_name> AT <location>   -> Located variable!
+ * 
+ */
+
+/* Note:
+ *  The current_type_decl that this class returns may reference the
  * name of a type, or the type declaration itself!
  * For an example of the first, consider a variable declared as ...
  * x : AAA;
@@ -265,35 +290,6 @@ class search_var_instance_decl_c: public search_visitor_c {
     /* task_configuration_list program_configuration_list */
     // SYM_REF2(single_resource_declaration_c, task_configuration_list, program_configuration_list)
     void *visit(single_resource_declaration_c *symbol);
-
-#if 0
-/*********************/
-/* B 1.4 - Variables */
-/*********************/
-SYM_REF2(symbolic_variable_c, var_name, unused)
-
-/********************************************/
-/* B.1.4.1   Directly Represented Variables */
-/********************************************/
-SYM_TOKEN(direct_variable_c)
-
-/*************************************/
-/* B.1.4.2   Multi-element Variables */
-/*************************************/
-/*  subscripted_variable '[' subscript_list ']' */
-SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
-
-/* subscript_list ',' subscript */
-SYM_LIST(subscript_list_c)
-
-/*  record_variable '.' field_selector */
-/*  WARNING: input and/or output variables of function blocks
- *           may be accessed as fields of a tructured variable!
- *           Code handling a structured_variable_c must take
- *           this into account!
- */
-SYM_REF2(structured_variable_c, record_variable, field_selector)
-#endif
 
 }; // search_var_instance_decl_c
 
