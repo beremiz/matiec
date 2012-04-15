@@ -44,17 +44,20 @@
 class lvalue_check_c: public iterator_visitor_c {
 
   private:
-	search_varfb_instance_type_c *search_varfb_instance_type;
-	search_var_instance_decl_c *search_var_instance_decl;
+    search_varfb_instance_type_c *search_varfb_instance_type;
+    search_var_instance_decl_c *search_var_instance_decl;
     search_base_type_c search_base_type;
     int error_found;
     int current_display_error_level;
     std::vector <symbol_c *> control_variables;
-    symbol_c *base_type(symbol_c *symbol);
-    void check_for_controlvar_assignment(symbolic_variable_c *lvalue);
-    void check_output_assignment(symbolic_variable_c *lvalue);
-    void check_constant_assignment(symbolic_variable_c *lvalue);
-    void check_function_call_parameter(function_invocation_c *f_call);
+
+    void verify_is_lvalue              (symbol_c *lvalue);
+    void check_assignment_to_controlvar(symbol_c *lvalue);
+    void check_assignment_to_output    (symbol_c *lvalue);
+    void check_assignment_to_constant  (symbol_c *lvalue);
+    void check_assignment_to_expression(symbol_c *lvalue);
+    void check_formal_call   (symbol_c *f_call, symbol_c *f_decl);
+    void check_nonformal_call(symbol_c *f_call, symbol_c *f_decl);
 
 
   public:

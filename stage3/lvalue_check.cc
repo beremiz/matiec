@@ -70,20 +70,23 @@ int lvalue_check_c::get_error_found() {
 	return error_found;
 }
 
+
+#include <strings.h>
 /* No writing to iterator variables (used in FOR loops) inside the loop itself */
-void lvalue_check_c::check_for_controlvar_assignment(symbolic_variable_c * lvalue) {
+void lvalue_check_c::check_assignment_to_controlvar(symbol_c *lvalue) {
 	for (unsigned int i = 0; i < control_variables.size(); i++) {
 		symbolic_variable_c *cvar = (symbolic_variable_c *)control_variables[i];
-		if (strcasecmp(((identifier_c *)lvalue->var_name)->value, ((identifier_c *)cvar->var_name)->value) == 0) {
+		if (strcasecmp(((identifier_c *)((symbolic_variable_c *)lvalue)->var_name)->value, ((identifier_c *)((symbolic_variable_c *)cvar)->var_name)->value) == 0) {
 			STAGE3_ERROR(0, lvalue, lvalue, "Assignment to FOR control variable are not be allowed.");
 			break;
 		}
 	}
 }
 
+
 /* fb_instance.var := ...  is not valid if var is output (not input ??) variable */
-void lvalue_check_c::check_output_assignment(symbolic_variable_c * lvalue) {
-	symbol_c *type_id = search_varfb_instance_type->get_basetype_id(lvalue->var_name);
+void lvalue_check_c::check_assignment_to_output(symbol_c * lvalue) {
+	symbol_c *type_id = search_varfb_instance_type->get_basetype_id(lvalue);
 	if (NULL != type_id) {
 		function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(type_id);
 		if (function_block_type_symtable.end_value() != fb_decl) {
@@ -91,49 +94,83 @@ void lvalue_check_c::check_output_assignment(symbolic_variable_c * lvalue) {
 			structured_variable_c * str_var = (structured_variable_c *)lvalue;
 			unsigned int vartype = search_var_instance_decl.get_vartype(str_var->field_selector);
 			if (vartype == search_var_instance_decl_c::output_vt)
-				STAGE3_ERROR(0, lvalue, lvalue, "Assignment to FB output field variable are not be allowed.");
+				STAGE3_ERROR(0, lvalue, lvalue, "Assignment to FB output field variable is not be allowed.");
 		}
 	}
 }
+
 
 /*  No writing to CONSTANTs */
-void lvalue_check_c::check_constant_assignment(symbolic_variable_c *lvalue) {
-	unsigned int option = search_var_instance_decl->get_option(lvalue->var_name);
+void lvalue_check_c::check_assignment_to_constant(symbol_c *lvalue) {
+	unsigned int option = search_var_instance_decl->get_option(lvalue);
 	if (option == search_var_instance_decl_c::constant_opt) {
-		STAGE3_ERROR(0, lvalue, lvalue, "Assignment to CONSTANT variables are not be allowed.");
+		STAGE3_ERROR(0, lvalue, lvalue, "Assignment to CONSTANT variables is not be allowed.");
 	}
 }
 
-/* function_name(45)  will check whether the first parameter of the function is not an output variable. */
-/* function_name(var_name)  will check whether var_name is lvalue if the first parameter of the function is an output variable. */
-void lvalue_check_c::check_function_call_parameter(function_invocation_c *f_call) {
-	function_declaration_c *f_decl;
-	identifier_c *param_name;
-	symbol_c *call_param_value;
 
-	if (NULL == f_call)
-		return;
-	/* We use called_function_declaration and for this reason LVALUE
-	 * check must be run after DATA TYPE check
+/*  No assigning values to expressions. */
+void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
+	/* TODO: check whether the lvalue is an expresion! */
+	/* This may occur in function invocations, when passing values (possibly an expression) to one 
+	 * of the function's OUTPUT parameters.
 	 */
-	if (NULL == f_call->called_function_declaration)
-		ERROR;
-	f_decl = (function_declaration_c *)f_call->called_function_declaration;
-	search_constant_type_c search_constant_type;
-	function_call_param_iterator_c fcp_iterator(f_call);
+}
+
+
+
+void lvalue_check_c::verify_is_lvalue(symbol_c *lvalue) {
+	check_assignment_to_controlvar(lvalue);
+	check_assignment_to_output(lvalue);
+	check_assignment_to_constant(lvalue);
+	check_assignment_to_expression(lvalue);
+}
+
+
+
+
+/* check whether all values passed to OUT or IN_OUT parameters are legal lvalues. */
+void lvalue_check_c::check_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
+  /* TODO */
+}
+
+  
+/* check whether all values passed to OUT or IN_OUT parameters are legal lvalues. */
+void lvalue_check_c::check_formal_call(symbol_c *f_call, symbol_c *f_decl) {
+	/* if data type semantic verification was unable to determine which function is being called,
+	 * then it does not make sense to go ahead and check for lvalues to unknown parameters.
+	 * We simply bug out!
+	 */
+	if (NULL == f_decl) return;
+	
+	symbol_c *call_param_name;
 	function_param_iterator_c       fp_iterator(f_decl);
-	do {
-		param_name = fp_iterator.next();
-		if(param_name == NULL) return;
-	} while ((strcmp(param_name->value, "EN")  == 0) || (strcmp(param_name->value, "ENO") == 0));
-	while((call_param_value = fcp_iterator.next_nf()) != NULL) {
-		if (search_constant_type.is_constant_value(call_param_value)) {
-			if (function_param_iterator_c::direction_out == fp_iterator.param_direction())
-				STAGE3_ERROR(0, call_param_value, call_param_value, "Assignment Constant value to Output parameter are not be allowed.");
+	function_call_param_iterator_c fcp_iterator(f_call);
+
+	/* Iterating through the formal parameters of the function call */
+	while((call_param_name = fcp_iterator.next_f()) != NULL) {
+
+		/* Obtaining the value being passed in the function call */
+		symbol_c *call_param_value = fcp_iterator.get_current_value();
+		if (NULL == call_param_value) ERROR;
+
+		/* Find the corresponding parameter in function declaration, and it's direction (IN, OUT, IN_OUT) */
+		identifier_c *param_name = fp_iterator.search(call_param_name);
+		function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
+		
+		/* We only check if 'call_param_value' is a valid lvalue if the value is being passed
+		 * to a valid paramater of the function being called, and that parameter is either OUT or IN_OUT.
+		 */
+		if ((param_name != NULL) && 
+		    ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction))) {
+			verify_is_lvalue(call_param_value);
 		}
-		param_name = fp_iterator.next();
 	}
 }
+
+
+
+
 
 
 
@@ -188,8 +225,12 @@ void *lvalue_check_c::visit(program_declaration_c *symbol) {
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
+// SYM_REF3(function_invocation_c, function_name, formal_param_list, nonformal_param_list, symbol_c *called_function_declaration; int extensible_param_count; std::vector <symbol_c *> candidate_functions;)
 void *lvalue_check_c::visit(function_invocation_c *symbol) {
-	check_function_call_parameter(symbol);
+	if (NULL != symbol->formal_param_list)
+		check_formal_call(symbol, symbol->called_function_declaration);
+	if (NULL != symbol->nonformal_param_list)
+		check_nonformal_call(symbol, symbol->called_function_declaration);
 	return NULL;
 }
 
@@ -197,12 +238,7 @@ void *lvalue_check_c::visit(function_invocation_c *symbol) {
 /* B 3.2.1 Assignment Statements */
 /*********************************/
 void *lvalue_check_c::visit(assignment_statement_c *symbol) {
-	symbolic_variable_c *lvalue;
-
-	lvalue = (symbolic_variable_c *)symbol->l_exp;
-	check_for_controlvar_assignment(lvalue);
-	check_output_assignment(lvalue);
-	check_constant_assignment(lvalue);
+	verify_is_lvalue(symbol->l_exp);
 	/* We call visit r_exp to check function_call */
 	symbol->r_exp->accept(*this);
 	return NULL;
