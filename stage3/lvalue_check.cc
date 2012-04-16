@@ -44,7 +44,7 @@
                                                  LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column);\
     fprintf(stderr, __VA_ARGS__);                                                                                           \
     fprintf(stderr, "\n");                                                                                                  \
-    error_found = true;                                                                                                     \
+    error_count++;                                                                                                     \
   }                                                                                                                         \
 }
 
@@ -60,14 +60,14 @@
 
 
 lvalue_check_c::lvalue_check_c(symbol_c *ignore) {
-	error_found = false;
+	error_count = 0;
 }
 
 lvalue_check_c::~lvalue_check_c(void) {
 }
 
-int lvalue_check_c::get_error_found() {
-	return error_found;
+int lvalue_check_c::get_error_count() {
+	return error_count;
 }
 
 
@@ -84,18 +84,47 @@ void lvalue_check_c::check_assignment_to_controlvar(symbol_c *lvalue) {
 }
 
 
-/* fb_instance.var := ...  is not valid if var is output (not input ??) variable */
-void lvalue_check_c::check_assignment_to_output(symbol_c * lvalue) {
-	symbol_c *type_id = search_varfb_instance_type->get_basetype_id(lvalue);
-	if (NULL != type_id) {
-		function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(type_id);
-		if (function_block_type_symtable.end_value() != fb_decl) {
-			search_var_instance_decl_c   search_var_instance_decl(fb_decl);
-			structured_variable_c * str_var = (structured_variable_c *)lvalue;
-			unsigned int vartype = search_var_instance_decl.get_vartype(str_var->field_selector);
-			if (vartype == search_var_instance_decl_c::output_vt)
-				STAGE3_ERROR(0, lvalue, lvalue, "Assignment to FB output field variable is not be allowed.");
+/* fb_instance.var := ...  is not valid if var is output variable */
+/* NOTE, if a fb_instance1.fb_instance2.fb_instance3.var is used, we must iteratively check that none of the 
+ *       FB records are declared as OUTPUT variables!!  
+ *       This is the reason why we have the while() loop in this function!
+ */
+void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
+	decompose_var_instance_name_c decompose_lvalue(lvalue);
+	search_base_type_c            search_base_type;
+
+	symbol_c *struct_elem = decompose_lvalue.next_part();
+	symbol_c *type_decl   = search_var_instance_decl->get_decl(struct_elem);
+	// symbol_c *type_id  = spec_init_sperator_c::get_spec(type_decl); /* this is not required! search_base_type_c can handle spec_init symbols! */
+	symbol_c *basetype_id = search_base_type.get_basetype_id(/*type_id*/ type_decl);
+	/* If we can not determine the data type of the element, then the code must have a data type semantic error.
+	 * This will have been caught by the data type semantic verifier, so we do not bother with this anymore!
+	 */
+	if (NULL == basetype_id) return;
+
+	/* Determine if the record/structure element is of a FB type. */
+	/* NOTE: If the structure element is not a FB type, then we can quit this check.
+	 *       Remember that the standard does not allow a STRUCT data type to have elements that are FB instances!
+	 *       Similarly, arrays of FB instances is also not allowed.
+	 *       So, as soon as we find one record/structure element that is not a FB, no other record/structure element
+	 *       will be of FB type, which means we can quit this check!
+	 */
+	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(basetype_id);
+	if (function_block_type_symtable.end_value() == fb_decl) return;
+
+	while (NULL != (struct_elem = decompose_lvalue.next_part())) {
+		search_var_instance_decl_c   fb_search_var_instance_decl(fb_decl);
+		if (search_var_instance_decl_c::output_vt == fb_search_var_instance_decl.get_vartype(struct_elem)) {
+			STAGE3_ERROR(0, struct_elem, struct_elem, "Assignment to FB output variable is not allowed.");
+			return; /* no need to carry on checking once the first error is found! */
 		}
+
+		/* prepare for any possible further record/structure elements */
+		type_decl   = fb_search_var_instance_decl.get_decl(struct_elem);
+		basetype_id = search_base_type.get_basetype_id(type_decl);
+		if (NULL == basetype_id) return; /* same comment as above... */
+		fb_decl = function_block_type_symtable.find_value(basetype_id);
+		if (function_block_type_symtable.end_value() == fb_decl) return; /* same comment as above... */
 	}
 }
 
@@ -113,17 +142,17 @@ void lvalue_check_c::check_assignment_to_constant(symbol_c *lvalue) {
 void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
 	/* TODO: check whether the lvalue is an expresion! */
 	/* This may occur in function invocations, when passing values (possibly an expression) to one 
-	 * of the function's OUTPUT parameters.
+	 * of the function's OUTPUT or IN_OUT parameters.
 	 */
 }
 
 
 
 void lvalue_check_c::verify_is_lvalue(symbol_c *lvalue) {
+	check_assignment_to_expression(lvalue);
 	check_assignment_to_controlvar(lvalue);
 	check_assignment_to_output(lvalue);
 	check_assignment_to_constant(lvalue);
-	check_assignment_to_expression(lvalue);
 }
 
 
@@ -161,8 +190,7 @@ void lvalue_check_c::check_formal_call(symbol_c *f_call, symbol_c *f_decl) {
 		/* We only check if 'call_param_value' is a valid lvalue if the value is being passed
 		 * to a valid paramater of the function being called, and that parameter is either OUT or IN_OUT.
 		 */
-		if ((param_name != NULL) && 
-		    ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction))) {
+		if ((param_name != NULL) && ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction))) {
 			verify_is_lvalue(call_param_value);
 		}
 	}
@@ -227,10 +255,8 @@ void *lvalue_check_c::visit(program_declaration_c *symbol) {
 /***********************/
 // SYM_REF3(function_invocation_c, function_name, formal_param_list, nonformal_param_list, symbol_c *called_function_declaration; int extensible_param_count; std::vector <symbol_c *> candidate_functions;)
 void *lvalue_check_c::visit(function_invocation_c *symbol) {
-	if (NULL != symbol->formal_param_list)
-		check_formal_call(symbol, symbol->called_function_declaration);
-	if (NULL != symbol->nonformal_param_list)
-		check_nonformal_call(symbol, symbol->called_function_declaration);
+	if (NULL != symbol->formal_param_list   )  check_formal_call   (symbol, symbol->called_function_declaration);
+	if (NULL != symbol->nonformal_param_list)  check_nonformal_call(symbol, symbol->called_function_declaration);
 	return NULL;
 }
 

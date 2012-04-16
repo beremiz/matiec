@@ -56,18 +56,29 @@ static int type_safety(symbol_c *tree_root){
 	tree_root->accept(narrow_candidate_datatypes);
 	print_datatypes_error_c print_datatypes_error(tree_root);
 	tree_root->accept(print_datatypes_error);
-	if (print_datatypes_error.get_error_found())
-		return -1;
-	lvalue_check_c lvalue_check(tree_root);
-	tree_root->accept(lvalue_check);
-	if (lvalue_check.get_error_found())
-		return -1;
-	return 0;
+	return print_datatypes_error.get_error_count();
 }
 
 
+/* Type safety analysis assumes that flow control analysis has already been completed,
+ * so be sure to call flow_control_analysis() before calling this function
+ */
+static int lvalue_check(symbol_c *tree_root){
+	lvalue_check_c lvalue_check(tree_root);
+	tree_root->accept(lvalue_check);
+	return lvalue_check.get_error_count();
+}
+
 
 int stage3(symbol_c *tree_root){
-	flow_control_analysis(tree_root);
-	return type_safety(tree_root);
+	int error_count = 0;
+	error_count += flow_control_analysis(tree_root);
+	error_count += type_safety(tree_root);
+	error_count += lvalue_check(tree_root);
+	
+	if (error_count > 0) {
+		fprintf(stderr, "%d errors found. Bailing out!\n", error_count); 
+		return -1;
+	}
+	return 0;
 }

@@ -61,7 +61,7 @@
     fprintf(stderr, __VA_ARGS__);                                                                                           \
     fprintf(stderr, "\n");                                                                                                  \
     il_error = true;                                                                                                        \
-    error_found = true;                                                                                                     \
+    error_count++;                                                                                                     \
   }                                                                                                                         \
 }  
 
@@ -80,7 +80,7 @@
 static int debug = 0;
 
 print_datatypes_error_c::print_datatypes_error_c(symbol_c *ignore) {
-	error_found = false;
+	error_count = 0;
 	warning_found = false;
 	current_display_error_level = error_level_default;
 }
@@ -88,8 +88,8 @@ print_datatypes_error_c::print_datatypes_error_c(symbol_c *ignore) {
 print_datatypes_error_c::~print_datatypes_error_c(void) {
 }
 
-int print_datatypes_error_c::get_error_found() {
-	return error_found;
+int print_datatypes_error_c::get_error_count() {
+	return error_count;
 }
 
 

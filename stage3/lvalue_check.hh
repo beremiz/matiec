@@ -47,7 +47,7 @@ class lvalue_check_c: public iterator_visitor_c {
     search_varfb_instance_type_c *search_varfb_instance_type;
     search_var_instance_decl_c *search_var_instance_decl;
     search_base_type_c search_base_type;
-    int error_found;
+    int error_count;
     int current_display_error_level;
     std::vector <symbol_c *> control_variables;
 
@@ -63,7 +63,7 @@ class lvalue_check_c: public iterator_visitor_c {
   public:
     lvalue_check_c(symbol_c *ignore);
     virtual ~lvalue_check_c(void);
-    int get_error_found();
+    int get_error_count();
 
     /**************************************/
     /* B 1.5 - Program organisation units */

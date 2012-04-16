@@ -73,7 +73,7 @@ class print_datatypes_error_c: public iterator_visitor_c {
      */
     int  il_parenthesis_level;
     bool il_error;
-    bool error_found;
+    int  error_count;
     bool warning_found;
 
     /* the current data type of the data stored in the IL stack, i.e. the default variable */
@@ -99,7 +99,7 @@ class print_datatypes_error_c: public iterator_visitor_c {
   public:
     print_datatypes_error_c(symbol_c *ignore);
     virtual ~print_datatypes_error_c(void);
-    int get_error_found();
+    int get_error_count();
 
 
     /*********************/
