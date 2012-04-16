@@ -13,6 +13,7 @@ libabsyntax_utils_a_SOURCES = \
 	function_param_iterator.cc \
 	get_function_type.cc \
 	get_sizeof_datatype.cc \
+	get_var_name.cc \
 	search_il_label.cc \
 	search_base_type.cc \
 	search_constant_type.cc \

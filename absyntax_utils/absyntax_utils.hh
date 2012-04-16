@@ -121,6 +121,7 @@ extern symtable_c<symbol_c *, &null_symbol5> enumerated_value_symtable;
 #include "get_sizeof_datatype.hh"
 #include "get_function_type.h"
 #include "search_il_label.hh"
+#include "get_var_name.hh"
 
 /***********************************************************************/
 /***********************************************************************/
