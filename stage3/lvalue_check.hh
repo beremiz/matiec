@@ -49,7 +49,7 @@ class lvalue_check_c: public iterator_visitor_c {
     search_base_type_c search_base_type;
     int error_count;
     int current_display_error_level;
-    std::vector <symbol_c *> control_variables;
+    std::vector <token_c *> control_variables;
 
     void verify_is_lvalue              (symbol_c *lvalue);
     void check_assignment_to_controlvar(symbol_c *lvalue);

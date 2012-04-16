@@ -75,9 +75,9 @@ int lvalue_check_c::get_error_count() {
 /* No writing to iterator variables (used in FOR loops) inside the loop itself */
 void lvalue_check_c::check_assignment_to_controlvar(symbol_c *lvalue) {
 	for (unsigned int i = 0; i < control_variables.size(); i++) {
-		symbolic_variable_c *cvar = (symbolic_variable_c *)control_variables[i];
-		if (strcasecmp(((identifier_c *)((symbolic_variable_c *)lvalue)->var_name)->value, ((identifier_c *)((symbolic_variable_c *)cvar)->var_name)->value) == 0) {
-			STAGE3_ERROR(0, lvalue, lvalue, "Assignment to FOR control variable are not be allowed.");
+		token_c *lvalue_name = get_var_name_c::get_name(lvalue);
+		if (compare_identifiers(lvalue_name, control_variables[i]) == 0) {
+			STAGE3_ERROR(0, lvalue, lvalue, "Assignment to FOR control variable is not allowed.");
 			break;
 		}
 	}
@@ -274,7 +274,7 @@ void *lvalue_check_c::visit(assignment_statement_c *symbol) {
 /* B 3.2.4 Iteration Statements */
 /********************************/
 void *lvalue_check_c::visit(for_statement_c *symbol) {
-	control_variables.push_back(symbol->control_variable);
+	control_variables.push_back(get_var_name_c::get_name(symbol->control_variable));
 	symbol->statement_list->accept(*this);
 	control_variables.pop_back();
 	return NULL;
