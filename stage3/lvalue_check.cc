@@ -159,9 +159,45 @@ void lvalue_check_c::verify_is_lvalue(symbol_c *lvalue) {
 
 
 /* check whether all values passed to OUT or IN_OUT parameters are legal lvalues. */
+/*
+ * All parameters being passed to the called function MUST be in the parameter list to which f_call points to!
+ * This means that, for non formal function calls in IL, de current (default value) must be artificially added to the
+ * beginning of the parameter list BEFORE calling handle_function_call().
+ */
+#include <string.h> /* required for strcmp() */
 void lvalue_check_c::check_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
-  /* TODO */
+	symbol_c *call_param_value;
+	identifier_c *param_name;
+	function_param_iterator_c       fp_iterator(f_decl);
+	function_call_param_iterator_c fcp_iterator(f_call);
+
+	/* Iterating through the non-formal parameters of the function call */
+	while((call_param_value = fcp_iterator.next_nf()) != NULL) {
+		/* Iterate to the next parameter of the function being called.
+		 * Get the name of that parameter, and ignore if EN or ENO.
+		 */
+		do {
+			param_name = fp_iterator.next();
+			/* If there is no other parameter declared, then we are passing too many parameters... */
+			/* This error should have been caught in data type verification, so we simply abandon our check! */
+			if(param_name == NULL) return;
+		} while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
+
+		/* Find the corresponding parameter in function declaration, and it's direction (IN, OUT, IN_OUT) */
+		function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
+		
+		/* We only check if 'call_param_value' is a valid lvalue if the value is being passed
+		 * to a valid paramater of the function being called, and that parameter is either OUT or IN_OUT.
+		 */
+		if ((param_name != NULL) && ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction))) {
+			verify_is_lvalue(call_param_value);
+		}
+	}
 }
+
+
+
+
 
   
 /* check whether all values passed to OUT or IN_OUT parameters are legal lvalues. */
