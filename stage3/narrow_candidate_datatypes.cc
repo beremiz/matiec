@@ -96,6 +96,12 @@ static void set_datatype_in_prev_il_instructions(symbol_c *datatype, il_instruct
 
 
 bool narrow_candidate_datatypes_c::is_widening_compatible(const struct widen_entry widen_table[], symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, bool *deprecated_status) {
+	/* NOTE: According to our algorithm, left_type and right_type should never by NULL (if they are, we have an internal compiler error!
+	 *       However, result_type may be NULL if the code has a data type semantic error!
+	 */
+	if ((NULL == left_type) || (NULL == right_type) || (NULL == result_type))
+		return false;
+
 	for (int k = 0; NULL != widen_table[k].left;  k++) {
 		if        ((typeid(*left_type)   == typeid(*widen_table[k].left))
 		        && (typeid(*right_type)  == typeid(*widen_table[k].right))
