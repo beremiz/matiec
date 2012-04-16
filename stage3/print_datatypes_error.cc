@@ -1249,7 +1249,7 @@ void *print_datatypes_error_c::visit(for_statement_c *symbol) {
 
 void *print_datatypes_error_c::visit(while_statement_c *symbol) {
 	symbol->expression->accept(*this);
-	if (symbol->candidate_datatypes.size() != 1) {
+	if (!is_type_valid(symbol->expression->datatype)) {
 		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'WHILE' condition.");
 		return NULL;
 	}
@@ -1259,7 +1259,7 @@ void *print_datatypes_error_c::visit(while_statement_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(repeat_statement_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1) {
+	if (!is_type_valid(symbol->expression->datatype)) {
 		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'REPEAT' condition.");
 		return NULL;
 	}
