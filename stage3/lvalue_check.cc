@@ -93,8 +93,15 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 	decompose_var_instance_name_c decompose_lvalue(lvalue);
 	search_base_type_c            search_base_type;
 
+	/* Get the first element/record of the potentially structured variable symbol */
+	/* Note that if symbol is pointing to an expression (or simply a literal value), it will return a NULL.
+	 * Once we have implemented the check_assignment_to_expression() method, and abort calling the other checks (including this one)
+	 * when an expression is found, we may replace this check with an assertion...
+	 * if (NULL == struct_elem) ERROR;
+	 */
 	symbol_c *struct_elem = decompose_lvalue.next_part();
 	if (NULL == struct_elem) return;
+	
 	symbol_c *type_decl   = search_var_instance_decl->get_decl(struct_elem);
 	// symbol_c *type_id  = spec_init_sperator_c::get_spec(type_decl); /* this is not required! search_base_type_c can handle spec_init symbols! */
 	symbol_c *basetype_id = search_base_type.get_basetype_id(/*type_id*/ type_decl);
