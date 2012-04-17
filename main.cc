@@ -124,6 +124,7 @@ int main(int argc, char **argv) {
   char * builddir = NULL;
   stage1_2_options_t stage1_2_options = {false, false, NULL};
   int optres, errflg = 0;
+  int path_len;
 /*
   extern char *optarg;
   extern int optind, optopt;
@@ -148,9 +149,19 @@ int main(int argc, char **argv) {
       stage1_2_options.safe_extensions = true;
       break;
     case 'I':
+      /* NOTE: To improve the usability under windows:
+       *       We delete last char's path if it ends with "\".
+       *       In this way compiler front-end accepts paths with or without
+       *       slash terminator.
+       */
+      path_len = strlen(optarg) - 1;
+      if (optarg[path_len] == '\\') optarg[path_len]= '\0';
       stage1_2_options.includedir = optarg;
       break;
     case 'T':
+      /* NOTE: see note above */
+      path_len = strlen(optarg) - 1;
+      if (optarg[path_len] == '\\') optarg[path_len]= '\0';
       builddir = optarg;
       break;
     case ':':       /* -I or -T without operand */
