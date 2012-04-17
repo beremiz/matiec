@@ -94,6 +94,7 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 	search_base_type_c            search_base_type;
 
 	symbol_c *struct_elem = decompose_lvalue.next_part();
+	if (NULL == struct_elem) return;
 	symbol_c *type_decl   = search_var_instance_decl->get_decl(struct_elem);
 	// symbol_c *type_id  = spec_init_sperator_c::get_spec(type_decl); /* this is not required! search_base_type_c can handle spec_init symbols! */
 	symbol_c *basetype_id = search_base_type.get_basetype_id(/*type_id*/ type_decl);
