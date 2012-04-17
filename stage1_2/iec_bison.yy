@@ -1909,13 +1909,13 @@ numeric_literal:
 
 integer_literal:
   integer_type_name '#' signed_integer
-	{$$ = new integer_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new integer_literal_c($1, $3, locloc(@$));}
 | integer_type_name '#' binary_integer
-	{$$ = new integer_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new integer_literal_c($1, $3, locloc(@$));}
 | integer_type_name '#' octal_integer
-	{$$ = new integer_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new integer_literal_c($1, $3, locloc(@$));}
 | integer_type_name '#' hex_integer
-	{$$ = new integer_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new integer_literal_c($1, $3, locloc(@$));}
 /* NOTE: see note in the definition of constant for reason
  * why signed_integer, binary_integer, octal_integer
  * and hex_integer are missing here!
@@ -1951,7 +1951,7 @@ real_literal:
  */
 /*  signed_real */
   real_type_name '#' signed_real
-	{$$ = new real_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new real_literal_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | real_type_name signed_real
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'#' missing between real type name and value in real literal."); yynerrs++;}
@@ -1975,13 +1975,13 @@ signed_real:
 
 bit_string_literal:
   bit_string_type_name '#' integer  /* i.e. unsigned_integer */
-	{$$ = new bit_string_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new bit_string_literal_c($1, $3, locloc(@$));}
 | bit_string_type_name '#' binary_integer
-	{$$ = new bit_string_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new bit_string_literal_c($1, $3, locloc(@$));}
 | bit_string_type_name '#' octal_integer
-	{$$ = new bit_string_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new bit_string_literal_c($1, $3, locloc(@$));}
 | bit_string_type_name '#' hex_integer
-	{$$ = new bit_string_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new bit_string_literal_c($1, $3, locloc(@$));}
 /* NOTE: see note in the definition of constant for reason
  * why unsigned_integer, binary_integer, octal_integer
  * and hex_integer are missing here!
@@ -6287,7 +6287,7 @@ instruction_list:
   il_instruction
 	{$$ = new instruction_list_c(locloc(@$)); $$->add_element($1);}
 | any_pragma eol_list
-	{$$ = new instruction_list_c(locloc(@$)); $$->add_element($1);}
+	{$$ = new instruction_list_c(locloc(@1)); $$->add_element($1);} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | instruction_list il_instruction
 	{$$ = $1; $$->add_element($2);}
 | instruction_list any_pragma
@@ -6298,11 +6298,11 @@ instruction_list:
 
 il_instruction:
   il_incomplete_instruction eol_list
-	{$$ = new il_instruction_c(NULL, $1, locloc(@$));}
+	{$$ = new il_instruction_c(NULL, $1, locloc(@1));} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | label ':' il_incomplete_instruction eol_list
-	{$$ = new il_instruction_c($1, $3, locloc(@$));}
+	{$$ = new il_instruction_c($1, $3, locf(@1), locl(@3));} /* locf(@1), locl(@3) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | label ':' eol_list
-	{$$ = new il_instruction_c($1, NULL, locloc(@$));}
+	{$$ = new il_instruction_c($1, NULL, locf(@1), locl(@2));} /* locf(@1), locl(@2) is not a bug! We ignore trailing EOLs when determining symbol location! */
 /* ERROR_CHECK_BEGIN */
 | error eol_list
 	{$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid IL instruction."); yyerrok;}
@@ -6637,11 +6637,11 @@ simple_instr_list:
 
 il_simple_instruction:
   il_simple_operation eol_list
-	{$$ = new il_simple_instruction_c($1, locloc(@$));}
+	{$$ = new il_simple_instruction_c($1, locloc(@1));} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | il_expression eol_list
-	{$$ = new il_simple_instruction_c($1, locloc(@$));}
+	{$$ = new il_simple_instruction_c($1, locloc(@1));} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | il_formal_funct_call eol_list
-	{$$ = new il_simple_instruction_c($1, locloc(@$));}
+	{$$ = new il_simple_instruction_c($1, locloc(@1));} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 /* ERROR_CHECK_BEGIN */
 | il_expression error
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "EOL missing after expression IL instruction."); yyerrok;}
