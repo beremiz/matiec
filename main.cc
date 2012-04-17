@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
     /* moved to bison, although it could perfectly well still be here instead of in bison code. */
   //add_en_eno_param_decl_c::add_to(tree_root);
 
-  /* Only very simple (not yet complete) data type checking currently implemented... */
+  /* Do semantic verification of code (data type and lvalue checking currently implemented) */
   if (stage3(tree_root) < 0)
     return EXIT_FAILURE;
   

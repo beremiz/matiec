@@ -77,7 +77,7 @@ int stage3(symbol_c *tree_root){
 	error_count += lvalue_check(tree_root);
 	
 	if (error_count > 0) {
-		fprintf(stderr, "%d errors found. Bailing out!\n", error_count); 
+		fprintf(stderr, "%d error(s) found. Bailing out!\n", error_count); 
 		return -1;
 	}
 	return 0;

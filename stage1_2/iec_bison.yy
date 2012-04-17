@@ -8059,11 +8059,11 @@ void print_err_msg(int first_line,
 
   if (full_token_loc) {
     if (first_filename == last_filename)
-      fprintf(stderr, "%s:%d-%d..%d-%d: error : %s\n", first_filename, first_line, first_column, last_line, last_column, additional_error_msg);
+      fprintf(stderr, "%s:%d-%d..%d-%d: error: %s\n", first_filename, first_line, first_column, last_line, last_column, additional_error_msg);
     else
-      fprintf(stderr, "%s:%d-%d..%s:%d-%d: error : %s\n", first_filename, first_line, first_column, last_filename, last_line, last_column, additional_error_msg);
+      fprintf(stderr, "%s:%d-%d..%s:%d-%d: error: %s\n", first_filename, first_line, first_column, last_filename, last_line, last_column, additional_error_msg);
   } else {
-      fprintf(stderr, "%s:%d: error : %s\n", first_filename, first_line, additional_error_msg);
+      fprintf(stderr, "%s:%d: error: %s\n", first_filename, first_line, additional_error_msg);
   }
   //fprintf(stderr, "error %d: %s\n", yynerrs /* a global variable */, additional_error_msg);
   print_include_stack();
@@ -8265,7 +8265,7 @@ int stage2__(const char *filename,
       ERROR;
 
   if (yynerrs > 0) {
-    fprintf (stderr, "\nFound %d error(s) in %s. Bailing out!\n", yynerrs /* global variable */, libfilename);
+    fprintf (stderr, "\n%d error(s) found in %s. Bailing out!\n", yynerrs /* global variable */, libfilename);
     ERROR;
   }
   free(libfilename);
@@ -8298,7 +8298,7 @@ int stage2__(const char *filename,
   }
 
   if (yynerrs > 0) {
-    fprintf (stderr, "\nFound %d error(s). Bailing out!\n", yynerrs /* global variable */);
+    fprintf (stderr, "\n%d error(s) found. Bailing out!\n", yynerrs /* global variable */);
     exit(EXIT_FAILURE);
   }
   
