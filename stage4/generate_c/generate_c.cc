@@ -49,6 +49,11 @@
 /* function defined in main.cc */
 extern void error_exit(const char *file_name, int line_no);
 
+
+#define STAGE4_ERROR(symbol1, symbol2, ...) {stage4err("while generating C code", symbol1, symbol2, __VA_ARGS__); exit(EXIT_FAILURE);}
+
+
+
 /***********************************************************************/
 
 /* Unlike Programs and Configurations which get mapped onto C++ classes,
@@ -375,7 +380,7 @@ class calculate_time_c: public iterator_visitor_c {
     /* SYM_REF2(duration_c, neg, interval) */
     void *visit(duration_c *symbol) {
       if (symbol->neg != NULL)
-        ERROR;
+        {STAGE4_ERROR(symbol, symbol, "Negative TIME literals are not currently supported"); ERROR;}
       symbol->interval->accept(*this);
       return NULL;
     }
@@ -2484,6 +2489,7 @@ class generate_c_c: public iterator_visitor_c {
 
           if (configuration_count++) {
             /* the first configuration is the one we will use!! */
+            STAGE4_ERROR(symbol, symbol, "A previous CONFIGURATION has already been declared (C code generation currently only allows a single configuration).");
             ERROR;
           }
 
@@ -2494,7 +2500,7 @@ class generate_c_c: public iterator_visitor_c {
             symbol->accept(calculate_common_ticktime);
             common_ticktime = calculate_common_ticktime.get_common_ticktime();
             if (common_ticktime == 0) {
-              fprintf(stderr, "\nYou must at least define a periodic task to set cycle period!");
+              STAGE4_ERROR(symbol, symbol, "You must define at least one periodic task (to set cycle period)!");
               ERROR;
             }
 

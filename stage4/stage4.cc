@@ -48,7 +48,23 @@
 #include "stage4.hh"
 
 
+#define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
+#define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
+#include <stdarg.h>
 
+void stage4err(const char *stage4_generator_id, symbol_c *symbol1, symbol_c *symbol2, const char *errmsg, ...) {
+    va_list argptr;
+    va_start(argptr, errmsg); /* second argument is last fixed pamater of stage4err() */
+
+    fprintf(stderr, "%s:%d-%d..%d-%d: error %s: ",
+            FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,
+                                                 LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column,
+            stage4_generator_id);
+    vfprintf(stderr, errmsg, argptr);
+    fprintf(stderr, "\n");
+    // error_count++;
+    va_end(argptr);
+}
 
 
 
