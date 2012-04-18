@@ -689,8 +689,10 @@ void *fill_candidate_datatypes_c::visit(location_c *symbol) {
 void *fill_candidate_datatypes_c::visit(located_var_decl_c *symbol) {
   symbol->located_var_spec_init->accept(*this);
   symbol->location->accept(*this);
-  symbol->variable_name->candidate_datatypes = symbol->location->candidate_datatypes;
-  intersect_candidate_datatype_list(symbol->variable_name /*origin, dest.*/, symbol->located_var_spec_init /*with*/);
+  if (NULL != symbol->variable_name) {
+    symbol->variable_name->candidate_datatypes = symbol->location->candidate_datatypes;
+    intersect_candidate_datatype_list(symbol->variable_name /*origin, dest.*/, symbol->located_var_spec_init /*with*/);
+  }
   return NULL;
 }  
 
