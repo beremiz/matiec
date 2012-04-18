@@ -148,10 +148,31 @@ void lvalue_check_c::check_assignment_to_constant(symbol_c *lvalue) {
 
 /*  No assigning values to expressions. */
 void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
-	/* TODO: check whether the lvalue is an expresion! */
 	/* This may occur in function invocations, when passing values (possibly an expression) to one 
 	 * of the function's OUTPUT or IN_OUT parameters.
 	 */
+	/* This may occur in function invocations, when passing values (possibly an expression) to one
+	 * of the function's OUTPUT or IN_OUT parameters.
+	 */
+	if ( (typeid( *lvalue ) == typeid( or_expression_c     )) ||
+	     (typeid( *lvalue ) == typeid( xor_expression_c    )) ||
+	     (typeid( *lvalue ) == typeid( and_expression_c    )) ||
+	     (typeid( *lvalue ) == typeid( equ_expression_c    )) ||
+	     (typeid( *lvalue ) == typeid( notequ_expression_c )) ||
+	     (typeid( *lvalue ) == typeid( lt_expression_c     )) ||
+	     (typeid( *lvalue ) == typeid( gt_expression_c     )) ||
+	     (typeid( *lvalue ) == typeid( le_expression_c     )) ||
+	     (typeid( *lvalue ) == typeid( ge_expression_c     )) ||
+	     (typeid( *lvalue ) == typeid( add_expression_c    )) ||
+	     (typeid( *lvalue ) == typeid( sub_expression_c    )) ||
+	     (typeid( *lvalue ) == typeid( mul_expression_c    )) ||
+	     (typeid( *lvalue ) == typeid( div_expression_c    )) ||
+	     (typeid( *lvalue ) == typeid( mod_expression_c    )) ||
+	     (typeid( *lvalue ) == typeid( power_expression_c  )) ||
+	     (typeid( *lvalue ) == typeid( neg_expression_c    )) ||
+	     (typeid( *lvalue ) == typeid( not_expression_c    )) ||
+	     (typeid( *lvalue ) == typeid( function_invocation_c)))
+		STAGE3_ERROR(0, lvalue, lvalue, "Assignment an expression to OUT or IN_OUT params is not be allowed.");
 }
 
 
