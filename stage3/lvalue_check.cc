@@ -154,26 +154,76 @@ void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
 	/* This may occur in function invocations, when passing values (possibly an expression) to one
 	 * of the function's OUTPUT or IN_OUT parameters.
 	 */
-	if ( (typeid( *lvalue ) == typeid( or_expression_c     )) ||
-	     (typeid( *lvalue ) == typeid( xor_expression_c    )) ||
-	     (typeid( *lvalue ) == typeid( and_expression_c    )) ||
-	     (typeid( *lvalue ) == typeid( equ_expression_c    )) ||
-	     (typeid( *lvalue ) == typeid( notequ_expression_c )) ||
-	     (typeid( *lvalue ) == typeid( lt_expression_c     )) ||
-	     (typeid( *lvalue ) == typeid( gt_expression_c     )) ||
-	     (typeid( *lvalue ) == typeid( le_expression_c     )) ||
-	     (typeid( *lvalue ) == typeid( ge_expression_c     )) ||
-	     (typeid( *lvalue ) == typeid( add_expression_c    )) ||
-	     (typeid( *lvalue ) == typeid( sub_expression_c    )) ||
-	     (typeid( *lvalue ) == typeid( mul_expression_c    )) ||
-	     (typeid( *lvalue ) == typeid( div_expression_c    )) ||
-	     (typeid( *lvalue ) == typeid( mod_expression_c    )) ||
-	     (typeid( *lvalue ) == typeid( power_expression_c  )) ||
-	     (typeid( *lvalue ) == typeid( neg_expression_c    )) ||
-	     (typeid( *lvalue ) == typeid( not_expression_c    )) ||
-	     (typeid( *lvalue ) == typeid( function_invocation_c)))
-		STAGE3_ERROR(0, lvalue, lvalue, "Assignment an expression to OUT or IN_OUT params is not be allowed.");
-}
+	if ( 
+	     /*********************/
+	     /* B 1.2 - Constants */
+	     /*********************/
+	     /******************************/
+	     /* B 1.2.1 - Numeric Literals */
+	     /******************************/
+	     (typeid( *lvalue ) == typeid( real_c                         )) ||
+	     (typeid( *lvalue ) == typeid( integer_c                      )) ||
+	     (typeid( *lvalue ) == typeid( binary_integer_c               )) ||
+	     (typeid( *lvalue ) == typeid( octal_integer_c                )) ||
+	     (typeid( *lvalue ) == typeid( hex_integer_c                  )) ||
+	     (typeid( *lvalue ) == typeid( neg_real_c                     )) ||
+	     (typeid( *lvalue ) == typeid( neg_integer_c                  )) ||
+	     (typeid( *lvalue ) == typeid( integer_literal_c              )) ||
+	     (typeid( *lvalue ) == typeid( real_literal_c                 )) ||
+	     (typeid( *lvalue ) == typeid( bit_string_literal_c           )) ||
+	     (typeid( *lvalue ) == typeid( boolean_literal_c              )) ||
+	     (typeid( *lvalue ) == typeid( boolean_true_c                 )) || /* should not really be needed */
+	     (typeid( *lvalue ) == typeid( boolean_false_c                )) || /* should not really be needed */
+	     /*******************************/
+	     /* B.1.2.2   Character Strings */
+	     /*******************************/
+	     (typeid( *lvalue ) == typeid( double_byte_character_string_c )) ||
+	     (typeid( *lvalue ) == typeid( single_byte_character_string_c )) ||
+	     /***************************/
+	     /* B 1.2.3 - Time Literals */
+	     /***************************/
+	     /************************/
+	     /* B 1.2.3.1 - Duration */
+	     /************************/
+	     (typeid( *lvalue ) == typeid( duration_c                     )) ||
+	     /************************************/
+	     /* B 1.2.3.2 - Time of day and Date */
+	     /************************************/
+	     (typeid( *lvalue ) == typeid( time_of_day_c                  )) ||
+	     (typeid( *lvalue ) == typeid( daytime_c                      )) || /* should not really be needed */
+	     (typeid( *lvalue ) == typeid( date_c                         )) || /* should not really be needed */
+	     (typeid( *lvalue ) == typeid( date_literal_c                 )) ||
+	     (typeid( *lvalue ) == typeid( date_and_time_c                )) ||
+	     /***************************************/
+	     /* B.3 - Language ST (Structured Text) */
+	     /***************************************/
+	     /***********************/
+	     /* B 3.1 - Expressions */
+	     /***********************/
+	     (typeid( *lvalue ) == typeid( or_expression_c                )) ||
+	     (typeid( *lvalue ) == typeid( xor_expression_c               )) ||
+	     (typeid( *lvalue ) == typeid( and_expression_c               )) ||
+	     (typeid( *lvalue ) == typeid( equ_expression_c               )) ||
+	     (typeid( *lvalue ) == typeid( notequ_expression_c            )) ||
+	     (typeid( *lvalue ) == typeid( lt_expression_c                )) ||
+	     (typeid( *lvalue ) == typeid( gt_expression_c                )) ||
+	     (typeid( *lvalue ) == typeid( le_expression_c                )) ||
+	     (typeid( *lvalue ) == typeid( ge_expression_c                )) ||
+	     (typeid( *lvalue ) == typeid( add_expression_c               )) ||
+	     (typeid( *lvalue ) == typeid( sub_expression_c               )) ||
+	     (typeid( *lvalue ) == typeid( mul_expression_c               )) ||
+	     (typeid( *lvalue ) == typeid( div_expression_c               )) ||
+	     (typeid( *lvalue ) == typeid( mod_expression_c               )) ||
+	     (typeid( *lvalue ) == typeid( power_expression_c             )) ||
+	     (typeid( *lvalue ) == typeid( neg_expression_c               )) ||
+	     (typeid( *lvalue ) == typeid( not_expression_c               )) ||
+	     (typeid( *lvalue ) == typeid( function_invocation_c          )))
+		STAGE3_ERROR(0, lvalue, lvalue, "Assigning an expression to an OUT or IN_OUT parameter is not allowed.");
+}                                                                  
+
+
+
+
 
 
 
