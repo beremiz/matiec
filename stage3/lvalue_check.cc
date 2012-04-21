@@ -362,6 +362,59 @@ void *lvalue_check_c::visit(program_declaration_c *symbol) {
 	return NULL;
 }
 
+/****************************************/
+/* B.2 - Language IL (Instruction List) */
+/****************************************/
+/***********************************/
+/* B 2.1 Instructions and Operands */
+/***********************************/
+void *lvalue_check_c::visit(il_instruction_c *symbol) {
+	symbol->il_instruction->accept(*this);
+	return NULL;
+}
+
+void *lvalue_check_c::visit(il_simple_operation_c *symbol) {
+	/* recursive call to fill the candidate data types list */
+	current_il_operand = symbol->il_operand;
+	symbol->il_simple_operator->accept(*this);
+	current_il_operand = NULL;
+	return NULL;
+}
+
+
+/*******************/
+/* B 2.2 Operators */
+/*******************/
+void *lvalue_check_c::visit(ST_operator_c *symbol) {
+	verify_is_lvalue(current_il_operand);
+	return NULL;
+}
+
+void *lvalue_check_c::visit(STN_operator_c *symbol) {
+	verify_is_lvalue(current_il_operand);
+	return NULL;
+}
+
+void *lvalue_check_c::visit(S_operator_c *symbol) {
+	verify_is_lvalue(current_il_operand);
+	return NULL;
+}
+
+void *lvalue_check_c::visit(R_operator_c *symbol) {
+	verify_is_lvalue(current_il_operand);
+	return NULL;
+}
+
+void *lvalue_check_c::visit(S1_operator_c *symbol) {
+	verify_is_lvalue(current_il_operand);
+	return NULL;
+}
+
+void *lvalue_check_c::visit(R1_operator_c *symbol) {
+	verify_is_lvalue(current_il_operand);
+	return NULL;
+}
+
 /***************************************/
 /* B.3 - Language ST (Structured Text) */
 /***************************************/

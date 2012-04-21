@@ -83,6 +83,25 @@ class lvalue_check_c: public iterator_visitor_c {
     /**********************/
     void *visit(program_declaration_c *symbol);
 
+    /****************************************/
+    /* B.2 - Language IL (Instruction List) */
+    /****************************************/
+    /***********************************/
+    /* B 2.1 Instructions and Operands */
+    /***********************************/
+    void *visit(il_instruction_c *symbol);
+    void *visit(il_simple_operation_c *symbol);
+
+    /*******************/
+    /* B 2.2 Operators */
+    /*******************/
+    void *visit(ST_operator_c *symbol);
+    void *visit(STN_operator_c *symbol);
+    void *visit(S_operator_c *symbol);
+    void *visit(R_operator_c *symbol);
+    void *visit(S1_operator_c *symbol);
+    void *visit(R1_operator_c *symbol);
+
     /***************************************/
     /* B.3 - Language ST (Structured Text) */
     /***************************************/
