@@ -385,6 +385,15 @@ void *lvalue_check_c::visit(assignment_statement_c *symbol) {
 	return NULL;
 }
 
+/*****************************************/
+/* B 3.2.2 Subprogram Control Statements */
+/*****************************************/
+void *lvalue_check_c::visit(fb_invocation_c *symbol) {
+	if (NULL != symbol->formal_param_list   )  check_formal_call   (symbol, symbol->called_fb_declaration);
+	if (NULL != symbol->nonformal_param_list)  check_nonformal_call(symbol, symbol->called_fb_declaration);
+	return NULL;
+}
+
 /********************************/
 /* B 3.2.4 Iteration Statements */
 /********************************/
