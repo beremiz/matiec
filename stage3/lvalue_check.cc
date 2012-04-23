@@ -229,10 +229,11 @@ void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
 
 
 void lvalue_check_c::verify_is_lvalue(symbol_c *lvalue) {
-	check_assignment_to_expression(lvalue);
-	check_assignment_to_controlvar(lvalue);
-	check_assignment_to_output(lvalue);
-	check_assignment_to_constant(lvalue);
+	int init_error_count = error_count;  /* stop the checks once an error has been found... */
+	if (error_count == init_error_count)  check_assignment_to_expression(lvalue);
+	if (error_count == init_error_count)  check_assignment_to_controlvar(lvalue);
+	if (error_count == init_error_count)  check_assignment_to_output(lvalue);
+	if (error_count == init_error_count)  check_assignment_to_constant(lvalue);
 }
 
 
