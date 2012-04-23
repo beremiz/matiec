@@ -50,6 +50,7 @@ class lvalue_check_c: public iterator_visitor_c {
     int error_count;
     int current_display_error_level;
     std::vector <token_c *> control_variables;
+    symbol_c *current_il_operand;
 
     void verify_is_lvalue              (symbol_c *lvalue);
     void check_assignment_to_controlvar(symbol_c *lvalue);
@@ -99,8 +100,6 @@ class lvalue_check_c: public iterator_visitor_c {
     void *visit(STN_operator_c *symbol);
     void *visit(S_operator_c *symbol);
     void *visit(R_operator_c *symbol);
-    void *visit(S1_operator_c *symbol);
-    void *visit(R1_operator_c *symbol);
 
     /***************************************/
     /* B.3 - Language ST (Structured Text) */

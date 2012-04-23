@@ -61,6 +61,7 @@
 
 lvalue_check_c::lvalue_check_c(symbol_c *ignore) {
 	error_count = 0;
+	current_il_operand = NULL;
 }
 
 lvalue_check_c::~lvalue_check_c(void) {
@@ -405,15 +406,6 @@ void *lvalue_check_c::visit(R_operator_c *symbol) {
 	return NULL;
 }
 
-void *lvalue_check_c::visit(S1_operator_c *symbol) {
-	verify_is_lvalue(current_il_operand);
-	return NULL;
-}
-
-void *lvalue_check_c::visit(R1_operator_c *symbol) {
-	verify_is_lvalue(current_il_operand);
-	return NULL;
-}
 
 /***************************************/
 /* B.3 - Language ST (Structured Text) */
