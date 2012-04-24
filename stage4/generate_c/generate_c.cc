@@ -1674,7 +1674,8 @@ void *visit(configuration_declaration_c *symbol) {
   s4o.print(s4o.indent_spaces);
   vardecl = new generate_c_vardecl_c(&s4o,
                                      generate_c_vardecl_c::constructorinit_vf,
-                                     generate_c_vardecl_c::global_vt);
+                                     generate_c_vardecl_c::global_vt,
+                                     symbol->configuration_name);
   vardecl->print(symbol);
   delete vardecl;
   s4o.print("\n");
