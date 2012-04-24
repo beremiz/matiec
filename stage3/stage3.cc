@@ -40,11 +40,14 @@
 #include "print_datatypes_error.hh"
 #include "lvalue_check.hh"
 
+
+
 static int flow_control_analysis(symbol_c *tree_root){
   flow_control_analysis_c flow_control_analysis(tree_root);
   tree_root->accept(flow_control_analysis);
   return 0;
 }
+
 
 /* Type safety analysis assumes that flow control analysis has already been completed,
  * so be sure to call flow_control_analysis() before calling this function
@@ -60,8 +63,8 @@ static int type_safety(symbol_c *tree_root){
 }
 
 
-/* Type safety analysis assumes that flow control analysis has already been completed,
- * so be sure to call flow_control_analysis() before calling this function
+/* Left value checking assumes that datat type analysis has already been completed,
+ * so be sure to call type_safety() before calling this function
  */
 static int lvalue_check(symbol_c *tree_root){
 	lvalue_check_c lvalue_check(tree_root);
