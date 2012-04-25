@@ -264,7 +264,7 @@ void lvalue_check_c::check_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
 			if(param_name == NULL) return;
 		} while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
 
-		/* Find the corresponding parameter in function declaration, and it's direction (IN, OUT, IN_OUT) */
+		/* Determine the direction (IN, OUT, IN_OUT) of the parameter... */
 		function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
 		
 		/* We only check if 'call_param_value' is a valid lvalue if the value is being passed
@@ -388,6 +388,81 @@ void *lvalue_check_c::visit(il_simple_operation_c *symbol) {
 	current_il_operand = NULL;
 	return NULL;
 }
+
+
+
+
+/* | function_name [il_operand_list] */
+/* NOTE: The parameters 'called_function_declaration' and 'extensible_param_count' are used to pass data between the stage 3 and stage 4. */
+// SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
+void *lvalue_check_c::visit(il_function_call_c *symbol) {
+	/* The first parameter of a non formal function call in IL will be the 'current value' (i.e. the prev_il_instruction)
+	 * In order to be able to handle this without coding special cases, we will simply prepend that symbol
+	 * to the il_operand_list, and remove it after calling handle_function_call().
+	 *
+	 * However, if no further paramters are given, then il_operand_list will be NULL, and we will
+	 * need to create a new object to hold the pointer to prev_il_instruction.
+	 * This change will also be undone at the end of this method.
+	 */
+	/* TODO: Copying the location data will result in confusing error message. 
+	 *       We need to make this better, by inserting code to handle this special situation explicitly!
+	 */
+	/* NOTE: When calling a function, using the 'current value' as the first parameter of the function invocation
+	 *       implies that we can only call functions whose first parameter is IN. It would not do to pass
+	 *       the 'current value' to an OUT or IN_OUT parameter.
+	 *       In order to make sure that this will be caught by the check_nonformal_call() function,
+	 *       we add a symbol that cannot be an lvalue; in this case, a real_c (REAL literal).
+	 */
+	real_c param_value(NULL);
+	*((symbol_c *)(&param_value)) = *((symbol_c *)symbol); /* copy the symbol location (file, line, offset) data */
+	if (NULL == symbol->il_operand_list)  symbol->il_operand_list = new il_operand_list_c;
+	if (NULL == symbol->il_operand_list)  ERROR;
+	((list_c *)symbol->il_operand_list)->insert_element(&param_value, 0);
+
+	check_nonformal_call(symbol, symbol->called_function_declaration);
+
+	/* Undo the changes to the abstract syntax tree we made above... */
+	((list_c *)symbol->il_operand_list)->remove_element(0);
+	if (((list_c *)symbol->il_operand_list)->n == 0) {
+		/* if the list becomes empty, then that means that it did not exist before we made these changes, so we delete it! */
+		delete 	symbol->il_operand_list;
+		symbol->il_operand_list = NULL;
+	}
+
+	return NULL;
+}
+
+
+
+
+
+
+/*   il_call_operator prev_declared_fb_name
+ * | il_call_operator prev_declared_fb_name '(' ')'
+ * | il_call_operator prev_declared_fb_name '(' eol_list ')'
+ * | il_call_operator prev_declared_fb_name '(' il_operand_list ')'
+ * | il_call_operator prev_declared_fb_name '(' eol_list il_param_list ')'
+ */
+/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
+// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
+void *lvalue_check_c::visit(il_fb_call_c *symbol) {
+	if (NULL != symbol->il_operand_list)  check_nonformal_call(symbol, symbol->called_fb_declaration);
+	if (NULL != symbol->  il_param_list)     check_formal_call(symbol, symbol->called_fb_declaration);
+	return NULL;
+}
+
+
+/* | function_name '(' eol_list [il_param_list] ')' */
+/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4. */
+// SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
+void *lvalue_check_c::visit(il_formal_funct_call_c *symbol) {
+	check_formal_call(symbol, symbol->called_function_declaration);
+	return NULL;
+}
+
+
+
+
 
 
 /*******************/
