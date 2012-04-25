@@ -108,7 +108,7 @@ symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable) {
   return (symbol_c *)search_scope->accept(*this);
 }
 
-unsigned int search_var_instance_decl_c::get_vartype(symbol_c *variable) {
+search_var_instance_decl_c::vt_t search_var_instance_decl_c::get_vartype(symbol_c *variable) {
   this->current_vartype = none_vt;
   this->current_option  = none_opt;
   this->search_name = get_var_name_c::get_name(variable);
@@ -116,7 +116,7 @@ unsigned int search_var_instance_decl_c::get_vartype(symbol_c *variable) {
   return this->current_vartype;
 }
 
-unsigned int search_var_instance_decl_c::get_option(symbol_c *variable) {
+search_var_instance_decl_c::opt_t search_var_instance_decl_c::get_option(symbol_c *variable) {
   this->current_vartype = none_vt;
   this->current_option  = none_opt;
   this->search_name = get_var_name_c::get_name(variable);

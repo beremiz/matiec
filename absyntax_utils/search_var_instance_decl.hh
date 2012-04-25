@@ -90,30 +90,29 @@
 
 class search_var_instance_decl_c: public search_visitor_c {
 
-  private:
-    symbol_c *search_scope;
-    symbol_c *search_name;
-    symbol_c *current_type_decl;
-
-    /* variable used to store the type of variable currently being processed... */
-    /* Will contain a single value of generate_c_vardecl_c::XXXX_vt */
-    unsigned int current_vartype;
-    unsigned int current_option;
-
   public:
     search_var_instance_decl_c(symbol_c *search_scope);
-    
-    symbol_c *   get_decl   (symbol_c *variable_instance_name); 
-    unsigned int get_vartype(symbol_c *variable_instance_name);
-    unsigned int get_option (symbol_c *variable_instance_name);
-
-    /* NOTE: The following function will be completely deleted in the (hopefully near) future. */
-    /* Returns true if the variable is an ARRAY or a STRUCT, otherwise returns false.
-     * Note that for FB, also returns false!
-     */
-    bool type_is_complex(symbol_c *variable_name);
 
   public:
+    typedef enum {
+        input_vt   ,  // VAR_INPUT
+        output_vt  ,  // VAR_OUTPUT
+        inoutput_vt,  // VAR_IN_OUT
+        private_vt ,  // VAR
+        temp_vt    ,  // VAR_TEMP
+        external_vt,  // VAR_EXTERNAL
+        global_vt  ,  // VAR_GLOBAL
+        located_vt ,   // VAR <var_name> AT <location>
+        none_vt
+      } vt_t;
+      
+    typedef enum {
+        constant_opt  ,
+        retain_opt    ,
+        non_retain_opt,
+        none_opt
+      } opt_t;
+#if 0        
     /* the types of variables that need to be processed... */
     static const unsigned int none_vt     = 0x0000;
     static const unsigned int input_vt    = 0x0001;  // VAR_INPUT
@@ -129,7 +128,30 @@ class search_var_instance_decl_c: public search_visitor_c {
     static const unsigned int constant_opt    = 0x0001;
     static const unsigned int retain_opt      = 0x0002;
     static const unsigned int non_retain_opt  = 0x0003;
+#endif    
+    
+    symbol_c *   get_decl   (symbol_c *variable_instance_name); 
+    vt_t         get_vartype(symbol_c *variable_instance_name);
+    opt_t        get_option (symbol_c *variable_instance_name);
 
+    /* NOTE: The following function will be completely deleted in the (hopefully near) future. */
+    /* Returns true if the variable is an ARRAY or a STRUCT, otherwise returns false.
+     * Note that for FB, also returns false!
+     */
+    bool type_is_complex(symbol_c *variable_name);
+
+    
+    
+  private:
+    symbol_c *search_scope;
+    symbol_c *search_name;
+    symbol_c *current_type_decl;
+    /* variable used to store the type of variable currently being processed... */
+    /* Will contain a single value of generate_c_vardecl_c::XXXX_vt */
+    vt_t  current_vartype;
+    opt_t current_option;
+
+    
   private:
     /***************************/
     /* B 0 - Programming Model */
