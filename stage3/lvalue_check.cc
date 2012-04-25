@@ -371,7 +371,13 @@ void *lvalue_check_c::visit(program_declaration_c *symbol) {
 /* B 2.1 Instructions and Operands */
 /***********************************/
 void *lvalue_check_c::visit(il_instruction_c *symbol) {
-	symbol->il_instruction->accept(*this);
+	/* il_instruction will be NULL when parsing a label with no instruction
+	 * e.g.:   label1:          <---- il_instruction = NULL!
+	 *                 LD 33
+	 *                 ...
+	 */
+	if (NULL != symbol->il_instruction)
+		symbol->il_instruction->accept(*this);
 	return NULL;
 }
 
