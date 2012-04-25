@@ -324,7 +324,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
       wanted_variablegeneration = complextype_base_vg;
       symbol->accept(*this);
-      if (search_varfb_instance_type->type_is_complex(symbol))
+      if (search_var_instance_decl->type_is_complex(symbol))
     	s4o.print(",");
       wanted_variablegeneration = complextype_suffix_vg;
       symbol->accept(*this);
@@ -350,7 +350,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       s4o.print(",");
       wanted_variablegeneration = expression_vg;
       print_check_function(type, value, NULL, true);
-      if (search_varfb_instance_type->type_is_complex(symbol)) {
+      if (search_var_instance_decl->type_is_complex(symbol)) {
         s4o.print(",");
         wanted_variablegeneration = complextype_suffix_vg;
         symbol->accept(*this);

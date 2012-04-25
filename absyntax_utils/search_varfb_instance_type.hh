@@ -104,16 +104,13 @@ class search_varfb_instance_type_c : null_visitor_c {
     void init(void);
 
   public:
-    search_varfb_instance_type_c(symbol_c *search_scope);
-    symbol_c *get_basetype_decl(symbol_c *variable_name);
-    symbol_c *get_basetype_id  (symbol_c *variable_name);
-//     symbol_c *get_type_decl(symbol_c *variable_name);
-    symbol_c *get_type_id(symbol_c *variable_name);
+    search_varfb_instance_type_c(symbol_c *search_scope );
+    symbol_c *get_basetype_decl (symbol_c *variable_name);
+    symbol_c *get_basetype_id   (symbol_c *variable_name);
+//  symbol_c *get_type_decl     (symbol_c *variable_name);
+    symbol_c *get_type_id       (symbol_c *variable_name);
 
-    /* NOTE: The following function should be moved to its own independent visitor class.
-     *       In other words, it will be removed from this class in the future. 
-     */
-    bool type_is_complex(symbol_c *variable_name);
+
 
   private:
     /* a helper function... */

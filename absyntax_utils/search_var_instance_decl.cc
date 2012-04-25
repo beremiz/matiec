@@ -124,6 +124,33 @@ unsigned int search_var_instance_decl_c::get_option(symbol_c *variable) {
   return this->current_option;
 }
 
+
+
+/* This is a temporary fix. Hopefully, once I clean up stage4 code, and I change the way
+ * we generate C code, this function will no longer be needed!
+ */
+#include <typeinfo>  /* required for typeid() */
+bool search_var_instance_decl_c::type_is_complex(symbol_c *symbol) {
+  symbol_c *decl;
+  search_base_type_c search_base_type;
+  
+  decl = this->get_decl(symbol);
+  if (NULL == decl) ERROR;
+  decl = search_base_type.get_basetype_decl(decl);
+  if (NULL == decl) ERROR;
+  
+  return ((typeid( *(decl) ) == typeid( array_specification_c                )) ||
+//        (typeid( *(decl) ) == typeid( array_spec_init_c                    )) ||  /* does not seem to be necessary */
+          (typeid( *(decl) ) == typeid( structure_type_declaration_c         )) ||  
+          (typeid( *(decl) ) == typeid( structure_element_declaration_list_c )) ||
+//        (typeid( *(decl) ) == typeid( structure_type_declaration_c         )) ||  /* does not seem to be necessary */
+          (typeid( *(decl) ) == typeid( initialized_structure_c              ))
+          
+         );
+}
+
+
+
 /***************************/
 /* B 0 - Programming Model */
 /***************************/

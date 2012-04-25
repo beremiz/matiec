@@ -102,13 +102,15 @@ class search_var_instance_decl_c: public search_visitor_c {
 
   public:
     search_var_instance_decl_c(symbol_c *search_scope);
-    symbol_c *get_decl(symbol_c *variable_instance_name);
     
+    symbol_c *   get_decl   (symbol_c *variable_instance_name); 
     unsigned int get_vartype(symbol_c *variable_instance_name);
-    unsigned int get_option(symbol_c *variable_instance_name);
+    unsigned int get_option (symbol_c *variable_instance_name);
+
+    /* NOTE: The following function will be completely deleted in the (hopefully near) future. */
+    bool type_is_complex(symbol_c *variable_name);
 
   public:
-
     /* the types of variables that need to be processed... */
     static const unsigned int none_vt     = 0x0000;
     static const unsigned int input_vt    = 0x0001;  // VAR_INPUT

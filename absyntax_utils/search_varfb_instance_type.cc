@@ -125,14 +125,6 @@ symbol_c *search_varfb_instance_type_c::get_basetype_decl(symbol_c *variable_nam
 
 
 
-bool search_varfb_instance_type_c::type_is_complex(symbol_c *variable_name) {
-  this->init();
-  variable_name->accept(*this);
-  return this->is_complex;
-}
-
-
-
 
 /*************************/
 /* B.1 - Common elements */
