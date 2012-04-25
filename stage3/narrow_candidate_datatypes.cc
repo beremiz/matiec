@@ -650,7 +650,7 @@ void *narrow_candidate_datatypes_c::visit(il_function_call_c *symbol) {
 	 *
 	 * However, if no further paramters are given, then il_operand_list will be NULL, and we will
 	 * need to create a new object to hold the pointer to prev_il_instruction.
-	 * This change will also be undone later in print_datatypes_error_c.
+	 * This change will also be undone at the end of this method.
 	 */
 	symbol_c param_value = *fake_prev_il_instruction; /* copy the candidate_datatypes list */
 	if (NULL == symbol->il_operand_list)  symbol->il_operand_list = new il_operand_list_c;
