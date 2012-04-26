@@ -93,7 +93,6 @@ void search_varfb_instance_type_c::init(void) {
   this->current_basetype_id    = NULL;
   this->current_basetype_decl  = NULL;
   this->current_field_selector = NULL;
-  this->is_complex = false;
 }
 
 
@@ -298,8 +297,6 @@ void *search_varfb_instance_type_c::visit(symbolic_variable_c *symbol) {
  * then this class must be called with the identifier_c 'X'.
  */
 void *search_varfb_instance_type_c::visit(array_variable_c *symbol) {
-  this->is_complex = true;
-
   /* determine the data type of the subscripted_variable... 
    * This should be an array_specification_c
    *    ARRAY [xx..yy] OF Stored_Data_Type
@@ -323,7 +320,6 @@ void *search_varfb_instance_type_c::visit(array_variable_c *symbol) {
  */
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
 void *search_varfb_instance_type_c::visit(structured_variable_c *symbol) {
-  this->is_complex = true;
   symbol->record_variable->accept(*this);
   
   /* Now we search for the data type of the field... But only if we were able to determine the data type of the variable */

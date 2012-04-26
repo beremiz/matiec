@@ -98,8 +98,6 @@ class search_varfb_instance_type_c : null_visitor_c {
     
     symbol_c *current_field_selector;
 
-    bool is_complex;
-    
     /* sets all the above variables to NULL, or false */
     void init(void);
 
