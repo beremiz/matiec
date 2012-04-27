@@ -32,6 +32,16 @@
  */
 
 
+/* TODO - things yet not checked by this data type checker...
+ *
+ * - check variable declarations
+ * - check data type declarations
+ * - check inside configurations (variable declarations)
+ * - check SFC code
+ * - must fix S and R IL functions (includes potientialy fixing stage4 code!) 
+ */
+
+
 /*
  *  Fill candidate list of data types for all symbols
  */
