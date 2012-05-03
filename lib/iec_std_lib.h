@@ -261,6 +261,7 @@ static inline IEC_TIMESPEC __dt_to_timespec(double seconds,  double minutes, dou
   broken_down_time.tm_mday = day;  /* day of month, from 1 to 31 */
   broken_down_time.tm_mon = month - 1;   /* month since January, in the range 0 to 11 */
   broken_down_time.tm_year = year - 1900;  /* number of years since 1900 */
+  broken_down_time.tm_isdst = 0; /* disable daylight savings time */
 
   epoch_seconds = mktime(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
   if ((time_t)(-1) == epoch_seconds)
