@@ -48,6 +48,11 @@
 #include "stage4.hh"
 
 
+#define ERROR error_exit(__FILE__,__LINE__)
+/* function defined in main.cc */
+extern void error_exit(const char *file_name, int line_no);
+
+
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
 #define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
 #include <stdarg.h>
@@ -73,6 +78,7 @@ stage4out_c::stage4out_c(std::string indent_level):
   out = &std::cout;
   this->indent_level = indent_level;
   this->indent_spaces = "";
+  allow_output = true;
 }
 
 stage4out_c::stage4out_c(const char *dir, const char *radix, const char *extension, std::string indent_level) {	
@@ -243,8 +249,7 @@ int stage4(symbol_c *tree_root, const char *builddir) {
   stage4out_c s4o;
   visitor_c *generate_code = new_code_generator(&s4o, builddir);
 
-  if (NULL == generate_code)
-    return -1;
+  if (NULL == generate_code) ERROR;
 
   tree_root->accept(*generate_code);
 
