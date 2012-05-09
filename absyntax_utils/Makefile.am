@@ -11,7 +11,6 @@ libabsyntax_utils_a_SOURCES = \
 	function_call_iterator.cc \
 	function_call_param_iterator.cc \
 	function_param_iterator.cc \
-	get_function_type.cc \
 	get_sizeof_datatype.cc \
 	get_var_name.cc \
 	search_il_label.cc \
