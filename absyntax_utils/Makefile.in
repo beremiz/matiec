@@ -77,7 +77,7 @@ am_libabsyntax_utils_a_OBJECTS = absyntax_utils.$(OBJEXT) \
 	case_element_iterator.$(OBJEXT) \
 	function_call_iterator.$(OBJEXT) \
 	function_call_param_iterator.$(OBJEXT) \
-	function_param_iterator.$(OBJEXT) get_function_type.$(OBJEXT) \
+	function_param_iterator.$(OBJEXT) \
 	get_sizeof_datatype.$(OBJEXT) get_var_name.$(OBJEXT) \
 	search_il_label.$(OBJEXT) search_base_type.$(OBJEXT) \
 	search_constant_type.$(OBJEXT) \
@@ -212,7 +212,6 @@ libabsyntax_utils_a_SOURCES = \
 	function_call_iterator.cc \
 	function_call_param_iterator.cc \
 	function_param_iterator.cc \
-	get_function_type.cc \
 	get_sizeof_datatype.cc \
 	get_var_name.cc \
 	search_il_label.cc \
@@ -315,7 +314,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function_call_iterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function_call_param_iterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function_param_iterator.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/get_function_type.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/get_sizeof_datatype.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/get_var_name.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search_base_type.Po@am__quote@
