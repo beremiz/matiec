@@ -130,7 +130,7 @@ void* function_param_iterator_c::handle_param_list(list_c *list) {
         if (extensible_parameter != NULL) {
           sym = extensible_parameter->var_name;
           current_param_is_extensible = true;
-          _first_extensible_param_index = extract_integer(extensible_parameter->first_index);
+          _first_extensible_param_index = extract_integer_value(extensible_parameter->first_index);
         }
         identifier_c *variable_name = dynamic_cast<identifier_c *>(sym);
         if (variable_name == NULL) ERROR;
@@ -167,7 +167,7 @@ void* function_param_iterator_c::handle_single_param(symbol_c *var_name) {
       if (extensible_parameter != NULL) {
         var_name = extensible_parameter->var_name;
         current_param_is_extensible = true;
-        _first_extensible_param_index = extract_integer(extensible_parameter->first_index);
+        _first_extensible_param_index = extract_integer_value(extensible_parameter->first_index);
       }
       identifier_c *variable_name = dynamic_cast<identifier_c *>(var_name);
       if (variable_name == NULL) ERROR;
@@ -265,7 +265,7 @@ identifier_c *function_param_iterator_c::next(void) {
   if (extensible_parameter != NULL) {
     sym = extensible_parameter->var_name;
     current_param_is_extensible = true;
-    _first_extensible_param_index = extract_integer(extensible_parameter->first_index);
+    _first_extensible_param_index = extract_integer_value(extensible_parameter->first_index);
     current_extensible_param_index = _first_extensible_param_index;
   }
   identifier = dynamic_cast<identifier_c *>(sym);

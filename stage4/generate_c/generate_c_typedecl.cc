@@ -255,7 +255,7 @@ void *visit(subrange_c *symbol) {
     case array_td:
       if (current_basetypedeclaration == arraysubrange_bd) {
         s4o_incl.print("[");
-        dimension = extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
+        dimension = extract_integer_value(symbol->upper_limit) - extract_integer_value(symbol->lower_limit) + 1;
         print_integer_incl(dimension);
         s4o_incl.print("]");
       }

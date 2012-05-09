@@ -353,6 +353,10 @@ class calculate_time_c: public iterator_visitor_c {
     
     unsigned long long get_time(void) {return time;};
 
+    /* NOTE: we should really remove this function, and replace it with  extract_integer_value() (in absyntax_utils.h)
+     *       but right now I don't want to spend time checking if this change will introduce some conversion bug
+     *       since it returns a long long, and not a float!
+     */
     void *get_integer_value(token_c *token) {
       std::string str = "";
       for (unsigned int i = 0; i < strlen(token->value); i++)
@@ -362,6 +366,10 @@ class calculate_time_c: public iterator_visitor_c {
       return NULL;
     }
 
+    /* NOTE: this function is incomplete, as it should also be removing '_' inserted into the literal,
+     *       but we leave it for now.
+     *       In truth, we should really have an extract_real_value() in absyntax_util.h !!!
+     */
     void *get_float_value(token_c *token) {
       current_value = atof(token->value);
       return NULL;
@@ -388,48 +396,31 @@ class calculate_time_c: public iterator_visitor_c {
     /* SYM_TOKEN(fixed_point_c) */
     void *visit(fixed_point_c *symbol) {return get_float_value(symbol);}
     
-    /* SYM_REF2(days_c, days, hours) */
-    void *visit(days_c *symbol) {
-      if (symbol->hours)
-        symbol->hours->accept(*this);
-      symbol->days->accept(*this);
-      time += (unsigned long long)(current_value * 24 * 3600 * SECOND);
-      return NULL;
-    }
     
-    /* SYM_REF2(hours_c, hours, minutes) */
-    void *visit(hours_c *symbol) {
-      if (symbol->minutes)
-        symbol->minutes->accept(*this);
-      symbol->hours->accept(*this);
-      time += (unsigned long long)(current_value * 3600 * SECOND);
-      return NULL;
-    }
-    
-    /* SYM_REF2(minutes_c, minutes, seconds) */
-    void *visit(minutes_c *symbol) {
-      if (symbol->seconds)
-        symbol->seconds->accept(*this);
-      symbol->minutes->accept(*this);
-      time += (unsigned long long)(current_value * 60 * SECOND);
-      return NULL;
-    }
-    
-    /* SYM_REF2(seconds_c, seconds, milliseconds) */
-    void *visit(seconds_c *symbol) {
-      if (symbol->milliseconds)
-        symbol->milliseconds->accept(*this);
-      symbol->seconds->accept(*this);
-      time += (unsigned long long)(current_value * SECOND);
-      return NULL;
-    }
-    
-    /* SYM_REF2(milliseconds_c, milliseconds, unused) */
-    void *visit(milliseconds_c *symbol) {
-      symbol->milliseconds->accept(*this);
+    /* SYM_REF5(interval_c, days, hours, minutes, seconds, milliseconds) */
+    void *visit(interval_c *symbol) {
+      current_value = 0;
+      if (NULL != symbol->milliseconds) symbol->milliseconds->accept(*this);
       time += (unsigned long long)(current_value * MILLISECOND);
+   
+      current_value = 0;
+      if (NULL != symbol->seconds)      symbol->seconds->accept(*this);
+      time += (unsigned long long)(current_value * SECOND);
+   
+      current_value = 0;
+      if (NULL != symbol->minutes)      symbol->minutes->accept(*this);
+      time += (unsigned long long)(current_value * 60 * SECOND);
+   
+      current_value = 0;
+      if (NULL != symbol->hours)        symbol->hours->accept(*this);
+      time += (unsigned long long)(current_value * 60 * 60 * SECOND);
+   
+      current_value = 0;
+      if (NULL != symbol->days)         symbol->days->accept(*this);
+      time += (unsigned long long)(current_value * 60 * 60 * 24 * SECOND);
+   
       return NULL;
-    }
+    }      
 };
 
 /***********************************************************************/
@@ -791,7 +782,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     /*  signed_integer DOTDOT signed_integer */
     //SYM_REF2(subrange_c, lower_limit, upper_limit)
     void *visit(subrange_c *symbol) {
-      int dimension = extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
+      int dimension = extract_integer_value(symbol->upper_limit) - extract_integer_value(symbol->lower_limit) + 1;
       switch (current_mode) {
         case arrayname_im:
           current_array_name += "_";

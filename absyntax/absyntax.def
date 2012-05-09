@@ -210,13 +210,15 @@ SYM_TOKEN(single_byte_character_string_c)
 /************************/
 SYM_REF0(neg_time_c)
 SYM_REF3(duration_c, type_name, neg, interval)
+SYM_REF5(interval_c, days, hours, minutes, seconds, milliseconds)
 SYM_TOKEN(fixed_point_c)
+/*
 SYM_REF2(days_c, days, hours)
 SYM_REF2(hours_c, hours, minutes)
 SYM_REF2(minutes_c, minutes, seconds)
 SYM_REF2(seconds_c, seconds, milliseconds)
 SYM_REF1(milliseconds_c, milliseconds)
-
+*/
 
 /************************************/
 /* B 1.2.3.2 - Time of day and Date */

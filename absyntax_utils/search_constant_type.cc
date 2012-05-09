@@ -105,11 +105,7 @@ void *search_constant_type_c::visit(single_byte_character_string_c *symbol) {ret
 void *search_constant_type_c::visit(neg_time_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
 void *search_constant_type_c::visit(duration_c *symbol) {return (void *)(symbol->type_name);}
 void *search_constant_type_c::visit(fixed_point_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(days_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(hours_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(minutes_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(seconds_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(milliseconds_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
+void *search_constant_type_c::visit(interval_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
 
 /************************************/
 /* B 1.2.3.2 - Time of day and Date */

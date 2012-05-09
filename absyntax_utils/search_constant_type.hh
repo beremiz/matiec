@@ -168,12 +168,8 @@ class search_constant_type_c: public search_visitor_c {
     /************************/
     void *visit(neg_time_c *symbol);
     void *visit(duration_c *symbol);
+    void *visit(interval_c *symbol);
     void *visit(fixed_point_c *symbol);
-    void *visit(days_c *symbol);
-    void *visit(hours_c *symbol);
-    void *visit(minutes_c *symbol);
-    void *visit(seconds_c *symbol);
-    void *visit(milliseconds_c *symbol);
 
     /************************************/
     /* B 1.2.3.2 - Time of day and Date */

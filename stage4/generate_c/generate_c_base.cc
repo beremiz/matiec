@@ -410,18 +410,12 @@ void *visit(neg_time_c *symbol) {s4o.print("-1"); /* negative time value */; ret
 void *visit(duration_c *symbol) {
   TRACE("duration_c");
   s4o.print("__time_to_timespec(");
-  if (NULL == symbol->neg)
-    s4o.print("1");  /* positive time value */
-  else
-    symbol->neg->accept(*this);  /* this will print '-1'   :-) */
+  
+  if (NULL == symbol->neg)    s4o.print("1");  /* positive time value */
+  else                        symbol->neg->accept(*this);  /* this will print '-1'   :-) */
 
   s4o.print(", ");
-
   symbol->interval->accept(*this);
-  if (typeid(*symbol->interval) == typeid(hours_c)) {s4o.print(", 0");}
-  if (typeid(*symbol->interval) == typeid(minutes_c)) {s4o.print(", 0, 0");}
-  if (typeid(*symbol->interval) == typeid(seconds_c)) {s4o.print(", 0, 0, 0");}
-  if (typeid(*symbol->interval) == typeid(milliseconds_c)) {s4o.print(", 0, 0, 0, 0");}
   s4o.print(")");
   return NULL;
 }
@@ -430,73 +424,32 @@ void *visit(duration_c *symbol) {
 /* SYM_TOKEN(fixed_point_c) */
 void *visit(fixed_point_c *symbol) {return print_striped_token(symbol);}
 
-
-/* SYM_REF2(days_c, days, hours) */
-void *visit(days_c *symbol) {
-  TRACE("days_c");
-  if (NULL == symbol->hours)
-    s4o.print("0, 0, 0, 0");  /* milliseconds, seconds, minutes, hours */
-  else
-    symbol->hours->accept(*this);
-
+/* SYM_REF5(interval_c, days, hours, minutes, seconds, milliseconds) */
+void *visit(interval_c *symbol) {
+  TRACE("interval_c");
+  /* s4o.print("0, 0, 0, 0, 0");  // milliseconds, seconds, minutes, hours, days */
+  if (NULL == symbol->milliseconds) s4o.print("0");  /* milliseconds */
+  else                              symbol->milliseconds->accept(*this);
   s4o.print(", ");
 
-  symbol->days->accept(*this);
-  return NULL;
-}
-
-
-/* SYM_REF2(hours_c, hours, minutes) */
-void *visit(hours_c *symbol) {
-  TRACE("hours_c");
-  if (NULL == symbol->minutes)
-    s4o.print("0, 0, 0");  /* milliseconds, seconds, minutes */
-  else
-    symbol->minutes->accept(*this);
-
+  if (NULL == symbol->seconds)      s4o.print("0");  /* seconds */
+  else                              symbol->seconds->accept(*this);
   s4o.print(", ");
 
-  symbol->hours->accept(*this);
-  return NULL;
-}
-
-
-/* SYM_REF2(minutes_c, minutes, seconds) */
-void *visit(minutes_c *symbol) {
-  TRACE("minutes_c");
-  if (NULL == symbol->seconds)
-    s4o.print("0, 0");  /* milliseconds, seconds */
-  else
-    symbol->seconds->accept(*this);
-
+  if (NULL == symbol->minutes)      s4o.print("0");  /* minutes */
+  else                              symbol->minutes->accept(*this);
   s4o.print(", ");
 
-  symbol->minutes->accept(*this);
-  return NULL;
-}
-
-
-/* SYM_REF2(seconds_c, seconds, milliseconds) */
-void *visit(seconds_c *symbol) {
-  TRACE("seconds_c");
-  if (NULL == symbol->milliseconds)
-    s4o.print("0");  /* milliseconds */
-  else
-    symbol->milliseconds->accept(*this);
-
+  if (NULL == symbol->hours)        s4o.print("0");  /* hours */
+  else                              symbol->hours->accept(*this);
   s4o.print(", ");
 
-  symbol->seconds->accept(*this);
+  if (NULL == symbol->days)         s4o.print("0");  /* days */
+  else                              symbol->days->accept(*this);
+
   return NULL;
 }
 
-
-/* SYM_REF2(milliseconds_c, milliseconds, unused) */
-void *visit(milliseconds_c *symbol) {
-  TRACE("milliseconds_c");
-  symbol->milliseconds->accept(*this);
-  return NULL;
-}
 
 /************************************/
 /* B 1.2.3.2 - Time of day and Date */

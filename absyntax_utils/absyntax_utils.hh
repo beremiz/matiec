@@ -56,7 +56,7 @@
 int compare_identifiers(symbol_c *ident1, symbol_c *ident2);
 
 /* extract the value of an integer from an integer_c object !! */
-int extract_integer(symbol_c *integer);
+long long extract_integer_value(symbol_c *integer);
   
 /* A symbol table with all globally declared functions... */
 extern function_declaration_c null_symbol1;
@@ -119,7 +119,6 @@ extern symtable_c<symbol_c *, &null_symbol5> enumerated_value_symtable;
 #include "search_expression_type.hh"
 #include "add_en_eno_param_decl.hh"
 #include "get_sizeof_datatype.hh"
-#include "get_function_type.h"
 #include "search_il_label.hh"
 #include "get_var_name.hh"
 

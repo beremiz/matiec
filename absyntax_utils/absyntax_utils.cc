@@ -98,20 +98,21 @@ int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 
 /* extract the value of an integer from an integer_c object !! */
 /* NOTE: it must ignore underscores! */
-int extract_integer(symbol_c *sym) {
+long long extract_integer_value(symbol_c *sym) {
   std::string str = "";
   integer_c *integer;
   neg_integer_c * neg_integer;
 
   if ((neg_integer = dynamic_cast<neg_integer_c *>(sym)) != NULL)
-    return - extract_integer((integer_c *)neg_integer->exp);
+    return - extract_integer_value(neg_integer->exp);
   
   if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
 
   for(unsigned int i = 0; i < strlen(integer->value); i++)
     if (integer->value[i] != '_')  str += integer->value[i];
 
-  return atoi(str.c_str());
+  /* return atoi(str.c_str()); */
+  return atoll(str.c_str());
 }
 
 

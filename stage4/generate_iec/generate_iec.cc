@@ -234,43 +234,37 @@ void *visit(duration_c *symbol) {
 
 void *visit(fixed_point_c *symbol) {return print_token(symbol);}
 
-void *visit(days_c *symbol) {
-  symbol->days->accept(*this);
-  s4o.print("d");
-  if (symbol->hours != NULL)
+/* SYM_REF5(interval_c, days, hours, minutes, seconds, milliseconds) */
+void *visit(interval_c *symbol) {
+  if (NULL != symbol->days) {
+    symbol->days->accept(*this);
+    s4o.print("d");
+  }
+
+  if (NULL != symbol->hours) {
     symbol->hours->accept(*this);
-  return NULL;
-}
+    s4o.print("h");
+  }
 
-void *visit(hours_c *symbol) {
-  symbol->hours->accept(*this);
-  s4o.print("h");
-  if (symbol->minutes != NULL)
+  if (NULL != symbol->minutes) {
     symbol->minutes->accept(*this);
-  return NULL;
-}
+    s4o.print("m");
+  }
 
-void *visit(minutes_c *symbol) {
-  symbol->minutes->accept(*this);
-  s4o.print("m");
-  if (symbol->seconds != NULL)
+  if (NULL != symbol->seconds) {
     symbol->seconds->accept(*this);
-  return NULL;
-}
+    s4o.print("s");
+  }
 
-void *visit(seconds_c *symbol) {
-  symbol->seconds->accept(*this);
-  s4o.print("s");
-  if (symbol->milliseconds != NULL)
+  if (NULL != symbol->milliseconds) {
     symbol->milliseconds->accept(*this);
+    s4o.print("ms");
+  }
+
   return NULL;
 }
 
-void *visit(milliseconds_c *symbol) {
-  symbol->milliseconds->accept(*this);
-  s4o.print("ms");
-  return NULL;
-}
+
 
 /************************************/
 /* B 1.2.3.2 - Time of day and Date */

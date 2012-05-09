@@ -211,7 +211,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
     /*  signed_integer DOTDOT signed_integer */
     //SYM_REF2(subrange_c, lower_limit, upper_limit)
     void *visit(subrange_c *symbol) {
-      int dimension = extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
+      int dimension = extract_integer_value(symbol->upper_limit) - extract_integer_value(symbol->lower_limit) + 1;
       switch (current_mode) {
         case arraysize_am:
           array_size *= dimension;
@@ -264,7 +264,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       
       switch (current_mode) {
         case initializationvalue_am:
-          initial_element_number = extract_integer(symbol->integer);
+          initial_element_number = extract_integer_value(symbol->integer);
           if (current_initialization_count < defined_values_count) {
             int temp_element_number = 0;
             int diff = defined_values_count - current_initialization_count;
@@ -1407,7 +1407,7 @@ void *visit(array_specification_c *symbol) {
 /*  signed_integer DOTDOT signed_integer */
 //SYM_REF2(subrange_c, lower_limit, upper_limit)
 void *visit(subrange_c *symbol) {
-  int dimension = extract_integer(symbol->upper_limit) - extract_integer(symbol->lower_limit) + 1;
+  long long dimension = extract_integer_value(symbol->upper_limit) - extract_integer_value(symbol->lower_limit) + 1;
   s4o.print("_");
   print_integer(dimension);
   return NULL;
