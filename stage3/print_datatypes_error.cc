@@ -591,8 +591,13 @@ void *print_datatypes_error_c::visit(array_variable_c *symbol) {
 
 /* subscript_list ',' subscript */
 // SYM_LIST(subscript_list_c)
-/* NOTE: we inherit from iterator visitor, so we do not need to implement this method... */
-// void *print_datatypes_error_c::visit(subscript_list_c *symbol)
+void *print_datatypes_error_c::visit(subscript_list_c *symbol) {
+	for (int i = 0; i < symbol->n; i++) {
+		if (NULL == symbol->elements[i]->datatype)
+			STAGE3_ERROR(0, symbol, symbol, "Invalid data type for array subscript field.");
+	}
+	return NULL;
+}
 
 
 /*  record_variable '.' field_selector */

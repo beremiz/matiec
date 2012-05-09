@@ -167,6 +167,7 @@ class print_datatypes_error_c: public iterator_visitor_c {
     /* B 1.4.2 - Multi-element variables */
     /*************************************/
     void *visit(array_variable_c *symbol);
+    void *visit(subscript_list_c *symbol);
     void *visit(structured_variable_c *symbol);
 
     /******************************************/
