@@ -71,6 +71,7 @@
 
 lvalue_check_c::lvalue_check_c(symbol_c *ignore) {
 	error_count = 0;
+	current_display_error_level = 0;
 	current_il_operand = NULL;
 }
 
