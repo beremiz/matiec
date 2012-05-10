@@ -32,6 +32,16 @@
  */
 
 
+
+/* Expressions on the left hand side of assignment statements have aditional restrictions on their datatype.
+ * For example, they cannot be literals, CONSTANT type variables, function invocations, etc...
+ * This class wil do those checks.
+ * 
+ * Note that assignment may also be done when passing variables to OUTPUT or IN_OUT function parameters,so we check those too.
+ */
+
+
+
 #include "lvalue_check.hh"
 
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
