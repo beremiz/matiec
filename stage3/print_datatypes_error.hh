@@ -32,6 +32,17 @@
  *
  */
 
+/* NOTE: The algorithm implemented here assumes that the symbol_c.candidate_datatype, and the symbol_c.datatype 
+ *       annotations have already been apropriately filled in!
+ *       BEFORE running this visitor, be sure to CALL the fill_candidate_datatypes_c, and the narrow_candidate_datatypes_c visitors!
+ */
+
+
+/*
+ *  By analysing the candidate datatype lists, as well as the chosen datatype for each expression, determine
+ *  if an datatype error has been found, and if so, print out an error message.
+ */
+
 
 #include "../absyntax_utils/absyntax_utils.hh"
 #include "datatype_functions.hh"

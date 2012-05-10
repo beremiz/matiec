@@ -32,9 +32,26 @@
  */
 
 
-/*
- *  Narrow class select and store a data type from candidate data types list for all symbols
+/* NOTE: The algorithm implemented here assumes that candidate datatype lists have already been filled!
+ *       BEFORE running this visitor, be sure to CALL the fill_candidate_datatype_c visitor!
  */
+
+
+/*
+ *  Choose, from the list of all the possible datatypes each expression may take, the single datatype that it will in fact take.
+ *  The resulting (chosen) datatype, will be stored in the symbol_c.datatype variable, leaving the candidate datatype list untouched!
+ * 
+ *  For rvalue expressions, this decision will be based on the datatype of the lvalue expression.
+ *  For lvalue expressions, the candidate datatype list should have a single entry.
+ * 
+ *  For example, the very simple literal '0' in 'foo := 0', may represent a:
+ *    BOOL, BYTE, WORD, DWORD, LWORD, USINT, SINT, UINT, INT, UDINT, DINT, ULINT, LINT (as well as the SAFE versions of these data tyes too!)
+ * 
+ *  In this class, the datatype of '0' will be set to the same datatype as the 'foo' variable.
+ *  If the intersection of the candidate datatype lists of the left and right side expressions is empty, 
+ *  then a datatype error has been found, and the datatype is either left at NULL, or set to a pointer of an invalid_type_name_c object!
+ */
+
 
 #include "narrow_candidate_datatypes.hh"
 #include "datatype_functions.hh"

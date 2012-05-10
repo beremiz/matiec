@@ -32,6 +32,19 @@
  *
  */
 
+/* NOTE: The algorithm implemented here assumes that flow control analysis has already been completed!
+ *       BEFORE running this visitor, be sure to CALL the flow_control_analysis_c visitor!
+ */
+
+
+/*
+ *  Fill the candidate datatype list for all symbols that may legally 'have' a data type (e.g. variables, literals, function calls, expressions, etc.)
+ * 
+ *  The candidate datatype list will be filled with a list of all the data types that expression may legally take.
+ *  For example, the very simple literal '0' (as in foo := 0), may represent a:
+ *    BOOL, BYTE, WORD, DWORD, LWORD, USINT, SINT, UINT, INT, UDINT, DINT, ULINT, LINT (as well as the SAFE versions of these data tyes too!)
+ */
+
 
 #include "../absyntax_utils/absyntax_utils.hh"
 #include "datatype_functions.hh"
