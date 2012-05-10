@@ -595,7 +595,7 @@ void *print_datatypes_error_c::visit(subscript_list_c *symbol) {
 	for (int i = 0; i < symbol->n; i++) {
 		int start_error_count = error_count;
 		symbol->elements[i]->accept(*this);
-		/* I (mjs) do not believe that the following error message will ever get printed, but lets play it safe and leave it in... */
+		/* The following error message will only get printed if the current_display_error_level is set higher than 0! */
 		if ((start_error_count == error_count) && (NULL == symbol->elements[i]->datatype))
 			STAGE3_ERROR(0, symbol, symbol, "Invalid data type for array subscript field.");
 	}
