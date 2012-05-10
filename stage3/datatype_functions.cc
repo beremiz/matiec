@@ -25,7 +25,7 @@
 #include "datatype_functions.hh"
 #include "../absyntax_utils/absyntax_utils.hh"
 #include <vector>
-// #include <algorithm>
+
 
 
 
@@ -37,9 +37,7 @@ const char *elementary_type_c::to_string(symbol_c *symbol) {
   if (NULL == singleton)    singleton = new elementary_type_c;
   if (NULL == singleton)    ERROR;
   const char *res           = (const char *)symbol->accept(*singleton);
-  if (NULL == res) {
-	  int i = 1;
-  }
+  if (NULL == res)          ERROR;
   return res;
 }
 
