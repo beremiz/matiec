@@ -392,7 +392,6 @@ void *lvalue_check_c::visit(il_instruction_c *symbol) {
 }
 
 void *lvalue_check_c::visit(il_simple_operation_c *symbol) {
-	/* recursive call to fill the candidate data types list */
 	current_il_operand = symbol->il_operand;
 	symbol->il_simple_operator->accept(*this);
 	current_il_operand = NULL;
