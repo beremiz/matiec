@@ -535,6 +535,7 @@ void *lvalue_check_c::visit(fb_invocation_c *symbol) {
 /* B 3.2.4 Iteration Statements */
 /********************************/
 void *lvalue_check_c::visit(for_statement_c *symbol) {
+        verify_is_lvalue(symbol->control_variable);
 	control_variables.push_back(get_var_name_c::get_name(symbol->control_variable));
 	symbol->statement_list->accept(*this);
 	control_variables.pop_back();
