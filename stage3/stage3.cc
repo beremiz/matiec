@@ -39,7 +39,7 @@
 #include "narrow_candidate_datatypes.hh"
 #include "print_datatypes_error.hh"
 #include "lvalue_check.hh"
-
+#include "range_check.hh"
 
 
 static int flow_control_analysis(symbol_c *tree_root){
@@ -72,12 +72,19 @@ static int lvalue_check(symbol_c *tree_root){
 	return lvalue_check.get_error_count();
 }
 
+static int range_check(symbol_c *tree_root){
+	range_check_c range_check(tree_root);
+	tree_root->accept(range_check);
+	return range_check.get_error_count();
+}
+
 
 int stage3(symbol_c *tree_root){
 	int error_count = 0;
 	error_count += flow_control_analysis(tree_root);
 	error_count += type_safety(tree_root);
 	error_count += lvalue_check(tree_root);
+	error_count += range_check(tree_root);
 	
 	if (error_count > 0) {
 		fprintf(stderr, "%d error(s) found. Bailing out!\n", error_count); 
