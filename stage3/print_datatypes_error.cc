@@ -649,7 +649,7 @@ void *print_datatypes_error_c::visit(located_var_decl_c *symbol) {
   /* It does not make sense to call symbol->location->accept(*this). The check is done right here if the following if() */
   // symbol->location->accept(*this); 
   if ((is_type_valid(symbol->located_var_spec_init->datatype)) && (!is_type_valid(symbol->location->datatype)))
-    STAGE3_ERROR(0, symbol, symbol, "Location is incompatible with data type.");
+    STAGE3_ERROR(0, symbol, symbol, "Bit size of data type is incompatible with bit size of location.");
   return NULL;
 }  
 

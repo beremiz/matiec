@@ -696,8 +696,83 @@ void *fill_candidate_datatypes_c::visit(var1_list_c *symbol) {
 /*  AT direct_variable */
 // SYM_REF1(location_c, direct_variable)
 void *fill_candidate_datatypes_c::visit(location_c *symbol) {
+ /* This is a special situation. 
+  *
+  * The reason is that a located variable may be declared to be of any data type, as long as the size
+  * matches the location (lines 1 3 and 4 of table 17). For example:
+  *   var1 AT %MB42.0 : BYTE;
+  *   var1 AT %MB42.1 : SINT;
+  *   var1 AT %MB42.2 : USINT;
+  *   var1 AT %MW64   : INT;
+  *   var1 AT %MD56   : DINT;
+  *   var1 AT %MD57   : REAL;
+  *  are all valid!!
+  *
+  *  However, when used inside an expression, the direct variable (uses the same syntax as the location
+  *  of a located variable) is limited to the following (ANY_BIT) data types:
+  *    %MX --> BOOL
+  *    %MB --> BYTE
+  *    %MW --> WORD
+  *    %MD --> DWORD
+  *    %ML --> LWORD
+  *
+  *  So, in order to be able to analyse expressions with direct variables
+  *   e.g:  var1 := 66 OR %MW34
+  *  where the direct variable may only take the ANY_BIT data types, the fill_candidate_datatypes_c
+  *  considers that only the ANY_BIT data types are allowed for a direct variable.
+  *  However, it appears from the examples in the standard (lines 1 3 and 4 of table 17)
+  *  a location may have any data type (presumably as long as the size in bits match).
+  *  For this reason, a location_c may have more allowable data types than a direct_variable_c
+  */
+
 	symbol->direct_variable->accept(*this);
-	symbol->candidate_datatypes = symbol->direct_variable->candidate_datatypes;
+	for (unsigned int i = 0; i < symbol->direct_variable->candidate_datatypes.size(); i++) {
+        	switch (get_sizeof_datatype_c::getsize(symbol->direct_variable->candidate_datatypes[i])) {
+			case  1: /* bit   -  1 bit  */
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safebool_type_name);
+					break;
+			case  8: /* byte  -  8 bits */
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safebyte_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::sint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safesint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::usint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeusint_type_name);
+					break;
+			case 16: /* word  - 16 bits */
+	 				add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeword_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::int_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::uint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeuint_type_name);
+					break;
+			case 32: /* dword - 32 bits */
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safedword_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::dint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safedint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::udint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeudint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::real_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safereal_type_name);
+					break;
+			case 64: /* lword - 64 bits */
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safelword_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::lint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safelint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::ulint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeulint_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::lreal_type_name);
+					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safelreal_type_name);
+					break;
+			default: /* if none of the above, then no valid datatype allowed... */
+					break;
+		} /* switch() */
+	} /* for */
+
 	return NULL;
 }
 
