@@ -31,27 +31,27 @@
  *
  */
 
-#include <vector>
+// #include <vector>
 #include "../absyntax_utils/absyntax_utils.hh"
-#include "datatype_functions.hh"
+// #include "datatype_functions.hh"
 
 
 
 
-class range_check_c: public iterator_visitor_c {
+class array_range_check_c: public iterator_visitor_c {
 
   private:
     search_varfb_instance_type_c *search_varfb_instance_type;
-    search_var_instance_decl_c *search_var_instance_decl;
+    // search_var_instance_decl_c *search_var_instance_decl;
     search_base_type_c search_base_type;
     int error_count;
     int current_display_error_level;
 
-    void check_range_array_check(array_variable_c *symbol);
+    void check_dimension_count(array_variable_c *symbol);
 
   public:
-    range_check_c(symbol_c *ignore);
-    virtual ~range_check_c(void);
+    array_range_check_c(symbol_c *ignore);
+    virtual ~array_range_check_c(void);
     int get_error_count();
 
     /*********************/
@@ -80,20 +80,7 @@ class range_check_c: public iterator_visitor_c {
     /**********************/
     void *visit(program_declaration_c *symbol);
 
-
-    /***************************************/
-    /* B.3 - Language ST (Structured Text) */
-    /***************************************/
-
-    /*********************************/
-    /* B 3.2.1 Assignment Statements */
-    /*********************************/
-    void *visit(assignment_statement_c *symbol);
-
-
-
-
-}; /* range_check_c */
+}; /* array_range_check_c */
 
 
 

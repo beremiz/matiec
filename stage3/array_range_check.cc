@@ -43,7 +43,7 @@
  */
 
 
-#include "range_check.hh"
+#include "array_range_check.hh"
 
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
 #define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
@@ -70,27 +70,25 @@
 }
 
 
-range_check_c::range_check_c(symbol_c *ignore) {
+array_range_check_c::array_range_check_c(symbol_c *ignore) {
 	error_count = 0;
 	current_display_error_level = 0;
 }
 
-range_check_c::~range_check_c(void) {
+array_range_check_c::~array_range_check_c(void) {
 }
 
-int range_check_c::get_error_count() {
+int array_range_check_c::get_error_count() {
 	return error_count;
 }
 
-void range_check_c::check_range_array_check(array_variable_c *symbol) {
+void array_range_check_c::check_dimension_count(array_variable_c *symbol) {
 	int dimension_count;
-	symbol_c* dimension;
-	var_declarations_c *var_decl;
-	array_dimension_iterator_c* array_dimension_iterator;
+	symbol_c *var_decl;
 
-	var_decl = (var_declarations_c *)search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable);
-	array_dimension_iterator = new array_dimension_iterator_c(var_decl);
-	for (dimension_count = 0; NULL != array_dimension_iterator->next(); dimension_count++);
+	var_decl = search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable);
+	array_dimension_iterator_c array_dimension_iterator(var_decl);
+	for (dimension_count = 0; NULL != array_dimension_iterator.next(); dimension_count++);
 	if (dimension_count != ((list_c *)symbol->subscript_list)->n)
 		STAGE3_ERROR(0, symbol, symbol, "Number of dimensions does not match, Array have %d dimension(s)", dimension_count);
 }
@@ -101,8 +99,8 @@ void range_check_c::check_range_array_check(array_variable_c *symbol) {
 /*************************************/
 /* B 1.4.2 - Multi-element variables */
 /*************************************/
-void *range_check_c::visit(array_variable_c *symbol) {
-	check_range_array_check(symbol);
+void *array_range_check_c::visit(array_variable_c *symbol) {
+	check_dimension_count(symbol);
 	return NULL;
 }
 
@@ -113,63 +111,44 @@ void *range_check_c::visit(array_variable_c *symbol) {
 /***********************/
 /* B 1.5.1 - Functions */
 /***********************/
-void *range_check_c::visit(function_declaration_c *symbol) {
+void *array_range_check_c::visit(function_declaration_c *symbol) {
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
-	search_var_instance_decl = new search_var_instance_decl_c(symbol);
+	// search_var_instance_decl = new search_var_instance_decl_c(symbol);
 	symbol->function_body->accept(*this);
 	delete search_varfb_instance_type;
-	delete search_var_instance_decl;
+	// delete search_var_instance_decl;
 	search_varfb_instance_type = NULL;
-	search_var_instance_decl = NULL;
+	// search_var_instance_decl = NULL;
 	return NULL;
 }
 
 /*****************************/
 /* B 1.5.2 - Function blocks */
 /*****************************/
-void *range_check_c::visit(function_block_declaration_c *symbol) {
+void *array_range_check_c::visit(function_block_declaration_c *symbol) {
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
-	search_var_instance_decl = new search_var_instance_decl_c(symbol);
+	// search_var_instance_decl = new search_var_instance_decl_c(symbol);
 	symbol->fblock_body->accept(*this);
 	delete search_varfb_instance_type;
-	delete search_var_instance_decl;
+	// delete search_var_instance_decl;
 	search_varfb_instance_type = NULL;
-	search_var_instance_decl = NULL;
+	// search_var_instance_decl = NULL;
 	return NULL;
 }
 
 /**********************/
 /* B 1.5.3 - Programs */
 /**********************/
-void *range_check_c::visit(program_declaration_c *symbol) {
+void *array_range_check_c::visit(program_declaration_c *symbol) {
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
-	search_var_instance_decl = new search_var_instance_decl_c(symbol);
+	// search_var_instance_decl = new search_var_instance_decl_c(symbol);
 	symbol->function_block_body->accept(*this);
 	delete search_varfb_instance_type;
-	delete search_var_instance_decl;
+	// delete search_var_instance_decl;
 	search_varfb_instance_type = NULL;
-	search_var_instance_decl = NULL;
+	// search_var_instance_decl = NULL;
 	return NULL;
 }
-
-
-
-/***************************************/
-/* B.3 - Language ST (Structured Text) */
-/***************************************/
-/*********************************/
-/* B 3.2.1 Assignment Statements */
-/*********************************/
-void *range_check_c::visit(assignment_statement_c *symbol) {
-	symbol->l_exp->accept(*this);
-    symbol->r_exp->accept(*this);
-	return NULL;
-}
-
-
-
-
-
 
 
 

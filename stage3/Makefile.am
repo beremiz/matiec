@@ -10,5 +10,5 @@ libstage3_a_SOURCES = \
 	print_datatypes_error.cc \
 	datatype_functions.cc \
 	lvalue_check.cc \
-        range_check.cc
+	array_range_check.cc
 

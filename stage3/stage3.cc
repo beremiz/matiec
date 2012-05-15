@@ -39,7 +39,7 @@
 #include "narrow_candidate_datatypes.hh"
 #include "print_datatypes_error.hh"
 #include "lvalue_check.hh"
-#include "range_check.hh"
+#include "array_range_check.hh"
 
 
 static int flow_control_analysis(symbol_c *tree_root){
@@ -73,9 +73,9 @@ static int lvalue_check(symbol_c *tree_root){
 }
 
 static int range_check(symbol_c *tree_root){
-	range_check_c range_check(tree_root);
-	tree_root->accept(range_check);
-	return range_check.get_error_count();
+	array_range_check_c array_range_check(tree_root);
+	tree_root->accept(array_range_check);
+	return array_range_check.get_error_count();
 }
 
 
