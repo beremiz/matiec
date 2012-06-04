@@ -102,7 +102,7 @@ array_dimension_iterator_c::array_dimension_iterator_c(symbol_c *symbol) {
  *
  * Returns the subrange symbol!
  */
-symbol_c *array_dimension_iterator_c::next(void) {
+subrange_c *array_dimension_iterator_c::next(void) {
   void *res = array_specification->accept(*this);
   if (res == NULL) 
     return NULL;

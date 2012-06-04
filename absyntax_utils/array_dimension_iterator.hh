@@ -54,7 +54,7 @@ class array_dimension_iterator_c : public null_visitor_c {
     /* a pointer to the array_specification_c currently being analyzed */
     symbol_c *array_specification;
     /* used when called to iterate() for a parameter */
-    symbol_c *current_array_dimension;
+    subrange_c *current_array_dimension;
 
   private:
     void* iterate_list(list_c *list);
@@ -64,7 +64,7 @@ class array_dimension_iterator_c : public null_visitor_c {
     void reset(void);
 
     /* initialize the iterator object.
-     * We must be given a reference to a case_list_c that will be analyzed...
+     * We must be given a reference to a array_specification_c that will be analyzed...
      */
     array_dimension_iterator_c(symbol_c *symbol);
 
@@ -75,7 +75,8 @@ class array_dimension_iterator_c : public null_visitor_c {
      *
      * Returns the subrange symbol!
      */
-    symbol_c *next(void);
+    subrange_c *next(void);
+    
 
     private:
     
