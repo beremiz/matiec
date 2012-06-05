@@ -48,9 +48,10 @@
 
 #include <stdio.h> // required for NULL
 #include <vector>
+#include <string>
 
 /* Forward declaration of the visitor interface
- * dclared in the visitor.hh file
+ * declared in the visitor.hh file
  * We cannot include the visitor.hh file, as it will
  * include this same file first, as it too requires references
  * to the abstract syntax classes defined here.
@@ -59,7 +60,6 @@ class visitor_c; // forward declaration
 
 
 class symbol_c; // forward declaration
-
 
 
 /* The base class of all symbols */
@@ -83,7 +83,12 @@ class symbol_c {
      * If it points to an object of type invalid_type_name_c, it means it is invalid.
      * Otherwise, it points to an object of the apropriate data type (e.g. int_type_name_c, bool_type_name_c, ...)
      */
-    symbol_c *datatype;    
+    symbol_c *datatype;
+
+    double   *const_value_real;
+    int64_t  *const_value_integer;
+    uint64_t *const_value_uinteger;
+    bool     *const_value_bool;
 
 
   public:
@@ -301,7 +306,5 @@ class class_name_c: public symbol_c {											\
 #undef SYM_REF4
 #undef SYM_REF5
 #undef SYM_REF6
-
-
 
 #endif /*  _ABSYNTAX_HH */
