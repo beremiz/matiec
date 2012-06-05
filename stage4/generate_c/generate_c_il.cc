@@ -524,19 +524,15 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
 
 public:
 void *visit(il_default_variable_c *symbol) {
-  //s4o.print("il_default_variable_c VISITOR!!\n");
   symbol->var_name->accept(*this);
   if (NULL != symbol->current_type) {
     s4o.print(".");
-    if (search_expression_type->is_literal_integer_type(symbol->current_type))
-      this->lint_type.accept(*this);
-    else if (search_expression_type->is_literal_real_type(this->default_variable_name.current_type))
-      this->lreal_type.accept(*this);
-    else
-      symbol->current_type->accept(*this);
+    if      ( search_expression_type->is_literal_integer_type(symbol->current_type))                  this->lint_type.accept(*this);
+    else if ( search_expression_type->is_literal_real_type(this->default_variable_name.current_type)) this->lreal_type.accept(*this);
+    else if ( search_expression_type->is_bool_type(this->default_variable_name.current_type))         this->bool_type.accept(*this); 
+    else symbol->current_type->accept(*this);
     s4o.print("var");
-  }
-  return NULL;
+  } return NULL;
 }
 
 
