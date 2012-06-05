@@ -85,6 +85,8 @@
 	((((std::numeric_limits< type >::max() - a) < (-b)) ? 1 : 0) || \
 	 (((std::numeric_limits< type >::min() + a) > (-b)) ? 1 : 0))
 
+#define SYMBOL_BOOL_VALUE (symbol->exp->const_value_bool)
+#define SYMBOL_REAL_VALUE (symbol->exp->const_value_real)
 
 
 
@@ -129,15 +131,11 @@ void *constant_folding_c::visit(integer_c *symbol) {
 }
 
 void *constant_folding_c::visit(neg_real_c *symbol) {
-	double *real_value;
-
-	real_value = (double *)malloc(sizeof(double));
 	symbol->exp->accept(*this);
 	if (NULL == symbol->exp->const_value_real)
 		ERROR;
-	*real_value = - *(symbol->exp->const_value_real);
-	symbol->const_value_real = real_value;
-
+	symbol->const_value_real = (double*) malloc(sizeof(double));
+	*symbol->const_value_real = - *(symbol->exp->const_value_real);
 	return NULL;
 }
 
@@ -162,34 +160,26 @@ void *constant_folding_c::visit(octal_integer_c *symbol) {
 }
 
 void *constant_folding_c::visit(hex_integer_c *symbol) {
-	int64_t *integer_value;
-
-	integer_value = (int64_t *)malloc(sizeof(int64_t));
-	*integer_value = extract_hex_value(symbol);
+	symbol->const_value_integer = (int64_t*) malloc(sizeof(int64_t));
+	*(symbol->const_value_integer) = extract_hex_value(symbol);
 
 	return NULL;
 }
 
 void *constant_folding_c::visit(integer_literal_c *symbol) {
-	int64_t *integer_value;
-
 	symbol->value->accept(*this);
 	if (NULL == symbol->value->const_value_integer) ERROR;
+	symbol->const_value_integer = (int64_t*) malloc(sizeof(int64_t));
 	*(symbol->const_value_integer) = *(symbol->value->const_value_integer);
-	integer_value = (int64_t *)malloc(sizeof(int64_t));
 
 	return NULL;
 }
 
 void *constant_folding_c::visit(real_literal_c *symbol) {
-	double *real_value;
-
-	real_value = (double *)malloc(sizeof(double));
 	symbol->value->accept(*this);
-	if (NULL == symbol->value->const_value_real)
-		ERROR;
-	*real_value = *(symbol->value->const_value_real);
-	symbol->const_value_real = real_value;
+	if (NULL == symbol->value->const_value_real) ERROR;
+	symbol->const_value_real = (double*) malloc(sizeof(double));
+	*symbol->const_value_real =  *(symbol->value->const_value_real);
 
 	return NULL;
 }
@@ -377,10 +367,17 @@ void *constant_folding_c::visit(add_expression_c *symbol) {
 		*(symbol->const_value_integer) = *(symbol->l_exp->const_value_integer) + *(symbol->r_exp->const_value_integer);
 	}
 	if (DO_OPER(real)) {
-		if (CHECK_OVERFLOW_SUM(*(symbol->l_exp->const_value_real), *(symbol->r_exp->const_value_real), double))
-			STAGE3_ERROR(0, symbol, symbol, "Overflow in constant expression.");
 		symbol->const_value_real = (double*) malloc(sizeof(double));
 		*(symbol->const_value_real) = *(symbol->l_exp->const_value_real) + *(symbol->r_exp->const_value_real);
+		/*
+		 * According to the IEEE standard, NaN value is used as:
+		 *   - representation of a number that has underflowed
+		 *   - representation of number that has overflowed
+		 *   - number is a higher precision format
+		 *   - A complex number
+		 */
+		 if (isnan(*(symbol->const_value_real)))
+			STAGE3_ERROR(0, symbol, symbol, "Overflow in constant expression.");
 	}
 
 	return NULL;
@@ -396,10 +393,17 @@ void *constant_folding_c::visit(sub_expression_c *symbol) {
 		*(symbol->const_value_integer) = *(symbol->l_exp->const_value_integer) - *(symbol->r_exp->const_value_integer);
 	}
 	if (DO_OPER(real)) {
-		if (CHECK_OVERFLOW_SUB(*(symbol->l_exp->const_value_real), *(symbol->r_exp->const_value_real), double))
-			STAGE3_ERROR(0, symbol, symbol, "Overflow in constant expression.");
 		symbol->const_value_real = (double*) malloc(sizeof(double));
 		*(symbol->const_value_real) = *(symbol->l_exp->const_value_real) - *(symbol->r_exp->const_value_real);
+		/*
+		 * According to the IEEE standard, NaN value is used as:
+		 *   - representation of a number that has underflowed
+		 *   - representation of number that has overflowed
+		 *   - number is a higher precision format
+		 *   - A complex number
+		 */
+		if (isnan(*(symbol->const_value_real)))
+			STAGE3_ERROR(0, symbol, symbol, "Overflow in constant expression.");
 	}
 
 	return NULL;
@@ -410,17 +414,20 @@ void *constant_folding_c::visit(mul_expression_c *symbol) {
 	symbol->r_exp->accept(*this);
 	if (DO_OPER(integer)) {
 		symbol->const_value_integer = (int64_t*) malloc(sizeof(int64_t));
-		if ((*(symbol->l_exp->const_value_integer) == 0) ||
-			(*(symbol->r_exp->const_value_integer) == 0)) {
-			*(symbol->const_value_integer) = 0;
-			return NULL;
-		}
-
 		*(symbol->const_value_integer) = *(symbol->l_exp->const_value_integer) * *(symbol->r_exp->const_value_integer);
 	}
 	if (DO_OPER(real)) {
 		symbol->const_value_real = (double*) malloc(sizeof(double));
 		*(symbol->const_value_real) = *(symbol->l_exp->const_value_real) * *(symbol->r_exp->const_value_real);
+		/*
+		 * According to the IEEE standard, NaN value is used as:
+		 *   - representation of a number that has underflowed
+		 *   - representation of number that has overflowed
+		 *   - number is a higher precision format
+		 *   - A complex number
+		 */
+		if (isnan(*(symbol->const_value_real)))
+			STAGE3_ERROR(0, symbol, symbol, "Overflow in constant expression.");
 	}
 
 	return NULL;
@@ -440,6 +447,15 @@ void *constant_folding_c::visit(div_expression_c *symbol) {
 			STAGE3_ERROR(0, symbol, symbol, "Division by zero in constant expression.");
 		symbol->const_value_real = (double*) malloc(sizeof(double));
 		*(symbol->const_value_real) = *(symbol->l_exp->const_value_real) / *(symbol->r_exp->const_value_real);
+		/*
+		 * According to the IEEE standard, NaN value is used as:
+		 *   - representation of a number that has underflowed
+		 *   - representation of number that has overflowed
+		 *   - number is a higher precision format
+		 *   - A complex number
+		 */
+		if (isnan(*(symbol->const_value_real)))
+			STAGE3_ERROR(0, symbol, symbol, "Overflow in constant expression.");
 	}
 
 	return NULL;
@@ -453,6 +469,7 @@ void *constant_folding_c::visit(mod_expression_c *symbol) {
 			STAGE3_ERROR(0, symbol, symbol, "Division by zero in constant expression.");
 		symbol->const_value_integer = (int64_t*) malloc(sizeof(int64_t));
 		*(symbol->const_value_integer) = *(symbol->l_exp->const_value_integer) % *(symbol->r_exp->const_value_integer);
+
 	}
 
 	return NULL;
@@ -464,6 +481,15 @@ void *constant_folding_c::visit(power_expression_c *symbol) {
 	if ((NULL != symbol->l_exp->const_value_real) && (NULL != symbol->r_exp->const_value_integer)) {
 		symbol->const_value_real = (double*) malloc(sizeof(double));
 		*(symbol->const_value_real) = pow(*(symbol->l_exp->const_value_real), *(symbol->r_exp->const_value_integer));
+		/*
+		 * According to the IEEE standard, NaN value is used as:
+		 *   - representation of a number that has underflowed
+		 *   - representation of number that has overflowed
+		 *   - number is a higher precision format
+		 *   - A complex number
+		 */
+		if (isnan(*(symbol->const_value_real)))
+			STAGE3_ERROR(0, symbol, symbol, "Overflow in constant expression.");
 	}
 
 	return NULL;
