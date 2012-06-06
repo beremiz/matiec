@@ -46,6 +46,9 @@
 #include <math.h> /* required for pow function */
 #include <stdlib.h> /* required for malloc() */
 
+
+
+
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
 #define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
 
@@ -99,7 +102,15 @@
 
 constant_folding_c::constant_folding_c(symbol_c *symbol) {
     error_count = 0;
+    warning_found = false;
     current_display_error_level = 0;
+    
+    /* check whether the platform on which the compiler is being run implements IEC 559 floating point data types. */
+    symbol_c null_symbol;
+    if (! (std::numeric_limits<real64_t>::is_iec559) )
+        STAGE3_WARNING(&null_symbol, &null_symbol, "The platform running the compiler does not implement IEC 559 floating point numbers. "
+                                                   "Any error and/or warning messages related to overflow/underflow of the result of operations on REAL/LREAL literals "
+                                                   " (i.e. constant folding) may themselves be erroneous, although are most probably correct");
 }
 
 
@@ -119,7 +130,7 @@ int constant_folding_c::get_error_count() {
 /* B 1.2.1 - Numeric Literals */
 /******************************/
 void *constant_folding_c::visit(real_c *symbol) {
-	MALLOC(symbol->const_value_real, double);
+	MALLOC(symbol->const_value_real, real64_t);
 	*symbol->const_value_real = extract_real_value(symbol);
 
 	return NULL;
@@ -141,7 +152,7 @@ void *constant_folding_c::visit(neg_real_c *symbol) {
 	symbol->exp->accept(*this);
 	if (NULL == symbol->exp->const_value_real)
 		ERROR;
-	symbol->const_value_real = (double*) malloc(sizeof(double));
+	symbol->const_value_real = (real64_t*) malloc(sizeof(real64_t));
 	*symbol->const_value_real = - *(symbol->exp->const_value_real);
 	return NULL;
 }
@@ -191,7 +202,7 @@ void *constant_folding_c::visit(integer_literal_c *symbol) {
 void *constant_folding_c::visit(real_literal_c *symbol) {
 	symbol->value->accept(*this);
 	if (NULL == symbol->value->const_value_real) ERROR;
-	symbol->const_value_real = (double*) malloc(sizeof(double));
+	symbol->const_value_real = (real64_t*) malloc(sizeof(real64_t));
 	*symbol->const_value_real =  *(symbol->value->const_value_real);
 
 	return NULL;
@@ -395,7 +406,7 @@ void *constant_folding_c::visit(add_expression_c *symbol) {
 		*(symbol->const_value_integer) = *(symbol->l_exp->const_value_integer) + *(symbol->r_exp->const_value_integer);
 	}
 	if (DO_OPER(real)) {
-		symbol->const_value_real = (double*) malloc(sizeof(double));
+		symbol->const_value_real = (real64_t*) malloc(sizeof(real64_t));
 		*(symbol->const_value_real) = *(symbol->l_exp->const_value_real) + *(symbol->r_exp->const_value_real);
 		/*
 		 * According to the IEEE standard, NaN value is used as:
@@ -422,7 +433,7 @@ void *constant_folding_c::visit(sub_expression_c *symbol) {
 		*(symbol->const_value_integer) = *(symbol->l_exp->const_value_integer) - *(symbol->r_exp->const_value_integer);
 	}
 	if (DO_OPER(real)) {
-		symbol->const_value_real = (double*) malloc(sizeof(double));
+		symbol->const_value_real = (real64_t*) malloc(sizeof(real64_t));
 		*(symbol->const_value_real) = *(symbol->l_exp->const_value_real) - *(symbol->r_exp->const_value_real);
 		/*
 		 * According to the IEEE standard, NaN value is used as:
@@ -447,7 +458,7 @@ void *constant_folding_c::visit(mul_expression_c *symbol) {
 		*(symbol->const_value_integer) = *(symbol->l_exp->const_value_integer) * *(symbol->r_exp->const_value_integer);
 	}
 	if (DO_OPER(real)) {
-		symbol->const_value_real = (double*) malloc(sizeof(double));
+		symbol->const_value_real = (real64_t*) malloc(sizeof(real64_t));
 		*(symbol->const_value_real) = *(symbol->l_exp->const_value_real) * *(symbol->r_exp->const_value_real);
 		/*
 		 * According to the IEEE standard, NaN value is used as:
@@ -476,7 +487,7 @@ void *constant_folding_c::visit(div_expression_c *symbol) {
 	if (DO_OPER(real)) {
 		if (*(symbol->r_exp->const_value_real) == 0)
 			STAGE3_ERROR(0, symbol, symbol, "Division by zero in constant expression.");
-		symbol->const_value_real = (double*) malloc(sizeof(double));
+		symbol->const_value_real = (real64_t*) malloc(sizeof(real64_t));
 		*(symbol->const_value_real) = *(symbol->l_exp->const_value_real) / *(symbol->r_exp->const_value_real);
 		/*
 		 * According to the IEEE standard, NaN value is used as:
@@ -512,7 +523,7 @@ void *constant_folding_c::visit(power_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	if ((NULL != symbol->l_exp->const_value_real) && (NULL != symbol->r_exp->const_value_integer)) {
-		symbol->const_value_real = (double*) malloc(sizeof(double));
+		symbol->const_value_real = (real64_t*) malloc(sizeof(real64_t));
 		*(symbol->const_value_real) = pow(*(symbol->l_exp->const_value_real), *(symbol->r_exp->const_value_integer));
 		/*
 		 * According to the IEEE standard, NaN value is used as:
@@ -536,7 +547,7 @@ void *constant_folding_c::visit(neg_expression_c *symbol) {
 		*(symbol->const_value_integer) = - *(symbol->exp->const_value_integer);
 	}
 	if (NULL != symbol->exp->const_value_real) {
-		symbol->const_value_real = (double*) malloc(sizeof(double));
+		symbol->const_value_real = (real64_t*) malloc(sizeof(real64_t));
 		*(symbol->const_value_real) = - *(symbol->exp->const_value_real);
 	}
 	return NULL;

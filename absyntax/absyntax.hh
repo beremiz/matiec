@@ -51,6 +51,22 @@
 #include <string>
 #include <stdint.h>  // required for uint64_t, etc...
 
+
+
+/* NOTE: we cant use sizeof() in pre-processor directives, so we do it another way... */
+#include <float.h>
+#if    (LDBL_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
+  #define long_double long double
+  #define real64_t long_double /* so we can later use #if (real64_t == long_double) directives in the code! */
+#elif  ( DBL_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
+  #define real64_t double
+#elif  ( FLT_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
+  #define real64_t float
+#else 
+  #error Could not find a 64 bit floating point data type on this platform. Aborting...
+#endif
+
+
 /* Forward declaration of the visitor interface
  * declared in the visitor.hh file
  * We cannot include the visitor.hh file, as it will
@@ -86,7 +102,7 @@ class symbol_c {
      */
     symbol_c *datatype;
 
-    double   *const_value_real;
+    real64_t *const_value_real;
     int64_t  *const_value_integer;
     uint64_t *const_value_uinteger;
     bool     *const_value_bool;
@@ -147,7 +163,7 @@ class list_c: public symbol_c {
 
 
 
-#define SYM_LIST(class_name_c, ...)												\
+#define SYM_LIST(class_name_c, ...)											\
 class class_name_c:	public list_c {											\
   public:														\
     __VA_ARGS__														\
@@ -162,7 +178,7 @@ class class_name_c:	public list_c {											\
 };
 
 
-#define SYM_TOKEN(class_name_c, ...)												\
+#define SYM_TOKEN(class_name_c, ...)											\
 class class_name_c: 	public token_c {										\
   public:														\
     __VA_ARGS__														\
@@ -174,7 +190,7 @@ class class_name_c: 	public token_c {										\
 };
 
 
-#define SYM_REF0(class_name_c, ...)												\
+#define SYM_REF0(class_name_c, ...)											\
 class class_name_c: public symbol_c {											\
   public:														\
     __VA_ARGS__														\
@@ -250,7 +266,7 @@ class class_name_c: public symbol_c {											\
 };
 
 
-#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)								\
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)							\
 class class_name_c: public symbol_c {											\
   public:														\
     symbol_c *ref1;													\

@@ -58,7 +58,7 @@ int compare_identifiers(symbol_c *ident1, symbol_c *ident2);
 /* extract the value of an integer/hex_integer/real from an integer_c/hex_integer_c/real_c symbol !! */
 long long extract_integer_value(symbol_c *sym);
 uint64_t  extract_hex_value    (symbol_c *sym);
-double    extract_real_value   (symbol_c *sym);
+real64_t  extract_real_value   (symbol_c *sym);
   
 /* A symbol table with all globally declared functions... */
 extern function_declaration_c null_symbol1;

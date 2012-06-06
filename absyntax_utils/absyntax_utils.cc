@@ -138,7 +138,7 @@ uint64_t extract_hex_value(symbol_c *sym) {
 
 /* extract the value of a real from an real_c object !! */
 /* NOTE: it must ignore underscores! */
-double extract_real_value(symbol_c *sym) {
+real64_t extract_real_value(symbol_c *sym) {
   std::string str = "";
   char *endptr;
   real_c * real_sym;
@@ -148,7 +148,15 @@ double extract_real_value(symbol_c *sym) {
   for(unsigned int i = 3; i < strlen(real_sym->value); i++)
     if (real_sym->value[i] != '_') str += real_sym->value[i];
     
-  ret = strtod(str.c_str(), NULL);
+  #if    (real64_t  == float)
+    ret = strtof(str.c_str(), NULL);
+  #elif  (real64_t  == double)
+    ret = strtod(str.c_str(), NULL);
+  #elif  (real64_t  == long_double)
+    ret = strtold(str.c_str(), NULL);
+  #else 
+    #error Could not determine which data type is being used for real64_t (defined in absyntax.hh). Aborting!
+  #endif
   if (errno != 0) ERROR;
 
   return ret;
