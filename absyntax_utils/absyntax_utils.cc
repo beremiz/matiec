@@ -117,19 +117,19 @@ long long extract_integer_value(symbol_c *sym) {
 }
 
 uint64_t extract_hex_value(symbol_c *sym) {
-	std::string str = "";
-	char *endptr;
-	hex_integer_c * hex_integer;
-	uint64_t ret;
+  std::string str = "";
+  char *endptr;
+  hex_integer_c * hex_integer;
+  uint64_t ret;
 
-    if ((hex_integer = dynamic_cast<hex_integer_c *>(sym)) == NULL) ERROR;
-    for(unsigned int i = 3; i < strlen(hex_integer->value); i++)
-    	if (hex_integer->value[i] != '_') str += hex_integer->value[i];
-    errno = 0;    /* To distinguish success/failure after call */
-    ret = strtol(str.c_str(), &endptr, 16);
-    if (errno != 0) ERROR;
+  if ((hex_integer = dynamic_cast<hex_integer_c *>(sym)) == NULL) ERROR;
+  for(unsigned int i = 3; i < strlen(hex_integer->value); i++)
+    if (hex_integer->value[i] != '_') str += hex_integer->value[i];
+  errno = 0;    /* To distinguish success/failure after call */
+  ret = strtoull(str.c_str(), &endptr, 16);
+  if (errno != 0) ERROR;
 
-	return ret;
+  return ret;
 }
 
 

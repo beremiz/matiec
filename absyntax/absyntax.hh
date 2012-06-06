@@ -49,6 +49,7 @@
 #include <stdio.h> // required for NULL
 #include <vector>
 #include <string>
+#include <stdint.h>  // required for uint64_t, etc...
 
 /* Forward declaration of the visitor interface
  * declared in the visitor.hh file

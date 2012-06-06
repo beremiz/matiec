@@ -44,6 +44,7 @@
 #include <typeinfo>
 #include <limits>
 #include <math.h> /* required for pow function */
+#include <stdlib.h> /* required for malloc() */
 
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
 #define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))

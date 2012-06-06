@@ -75,7 +75,8 @@ am_libstage3_a_OBJECTS = stage3.$(OBJEXT) \
 	fill_candidate_datatypes.$(OBJEXT) \
 	narrow_candidate_datatypes.$(OBJEXT) \
 	print_datatypes_error.$(OBJEXT) datatype_functions.$(OBJEXT) \
-	lvalue_check.$(OBJEXT) array_range_check.$(OBJEXT)
+	lvalue_check.$(OBJEXT) array_range_check.$(OBJEXT) \
+	constant_folding.$(OBJEXT)
 libstage3_a_OBJECTS = $(am_libstage3_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/config
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -198,7 +199,8 @@ libstage3_a_SOURCES = \
 	print_datatypes_error.cc \
 	datatype_functions.cc \
 	lvalue_check.cc \
-	array_range_check.cc
+	array_range_check.cc \
+        constant_folding.cc
 
 all: all-am
 
@@ -278,6 +280,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/array_range_check.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constant_folding.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/datatype_functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fill_candidate_datatypes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flow_control_analysis.Po@am__quote@
