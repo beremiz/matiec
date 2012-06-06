@@ -116,6 +116,9 @@ long long extract_integer_value(symbol_c *sym) {
   return atoll(str.c_str());
 }
 
+
+/* extract the value of an hex integer from an hex_integer_c object !! */
+/* NOTE: it must ignore underscores! */
 uint64_t extract_hex_value(symbol_c *sym) {
   std::string str = "";
   char *endptr;
@@ -125,8 +128,27 @@ uint64_t extract_hex_value(symbol_c *sym) {
   if ((hex_integer = dynamic_cast<hex_integer_c *>(sym)) == NULL) ERROR;
   for(unsigned int i = 3; i < strlen(hex_integer->value); i++)
     if (hex_integer->value[i] != '_') str += hex_integer->value[i];
-  errno = 0;    /* To distinguish success/failure after call */
+    
   ret = strtoull(str.c_str(), &endptr, 16);
+  if (errno != 0) ERROR;
+
+  return ret;
+}
+
+
+/* extract the value of a real from an real_c object !! */
+/* NOTE: it must ignore underscores! */
+double extract_real_value(symbol_c *sym) {
+  std::string str = "";
+  char *endptr;
+  real_c * real_sym;
+  uint64_t ret;
+
+  if ((real_sym = dynamic_cast<real_c *>(sym)) == NULL) ERROR;
+  for(unsigned int i = 3; i < strlen(real_sym->value); i++)
+    if (real_sym->value[i] != '_') str += real_sym->value[i];
+    
+  ret = strtod(str.c_str(), NULL);
   if (errno != 0) ERROR;
 
   return ret;

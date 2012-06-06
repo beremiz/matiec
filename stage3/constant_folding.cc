@@ -72,6 +72,12 @@
 
 
 
+
+#define MALLOC(variable, data_type) \
+ variable = (data_type *)malloc(sizeof(data_type)); \
+ if (variable == NULL) ERROR;
+
+
 #define DO_OPER(dtype)\
     (NULL != symbol->r_exp->const_value_##dtype ) && \
     (NULL != symbol->l_exp->const_value_##dtype )
@@ -96,8 +102,10 @@ constant_folding_c::constant_folding_c(symbol_c *symbol) {
     current_display_error_level = 0;
 }
 
+
 constant_folding_c::~constant_folding_c(void) {
 }
+
 
 int constant_folding_c::get_error_count() {
 	return error_count;
@@ -111,14 +119,12 @@ int constant_folding_c::get_error_count() {
 /* B 1.2.1 - Numeric Literals */
 /******************************/
 void *constant_folding_c::visit(real_c *symbol) {
-	double *real_value;
-
-	real_value = (double *)malloc(sizeof(double));
-	sscanf(symbol->value, "%lf", real_value);
-	symbol->const_value_real = real_value;
+	MALLOC(symbol->const_value_real, double);
+	*symbol->const_value_real = extract_real_value(symbol);
 
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(integer_c *symbol) {
 	int64_t *integer_value;
@@ -130,6 +136,7 @@ void *constant_folding_c::visit(integer_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(neg_real_c *symbol) {
 	symbol->exp->accept(*this);
 	if (NULL == symbol->exp->const_value_real)
@@ -138,6 +145,7 @@ void *constant_folding_c::visit(neg_real_c *symbol) {
 	*symbol->const_value_real = - *(symbol->exp->const_value_real);
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(neg_integer_c *symbol) {
 	int64_t *integer_value;
@@ -149,15 +157,18 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(binary_integer_c *symbol) {
 
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(octal_integer_c *symbol) {
 
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(hex_integer_c *symbol) {
 	symbol->const_value_integer = (int64_t*) malloc(sizeof(int64_t));
@@ -165,6 +176,7 @@ void *constant_folding_c::visit(hex_integer_c *symbol) {
 
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(integer_literal_c *symbol) {
 	symbol->value->accept(*this);
@@ -175,6 +187,7 @@ void *constant_folding_c::visit(integer_literal_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(real_literal_c *symbol) {
 	symbol->value->accept(*this);
 	if (NULL == symbol->value->const_value_real) ERROR;
@@ -184,10 +197,12 @@ void *constant_folding_c::visit(real_literal_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(bit_string_literal_c *symbol) {
 
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(boolean_literal_c *symbol) {
 	symbol->value->accept(*this);
@@ -198,6 +213,7 @@ void *constant_folding_c::visit(boolean_literal_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(boolean_true_c *symbol) {
 	symbol->const_value_bool = (bool *)malloc(sizeof(bool));
 	*(symbol->const_value_bool) = true;
@@ -205,12 +221,15 @@ void *constant_folding_c::visit(boolean_true_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(boolean_false_c *symbol) {
 	symbol->const_value_bool = (bool *)malloc(sizeof(bool));
 	*(symbol->const_value_bool) = false;
 
 	return NULL;
 }
+
+
 
 /***************************************/
 /* B.3 - Language ST (Structured Text) */
@@ -233,6 +252,7 @@ void *constant_folding_c::visit(or_expression_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(xor_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
@@ -243,6 +263,7 @@ void *constant_folding_c::visit(xor_expression_c *symbol) {
 
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(and_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
@@ -258,6 +279,7 @@ void *constant_folding_c::visit(and_expression_c *symbol) {
 
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(equ_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
@@ -278,6 +300,7 @@ void *constant_folding_c::visit(equ_expression_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(notequ_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
@@ -297,6 +320,7 @@ void *constant_folding_c::visit(notequ_expression_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(lt_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
@@ -311,6 +335,7 @@ void *constant_folding_c::visit(lt_expression_c *symbol) {
 
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(gt_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
@@ -327,6 +352,7 @@ void *constant_folding_c::visit(gt_expression_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(le_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
@@ -342,6 +368,7 @@ void *constant_folding_c::visit(le_expression_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(ge_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
@@ -356,6 +383,7 @@ void *constant_folding_c::visit(ge_expression_c *symbol) {
 
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(add_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
@@ -383,6 +411,7 @@ void *constant_folding_c::visit(add_expression_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(sub_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
@@ -409,6 +438,7 @@ void *constant_folding_c::visit(sub_expression_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(mul_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
@@ -432,6 +462,7 @@ void *constant_folding_c::visit(mul_expression_c *symbol) {
 
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(div_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
@@ -461,6 +492,7 @@ void *constant_folding_c::visit(div_expression_c *symbol) {
 	return NULL;
 }
 
+
 void *constant_folding_c::visit(mod_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
@@ -474,6 +506,7 @@ void *constant_folding_c::visit(mod_expression_c *symbol) {
 
 	return NULL;
 }
+
 
 void *constant_folding_c::visit(power_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
@@ -494,6 +527,8 @@ void *constant_folding_c::visit(power_expression_c *symbol) {
 
 	return NULL;
 }
+
+
 void *constant_folding_c::visit(neg_expression_c *symbol) {
 	symbol->exp->accept(*this);
 	if (NULL != symbol->exp->const_value_integer) {
@@ -506,6 +541,8 @@ void *constant_folding_c::visit(neg_expression_c *symbol) {
 	}
 	return NULL;
 }
+
+
 
 void *constant_folding_c::visit(not_expression_c *symbol) {
 	symbol->exp->accept(*this);
