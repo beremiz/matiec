@@ -62,9 +62,9 @@ symbol_c::symbol_c(
   this->last_column  = last_column;
   this->last_order   = last_order;
   this->datatype     = NULL;
-  this->const_value_real     = NULL;
-  this->const_value_integer  = NULL;
-  this->const_value_uinteger = NULL;
+  this->const_value_real64   = NULL;
+  this->const_value_int64    = NULL;
+  this->const_value_uint64   = NULL;
   this->const_value_bool     = NULL;
 }
 

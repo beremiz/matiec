@@ -52,7 +52,7 @@
 #include <stdint.h>  // required for uint64_t, etc...
 
 
-
+/* Determine, for the current platform, which data type (float, double or long double) uses 64 bits. */
 /* NOTE: we cant use sizeof() in pre-processor directives, so we do it another way... */
 #include <float.h>
 #if    (LDBL_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
@@ -79,12 +79,22 @@ class visitor_c; // forward declaration
 class symbol_c; // forward declaration
 
 
+
+
+
+
+
+
+
+
+
 /* The base class of all symbols */
 class symbol_c {
 
   public:
     /*
-     * Line number for the purposes of error checking
+     * Line number for the purposes of error checking.
+     * Annotated (inserted) by stage1_2
      */
     int first_line;
     int first_column;
@@ -94,6 +104,12 @@ class symbol_c {
     int last_column;
     const char *last_file;  /* filename referenced by last line/column */
     long int last_order;    /* relative order in which it is read by lexcial analyser */
+
+
+    /*
+     * Annotations produced during stage 3
+     */
+    /*** Data type analysis ***/
     std::vector <symbol_c *> candidate_datatypes; /* All possible data types the expression/literal/etc. may take. Filled in stage3 by fill_candidate_datatypes_c class */
     /* Data type of the expression/literal/etc. Filled in stage3 by narrow_candidate_datatypes_c 
      * If set to NULL, it means it has not yet been evaluated.
@@ -102,10 +118,44 @@ class symbol_c {
      */
     symbol_c *datatype;
 
-    real64_t *const_value_real;
-    int64_t  *const_value_integer;
-    uint64_t *const_value_uinteger;
-    bool     *const_value_bool;
+    /*** constant folding ***/
+    /* During stage 3 (semantic analysis/checking) we will be doing constant folding.
+     * That algorithm will anotate the abstract syntax tree with the result of operations
+     * on literals (i.e. 44 + 55 will store the result 99).
+     * Since the same source code (e.g. 1 + 0) may actually be a BOOL or an ANY_INT,
+     * or an ANY_BIT, we need to handle all possibilities, and determine the result of the
+     * operation assuming each type.
+     * For this reason, we have one entry for each possible type, with some expressions
+     * having more than one entry filled in!
+     */
+    typedef enum { cs_undefined,   /* not defined --> const_value is not valid! */
+                   cs_const_value, /* const value is valid */
+                   cs_overflow     /* result produced overflow or underflow --> const_value is not valid! */
+                 } const_status_t;
+ 
+    typedef struct {
+        const_status_t status;
+        real64_t       value; 
+    } const_value_real64_t;
+    const_value_real64_t *const_value_real64; /* when NULL --> UNDEFINED */
+    
+    typedef struct {
+        const_status_t status;
+        int64_t        value; 
+    } const_value_int64_t;
+    const_value_int64_t *const_value_int64; /* when NULL --> UNDEFINED */
+    
+    typedef struct {
+        const_status_t status;
+        uint64_t       value; 
+    } const_value_uint64_t;
+    const_value_uint64_t *const_value_uint64; /* when NULL --> UNDEFINED */
+    
+    typedef struct {
+        const_status_t status;
+        bool           value; 
+    } const_value_bool_t;
+    const_value_bool_t *const_value_bool; /* when NULL --> UNDEFINED */
 
 
   public:
