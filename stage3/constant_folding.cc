@@ -238,6 +238,7 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 		NEW_CVALUE( int64, symbol);
 		SET_CVALUE( int64, symbol, - GET_CVALUE( int64, symbol->exp));
 	}
+        /* TODO: check for overflows */
 	return NULL;
 }
 
@@ -434,12 +435,9 @@ void *constant_folding_c::visit(ge_expression_c *symbol) {
 void *constant_folding_c::visit(add_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BIN_OPER(uint64, +);
-	DO_BIN_OPER( int64, +);
-	DO_BIN_OPER(real64, +);
-	CHECK_OVERFLOW_SUM(uint64);
-	CHECK_OVERFLOW_SUM( int64);
-	CHECK_OVERFLOW_real64;
+	DO_BIN_OPER(uint64, +);   CHECK_OVERFLOW_SUM(uint64);
+	DO_BIN_OPER( int64, +);   CHECK_OVERFLOW_SUM( int64);
+	DO_BIN_OPER(real64, +);   CHECK_OVERFLOW_real64;
 	return NULL;
 }
 
@@ -452,12 +450,9 @@ void *constant_folding_c::visit(add_expression_c *symbol) {
 void *constant_folding_c::visit(sub_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BIN_OPER(uint64, -);
-	DO_BIN_OPER( int64, -);
-	DO_BIN_OPER(real64, -);
-	CHECK_OVERFLOW_SUB(uint64);
-	CHECK_OVERFLOW_SUB( int64);
-	CHECK_OVERFLOW_real64;
+	DO_BIN_OPER(uint64, -);   CHECK_OVERFLOW_SUB(uint64);
+	DO_BIN_OPER( int64, -);   CHECK_OVERFLOW_SUB( int64);
+	DO_BIN_OPER(real64, -);   CHECK_OVERFLOW_real64;
 	return NULL;
 }
 
@@ -470,12 +465,9 @@ void *constant_folding_c::visit(sub_expression_c *symbol) {
 void *constant_folding_c::visit(mul_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BIN_OPER(uint64, *);
-	DO_BIN_OPER( int64, *);
-	DO_BIN_OPER(real64, *);
-	CHECK_OVERFLOW_MUL(uint64);
-	CHECK_OVERFLOW_MUL( int64);
-	CHECK_OVERFLOW_real64;
+	DO_BIN_OPER(uint64, *);  CHECK_OVERFLOW_MUL(uint64);
+	DO_BIN_OPER( int64, *);  CHECK_OVERFLOW_MUL( int64);
+	DO_BIN_OPER(real64, *);  CHECK_OVERFLOW_real64;
 	return NULL;
 }
 
