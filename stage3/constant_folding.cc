@@ -122,7 +122,6 @@
 
 #include "constant_folding.hh"
 #include <limits>
-#include <stdint.h> /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
 #include <math.h> /* required for pow function */
 #include <stdlib.h> /* required for malloc() */
 
