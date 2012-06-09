@@ -129,6 +129,7 @@ uint64_t extract_hex_value(symbol_c *sym) {
   for(unsigned int i = 3; i < strlen(hex_integer->value); i++)
     if (hex_integer->value[i] != '_') str += hex_integer->value[i];
     
+  errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
   ret = strtoull(str.c_str(), &endptr, 16);
   if (errno != 0) ERROR;
 
@@ -148,6 +149,7 @@ real64_t extract_real_value(symbol_c *sym) {
   for(unsigned int i = 3; i < strlen(real_sym->value); i++)
     if (real_sym->value[i] != '_') str += real_sym->value[i];
     
+  errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
   #if    (real64_t  == float)
     ret = strtof(str.c_str(), NULL);
   #elif  (real64_t  == double)
