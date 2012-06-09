@@ -53,7 +53,15 @@
 
 
 /* Determine, for the current platform, which data type (float, double or long double) uses 64 bits. */
-/* NOTE: we cant use sizeof() in pre-processor directives, so we do it another way... */
+/* NOTE: We cant use sizeof() in pre-processor directives, so we have to do it another way... */
+/* CURIOSITY: We can use sizeof() and offsetof() inside static_assert() but:
+ *          - this only allows us to make assertions, and not #define new macros
+ *          - is only available in the C standard [ISO/IEC 9899:2011] and the C++ 0X draft standard [Becker 2008]. It is not available in C99.
+ *          https://www.securecoding.cert.org/confluence/display/seccode/DCL03-C.+Use+a+static+assertion+to+test+the+value+of+a+constant+expression
+ *         struct {int a, b, c, d} header_t;
+ *  e.g.:  static_assert(offsetof(struct header_t, c) == 8, "Compile time error message.");
+ */
+
 #include <float.h>
 #if    (LDBL_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
   #define long_double long double

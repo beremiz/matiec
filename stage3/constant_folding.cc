@@ -31,6 +31,13 @@
  */
 
 
+/* NOTE:
+ *   Most of the conditions to detect overflows on signed (but not unsigned) integer operations were adapted from
+ *   https://www.securecoding.cert.org/confluence/display/seccode/INT32-C.+Ensure+that+operations+on+signed+integers+do+not+result+in+overflow?showComments=false
+ */
+
+
+
 /* Do constant folding...
  *
  * I.e., Determine the value of all expressions in which only constant values (i.e. literals) are used.
@@ -43,7 +50,8 @@
  *       etc...
  *
  *
- * NOTE 1 that some operations and constants can have multiple data types. For example,
+ * NOTE 1 
+ *      Some operations and constants can have multiple data types. For example,
  *        1 AND 0
  *      may be either a BOOL, BYTE, WORD or LWORD.
  *
@@ -109,16 +117,23 @@
  *    before we can decide whether or not we should print out an overflow error message.
  *
  *    For this reason, this visitor merely annotates the abstract syntax tree, and leaves the
- `    actuall printing of errors for the print_datatype_errors_c class!
+ *    actuall printing of errors for the print_datatype_errors_c class!
  */
 
 #include "constant_folding.hh"
-#include <typeinfo>
 #include <limits>
+#include <stdint.h> /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
 #include <math.h> /* required for pow function */
 #include <stdlib.h> /* required for malloc() */
 
-
+#if 1
+#define INT64_MAX (std::numeric_limits< int64_t >::max())
+#define INT64_MIN (std::numeric_limits< int64_t >::min()) 
+#else
+/* An alternative is to use the std::numeric_limits< uint64_t >::min() / max()  methods already defined in #include <limits> */
+#define __STDC_LIMIT_MACROS /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
+#include <stdint.h>         /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
+#endif
 
 
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
@@ -177,6 +192,143 @@
 
 
 
+
+
+
+
+
+
+/* res = a + b */
+static void CHECK_OVERFLOW_uint64_SUM(symbol_c *res, symbol_c *a, symbol_c *b) {
+	if (VALID_CVALUE(uint64, res))
+		/* If sum is smaller than either operand => overflow! */
+		if (GET_CVALUE(uint64, res) < GET_CVALUE(uint64, a))
+			SET_OVFLOW(uint64, res);
+}
+
+/* res = a - b */
+static void CHECK_OVERFLOW_uint64_SUB(symbol_c *res, symbol_c *a, symbol_c *b) {
+	if (VALID_CVALUE(uint64, res))
+		/* If diference is larger than a => overflow! */
+		if (GET_CVALUE(uint64, res) > GET_CVALUE(uint64, a))
+			SET_OVFLOW(uint64, res);
+}
+
+/* res = a * b */
+static void CHECK_OVERFLOW_uint64_MUL(symbol_c *res, symbol_c *a, symbol_c *b) {
+	if (VALID_CVALUE(uint64, res))
+		if (false /* TODO */)
+			SET_OVFLOW(uint64, res);
+}
+
+/* res = a / b */
+static void CHECK_OVERFLOW_uint64_DIV(symbol_c *res, symbol_c *a, symbol_c *b) {
+	if (VALID_CVALUE(uint64, res))
+		if (false /* TODO */)
+			SET_OVFLOW(uint64, res);
+}
+
+/* res = a MOD b */
+static void CHECK_OVERFLOW_uint64_MOD(symbol_c *res, symbol_c *a, symbol_c *b) {
+	if (VALID_CVALUE(uint64, res))
+		if (false /* TODO */)
+			SET_OVFLOW(uint64, res);
+}
+
+/* res = a + b */
+static void CHECK_OVERFLOW_int64_SUM(symbol_c *res, symbol_c *a_ptr, symbol_c *b_ptr) {
+	int64_t a = GET_CVALUE(int64, a_ptr);
+	int64_t b = GET_CVALUE(int64, b_ptr);
+	if (VALID_CVALUE(int64, res))
+		/* The following test is valid no matter what representation is being used (e.g. two's complement, etc...) */
+		if (((b > 0) && (a > (INT64_MAX - b)))
+		 || ((b < 0) && (a < (INT64_MIN - b))))
+			SET_OVFLOW(int64, res);
+}
+
+/* res = a - b */
+static void CHECK_OVERFLOW_int64_SUB(symbol_c *res, symbol_c *a_ptr, symbol_c *b_ptr) {
+	int64_t a = GET_CVALUE(int64, a_ptr);
+	int64_t b = GET_CVALUE(int64, b_ptr);
+	if (VALID_CVALUE(int64, res))
+		/* The following test is valid no matter what representation is being used (e.g. two's complement, etc...) */
+		if (((b > 0) && (a < (INT64_MIN + b)))
+		 || ((b < 0) && (a > (INT64_MAX + b))))
+			SET_OVFLOW(int64, res);
+}
+
+
+/* res = a * b */
+static void CHECK_OVERFLOW_int64_MUL(symbol_c *res, symbol_c *a_ptr, symbol_c *b_ptr) {
+	int64_t a = GET_CVALUE(int64, a_ptr);
+	int64_t b = GET_CVALUE(int64, b_ptr);
+	if (VALID_CVALUE(int64, res))
+		if (   ( (a > 0) &&  (b > 0) &&             (a > (INT64_MAX / b))) 
+		    || ( (a > 0) && !(b > 0) &&             (b < (INT64_MIN / a))) 
+		    || (!(a > 0) &&  (b > 0) &&             (a < (INT64_MIN / b))) 
+		    || (!(a > 0) && !(b > 0) && (a != 0) && (b < (INT64_MAX / a))))
+			SET_OVFLOW(int64, res);
+}
+
+
+/* res = a / b */
+static void CHECK_OVERFLOW_int64_DIV(symbol_c *res, symbol_c *a_ptr, symbol_c *b_ptr) {
+	int64_t a = GET_CVALUE(int64, a_ptr);
+	int64_t b = GET_CVALUE(int64, b_ptr);
+	if (VALID_CVALUE(int64, res))
+		if ((b == 0) || ((a == INT64_MIN) && (b == -1)))
+			SET_OVFLOW(int64, res);
+}
+
+
+/* res = a MOD b */
+static void CHECK_OVERFLOW_int64_MOD(symbol_c *res, symbol_c *a_ptr, symbol_c *b_ptr) {
+	int64_t a = GET_CVALUE(int64, a_ptr);
+	int64_t b = GET_CVALUE(int64, b_ptr);
+	/* IEC 61131-3 standard says IN1 MOD IN2 must be equivalent to
+	 *  IF (IN2 = 0) THEN OUT:=0 ; ELSE OUT:=IN1 - (IN1/IN2)*IN2 ; END_IF
+	 *
+	 * Note that, when IN1 = INT64_MIN, and IN2 = -1, an overflow occurs in the division,
+	 * so although the MOD operation should be OK, acording to the above definition, we actually have an overflow!!
+	 *
+	 * On the other hand, division by 0 is OK!!
+	 */
+	if (VALID_CVALUE(int64, res))
+		if ((a == INT64_MIN) && (b == -1))
+			SET_OVFLOW(int64, res);
+}
+
+
+/* res = - a */
+static void CHECK_OVERFLOW_int64_NEG(symbol_c *res, symbol_c *a_ptr) {
+	int64_t a = GET_CVALUE(int64, a_ptr);
+	if (VALID_CVALUE(int64, res))
+		if (a == INT64_MIN)
+			SET_OVFLOW(int64, res);
+}
+
+
+
+static void CHECK_OVERFLOW_real64(symbol_c *res) {
+	if (VALID_CVALUE(real64, res))
+        	/* NaN => underflow, overflow, number is a higher precision format, is a complex number (IEEE standard) */
+		 if (isnan(GET_CVALUE(real64, res)))
+			SET_OVFLOW(real64, res);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 constant_folding_c::constant_folding_c(symbol_c *symbol) {
     error_count = 0;
     warning_found = false;
@@ -228,6 +380,7 @@ void *constant_folding_c::visit(neg_real_c *symbol) {
 		return NULL;
 	NEW_CVALUE(real64, symbol);
 	SET_CVALUE(real64, symbol, - GET_CVALUE( real64, symbol->exp));
+	CHECK_OVERFLOW_real64(symbol);
 	return NULL;
 }
 
@@ -238,7 +391,7 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 		NEW_CVALUE( int64, symbol);
 		SET_CVALUE( int64, symbol, - GET_CVALUE( int64, symbol->exp));
 	}
-        /* TODO: check for overflows */
+       	CHECK_OVERFLOW_int64_NEG(symbol, symbol->exp);
 	return NULL;
 }
 
@@ -422,82 +575,58 @@ void *constant_folding_c::visit(ge_expression_c *symbol) {
 }
 
 
-#define CHECK_OVERFLOW_SUM(dtype)\
-	if (VALID_CVALUE(dtype, symbol))                                                                                                             \
-		if ((((std::numeric_limits< dtype##_t >::max() - GET_CVALUE(dtype, symbol->l_exp)) < (GET_CVALUE(dtype, symbol->r_exp))) ? 1 : 0) || \
-		    (((std::numeric_limits< dtype##_t >::min() + GET_CVALUE(dtype, symbol->l_exp)) > (GET_CVALUE(dtype, symbol->r_exp))) ? 1 : 0))   \
-			SET_OVFLOW(dtype, symbol);
-#define CHECK_OVERFLOW_real64  \
-	if (VALID_CVALUE(real64, symbol))                                                                                                            \
-        	/* NaN => underflow, overflow, number is a higher precision format, is a complex number (IEEE standard) */                           \
-		 if (isnan(GET_CVALUE(real64, symbol)))                                                                                              \
-			SET_OVFLOW(real64, symbol);
 void *constant_folding_c::visit(add_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BIN_OPER(uint64, +);   CHECK_OVERFLOW_SUM(uint64);
-	DO_BIN_OPER( int64, +);   CHECK_OVERFLOW_SUM( int64);
-	DO_BIN_OPER(real64, +);   CHECK_OVERFLOW_real64;
+	DO_BIN_OPER(uint64, +);   CHECK_OVERFLOW_uint64_SUM(symbol, symbol->l_exp, symbol->r_exp);
+	DO_BIN_OPER( int64, +);   CHECK_OVERFLOW_int64_SUM (symbol, symbol->l_exp, symbol->r_exp);
+	DO_BIN_OPER(real64, +);   CHECK_OVERFLOW_real64    (symbol);
 	return NULL;
 }
 
 
-#define CHECK_OVERFLOW_SUB(dtype)\
-	if (VALID_CVALUE(dtype, symbol))                                                                                                             \
-		if ((((std::numeric_limits< dtype##_t >::max() - GET_CVALUE(dtype, symbol->l_exp)) < (-GET_CVALUE(dtype, symbol->r_exp))) ? 1 : 0) || \
-		    (((std::numeric_limits< dtype##_t >::min() + GET_CVALUE(dtype, symbol->l_exp)) > (-GET_CVALUE(dtype, symbol->r_exp))) ? 1 : 0))   \
-			SET_OVFLOW(dtype, symbol);
 void *constant_folding_c::visit(sub_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BIN_OPER(uint64, -);   CHECK_OVERFLOW_SUB(uint64);
-	DO_BIN_OPER( int64, -);   CHECK_OVERFLOW_SUB( int64);
-	DO_BIN_OPER(real64, -);   CHECK_OVERFLOW_real64;
+	DO_BIN_OPER(uint64, -);   CHECK_OVERFLOW_uint64_SUB(symbol, symbol->l_exp, symbol->r_exp);
+	DO_BIN_OPER( int64, -);   CHECK_OVERFLOW_int64_SUB (symbol, symbol->l_exp, symbol->r_exp);
+	DO_BIN_OPER(real64, -);   CHECK_OVERFLOW_real64    (symbol);
 	return NULL;
 }
 
 
-/* TODO!!! */
-#define CHECK_OVERFLOW_MUL(dtype)\
-	if (VALID_CVALUE(dtype, symbol))                                                                                                             \
-		if (false)                                                                                                                                   \
-			SET_OVFLOW(dtype, symbol);
 void *constant_folding_c::visit(mul_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BIN_OPER(uint64, *);  CHECK_OVERFLOW_MUL(uint64);
-	DO_BIN_OPER( int64, *);  CHECK_OVERFLOW_MUL( int64);
-	DO_BIN_OPER(real64, *);  CHECK_OVERFLOW_real64;
+	DO_BIN_OPER(uint64, *);   CHECK_OVERFLOW_uint64_MUL(symbol, symbol->l_exp, symbol->r_exp);
+	DO_BIN_OPER( int64, *);   CHECK_OVERFLOW_int64_MUL (symbol, symbol->l_exp, symbol->r_exp);
+	DO_BIN_OPER(real64, *);   CHECK_OVERFLOW_real64    (symbol);
 	return NULL;
 }
 
 
 
-/* TODO!!! */
-#define CHECK_OVERFLOW_DIV(dtype)\
-	if (VALID_CVALUE(dtype, symbol))                                                                                                             \
-		if (false)                                                                                                                                   \
-			SET_OVFLOW(dtype, symbol);
 void *constant_folding_c::visit(div_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	if (ISZERO_CVALUE(uint64, symbol->r_exp))  {NEW_CVALUE(uint64, symbol); SET_OVFLOW(uint64, symbol);} else {DO_BIN_OPER(uint64, /); CHECK_OVERFLOW_DIV(uint64)};
-	if (ISZERO_CVALUE( int64, symbol->r_exp))  {NEW_CVALUE( int64, symbol); SET_OVFLOW( int64, symbol);} else {DO_BIN_OPER( int64, /); CHECK_OVERFLOW_DIV( int64)};
-	if (ISZERO_CVALUE(real64, symbol->r_exp))  {NEW_CVALUE(real64, symbol); SET_OVFLOW(real64, symbol);} else {DO_BIN_OPER(real64, /); CHECK_OVERFLOW_real64;};
+	if (ISZERO_CVALUE(uint64, symbol->r_exp))  {NEW_CVALUE(uint64, symbol); SET_OVFLOW(uint64, symbol);} else {DO_BIN_OPER(uint64, /); CHECK_OVERFLOW_uint64_DIV(symbol, symbol->l_exp, symbol->r_exp);};
+	if (ISZERO_CVALUE( int64, symbol->r_exp))  {NEW_CVALUE( int64, symbol); SET_OVFLOW( int64, symbol);} else {DO_BIN_OPER( int64, /); CHECK_OVERFLOW_int64_DIV(symbol, symbol->l_exp, symbol->r_exp);};
+	if (ISZERO_CVALUE(real64, symbol->r_exp))  {NEW_CVALUE(real64, symbol); SET_OVFLOW(real64, symbol);} else {DO_BIN_OPER(real64, /); CHECK_OVERFLOW_real64(symbol);};
 	return NULL;
 }
 
 
-/* TODO!!! */
-#define CHECK_OVERFLOW_MOD(dtype)\
-	if (VALID_CVALUE(dtype, symbol))                                                                                                             \
-		if (false)                                                                                                                                   \
-			SET_OVFLOW(dtype, symbol);
 void *constant_folding_c::visit(mod_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	if (ISZERO_CVALUE(uint64, symbol->r_exp))  {NEW_CVALUE(uint64, symbol); SET_OVFLOW(uint64, symbol);} else {DO_BIN_OPER(uint64, %); CHECK_OVERFLOW_MOD(uint64)};
-	if (ISZERO_CVALUE( int64, symbol->r_exp))  {NEW_CVALUE( int64, symbol); SET_OVFLOW( int64, symbol);} else {DO_BIN_OPER( int64, %); CHECK_OVERFLOW_MOD( int64)};
+	/* IEC 61131-3 standard says IN1 MOD IN2 must be equivalent to
+	 *  IF (IN2 = 0) THEN OUT:=0 ; ELSE OUT:=IN1 - (IN1/IN2)*IN2 ; END_IF
+	 *
+	 * Note that, when IN1 = INT64_MIN, and IN2 = -1, an overflow occurs in the division,
+	 * so although the MOD operation should be OK, acording to the above definition, we actually have an overflow!!
+	 */
+	if (ISZERO_CVALUE(uint64, symbol->r_exp))  {NEW_CVALUE(uint64, symbol); SET_CVALUE(uint64, symbol, 0);} else {DO_BIN_OPER(uint64, %); CHECK_OVERFLOW_uint64_MOD(symbol, symbol->l_exp, symbol->r_exp);};
+	if (ISZERO_CVALUE( int64, symbol->r_exp))  {NEW_CVALUE( int64, symbol); SET_CVALUE( int64, symbol, 0);} else {DO_BIN_OPER( int64, %); CHECK_OVERFLOW_int64_MOD(symbol, symbol->l_exp, symbol->r_exp);};
 	return NULL;
 }
 
@@ -517,16 +646,11 @@ void *constant_folding_c::visit(power_expression_c *symbol) {
 		NEW_CVALUE(real64, symbol);
 		SET_CVALUE(real64, symbol, pow(GET_CVALUE(real64, symbol->l_exp), GET_CVALUE(uint64, symbol->r_exp)));
 	}
-	CHECK_OVERFLOW_real64;
+	CHECK_OVERFLOW_real64(symbol);
 	return NULL;
 }
 
 
-/* TODO!!! */
-#define CHECK_OVERFLOW_NEG(dtype)\
-	if (VALID_CVALUE(dtype, symbol))                                                                                                             \
-		if (false)                                                                                                                                   \
-			SET_OVFLOW(dtype, symbol);
 void *constant_folding_c::visit(neg_expression_c *symbol) {
 	symbol->exp->accept(*this);
 	if (VALID_CVALUE( int64, symbol->exp)) {
@@ -537,8 +661,8 @@ void *constant_folding_c::visit(neg_expression_c *symbol) {
 		NEW_CVALUE(real64, symbol);
 		SET_CVALUE(real64, symbol, - GET_CVALUE(real64, symbol->exp));
 	}
-	CHECK_OVERFLOW_NEG( int64);
-	CHECK_OVERFLOW_real64;
+	CHECK_OVERFLOW_int64_NEG(symbol, symbol->exp);
+	CHECK_OVERFLOW_real64(symbol);
 	return NULL;
 }
 
