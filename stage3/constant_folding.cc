@@ -393,7 +393,9 @@ int constant_folding_c::get_error_count() {
 /* B 1.2.1 - Numeric Literals */
 /******************************/
 void *constant_folding_c::visit(real_c *symbol) {
-	NEW_CVALUE(real64, symbol);	SET_CVALUE(real64, symbol, extract_real_value(symbol));
+	bool overflow;
+	NEW_CVALUE(real64, symbol);	SET_CVALUE(real64, symbol, extract_real_value(symbol, &overflow));
+	if (overflow) SET_OVFLOW(real64, symbol);
 	return NULL;
 }
 

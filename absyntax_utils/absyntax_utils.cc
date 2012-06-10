@@ -139,14 +139,28 @@ uint64_t extract_hex_value(symbol_c *sym) {
 
 /* extract the value of a real from an real_c object !! */
 /* NOTE: it must ignore underscores! */
-real64_t extract_real_value(symbol_c *sym) {
+/* From iec_bison.yy
+ *  real:
+ *   real_token		{$$ = new real_c($1, locloc(@$));}
+ * | fixed_point_token	{$$ = new real_c($1, locloc(@$));}
+ *
+ * From iec_flex.ll
+ * {real}			{yylval.ID=strdup(yytext); return real_token;}
+ * {fixed_point}		{yylval.ID=strdup(yytext); return fixed_point_token;}
+ *
+ * real		{integer}\.{integer}{exponent}
+ * fixed_point		{integer}\.{integer}
+ * exponent        [Ee]([+-]?){integer}
+ * integer         {digit}((_?{digit})*)
+ */
+real64_t extract_real_value(symbol_c *sym, bool *overflow = NULL) {
   std::string str = "";
   char *endptr;
   real_c * real_sym;
-  uint64_t ret;
+  real64_t ret;
 
   if ((real_sym = dynamic_cast<real_c *>(sym)) == NULL) ERROR;
-  for(unsigned int i = 3; i < strlen(real_sym->value); i++)
+  for(unsigned int i = 0; i < strlen(real_sym->value); i++)
     if (real_sym->value[i] != '_') str += real_sym->value[i];
     
   errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
@@ -159,7 +173,10 @@ real64_t extract_real_value(symbol_c *sym) {
   #else 
     #error Could not determine which data type is being used for real64_t (defined in absyntax.hh). Aborting!
   #endif
-  if (errno != 0) ERROR;
+  if (overflow != NULL)
+    *overflow = (errno == ERANGE);
+  if ((errno != 0) && (errno != ERANGE)) 
+    ERROR;
 
   return ret;
 }
