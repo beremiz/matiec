@@ -177,12 +177,18 @@
     /* The following test is correct in the presence of a NULL pointer, as the logical evaluation will be suspended as soon as the first condition is false! */
 #define VALID_CVALUE(dtype, symbol)           ((NULL != (symbol)->const_value_##dtype) && (symbol_c::cs_const_value == (symbol)->const_value_##dtype->status))
 #define ISZERO_CVALUE(dtype, symbol)          ((VALID_CVALUE(dtype, symbol)) && (GET_CVALUE(dtype, symbol) == 0))
+
 #define DO_BINARY_OPER(dtype, oper)\
 	if (VALID_CVALUE(dtype, symbol->r_exp) && VALID_CVALUE(dtype, symbol->l_exp)) {                                \
 		NEW_CVALUE(dtype, symbol);                                                                             \
 		SET_CVALUE(dtype, symbol, GET_CVALUE(dtype, symbol->l_exp) oper GET_CVALUE(dtype, symbol->r_exp));     \
 	}
 
+#define DO_UNARY_OPER(dtype, oper, arg)\
+	if (VALID_CVALUE(dtype, arg)) {                                                                                \
+		NEW_CVALUE(dtype, symbol);                                                                             \
+		SET_CVALUE(dtype, symbol, oper GET_CVALUE(dtype, arg));                                                \
+	}
 
 
 
@@ -387,27 +393,21 @@ int constant_folding_c::get_error_count() {
 /* B 1.2.1 - Numeric Literals */
 /******************************/
 void *constant_folding_c::visit(real_c *symbol) {
-	NEW_CVALUE(real64, symbol);
-	SET_CVALUE(real64, symbol, extract_real_value(symbol));
+	NEW_CVALUE(real64, symbol);	SET_CVALUE(real64, symbol, extract_real_value(symbol));
 	return NULL;
 }
 
 
 void *constant_folding_c::visit(integer_c *symbol) {
-	NEW_CVALUE( int64, symbol);
-	SET_CVALUE( int64, symbol, extract_integer_value(symbol));
-	NEW_CVALUE(uint64, symbol);
-	SET_CVALUE(uint64, symbol, extract_integer_value(symbol));
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_integer_value(symbol));
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_integer_value(symbol));
 	return NULL;
 }
 
 
 void *constant_folding_c::visit(neg_real_c *symbol) {
 	symbol->exp->accept(*this);
-	if (!VALID_CVALUE(real64, symbol->exp))
-		return NULL;
-	NEW_CVALUE(real64, symbol);
-	SET_CVALUE(real64, symbol, - GET_CVALUE( real64, symbol->exp));
+	DO_UNARY_OPER(real64, -, symbol->exp);
 	CHECK_OVERFLOW_real64(symbol);
 	return NULL;
 }
@@ -415,10 +415,7 @@ void *constant_folding_c::visit(neg_real_c *symbol) {
 /* | '-' integer	{$$ = new neg_integer_c($2, locloc(@$));} */
 void *constant_folding_c::visit(neg_integer_c *symbol) {
 	symbol->exp->accept(*this);
-	if (VALID_CVALUE(int64, symbol->exp)) {
-		NEW_CVALUE( int64, symbol);
-		SET_CVALUE( int64, symbol, - GET_CVALUE( int64, symbol->exp));
-	}
+	DO_UNARY_OPER(int64, -, symbol->exp);
 	CHECK_OVERFLOW_int64_NEG(symbol, symbol->exp);
 	return NULL;
 }
@@ -435,10 +432,8 @@ void *constant_folding_c::visit(octal_integer_c *symbol) {
 
 
 void *constant_folding_c::visit(hex_integer_c *symbol) {
-	NEW_CVALUE( int64, symbol);
-	SET_CVALUE( int64, symbol, extract_hex_value(symbol));
-	NEW_CVALUE(uint64, symbol);
-	SET_CVALUE(uint64, symbol, extract_hex_value(symbol));
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_hex_value(symbol));
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_hex_value(symbol));
 	return NULL;
 }
 
@@ -453,24 +448,15 @@ integer_literal:
 // SYM_REF2(integer_literal_c, type, value)
 void *constant_folding_c::visit(integer_literal_c *symbol) {
 	symbol->value->accept(*this);
-	if (VALID_CVALUE( int64, symbol->value)) {
-		NEW_CVALUE( int64, symbol);
-		SET_CVALUE( int64, symbol, GET_CVALUE( int64, symbol->value));
-	}
-	if (VALID_CVALUE(uint64, symbol->value)) {
-		NEW_CVALUE(uint64, symbol);
-		SET_CVALUE(uint64, symbol, GET_CVALUE(uint64, symbol->value));
-	}
+	DO_UNARY_OPER( int64, /* none */, symbol->value);
+	DO_UNARY_OPER(uint64, /* none */, symbol->value);
 	return NULL;
 }
 
 
 void *constant_folding_c::visit(real_literal_c *symbol) {
 	symbol->value->accept(*this);
-	if (VALID_CVALUE(real64, symbol->value)) {
-		NEW_CVALUE(real64, symbol);
-		SET_CVALUE(real64, symbol,  GET_CVALUE(real64, symbol->value));
-	}
+	DO_UNARY_OPER(real64, /* none */, symbol->value);
 	return NULL;
 }
 
@@ -482,24 +468,19 @@ void *constant_folding_c::visit(bit_string_literal_c *symbol) {
 
 void *constant_folding_c::visit(boolean_literal_c *symbol) {
 	symbol->value->accept(*this);
-	if (VALID_CVALUE(bool, symbol->value)) {
-		NEW_CVALUE(bool, symbol);
-		SET_CVALUE(bool, symbol,  GET_CVALUE(  bool, symbol->value));
-	}
+	DO_UNARY_OPER(bool, /* none */, symbol->value);
 	return NULL;
 }
 
 
 void *constant_folding_c::visit(boolean_true_c *symbol) {
-	NEW_CVALUE(bool, symbol);
-	SET_CVALUE(bool, symbol, true);
+	NEW_CVALUE(bool, symbol);	SET_CVALUE(bool, symbol, true);
 	return NULL;
 }
 
 
 void *constant_folding_c::visit(boolean_false_c *symbol) {
-	NEW_CVALUE(bool, symbol);
-	SET_CVALUE(bool, symbol, false);
+	NEW_CVALUE(bool, symbol);	SET_CVALUE(bool, symbol, false);
 	return NULL;
 }
 
@@ -681,16 +662,8 @@ void *constant_folding_c::visit(power_expression_c *symbol) {
 
 void *constant_folding_c::visit(neg_expression_c *symbol) {
 	symbol->exp->accept(*this);
-	if (VALID_CVALUE( int64, symbol->exp)) {
-		NEW_CVALUE( int64, symbol);
-		SET_CVALUE( int64, symbol, - GET_CVALUE( int64, symbol->exp));
-	}
-	if (VALID_CVALUE(real64, symbol->exp)) {
-		NEW_CVALUE(real64, symbol);
-		SET_CVALUE(real64, symbol, - GET_CVALUE(real64, symbol->exp));
-	}
-	CHECK_OVERFLOW_int64_NEG(symbol, symbol->exp);
-	CHECK_OVERFLOW_real64(symbol);
+	DO_UNARY_OPER( int64, -, symbol->exp);	CHECK_OVERFLOW_int64_NEG(symbol, symbol->exp);
+	DO_UNARY_OPER(real64, -, symbol->exp);	CHECK_OVERFLOW_real64(symbol);
 	return NULL;
 }
 
@@ -698,14 +671,8 @@ void *constant_folding_c::visit(neg_expression_c *symbol) {
 
 void *constant_folding_c::visit(not_expression_c *symbol) {
 	symbol->exp->accept(*this);
-	if (VALID_CVALUE(  bool, symbol->exp)) {
-		NEW_CVALUE(  bool, symbol);
-		SET_CVALUE(  bool, symbol,  ! GET_CVALUE(  bool, symbol->exp));
-	}
-	if (VALID_CVALUE(uint64, symbol->exp)) {
-		NEW_CVALUE(uint64, symbol);
-		SET_CVALUE(uint64, symbol,  ~ GET_CVALUE(uint64, symbol->exp));
-	}
+	DO_UNARY_OPER(  bool, !, symbol->exp);
+	DO_UNARY_OPER(uint64, ~, symbol->exp);
 	return NULL;
 }
 
