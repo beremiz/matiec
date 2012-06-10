@@ -180,7 +180,7 @@
 
 #define DO_BINARY_OPER(dtype, oper, otype)\
 	if (VALID_CVALUE(dtype, symbol->r_exp) && VALID_CVALUE(dtype, symbol->l_exp)) {                                \
-		NEW_CVALUE(dtype, symbol);                                                                             \
+		NEW_CVALUE(otype, symbol);                                                                             \
 		SET_CVALUE(otype, symbol, GET_CVALUE(dtype, symbol->l_exp) oper GET_CVALUE(dtype, symbol->r_exp));     \
 	}
 
