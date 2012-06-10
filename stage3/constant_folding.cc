@@ -178,10 +178,10 @@
 #define VALID_CVALUE(dtype, symbol)           ((NULL != (symbol)->const_value_##dtype) && (symbol_c::cs_const_value == (symbol)->const_value_##dtype->status))
 #define ISZERO_CVALUE(dtype, symbol)          ((VALID_CVALUE(dtype, symbol)) && (GET_CVALUE(dtype, symbol) == 0))
 
-#define DO_BINARY_OPER(dtype, oper)\
+#define DO_BINARY_OPER(dtype, oper, otype)\
 	if (VALID_CVALUE(dtype, symbol->r_exp) && VALID_CVALUE(dtype, symbol->l_exp)) {                                \
 		NEW_CVALUE(dtype, symbol);                                                                             \
-		SET_CVALUE(dtype, symbol, GET_CVALUE(dtype, symbol->l_exp) oper GET_CVALUE(dtype, symbol->r_exp));     \
+		SET_CVALUE(otype, symbol, GET_CVALUE(dtype, symbol->l_exp) oper GET_CVALUE(dtype, symbol->r_exp));     \
 	}
 
 #define DO_UNARY_OPER(dtype, oper, arg)\
@@ -496,8 +496,8 @@ void *constant_folding_c::visit(boolean_false_c *symbol) {
 void *constant_folding_c::visit(or_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(bool,   ||);
-	DO_BINARY_OPER(uint64, | );
+	DO_BINARY_OPER(  bool, ||, bool);
+	DO_BINARY_OPER(uint64, | , bool);
 	return NULL;
 }
 
@@ -505,8 +505,8 @@ void *constant_folding_c::visit(or_expression_c *symbol) {
 void *constant_folding_c::visit(xor_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(bool,   ^);
-	DO_BINARY_OPER(uint64, ^);
+	DO_BINARY_OPER(  bool, ^, bool);
+	DO_BINARY_OPER(uint64, ^, uint64);
 	return NULL;
 }
 
@@ -514,8 +514,8 @@ void *constant_folding_c::visit(xor_expression_c *symbol) {
 void *constant_folding_c::visit(and_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(bool,   &&);
-	DO_BINARY_OPER(uint64, & );
+	DO_BINARY_OPER(  bool, &&, bool);
+	DO_BINARY_OPER(uint64, & , uint64);
 	return NULL;
 }
 
@@ -523,10 +523,10 @@ void *constant_folding_c::visit(and_expression_c *symbol) {
 void *constant_folding_c::visit(equ_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(bool,   ==);
-	DO_BINARY_OPER(uint64, ==);
-	DO_BINARY_OPER( int64, ==);
-	DO_BINARY_OPER(real64, ==);
+	DO_BINARY_OPER(  bool, ==, bool);
+	DO_BINARY_OPER(uint64, ==, bool);
+	DO_BINARY_OPER( int64, ==, bool);
+	DO_BINARY_OPER(real64, ==, bool);
 	return NULL;
 }
 
@@ -534,10 +534,10 @@ void *constant_folding_c::visit(equ_expression_c *symbol) {
 void *constant_folding_c::visit(notequ_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(bool,   !=);
-	DO_BINARY_OPER(uint64, !=);
-	DO_BINARY_OPER( int64, !=);
-	DO_BINARY_OPER(real64, !=);
+	DO_BINARY_OPER(  bool, !=, bool);
+	DO_BINARY_OPER(uint64, !=, bool);
+	DO_BINARY_OPER( int64, !=, bool);
+	DO_BINARY_OPER(real64, !=, bool);
 	return NULL;
 }
 
@@ -545,10 +545,10 @@ void *constant_folding_c::visit(notequ_expression_c *symbol) {
 void *constant_folding_c::visit(lt_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(bool,   <);
-	DO_BINARY_OPER(uint64, <);
-	DO_BINARY_OPER( int64, <);
-	DO_BINARY_OPER(real64, <);
+	DO_BINARY_OPER(  bool, <, bool);
+	DO_BINARY_OPER(uint64, <, bool);
+	DO_BINARY_OPER( int64, <, bool);
+	DO_BINARY_OPER(real64, <, bool);
 	return NULL;
 }
 
@@ -556,10 +556,10 @@ void *constant_folding_c::visit(lt_expression_c *symbol) {
 void *constant_folding_c::visit(gt_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(bool,   >);
-	DO_BINARY_OPER(uint64, >);
-	DO_BINARY_OPER( int64, >);
-	DO_BINARY_OPER(real64, >);
+	DO_BINARY_OPER(  bool, >, bool);
+	DO_BINARY_OPER(uint64, >, bool);
+	DO_BINARY_OPER( int64, >, bool);
+	DO_BINARY_OPER(real64, >, bool);
 	return NULL;
 }
 
@@ -567,10 +567,10 @@ void *constant_folding_c::visit(gt_expression_c *symbol) {
 void *constant_folding_c::visit(le_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(bool,   <=);
-	DO_BINARY_OPER(uint64, <=);
-	DO_BINARY_OPER( int64, <=);
-	DO_BINARY_OPER(real64, <=);
+	DO_BINARY_OPER(  bool, <=, bool);
+	DO_BINARY_OPER(uint64, <=, bool);
+	DO_BINARY_OPER( int64, <=, bool);
+	DO_BINARY_OPER(real64, <=, bool);
 	return NULL;
 }
 
@@ -578,10 +578,10 @@ void *constant_folding_c::visit(le_expression_c *symbol) {
 void *constant_folding_c::visit(ge_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(bool,   >=);
-	DO_BINARY_OPER(uint64, >=);
-	DO_BINARY_OPER( int64, >=);
-	DO_BINARY_OPER(real64, >=);
+	DO_BINARY_OPER(  bool, >=, bool);
+	DO_BINARY_OPER(uint64, >=, bool);
+	DO_BINARY_OPER( int64, >=, bool);
+	DO_BINARY_OPER(real64, >=, bool);
 	return NULL;
 }
 
@@ -589,9 +589,9 @@ void *constant_folding_c::visit(ge_expression_c *symbol) {
 void *constant_folding_c::visit(add_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(uint64, +);   CHECK_OVERFLOW_uint64_SUM(symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER( int64, +);   CHECK_OVERFLOW_int64_SUM (symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER(real64, +);   CHECK_OVERFLOW_real64    (symbol);
+	DO_BINARY_OPER(uint64, +, uint64);   CHECK_OVERFLOW_uint64_SUM(symbol, symbol->l_exp, symbol->r_exp);
+	DO_BINARY_OPER( int64, +,  int64);   CHECK_OVERFLOW_int64_SUM (symbol, symbol->l_exp, symbol->r_exp);
+	DO_BINARY_OPER(real64, +, real64);   CHECK_OVERFLOW_real64    (symbol);
 	return NULL;
 }
 
@@ -599,9 +599,9 @@ void *constant_folding_c::visit(add_expression_c *symbol) {
 void *constant_folding_c::visit(sub_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(uint64, -);   CHECK_OVERFLOW_uint64_SUB(symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER( int64, -);   CHECK_OVERFLOW_int64_SUB (symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER(real64, -);   CHECK_OVERFLOW_real64    (symbol);
+	DO_BINARY_OPER(uint64, -, uint64);   CHECK_OVERFLOW_uint64_SUB(symbol, symbol->l_exp, symbol->r_exp);
+	DO_BINARY_OPER( int64, -,  int64);   CHECK_OVERFLOW_int64_SUB (symbol, symbol->l_exp, symbol->r_exp);
+	DO_BINARY_OPER(real64, -, real64);   CHECK_OVERFLOW_real64    (symbol);
 	return NULL;
 }
 
@@ -609,9 +609,9 @@ void *constant_folding_c::visit(sub_expression_c *symbol) {
 void *constant_folding_c::visit(mul_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(uint64, *);   CHECK_OVERFLOW_uint64_MUL(symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER( int64, *);   CHECK_OVERFLOW_int64_MUL (symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER(real64, *);   CHECK_OVERFLOW_real64    (symbol);
+	DO_BINARY_OPER(uint64, *, uint64);   CHECK_OVERFLOW_uint64_MUL(symbol, symbol->l_exp, symbol->r_exp);
+	DO_BINARY_OPER( int64, *,  int64);   CHECK_OVERFLOW_int64_MUL (symbol, symbol->l_exp, symbol->r_exp);
+	DO_BINARY_OPER(real64, *, real64);   CHECK_OVERFLOW_real64    (symbol);
 	return NULL;
 }
 
@@ -620,9 +620,9 @@ void *constant_folding_c::visit(mul_expression_c *symbol) {
 void *constant_folding_c::visit(div_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
-	if (ISZERO_CVALUE(uint64, symbol->r_exp))  {NEW_CVALUE(uint64, symbol); SET_OVFLOW(uint64, symbol);} else {DO_BINARY_OPER(uint64, /); CHECK_OVERFLOW_uint64_DIV(symbol, symbol->l_exp, symbol->r_exp);};
-	if (ISZERO_CVALUE( int64, symbol->r_exp))  {NEW_CVALUE( int64, symbol); SET_OVFLOW( int64, symbol);} else {DO_BINARY_OPER( int64, /); CHECK_OVERFLOW_int64_DIV(symbol, symbol->l_exp, symbol->r_exp);};
-	if (ISZERO_CVALUE(real64, symbol->r_exp))  {NEW_CVALUE(real64, symbol); SET_OVFLOW(real64, symbol);} else {DO_BINARY_OPER(real64, /); CHECK_OVERFLOW_real64(symbol);};
+	if (ISZERO_CVALUE(uint64, symbol->r_exp))  {NEW_CVALUE(uint64, symbol); SET_OVFLOW(uint64, symbol);} else {DO_BINARY_OPER(uint64, /, uint64); CHECK_OVERFLOW_uint64_DIV(symbol, symbol->l_exp, symbol->r_exp);};
+	if (ISZERO_CVALUE( int64, symbol->r_exp))  {NEW_CVALUE( int64, symbol); SET_OVFLOW( int64, symbol);} else {DO_BINARY_OPER( int64, /,  int64); CHECK_OVERFLOW_int64_DIV(symbol, symbol->l_exp, symbol->r_exp);};
+	if (ISZERO_CVALUE(real64, symbol->r_exp))  {NEW_CVALUE(real64, symbol); SET_OVFLOW(real64, symbol);} else {DO_BINARY_OPER(real64, /, real64); CHECK_OVERFLOW_real64(symbol);};
 	return NULL;
 }
 
@@ -636,8 +636,8 @@ void *constant_folding_c::visit(mod_expression_c *symbol) {
 	 * Note that, when IN1 = INT64_MIN, and IN2 = -1, an overflow occurs in the division,
 	 * so although the MOD operation should be OK, acording to the above definition, we actually have an overflow!!
 	 */
-	if (ISZERO_CVALUE(uint64, symbol->r_exp))  {NEW_CVALUE(uint64, symbol); SET_CVALUE(uint64, symbol, 0);} else {DO_BINARY_OPER(uint64, %); CHECK_OVERFLOW_uint64_MOD(symbol, symbol->l_exp, symbol->r_exp);};
-	if (ISZERO_CVALUE( int64, symbol->r_exp))  {NEW_CVALUE( int64, symbol); SET_CVALUE( int64, symbol, 0);} else {DO_BINARY_OPER( int64, %); CHECK_OVERFLOW_int64_MOD(symbol, symbol->l_exp, symbol->r_exp);};
+	if (ISZERO_CVALUE(uint64, symbol->r_exp))  {NEW_CVALUE(uint64, symbol); SET_CVALUE(uint64, symbol, 0);} else {DO_BINARY_OPER(uint64, %, uint64); CHECK_OVERFLOW_uint64_MOD(symbol, symbol->l_exp, symbol->r_exp);};
+	if (ISZERO_CVALUE( int64, symbol->r_exp))  {NEW_CVALUE( int64, symbol); SET_CVALUE( int64, symbol, 0);} else {DO_BINARY_OPER( int64, %,  int64); CHECK_OVERFLOW_int64_MOD(symbol, symbol->l_exp, symbol->r_exp);};
 	return NULL;
 }
 
