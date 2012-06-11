@@ -37,7 +37,6 @@
 
 
 
-
 class array_range_check_c: public iterator_visitor_c {
 
   private:
@@ -48,6 +47,7 @@ class array_range_check_c: public iterator_visitor_c {
     int current_display_error_level;
 
     void check_dimension_count(array_variable_c *symbol);
+    void check_bounds(array_variable_c *symbol);
 
   public:
     array_range_check_c(symbol_c *ignore);

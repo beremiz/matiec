@@ -69,6 +69,10 @@
     warning_found = true;                                                                                                   \
 }
 
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value_##dtype->value)
+#define VALID_CVALUE(dtype, symbol)           ((NULL != (symbol)->const_value_##dtype) && (symbol_c::cs_const_value == (symbol)->const_value_##dtype->status))
+
+
 
 array_range_check_c::array_range_check_c(symbol_c *ignore) {
 	error_count = 0;
@@ -93,6 +97,28 @@ void array_range_check_c::check_dimension_count(array_variable_c *symbol) {
 		STAGE3_ERROR(0, symbol, symbol, "Number of dimensions does not match, Array have %d dimension(s)", dimension_count);
 }
 
+void array_range_check_c::check_bounds(array_variable_c *symbol) {
+  list_c *l;
+  symbol_c *var_decl;
+
+  l = (list_c *)symbol->subscript_list;
+  var_decl = search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable);
+  array_dimension_iterator_c array_dimension_iterator(var_decl);
+  for (int i =  0; i < l->n; i++) {
+    subrange_c *dimension = array_dimension_iterator.next();
+    /* Index is not constant*/
+    if (!VALID_CVALUE(int64, l->elements[i]))
+    	continue;
+    /* Limits must be constant */
+    if (!VALID_CVALUE(int64,  dimension->lower_limit) ||!VALID_CVALUE(int64,  dimension->upper_limit))
+        ERROR;
+
+    if ( GET_CVALUE(int64, l->elements[i]) < GET_CVALUE(int64, dimension->lower_limit) ||
+    	 GET_CVALUE(int64, l->elements[i]) > GET_CVALUE(int64, dimension->upper_limit))
+      STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds.");
+  }
+}
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
@@ -101,6 +127,7 @@ void array_range_check_c::check_dimension_count(array_variable_c *symbol) {
 /*************************************/
 void *array_range_check_c::visit(array_variable_c *symbol) {
 	check_dimension_count(symbol);
+	check_bounds(symbol);
 	return NULL;
 }
 
