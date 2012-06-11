@@ -118,17 +118,40 @@
 
 #include "constant_folding.hh"
 #include <limits>
-#include <math.h> /* required for pow function */
+#include <math.h> /* required for pow function, and HUGE_VAL, HUGE_VALF, HUGE_VALL */
 #include <stdlib.h> /* required for malloc() */
 
-#if 1
-#define UINT64_MAX (std::numeric_limits< uint64_t >::max())
-#define  INT64_MAX (std::numeric_limits<  int64_t >::max())
-#define  INT64_MIN (std::numeric_limits<  int64_t >::min()) 
-#else
 #define __STDC_LIMIT_MACROS /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
 #include <stdint.h>         /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
+
+
+
+#ifndef   UINT64_MAX 
+  #define UINT64_MAX (std::numeric_limits< uint64_t >::max())
 #endif
+#ifndef    INT64_MAX 
+  #define  INT64_MAX (std::numeric_limits<  int64_t >::max())
+#endif
+#ifndef    INT64_MIN
+  #define  INT64_MIN (std::numeric_limits<  int64_t >::min()) 
+#endif
+
+#if    (real64_t  == float)
+  #define HUGE_VAL64  HUGE_VALF
+#elif  (real64_t  == double)
+  #define HUGE_VAL64  HUGE_VAL
+#elif  (real64_t  == long_double)
+  #define HUGE_VAL64  HUGE_VALL
+#else 
+  #error Could not determine which data type is being used for real64_t (defined in absyntax.hh). Aborting!
+#endif
+
+
+
+
+
+
+
 
 
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
@@ -342,12 +365,18 @@ static void CHECK_OVERFLOW_int64_NEG(symbol_c *res, symbol_c *a_ptr) {
 
 
 
-static void CHECK_OVERFLOW_real64(symbol_c *res) {
-	if (!VALID_CVALUE(real64, res))
+static void CHECK_OVERFLOW_real64(symbol_c *res_ptr) {
+	if (!VALID_CVALUE(real64, res_ptr))
 		return;
-       	/* NaN => underflow, overflow, number is a higher precision format, is a complex number (IEEE standard) */
-	if (isnan(GET_CVALUE(real64, res)))
-		SET_OVFLOW(real64, res);
+	real64_t res = GET_CVALUE(real64, res_ptr);
+	/* NaN => underflow, overflow, number is a higher precision format, is a complex number (IEEE standard) */
+	/* The IEC 61131-3 clearly states in section '2.5.1.5.2 Numerical functions':
+	 * "It is an error if the result of evaluation of one of these [numerical] functions exceeds the range of values
+	 *  specified for the data type of the function output, or if division by zero is attempted."
+	 * For this reason, any operation that has as a result a positive or negative inifinity, is also an error!
+	 */
+	if ((isnan(res)) || (res == HUGE_VAL64) || (res == -HUGE_VAL64))
+		SET_OVFLOW(real64, res_ptr);
 }
 
 
@@ -371,9 +400,10 @@ constant_folding_c::constant_folding_c(symbol_c *symbol) {
     /* check whether the platform on which the compiler is being run implements IEC 559 floating point data types. */
     symbol_c null_symbol;
     if (! (std::numeric_limits<real64_t>::is_iec559) )
-        STAGE3_WARNING(&null_symbol, &null_symbol, "The platform running the compiler does not implement IEC 559 floating point numbers. "
+        STAGE3_WARNING(&null_symbol, &null_symbol, "The platform running the compiler does not implement IEC 60559 floating point numbers. "
                                                    "Any error and/or warning messages related to overflow/underflow of the result of operations on REAL/LREAL literals "
-                                                   " (i.e. constant folding) may themselves be erroneous, although are most probably correct.");
+                                                   "(i.e. constant folding) may themselves be erroneous, although are most probably correct."
+                                                   "However, more likely is the possible existance of overflow/underflow errors that are not detected.");
 }
 
 
