@@ -68,6 +68,10 @@ class stage4out_c {
     void *print_long_integer(unsigned long l_integer, bool suffix=true);
     void *print_long_long_integer(unsigned long long ll_integer, bool suffix=true);
 
+    void *print_int64(int64_t integer);
+    void *print_uint64(uint64_t integer);
+    void *print_real64(real64_t integer);
+
     void *printupper(const char *str);
     void *printupper(std::string str);
 

@@ -163,6 +163,24 @@ void *stage4out_c::print_long_long_integer(unsigned long long ll_integer, bool s
   return NULL;
 }
 
+void *stage4out_c::print_int64(int64_t integer) {
+  if (!allow_output) return NULL;
+  *out << integer;
+  return NULL;
+}
+
+void *stage4out_c::print_uint64(uint64_t integer) {
+  if (!allow_output) return NULL;
+  *out << integer;
+  return NULL;
+}
+
+void *stage4out_c::print_real64(real64_t integer) {
+  if (!allow_output) return NULL;
+  *out << integer;
+  return NULL;
+}
+
 void *stage4out_c::printupper(const char *str) {
   if (!allow_output) return NULL;
   for (int i = 0; str[i] != '\0'; i++)
