@@ -99,21 +99,51 @@ int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 
 /* extract the value of an integer from an integer_c object !! */
 /* NOTE: it must ignore underscores! */
-long long extract_integer_value(symbol_c *sym) {
+int64_t extract_int64_value(symbol_c *sym, bool *overflow) {
   std::string str = "";
   integer_c *integer;
   neg_integer_c * neg_integer;
+  char *endptr;
+  int64_t ret;
 
   if ((neg_integer = dynamic_cast<neg_integer_c *>(sym)) != NULL)
-    return - extract_integer_value(neg_integer->exp);
+    return - extract_int64_value(neg_integer->exp, overflow);
+
+  if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
+
+  for(unsigned int i = 0; i < strlen(integer->value); i++)
+    if (integer->value[i] != '_')  str += integer->value[i];
+
+  errno = 0;
+  ret = strtoll(str.c_str(), &endptr, 10);
+  if (overflow != NULL)
+    *overflow = (errno == ERANGE);
+  if ((errno != 0) && (errno != ERANGE))
+    ERROR;
+
+  return ret;
+}
+
+uint64_t extract_uint64_value(symbol_c *sym, bool *overflow) {
+  std::string str = "";
+  integer_c *integer;
+  neg_integer_c * neg_integer;
+  char *endptr;
+  uint64_t ret;
   
   if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
 
   for(unsigned int i = 0; i < strlen(integer->value); i++)
     if (integer->value[i] != '_')  str += integer->value[i];
 
-  /* return atoi(str.c_str()); */
-  return atoll(str.c_str());
+  errno = 0;
+  ret = strtoull(str.c_str(), &endptr, 10);
+  if (overflow != NULL)
+    *overflow = (errno == ERANGE);
+  if ((errno != 0) && (errno != ERANGE))
+    ERROR;
+
+  return ret;
 }
 
 
@@ -153,9 +183,8 @@ uint64_t extract_hex_value(symbol_c *sym) {
  * exponent        [Ee]([+-]?){integer}
  * integer         {digit}((_?{digit})*)
  */
-real64_t extract_real_value(symbol_c *sym, bool *overflow = NULL) {
+real64_t extract_real_value(symbol_c *sym, bool *overflow) {
   std::string str = "";
-  char *endptr;
   real_c * real_sym;
   real64_t ret;
 

@@ -431,8 +431,9 @@ void *constant_folding_c::visit(real_c *symbol) {
 
 
 void *constant_folding_c::visit(integer_c *symbol) {
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_integer_value(symbol));
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_integer_value(symbol));
+	bool overflow;
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value(symbol, &overflow));
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
 	return NULL;
 }
 
