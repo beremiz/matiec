@@ -94,11 +94,11 @@ void array_range_check_c::check_dimension_count(array_variable_c *symbol) {
 	array_dimension_iterator_c array_dimension_iterator(var_decl);
 	for (dimension_count = 0; NULL != array_dimension_iterator.next(); dimension_count++);
 	if (dimension_count != ((list_c *)symbol->subscript_list)->n)
-		STAGE3_ERROR(0, symbol, symbol, "Number of dimensions does not match, Array have %d dimension(s)", dimension_count);
+		STAGE3_ERROR(0, symbol, symbol, "Number of subscripts/indexes does not match the number of subscripts/indexes in the array's declaration (array has %d indexes)", dimension_count);
 }
 
 void array_range_check_c::check_bounds(array_variable_c *symbol) {
-  list_c *l;
+  list_c *l; /* the subscript_list */
   symbol_c *var_decl;
 
   l = (list_c *)symbol->subscript_list;
@@ -106,16 +106,22 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
   array_dimension_iterator_c array_dimension_iterator(var_decl);
   for (int i =  0; i < l->n; i++) {
     subrange_c *dimension = array_dimension_iterator.next();
-    /* Index is not constant*/
-    if (!VALID_CVALUE(int64, l->elements[i]))
-    	continue;
-    /* Limits must be constant */
-    if (!VALID_CVALUE(int64,  dimension->lower_limit) ||!VALID_CVALUE(int64,  dimension->upper_limit))
-        ERROR;
+    
+    if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE( int64, dimension->lower_limit))
+      if ( GET_CVALUE( int64, l->elements[i])   <  GET_CVALUE( int64, dimension->lower_limit))
+      {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
 
-    if ( GET_CVALUE(int64, l->elements[i]) < GET_CVALUE(int64, dimension->lower_limit) ||
-    	 GET_CVALUE(int64, l->elements[i]) > GET_CVALUE(int64, dimension->upper_limit))
-      STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds.");
+    if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE( int64, dimension->upper_limit))
+      if ( GET_CVALUE( int64, l->elements[i])   >  GET_CVALUE( int64, dimension->upper_limit))
+      {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
+
+    if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE(uint64, dimension->lower_limit))
+      if ( GET_CVALUE(uint64, l->elements[i])   <  GET_CVALUE(uint64, dimension->lower_limit))
+      {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
+
+    if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE(uint64, dimension->upper_limit))
+      if ( GET_CVALUE(uint64, l->elements[i])   >  GET_CVALUE(uint64, dimension->upper_limit))
+      {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
   }
 }
 
