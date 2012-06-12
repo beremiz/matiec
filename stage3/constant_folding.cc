@@ -433,7 +433,9 @@ void *constant_folding_c::visit(real_c *symbol) {
 void *constant_folding_c::visit(integer_c *symbol) {
 	bool overflow;
 	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value(symbol, &overflow));
+	if (overflow) SET_OVFLOW(int64, symbol);
 	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
+	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
 
