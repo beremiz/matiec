@@ -405,7 +405,7 @@ void *get_sizeof_datatype_c::visit(hex_integer_c *symbol) {
     /* Assumes ASCII */
     if (!(('0' <= *sval) && ('9' >= *sval)) && 
         !(('A' <= *sval) && ('F' >= *sval)) &&
-        !(('a' <= *sval) && ('b' >= *sval)) &&
+        !(('a' <= *sval) && ('f' >= *sval)) &&
         ! ('_' == *sval))
       ERROR;
 
