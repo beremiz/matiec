@@ -106,6 +106,9 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
   array_dimension_iterator_c array_dimension_iterator(var_decl);
   for (int i =  0; i < l->n; i++) {
     subrange_c *dimension = array_dimension_iterator.next();
+    /* mismatch between number of indexes/subscripts. This error will be caught in check_dimension_count() so we ignore it. */
+    if (NULL == dimension) 
+      return;
     
     if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE( int64, dimension->lower_limit))
       if ( GET_CVALUE( int64, l->elements[i])   <  GET_CVALUE( int64, dimension->lower_limit))
