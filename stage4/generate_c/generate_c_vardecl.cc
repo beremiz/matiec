@@ -1597,7 +1597,7 @@ void *visit(structured_var_declaration_c *symbol) {
 }
 
 void *visit(structure_element_initialization_list_c *symbol) {
-  if (wanted_varformat == localinit_vf) {
+  if (wanted_varformat == localinit_vf || wanted_varformat == constructorinit_vf) {
     generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
     structure_initialization->init_structure_default(this->current_var_type_symbol);
     structure_initialization->init_structure_values(this->current_var_init_symbol);

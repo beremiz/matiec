@@ -81,28 +81,28 @@ typedef struct {
 #endif
 
 
-#define __lit(type,value,sfx) (type)value##sfx
-// Keep this macro expention step to let sfx change into L or LL
-#define __literal(type,value,sfx) __lit(type,value,sfx)
+#define __lit(type,value,...) (type)value##__VA_ARGS__
+// Keep this macro expention step to let sfx(__VA_ARGS__) change into L or LL
+#define __literal(type,value,...) __lit(type,value,##__VA_ARGS__##)
 
-#define __BOOL_LITERAL(value) __literal(BOOL,value,)
-#define __SINT_LITERAL(value) __literal(SINT,value,)
-#define __INT_LITERAL(value) __literal(INT,value,)
+#define __BOOL_LITERAL(value) __literal(BOOL,value)
+#define __SINT_LITERAL(value) __literal(SINT,value)
+#define __INT_LITERAL(value) __literal(INT,value)
 #define __DINT_LITERAL(value) __literal(DINT,value,__32b_sufix)
 #define __LINT_LITERAL(value) __literal(LINT,value,__64b_sufix)
-#define __USINT_LITERAL(value) __literal(USINT,value,)
-#define __UINT_LITERAL(value) __literal(UINT,value,)
+#define __USINT_LITERAL(value) __literal(USINT,value)
+#define __UINT_LITERAL(value) __literal(UINT,value)
 #define __UDINT_LITERAL(value) __literal(UDINT,value,__32b_sufix)
 #define __ULINT_LITERAL(value) __literal(ULINT,value,__64b_sufix)
 #define __REAL_LITERAL(value) __literal(REAL,value,__32b_sufix)
 #define __LREAL_LITERAL(value) __literal(LREAL,value,__64b_sufix)
-#define __TIME_LITERAL(value) __literal(TIME,value,)
-#define __DATE_LITERAL(value) __literal(DATE,value,)
-#define __TOD_LITERAL(value) __literal(TOD,value,)
-#define __DT_LITERAL(value) __literal(DT,value,)
-#define __STRING_LITERAL(count,value) (STRING){count,value}
-#define __BYTE_LITERAL(value) __literal(BYTE,value,)
-#define __WORD_LITERAL(value) __literal(WORD,value,)
+#define __TIME_LITERAL(value) __literal(TIME,value)
+#define __DATE_LITERAL(value) __literal(DATE,value)
+#define __TOD_LITERAL(value) __literal(TOD,value)
+#define __DT_LITERAL(value) __literal(DT,value)
+#define __STRING_LITERAL(count,value) {count,value}
+#define __BYTE_LITERAL(value) __literal(BYTE,value)
+#define __WORD_LITERAL(value) __literal(WORD,value)
 #define __DWORD_LITERAL(value) __literal(DWORD,value,__32b_sufix)
 #define __LWORD_LITERAL(value) __literal(LWORD,value,__64b_sufix)
 
