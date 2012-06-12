@@ -2692,7 +2692,7 @@ subrange:
 | signed_integer DOTDOT error
 	{$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no value defined for upper bound in subrange definition.");}
-	 else {print_err_msg(locf(@3), locl(@3), "invalid value for lower bound in subrange definition."); yyclearin;}
+	 else {print_err_msg(locf(@3), locl(@3), "invalid value for upper bound in subrange definition."); yyclearin;}
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
