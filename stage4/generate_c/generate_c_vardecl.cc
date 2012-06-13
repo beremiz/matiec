@@ -22,6 +22,8 @@
  * used in safety-critical situations without a full and competent review.
  */
 
+#include <limits>  // required for std::numeric_limits<XXX>
+
 class initialization_analyzer_c: public null_visitor_c {
   public:
 	typedef enum {
@@ -74,9 +76,9 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
 
   private:
     int current_dimension;
-    int array_size;
-    int defined_values_count;
-    int current_initialization_count;
+    unsigned long long int array_size;
+    unsigned long long int defined_values_count;
+    unsigned long long int current_initialization_count;
 
   public:
     generate_c_array_initialization_c(stage4out_c *s4o_ptr): generate_c_typedecl_c(s4o_ptr) {}
@@ -124,7 +126,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       if (array_default_initialization != NULL && defined_values_count < array_size)
         array_default_initialization->accept(*this);
       if (defined_values_count < array_size) {
-        for (int i = defined_values_count; i < array_size; i++) {
+        for (unsigned long long int i = defined_values_count; i < array_size; i++) {
           if (defined_values_count > 0)
             s4o.print(",");
           array_default_value->accept(*this);
@@ -211,14 +213,17 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
     /*  signed_integer DOTDOT signed_integer */
     //SYM_REF2(subrange_c, lower_limit, upper_limit)
     void *visit(subrange_c *symbol) {
-      int dimension = extract_int64_value(symbol->upper_limit) - extract_int64_value(symbol->lower_limit) + 1;
       switch (current_mode) {
         case arraysize_am:
-          array_size *= dimension;
+          /* res = a * b; --->  Check for overflow by pre-condition: If (UINT_MAX / a) < b => overflow! */
+          if ((std::numeric_limits< unsigned long long int >::max() / array_size) < symbol->dimension)
+            STAGE4_ERROR(symbol, symbol, "The array containing this subrange has a total number of elements larger than the maximum currently supported (%llu).", 
+                         std::numeric_limits< unsigned long long int >::max());
+          array_size *= symbol->dimension;
           break;
         case typedecl_am:
           s4o.print("_");
-          s4o.print_integer(dimension);
+          s4o.print_integer(symbol->dimension);
           break;
         default:
           break;
@@ -260,14 +265,14 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
     /* integer '(' [array_initial_element] ')' */
     /* array_initial_element may be NULL ! */
     void *visit(array_initial_elements_c *symbol) {
-      int initial_element_number;
+      unsigned long long int initial_element_number;
       
       switch (current_mode) {
         case initializationvalue_am:
           initial_element_number = extract_int64_value(symbol->integer);
           if (current_initialization_count < defined_values_count) {
-            int temp_element_number = 0;
-            int diff = defined_values_count - current_initialization_count;
+            unsigned long long int temp_element_number = 0;
+            unsigned long long int diff = defined_values_count - current_initialization_count;
             if (diff <= initial_element_number)
               temp_element_number = initial_element_number - diff;
             current_initialization_count += initial_element_number - 1;
@@ -281,7 +286,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
             current_initialization_count += initial_element_number - 1;
           if (defined_values_count + initial_element_number > array_size)
             ERROR;
-          for (int i = 0; i < initial_element_number; i++) {
+          for (unsigned long long int i = 0; i < initial_element_number; i++) {
             if (i > 0)
               s4o.print(",");
             if (symbol->array_initial_element != NULL) {
@@ -1407,9 +1412,8 @@ void *visit(array_specification_c *symbol) {
 /*  signed_integer DOTDOT signed_integer */
 //SYM_REF2(subrange_c, lower_limit, upper_limit)
 void *visit(subrange_c *symbol) {
-  long long dimension = extract_int64_value(symbol->upper_limit) - extract_int64_value(symbol->lower_limit) + 1;
   s4o.print("_");
-  print_integer(dimension);
+  print_integer(symbol->dimension);
   return NULL;
 }
 

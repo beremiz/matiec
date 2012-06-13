@@ -31,6 +31,7 @@
 #include <sstream>
 #include <strings.h>
 
+
 #include "../../util/symtable.hh"
 #include "../../util/dsymtable.hh"
 #include "../../absyntax/visitor.hh"
@@ -51,6 +52,12 @@ extern void error_exit(const char *file_name, int line_no);
 
 
 #define STAGE4_ERROR(symbol1, symbol2, ...) {stage4err("while generating C code", symbol1, symbol2, __VA_ARGS__); exit(EXIT_FAILURE);}
+
+
+/* Macros to access the constant value of each expression (if it exists) from the annotation introduced to the symbol_c object by constant_folding_c in stage3! */
+/* NOTE: The following test is correct in the presence of a NULL pointer, as the logical evaluation will be suspended as soon as the first condition is false! */
+#define VALID_CVALUE(dtype, symbol)           ((NULL != (symbol)->const_value_##dtype) && (symbol_c::cs_const_value == (symbol)->const_value_##dtype->status))
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value_##dtype->value) 
 
 
 
@@ -782,19 +789,18 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     /*  signed_integer DOTDOT signed_integer */
     //SYM_REF2(subrange_c, lower_limit, upper_limit)
     void *visit(subrange_c *symbol) {
-      int dimension = extract_int64_value(symbol->upper_limit) - extract_int64_value(symbol->lower_limit) + 1;
       switch (current_mode) {
         case arrayname_im:
           current_array_name += "_";
           {
             std::stringstream ss;
-            ss << dimension;
+            ss << symbol->dimension;
             current_array_name += ss.str();
           }
           break;
         case arraydeclaration_im:
           s4o_incl.print("[");
-          s4o_incl.print_integer(dimension);
+          s4o_incl.print_integer(symbol->dimension);
           s4o_incl.print("]");
         default:
           generate_c_typedecl_c::visit(symbol);

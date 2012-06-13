@@ -217,8 +217,6 @@
 
 
 
-
-
 /* NOTE:
  *   Most of the conditions to detect overflows on signed and unsigned integer operations were adapted from
  *   https://www.securecoding.cert.org/confluence/display/seccode/INT32-C.+Ensure+that+operations+on+signed+integers+do+not+result+in+overflow?showComments=false

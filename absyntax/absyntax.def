@@ -315,7 +315,8 @@ SYM_REF2(subrange_spec_init_c, subrange_specification, signed_integer)
 SYM_REF2(subrange_specification_c, integer_type_name, subrange)
 
 /*  signed_integer DOTDOT signed_integer */
-SYM_REF2(subrange_c, lower_limit, upper_limit)
+/* dimension will be filled in during stage 3 (array_range_check_c) with the number of elements in this subrange */
+SYM_REF2(subrange_c, lower_limit, upper_limit, unsigned long long int dimension;)
 
 /*  enumerated_type_name ':' enumerated_spec_init */
 SYM_REF2(enumerated_type_declaration_c, enumerated_type_name, enumerated_spec_init)

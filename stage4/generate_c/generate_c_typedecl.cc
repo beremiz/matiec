@@ -75,15 +75,15 @@ class generate_c_typedecl_c: public generate_c_base_c {
 
     basetypedeclaration_t current_basetypedeclaration;
 
-    void print_integer(unsigned int integer) {
-      char str[10];
-      sprintf(str, "%d", integer);
+    void print_integer(unsigned long long int integer) {
+      char str[24];
+      sprintf(str, "%llu", integer);
       s4o.print(str);
     }
 
-    void print_integer_incl(unsigned int integer) {
-      char str[10];
-      sprintf(str, "%d", integer);
+    void print_integer_incl(unsigned long long int integer) {
+      char str[24];
+      sprintf(str, "%llu", integer);
       s4o_incl.print(str);
     }
 
@@ -255,8 +255,7 @@ void *visit(subrange_c *symbol) {
     case array_td:
       if (current_basetypedeclaration == arraysubrange_bd) {
         s4o_incl.print("[");
-        dimension = extract_int64_value(symbol->upper_limit) - extract_int64_value(symbol->lower_limit) + 1;
-        print_integer_incl(dimension);
+        print_integer_incl(symbol->dimension);
         s4o_incl.print("]");
       }
       else

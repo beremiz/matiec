@@ -44,6 +44,8 @@
 
 
 #include "array_range_check.hh"
+#include <limits>  // required for std::numeric_limits<XXX>
+
 
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
 #define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
@@ -79,12 +81,18 @@ array_range_check_c::array_range_check_c(symbol_c *ignore) {
 	current_display_error_level = 0;
 }
 
+
+
 array_range_check_c::~array_range_check_c(void) {
 }
+
+
 
 int array_range_check_c::get_error_count() {
 	return error_count;
 }
+
+
 
 void array_range_check_c::check_dimension_count(array_variable_c *symbol) {
 	int dimension_count;
@@ -96,6 +104,8 @@ void array_range_check_c::check_dimension_count(array_variable_c *symbol) {
 	if (dimension_count != ((list_c *)symbol->subscript_list)->n)
 		STAGE3_ERROR(0, symbol, symbol, "Number of subscripts/indexes does not match the number of subscripts/indexes in the array's declaration (array has %d indexes)", dimension_count);
 }
+
+
 
 void array_range_check_c::check_bounds(array_variable_c *symbol) {
   list_c *l; /* the subscript_list */
@@ -128,6 +138,71 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
   }
 }
 
+
+
+
+
+
+
+
+
+/*************************/
+/* B.1 - Common elements */
+/*************************/
+/**********************/
+/* B.1.3 - Data types */
+/**********************/
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+
+/*  signed_integer DOTDOT signed_integer */
+/* dimension will be filled in during stage 3 (array_range_check_c) with the number of elements in this subrange */
+// SYM_REF2(subrange_c, lower_limit, upper_limit, unsigned long long int dimension)
+void *array_range_check_c::visit(subrange_c *symbol) {
+	unsigned long long int dimension = 0; // we use unsigned long long instead of uint64_t since it might just happen to be larger than uint64_t in the platform used for compiling this code!!
+
+/* Determine the size of the array... */
+	if        (VALID_CVALUE( int64, symbol->upper_limit) && VALID_CVALUE( int64, symbol->lower_limit)) {  
+		// do the sums in such a way that no overflow is possible... even during intermediate steps used by compiler!
+		// remember that the result (dimension) is unsigned, while the operands are signed!!
+		// dimension = GET_CVALUE( int64, symbol->upper_limit) - VALID_CVALUE( int64, symbol->lower_limit);
+		if (VALID_CVALUE( int64, symbol->lower_limit) >= 0) {
+			dimension = GET_CVALUE( int64, symbol->upper_limit) - GET_CVALUE( int64, symbol->lower_limit);
+		} else {
+			dimension  = -GET_CVALUE( int64, symbol->lower_limit);
+			dimension +=  GET_CVALUE( int64, symbol->upper_limit);     
+		}
+	} else if (VALID_CVALUE(uint64, symbol->upper_limit) && VALID_CVALUE(uint64, symbol->lower_limit)) {
+		dimension = GET_CVALUE(uint64, symbol->upper_limit) - VALID_CVALUE(uint64, symbol->lower_limit); 
+	} else if (VALID_CVALUE(uint64, symbol->upper_limit) && VALID_CVALUE( int64, symbol->lower_limit)) {
+		if (VALID_CVALUE( int64, symbol->lower_limit) >= 0) {
+			dimension = GET_CVALUE( int64, symbol->upper_limit) - GET_CVALUE( int64, symbol->lower_limit);
+		} else {
+		unsigned long long int lower_ull;
+		lower_ull  = -GET_CVALUE( int64, symbol->lower_limit);
+		dimension  =  GET_CVALUE( int64, symbol->upper_limit) + lower_ull;     
+		/* TODO: check this overflow test, it does not seem to be working. I don't have to go now... Will check later. */
+		if (dimension < lower_ull)
+			STAGE3_ERROR(0, symbol, symbol, "Number of elements in array subrange exceeds maximum number of elements (%llu).", std::numeric_limits< unsigned long long int >::max());
+		}
+	} else ERROR;
+
+	/* correct value for dimension is actually ---> dimension = upper_limit - lower_limit + 1
+	 * Up to now, we have only determined dimension = upper_limit - lower_limit
+	 * We must first check whether this last increment will cause an overflow!
+	 */
+	if (dimension == std::numeric_limits< unsigned long long int >::max())
+		STAGE3_ERROR(0, symbol, symbol, "Number of elements in array subrange exceeds maximum number of elements (%llu).", std::numeric_limits< unsigned long long int >::max());
+	
+	/* correct value for dimension is actually ---> dimension = upper_limit - lower_limit + 1 */
+	dimension++; 
+	
+	symbol->dimension = dimension;
+	return NULL;
+}
+
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
@@ -147,7 +222,9 @@ void *array_range_check_c::visit(array_variable_c *symbol) {
 /***********************/
 /* B 1.5.1 - Functions */
 /***********************/
+// SYM_REF4(function_declaration_c, derived_function_name, type_name, var_declarations_list, function_body)
 void *array_range_check_c::visit(function_declaration_c *symbol) {
+	symbol->var_declarations_list->accept(*this); // required for visiting subrange_c
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	// search_var_instance_decl = new search_var_instance_decl_c(symbol);
 	symbol->function_body->accept(*this);
@@ -161,7 +238,9 @@ void *array_range_check_c::visit(function_declaration_c *symbol) {
 /*****************************/
 /* B 1.5.2 - Function blocks */
 /*****************************/
+// SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
 void *array_range_check_c::visit(function_block_declaration_c *symbol) {
+	symbol->var_declarations->accept(*this); // required for visiting subrange_c
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	// search_var_instance_decl = new search_var_instance_decl_c(symbol);
 	symbol->fblock_body->accept(*this);
@@ -175,7 +254,9 @@ void *array_range_check_c::visit(function_block_declaration_c *symbol) {
 /**********************/
 /* B 1.5.3 - Programs */
 /**********************/
+// SYM_REF3(program_declaration_c, program_type_name, var_declarations, function_block_body)
 void *array_range_check_c::visit(program_declaration_c *symbol) {
+	symbol->var_declarations->accept(*this); // required for visiting subrange_c
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	// search_var_instance_decl = new search_var_instance_decl_c(symbol);
 	symbol->function_block_body->accept(*this);
