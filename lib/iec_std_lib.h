@@ -83,7 +83,7 @@ typedef struct {
 
 #define __lit(type,value,...) (type)value##__VA_ARGS__
 // Keep this macro expention step to let sfx(__VA_ARGS__) change into L or LL
-#define __literal(type,value,...) __lit(type,value,##__VA_ARGS__##)
+#define __literal(type,value,...) __lit(type,value,##__VA_ARGS__)
 
 #define __BOOL_LITERAL(value) __literal(BOOL,value)
 #define __SINT_LITERAL(value) __literal(SINT,value)
