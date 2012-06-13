@@ -97,6 +97,26 @@ int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 }
 
 
+
+  /* To allow the compiler to be portable, we cannot assume that int64_t is mapped onto long long int,
+   * so we cannot call strtoll() and strtoull() in extract_int64() and extract_uint64().
+   *
+   * So, we create our own strtouint64() and strtoint64() functions.
+   * (We actually call them matiec_strtoint64() so they will not clash with any function
+   *  that may be added to the standard library in the future).
+   * We actually create several of each, and let the compiler choose which is the correct one,
+   * by having it resolve the call to the overloaded function. For the C++ compiler to be able
+   * to resolve this ambiguity, we need to add a dummy parameter to each function!
+   *
+   * TODO: support platforms in which int64_t is mapped onto int !! Is this really needed?
+   */
+static  int64_t matiec_strtoint64 (         long      int *dummy, const char *nptr, char **endptr, int base) {return strtol  (nptr, endptr, base);}
+static  int64_t matiec_strtoint64 (         long long int *dummy, const char *nptr, char **endptr, int base) {return strtoll (nptr, endptr, base);}
+  
+static uint64_t matiec_strtouint64(unsigned long      int *dummy, const char *nptr, char **endptr, int base) {return strtoul (nptr, endptr, base);}
+static uint64_t matiec_strtouint64(unsigned long long int *dummy, const char *nptr, char **endptr, int base) {return strtoull(nptr, endptr, base);}
+
+
 /* extract the value of an integer from an integer_c object !! */
 /* NOTE: it must ignore underscores! */
 int64_t extract_int64_value(symbol_c *sym, bool *overflow) {
@@ -114,8 +134,8 @@ int64_t extract_int64_value(symbol_c *sym, bool *overflow) {
   for(unsigned int i = 0; i < strlen(integer->value); i++)
     if (integer->value[i] != '_')  str += integer->value[i];
 
-  errno = 0;
-  ret = strtoll(str.c_str(), &endptr, 10);
+  errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
+  ret = matiec_strtoint64((int64_t *)NULL, str.c_str(), &endptr, 10);
   if (overflow != NULL)
     *overflow = (errno == ERANGE);
   if ((errno != 0) && (errno != ERANGE))
@@ -136,8 +156,8 @@ uint64_t extract_uint64_value(symbol_c *sym, bool *overflow) {
   for(unsigned int i = 0; i < strlen(integer->value); i++)
     if (integer->value[i] != '_')  str += integer->value[i];
 
-  errno = 0;
-  ret = strtoull(str.c_str(), &endptr, 10);
+  errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
+  ret = matiec_strtouint64((uint64_t *)NULL, str.c_str(), &endptr, 10);
   if (overflow != NULL)
     *overflow = (errno == ERANGE);
   if ((errno != 0) && (errno != ERANGE))
