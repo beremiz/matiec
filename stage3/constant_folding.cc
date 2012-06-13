@@ -452,6 +452,15 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 	symbol->exp->accept(*this);
 	DO_UNARY_OPER(int64, -, symbol->exp);
 	CHECK_OVERFLOW_int64_NEG(symbol, symbol->exp);
+	/* NOTE 1: INT64_MIN = -(INT64_MAX + 1)   ---> assuming two's complement representation!!!
+	 * NOTE 2: if the user happens to want INT_MIN, that value will first be parsed as a positive integer, before being negated here.
+	 * However, the positive value cannot be stored inside an int64! So, in this case, we will get the value from the uint64 cvalue.
+	 */
+	// if (INT64_MIN == -INT64_MAX - 1) // We do not really need to check that the platform uses two's complement
+	if (VALID_CVALUE(uint64, symbol->exp) && (GET_CVALUE(uint64, symbol->exp) == -INT64_MIN)) {
+		NEW_CVALUE(int64, symbol); // in principle, if the above condition is true, then no new cvalue was created by DO_UNARY_OPER(). Not that it would be a problem to create a new one!
+		SET_CVALUE(int64, symbol, INT64_MIN);
+	}
 	return NULL;
 }
 
