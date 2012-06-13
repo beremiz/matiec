@@ -126,11 +126,7 @@ int64_t extract_int64_value(symbol_c *sym, bool *overflow) {
   char *endptr;
   int64_t ret;
 
-  if ((neg_integer = dynamic_cast<neg_integer_c *>(sym)) != NULL)
-    return - extract_int64_value(neg_integer->exp, overflow);
-
   if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
-
   for(unsigned int i = 0; i < strlen(integer->value); i++)
     if (integer->value[i] != '_')  str += integer->value[i];
 
@@ -152,7 +148,6 @@ uint64_t extract_uint64_value(symbol_c *sym, bool *overflow) {
   uint64_t ret;
   
   if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
-
   for(unsigned int i = 0; i < strlen(integer->value); i++)
     if (integer->value[i] != '_')  str += integer->value[i];
 
