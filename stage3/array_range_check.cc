@@ -135,6 +135,8 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
     if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE(uint64, dimension->upper_limit))
       if ( GET_CVALUE(uint64, l->elements[i])   >  GET_CVALUE(uint64, dimension->upper_limit))
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
+      
+    /* TODO: what happens when one has a int64 cvalue, and another has a uint64 cvalue? */
   }
 }
 

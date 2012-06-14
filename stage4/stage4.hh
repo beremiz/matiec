@@ -61,16 +61,21 @@ class stage4out_c {
     void indent_right(void);
     void indent_left(void);
 
-    void *print(const char *str);
-    void *print(std::string str);
+    void *print(          std::string  value);
+    void *print(           const char *value);
+    //void *print(               int64_t value); // not required, since we have long long int, or similar
+    //void *print(              uint64_t value); // not required, since we have long long int, or similar
+    void *print(              real64_t value);
+    void *print(                   int value);
+    void *print(              long int value);
+    void *print(         long long int value);
+    void *print(unsigned           int value);
+    void *print(unsigned      long int value);
+    void *print(unsigned long long int value);
     
-    void *print_integer(int integer);
     void *print_long_integer(unsigned long l_integer, bool suffix=true);
     void *print_long_long_integer(unsigned long long ll_integer, bool suffix=true);
 
-    void *print_int64(int64_t integer);
-    void *print_uint64(uint64_t integer);
-    void *print_real64(real64_t integer);
 
     void *printupper(const char *str);
     void *printupper(std::string str);

@@ -117,7 +117,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
     }      
 
     void print_transition_number(void) {
-      s4o.print_integer(transition_number);
+      s4o.print(transition_number);
     }
 
     void print_reset_step(symbol_c *step_name) {

@@ -179,7 +179,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       if (function_type_suffix) {
         function_type_suffix->accept(*this);
       }
-      s4o.print_integer(fcall_number);
+      s4o.print(fcall_number);
       s4o.print("(");
       s4o.indent_right();
 

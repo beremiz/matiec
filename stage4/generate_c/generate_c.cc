@@ -349,85 +349,75 @@ class print_function_parameter_data_types_c: public generate_c_base_c {
 #define MILLISECOND 1000000
 #define SECOND 1000 * MILLISECOND
 
-/* A helper class that knows how to generate code for both the IL and ST languages... */
-class calculate_time_c: public iterator_visitor_c {
-  private:
-    unsigned long long time;
-    float current_value;
+unsigned long long calculate_time(symbol_c *symbol) {
+  if (NULL == symbol) return 0;
   
-  public:
-    calculate_time_c(void){time = 0;};
-    
-    unsigned long long get_time(void) {return time;};
-
-    /* NOTE: we should really remove this function, and replace it with  extract_integer_value() (in absyntax_utils.h)
-     *       but right now I don't want to spend time checking if this change will introduce some conversion bug
-     *       since it returns a long long, and not a float!
-     */
-    void *get_integer_value(token_c *token) {
-      std::string str = "";
-      for (unsigned int i = 0; i < strlen(token->value); i++)
-        if (token->value[i] != '_')
-          str += token->value[i];
-      current_value = atof(str.c_str());
-      return NULL;
-    }
-
-    /* NOTE: this function is incomplete, as it should also be removing '_' inserted into the literal,
-     *       but we leave it for now.
-     *       In truth, we should really have an extract_real_value() in absyntax_util.h !!!
-     */
-    void *get_float_value(token_c *token) {
-      current_value = atof(token->value);
-      return NULL;
-    }
-
-/******************************/
-/* B 1.2.1 - Numeric Literals */
-/******************************/
-
-    void *visit(integer_c *symbol) {return get_integer_value(symbol);}
-    
-/************************/
-/* B 1.2.3.1 - Duration */
-/************************/
+  interval_c *interval = dynamic_cast<interval_c *>(symbol);
+  duration_c *duration = dynamic_cast<duration_c *>(symbol);
   
+  if ((NULL == interval) && (NULL == duration)) ERROR;
+
+  if (NULL != duration) {
     /* SYM_REF2(duration_c, neg, interval) */
-    void *visit(duration_c *symbol) {
-      if (symbol->neg != NULL)
-        {STAGE4_ERROR(symbol, symbol, "Negative TIME literals are not currently supported"); ERROR;}
-      symbol->interval->accept(*this);
-      return NULL;
-    }
-    
-    /* SYM_TOKEN(fixed_point_c) */
-    void *visit(fixed_point_c *symbol) {return get_float_value(symbol);}
-    
-    
+    if (duration->neg != NULL)
+      {STAGE4_ERROR(duration, duration, "Negative TIME literals are not currently supported"); ERROR;}
+    return calculate_time(duration->interval);
+  }
+
+  if (NULL != interval) {
     /* SYM_REF5(interval_c, days, hours, minutes, seconds, milliseconds) */
-    void *visit(interval_c *symbol) {
-      current_value = 0;
-      if (NULL != symbol->milliseconds) symbol->milliseconds->accept(*this);
-      time += (unsigned long long)(current_value * MILLISECOND);
+      unsigned long long int time_ull = 0; 
+      long double            time_ld  = 0;
+      /*
+      const unsigned long long int MILLISECOND = 1000000;
+      const unsigned long long int      SECOND = 1000 * MILLISECOND
+      */
+      
+      if (NULL != interval->milliseconds) {
+        if      (VALID_CVALUE( int64, interval->milliseconds) &&           GET_CVALUE( int64, interval->milliseconds) < 0) ERROR; // interval elements should always be positive!
+        if      (VALID_CVALUE( int64, interval->milliseconds)) time_ull += GET_CVALUE( int64, interval->milliseconds) * MILLISECOND;
+        else if (VALID_CVALUE(uint64, interval->milliseconds)) time_ull += GET_CVALUE(uint64, interval->milliseconds) * MILLISECOND;
+        else if (VALID_CVALUE(real64, interval->milliseconds)) time_ld  += GET_CVALUE(real64, interval->milliseconds) * MILLISECOND;
+        else ERROR; // if (NULL != interval->milliseconds) is true, then it must have a valid constant value!
+      }
    
-      current_value = 0;
-      if (NULL != symbol->seconds)      symbol->seconds->accept(*this);
-      time += (unsigned long long)(current_value * SECOND);
-   
-      current_value = 0;
-      if (NULL != symbol->minutes)      symbol->minutes->accept(*this);
-      time += (unsigned long long)(current_value * 60 * SECOND);
-   
-      current_value = 0;
-      if (NULL != symbol->hours)        symbol->hours->accept(*this);
-      time += (unsigned long long)(current_value * 60 * 60 * SECOND);
-   
-      current_value = 0;
-      if (NULL != symbol->days)         symbol->days->accept(*this);
-      time += (unsigned long long)(current_value * 60 * 60 * 24 * SECOND);
-   
-      return NULL;
-    }      
+      if (NULL != interval->seconds     ) {
+        if      (VALID_CVALUE( int64, interval->seconds     ) &&           GET_CVALUE( int64, interval->seconds     ) < 0) ERROR; // interval elements should always be positive!
+        if      (VALID_CVALUE( int64, interval->seconds     )) time_ull += GET_CVALUE( int64, interval->seconds     ) * SECOND;
+        else if (VALID_CVALUE(uint64, interval->seconds     )) time_ull += GET_CVALUE(uint64, interval->seconds     ) * SECOND;
+        else if (VALID_CVALUE(real64, interval->seconds     )) time_ld  += GET_CVALUE(real64, interval->seconds     ) * SECOND;
+        else ERROR; // if (NULL != interval->seconds) is true, then it must have a valid constant value!
+      }
+
+      if (NULL != interval->minutes     ) {
+        if      (VALID_CVALUE( int64, interval->minutes     ) &&           GET_CVALUE( int64, interval->minutes     ) < 0) ERROR; // interval elements should always be positive!
+        if      (VALID_CVALUE( int64, interval->minutes     )) time_ull += GET_CVALUE( int64, interval->minutes     ) * SECOND * 60;
+        else if (VALID_CVALUE(uint64, interval->minutes     )) time_ull += GET_CVALUE(uint64, interval->minutes     ) * SECOND * 60;
+        else if (VALID_CVALUE(real64, interval->minutes     )) time_ld  += GET_CVALUE(real64, interval->minutes     ) * SECOND * 60;
+        else ERROR; // if (NULL != interval->minutes) is true, then it must have a valid constant value!
+      }
+
+      if (NULL != interval->hours       ) {
+        if      (VALID_CVALUE( int64, interval->hours       ) &&           GET_CVALUE( int64, interval->hours       ) < 0) ERROR; // interval elements should always be positive!
+        if      (VALID_CVALUE( int64, interval->hours       )) time_ull += GET_CVALUE( int64, interval->hours       ) * SECOND * 60 * 60;
+        else if (VALID_CVALUE(uint64, interval->hours       )) time_ull += GET_CVALUE(uint64, interval->hours       ) * SECOND * 60 * 60;
+        else if (VALID_CVALUE(real64, interval->hours       )) time_ld  += GET_CVALUE(real64, interval->hours       ) * SECOND * 60 * 60;
+        else ERROR; // if (NULL != interval->hours) is true, then it must have a valid constant value!
+      }
+
+      if (NULL != interval->days        ) {
+        if      (VALID_CVALUE( int64, interval->days        ) &&           GET_CVALUE( int64, interval->days        ) < 0) ERROR; // interval elements should always be positive!
+        if      (VALID_CVALUE( int64, interval->days        )) time_ull += GET_CVALUE( int64, interval->days        ) * SECOND * 60 * 60 * 24;
+        else if (VALID_CVALUE(uint64, interval->days        )) time_ull += GET_CVALUE(uint64, interval->days        ) * SECOND * 60 * 60 * 24;
+        else if (VALID_CVALUE(real64, interval->days        )) time_ld  += GET_CVALUE(real64, interval->days        ) * SECOND * 60 * 60 * 24;
+        else ERROR; // if (NULL != interval->days) is true, then it must have a valid constant value!
+      }
+
+      time_ull += time_ld;
+      return time_ull;
+  };
+  ERROR; // should never reach this point!
+  return 0; // humour the compiler!
 };
 
 /***********************************************************************/
@@ -481,14 +471,9 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
 /*  TASK task_name task_initialization */
 //SYM_REF2(task_configuration_c, task_name, task_initialization)  
     void *visit(task_initialization_c *symbol) {
-      calculate_time_c calculate_time;
-      unsigned long long time = 0;
-      if (symbol->interval_data_source != NULL) {
-        symbol->interval_data_source->accept(calculate_time);
-        time = calculate_time.get_time();
-      }
-      if (time > 0)
-        update_ticktime(time);
+      unsigned long long time = calculate_time(symbol->interval_data_source);
+      if (time < 0)  ERROR;
+      else           update_ticktime(time);
       return NULL;
     }
 };    
@@ -800,7 +785,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
           break;
         case arraydeclaration_im:
           s4o_incl.print("[");
-          s4o_incl.print_integer(symbol->dimension);
+          s4o_incl.print(symbol->dimension);
           s4o_incl.print("]");
         default:
           generate_c_typedecl_c::visit(symbol);
@@ -1815,7 +1800,7 @@ class generate_c_resources_c: public generate_c_typedecl_c {
 
     declaretype_t wanted_declaretype;
 
-    unsigned long common_ticktime;
+    unsigned long long common_ticktime;
     
     const char *current_program_name;
 
@@ -2192,12 +2177,10 @@ END_RESOURCE
             current_task_name->accept(*this);
             s4o.print(" = ");
             if (symbol->interval_data_source != NULL) {
-              calculate_time_c calculate_time;
-              symbol->interval_data_source->accept(calculate_time);
-              unsigned long time = calculate_time.get_time();
+              unsigned long long int time = calculate_time(symbol->interval_data_source);
               if (time != 0) {
                 s4o.print("!(tick % ");
-                s4o.print_integer((int)(time / common_ticktime));
+                s4o.print(time / common_ticktime);
                 s4o.print(")");
               }
               else

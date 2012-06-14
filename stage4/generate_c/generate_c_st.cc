@@ -792,7 +792,7 @@ void *visit(function_invocation_c *symbol) {
       print_function_parameter_data_types_c overloaded_func_suf(&s4o);
       f_decl->accept(overloaded_func_suf);
     }
-    s4o.print_integer(fcall_number);
+    s4o.print(fcall_number);
   }
   else {
     function_name->accept(*this);

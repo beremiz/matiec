@@ -75,18 +75,6 @@ class generate_c_typedecl_c: public generate_c_base_c {
 
     basetypedeclaration_t current_basetypedeclaration;
 
-    void print_integer(unsigned long long int integer) {
-      char str[24];
-      sprintf(str, "%llu", integer);
-      s4o.print(str);
-    }
-
-    void print_integer_incl(unsigned long long int integer) {
-      char str[24];
-      sprintf(str, "%llu", integer);
-      s4o_incl.print(str);
-    }
-
     void *print_list_incl(list_c *list,
          std::string pre_elem_str = "",
          std::string inter_elem_str = "",
@@ -255,7 +243,7 @@ void *visit(subrange_c *symbol) {
     case array_td:
       if (current_basetypedeclaration == arraysubrange_bd) {
         s4o_incl.print("[");
-        print_integer_incl(symbol->dimension);
+        s4o_incl.print(symbol->dimension);
         s4o_incl.print("]");
       }
       else

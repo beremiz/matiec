@@ -136,18 +136,18 @@ void stage4out_c::indent_left(void) {
     indent_spaces.erase();
 }
 
+void *stage4out_c::print(           std::string value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(           const char *value) {if (!allow_output) return NULL; *out << value; return NULL;}
+//void *stage4out_c::print(               int64_t value) {if (!allow_output) return NULL; *out << value; return NULL;}
+//void *stage4out_c::print(              uint64_t value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(              real64_t value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(                   int value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(              long int value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(         long long int value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(unsigned           int value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(unsigned      long int value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(unsigned long long int value) {if (!allow_output) return NULL; *out << value; return NULL;}
 
-void *stage4out_c::print(const char *str) {
-  if (!allow_output) return NULL;
-  *out << str;
-  return NULL;
-}
-
-void *stage4out_c::print_integer(int integer) {
-  if (!allow_output) return NULL;
-  *out << integer;
-  return NULL;
-}
 
 void *stage4out_c::print_long_integer(unsigned long l_integer, bool suffix) {
   if (!allow_output) return NULL;
@@ -163,23 +163,6 @@ void *stage4out_c::print_long_long_integer(unsigned long long ll_integer, bool s
   return NULL;
 }
 
-void *stage4out_c::print_int64(int64_t integer) {
-  if (!allow_output) return NULL;
-  *out << integer;
-  return NULL;
-}
-
-void *stage4out_c::print_uint64(uint64_t integer) {
-  if (!allow_output) return NULL;
-  *out << integer;
-  return NULL;
-}
-
-void *stage4out_c::print_real64(real64_t integer) {
-  if (!allow_output) return NULL;
-  *out << integer;
-  return NULL;
-}
 
 void *stage4out_c::printupper(const char *str) {
   if (!allow_output) return NULL;
@@ -213,12 +196,6 @@ void *stage4out_c::printlocation_comasep(const char *str) {
   return NULL;
 }
 
-
-void *stage4out_c::print(std::string str) {
-  if (!allow_output) return NULL;
-  *out << str;
-  return NULL;
-}
 
 
 void *stage4out_c::printupper(std::string str) {

@@ -385,7 +385,7 @@ class generate_c_base_c: public iterator_visitor_c {
 
       str += '"';
       s4o.print("__STRING_LITERAL(");
-      s4o.print_integer(count); 
+      s4o.print(count); 
       s4o.print(",");
       s4o.print(str);
       s4o.print(")");

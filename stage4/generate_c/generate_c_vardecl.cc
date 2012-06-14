@@ -223,7 +223,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
           break;
         case typedecl_am:
           s4o.print("_");
-          s4o.print_integer(symbol->dimension);
+          s4o.print(symbol->dimension);
           break;
         default:
           break;
@@ -1413,7 +1413,7 @@ void *visit(array_specification_c *symbol) {
 //SYM_REF2(subrange_c, lower_limit, upper_limit)
 void *visit(subrange_c *symbol) {
   s4o.print("_");
-  print_integer(symbol->dimension);
+  s4o.print(symbol->dimension);
   return NULL;
 }
 
