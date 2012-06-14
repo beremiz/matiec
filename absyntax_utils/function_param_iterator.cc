@@ -47,14 +47,13 @@
  */
 
 
-
-#include "absyntax_utils.hh"  /* required for extract_integer() */
-// #include "function_param_iterator.hh"  /* no longer required, aready included by absyntax_utils.hh */
-// #include "spec_init_separator.hh"  /* no longer required, aready included by absyntax_utils.hh */
+#include "function_param_iterator.hh"  /* no longer required, aready included by absyntax_utils.hh */
+#include "spec_init_separator.hh"  /* no longer required, aready included by absyntax_utils.hh */
 #include <stdlib.h>  /* required for strtol() */
 #include <string.h>
 #include <strings.h>
-
+#include <limits> // required for std::numeric_limits< XXX >::max()
+#include <errno.h> // required for errno
 
 //#define DEBUG
 #ifdef DEBUG
@@ -67,6 +66,61 @@
 #define ERROR error_exit(__FILE__,__LINE__)
 /* function defined in main.cc */
 extern void error_exit(const char *file_name, int line_no);
+
+
+
+
+
+/* NOTE: The following function is not really needed, as we could get the value that constant_folding_c determined for this
+ *       integer. Remember that currently constant_folding_c runs before this class is ever used/called!
+ *       However, I (Mario) do not currently feel it would be a good idea to restrict the use of this
+ *       abstract syntax utility to only after the constant_folding_c has had a chance to fill in the constant value
+ *       of this symbol. 
+ *       For this reason only, I have opted to let this abstract syntax utility have its own private copy of the
+ *       extract_integer() function.
+ *       Another aspect that makes this OK is that this function will only be used to extract the integer value of the
+ *       index for the first extensible paramater (examples follow shortly). Since this is an extension to IEC 61131-3 
+ *       that we created to allow us to handle extensible functions with very little hard coding, it is OK if we
+ *       impose extra/different limits on how an integer may be legally be formated in this case. This will also 
+ *       only show up in code that describes the interface to the standard function of IEC 61131-3, which the user
+ *       will not ever get to see. We write that IEC 61131-3 code ourselves!
+ *
+ *      Example of source code we will be parsing and analysing:
+ *
+ *      FUNCTION ADD : REAL VAR_INPUT IN 1 .. : REAL; END_VAR RETURN; END_FUNCTION
+ *                                      ^^^
+ *
+ *      FUNCTION MUX : REAL VAR_INPUT K : USINT; IN 0 .. : REAL; END_VAR RETURN; END_FUNCTION
+ *                                                 ^^^
+ *
+ *      Basically, currently this will only be either a '0' or a '1' !!
+ */
+
+/* NOTE: it must ignore underscores! */
+static int extract_first_index_value(symbol_c *sym) {
+  std::string str = "";
+  integer_c *integer;
+  long int ret;
+
+  if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
+  for(unsigned int i = 0; i < strlen(integer->value); i++)
+    if (integer->value[i] != '_')  str += integer->value[i];
+
+  errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
+  ret = strtol(str.c_str(), NULL, 10);
+  if (errno != 0) ERROR;
+  if (ret < 0) ERROR; // the following code assumes that the first index will never be negative!
+  if (ret > std::numeric_limits< int >::max()) ERROR; // output of this function is only an int!!
+
+  return ret;
+}
+
+
+
+
+
+
+
 
 
 
@@ -130,7 +184,7 @@ void* function_param_iterator_c::handle_param_list(list_c *list) {
         if (extensible_parameter != NULL) {
           sym = extensible_parameter->var_name;
           current_param_is_extensible = true;
-          _first_extensible_param_index = extract_int64_value(extensible_parameter->first_index);
+          _first_extensible_param_index = extract_first_index_value(extensible_parameter->first_index);
         }
         identifier_c *variable_name = dynamic_cast<identifier_c *>(sym);
         if (variable_name == NULL) ERROR;
@@ -167,7 +221,7 @@ void* function_param_iterator_c::handle_single_param(symbol_c *var_name) {
       if (extensible_parameter != NULL) {
         var_name = extensible_parameter->var_name;
         current_param_is_extensible = true;
-        _first_extensible_param_index = extract_int64_value(extensible_parameter->first_index);
+        _first_extensible_param_index = extract_first_index_value(extensible_parameter->first_index);
       }
       identifier_c *variable_name = dynamic_cast<identifier_c *>(var_name);
       if (variable_name == NULL) ERROR;
@@ -265,7 +319,7 @@ identifier_c *function_param_iterator_c::next(void) {
   if (extensible_parameter != NULL) {
     sym = extensible_parameter->var_name;
     current_param_is_extensible = true;
-    _first_extensible_param_index = extract_int64_value(extensible_parameter->first_index);
+    _first_extensible_param_index = extract_first_index_value(extensible_parameter->first_index);
     current_extensible_param_index = _first_extensible_param_index;
   }
   identifier = dynamic_cast<identifier_c *>(sym);
