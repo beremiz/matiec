@@ -40,12 +40,7 @@
 #include "absyntax.hh"
 //#include "../stage1_2/iec.hh" /* required for BOGUS_TOKEN_ID, etc... */
 #include "visitor.hh"
-
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
-
-#define ABORT(str) {printf("ERROR: %s\n", str); ERROR;}
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
 
@@ -106,7 +101,7 @@ void list_c::add_element(symbol_c *elem) {
   n++;
   elements = (symbol_c **)realloc(elements, n * sizeof(symbol_c *));
   if (elements == NULL)
-    ABORT("Out of memory");
+    ERROR_MSG("Out of memory");
   elements[n - 1] = elem;
  
   if (elem == NULL)

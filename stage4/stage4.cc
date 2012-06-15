@@ -46,11 +46,9 @@
 #include <stdlib.h>
 
 #include "stage4.hh"
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 #define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
@@ -61,10 +59,12 @@ void stage4err(const char *stage4_generator_id, symbol_c *symbol1, symbol_c *sym
     va_list argptr;
     va_start(argptr, errmsg); /* second argument is last fixed pamater of stage4err() */
 
-    fprintf(stderr, "%s:%d-%d..%d-%d: error %s: ",
-            FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,
-                                                 LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column,
-            stage4_generator_id);
+    if ((symbol1 != NULL) && (symbol2 != NULL))
+      fprintf(stderr, "%s:%d-%d..%d-%d: ",
+              FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,
+                                                   LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column);
+
+    fprintf(stderr, "error %s: ", stage4_generator_id);
     vfprintf(stderr, errmsg, argptr);
     fprintf(stderr, "\n");
     // error_count++;

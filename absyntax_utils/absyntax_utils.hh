@@ -55,12 +55,6 @@
 /* returns 0 if the names are equal!! Case is ignored. */
 int compare_identifiers(symbol_c *ident1, symbol_c *ident2);
 
-/* extract the value of an integer/hex_integer/real from an integer_c/hex_integer_c/real_c symbol !! */
-int64_t   extract_int64_value  (symbol_c *sym, bool *overflow = NULL);
-int64_t   extract_uint64_value (symbol_c *sym, bool *overflow = NULL);
-uint64_t  extract_hex_value    (symbol_c *sym);
-real64_t  extract_real_value   (symbol_c *sym, bool *overflow = NULL);
-  
 /* A symbol table with all globally declared functions... */
 extern function_declaration_c null_symbol1;
 typedef dsymtable_c<function_declaration_c *, &null_symbol1> function_symtable_t;

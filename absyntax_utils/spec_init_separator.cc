@@ -37,6 +37,8 @@
  */
 
 #include "spec_init_separator.hh"
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
+
 
 //#define DEBUG
 #ifdef DEBUG
@@ -45,9 +47,6 @@
 #define TRACE(classname)
 #endif
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 spec_init_sperator_c *spec_init_sperator_c::get_class_instance(void) {

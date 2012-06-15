@@ -44,11 +44,9 @@
 #include "../util/symtable.hh"
 #include "search_constant_type.hh"
 #include "absyntax_utils.hh"
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 symbol_c *search_constant_type_c::get_type(symbol_c *constant) {
   return (symbol_c *)constant->accept(*this);

@@ -57,12 +57,10 @@
 #include "generate_iec.hh"
 
 #include "../stage4.hh"
+#include "../../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 

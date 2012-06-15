@@ -265,28 +265,37 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
     /* integer '(' [array_initial_element] ')' */
     /* array_initial_element may be NULL ! */
     void *visit(array_initial_elements_c *symbol) {
-      unsigned long long int initial_element_number;
+      unsigned long long int initial_element_count;
+ 
+      /* This code assumes that unsigned long long int is >= uint64_t */
+      if (std::numeric_limits< uint64_t >::max() > std::numeric_limits< unsigned long long int >::max()) 
+	ERROR_MSG("Assertion (sizeof(uint64_t) > sizeof(unsigned long long int)) failed! Compiler cannot execute correctly on the current platform!");
       
       switch (current_mode) {
         case initializationvalue_am:
-          initial_element_number = extract_int64_value(symbol->integer);
+          if      (VALID_CVALUE( int64, symbol->integer) && (GET_CVALUE( int64, symbol->integer) >= 0))
+            initial_element_count = GET_CVALUE( int64, symbol->integer);
+          else if (VALID_CVALUE(uint64, symbol->integer))
+            initial_element_count = GET_CVALUE(uint64, symbol->integer);
+          else ERROR;
+     
           if (current_initialization_count < defined_values_count) {
             unsigned long long int temp_element_number = 0;
             unsigned long long int diff = defined_values_count - current_initialization_count;
-            if (diff <= initial_element_number)
-              temp_element_number = initial_element_number - diff;
-            current_initialization_count += initial_element_number - 1;
-            initial_element_number = temp_element_number;
-            if (initial_element_number > 0) {
+            if (diff <= initial_element_count)
+              temp_element_number = initial_element_count - diff;
+            current_initialization_count += initial_element_count - 1;
+            initial_element_count = temp_element_number;
+            if (initial_element_count > 0) {
               defined_values_count++;
               s4o.print(",");
             }
           }
           else
-            current_initialization_count += initial_element_number - 1;
-          if (defined_values_count + initial_element_number > array_size)
+            current_initialization_count += initial_element_count - 1;
+          if (defined_values_count + initial_element_count > array_size)
             ERROR;
-          for (unsigned long long int i = 0; i < initial_element_number; i++) {
+          for (unsigned long long int i = 0; i < initial_element_count; i++) {
             if (i > 0)
               s4o.print(",");
             if (symbol->array_initial_element != NULL) {
@@ -296,8 +305,8 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
               array_default_value->accept(*this);
             }
           }
-          if (initial_element_number > 1)
-            defined_values_count += initial_element_number - 1;
+          if (initial_element_count > 1)
+            defined_values_count += initial_element_count - 1;
           break;
         default:
           break;

@@ -80,11 +80,23 @@
 #define HGVERSION ""
 #endif
 
-#define ERROR          error_exit(__FILE__,__LINE__)
-void error_exit(const char *file_name, int line_no) {
-  std::cerr << "\nInternal compiler error in file " << file_name
-            << " at line " << line_no << "\n";
-//   if (msg != NULL) std::cerr << message << "\n\n";
+#include "main.hh"  // symbol_c type
+#include <stdarg.h> // required for va_start(), va_list
+
+void error_exit(const char *file_name, int line_no, const char *errmsg, ...) {
+  va_list argptr;
+  va_start(argptr, errmsg); /* second argument is last fixed pamater of error_exit() */
+
+  fprintf(stderr, "\nInternal compiler error in file %s at line %d", file_name, line_no);
+  if (errmsg != NULL) {
+    fprintf(stderr, ": ");
+    vfprintf(stderr, errmsg, argptr);
+  } else {
+    fprintf(stderr, ".");
+  }
+  fprintf(stderr, "\n");
+  va_end(argptr);
+    
   exit(EXIT_FAILURE);
 }
 

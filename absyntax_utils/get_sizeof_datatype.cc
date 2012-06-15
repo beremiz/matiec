@@ -82,10 +82,8 @@
 #include <stdint.h>  // get definition of uint64_t and UINT64_MAX
 #include <errno.h>
 
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 /* This class is a singleton.

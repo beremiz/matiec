@@ -50,13 +50,14 @@
 #include <typeinfo>
 #include <list>
 #include <strings.h>
-#include <string.h>  /* required for strlen() */
-#include <stdlib.h>  /* required for atoi() */
-#include <errno.h>   /* required for errno */
+// #include <string.h>  /* required for strlen() */
+// #include <stdlib.h>  /* required for atoi() */
+// #include <errno.h>   /* required for errno */
 
 #include "../util/symtable.hh"
 #include "../util/dsymtable.hh"
 #include "../absyntax/visitor.hh"
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
 
@@ -67,9 +68,6 @@
 #define TRACE(classname)
 #endif
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 /***********************************************************************/
@@ -94,135 +92,6 @@ int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 
   /* identifiers do not match! */
   return 1;
-}
-
-
-
-  /* To allow the compiler to be portable, we cannot assume that int64_t is mapped onto long long int,
-   * so we cannot call strtoll() and strtoull() in extract_int64() and extract_uint64().
-   *
-   * So, we create our own strtouint64() and strtoint64() functions.
-   * (We actually call them matiec_strtoint64() so they will not clash with any function
-   *  that may be added to the standard library in the future).
-   * We actually create several of each, and let the compiler choose which is the correct one,
-   * by having it resolve the call to the overloaded function. For the C++ compiler to be able
-   * to resolve this ambiguity, we need to add a dummy parameter to each function!
-   *
-   * TODO: support platforms in which int64_t is mapped onto int !! Is this really needed?
-   */
-static  int64_t matiec_strtoint64 (         long      int *dummy, const char *nptr, char **endptr, int base) {return strtol  (nptr, endptr, base);}
-static  int64_t matiec_strtoint64 (         long long int *dummy, const char *nptr, char **endptr, int base) {return strtoll (nptr, endptr, base);}
-  
-static uint64_t matiec_strtouint64(unsigned long      int *dummy, const char *nptr, char **endptr, int base) {return strtoul (nptr, endptr, base);}
-static uint64_t matiec_strtouint64(unsigned long long int *dummy, const char *nptr, char **endptr, int base) {return strtoull(nptr, endptr, base);}
-
-
-/* extract the value of an integer from an integer_c object !! */
-/* NOTE: it must ignore underscores! */
-int64_t extract_int64_value(symbol_c *sym, bool *overflow) {
-  std::string str = "";
-  integer_c *integer;
-  neg_integer_c * neg_integer;
-  char *endptr;
-  int64_t ret;
-
-  if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
-  for(unsigned int i = 0; i < strlen(integer->value); i++)
-    if (integer->value[i] != '_')  str += integer->value[i];
-
-  errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
-  ret = matiec_strtoint64((int64_t *)NULL, str.c_str(), &endptr, 10);
-  if (overflow != NULL)
-    *overflow = (errno == ERANGE);
-  if ((errno != 0) && (errno != ERANGE))
-    ERROR;
-
-  return ret;
-}
-
-uint64_t extract_uint64_value(symbol_c *sym, bool *overflow) {
-  std::string str = "";
-  integer_c *integer;
-  neg_integer_c * neg_integer;
-  char *endptr;
-  uint64_t ret;
-  
-  if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
-  for(unsigned int i = 0; i < strlen(integer->value); i++)
-    if (integer->value[i] != '_')  str += integer->value[i];
-
-  errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
-  ret = matiec_strtouint64((uint64_t *)NULL, str.c_str(), &endptr, 10);
-  if (overflow != NULL)
-    *overflow = (errno == ERANGE);
-  if ((errno != 0) && (errno != ERANGE))
-    ERROR;
-
-  return ret;
-}
-
-
-/* extract the value of an hex integer from an hex_integer_c object !! */
-/* NOTE: it must ignore underscores! */
-uint64_t extract_hex_value(symbol_c *sym) {
-  std::string str = "";
-  char *endptr;
-  hex_integer_c * hex_integer;
-  uint64_t ret;
-
-  if ((hex_integer = dynamic_cast<hex_integer_c *>(sym)) == NULL) ERROR;
-  for(unsigned int i = 3; i < strlen(hex_integer->value); i++)
-    if (hex_integer->value[i] != '_') str += hex_integer->value[i];
-    
-  errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
-  ret = strtoull(str.c_str(), &endptr, 16);
-  if (errno != 0) ERROR;
-
-  return ret;
-}
-
-
-/* extract the value of a real from an real_c object !! */
-/* NOTE: it must ignore underscores! */
-/* From iec_bison.yy
- *  real:
- *   real_token		{$$ = new real_c($1, locloc(@$));}
- * | fixed_point_token	{$$ = new real_c($1, locloc(@$));}
- *
- * From iec_flex.ll
- * {real}			{yylval.ID=strdup(yytext); return real_token;}
- * {fixed_point}		{yylval.ID=strdup(yytext); return fixed_point_token;}
- *
- * real		{integer}\.{integer}{exponent}
- * fixed_point		{integer}\.{integer}
- * exponent        [Ee]([+-]?){integer}
- * integer         {digit}((_?{digit})*)
- */
-real64_t extract_real_value(symbol_c *sym, bool *overflow) {
-  std::string str = "";
-  real_c * real_sym;
-  real64_t ret;
-
-  if ((real_sym = dynamic_cast<real_c *>(sym)) == NULL) ERROR;
-  for(unsigned int i = 0; i < strlen(real_sym->value); i++)
-    if (real_sym->value[i] != '_') str += real_sym->value[i];
-    
-  errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
-  #if    (real64_t  == float)
-    ret = strtof(str.c_str(), NULL);
-  #elif  (real64_t  == double)
-    ret = strtod(str.c_str(), NULL);
-  #elif  (real64_t  == long_double)
-    ret = strtold(str.c_str(), NULL);
-  #else 
-    #error Could not determine which data type is being used for real64_t (defined in absyntax.hh). Aborting!
-  #endif
-  if (overflow != NULL)
-    *overflow = (errno == ERANGE);
-  if ((errno != 0) && (errno != ERANGE)) 
-    ERROR;
-
-  return ret;
 }
 
 

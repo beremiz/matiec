@@ -46,10 +46,7 @@
  * we may have FB instances declared of a specific FB type.
  */
 #include "absyntax_utils.hh"
-
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
 

@@ -36,6 +36,7 @@
 #include "../../util/dsymtable.hh"
 #include "../../absyntax/visitor.hh"
 #include "../../absyntax_utils/absyntax_utils.hh"
+#include "../../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 #include "../stage4.hh"
 
@@ -46,9 +47,6 @@
 #define TRACE(classname)
 #endif
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 #define STAGE4_ERROR(symbol1, symbol2, ...) {stage4err("while generating C code", symbol1, symbol2, __VA_ARGS__); exit(EXIT_FAILURE);}
