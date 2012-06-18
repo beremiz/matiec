@@ -119,24 +119,42 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
     /* mismatch between number of indexes/subscripts. This error will be caught in check_dimension_count() so we ignore it. */
     if (NULL == dimension) 
       return;
-    
+
+    /* Check lower limit */
     if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE( int64, dimension->lower_limit))
       if ( GET_CVALUE( int64, l->elements[i])   <  GET_CVALUE( int64, dimension->lower_limit))
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
 
-    if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE( int64, dimension->upper_limit))
-      if ( GET_CVALUE( int64, l->elements[i])   >  GET_CVALUE( int64, dimension->upper_limit))
+    if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE(uint64, dimension->lower_limit))
+      if ( GET_CVALUE( int64, l->elements[i])   <  GET_CVALUE(uint64, dimension->lower_limit))
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
 
     if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE(uint64, dimension->lower_limit))
       if ( GET_CVALUE(uint64, l->elements[i])   <  GET_CVALUE(uint64, dimension->lower_limit))
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
 
+    if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE( int64, dimension->lower_limit))
+      if ( GET_CVALUE(uint64, l->elements[i])   <  GET_CVALUE( int64, dimension->lower_limit))
+      {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
+
+    /* Repeat the same check, now for upper limit */
+    if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE( int64, dimension->upper_limit))
+      if ( GET_CVALUE( int64, l->elements[i])   >  GET_CVALUE( int64, dimension->upper_limit))
+      {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
+
+    if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE(uint64, dimension->upper_limit))
+      if ( GET_CVALUE( int64, l->elements[i])   >  GET_CVALUE(uint64, dimension->upper_limit))
+      {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
+
     if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE(uint64, dimension->upper_limit))
       if ( GET_CVALUE(uint64, l->elements[i])   >  GET_CVALUE(uint64, dimension->upper_limit))
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
       
-    /* TODO: what happens when one has a int64 cvalue, and another has a uint64 cvalue? */
+    if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE( int64, dimension->upper_limit))
+      if ( GET_CVALUE(uint64, l->elements[i])   >  GET_CVALUE( int64, dimension->upper_limit))
+      {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
+      
+   /* TODO: How do we make these comparisons between int and unsigned int, without the compiler complaining? */
   }
 }
 
