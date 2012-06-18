@@ -164,29 +164,28 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
 void *array_range_check_c::visit(subrange_c *symbol) {
 	unsigned long long int dimension = 0; // we use unsigned long long instead of uint64_t since it might just happen to be larger than uint64_t in the platform used for compiling this code!!
 
-/* Determine the size of the array... */
+	/* Determine the size of the array... */
 	if        (VALID_CVALUE( int64, symbol->upper_limit) && VALID_CVALUE( int64, symbol->lower_limit)) {  
 		// do the sums in such a way that no overflow is possible... even during intermediate steps used by compiler!
 		// remember that the result (dimension) is unsigned, while the operands are signed!!
 		// dimension = GET_CVALUE( int64, symbol->upper_limit) - VALID_CVALUE( int64, symbol->lower_limit);
-		if (VALID_CVALUE( int64, symbol->lower_limit) >= 0) {
+		if (GET_CVALUE( int64, symbol->lower_limit) >= 0) {
 			dimension = GET_CVALUE( int64, symbol->upper_limit) - GET_CVALUE( int64, symbol->lower_limit);
 		} else {
 			dimension  = -GET_CVALUE( int64, symbol->lower_limit);
 			dimension +=  GET_CVALUE( int64, symbol->upper_limit);     
 		}
 	} else if (VALID_CVALUE(uint64, symbol->upper_limit) && VALID_CVALUE(uint64, symbol->lower_limit)) {
-		dimension = GET_CVALUE(uint64, symbol->upper_limit) - VALID_CVALUE(uint64, symbol->lower_limit); 
+		dimension = GET_CVALUE(uint64, symbol->upper_limit) - GET_CVALUE(uint64, symbol->lower_limit); 
 	} else if (VALID_CVALUE(uint64, symbol->upper_limit) && VALID_CVALUE( int64, symbol->lower_limit)) {
-		if (VALID_CVALUE( int64, symbol->lower_limit) >= 0) {
-			dimension = GET_CVALUE( int64, symbol->upper_limit) - GET_CVALUE( int64, symbol->lower_limit);
+		if (GET_CVALUE( int64, symbol->lower_limit) >= 0) {
+			dimension = GET_CVALUE(uint64, symbol->upper_limit) - GET_CVALUE( int64, symbol->lower_limit);
 		} else {
-		unsigned long long int lower_ull;
-		lower_ull  = -GET_CVALUE( int64, symbol->lower_limit);
-		dimension  =  GET_CVALUE( int64, symbol->upper_limit) + lower_ull;     
-		/* TODO: check this overflow test, it does not seem to be working. I don't have to go now... Will check later. */
-		if (dimension < lower_ull)
-			STAGE3_ERROR(0, symbol, symbol, "Number of elements in array subrange exceeds maximum number of elements (%llu).", std::numeric_limits< unsigned long long int >::max());
+			unsigned long long int lower_ull;
+			lower_ull  = -GET_CVALUE( int64, symbol->lower_limit);
+			dimension  =  GET_CVALUE(uint64, symbol->upper_limit) + lower_ull;     
+			if (dimension < lower_ull)
+				STAGE3_ERROR(0, symbol, symbol, "Number of elements in array subrange exceeds maximum number of elements (%llu).", std::numeric_limits< unsigned long long int >::max());
 		}
 	} else ERROR;
 
@@ -203,6 +202,29 @@ void *array_range_check_c::visit(subrange_c *symbol) {
 	symbol->dimension = dimension;
 	return NULL;
 }
+
+
+
+
+
+/* integer '(' [array_initial_element] ')' */
+/* array_initial_element may be NULL ! */
+// SYM_REF2(array_initial_elements_c, integer, array_initial_element)
+void *array_range_check_c::visit(array_initial_elements_c *symbol) {
+	if (VALID_CVALUE( int64, symbol->integer) && (GET_CVALUE( int64, symbol->integer) < 0)) 
+		ERROR; /* the IEC 61131-3 syntax guarantees that this value will never be negative! */
+
+	/* TODO: check that the total number of 'initial values' does not exceed the size of the array! */
+
+	return NULL;
+}
+
+
+
+
+
+
+
 
 
 /*********************/
