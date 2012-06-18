@@ -255,7 +255,7 @@ static uint64_t matiec_strtouint64(unsigned long long int *dummy, const char *np
 
 /* extract the value of an integer from an integer_c object !! */
 /* NOTE: it must ignore underscores! */
-int64_t extract_int64_value(symbol_c *sym, bool *overflow) {
+int64_t extract_int64_value(symbol_c *sym, int base, bool *overflow) {
   std::string str = "";
   integer_c *integer;
   char *endptr;
@@ -266,19 +266,18 @@ int64_t extract_int64_value(symbol_c *sym, bool *overflow) {
     if (integer->value[i] != '_')  str += integer->value[i];
 
   errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
-  ret = matiec_strtoint64((int64_t *)NULL, str.c_str(), &endptr, 10);
+  ret = matiec_strtoint64((int64_t *)NULL, str.c_str(), &endptr, base);
   if (overflow != NULL)
     *overflow = (errno == ERANGE);
-  if ((errno != 0) && (errno != ERANGE))
+  if (((errno != 0) && (errno != ERANGE)) || (*endptr != '\0'))
     ERROR;
 
   return ret;
 }
 
-uint64_t extract_uint64_value(symbol_c *sym, bool *overflow) {
+uint64_t extract_uint64_value(symbol_c *sym, int base, bool *overflow) {
   std::string str = "";
   integer_c *integer;
-  neg_integer_c * neg_integer;
   char *endptr;
   uint64_t ret;
   
@@ -287,35 +286,15 @@ uint64_t extract_uint64_value(symbol_c *sym, bool *overflow) {
     if (integer->value[i] != '_')  str += integer->value[i];
 
   errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
-  ret = matiec_strtouint64((uint64_t *)NULL, str.c_str(), &endptr, 10);
+  ret = matiec_strtouint64((uint64_t *)NULL, str.c_str(), &endptr, base);
   if (overflow != NULL)
     *overflow = (errno == ERANGE);
-  if ((errno != 0) && (errno != ERANGE))
+  if (((errno != 0) && (errno != ERANGE)) || (*endptr != '\0'))
     ERROR;
 
   return ret;
 }
 
-
-
-/* extract the value of an hex integer from an hex_integer_c object !! */
-/* NOTE: it must ignore underscores! */
-uint64_t extract_hex_value(symbol_c *sym) {
-  std::string str = "";
-  char *endptr;
-  hex_integer_c * hex_integer;
-  uint64_t ret;
-
-  if ((hex_integer = dynamic_cast<hex_integer_c *>(sym)) == NULL) ERROR;
-  for(unsigned int i = 3; i < strlen(hex_integer->value); i++)
-    if (hex_integer->value[i] != '_') str += hex_integer->value[i];
-    
-  errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
-  ret = strtoull(str.c_str(), &endptr, 16);
-  if (errno != 0) ERROR;
-
-  return ret;
-}
 
 
 /* extract the value of a real from an real_c object !! */
@@ -336,7 +315,8 @@ uint64_t extract_hex_value(symbol_c *sym) {
  */
 real64_t extract_real_value(symbol_c *sym, bool *overflow) {
   std::string str = "";
-  real_c * real_sym;
+  real_c *real_sym;
+  char   *endptr;
   real64_t ret;
 
   if ((real_sym = dynamic_cast<real_c *>(sym)) == NULL) ERROR;
@@ -345,17 +325,17 @@ real64_t extract_real_value(symbol_c *sym, bool *overflow) {
     
   errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
   #if    (real64_t  == float)
-    ret = strtof(str.c_str(), NULL);
+    ret = strtof(str.c_str(),  &endptr);
   #elif  (real64_t  == double)
-    ret = strtod(str.c_str(), NULL);
+    ret = strtod(str.c_str(),  &endptr);
   #elif  (real64_t  == long_double)
-    ret = strtold(str.c_str(), NULL);
+    ret = strtold(str.c_str(), &endptr);
   #else 
     #error Could not determine which data type is being used for real64_t (defined in absyntax.hh). Aborting!
   #endif
   if (overflow != NULL)
     *overflow = (errno == ERANGE);
-  if ((errno != 0) && (errno != ERANGE)) 
+  if (((errno != 0) && (errno != ERANGE)) || (*endptr != '\0'))
     ERROR;
 
   return ret;
@@ -593,9 +573,9 @@ void *constant_folding_c::visit(real_c *symbol) {
 
 void *constant_folding_c::visit(integer_c *symbol) {
 	bool overflow;
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value(symbol, &overflow));
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, 10, &overflow));
 	if (overflow) SET_OVFLOW(int64, symbol);
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, 10, &overflow));
 	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
@@ -618,7 +598,7 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 	 * However, the positive value cannot be stored inside an int64! So, in this case, we will get the value from the uint64 cvalue.
 	 */
 	// if (INT64_MIN == -INT64_MAX - 1) // We do not really need to check that the platform uses two's complement
-	if (VALID_CVALUE(uint64, symbol->exp) && (GET_CVALUE(uint64, symbol->exp) == -INT64_MIN)) {
+	if (VALID_CVALUE(uint64, symbol->exp) && (GET_CVALUE(uint64, symbol->exp) == -INT64_MIN)) { // How do we stop the compiler from complaining about a comparison between int and unsigned int?
 		NEW_CVALUE(int64, symbol); // in principle, if the above condition is true, then no new cvalue was created by DO_UNARY_OPER(). Not that it would be a problem to create a new one!
 		SET_CVALUE(int64, symbol, INT64_MIN);
 	}
@@ -627,18 +607,31 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 
 
 void *constant_folding_c::visit(binary_integer_c *symbol) {
+	bool overflow;
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol,  2, &overflow));
+	if (overflow) SET_OVFLOW(int64, symbol);
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol,  2, &overflow));
+	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
 
 
 void *constant_folding_c::visit(octal_integer_c *symbol) {
+	bool overflow;
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol,  8, &overflow));
+	if (overflow) SET_OVFLOW(int64, symbol);
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol,  8, &overflow));
+	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
 
 
 void *constant_folding_c::visit(hex_integer_c *symbol) {
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_hex_value(symbol));
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_hex_value(symbol));
+	bool overflow;
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, 16, &overflow));
+	if (overflow) SET_OVFLOW(int64, symbol);
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, 16, &overflow));
+	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
 
