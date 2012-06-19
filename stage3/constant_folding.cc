@@ -255,15 +255,29 @@ static uint64_t matiec_strtouint64(unsigned long long int *dummy, const char *np
 
 /* extract the value of an integer from an integer_c object !! */
 /* NOTE: it must ignore underscores! */
-int64_t extract_int64_value(symbol_c *sym, int base, bool *overflow) {
-  std::string str = "";
-  integer_c *integer;
-  char *endptr;
-  int64_t ret;
+/* NOTE: To follow the basic structure used throughout the compiler's code, we should really be
+ * writing this as a visitor_c (and do away with the dynamic casts!), but since we only have 3 distinct 
+ * symbol class types to handle, it is probably easier to read if we write it as a standard function... 
+ */
+int64_t extract_int64_value(symbol_c *sym, bool *overflow) {
+  int64_t      ret;
+  std::string  str = "";
+  char        *endptr;
+  const char  *value;
+  int          base;
+  integer_c         *integer;
+  hex_integer_c     *hex_integer;
+  octal_integer_c   *octal_integer;
+  binary_integer_c  *binary_integer;
 
-  if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
-  for(unsigned int i = 0; i < strlen(integer->value); i++)
-    if (integer->value[i] != '_')  str += integer->value[i];
+   if       ((integer        = dynamic_cast<integer_c *>(sym))        != NULL) {value = integer       ->value + 0; base = 10;}
+   else  if ((hex_integer    = dynamic_cast<hex_integer_c *>(sym))    != NULL) {value = hex_integer   ->value + 3; base = 16;}
+   else  if ((octal_integer  = dynamic_cast<octal_integer_c *>(sym))  != NULL) {value = octal_integer ->value + 2; base =  8;}
+   else  if ((binary_integer = dynamic_cast<binary_integer_c *>(sym)) != NULL) {value = binary_integer->value + 2; base =  2;}
+   else  ERROR;
+
+  for(unsigned int i = 0; i < strlen(value); i++)
+    if (value[i] != '_')  str += value[i];
 
   errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
   ret = matiec_strtoint64((int64_t *)NULL, str.c_str(), &endptr, base);
@@ -275,15 +289,27 @@ int64_t extract_int64_value(symbol_c *sym, int base, bool *overflow) {
   return ret;
 }
 
-uint64_t extract_uint64_value(symbol_c *sym, int base, bool *overflow) {
-  std::string str = "";
-  integer_c *integer;
-  char *endptr;
-  uint64_t ret;
-  
-  if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
-  for(unsigned int i = 0; i < strlen(integer->value); i++)
-    if (integer->value[i] != '_')  str += integer->value[i];
+
+
+uint64_t extract_uint64_value(symbol_c *sym, bool *overflow) {
+  uint64_t     ret;
+  std::string  str = "";
+  char        *endptr;
+  const char  *value;
+  int          base;
+  integer_c         *integer;
+  hex_integer_c     *hex_integer;
+  octal_integer_c   *octal_integer;
+  binary_integer_c  *binary_integer;
+
+   if       ((integer        = dynamic_cast<integer_c *>(sym))        != NULL) {value = integer       ->value + 0; base = 10;}
+   else  if ((hex_integer    = dynamic_cast<hex_integer_c *>(sym))    != NULL) {value = hex_integer   ->value + 3; base = 16;}
+   else  if ((octal_integer  = dynamic_cast<octal_integer_c *>(sym))  != NULL) {value = octal_integer ->value + 2; base =  8;}
+   else  if ((binary_integer = dynamic_cast<binary_integer_c *>(sym)) != NULL) {value = binary_integer->value + 2; base =  2;}
+   else  ERROR;
+
+  for(unsigned int i = 0; i < strlen(value); i++)
+    if (value[i] != '_')  str += value[i];
 
   errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
   ret = matiec_strtouint64((uint64_t *)NULL, str.c_str(), &endptr, base);
@@ -573,9 +599,9 @@ void *constant_folding_c::visit(real_c *symbol) {
 
 void *constant_folding_c::visit(integer_c *symbol) {
 	bool overflow;
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, 10, &overflow));
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
 	if (overflow) SET_OVFLOW(int64, symbol);
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, 10, &overflow));
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
 	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
@@ -608,9 +634,9 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 
 void *constant_folding_c::visit(binary_integer_c *symbol) {
 	bool overflow;
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol,  2, &overflow));
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
 	if (overflow) SET_OVFLOW(int64, symbol);
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol,  2, &overflow));
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
 	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
@@ -618,9 +644,9 @@ void *constant_folding_c::visit(binary_integer_c *symbol) {
 
 void *constant_folding_c::visit(octal_integer_c *symbol) {
 	bool overflow;
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol,  8, &overflow));
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
 	if (overflow) SET_OVFLOW(int64, symbol);
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol,  8, &overflow));
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
 	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
@@ -628,9 +654,9 @@ void *constant_folding_c::visit(octal_integer_c *symbol) {
 
 void *constant_folding_c::visit(hex_integer_c *symbol) {
 	bool overflow;
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, 16, &overflow));
+	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
 	if (overflow) SET_OVFLOW(int64, symbol);
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, 16, &overflow));
+	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
 	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
