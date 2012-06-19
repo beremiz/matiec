@@ -719,7 +719,7 @@ void *constant_folding_c::visit(or_expression_c *symbol) {
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	DO_BINARY_OPER(  bool, ||, bool);
-	DO_BINARY_OPER(uint64, | , bool);
+	DO_BINARY_OPER(uint64, | , uint64);
 	return NULL;
 }
 
