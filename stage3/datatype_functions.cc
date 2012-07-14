@@ -409,9 +409,22 @@ int search_in_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c 
 	return -1;
 }
 
-
-
-
+/* Remove a datatype inside a candidate_datatypes list.
+ * Returns: If successful it returns true, false otherwise.
+ */
+bool remove_from_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c *> &candidate_datatypes) {
+	unsigned int ofs;
+	if (NULL == datatype)
+		return false;
+	for(ofs = 0; ofs < candidate_datatypes.size(); ofs++)
+		if (is_type_equal(datatype, candidate_datatypes[ofs]))
+			break;
+	if (ofs <  candidate_datatypes.size()) {
+		candidate_datatypes.erase(candidate_datatypes.begin() + ofs);
+		return true;
+	}
+	return false;
+}
 
 
 

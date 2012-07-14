@@ -111,6 +111,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /* Returns true if it really did add the datatype to the list, or false if it was already present in the list! */
     bool add_datatype_to_candidate_list  (symbol_c *symbol, symbol_c *datatype);
     bool add_2datatypes_to_candidate_list(symbol_c *symbol, symbol_c *datatype1, symbol_c *datatype2);
+    void remove_incompatible_datatypes(symbol_c *symbol);
     
     
   public:

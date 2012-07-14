@@ -201,8 +201,8 @@
  if ((symbol->const_value_##dtype) == NULL) ERROR; \
  (symbol->const_value_##dtype)->status = symbol_c::cs_undefined;
 
-#define SET_CVALUE(dtype, symbol, new_value)  ((symbol)->const_value_##dtype->value) = new_value; ((symbol)->const_value_##dtype->status) = symbol_c::cs_const_value;  
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value_##dtype->value) 
+#define SET_CVALUE(dtype, symbol, new_value)  ((symbol)->const_value_##dtype->value) = new_value; ((symbol)->const_value_##dtype->status) = symbol_c::cs_const_value;
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value_##dtype->value)
 #define SET_OVFLOW(dtype, symbol)             ((symbol)->const_value_##dtype->status) = symbol_c::cs_overflow
     /* The following test is correct in the presence of a NULL pointer, as the logical evaluation will be suspended as soon as the first condition is false! */
 #define VALID_CVALUE(dtype, symbol)           ((NULL != (symbol)->const_value_##dtype) && (symbol_c::cs_const_value == (symbol)->const_value_##dtype->status))

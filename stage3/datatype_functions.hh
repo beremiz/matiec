@@ -144,6 +144,11 @@ extern const struct widen_entry widen_CMP_table[];
  */
 int search_in_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
 
+/* Remove a datatype inside a candidate_datatypes list.
+ * Returns: If successful it returns true, false otherwise.
+ */
+bool remove_from_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c *> &candidate_datatypes);
+
 /* Intersect two candidate_datatype_lists.
  * Remove from list1 (origin, dest.) all elements that are not found in list2 (with).
  * In essence, list1 will contain the result of the intersection of list1 with list2.
