@@ -398,7 +398,7 @@ const struct widen_entry widen_CMP_table[] = {
 /* Search for a datatype inside a candidate_datatypes list.
  * Returns: position of datatype in the list, or -1 if not found.
  */
-int search_in_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes) {
+int search_in_candidate_datatype_list(symbol_c *datatype, const std::vector <symbol_c *> &candidate_datatypes) {
 	if (NULL == datatype) 
 		return -1;
 
@@ -413,17 +413,12 @@ int search_in_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c 
  * Returns: If successful it returns true, false otherwise.
  */
 bool remove_from_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c *> &candidate_datatypes) {
-	unsigned int ofs;
-	if (NULL == datatype)
+	int pos = search_in_candidate_datatype_list(datatype, candidate_datatypes);
+	if (pos < 0)
 		return false;
-	for(ofs = 0; ofs < candidate_datatypes.size(); ofs++)
-		if (is_type_equal(datatype, candidate_datatypes[ofs]))
-			break;
-	if (ofs <  candidate_datatypes.size()) {
-		candidate_datatypes.erase(candidate_datatypes.begin() + ofs);
-		return true;
-	}
-	return false;
+	
+	candidate_datatypes.erase(candidate_datatypes.begin() + pos);
+	return true;
 }
 
 

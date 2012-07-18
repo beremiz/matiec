@@ -142,7 +142,7 @@ extern const struct widen_entry widen_CMP_table[];
 /* Search for a datatype inside a candidate_datatypes list.
  * Returns: position of datatype in the list, or -1 if not found.
  */
-int search_in_candidate_datatype_list(symbol_c *datatype, std::vector <symbol_c *> candidate_datatypes);
+int search_in_candidate_datatype_list(symbol_c *datatype, const std::vector <symbol_c *> &candidate_datatypes);
 
 /* Remove a datatype inside a candidate_datatypes list.
  * Returns: If successful it returns true, false otherwise.
