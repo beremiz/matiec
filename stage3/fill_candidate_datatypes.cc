@@ -139,11 +139,10 @@ void fill_candidate_datatypes_c::remove_incompatible_datatypes(symbol_c *symbol)
     if (VALID_CVALUE(  int64, symbol)) value = GET_CVALUE(int64, symbol);
     if (IS_OVERFLOW (  int64, symbol)) value = (int64_t)INT32_MAX + (int64_t)1;
     
-    if ((value < 0) || (value > 1))                 {__REMOVE__( bool_type_name);}
-    if ((value <  INT8_MIN) || (value >  INT8_MAX)) {__REMOVE__(sint_type_name);  __REMOVE__( byte_type_name);}
-    if ((value < INT16_MIN) || (value > INT16_MAX)) {__REMOVE__( int_type_name);  __REMOVE__( word_type_name);}
-    if ((value < INT32_MIN) || (value > INT32_MAX)) {__REMOVE__(dint_type_name);  __REMOVE__(dword_type_name);}
-    if (IS_OVERFLOW( int64, symbol))                {__REMOVE__(lint_type_name);  __REMOVE__(lword_type_name);}
+    if ((value <  INT8_MIN) || (value >  INT8_MAX)) {__REMOVE__(sint_type_name);}
+    if ((value < INT16_MIN) || (value > INT16_MAX)) {__REMOVE__( int_type_name);}
+    if ((value < INT32_MIN) || (value > INT32_MAX)) {__REMOVE__(dint_type_name);}
+    if (IS_OVERFLOW( int64, symbol))                {__REMOVE__(lint_type_name);}
   }
     
   {/* Remove floating point data types */
