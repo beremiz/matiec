@@ -55,6 +55,7 @@
  *    BOOL, BYTE, WORD, DWORD, LWORD, USINT, SINT, UINT, INT, UDINT, DINT, ULINT, LINT (as well as the SAFE versions of these data tyes too!)
  */
 
+#include <../main.hh>         /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
 #include "fill_candidate_datatypes.hh"
 #include "datatype_functions.hh"
 #include <typeinfo>
@@ -141,24 +142,24 @@ void fill_candidate_datatypes_c::remove_incompatible_datatypes(symbol_c *symbol)
       }
     }
     if (IS_OVERFLOW( uint64, symbol)) {
-  	      remove_from_candidate_datatype_list(&search_constant_type_c::bool_type_name,       symbol->candidate_datatypes);
-  	      remove_from_candidate_datatype_list(&search_constant_type_c::safebool_type_name,   symbol->candidate_datatypes);
-    	  remove_from_candidate_datatype_list(&search_constant_type_c::usint_type_name,      symbol->candidate_datatypes);
-    	  remove_from_candidate_datatype_list(&search_constant_type_c::safeusint_type_name,  symbol->candidate_datatypes);
-	      remove_from_candidate_datatype_list(&search_constant_type_c::byte_type_name,       symbol->candidate_datatypes);
-	      remove_from_candidate_datatype_list(&search_constant_type_c::safebyte_type_name,   symbol->candidate_datatypes);
-    	  remove_from_candidate_datatype_list(&search_constant_type_c::uint_type_name,       symbol->candidate_datatypes);
-    	  remove_from_candidate_datatype_list(&search_constant_type_c::safeuint_type_name,   symbol->candidate_datatypes);
-          remove_from_candidate_datatype_list(&search_constant_type_c::word_type_name,       symbol->candidate_datatypes);
-          remove_from_candidate_datatype_list(&search_constant_type_c::safeword_type_name,   symbol->candidate_datatypes);
-    	  remove_from_candidate_datatype_list(&search_constant_type_c::udint_type_name,      symbol->candidate_datatypes);
-    	  remove_from_candidate_datatype_list(&search_constant_type_c::safeudint_type_name,  symbol->candidate_datatypes);
-          remove_from_candidate_datatype_list(&search_constant_type_c::dword_type_name,      symbol->candidate_datatypes);
-          remove_from_candidate_datatype_list(&search_constant_type_c::safedword_type_name,  symbol->candidate_datatypes);
-    	  remove_from_candidate_datatype_list(&search_constant_type_c::ulint_type_name,      symbol->candidate_datatypes);
-    	  remove_from_candidate_datatype_list(&search_constant_type_c::safeulint_type_name,  symbol->candidate_datatypes);
-          remove_from_candidate_datatype_list(&search_constant_type_c::lword_type_name,      symbol->candidate_datatypes);
-          remove_from_candidate_datatype_list(&search_constant_type_c::safelword_type_name,  symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::bool_type_name,       symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::safebool_type_name,   symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::usint_type_name,      symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::safeusint_type_name,  symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::byte_type_name,       symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::safebyte_type_name,   symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::uint_type_name,       symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::safeuint_type_name,   symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::word_type_name,       symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::safeword_type_name,   symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::udint_type_name,      symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::safeudint_type_name,  symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::dword_type_name,      symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::safedword_type_name,  symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::ulint_type_name,      symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::safeulint_type_name,  symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::lword_type_name,      symbol->candidate_datatypes);
+	remove_from_candidate_datatype_list(&search_constant_type_c::safelword_type_name,  symbol->candidate_datatypes);
     }
   }
   /* Remove signed data types */

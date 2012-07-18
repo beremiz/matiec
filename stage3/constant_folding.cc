@@ -126,35 +126,7 @@
 // #include <stdlib.h>  /* required for atoi() */
 #include <errno.h>   /* required for errno */
 
-
-
-#define __STDC_LIMIT_MACROS /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
-#include <stdint.h>         /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
-
-
-
-#ifndef   UINT64_MAX 
-  #define UINT64_MAX (std::numeric_limits< uint64_t >::max())
-#endif
-#ifndef    INT64_MAX 
-  #define  INT64_MAX (std::numeric_limits<  int64_t >::max())
-#endif
-#ifndef    INT64_MIN
-  #define  INT64_MIN (std::numeric_limits<  int64_t >::min()) 
-#endif
-
-#if    (real64_t  == float)
-  #define HUGE_VAL64  HUGE_VALF
-#elif  (real64_t  == double)
-  #define HUGE_VAL64  HUGE_VAL
-#elif  (real64_t  == long_double)
-  #define HUGE_VAL64  HUGE_VALL
-#else 
-  #error Could not determine which data type is being used for real64_t (defined in absyntax.hh). Aborting!
-#endif
-
-
-
+#include <../main.hh>         /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
 
 
 

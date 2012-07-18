@@ -34,8 +34,38 @@
 #ifndef _MAIN_HH
 #define _MAIN_HH
 
- /* Function used throughout the code --> used to report failed assertions (i.e. internal compiler errors)! */
 
+ /* Get the definition of INT16_MAX, INT16_MIN, UINT64_MAX, INT64_MAX, INT64_MIN, ... */
+
+#define __STDC_LIMIT_MACROS /* required when including from C++ source code. */
+#include <stdint.h>         
+
+#ifndef   UINT64_MAX 
+  #define UINT64_MAX (std::numeric_limits< uint64_t >::max())
+#endif
+#ifndef    INT64_MAX 
+  #define  INT64_MAX (std::numeric_limits<  int64_t >::max())
+#endif
+#ifndef    INT64_MIN
+  #define  INT64_MIN (std::numeric_limits<  int64_t >::min()) 
+#endif
+
+#if    (real64_t  == float)
+  #define HUGE_VAL64  HUGE_VALF
+#elif  (real64_t  == double)
+  #define HUGE_VAL64  HUGE_VAL
+#elif  (real64_t  == long_double)
+  #define HUGE_VAL64  HUGE_VALL
+#else 
+  #error Could not determine which data type is being used for real64_t (defined in absyntax.hh). Aborting!
+#endif
+
+
+
+
+ /* Function used throughout the code --> used to report failed assertions (i.e. internal compiler errors)! */
+#include <stddef.h>  /* required for NULL */
+ 
 #define ERROR               error_exit(__FILE__,__LINE__)
 #define ERROR_MSG(msg, ...) error_exit(__FILE__,__LINE__, msg)
 // #define ERROR_MSG(msg, ...) error_exit(__FILE__,__LINE__, msg, __VA_ARGS__)
