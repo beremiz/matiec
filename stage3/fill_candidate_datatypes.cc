@@ -590,13 +590,11 @@ void *fill_candidate_datatypes_c::visit(   boolean_literal_c *symbol) {
 
 void *fill_candidate_datatypes_c::visit(boolean_true_c *symbol) {
 	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
-	remove_incompatible_datatypes(symbol);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(boolean_false_c *symbol) {
 	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
-	remove_incompatible_datatypes(symbol);
 	return NULL;
 }
 
@@ -605,7 +603,6 @@ void *fill_candidate_datatypes_c::visit(boolean_false_c *symbol) {
 /*******************************/
 void *fill_candidate_datatypes_c::visit(double_byte_character_string_c *symbol) {
 	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::wstring_type_name, &search_constant_type_c::safewstring_type_name);
-	remove_incompatible_datatypes(symbol);
 	return NULL;
 }
 
@@ -1424,11 +1421,7 @@ void *fill_candidate_datatypes_c::visit(    ge_expression_c *symbol) {return han
  * functions if the input parameters are all literals (e.g. ADD(42, 42)). This
  * means this class will be more difficult than it appears at first.
  */
-void *fill_candidate_datatypes_c::visit(  add_expression_c *symbol) {
-	void *ret = handle_binary_expression(widen_ADD_table,  symbol, symbol->l_exp, symbol->r_exp);
-	remove_incompatible_datatypes(symbol);
-	return ret;
-}
+void *fill_candidate_datatypes_c::visit(  add_expression_c *symbol) {return handle_binary_expression(widen_ADD_table,  symbol, symbol->l_exp, symbol->r_exp);}
 void *fill_candidate_datatypes_c::visit(  sub_expression_c *symbol) {return handle_binary_expression(widen_SUB_table,  symbol, symbol->l_exp, symbol->r_exp);}
 void *fill_candidate_datatypes_c::visit(  mul_expression_c *symbol) {return handle_binary_expression(widen_MUL_table,  symbol, symbol->l_exp, symbol->r_exp);}
 void *fill_candidate_datatypes_c::visit(  div_expression_c *symbol) {return handle_binary_expression(widen_DIV_table,  symbol, symbol->l_exp, symbol->r_exp);}
