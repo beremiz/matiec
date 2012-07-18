@@ -35,10 +35,26 @@
 #define _MAIN_HH
 
 
+
+ /* Function used throughout the code --> used to report failed assertions (i.e. internal compiler errors)! */
+#include <stddef.h>  /* required for NULL */
+ 
+#define ERROR               error_exit(__FILE__,__LINE__)
+#define ERROR_MSG(msg, ...) error_exit(__FILE__,__LINE__, msg)
+// #define ERROR_MSG(msg, ...) error_exit(__FILE__,__LINE__, msg, __VA_ARGS__)
+
+extern void error_exit(const char *file_name, int line_no, const char *errmsg = NULL, ...);
+
+
+
+
+
+
  /* Get the definition of INT16_MAX, INT16_MIN, UINT64_MAX, INT64_MAX, INT64_MIN, ... */
 
-#define __STDC_LIMIT_MACROS /* required when including from C++ source code. */
+#define __STDC_LIMIT_MACROS /* required to have UINTxx_MAX defined when including stdint.h from C++ source code. */
 #include <stdint.h>         
+#include <limits>
 
 #ifndef   UINT64_MAX 
   #define UINT64_MAX (std::numeric_limits< uint64_t >::max())
@@ -50,27 +66,60 @@
   #define  INT64_MIN (std::numeric_limits<  int64_t >::min()) 
 #endif
 
-#if    (real64_t  == float)
-  #define HUGE_VAL64  HUGE_VALF
-#elif  (real64_t  == double)
-  #define HUGE_VAL64  HUGE_VAL
-#elif  (real64_t  == long_double)
-  #define HUGE_VAL64  HUGE_VALL
+
+
+/* Determine, for the current platform, which datas types (float, double or long double) use 64 and 32 bits. */
+/* NOTE: We cant use sizeof() in pre-processor directives, so we have to do it another way... */
+/* CURIOSITY: We can use sizeof() and offsetof() inside static_assert() but:
+ *          - this only allows us to make assertions, and not #define new macros
+ *          - is only available in the C standard [ISO/IEC 9899:2011] and the C++ 0X draft standard [Becker 2008]. It is not available in C99.
+ *          https://www.securecoding.cert.org/confluence/display/seccode/DCL03-C.+Use+a+static+assertion+to+test+the+value+of+a+constant+expression
+ *         struct {int a, b, c, d} header_t;
+ *  e.g.:  static_assert(offsetof(struct header_t, c) == 8, "Compile time error message.");
+ */
+
+#include <float.h>
+#if    (LDBL_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
+  #define long_double long double
+  #define real64_t long_double /* so we can later use #if (real64_t == long_double) directives in the code! */
+  #define REAL64_MAX  LDBL_MAX
+#elif  ( DBL_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
+  #define real64_t double
+  #define REAL64_MAX  DBL_MAX
+#elif  ( FLT_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
+  #define real64_t float
+  #define REAL64_MAX  FLT_MAX
 #else 
-  #error Could not determine which data type is being used for real64_t (defined in absyntax.hh). Aborting!
+  #error Could not find a 64 bit floating point data type on this platform. Aborting...
+#endif
+
+
+#if    (LDBL_MANT_DIG == 24) /* NOTE: 32 bit IEC559 real has 24 bits for mantissa! */
+  #ifndef long_double 
+    #define long_double long double
+  #endif  
+  #define real32_t long_double /* so we can later use #if (real32_t == long_double) directives in the code! */
+  #define REAL32_MAX  LDBL_MAX
+#elif  ( DBL_MANT_DIG == 24) /* NOTE: 32 bit IEC559 real has 24 bits for mantissa! */
+  #define real32_t double
+  #define REAL32_MAX  DBL_MAX
+#elif  ( FLT_MANT_DIG == 24) /* NOTE: 32 bit IEC559 real has 24 bits for mantissa! */
+  #define real32_t float
+  #define REAL32_MAX  FLT_MAX
+#else 
+  #error Could not find a 32 bit floating point data type on this platform. Aborting...
 #endif
 
 
 
+#include <math.h>
+#ifndef INFINITY
+  #error Could not find the macro that defines the value for INFINITY in the current platform.
+#endif
+#ifndef NAN
+  #error Could not find the macro that defines the value for NAN in the current platform.
+#endif
 
- /* Function used throughout the code --> used to report failed assertions (i.e. internal compiler errors)! */
-#include <stddef.h>  /* required for NULL */
- 
-#define ERROR               error_exit(__FILE__,__LINE__)
-#define ERROR_MSG(msg, ...) error_exit(__FILE__,__LINE__, msg)
-// #define ERROR_MSG(msg, ...) error_exit(__FILE__,__LINE__, msg, __VA_ARGS__)
-
-extern void error_exit(const char *file_name, int line_no, const char *errmsg = NULL, ...);
 
 
 

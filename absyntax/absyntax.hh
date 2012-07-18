@@ -50,29 +50,9 @@
 #include <vector>
 #include <string>
 #include <stdint.h>  // required for uint64_t, etc...
+#include "../main.hh" // required for uint8_t, real_64_t, ..., and the macros INT8_MAX, REAL32_MAX, ... */
 
 
-/* Determine, for the current platform, which data type (float, double or long double) uses 64 bits. */
-/* NOTE: We cant use sizeof() in pre-processor directives, so we have to do it another way... */
-/* CURIOSITY: We can use sizeof() and offsetof() inside static_assert() but:
- *          - this only allows us to make assertions, and not #define new macros
- *          - is only available in the C standard [ISO/IEC 9899:2011] and the C++ 0X draft standard [Becker 2008]. It is not available in C99.
- *          https://www.securecoding.cert.org/confluence/display/seccode/DCL03-C.+Use+a+static+assertion+to+test+the+value+of+a+constant+expression
- *         struct {int a, b, c, d} header_t;
- *  e.g.:  static_assert(offsetof(struct header_t, c) == 8, "Compile time error message.");
- */
-
-#include <float.h>
-#if    (LDBL_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
-  #define long_double long double
-  #define real64_t long_double /* so we can later use #if (real64_t == long_double) directives in the code! */
-#elif  ( DBL_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
-  #define real64_t double
-#elif  ( FLT_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
-  #define real64_t float
-#else 
-  #error Could not find a 64 bit floating point data type on this platform. Aborting...
-#endif
 
 
 /* Forward declaration of the visitor interface

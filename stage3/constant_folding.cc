@@ -117,16 +117,13 @@
  */
 
 #include "constant_folding.hh"
-#include <limits>
-#include <math.h> /* required for pow function, and HUGE_VAL, HUGE_VALF, HUGE_VALL */
 #include <stdlib.h> /* required for malloc() */
-
 
 #include <string.h>  /* required for strlen() */
 // #include <stdlib.h>  /* required for atoi() */
 #include <errno.h>   /* required for errno */
 
-#include <../main.hh>         /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
+#include "../main.hh" // required for uint8_t, real_64_t, ..., and the macros NAN, INFINITY, INT8_MAX, REAL32_MAX, ... */
 
 
 
@@ -508,7 +505,7 @@ static void CHECK_OVERFLOW_real64(symbol_c *res_ptr) {
 	 *  specified for the data type of the function output, or if division by zero is attempted."
 	 * For this reason, any operation that has as a result a positive or negative inifinity, is also an error!
 	 */
-	if ((isnan(res)) || (res == HUGE_VAL64) || (res == -HUGE_VAL64))
+	if ((isnan(res)) || (res == INFINITY) || (res == -INFINITY))
 		SET_OVFLOW(real64, res_ptr);
 }
 
