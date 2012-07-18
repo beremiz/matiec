@@ -45,8 +45,10 @@
  *       NOTE: for base 10 numeric literals, any number taking up more than 64 bits
  *             will only return a bitsize of 1024!
  *
- *       For numeric literals, we return the minimum number of bits
- *       required to store the value.
+ *       NOTE: The code that does the following has been commented out, since we no longer need it!
+ *             It has been superceded by the constant_folding.cc class.
+ *       // For numeric literals, we return the minimum number of bits
+ *       // required to store the value.
  *
  * E.g. TYPE new_int_t : INT; END_TYPE;
  *      TYPE new_int2_t : INT = 2; END_TYPE;
@@ -57,19 +59,21 @@
  *    sizeof(DINT) -> 32
  *    sizeof(LINT) -> 64
  *
- *    sizeof('1')       ->  1
- *    sizeof('015')     ->  4    # Leading zeros are ignored!
- *    sizeof('0')       ->  1    # This is a special case! Even the value 0 needs at least 1 bit to store!
- *    sizeof('16')      ->  5
- *    sizeof('2#00101') ->  3
- *    sizeof('8#334')   ->  9
- *    sizeof('16#2A')   ->  8
+ *       NOTE: The code that does the following has been commented out, since we no longer need it!
+ *             It has been superceded by the constant_folding.cc class.
+ *    // sizeof('1')       ->  1
+ *    // sizeof('015')     ->  4    # Leading zeros are ignored!
+ *    // sizeof('0')       ->  1    # This is a special case! Even the value 0 needs at least 1 bit to store!
+ *    // sizeof('16')      ->  5
+ *    // sizeof('2#00101') ->  3
+ *    // sizeof('8#334')   ->  9
+ *    // sizeof('16#2A')   ->  8
  *
- *    sizeof('7.4')     ->  32   # all real literals return 32 bits, the size of a 'REAL'
- *                               # TODO: study IEC 60559 for the range of values that may be
- *                               #       stored in a REAL (basic single width floating point format)
- *                               #       and in a LREAL (basic double width floating point format)
- *                               #       and see if some real literals need to return 64 instead!
+ *    // sizeof('7.4')     ->  32   # all real literals return 32 bits, the size of a 'REAL'
+ *    //                            # TODO: study IEC 60559 for the range of values that may be
+ *    //                            #       stored in a REAL (basic single width floating point format)
+ *    //                            #       and in a LREAL (basic double width floating point format)
+ *    //                            #       and see if some real literals need to return 64 instead!
  */
 
 #include "get_sizeof_datatype.hh"
@@ -96,8 +100,7 @@ get_sizeof_datatype_c *get_sizeof_datatype_c::singleton = NULL;
 #define _decode_int(ptr)     (((char *)ptr) - ((char *)NULL))
 
 
-
-
+#if 0   /* We no longer need the code for handling numeric literals. But keep it around for a little while longer... */
 /* divide a base 10 literal in a string by 2 */
 /* returns remainder of division (0 or 1)    */
 static int strdivby2(char **strptr) {
@@ -120,7 +123,7 @@ static int strdivby2(char **strptr) {
 
   return carry;
 }
-
+#endif
 
 /* Constructor for the singleton class */
 int get_sizeof_datatype_c::getsize(symbol_c *data_type_symbol) {
@@ -138,7 +141,7 @@ get_sizeof_datatype_c::~get_sizeof_datatype_c(void) {
       singleton = NULL;
     }
 
-
+#if 0   /* We no longer need the code for handling numeric literals. But keep it around for a little while longer... */
 /*********************/
 /* B 1.2 - Constants */
 /*********************/
@@ -415,7 +418,7 @@ void *get_sizeof_datatype_c::visit(hex_integer_c *symbol) {
 
   return _encode_int(bitsize);
 }
-
+#endif
 
 /***********************************/
 /* B 1.3.1 - Elementary Data Types */
