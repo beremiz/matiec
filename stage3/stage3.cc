@@ -55,8 +55,11 @@ static int flow_control_analysis(symbol_c *tree_root){
 }
 
 
-/* Type safety analysis assumes that flow control analysis has already been completed,
- * so be sure to call flow_control_analysis() before calling this function
+/* Type safety analysis assumes that 
+ *    - flow control analysis 
+ *    - constant folding (constant check)
+ * has already been completed, so be sure to call those semantic checkers
+ * before calling this function
  */
 static int type_safety(symbol_c *tree_root){
 	fill_candidate_datatypes_c fill_candidate_datatypes(tree_root);
