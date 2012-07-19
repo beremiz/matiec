@@ -148,6 +148,7 @@ void fill_candidate_datatypes_c::remove_incompatible_datatypes(symbol_c *symbol)
   {/* Remove floating point data types */
     real64_t value = 0;
     if (VALID_CVALUE( real64, symbol)) value = GET_CVALUE(real64, symbol);
+    if (IS_OVERFLOW ( real64, symbol)) value = (real64_t)REAL32_MAX + (real64_t)1;
     if (value >  REAL32_MAX )         {__REMOVE__( real_type_name);}
     if (value < -REAL32_MAX )         {__REMOVE__( real_type_name);}
     if (IS_OVERFLOW( real64, symbol)) {__REMOVE__(lreal_type_name);}
