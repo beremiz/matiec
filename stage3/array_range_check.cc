@@ -71,7 +71,19 @@
 #define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.value)
 #define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
 
-
+/*  The cmp_unsigned_signed function compares two numbers u and s.
+ *  It returns an integer indicating the relationship between the numbers:
+ *  - A zero value indicates that both numbers are equal.
+ *  - A value greater than zero indicates that numbers does not match and
+ *    first has a greater value.
+ *  - A value less than zero indicates that numbers does not match and
+ *    first has a lesser value.
+ */
+static inline int cmp_unsigned_signed(const uint64_t u, const int64_t s) {
+  if (u <= INT64_MAX)
+    return ((int64_t)u - s);
+  return -1;
+}
 
 array_range_check_c::array_range_check_c(symbol_c *ignore) {
 	error_count = 0;
@@ -119,11 +131,11 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
 
     /* Check lower limit */
     if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE( int64, dimension->lower_limit))
-      if ( GET_CVALUE( int64, l->elements[i])   <  GET_CVALUE( int64, dimension->lower_limit))
+      if ( GET_CVALUE( int64, l->elements[i]) < GET_CVALUE( int64, dimension->lower_limit) )
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
 
     if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE(uint64, dimension->lower_limit))
-      if ( GET_CVALUE( int64, l->elements[i])   <  GET_CVALUE(uint64, dimension->lower_limit))
+      if ( cmp_unsigned_signed( GET_CVALUE(uint64, dimension->lower_limit), GET_CVALUE( int64, l->elements[i])) > 0 )
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
 
     if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE(uint64, dimension->lower_limit))
@@ -131,7 +143,7 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
 
     if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE( int64, dimension->lower_limit))
-      if ( GET_CVALUE(uint64, l->elements[i])   <  GET_CVALUE( int64, dimension->lower_limit))
+      if ( cmp_unsigned_signed(GET_CVALUE(uint64, l->elements[i]), GET_CVALUE( int64, dimension->lower_limit)) < 0 )
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
 
     /* Repeat the same check, now for upper limit */
@@ -140,7 +152,7 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
 
     if ( VALID_CVALUE( int64, l->elements[i]) && VALID_CVALUE(uint64, dimension->upper_limit))
-      if ( GET_CVALUE( int64, l->elements[i])   >  GET_CVALUE(uint64, dimension->upper_limit))
+      if ( cmp_unsigned_signed( GET_CVALUE(uint64, dimension->upper_limit), GET_CVALUE( int64, l->elements[i])) < 0 )
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
 
     if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE(uint64, dimension->upper_limit))
@@ -148,10 +160,9 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
       
     if ( VALID_CVALUE(uint64, l->elements[i]) && VALID_CVALUE( int64, dimension->upper_limit))
-      if ( GET_CVALUE(uint64, l->elements[i])   >  GET_CVALUE( int64, dimension->upper_limit))
+      if ( cmp_unsigned_signed(GET_CVALUE(uint64, l->elements[i]), GET_CVALUE( int64, dimension->upper_limit)) < 0 )
       {STAGE3_ERROR(0, symbol, symbol, "Array access out of bounds."); continue;}
       
-   /* TODO: How do we make these comparisons between int and unsigned int, without the compiler complaining? */
   }
 }
 
