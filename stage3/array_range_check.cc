@@ -33,13 +33,10 @@
 
 
 /*
- * TODO:
- *   - Check subscript values fall within allowed range.
- *     For the checking of subscript values to work correctly, we would need to have constant folding working too:
+ * Array Range Checking:
+ *   - Check whether array subscript values fall within the allowed range.
+ *     Note that for the checking of subscript values to work correctly, we need to have constant folding working too:
  *     array_var[8 + 99] can not be checked without constant folding.
- *     However, even without constant folding range check may be usefull,
- *     and later changing it to use the values coming out of constant folding should not be very difficult.
- *
  */
 
 
