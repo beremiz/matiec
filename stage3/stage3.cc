@@ -42,16 +42,22 @@
 #include "array_range_check.hh"
 #include "constant_folding.hh"
 
-static int constant_check(symbol_c *tree_root){
-    constant_folding_c constant_folding(tree_root);
-    tree_root->accept(constant_folding);
-    return constant_folding.get_error_count();
-}
+
 
 static int flow_control_analysis(symbol_c *tree_root){
     flow_control_analysis_c flow_control_analysis(tree_root);
     tree_root->accept(flow_control_analysis);
     return 0;
+}
+
+
+/* Constant folding assumes that flow control analysis has been completed!
+ * so be sure to call flow_control_analysis() before calling this function!
+ */
+static int constant_folding(symbol_c *tree_root){
+    constant_folding_c constant_folding(tree_root);
+    tree_root->accept(constant_folding);
+    return constant_folding.get_error_count();
 }
 
 
@@ -72,7 +78,7 @@ static int type_safety(symbol_c *tree_root){
 }
 
 
-/* Left value checking assumes that datat type analysis has already been completed,
+/* Left value checking assumes that data type analysis has already been completed,
  * so be sure to call type_safety() before calling this function
  */
 static int lvalue_check(symbol_c *tree_root){
@@ -81,7 +87,10 @@ static int lvalue_check(symbol_c *tree_root){
 	return lvalue_check.get_error_count();
 }
 
-static int range_check(symbol_c *tree_root){
+/* Array range check assumes that constant folding has been completed!
+ * so be sure to call constant_folding() before calling this function!
+ */
+static int array_range_check(symbol_c *tree_root){
 	array_range_check_c array_range_check(tree_root);
 	tree_root->accept(array_range_check);
 	return array_range_check.get_error_count();
@@ -90,11 +99,11 @@ static int range_check(symbol_c *tree_root){
 
 int stage3(symbol_c *tree_root){
 	int error_count = 0;
-	error_count += constant_check(tree_root);
 	error_count += flow_control_analysis(tree_root);
+	error_count += constant_folding(tree_root);
 	error_count += type_safety(tree_root);
 	error_count += lvalue_check(tree_root);
-	error_count += range_check(tree_root);
+	error_count += array_range_check(tree_root);
 	
 	if (error_count > 0) {
 		fprintf(stderr, "%d error(s) found. Bailing out!\n", error_count); 

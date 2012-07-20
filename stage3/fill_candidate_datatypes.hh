@@ -87,10 +87,9 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
 //     int  il_parenthesis_level;
 //     bool error_found;
 
-    /* the current data type of the data stored in the IL stack, i.e. the default variable */
+    /* Pointer to the previous IL instruction, which contains the current data type (actually, the list of candidate data types) of the data stored in the IL stack, i.e. the default variable, a.k.a. accumulator */
     symbol_c *prev_il_instruction;
-    /* the current IL operand being analyzed - its symbol and its data type */
-    symbol_c *il_operand_type;
+    /* the current IL operand being analyzed */
     symbol_c *il_operand;
     symbol_c *widening_conversion(symbol_c *left_type, symbol_c *right_type, const struct widen_entry widen_table[]);
 

@@ -116,35 +116,25 @@ class symbol_c {
      * For this reason, we have one entry for each possible type, with some expressions
      * having more than one entry filled in!
      */
-    typedef enum { cs_undefined,   /* not defined --> const_value is not valid! */
+    typedef enum { cs_undefined,   /* not defined/not yet evaluated --> const_value is not valid! */
+                   cs_non_const,   /* we have deternmined that expression is not a const value --> const_value is not valid! */
                    cs_const_value, /* const value is valid */
                    cs_overflow     /* result produced overflow or underflow --> const_value is not valid! */
                  } const_status_t;
  
-    typedef struct {
-        const_status_t status;
-        real64_t       value; 
-    } const_value_real64_t;
-    const_value_real64_t *const_value_real64; /* when NULL --> UNDEFINED */
-    
-    typedef struct {
-        const_status_t status;
-        int64_t        value; 
-    } const_value_int64_t;
-    const_value_int64_t *const_value_int64; /* when NULL --> UNDEFINED */
-    
-    typedef struct {
-        const_status_t status;
-        uint64_t       value; 
-    } const_value_uint64_t;
-    const_value_uint64_t *const_value_uint64; /* when NULL --> UNDEFINED */
-    
-    typedef struct {
-        const_status_t status;
-        bool           value; 
-    } const_value_bool_t;
-    const_value_bool_t *const_value_bool; /* when NULL --> UNDEFINED */
+    typedef struct {const_status_t status;  real64_t  value; } const_value_real64_t;
+    typedef struct {const_status_t status;   int64_t  value; } const_value_int64_t;
+    typedef struct {const_status_t status;  uint64_t  value; } const_value_uint64_t;
+    typedef struct {const_status_t status;      bool  value; } const_value_bool_t;
 
+    typedef struct {
+      const_value_real64_t _real64; /* status is initialised to UNDEFINED */
+      const_value_int64_t   _int64; /* status is initialised to UNDEFINED */
+      const_value_uint64_t _uint64; /* status is initialised to UNDEFINED */
+      const_value_bool_t     _bool; /* status is initialised to UNDEFINED */
+    } const_value_t;
+    const_value_t const_value;
+    
 
   public:
     /* default constructor */

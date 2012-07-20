@@ -71,8 +71,8 @@
     warning_found = true;                                                                                                   \
 }
 
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value_##dtype->value)
-#define VALID_CVALUE(dtype, symbol)           ((NULL != (symbol)->const_value_##dtype) && (symbol_c::cs_const_value == (symbol)->const_value_##dtype->status))
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.value)
+#define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
 
 
 

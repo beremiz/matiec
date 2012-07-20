@@ -45,18 +45,23 @@
 
 
 class constant_folding_c : public iterator_visitor_c {
+  private:
     search_varfb_instance_type_c *search_varfb_instance_type;
     search_base_type_c search_base_type;
     int error_count;
     bool warning_found;
     int current_display_error_level;
+    /* Pointer to the previous IL instruction, which contains the current cvalue of the data stored in the IL stack, i.e. the default variable, a.k.a. accumulator */
+    symbol_c *prev_il_instruction;
+    /* the current IL operand being analyzed */
+    symbol_c *il_operand;
 
-public:
+  public:
 	constant_folding_c(symbol_c *symbol = NULL);
 	virtual ~constant_folding_c(void);
 	int get_error_count();
 
-private:
+  private:
     /*********************/
     /* B 1.2 - Constants */
     /*********************/
@@ -77,28 +82,98 @@ private:
     void *visit(boolean_true_c *symbol);
     void *visit(boolean_false_c *symbol);
 
+    /****************************************/
+    /* B.2 - Language IL (Instruction List) */
+    /****************************************/
+    /***********************************/
+    /* B 2.1 Instructions and Operands */
+    /***********************************/
+    // void *visit(instruction_list_c *symbol); /* Not needed, since we inherit from iterator_visitor_c */
+    void *visit(il_instruction_c *symbol);
+    void *visit(il_simple_operation_c *symbol);
+    //void *visit(il_function_call_c *symbol);  /* TODO */
+    void *visit(il_expression_c *symbol);
+    void *visit(il_jump_operation_c *symbol);
+    void *visit(il_fb_call_c *symbol);
+    //void *visit(il_formal_funct_call_c *symbol);   /* TODO */
+    //void *visit(il_operand_list_c *symbol);  /* Not needed, since we inherit from iterator_visitor_c */
+    void *visit(simple_instr_list_c *symbol);
+    void *visit(il_simple_instruction_c *symbol);
+
+
+    /*******************/
+    /* B 2.2 Operators */
+    /*******************/
+    void *visit(   LD_operator_c *symbol);
+    void *visit(  LDN_operator_c *symbol);
+    void *visit(   ST_operator_c *symbol);
+    void *visit(  STN_operator_c *symbol);
+    void *visit(  NOT_operator_c *symbol);
+    void *visit(    S_operator_c *symbol);
+    void *visit(    R_operator_c *symbol);
+    void *visit(   S1_operator_c *symbol);
+    void *visit(   R1_operator_c *symbol);
+    void *visit(  CLK_operator_c *symbol);
+    void *visit(   CU_operator_c *symbol);
+    void *visit(   CD_operator_c *symbol);
+    void *visit(   PV_operator_c *symbol);
+    void *visit(   IN_operator_c *symbol);
+    void *visit(   PT_operator_c *symbol);
+    void *visit(  AND_operator_c *symbol);
+    void *visit(   OR_operator_c *symbol);
+    void *visit(  XOR_operator_c *symbol);
+    void *visit( ANDN_operator_c *symbol);
+    void *visit(  ORN_operator_c *symbol);
+    void *visit( XORN_operator_c *symbol);
+    void *visit(  ADD_operator_c *symbol);
+    void *visit(  SUB_operator_c *symbol);
+    void *visit(  MUL_operator_c *symbol);
+    void *visit(  DIV_operator_c *symbol);
+    void *visit(  MOD_operator_c *symbol);
+    void *visit(   GT_operator_c *symbol);
+    void *visit(   GE_operator_c *symbol);
+    void *visit(   EQ_operator_c *symbol);
+    void *visit(   LT_operator_c *symbol);
+    void *visit(   LE_operator_c *symbol);
+    void *visit(   NE_operator_c *symbol);
+    void *visit(  CAL_operator_c *symbol);
+    void *visit( CALC_operator_c *symbol);
+    void *visit(CALCN_operator_c *symbol);
+    void *visit(  RET_operator_c *symbol);
+    void *visit( RETC_operator_c *symbol);
+    void *visit(RETCN_operator_c *symbol);
+    void *visit(  JMP_operator_c *symbol);
+    void *visit( JMPC_operator_c *symbol);
+    void *visit(JMPCN_operator_c *symbol);
+    /* Symbol class handled together with function call checks */
+    // void *visit(il_assign_operator_c *symbol, variable_name);
+    /* Symbol class handled together with function call checks */
+    // void *visit(il_assign_operator_c *symbol, option, variable_name);
+
     /***************************************/
     /* B.3 - Language ST (Structured Text) */
     /***************************************/
     /***********************/
     /* B 3.1 - Expressions */
     /***********************/
-    void *visit(or_expression_c *symbol);
-    void *visit(xor_expression_c *symbol);
-    void *visit(and_expression_c *symbol);
-    void *visit(equ_expression_c *symbol);
+    void *visit(    or_expression_c *symbol);
+    void *visit(   xor_expression_c *symbol);
+    void *visit(   and_expression_c *symbol);
+    void *visit(   equ_expression_c *symbol);
     void *visit(notequ_expression_c *symbol);
-    void *visit(lt_expression_c *symbol);
-    void *visit(gt_expression_c *symbol);
-    void *visit(le_expression_c *symbol);
-    void *visit(ge_expression_c *symbol);
-    void *visit(add_expression_c *symbol);
-    void *visit(sub_expression_c *symbol);
-    void *visit(mul_expression_c *symbol);
-    void *visit(div_expression_c *symbol);
-    void *visit(mod_expression_c *symbol);
-    void *visit(power_expression_c *symbol);
-    void *visit(neg_expression_c *symbol);
-    void *visit(not_expression_c *symbol);
+    void *visit(    lt_expression_c *symbol);
+    void *visit(    gt_expression_c *symbol);
+    void *visit(    le_expression_c *symbol);
+    void *visit(    ge_expression_c *symbol);
+    void *visit(   add_expression_c *symbol);
+    void *visit(   sub_expression_c *symbol);
+    void *visit(   mul_expression_c *symbol);
+    void *visit(   div_expression_c *symbol);
+    void *visit(   mod_expression_c *symbol);
+    void *visit( power_expression_c *symbol);
+    void *visit(   neg_expression_c *symbol);
+    void *visit(   not_expression_c *symbol);
+    //void *visit(function_invocation_c *symbol); /* TODO */
+    
 };
 

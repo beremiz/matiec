@@ -53,9 +53,8 @@
 
 
 /* Macros to access the constant value of each expression (if it exists) from the annotation introduced to the symbol_c object by constant_folding_c in stage3! */
-/* NOTE: The following test is correct in the presence of a NULL pointer, as the logical evaluation will be suspended as soon as the first condition is false! */
-#define VALID_CVALUE(dtype, symbol)           ((NULL != (symbol)->const_value_##dtype) && (symbol_c::cs_const_value == (symbol)->const_value_##dtype->status))
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value_##dtype->value) 
+#define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.value) 
 
 
 

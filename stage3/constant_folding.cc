@@ -165,28 +165,30 @@
 
 
 
-#define NEW_CVALUE(dtype, symbol) \
- (symbol->const_value_##dtype) = new(symbol_c::const_value_##dtype##_t); \
- if ((symbol->const_value_##dtype) == NULL) ERROR; \
- (symbol->const_value_##dtype)->status = symbol_c::cs_undefined;
+#define SET_CVALUE(dtype, symbol, new_value)  ((symbol)->const_value._##dtype.value) = new_value; ((symbol)->const_value._##dtype.status) = symbol_c::cs_const_value;
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.value)
+#define SET_OVFLOW(dtype, symbol)             ((symbol)->const_value._##dtype.status) = symbol_c::cs_overflow
+#define SET_NONCONST(dtype, symbol)           ((symbol)->const_value._##dtype.status) = symbol_c::cs_non_const
 
-#define SET_CVALUE(dtype, symbol, new_value)  ((symbol)->const_value_##dtype->value) = new_value; ((symbol)->const_value_##dtype->status) = symbol_c::cs_const_value;
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value_##dtype->value)
-#define SET_OVFLOW(dtype, symbol)             ((symbol)->const_value_##dtype->status) = symbol_c::cs_overflow
-    /* The following test is correct in the presence of a NULL pointer, as the logical evaluation will be suspended as soon as the first condition is false! */
-#define VALID_CVALUE(dtype, symbol)           ((NULL != (symbol)->const_value_##dtype) && (symbol_c::cs_const_value == (symbol)->const_value_##dtype->status))
+#define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
 #define ISZERO_CVALUE(dtype, symbol)          ((VALID_CVALUE(dtype, symbol)) && (GET_CVALUE(dtype, symbol) == 0))
+
+#define ISEQUAL_CVALUE(dtype, symbol1, symbol2) \
+	(VALID_CVALUE(dtype, symbol1) && VALID_CVALUE(dtype, symbol2) && (GET_CVALUE(dtype, symbol1) == GET_CVALUE(dtype, symbol2))) 
 
 #define DO_BINARY_OPER(dtype, oper, otype)\
 	if (VALID_CVALUE(dtype, symbol->r_exp) && VALID_CVALUE(dtype, symbol->l_exp)) {                                \
-		NEW_CVALUE(otype, symbol);                                                                             \
 		SET_CVALUE(otype, symbol, GET_CVALUE(dtype, symbol->l_exp) oper GET_CVALUE(dtype, symbol->r_exp));     \
 	}
 
-#define DO_UNARY_OPER(dtype, oper, arg)\
-	if (VALID_CVALUE(dtype, arg)) {                                                                                \
-		NEW_CVALUE(dtype, symbol);                                                                             \
-		SET_CVALUE(dtype, symbol, oper GET_CVALUE(dtype, arg));                                                \
+#define DO_BINARY_OPER_(oper_type, operation, res_type, operand1, operand2)\
+	if (VALID_CVALUE(oper_type, operand1) && VALID_CVALUE(oper_type, operand2)) {                                     \
+		SET_CVALUE(res_type, symbol, GET_CVALUE(oper_type, operand1) operation GET_CVALUE(oper_type, operand2));  \
+	}
+
+#define DO_UNARY_OPER(dtype, operation, operand)\
+	if (VALID_CVALUE(dtype, operand)) {                                                                               \
+		SET_CVALUE(dtype, symbol, operation GET_CVALUE(dtype, operand));                                          \
 	}
 
 
@@ -512,6 +514,163 @@ static void CHECK_OVERFLOW_real64(symbol_c *res_ptr) {
 
 
 
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***        Functions to execute operations on the const values      ***/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+/* static void *handle_cmp(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2, OPERATION) */
+#define handle_cmp(symbol, oper1, oper2, operation) {               \
+	if ((NULL == oper1) || (NULL == oper2)) return NULL;        \
+	DO_BINARY_OPER_(  bool, operation, bool, oper1, oper2);     \
+	DO_BINARY_OPER_(uint64, operation, bool, oper1, oper2);     \
+	DO_BINARY_OPER_( int64, operation, bool, oper1, oper2);     \
+	DO_BINARY_OPER_(real64, operation, bool, oper1, oper2);     \
+	return NULL;                                                \
+}
+
+
+/* NOTE: the MOVE standard function is equivalent to the ':=' in ST syntax */
+static void *handle_move(symbol_c *to, symbol_c *from) {
+	if (NULL == from) return NULL;
+	to->const_value = from->const_value;
+	return NULL;
+}
+
+
+/* unary negation (multiply by -1) */
+static void *handle_neg(symbol_c *symbol, symbol_c *oper) {
+	DO_UNARY_OPER( int64, -, oper);	CHECK_OVERFLOW_int64_NEG(symbol, oper);
+	DO_UNARY_OPER(real64, -, oper);	CHECK_OVERFLOW_real64(symbol);
+	return NULL;
+}
+
+
+/* unary boolean negation (NOT) */
+static void *handle_not(symbol_c *symbol, symbol_c *oper) {
+	if (NULL == oper) return NULL;
+	DO_UNARY_OPER(  bool, !, oper);
+	DO_UNARY_OPER(uint64, ~, oper);
+	return NULL;
+}
+
+
+static void *handle_or (symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
+	if ((NULL == oper1) || (NULL == oper2)) return NULL;
+	DO_BINARY_OPER_(  bool, ||, bool  , oper1, oper2);
+	DO_BINARY_OPER_(uint64, | , uint64, oper1, oper2);
+	return NULL;
+}
+
+
+static void *handle_xor(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
+	if ((NULL == oper1) || (NULL == oper2)) return NULL;
+	DO_BINARY_OPER_(  bool, ^, bool  , oper1, oper2);
+	DO_BINARY_OPER_(uint64, ^, uint64, oper1, oper2);
+	return NULL;
+}
+
+
+static void *handle_and(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
+	if ((NULL == oper1) || (NULL == oper2)) return NULL;
+	DO_BINARY_OPER_(  bool, &&, bool, oper1, oper2);
+	DO_BINARY_OPER_(uint64, & , uint64, oper1, oper2);
+	return NULL;
+}
+
+
+static void *handle_add(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
+	if ((NULL == oper1) || (NULL == oper2)) return NULL;
+	DO_BINARY_OPER_(uint64, +, uint64, oper1, oper2);   CHECK_OVERFLOW_uint64_SUM(symbol, oper1, oper2);
+	DO_BINARY_OPER_( int64, +,  int64, oper1, oper2);   CHECK_OVERFLOW_int64_SUM (symbol, oper1, oper2);
+	DO_BINARY_OPER_(real64, +, real64, oper1, oper2);   CHECK_OVERFLOW_real64    (symbol);
+	return NULL;
+}
+
+
+static void *handle_sub(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
+	if ((NULL == oper1) || (NULL == oper2)) return NULL;
+	DO_BINARY_OPER_(uint64, -, uint64, oper1, oper2);   CHECK_OVERFLOW_uint64_SUB(symbol, oper1, oper2);
+	DO_BINARY_OPER_( int64, -,  int64, oper1, oper2);   CHECK_OVERFLOW_int64_SUB (symbol, oper1, oper2);
+	DO_BINARY_OPER_(real64, -, real64, oper1, oper2);   CHECK_OVERFLOW_real64    (symbol);
+	return NULL;
+}
+
+
+static void *handle_mul(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
+	if ((NULL == oper1) || (NULL == oper2)) return NULL;
+	DO_BINARY_OPER_(uint64, *, uint64, oper1, oper2);   CHECK_OVERFLOW_uint64_MUL(symbol, oper1, oper2);
+	DO_BINARY_OPER_( int64, *,  int64, oper1, oper2);   CHECK_OVERFLOW_int64_MUL (symbol, oper1, oper2);
+	DO_BINARY_OPER_(real64, *, real64, oper1, oper2);   CHECK_OVERFLOW_real64    (symbol);
+	return NULL;
+}
+
+
+static void *handle_div(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
+	if ((NULL == oper1) || (NULL == oper2)) return NULL;
+	if (ISZERO_CVALUE(uint64, oper2))  {SET_OVFLOW(uint64, symbol);} else {DO_BINARY_OPER_(uint64, /, uint64, oper1, oper2); CHECK_OVERFLOW_uint64_DIV(symbol, oper1, oper2);};
+	if (ISZERO_CVALUE( int64, oper2))  {SET_OVFLOW( int64, symbol);} else {DO_BINARY_OPER_( int64, /,  int64, oper1, oper2); CHECK_OVERFLOW_int64_DIV (symbol, oper1, oper2);};
+	if (ISZERO_CVALUE(real64, oper2))  {SET_OVFLOW(real64, symbol);} else {DO_BINARY_OPER_(real64, /, real64, oper1, oper2); CHECK_OVERFLOW_real64(symbol);};
+	return NULL;
+}
+
+
+static void *handle_mod(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
+	if ((NULL == oper1) || (NULL == oper2)) return NULL;
+	/* IEC 61131-3 standard says IN1 MOD IN2 must be equivalent to
+	 *  IF (IN2 = 0) THEN OUT:=0 ; ELSE OUT:=IN1 - (IN1/IN2)*IN2 ; END_IF
+	 *
+	 * Note that, when IN1 = INT64_MIN, and IN2 = -1, an overflow occurs in the division,
+	 * so although the MOD operation should be OK, acording to the above definition, we actually have an overflow!!
+	 */
+	if (ISZERO_CVALUE(uint64, oper2))  {SET_CVALUE(uint64, symbol, 0);} else {DO_BINARY_OPER_(uint64, %, uint64, oper1, oper2); CHECK_OVERFLOW_uint64_MOD(symbol, oper1, oper2);};
+	if (ISZERO_CVALUE( int64, oper2))  {SET_CVALUE( int64, symbol, 0);} else {DO_BINARY_OPER_( int64, %,  int64, oper1, oper2); CHECK_OVERFLOW_int64_MOD (symbol, oper1, oper2);};
+	return NULL;
+}
+
+
+static void *handle_pow(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
+	/* NOTE: If the const_value in symbol->r_exp is within the limits of both int64 and uint64, then we do both operations.
+	 *       That is OK, as the result should be identicial (we do create an unnecessary CVALUE variable, but who cares?).
+	 *       If only one is valid, then that is the oper we will do!
+	 */
+	if (VALID_CVALUE(real64, oper1) && VALID_CVALUE( int64, oper2))
+		SET_CVALUE(real64, symbol, pow(GET_CVALUE(real64, oper1), GET_CVALUE( int64, oper2)));
+	if (VALID_CVALUE(real64, oper1) && VALID_CVALUE(uint64, oper2))
+		SET_CVALUE(real64, symbol, pow(GET_CVALUE(real64, oper1), GET_CVALUE(uint64, oper2)));
+	CHECK_OVERFLOW_real64(symbol);
+	return NULL;
+}
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***        Helper functions for handling IL instruction lists.      ***/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+
+/* If the cvalues of all the prev_il_intructions have the same VALID value, then set the local cvalue to that value, otherwise, set it to NONCONST! */
+#define intersect_prev_CVALUE_(dtype, symbol) {                                                                   \
+	symbol->const_value._##dtype = symbol->prev_il_instruction[0]->const_value._##dtype;                      \
+	for (unsigned int i = 1; i < symbol->prev_il_instruction.size(); i++) {                                   \
+		if (!ISEQUAL_CVALUE(dtype, symbol, symbol->prev_il_instruction[i]))                               \
+			{SET_NONCONST(dtype, symbol); break;}                                                     \
+	}                                                                                                         \
+}
+
+static void intersect_prev_cvalues(il_instruction_c *symbol) {
+	if (symbol->prev_il_instruction.empty())
+		return;
+	intersect_prev_CVALUE_(real64, symbol);
+	intersect_prev_CVALUE_(uint64, symbol);
+	intersect_prev_CVALUE_( int64, symbol);
+	intersect_prev_CVALUE_(  bool, symbol);
+}
 
 
 
@@ -560,7 +719,7 @@ int constant_folding_c::get_error_count() {
 /******************************/
 void *constant_folding_c::visit(real_c *symbol) {
 	bool overflow;
-	NEW_CVALUE(real64, symbol);	SET_CVALUE(real64, symbol, extract_real_value(symbol, &overflow));
+	SET_CVALUE(real64, symbol, extract_real_value(symbol, &overflow));
 	if (overflow) SET_OVFLOW(real64, symbol);
 	return NULL;
 }
@@ -568,9 +727,9 @@ void *constant_folding_c::visit(real_c *symbol) {
 
 void *constant_folding_c::visit(integer_c *symbol) {
 	bool overflow;
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
+	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
 	if (overflow) SET_OVFLOW(int64, symbol);
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
+	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
 	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
@@ -594,7 +753,6 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 	 */
 	// if (INT64_MIN == -INT64_MAX - 1) // We do not really need to check that the platform uses two's complement
 	if (VALID_CVALUE(uint64, symbol->exp) && (GET_CVALUE(uint64, symbol->exp) == -INT64_MIN)) { // How do we stop the compiler from complaining about a comparison between int and unsigned int?
-		NEW_CVALUE(int64, symbol); // in principle, if the above condition is true, then no new cvalue was created by DO_UNARY_OPER(). Not that it would be a problem to create a new one!
 		SET_CVALUE(int64, symbol, INT64_MIN);
 	}
 	return NULL;
@@ -603,9 +761,9 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 
 void *constant_folding_c::visit(binary_integer_c *symbol) {
 	bool overflow;
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
+	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
 	if (overflow) SET_OVFLOW(int64, symbol);
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
+	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
 	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
@@ -613,9 +771,9 @@ void *constant_folding_c::visit(binary_integer_c *symbol) {
 
 void *constant_folding_c::visit(octal_integer_c *symbol) {
 	bool overflow;
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
+	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
 	if (overflow) SET_OVFLOW(int64, symbol);
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
+	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
 	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
@@ -623,9 +781,9 @@ void *constant_folding_c::visit(octal_integer_c *symbol) {
 
 void *constant_folding_c::visit(hex_integer_c *symbol) {
 	bool overflow;
-	NEW_CVALUE( int64, symbol);	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
+	SET_CVALUE( int64, symbol, extract_int64_value (symbol, &overflow));
 	if (overflow) SET_OVFLOW(int64, symbol);
-	NEW_CVALUE(uint64, symbol);	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
+	SET_CVALUE(uint64, symbol, extract_uint64_value(symbol, &overflow));
 	if (overflow) SET_OVFLOW(uint64, symbol);
 	return NULL;
 }
@@ -667,15 +825,245 @@ void *constant_folding_c::visit(boolean_literal_c *symbol) {
 
 
 void *constant_folding_c::visit(boolean_true_c *symbol) {
-	NEW_CVALUE(bool, symbol);	SET_CVALUE(bool, symbol, true);
+	SET_CVALUE(bool, symbol, true);
 	return NULL;
 }
 
 
 void *constant_folding_c::visit(boolean_false_c *symbol) {
-	NEW_CVALUE(bool, symbol);	SET_CVALUE(bool, symbol, false);
+	SET_CVALUE(bool, symbol, false);
 	return NULL;
 }
+
+
+
+
+
+/****************************************/
+/* B.2 - Language IL (Instruction List) */
+/****************************************/
+/***********************************/
+/* B 2.1 Instructions and Operands */
+/***********************************/
+/* Not needed, since we inherit from iterator_visitor_c */
+/*| instruction_list il_instruction */
+// SYM_LIST(instruction_list_c)
+// void *constant_folding_c::visit(instruction_list_c *symbol) {}
+
+/* | label ':' [il_incomplete_instruction] eol_list */
+// SYM_REF2(il_instruction_c, label, il_instruction)
+// void *visit(instruction_list_c *symbol);
+void *constant_folding_c::visit(il_instruction_c *symbol) {
+	if (NULL == symbol->il_instruction) {
+		/* This empty/null il_instruction does not change the value of the current/default IL variable.
+		 * So it inherits the candidate_datatypes from it's previous IL instructions!
+		 */
+		intersect_prev_cvalues(symbol);
+	} else {
+		il_instruction_c fake_prev_il_instruction = *symbol;
+		intersect_prev_cvalues(&fake_prev_il_instruction);
+
+		if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
+		else                                          prev_il_instruction = &fake_prev_il_instruction;
+		symbol->il_instruction->accept(*this);
+		prev_il_instruction = NULL;
+
+		/* This object has (inherits) the same cvalues as the il_instruction */
+		symbol->const_value = symbol->il_instruction->const_value;
+	}
+
+	return NULL;
+}
+
+
+void *constant_folding_c::visit(il_simple_operation_c *symbol) {
+	/* determine the cvalue of the operand */
+	if (NULL != symbol->il_operand) {
+		symbol->il_operand->accept(*this);
+	}
+	/* determine the cvalue resulting from executing the il_operator... */
+	il_operand = symbol->il_operand;
+	symbol->il_simple_operator->accept(*this);
+	il_operand = NULL;
+	/* This object has (inherits) the same cvalues as the il_instruction */
+	symbol->const_value = symbol->il_simple_operator->const_value;
+	return NULL;
+}
+
+
+/* TODO: handle function invocations... */
+/* | function_name [il_operand_list] */
+/* NOTE: The parameters 'called_function_declaration' and 'extensible_param_count' are used to pass data between the stage 3 and stage 4. */
+// SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_function_declaration; int extensible_param_count;)
+// void *constant_folding_c::visit(il_function_call_c *symbol) {}
+
+
+/* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
+// SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
+void *constant_folding_c::visit(il_expression_c *symbol) {
+  symbol_c *prev_il_instruction_backup = prev_il_instruction;
+  
+  if (NULL != symbol->il_operand)
+    symbol->il_operand->accept(*this);
+
+  if(symbol->simple_instr_list != NULL)
+    symbol->simple_instr_list->accept(*this);
+
+  /* Now do the operation,  */
+  il_operand = symbol->simple_instr_list;
+  prev_il_instruction = prev_il_instruction_backup;
+  symbol->il_expr_operator->accept(*this);
+  il_operand = NULL;
+  
+  /* This object has (inherits) the same cvalues as the il_instruction */
+  symbol->const_value = symbol->il_expr_operator->const_value;
+  return NULL;
+}
+
+
+
+void *constant_folding_c::visit(il_jump_operation_c *symbol) {
+  /* recursive call to fill const values... */
+  il_operand = NULL;
+  symbol->il_jump_operator->accept(*this);
+  il_operand = NULL;
+  /* This object has (inherits) the same cvalues as the il_jump_operator */
+  symbol->const_value = symbol->il_jump_operator->const_value;
+  return NULL;
+}
+
+
+
+/* FB calls leave the value in the accumulator unchanged */
+/*   il_call_operator prev_declared_fb_name
+ * | il_call_operator prev_declared_fb_name '(' ')'
+ * | il_call_operator prev_declared_fb_name '(' eol_list ')'
+ * | il_call_operator prev_declared_fb_name '(' il_operand_list ')'
+ * | il_call_operator prev_declared_fb_name '(' eol_list il_param_list ')'
+ */
+/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
+// SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
+void *constant_folding_c::visit(il_fb_call_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+
+
+/* TODO: handle function invocations... */
+/* | function_name '(' eol_list [il_param_list] ')' */
+/* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4. */
+// SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
+// void *constant_folding_c::visit(il_formal_funct_call_c *symbol) {return NULL;}
+
+
+
+/* Not needed, since we inherit from iterator_visitor_c */
+//  void *constant_folding_c::visit(il_operand_list_c *symbol);
+
+
+
+/* | simple_instr_list il_simple_instruction */
+/* This object is referenced by il_expression_c objects */
+void *constant_folding_c::visit(simple_instr_list_c *symbol) {
+  if (symbol->n <= 0)
+    return NULL;  /* List is empty! Nothing to do. */
+    
+  for(int i = 0; i < symbol->n; i++)
+    symbol->elements[i]->accept(*this);
+
+  /* This object has (inherits) the same cvalues as the il_jump_operator */
+  symbol->const_value = symbol->elements[symbol->n-1]->const_value;
+  return NULL;
+}
+
+
+
+// SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
+void *constant_folding_c::visit(il_simple_instruction_c *symbol) {
+  if (symbol->prev_il_instruction.size() > 1) ERROR; /* There should be no labeled insructions inside an IL expression! */
+  if (symbol->prev_il_instruction.size() == 0)  prev_il_instruction = NULL;
+  else                                          prev_il_instruction = symbol->prev_il_instruction[0];
+  symbol->il_simple_instruction->accept(*this);
+  prev_il_instruction = NULL;
+
+  /* This object has (inherits) the same cvalues as the il_jump_operator */
+  symbol->const_value = symbol->il_simple_instruction->const_value;
+  return NULL;
+}
+
+
+/*
+    void *visit(il_param_list_c *symbol);
+    void *visit(il_param_assignment_c *symbol);
+    void *visit(il_param_out_assignment_c *symbol);
+*/
+
+
+/*******************/
+/* B 2.2 Operators */
+/*******************/
+void *constant_folding_c::visit(   LD_operator_c *symbol) {return handle_move(symbol, il_operand);}
+void *constant_folding_c::visit(  LDN_operator_c *symbol) {return handle_not (symbol, il_operand);}
+
+/* NOTE: we are implementing a constant folding algorithm, not a constant propagation algorithm.
+ *       For the constant propagation algorithm, the correct implementation of ST(N)_operator_c would be...
+ */
+//void *constant_folding_c::visit(   ST_operator_c *symbol) {return handle_move(il_operand, symbol);}
+//void *constant_folding_c::visit(  STN_operator_c *symbol) {return handle_not (il_operand, symbol);}
+void *constant_folding_c::visit(   ST_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(  STN_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+
+/* NOTE: the standard allows syntax in which the NOT operator is followed by an optional <il_operand>
+ *              NOT [<il_operand>]
+ *       However, it does not define the semantic of the NOT operation when the <il_operand> is specified.
+ *       We therefore consider it an error if an il_operand is specified! This error will be caught elsewhere!
+ */
+void *constant_folding_c::visit(  NOT_operator_c *symbol) {return handle_not(symbol, prev_il_instruction);}
+
+/* NOTE: Since we are only implementing a constant folding algorithm, and not a constant propagation algorithm,
+ *       the following IL instructions do not change/set the value of the il_operand!
+ */
+void *constant_folding_c::visit(    S_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(    R_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+
+/* FB calls leave the value in the accumulator unchanged */
+void *constant_folding_c::visit(   S1_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(   R1_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(  CLK_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(   CU_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(   CD_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(   PV_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(   IN_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(   PT_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+
+void *constant_folding_c::visit(  AND_operator_c *symbol) {return handle_and (symbol, prev_il_instruction, il_operand);}
+void *constant_folding_c::visit(   OR_operator_c *symbol) {return handle_or  (symbol, prev_il_instruction, il_operand);}
+void *constant_folding_c::visit(  XOR_operator_c *symbol) {return handle_xor (symbol, prev_il_instruction, il_operand);}
+void *constant_folding_c::visit( ANDN_operator_c *symbol) {       handle_and (symbol, prev_il_instruction, il_operand); return handle_not(symbol, symbol);}
+void *constant_folding_c::visit(  ORN_operator_c *symbol) {       handle_or  (symbol, prev_il_instruction, il_operand); return handle_not(symbol, symbol);}
+void *constant_folding_c::visit( XORN_operator_c *symbol) {       handle_xor (symbol, prev_il_instruction, il_operand); return handle_not(symbol, symbol);}
+
+void *constant_folding_c::visit(  ADD_operator_c *symbol) {return handle_add (symbol, prev_il_instruction, il_operand);}
+void *constant_folding_c::visit(  SUB_operator_c *symbol) {return handle_sub (symbol, prev_il_instruction, il_operand);}
+void *constant_folding_c::visit(  MUL_operator_c *symbol) {return handle_mul (symbol, prev_il_instruction, il_operand);}
+void *constant_folding_c::visit(  DIV_operator_c *symbol) {return handle_div (symbol, prev_il_instruction, il_operand);}
+void *constant_folding_c::visit(  MOD_operator_c *symbol) {return handle_mod (symbol, prev_il_instruction, il_operand);}
+
+void *constant_folding_c::visit(   GT_operator_c *symbol) {       handle_cmp (symbol, prev_il_instruction, il_operand, > );}
+void *constant_folding_c::visit(   GE_operator_c *symbol) {       handle_cmp (symbol, prev_il_instruction, il_operand, >=);}
+void *constant_folding_c::visit(   EQ_operator_c *symbol) {       handle_cmp (symbol, prev_il_instruction, il_operand, ==);}
+void *constant_folding_c::visit(   LT_operator_c *symbol) {       handle_cmp (symbol, prev_il_instruction, il_operand, < );}
+void *constant_folding_c::visit(   LE_operator_c *symbol) {       handle_cmp (symbol, prev_il_instruction, il_operand, <=);}
+void *constant_folding_c::visit(   NE_operator_c *symbol) {       handle_cmp (symbol, prev_il_instruction, il_operand, !=);}
+
+void *constant_folding_c::visit(  CAL_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(  RET_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(  JMP_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit( CALC_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(CALCN_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit( RETC_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(RETCN_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit( JMPC_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+void *constant_folding_c::visit(JMPCN_operator_c *symbol) {return handle_move(symbol, prev_il_instruction);}
+
+
 
 
 /***************************************/
@@ -684,189 +1072,26 @@ void *constant_folding_c::visit(boolean_false_c *symbol) {
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
-void *constant_folding_c::visit(or_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(  bool, ||, bool);
-	DO_BINARY_OPER(uint64, | , uint64);
-	return NULL;
-}
+void *constant_folding_c::visit(    or_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this); return handle_or (symbol, symbol->l_exp, symbol->r_exp);}
+void *constant_folding_c::visit(   xor_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this); return handle_xor(symbol, symbol->l_exp, symbol->r_exp);}
+void *constant_folding_c::visit(   and_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this); return handle_and(symbol, symbol->l_exp, symbol->r_exp);}
 
+void *constant_folding_c::visit(   equ_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this);        handle_cmp (symbol, symbol->l_exp, symbol->r_exp, ==);}
+void *constant_folding_c::visit(notequ_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this);        handle_cmp (symbol, symbol->l_exp, symbol->r_exp, !=);}
+void *constant_folding_c::visit(    lt_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this);        handle_cmp (symbol, symbol->l_exp, symbol->r_exp, < );}
+void *constant_folding_c::visit(    gt_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this);        handle_cmp (symbol, symbol->l_exp, symbol->r_exp, > );}
+void *constant_folding_c::visit(    le_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this);        handle_cmp (symbol, symbol->l_exp, symbol->r_exp, <=);}
+void *constant_folding_c::visit(    ge_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this);        handle_cmp (symbol, symbol->l_exp, symbol->r_exp, >=);}
 
-void *constant_folding_c::visit(xor_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(  bool, ^, bool);
-	DO_BINARY_OPER(uint64, ^, uint64);
-	return NULL;
-}
+void *constant_folding_c::visit(   add_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this); return handle_add(symbol, symbol->l_exp, symbol->r_exp);}
+void *constant_folding_c::visit(   sub_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this); return handle_sub(symbol, symbol->l_exp, symbol->r_exp);}
+void *constant_folding_c::visit(   mul_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this); return handle_mul(symbol, symbol->l_exp, symbol->r_exp);}
+void *constant_folding_c::visit(   div_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this); return handle_div(symbol, symbol->l_exp, symbol->r_exp);}
+void *constant_folding_c::visit(   mod_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this); return handle_mod(symbol, symbol->l_exp, symbol->r_exp);}
+void *constant_folding_c::visit( power_expression_c *symbol) {symbol->l_exp->accept(*this); symbol->r_exp->accept(*this); return handle_pow(symbol, symbol->l_exp, symbol->r_exp);}
 
+void *constant_folding_c::visit(   neg_expression_c *symbol) {symbol->  exp->accept(*this); return handle_neg(symbol, symbol->exp);}
+void *constant_folding_c::visit(   not_expression_c *symbol) {symbol->  exp->accept(*this); return handle_not(symbol, symbol->exp);}
 
-void *constant_folding_c::visit(and_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(  bool, &&, bool);
-	DO_BINARY_OPER(uint64, & , uint64);
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(equ_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(  bool, ==, bool);
-	DO_BINARY_OPER(uint64, ==, bool);
-	DO_BINARY_OPER( int64, ==, bool);
-	DO_BINARY_OPER(real64, ==, bool);
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(notequ_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(  bool, !=, bool);
-	DO_BINARY_OPER(uint64, !=, bool);
-	DO_BINARY_OPER( int64, !=, bool);
-	DO_BINARY_OPER(real64, !=, bool);
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(lt_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(  bool, <, bool);
-	DO_BINARY_OPER(uint64, <, bool);
-	DO_BINARY_OPER( int64, <, bool);
-	DO_BINARY_OPER(real64, <, bool);
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(gt_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(  bool, >, bool);
-	DO_BINARY_OPER(uint64, >, bool);
-	DO_BINARY_OPER( int64, >, bool);
-	DO_BINARY_OPER(real64, >, bool);
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(le_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(  bool, <=, bool);
-	DO_BINARY_OPER(uint64, <=, bool);
-	DO_BINARY_OPER( int64, <=, bool);
-	DO_BINARY_OPER(real64, <=, bool);
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(ge_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(  bool, >=, bool);
-	DO_BINARY_OPER(uint64, >=, bool);
-	DO_BINARY_OPER( int64, >=, bool);
-	DO_BINARY_OPER(real64, >=, bool);
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(add_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(uint64, +, uint64);   CHECK_OVERFLOW_uint64_SUM(symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER( int64, +,  int64);   CHECK_OVERFLOW_int64_SUM (symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER(real64, +, real64);   CHECK_OVERFLOW_real64    (symbol);
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(sub_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(uint64, -, uint64);   CHECK_OVERFLOW_uint64_SUB(symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER( int64, -,  int64);   CHECK_OVERFLOW_int64_SUB (symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER(real64, -, real64);   CHECK_OVERFLOW_real64    (symbol);
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(mul_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	DO_BINARY_OPER(uint64, *, uint64);   CHECK_OVERFLOW_uint64_MUL(symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER( int64, *,  int64);   CHECK_OVERFLOW_int64_MUL (symbol, symbol->l_exp, symbol->r_exp);
-	DO_BINARY_OPER(real64, *, real64);   CHECK_OVERFLOW_real64    (symbol);
-	return NULL;
-}
-
-
-
-void *constant_folding_c::visit(div_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	if (ISZERO_CVALUE(uint64, symbol->r_exp))  {NEW_CVALUE(uint64, symbol); SET_OVFLOW(uint64, symbol);} else {DO_BINARY_OPER(uint64, /, uint64); CHECK_OVERFLOW_uint64_DIV(symbol, symbol->l_exp, symbol->r_exp);};
-	if (ISZERO_CVALUE( int64, symbol->r_exp))  {NEW_CVALUE( int64, symbol); SET_OVFLOW( int64, symbol);} else {DO_BINARY_OPER( int64, /,  int64); CHECK_OVERFLOW_int64_DIV(symbol, symbol->l_exp, symbol->r_exp);};
-	if (ISZERO_CVALUE(real64, symbol->r_exp))  {NEW_CVALUE(real64, symbol); SET_OVFLOW(real64, symbol);} else {DO_BINARY_OPER(real64, /, real64); CHECK_OVERFLOW_real64(symbol);};
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(mod_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	/* IEC 61131-3 standard says IN1 MOD IN2 must be equivalent to
-	 *  IF (IN2 = 0) THEN OUT:=0 ; ELSE OUT:=IN1 - (IN1/IN2)*IN2 ; END_IF
-	 *
-	 * Note that, when IN1 = INT64_MIN, and IN2 = -1, an overflow occurs in the division,
-	 * so although the MOD operation should be OK, acording to the above definition, we actually have an overflow!!
-	 */
-	if (ISZERO_CVALUE(uint64, symbol->r_exp))  {NEW_CVALUE(uint64, symbol); SET_CVALUE(uint64, symbol, 0);} else {DO_BINARY_OPER(uint64, %, uint64); CHECK_OVERFLOW_uint64_MOD(symbol, symbol->l_exp, symbol->r_exp);};
-	if (ISZERO_CVALUE( int64, symbol->r_exp))  {NEW_CVALUE( int64, symbol); SET_CVALUE( int64, symbol, 0);} else {DO_BINARY_OPER( int64, %,  int64); CHECK_OVERFLOW_int64_MOD(symbol, symbol->l_exp, symbol->r_exp);};
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(power_expression_c *symbol) {
-	symbol->l_exp->accept(*this);
-	symbol->r_exp->accept(*this);
-	/* NOTE: If the const_value in symbol->r_exp is within the limits of both int64 and uint64, then we do both operations.
-	 *       That is OK, as the result should be identicial (we do create an unnecessary CVALUE variable, but who cares?).
-	 *       If only one is valid, then that is the oper we will do!
-	 */
-	if (VALID_CVALUE(real64, symbol->l_exp) && VALID_CVALUE( int64, symbol->r_exp)) {
-		NEW_CVALUE(real64, symbol);
-		SET_CVALUE(real64, symbol, pow(GET_CVALUE(real64, symbol->l_exp), GET_CVALUE( int64, symbol->r_exp)));
-	}
-	if (VALID_CVALUE(real64, symbol->l_exp) && VALID_CVALUE(uint64, symbol->r_exp)) {
-		NEW_CVALUE(real64, symbol);
-		SET_CVALUE(real64, symbol, pow(GET_CVALUE(real64, symbol->l_exp), GET_CVALUE(uint64, symbol->r_exp)));
-	}
-	CHECK_OVERFLOW_real64(symbol);
-	return NULL;
-}
-
-
-void *constant_folding_c::visit(neg_expression_c *symbol) {
-	symbol->exp->accept(*this);
-	DO_UNARY_OPER( int64, -, symbol->exp);	CHECK_OVERFLOW_int64_NEG(symbol, symbol->exp);
-	DO_UNARY_OPER(real64, -, symbol->exp);	CHECK_OVERFLOW_real64(symbol);
-	return NULL;
-}
-
-
-
-void *constant_folding_c::visit(not_expression_c *symbol) {
-	symbol->exp->accept(*this);
-	DO_UNARY_OPER(  bool, !, symbol->exp);
-	DO_UNARY_OPER(uint64, ~, symbol->exp);
-	return NULL;
-}
-
-
+/* TODO: handle function invocations... */
+// void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {}

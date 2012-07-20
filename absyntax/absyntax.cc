@@ -57,10 +57,10 @@ symbol_c::symbol_c(
   this->last_column  = last_column;
   this->last_order   = last_order;
   this->datatype     = NULL;
-  this->const_value_real64   = NULL;
-  this->const_value_int64    = NULL;
-  this->const_value_uint64   = NULL;
-  this->const_value_bool     = NULL;
+  this->const_value._real64.status   = cs_undefined;
+  this->const_value._int64.status    = cs_undefined;
+  this->const_value._uint64.status   = cs_undefined;
+  this->const_value._bool.status     = cs_undefined;
 }
 
 

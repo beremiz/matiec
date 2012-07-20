@@ -64,9 +64,9 @@
 #include <string.h>
 #include <strings.h>
 
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value_##dtype->value)
-#define VALID_CVALUE(dtype, symbol)           ((NULL != (symbol)->const_value_##dtype) && (symbol_c::cs_const_value == (symbol)->const_value_##dtype->status))
-#define IS_OVERFLOW(dtype, symbol)            ((NULL != (symbol)->const_value_##dtype) && (symbol_c::cs_overflow == (symbol)->const_value_##dtype->status))
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.value)
+#define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
+#define IS_OVERFLOW(dtype, symbol)            (symbol_c::cs_overflow == (symbol)->const_value._##dtype.status)
 
 /* set to 1 to see debug info during execution */
 static int debug = 0;
@@ -1198,6 +1198,7 @@ void *fill_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
 	 *              NOT [<il_operand>]
 	 *       However, it does not define the semantic of the NOT operation when the <il_operand> is specified.
 	 *       We therefore consider it an error if an il_operand is specified!
+	 *       We do not need to generate an error message. This error will be caught somewhere else!
 	 */
 	if (NULL == prev_il_instruction) return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
