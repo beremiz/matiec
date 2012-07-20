@@ -81,12 +81,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>  // get definition of ULLONG_MAX
-/* tell stdint.h we want the definition of UINT64_MAX */
-#define __STDC_LIMIT_MACROS
-#include <stdint.h>  // get definition of uint64_t and UINT64_MAX
 #include <errno.h>
 
-#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros, and uint64_t and UINT64_MAX
 
 
 
