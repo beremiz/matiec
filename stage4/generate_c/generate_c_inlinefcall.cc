@@ -397,15 +397,23 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     // SYM_REF2(structured_variable_c, record_variable, field_selector)
     void *visit(structured_variable_c *symbol) {
       TRACE("structured_variable_c");
+      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol->record_variable);
+      bool type_is_complex = search_varfb_instance_type->type_is_complex();
       if (generating_inlinefunction) {
         switch (wanted_variablegeneration) {
           case complextype_base_vg:
             symbol->record_variable->accept(*this);
+            if (!type_is_complex) {
+          	  s4o.print(".");
+          	  symbol->field_selector->accept(*this);
+            }
             break;
           case complextype_suffix_vg:
             symbol->record_variable->accept(*this);
-            s4o.print(".");
-            symbol->field_selector->accept(*this);
+            if (type_is_complex) {
+              s4o.print(".");
+              symbol->field_selector->accept(*this);
+            }
             break;
           default:
             print_getter(symbol);
