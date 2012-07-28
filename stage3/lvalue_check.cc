@@ -100,6 +100,8 @@ void lvalue_check_c::check_assignment_to_controlvar(symbol_c *lvalue) {
 /* NOTE, if a fb_instance1.fb_instance2.fb_instance3.var is used, we must iteratively check that none of the 
  *       FB records are declared as OUTPUT variables!!  
  *       This is the reason why we have the while() loop in this function!
+ * 
+ *       Note, however, that the first record (fb_instance1 in the above example) may be an output variable!
  */
 void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 	decompose_var_instance_name_c decompose_lvalue(lvalue);
@@ -278,11 +280,14 @@ void lvalue_check_c::check_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
 		/* Determine the direction (IN, OUT, IN_OUT) of the parameter... */
 		function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
 		
-		/* We only check if 'call_param_value' is a valid lvalue if the value is being passed
-		 * to a valid paramater of the function being called, and that parameter is either OUT or IN_OUT.
-		 */
-		if ((param_name != NULL) && ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction))) {
-			verify_is_lvalue(call_param_value);
+		/* We only process the parameter value if the paramater itself is valid... */
+		if (param_name != NULL) {
+			/* If the parameter is either OUT or IN_OUT, we check if 'call_param_value' is a valid lvalue */
+			if ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction)) 
+				verify_is_lvalue(call_param_value);
+			/* parameter values to IN parameters may be expressions with function invocations that must also be checked! */
+			if (function_param_iterator_c::direction_in == param_direction) 
+				call_param_value->accept(*this);  
 		}
 	}
 }
@@ -315,12 +320,16 @@ void lvalue_check_c::check_formal_call(symbol_c *f_call, symbol_c *f_decl) {
 		identifier_c *param_name = fp_iterator.search(call_param_name);
 		function_param_iterator_c::param_direction_t param_direction = fp_iterator.param_direction();
 		
-		/* We only check if 'call_param_value' is a valid lvalue if the value is being passed
-		 * to a valid paramater of the function being called, and that parameter is either OUT or IN_OUT.
-		 */
-		if ((param_name != NULL) && ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction))) {
-			verify_is_lvalue(call_param_value);
-		}
+		/* We only process the parameter value if the paramater itself is valid... */
+		if (param_name != NULL) {
+			/* If the parameter is either OUT or IN_OUT, we check if 'call_param_value' is a valid lvalue */
+			if ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction)) 
+				verify_is_lvalue(call_param_value);
+			/* parameter values to IN parameters may be expressions with function invocations that must also be checked! */
+			if (function_param_iterator_c::direction_in == param_direction) 
+				call_param_value->accept(*this);  
+		
+ 		}
 	}
 }
 
