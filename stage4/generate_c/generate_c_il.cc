@@ -661,13 +661,17 @@ void *visit(structured_variable_c *symbol) {
       }
       break;
     case complextype_suffix_vg:
-    case assignment_vg:
-      symbol->record_variable->accept(*this);
-      if (type_is_complex) {
-        s4o.print(".");
-        symbol->field_selector->accept(*this);
-      }
-      break;
+	  symbol->record_variable->accept(*this);
+	  if (type_is_complex) {
+		s4o.print(".");
+		symbol->field_selector->accept(*this);
+	  }
+	  break;
+	case assignment_vg:
+	  symbol->record_variable->accept(*this);
+	  s4o.print(".");
+	  symbol->field_selector->accept(*this);
+	  break;
     default:
       if (this->is_variable_prefix_null()) {
     	symbol->record_variable->accept(*this);
