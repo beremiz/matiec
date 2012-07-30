@@ -25,6 +25,21 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_RANLIB
+AC_PROG_AWK
+
+# Check bison version, we need a version great or equal than 2.4 to build matiec.
+[[[ $(bison --version) =~ ([0-9][.][0-9]*) ]]] && version_bison="${BASH_REMATCH[[1]]}"
+
+AS_IF([awk -v ver="$version_bison" 'BEGIN { if (ver < 2.4) exit 1; }'],
+	[have_bison_correct=yes], [have_bison_correct=no])
+
+
+if test "x${have_bison_correct}" = xno; then
+  echo "------------------------------------------"
+  echo " Wrong bison version: $version_bison < 2.4 "
+  echo "------------------------------------------"
+  (exit 1); exit 1;
+fi
 
 # Checks for header files.
 AC_CHECK_HEADERS([float.h limits.h stdint.h stdlib.h string.h strings.h sys/timeb.h unistd.h])
@@ -46,6 +61,7 @@ AC_FUNC_MALLOC
 AC_FUNC_MKTIME
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([clock_gettime memset pow strcasecmp strdup strtoul strtoull])
+
 
 AC_CONFIG_MACRO_DIR([config])
 
