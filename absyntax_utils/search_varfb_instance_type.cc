@@ -142,8 +142,12 @@ void *search_varfb_instance_type_c::visit(identifier_c *variable_name) {
   /* What if the variable has not been declared?  Then this should not be a compiler error! 
    * However, currently stage 2 of the compiler already detects when variables have not been delcared,
    * so if the variable's declaration is not found, then that means that we have an internal compiler error!
+   * 
+   * Actually, the above is not true anymore. See the use of the any_symbolic_variable in iec_bison.yy
+   *  - when defining the delay of a delayed action association in SFC
+   *  - in program connections inside configurations (will this search_varfb_instance_type_c class be called to handle this??)
    */
-  if (NULL == current_type_id) ERROR; 
+  // if (NULL == current_type_id) ERROR; 
 
   return NULL;
 }

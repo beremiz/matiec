@@ -1616,8 +1616,8 @@ EXIT		return EXIT;		/* Keyword */
 {fixed_point}ms		{yylval.ID=strdup(yytext); yylval.ID[yyleng-2] = '\0'; return fixed_point_ms_token;}
 
 _			/* do nothing - eat it up!*/
-\#			{/*fprintf(stderr, "poping from time_literal_state (###)\n");*/ yy_pop_state(); return end_interval_token;}
-.			{ERROR;}
+\#			{/*fprintf(stderr, "popping from time_literal_state (###)\n");*/ yy_pop_state(); return end_interval_token;}
+.			{/*fprintf(stderr, "time_literal_state: found invalid character '%s'. Aborting!\n", yytext);*/ ERROR;}
 \n			{ERROR;}
 }
 	/*******************************/

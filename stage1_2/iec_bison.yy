@@ -5139,7 +5139,9 @@ sfc_network:
 initial_step:
   INITIAL_STEP step_name ':' action_association_list END_STEP
 //  INITIAL_STEP identifier ':' action_association_list END_STEP
-	{$$ = new initial_step_c($2, $4, locloc(@$));}
+	{$$ = new initial_step_c($2, $4, locloc(@$));
+	 variable_name_symtable.insert($2, prev_declared_variable_name_token); // A step name may later be used as a structured variable!!
+	}
 /* ERROR_CHECK_BEGIN */
 | INITIAL_STEP ':' action_association_list END_STEP
   {$$ = NULL; print_err_msg(locf(@1), locl(@2), "no step name defined in initial step declaration."); yynerrs++;}
@@ -5159,7 +5161,9 @@ initial_step:
 step:
   STEP step_name ':' action_association_list END_STEP
 //  STEP identifier ':' action_association_list END_STEP
-	{$$ = new step_c($2, $4, locloc(@$));}
+	{$$ = new step_c($2, $4, locloc(@$));
+	 variable_name_symtable.insert($2, prev_declared_variable_name_token); // A step name may later be used as a structured variable!!
+	}
 /* ERROR_CHECK_BEGIN */
 | STEP ':' action_association_list END_STEP
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "no step name defined in step declaration."); yynerrs++;}
@@ -5261,9 +5265,58 @@ timed_qualifier:
 | SL		{$$ = new timed_qualifier_c(strdup("SL"), locloc(@$));}
 ;
 
+/* NOTE: A step_name may be used as a structured vaqriable, in order to access the status bit (e.g. Step1.X) 
+ *       or the time it has been active (e.g. Step1.T). 
+ *       In order to allow the step name to be used as a variable inside ST expressions (only ST expressions ??)
+ *       when defining transitions, we need to add the step_name to the list of previously declared variables.
+ *       This allows the step name to be used as a variable inside all transition expressions, as the user
+ *       can clearly define the transition _after_ the step itself has been defined/declared, so the 
+ *       'variable' is previously 'declared'.
+ *
+ *       However, when defining/declaring a step, a variable name can also be used to define a timed
+ *       action association. In this case, we may have a circular reference:
+ *        e.g.
+ *            ...
+ *             STEP step1:
+ *                action1 (D,t#100ms);
+ *             end_step
+ *
+ *             STEP step2:
+ *                action1 (D,step3.T);  <---- forward reference to step3.T !!!!!!
+ *             end_step
+ *
+ *             STEP step3:
+ *                action1 (D,step2.T);  <---- back reference to step2.T
+ *             end_step
+ *
+ *
+ *         There is no way the user can always use the step3.T variable only after it has
+ *         been 'declared'. So adding the steps to the list of previously declared variables 
+ *         when the steps are declared is not a solution to the above situation.
+ *
+ *         Fortunately, the standard does not allow ST expressions in the above syntax
+ *         (i.e. when defining the delay of a timed actions), but only either a 
+ *         Time literal, or a variable.
+ *         This is why we change the definition of action_time from
+ *         action_time:
+ *           duration
+ *         | variable
+ *         ;
+ *
+ *         to:
+ *         action_time:
+ *           duration
+ *         | any_symbolic_variable
+ *         ;
+ *
+ *       NOTE that this same problem does not occur with the 'indicator_name': it does not
+ *       make sense to set/indicate a step1.X variable, as these variables are read-only!
+ */     
+    
 action_time:
   duration
-| variable
+//| variable
+  | any_symbolic_variable
 ;
 
 indicator_name: variable;
