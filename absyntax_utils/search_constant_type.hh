@@ -89,8 +89,6 @@ class search_constant_type_c: public search_visitor_c {
   static time_type_name_c     time_type_name;
   static int_type_name_c      int_type_name;
 
-/* temporarily here until we remove the st_code_gen.c and il_code_gen.c files... */
-  static integer_c      integer;
 
   /******************************************************/
   /* Extensions to the base standard as defined in      */
