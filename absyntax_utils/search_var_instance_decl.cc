@@ -511,21 +511,62 @@ void *search_var_instance_decl_c::visit(function_declaration_c *symbol) {
 /*****************************/
 /* B 1.5.2 - Function Blocks */
 /*****************************/
+/*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
+// SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
 void *search_var_instance_decl_c::visit(function_block_declaration_c *symbol) {
-  /* no need to search through all the body, so we only
-   * visit the variable declarations...!
-   */
-  return symbol->var_declarations->accept(*this);
+  /* visit the variable declarations...! */
+  void *res = symbol->var_declarations->accept(*this);
+  if (NULL != res)
+    return res;
+  
+  /* not yet found, so we look into the body, to see if it is an SFC step! */
+  return symbol->fblock_body->accept(*this);
 }
 
 /**********************/
 /* B 1.5.3 - Programs */
 /**********************/
+/*  PROGRAM program_type_name program_var_declarations_list function_block_body END_PROGRAM */
+// SYM_REF3(program_declaration_c, program_type_name, var_declarations, function_block_body)
 void *search_var_instance_decl_c::visit(program_declaration_c *symbol) {
-  /* no need to search through all the body, so we only
-   * visit the variable declarations...!
-   */
-  return symbol->var_declarations->accept(*this);
+  /* visit the variable declarations...! */
+  void *res = symbol->var_declarations->accept(*this);
+  if (NULL != res)
+    return res;
+  
+  /* not yet found, so we look into the body, to see if it is an SFC step! */
+  return symbol->function_block_body->accept(*this);
+}
+
+
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+/* | sequential_function_chart sfc_network */
+// SYM_LIST(sequential_function_chart_c)
+/* search_var_instance_decl_c inherits from serach_visitor_c, so no need to implement the following method. */
+// void *search_var_instance_decl_c::visit(sequential_function_chart_c *symbol) {...}
+
+/* initial_step {step | transition | action} */
+// SYM_LIST(sfc_network_c)
+/* search_var_instance_decl_c inherits from serach_visitor_c, so no need to implement the following method. */
+// void *search_var_instance_decl_c::visit(sfc_network_c *symbol) {...}
+
+
+/* INITIAL_STEP step_name ':' action_association_list END_STEP */
+// SYM_REF2(initial_step_c, step_name, action_association_list)
+void *search_var_instance_decl_c::visit(initial_step_c *symbol) {
+  if (compare_identifiers(symbol->step_name, search_name) == 0)
+      return symbol;
+  return NULL;
+}
+
+/* STEP step_name ':' action_association_list END_STEP */
+// SYM_REF2(step_c, step_name, action_association_list)
+void *search_var_instance_decl_c::visit(step_c *symbol) {
+  if (compare_identifiers(symbol->step_name, search_name) == 0)
+      return symbol;
+  return NULL;
 }
 
 
@@ -580,3 +621,30 @@ void *search_var_instance_decl_c::visit(single_resource_declaration_c *symbol) {
   return NULL;
 }
 
+
+
+/****************************************/
+/* B.2 - Language IL (Instruction List) */
+/****************************************/
+/***********************************/
+/* B 2.1 Instructions and Operands */
+/***********************************/
+/*| instruction_list il_instruction */
+// SYM_LIST(instruction_list_c)
+void *search_var_instance_decl_c::visit(instruction_list_c *symbol) {
+  /* IL code does not contain any variable declarations! */
+  return NULL;
+}
+
+
+/***************************************/
+/* B.3 - Language ST (Structured Text) */
+/***************************************/
+/********************/
+/* B 3.2 Statements */
+/********************/
+// SYM_LIST(statement_list_c)
+void *search_var_instance_decl_c::visit(statement_list_c *symbol) {
+  /* ST code does not contain any variable declarations! */
+  return NULL;
+}

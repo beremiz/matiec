@@ -245,7 +245,7 @@ void *search_varfb_instance_type_c::visit(structure_element_declaration_list_c *
   for(int i = 0; i < symbol->n; i++) {
     symbol->elements[i]->accept(*this);
   }
-  
+
   return NULL;
 }
 
@@ -306,10 +306,12 @@ void *search_varfb_instance_type_c::visit(array_variable_c *symbol) {
    *    ARRAY [xx..yy] OF Stored_Data_Type
    */
   symbol->subscripted_variable->accept(*this);
+  symbol_c *basetype_decl = current_basetype_decl;
+  this->init(); /* set all current_*** pointers to NULL ! */
   
   /* Now we determine the 'Stored_Data_Type', i.e. the data type of the variable stored in the array. */
-  if (NULL != current_basetype_decl) {
-    current_basetype_decl->accept(*this);
+  if (NULL != basetype_decl) {
+    basetype_decl->accept(*this);
   }
   
   return NULL;
@@ -319,17 +321,24 @@ void *search_varfb_instance_type_c::visit(array_variable_c *symbol) {
 /*  record_variable '.' field_selector */
 /*  WARNING: input and/or output variables of function blocks
  *           may be accessed as fields of a structured variable!
- *           Code handling a structured_variable_c must take
- *           this into account!
+ *           Code handling a structured_variable_c must take this into account!
+ *           (i.e. that a FB instance may be accessed as a structured variable)!
+ *
+ *  WARNING: Status bit (.X) and activation time (.T) of STEPS in SFC diagrams
+ *           may be accessed as fields of a structured variable!
+ *           Code handling a structured_variable_c must take this into account 
+ *           (i.e. that an SFC STEP may be accessed as a structured variable)!
  */
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
 void *search_varfb_instance_type_c::visit(structured_variable_c *symbol) {
   symbol->record_variable->accept(*this);
+  symbol_c *basetype_decl = current_basetype_decl;
+  this->init(); /* set all current_*** pointers to NULL ! */
   
   /* Now we search for the data type of the field... But only if we were able to determine the data type of the variable */
-  if (NULL != current_basetype_decl) {
+  if (NULL != basetype_decl) {
     current_field_selector = symbol->field_selector;
-    current_basetype_decl->accept(*this);
+    basetype_decl->accept(*this);
     current_field_selector = NULL;
   }
   
@@ -358,4 +367,39 @@ void *search_varfb_instance_type_c::visit(function_block_declaration_c *symbol) 
   current_basetype_id   = search_base_type.get_basetype_id  (current_type_id);
   
   return NULL;
+}
+
+
+
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+/* INITIAL_STEP step_name ':' action_association_list END_STEP */
+// SYM_REF2(initial_step_c, step_name, action_association_list)
+/* NOTE: this method may be called from visit(structured_variable_c *symbol) method| */
+void *search_varfb_instance_type_c::visit(initial_step_c *symbol) {
+  if (NULL == current_field_selector) ERROR;
+
+  identifier_c T("T");
+  identifier_c X("X");
+  
+  if (compare_identifiers(&T, current_field_selector) == 0)   
+    current_type_id = &search_constant_type_c::time_type_name;
+  if (compare_identifiers(&X, current_field_selector) == 0)   
+    current_type_id = &search_constant_type_c::bool_type_name;
+  
+  current_basetype_decl = search_base_type.get_basetype_decl(current_type_id);
+  current_basetype_id   = search_base_type.get_basetype_id  (current_type_id);
+
+  return NULL;
+}
+
+
+/* STEP step_name ':' action_association_list END_STEP */
+// SYM_REF2(step_c, step_name, action_association_list)
+/* NOTE: this method may be called from visit(structured_variable_c *symbol) method| */
+void *search_varfb_instance_type_c::visit(step_c *symbol) {
+  /* The code here should be identicial to the code in the visit(initial_step_c *) visitor! So we simply call the other visitor! */
+  initial_step_c initial_step(NULL, NULL);
+  return initial_step.accept(*this);
 }

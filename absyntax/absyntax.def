@@ -466,8 +466,13 @@ SYM_LIST(subscript_list_c)
 /*  record_variable '.' field_selector */
 /*  WARNING: input and/or output variables of function blocks
  *           may be accessed as fields of a structured variable!
- *           Code handling a structured_variable_c must take
- *           this into account!
+ *           Code handling a structured_variable_c must take this into account!
+ *           (i.e. that a FB instance may be accessed as a structured variable)!
+ *
+ *  WARNING: Status bit (.X) and activation time (.T) of STEPS in SFC diagrams
+ *           may be accessed as fields of a structured variable!
+ *           Code handling a structured_variable_c must take this into account 
+ *           (i.e. that an SFC STEP may be accessed as a structured variable)!
  */
 SYM_REF2(structured_variable_c, record_variable, field_selector)
 

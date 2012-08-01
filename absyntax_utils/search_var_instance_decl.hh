@@ -301,6 +301,28 @@ class search_var_instance_decl_c: public search_visitor_c {
     /**********************/
     void *visit(program_declaration_c *symbol);
 
+    /*********************************************/
+    /* B.1.6  Sequential function chart elements */
+    /*********************************************/
+    /* | sequential_function_chart sfc_network */
+    // SYM_LIST(sequential_function_chart_c)
+    /* search_var_instance_decl_c inherits from serach_visitor_c, so no need to implement the following method. */
+    // void *visit(sequential_function_chart_c *symbol);
+    
+    /* initial_step {step | transition | action} */
+    // SYM_LIST(sfc_network_c)
+    /* search_var_instance_decl_c inherits from serach_visitor_c, so no need to implement the following method. */
+    // void *visit(sfc_network_c *symbol);
+
+
+    /* INITIAL_STEP step_name ':' action_association_list END_STEP */
+    // SYM_REF2(initial_step_c, step_name, action_association_list)
+    void *visit(initial_step_c *symbol);
+
+    /* STEP step_name ':' action_association_list END_STEP */
+    // SYM_REF2(step_c, step_name, action_association_list)
+    void *visit(step_c *symbol);
+
     /********************************/
     /* B 1.7 Configuration elements */
     /********************************/
@@ -329,6 +351,27 @@ class search_var_instance_decl_c: public search_visitor_c {
     /* task_configuration_list program_configuration_list */
     // SYM_REF2(single_resource_declaration_c, task_configuration_list, program_configuration_list)
     void *visit(single_resource_declaration_c *symbol);
+
+    
+    /****************************************/
+    /* B.2 - Language IL (Instruction List) */
+    /****************************************/
+    /***********************************/
+    /* B 2.1 Instructions and Operands */
+    /***********************************/
+    /*| instruction_list il_instruction */
+    // SYM_LIST(instruction_list_c)
+    void *visit(instruction_list_c *symbol);
+
+
+    /***************************************/
+    /* B.3 - Language ST (Structured Text) */
+    /***************************************/
+    /********************/
+    /* B 3.2 Statements */
+    /********************/
+    // SYM_LIST(statement_list_c)
+    void *visit(statement_list_c *symbol);
 
 }; // search_var_instance_decl_c
 

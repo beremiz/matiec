@@ -188,6 +188,17 @@ class search_varfb_instance_type_c : null_visitor_c {
     // SYM_REF4(function_block_declaration_c, fblock_name, var_declarations, fblock_body, unused)
     void *visit(function_block_declaration_c *symbol);
 
+    
+    /*********************************************/
+    /* B.1.6  Sequential function chart elements */
+    /*********************************************/
+    /* INITIAL_STEP step_name ':' action_association_list END_STEP */
+    // SYM_REF2(initial_step_c, step_name, action_association_list)
+    void *visit(initial_step_c *symbol);
+    /* STEP step_name ':' action_association_list END_STEP */
+    // SYM_REF2(step_c, step_name, action_association_list)
+    void *visit(step_c *symbol);
+
 }; // search_varfb_instance_type_c
 
 

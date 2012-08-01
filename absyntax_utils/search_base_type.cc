@@ -334,4 +334,20 @@ void *search_base_type_c::visit(function_block_declaration_c *symbol)           
 
 
 
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+/* INITIAL_STEP step_name ':' action_association_list END_STEP */
+// SYM_REF2(initial_step_c, step_name, action_association_list)
+void *search_base_type_c::visit(initial_step_c *symbol) {
+  this->current_type_name = NULL; /* this pseudo data type does not have a type name! */
+  return (void *)symbol;
+}
+
+/* STEP step_name ':' action_association_list END_STEP */
+// SYM_REF2(step_c, step_name, action_association_list)
+void *search_base_type_c::visit(step_c *symbol) {
+  this->current_type_name = NULL; /* this pseudo data type does not have a type name! */
+  return (void *)symbol;
+}
 
