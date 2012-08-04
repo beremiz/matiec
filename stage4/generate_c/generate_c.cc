@@ -797,6 +797,10 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
       return NULL;
     }
 
+    void *visit(structured_var_declaration_c *symbol) {
+      return NULL;
+    }
+
     /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
     /* structure_initialization -> may be NULL ! */
     void *visit(fb_name_decl_c *symbol) {
