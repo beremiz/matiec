@@ -262,7 +262,7 @@ void *search_var_instance_decl_c::visit(array_var_declaration_c *symbol) {
 /*  var1_list ':' structure_type_name */
 // SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
 void *search_var_instance_decl_c::visit(structured_var_declaration_c *symbol) {
-  current_type_decl = symbol->structure_type_name;
+  current_type_decl = symbol;
   return symbol->var1_list->accept(*this);
 }
 

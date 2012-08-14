@@ -194,6 +194,8 @@ class search_base_type_c: public null_visitor_c {
        *       structure_element_declaration_list_c
        */
     void *visit(structure_type_declaration_c *symbol);
+  /*  var1_list ':' structure_type_name */
+    void *visit(structured_var_declaration_c *symbol);
   /* structure_type_name ASSIGN structure_initialization */
   /* structure_initialization may be NULL ! */
     void *visit(initialized_structure_c *symbol);

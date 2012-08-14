@@ -809,6 +809,11 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
       return NULL;
     }
 
+    /*  var1_list ':' structure_type_name */
+	void *visit(structured_var_declaration_c *symbol) {
+	  return NULL;
+	}
+
     /*  var1_list ':' initialized_structure */
     // SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
     void *visit(structured_var_init_decl_c *symbol) {

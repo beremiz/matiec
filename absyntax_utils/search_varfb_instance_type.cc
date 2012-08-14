@@ -301,6 +301,34 @@ void *search_varfb_instance_type_c::visit(structure_type_declaration_c *symbol) 
    */
 }
 
+/*  var1_list ':' structure_type_name */
+void *search_varfb_instance_type_c::visit(structured_var_declaration_c *symbol) {
+  this->is_complex = true;
+  if (NULL != current_structelement_name) ERROR;
+
+  /* make sure that we have decomposed all structure elements of the variable name */
+  symbol_c *var_name = decompose_var_instance_name->next_part();
+  if (NULL == var_name) {
+	/* this is it... !
+	 * No need to look any further...
+	 * Note also that, unlike for the struct types, a function block may
+	 * not be defined based on another (i.e. no inheritance is allowed),
+	 * so this function block is already the most base type.
+	 * We simply return it.
+	 */
+	return (void *)symbol;
+  }
+
+  /* reset current_type_id because of new structure element part */
+  this->current_typeid = NULL;
+
+  /* look for the var_name in the structure declaration */
+  current_structelement_name = var_name;
+
+  /* recursively find out the data type of current_structelement_name... */
+  return symbol->structure_type_name->accept(*this);
+}
+
 /* structure_type_name ASSIGN structure_initialization */
 /* structure_initialization may be NULL ! */
 // SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)

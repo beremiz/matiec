@@ -149,6 +149,9 @@ class search_varfb_instance_type_c: public search_base_type_c {
     /*  structure_type_name ':' structure_specification */
     void *visit(structure_type_declaration_c *symbol);
 
+    /*  var1_list ':' structure_type_name */
+    void *visit(structured_var_declaration_c *symbol);
+
     /* structure_type_name ASSIGN structure_initialization */
     /* structure_initialization may be NULL ! */
     // SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
