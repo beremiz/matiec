@@ -752,7 +752,7 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 	 * However, the positive value cannot be stored inside an int64! So, in this case, we will get the value from the uint64 cvalue.
 	 */
 	// if (INT64_MIN == -INT64_MAX - 1) // We do not really need to check that the platform uses two's complement
-	if (VALID_CVALUE(uint64, symbol->exp) && (GET_CVALUE(uint64, symbol->exp) == -INT64_MIN)) { // How do we stop the compiler from complaining about a comparison between int and unsigned int?
+	if (VALID_CVALUE(uint64, symbol->exp) && (GET_CVALUE(uint64, symbol->exp) == (uint64_t)INT64_MAX+1)) {
 		SET_CVALUE(int64, symbol, INT64_MIN);
 	}
 	return NULL;
