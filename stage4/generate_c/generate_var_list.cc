@@ -330,11 +330,14 @@ class generate_var_list_c: protected generate_c_typedecl_c {
           this->current_var_type_name->accept(*this);
           s4o.print(";\n");
           SYMBOL *current_name;
+          symbol_c *tmp_var_type;
           current_name = new SYMBOL;
           current_name->symbol = symbol;
+          tmp_var_type = this->current_var_type_symbol;
           current_symbol_list.push_back(*current_name);
           this->current_var_type_symbol->accept(*this);
           current_symbol_list.pop_back();
+          this->current_var_type_symbol = tmp_var_type;
           break;
         case search_type_symbol_c::array_vtc:
           this->current_var_type_name->accept(*this);
