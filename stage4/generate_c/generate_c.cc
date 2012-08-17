@@ -797,10 +797,6 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
       return NULL;
     }
 
-    void *visit(structured_var_declaration_c *symbol) {
-      return NULL;
-    }
-
     /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
     /* structure_initialization -> may be NULL ! */
     void *visit(fb_name_decl_c *symbol) {
@@ -829,6 +825,12 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
         symbol->array_specification->accept(*this);
         current_mode = none_im;
       }
+      return NULL;
+    }
+
+    /*  var1_list ':' structure_type_name */
+    //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
+    void *visit(structured_var_declaration_c *symbol) {
       return NULL;
     }
 
