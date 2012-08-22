@@ -39,6 +39,10 @@
 
 #include "../absyntax/absyntax.hh"
 
+
+void stage4err(const char *stage4_generator_id, symbol_c *symbol1, symbol_c *symbol2, const char *errmsg, ...);
+
+
 class stage4out_c {
   public:
     std::string indent_level;
@@ -57,12 +61,21 @@ class stage4out_c {
     void indent_right(void);
     void indent_left(void);
 
-    void *print(const char *str);
-    void *print(std::string str);
+    void *print(          std::string  value);
+    void *print(           const char *value);
+    //void *print(               int64_t value); // not required, since we have long long int, or similar
+    //void *print(              uint64_t value); // not required, since we have long long int, or similar
+    void *print(              real64_t value);
+    void *print(                   int value);
+    void *print(              long int value);
+    void *print(         long long int value);
+    void *print(unsigned           int value);
+    void *print(unsigned      long int value);
+    void *print(unsigned long long int value);
     
-    void *print_integer(int integer);
     void *print_long_integer(unsigned long l_integer, bool suffix=true);
     void *print_long_long_integer(unsigned long long ll_integer, bool suffix=true);
+
 
     void *printupper(const char *str);
     void *printupper(std::string str);

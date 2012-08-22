@@ -44,11 +44,9 @@
 #include "../util/symtable.hh"
 #include "search_constant_type.hh"
 #include "absyntax_utils.hh"
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 symbol_c *search_constant_type_c::get_type(symbol_c *constant) {
   return (symbol_c *)constant->accept(*this);
@@ -105,11 +103,7 @@ void *search_constant_type_c::visit(single_byte_character_string_c *symbol) {ret
 void *search_constant_type_c::visit(neg_time_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
 void *search_constant_type_c::visit(duration_c *symbol) {return (void *)(symbol->type_name);}
 void *search_constant_type_c::visit(fixed_point_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(days_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(hours_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(minutes_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(seconds_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
-void *search_constant_type_c::visit(milliseconds_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
+void *search_constant_type_c::visit(interval_c *symbol) {ERROR; return NULL;}  /* this member function should never be called. */
 
 /************************************/
 /* B 1.2.3.2 - Time of day and Date */
@@ -133,6 +127,12 @@ void *search_constant_type_c::visit(enumerated_value_c *symbol) {
   return (void *)value_type;
 }
 
+
+
+
+invalid_type_name_c  search_constant_type_c::invalid_type_name;
+
+
 real_type_name_c     search_constant_type_c::real_type_name;
 sint_type_name_c     search_constant_type_c::sint_type_name;
 lint_type_name_c     search_constant_type_c::lint_type_name;
@@ -155,17 +155,26 @@ bool_type_name_c     search_constant_type_c::bool_type_name;
 time_type_name_c     search_constant_type_c::time_type_name;
 int_type_name_c      search_constant_type_c::int_type_name;
 
-// safebool_type_name_c    search_constant_type_c::safebool_type_name;
-  /* The following is required because the expression (TOD_var - TOD_var) will result in a data type
-   *  (in this case, TIME) that is neither of the expression elements...
-   */
 safetime_type_name_c     search_constant_type_c::safetime_type_name;
 safetod_type_name_c      search_constant_type_c::safetod_type_name;
 safedt_type_name_c       search_constant_type_c::safedt_type_name;
+safedate_type_name_c     search_constant_type_c::safedate_type_name;
+safereal_type_name_c     search_constant_type_c::safereal_type_name;
+safesint_type_name_c     search_constant_type_c::safesint_type_name;
+safelint_type_name_c     search_constant_type_c::safelint_type_name;
+safedint_type_name_c     search_constant_type_c::safedint_type_name;
+safedword_type_name_c    search_constant_type_c::safedword_type_name;
+safeudint_type_name_c    search_constant_type_c::safeudint_type_name;
+safeword_type_name_c     search_constant_type_c::safeword_type_name;
+safewstring_type_name_c  search_constant_type_c::safewstring_type_name;
+safestring_type_name_c   search_constant_type_c::safestring_type_name;
+safelword_type_name_c    search_constant_type_c::safelword_type_name;
+safeuint_type_name_c     search_constant_type_c::safeuint_type_name;
+safelreal_type_name_c    search_constant_type_c::safelreal_type_name;
+safebyte_type_name_c     search_constant_type_c::safebyte_type_name;
+safeusint_type_name_c    search_constant_type_c::safeusint_type_name;
+safeulint_type_name_c    search_constant_type_c::safeulint_type_name;
+safebool_type_name_c     search_constant_type_c::safebool_type_name;
+safeint_type_name_c      search_constant_type_c::safeint_type_name;
 
 
-
-/* temporarily here until we remove the st_code_gen.c and il_code_gen.c files... */
-/* It should then move to search_expression_type_c                               */
-integer_c search_constant_type_c::integer("1");
-real_c search_constant_type_c::real("1.0");

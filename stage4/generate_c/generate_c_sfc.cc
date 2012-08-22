@@ -117,7 +117,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
     }      
 
     void print_transition_number(void) {
-      s4o.print_integer(transition_number);
+      s4o.print(transition_number);
     }
 
     void print_reset_step(symbol_c *step_name) {
@@ -564,13 +564,17 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
               s4o.print(";\n");
             }
             s4o.indent_left();
-            s4o.print(s4o.indent_spaces + "}");
+            s4o.print(s4o.indent_spaces + "}\n");
             if (strcmp(qualifier, "DS") == 0) {
+              s4o.print(s4o.indent_spaces + "if (");
               s4o.print("desactivated");
+              s4o.print(") {\n");
               s4o.indent_right();
               s4o.print(s4o.indent_spaces);
               print_action_argument(current_action, "set_remaining_time");
               s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
+              s4o.indent_left();
+              s4o.print(s4o.indent_spaces + "}\n");
             }
           }
           break;
@@ -844,7 +848,7 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
         for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
           symbol_c *var_decl = search_var_instance_decl->get_decl(pt->symbol);
           if (var_decl != NULL) {
-            unsigned int vartype = search_var_instance_decl->get_vartype();
+            unsigned int vartype = search_var_instance_decl->get_vartype(pt->symbol);
 
             s4o.print(s4o.indent_spaces);
             if (vartype == search_var_instance_decl_c::external_vt)

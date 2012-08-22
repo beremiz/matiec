@@ -44,6 +44,8 @@
 
 
 
+/* Compile with the following option, to print out the const_value of each symbol, which was filled in by constant_folding_c during stage3 */
+// #define DEBUG_CONST_VALUE
 
 
 
@@ -55,6 +57,8 @@
 #include "generate_iec.hh"
 
 #include "../stage4.hh"
+#include "../../main.hh" // required for ERROR() and ERROR_MSG() macros.
+
 
 
 
@@ -74,11 +78,63 @@ class generate_iec_c: public visitor_c {
 
   private:
 
+    
+void print_const_value(symbol_c *symbol) {
+#ifdef DEBUG_CONST_VALUE
+  if (NULL == symbol) return;
+  bool first = true;
+  
+  if (NULL != symbol->const_value_uint64) {
+    first?s4o.print("{"):s4o.print("; ");
+    first = false;
+    s4o.print("uint64:");
+    if (symbol->const_value_uint64->status == symbol_c::cs_const_value)
+      s4o.print_uint64(symbol->const_value_uint64->value);
+    if (symbol->const_value_uint64->status == symbol_c::cs_overflow)
+    s4o.print("OVERFLOW");
+  }
+  if (NULL != symbol->const_value_int64) {
+    first?s4o.print("{"):s4o.print("; ");
+    first = false;
+    s4o.print("int64:");
+    if (symbol->const_value_int64->status == symbol_c::cs_const_value)
+      s4o.print_int64(symbol->const_value_int64->value);
+    if (symbol->const_value_int64->status == symbol_c::cs_overflow)
+    s4o.print("OVERFLOW");
+  }
+  if (NULL != symbol->const_value_real64) {
+    first?s4o.print("{"):s4o.print("; ");
+    first = false;
+    s4o.print("real64:");
+    if (symbol->const_value_real64->status == symbol_c::cs_const_value)
+      s4o.print_real64(symbol->const_value_real64->value);
+    if (symbol->const_value_real64->status == symbol_c::cs_overflow)
+    s4o.print("OVERFLOW");
+  }
+  if (NULL != symbol->const_value_bool) {
+    first?s4o.print("{"):s4o.print("; ");
+    first = false;
+    s4o.print("bool:");
+    if (symbol->const_value_bool->status == symbol_c::cs_const_value)
+      s4o.print((symbol->const_value_bool->value)?"true":"false");
+    if (symbol->const_value_bool->status == symbol_c::cs_overflow)
+    s4o.print("OVERFLOW");
+  }
+  if (!first) s4o.print("}");  
+#endif
+  return;
+}
+
+
+
 void *print_token(token_c *token) {
+  print_const_value(token);
   return s4o.print(token->value);
 }
 
+
 void *print_literal(symbol_c *type, symbol_c *value) {
+  print_const_value(value);
   if (NULL != type) {
     type->accept(*this);
     s4o.print("#");
@@ -108,9 +164,11 @@ void *print_list(list_c *list,
 }
 
 
-void *print_binary_expression(symbol_c *l_exp,
+void *print_binary_expression(symbol_c *symbol,
+			      symbol_c *l_exp,
 			      symbol_c *r_exp,
 			      const char *operation) {
+  print_const_value(symbol);
   s4o.print("(");
   l_exp->accept(*this);
   s4o.print(operation);
@@ -119,8 +177,10 @@ void *print_binary_expression(symbol_c *l_exp,
   return NULL;
 }
 
-void *print_unary_expression(symbol_c *exp,
+void *print_unary_expression(symbol_c *symbol,
+			     symbol_c *exp,
 			     const char *operation) {
+  print_const_value(symbol);
   s4o.print(operation);
   exp->accept(*this);
   return NULL;
@@ -153,6 +213,13 @@ void *visit(eno_param_c *symbol) {
 #endif
 
 
+/* A class used to identify an entry (literal, variable, etc...) in the abstract syntax tree with an invalid data type */
+/* This is only used from stage3 onwards. Stages 1 and 2 will never create any instances of invalid_type_name_c */
+// SYM_REF0(invalid_type_name_c)
+void *visit(invalid_type_name_c *symbol) {
+  ERROR;
+  return NULL;
+}
 
 
 /******************/
@@ -181,9 +248,9 @@ void *visit(identifier_c *symbol) {return print_token(symbol);}
 /* B 1.2.1 - Numeric Literals */
 /******************************/
 void *visit(real_c *symbol)               {return print_token(symbol);}
-void *visit(neg_real_c *symbol)           {return print_unary_expression(symbol->exp, "-");}
+void *visit(neg_real_c *symbol)           {return print_unary_expression(symbol, symbol->exp, "-");}
 void *visit(integer_c *symbol)            {return print_token(symbol);}
-void *visit(neg_integer_c *symbol)        {return print_unary_expression(symbol->exp, "-");}
+void *visit(neg_integer_c *symbol)        {return print_unary_expression(symbol, symbol->exp, "-");}
 void *visit(binary_integer_c *symbol)     {return print_token(symbol);}
 void *visit(octal_integer_c *symbol)      {return print_token(symbol);}
 void *visit(hex_integer_c *symbol)        {return print_token(symbol);}
@@ -223,43 +290,37 @@ void *visit(duration_c *symbol) {
 
 void *visit(fixed_point_c *symbol) {return print_token(symbol);}
 
-void *visit(days_c *symbol) {
-  symbol->days->accept(*this);
-  s4o.print("d");
-  if (symbol->hours != NULL)
+/* SYM_REF5(interval_c, days, hours, minutes, seconds, milliseconds) */
+void *visit(interval_c *symbol) {
+  if (NULL != symbol->days) {
+    symbol->days->accept(*this);
+    s4o.print("d");
+  }
+
+  if (NULL != symbol->hours) {
     symbol->hours->accept(*this);
-  return NULL;
-}
+    s4o.print("h");
+  }
 
-void *visit(hours_c *symbol) {
-  symbol->hours->accept(*this);
-  s4o.print("h");
-  if (symbol->minutes != NULL)
+  if (NULL != symbol->minutes) {
     symbol->minutes->accept(*this);
-  return NULL;
-}
+    s4o.print("m");
+  }
 
-void *visit(minutes_c *symbol) {
-  symbol->minutes->accept(*this);
-  s4o.print("m");
-  if (symbol->seconds != NULL)
+  if (NULL != symbol->seconds) {
     symbol->seconds->accept(*this);
-  return NULL;
-}
+    s4o.print("s");
+  }
 
-void *visit(seconds_c *symbol) {
-  symbol->seconds->accept(*this);
-  s4o.print("s");
-  if (symbol->milliseconds != NULL)
+  if (NULL != symbol->milliseconds) {
     symbol->milliseconds->accept(*this);
+    s4o.print("ms");
+  }
+
   return NULL;
 }
 
-void *visit(milliseconds_c *symbol) {
-  symbol->milliseconds->accept(*this);
-  s4o.print("ms");
-  return NULL;
-}
+
 
 /************************************/
 /* B 1.2.3.2 - Time of day and Date */
@@ -1670,6 +1731,17 @@ void *visit(simple_instr_list_c *symbol) {
   return print_list(symbol,  s4o.indent_spaces, "\n" + s4o.indent_spaces, "\n");
 }
 
+
+/* il_simple_instruction:
+ *   il_simple_operation eol_list
+ * | il_expression eol_list
+ * | il_formal_funct_call eol_list
+ */
+void *visit(il_simple_instruction_c *symbol)	{
+  return symbol->il_simple_instruction->accept(*this);
+}
+
+
 /* | il_initial_param_list il_param_instruction */
 void *visit(il_param_list_c *symbol) {
 // return print_list(symbol);
@@ -1769,23 +1841,23 @@ void *visit(il_assign_out_operator_c *symbol) {
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
-void *visit(or_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " OR ");}
-void *visit(xor_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " XOR ");}
-void *visit(and_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " AND ");}
-void *visit(equ_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " = ");}
-void *visit(notequ_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " <> ");}
-void *visit(lt_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");}
-void *visit(gt_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");}
-void *visit(le_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");}
-void *visit(ge_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");}
-void *visit(add_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " + ");}
-void *visit(sub_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " - ");}
-void *visit(mul_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " * ");}
-void *visit(div_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " / ");}
-void *visit(mod_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " MOD ");}
-void *visit(power_expression_c *symbol) {return print_binary_expression(symbol->l_exp, symbol->r_exp, " ** ");}
-void *visit(neg_expression_c *symbol) {return print_unary_expression(symbol->exp, "-");}
-void *visit(not_expression_c *symbol) {return print_unary_expression(symbol->exp, "NOT ");}
+void *visit(or_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " OR ");}
+void *visit(xor_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " XOR ");}
+void *visit(and_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " AND ");}
+void *visit(equ_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " = ");}
+void *visit(notequ_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " <> ");}
+void *visit(lt_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " < ");}
+void *visit(gt_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " > ");}
+void *visit(le_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " <= ");}
+void *visit(ge_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " >= ");}
+void *visit(add_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " + ");}
+void *visit(sub_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " - ");}
+void *visit(mul_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " * ");}
+void *visit(div_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " / ");}
+void *visit(mod_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " MOD ");}
+void *visit(power_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " ** ");}
+void *visit(neg_expression_c *symbol) {return print_unary_expression(symbol, symbol->exp, "-");}
+void *visit(not_expression_c *symbol) {return print_unary_expression(symbol, symbol->exp, "NOT ");}
 
 void *visit(function_invocation_c *symbol) {
   symbol->function_name->accept(*this);

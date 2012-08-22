@@ -46,9 +46,30 @@
 #include <stdlib.h>
 
 #include "stage4.hh"
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
 
+
+#define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
+#define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
+#include <stdarg.h>
+
+void stage4err(const char *stage4_generator_id, symbol_c *symbol1, symbol_c *symbol2, const char *errmsg, ...) {
+    va_list argptr;
+    va_start(argptr, errmsg); /* second argument is last fixed pamater of stage4err() */
+
+    if ((symbol1 != NULL) && (symbol2 != NULL))
+      fprintf(stderr, "%s:%d-%d..%d-%d: ",
+              FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,
+                                                   LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column);
+
+    fprintf(stderr, "error %s: ", stage4_generator_id);
+    vfprintf(stderr, errmsg, argptr);
+    fprintf(stderr, "\n");
+    // error_count++;
+    va_end(argptr);
+}
 
 
 
@@ -57,6 +78,7 @@ stage4out_c::stage4out_c(std::string indent_level):
   out = &std::cout;
   this->indent_level = indent_level;
   this->indent_spaces = "";
+  allow_output = true;
 }
 
 stage4out_c::stage4out_c(const char *dir, const char *radix, const char *extension, std::string indent_level) {	
@@ -114,18 +136,18 @@ void stage4out_c::indent_left(void) {
     indent_spaces.erase();
 }
 
+void *stage4out_c::print(           std::string value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(           const char *value) {if (!allow_output) return NULL; *out << value; return NULL;}
+//void *stage4out_c::print(               int64_t value) {if (!allow_output) return NULL; *out << value; return NULL;}
+//void *stage4out_c::print(              uint64_t value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(              real64_t value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(                   int value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(              long int value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(         long long int value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(unsigned           int value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(unsigned      long int value) {if (!allow_output) return NULL; *out << value; return NULL;}
+void *stage4out_c::print(unsigned long long int value) {if (!allow_output) return NULL; *out << value; return NULL;}
 
-void *stage4out_c::print(const char *str) {
-  if (!allow_output) return NULL;
-  *out << str;
-  return NULL;
-}
-
-void *stage4out_c::print_integer(int integer) {
-  if (!allow_output) return NULL;
-  *out << integer;
-  return NULL;
-}
 
 void *stage4out_c::print_long_integer(unsigned long l_integer, bool suffix) {
   if (!allow_output) return NULL;
@@ -140,6 +162,7 @@ void *stage4out_c::print_long_long_integer(unsigned long long ll_integer, bool s
   if (suffix) *out << "ULL";
   return NULL;
 }
+
 
 void *stage4out_c::printupper(const char *str) {
   if (!allow_output) return NULL;
@@ -173,12 +196,6 @@ void *stage4out_c::printlocation_comasep(const char *str) {
   return NULL;
 }
 
-
-void *stage4out_c::print(std::string str) {
-  if (!allow_output) return NULL;
-  *out << str;
-  return NULL;
-}
 
 
 void *stage4out_c::printupper(std::string str) {
@@ -227,8 +244,7 @@ int stage4(symbol_c *tree_root, const char *builddir) {
   stage4out_c s4o;
   visitor_c *generate_code = new_code_generator(&s4o, builddir);
 
-  if (NULL == generate_code)
-    return -1;
+  if (NULL == generate_code) ERROR;
 
   tree_root->accept(*generate_code);
 

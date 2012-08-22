@@ -33,13 +33,9 @@
 
 #include <iostream>
 #include "symtable.hh"
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
-
-/* A macro for printing out internal parser errors... */
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 

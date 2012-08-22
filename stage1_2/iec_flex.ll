@@ -91,8 +91,10 @@
  */
 %option noyy_top_state
 
-/* We will not be using unput() in our flex code... */
+/* We will be using unput() in our flex code, so we cannot set the following option!... */
+/*
 %option nounput
+*/
 
 /**************************************************/
 /* External Variable and Function declarations... */
@@ -171,8 +173,9 @@ extern const char *current_filename;
  * track of the locations, in order to give
  * more meaningful error messages!
  */
-extern YYLTYPE yylloc;
-
+/*
+ *extern YYLTYPE yylloc;
+b*/
 #define YY_INPUT(buf,result,max_size)  {\
     result = GetNextChar(buf, max_size);\
     if (  result <= 0  )\
@@ -208,7 +211,6 @@ static long int current_order = 0;
 	current_order++;							\
 	}
 
-
 /* Since this lexical parser we defined only works in ASCII based
  * systems, we might as well make sure it is being compiled on
  * one...
@@ -241,6 +243,10 @@ int get_identifier_token(const char *identifier_str);
 %{
 /* return all the text in the current token back to the input stream. */
 void unput_text(unsigned int n);
+/* return all the text in the current token back to the input stream, 
+ * but first return to the stream an additional character to mark the end of the token. 
+ */
+void unput_and_mark(const char c);
 %}
 
 
@@ -340,6 +346,16 @@ void unput_text(unsigned int n);
  * expecting any action qualifiers, flex does not return these tokens, and is free
  * to interpret them as previously defined variables/functions/... as the case may be.
  *
+ * The time_literal_state is required because TIME# literals are decomposed into 
+ * portions, and wewant to send these portions one by one to bison. Each poertion will 
+ * represent the value in days/hours/minutes/seconds/ms.
+ * Unfortunately, some of these portions may also be lexically analysed as an identifier. So,
+ * we need to disable lexical identification of identifiers while parsing TIME# literals!
+ * e.g.:  TIME#55d_4h_56m
+ *       We would like to return to bison the tokens 'TIME' '#' '55d' '_' '4h' '_' '56m'
+ *       Unfortunately, flex will join '_' and '4h' to create a legal {identifier} '_4h',
+ *       and return that identifier instead! So, we added this state!
+ *
  * The state machine has 7 possible states (INITIAL, config, decl, body, st, il, sfc)
  * Possible state changes are:
  *   INITIAL -> goto(decl_state)
@@ -418,7 +434,8 @@ void unput_text(unsigned int n);
 /* we are parsing sfc code, and expecting the priority token.       */
 %s sfc_priority_state
 
-
+/* we are parsing a TIME# literal. We must not return any {identifier} tokens. */
+%x time_literal_state
 
 
 /*******************/
@@ -598,6 +615,15 @@ identifier	({letter}|(_({letter}|{digit})))((_?({letter}|{digit}))*)
 /* B.1.2.1   Numeric literals */
 /******************************/
 integer         {digit}((_?{digit})*)
+
+/* Some helper symbols for parsing TIME literals... */
+integer_0_59    (0(_?))*([0-5](_?))?{digit}
+integer_0_19    (0(_?))*([0-1](_?))?{digit}
+integer_20_23   (0(_?))*2(_?)[0-3]
+integer_0_23    {integer_0_19}|{integer_20_23}
+integer_0_999   {digit}((_?{digit})?)((_?{digit})?)
+
+
 binary_integer  2#{bit}((_?{bit})*)
 bit		[0-1]
 octal_integer   8#{octal_digit}((_?{octal_digit})*)
@@ -673,21 +699,54 @@ single_byte_character_string	'({single_byte_character_representation}*)'
 /************************/
 fixed_point		{integer}\.{integer}
 
-fixed_point_d		{fixed_point}d
-integer_d		{integer}d
 
-fixed_point_h		{fixed_point}h
-integer_h		{integer}h
+/* NOTE: The IEC 61131-3 v2 standard has an incorrect formal syntax definition of duration,
+ *       as its definition does not match the standard's text.
+ *       IEC 61131-3 v3 (committee draft) seems to have this fixed, so we use that
+ *       definition instead!
+ *
+ *       duration::= ('T' | 'TIME') '#' ['+'|'-'] interval
+ *       interval::= days | hours | minutes | seconds | milliseconds
+ *       fixed_point  ::= integer [ '.' integer]
+ *       days         ::= fixed_point 'd' | integer 'd' ['_'] [ hours ]
+ *       hours        ::= fixed_point 'h' | integer 'h' ['_'] [ minutes ]
+ *       minutes      ::= fixed_point 'm' | integer 'm' ['_'] [ seconds ]
+ *       seconds      ::= fixed_point 's' | integer 's' ['_'] [ milliseconds ]
+ *       milliseconds ::= fixed_point 'ms'
+ * 
+ * 
+ *  The original IEC 61131-3 v2 definition is:
+ *       duration ::= ('T' | 'TIME') '#' ['-'] interval
+ *       interval ::= days | hours | minutes | seconds | milliseconds
+ *       fixed_point  ::= integer [ '.' integer]
+ *       days         ::= fixed_point 'd' | integer 'd' ['_'] hours
+ *       hours        ::= fixed_point 'h' | integer 'h' ['_'] minutes
+ *       minutes      ::= fixed_point 'm' | integer 'm' ['_'] seconds
+ *       seconds      ::= fixed_point 's' | integer 's' ['_'] milliseconds
+ *       milliseconds ::= fixed_point 'ms'
 
-fixed_point_m		{fixed_point}m
-integer_m		{integer}m
+ */
 
-fixed_point_s		{fixed_point}s
-integer_s		{integer}s
+interval_ms_X		({integer_0_999}(\.{integer})?)ms
+interval_s_X		{integer_0_59}s(_?{interval_ms_X})?
+interval_m_X		{integer_0_59}m(_?{interval_s_X})?
+interval_h_X		{integer_0_23}h(_?{interval_m_X})?
 
-fixed_point_ms		{fixed_point}ms
-integer_ms		{integer}ms
+interval_ms		{integer}ms|({fixed_point}ms)
+interval_s		{integer}s(_?{interval_ms_X})?|({fixed_point}s)
+interval_m		{integer}m(_?{interval_s_X})?|({fixed_point}m)
+interval_h		{integer}h(_?{interval_m_X})?|({fixed_point}h)
+interval_d		{integer}d(_?{interval_h_X})?|({fixed_point}d)
 
+interval		{interval_ms}|{interval_s}|{interval_m}|{interval_h}|{interval_d}
+
+/* to help provide nice error messages, we also parse an incorrect but plausible interval... */
+/* NOTE that this erroneous interval will be parsed outside the time_literal_state, so must not 
+ *      be able to parse any other legal lexcial construct (besides a legal interval, but that
+ *      is OK as this rule will appear _after_ the rule to parse legal intervals!).
+ */
+fixed_point_or_integer  {fixed_point}|{integer}
+erroneous_interval	({fixed_point_or_integer}d_?)?({fixed_point_or_integer}h_?)?({fixed_point_or_integer}m_?)?({fixed_point_or_integer}s_?)?({fixed_point_or_integer}ms)?
 
 /********************************************/
 /* B.1.4.1   Directly Represented Variables */
@@ -719,9 +778,9 @@ direct_variable_standard	%{location_prefix}({size_prefix}?){integer}((.{integer}
  *    in which case we are currently using "%I3" as the variable
  *    name.
  */
-direct_variable_matplc		%{identifier}
-
-direct_variable			{direct_variable_standard}|{direct_variable_matplc}
+/* direct_variable_matplc		%{identifier} */
+/* direct_variable			{direct_variable_standard}|{direct_variable_matplc} */
+direct_variable			{direct_variable_standard}
 
 /******************************************/
 /* B 1.4.3 - Declaration & Initialisation */
@@ -1541,23 +1600,26 @@ EXIT		return EXIT;		/* Keyword */
 	/* B 1.2.3.1 - Duration */
 	/************************/
 {fixed_point}		{yylval.ID=strdup(yytext); return fixed_point_token;}
+{interval}		{/*fprintf(stderr, "entering time_literal_state ##%s##\n", yytext);*/ unput_and_mark('#'); yy_push_state(time_literal_state);}
+{erroneous_interval}	{return erroneous_interval_token;}
 
-{fixed_point_d}		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return fixed_point_d_token;}
-{integer_d}		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return integer_d_token;}
+<time_literal_state>{
+{integer}d		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return integer_d_token;}
+{integer}h		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return integer_h_token;}
+{integer}m		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return integer_m_token;}
+{integer}s		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return integer_s_token;}
+{integer}ms		{yylval.ID=strdup(yytext); yylval.ID[yyleng-2] = '\0'; return integer_ms_token;}
+{fixed_point}d		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return fixed_point_d_token;}
+{fixed_point}h		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return fixed_point_h_token;}
+{fixed_point}m		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return fixed_point_m_token;}
+{fixed_point}s		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return fixed_point_s_token;}
+{fixed_point}ms		{yylval.ID=strdup(yytext); yylval.ID[yyleng-2] = '\0'; return fixed_point_ms_token;}
 
-{fixed_point_h}		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return fixed_point_h_token;}
-{integer_h}		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return integer_h_token;}
-
-{fixed_point_m}		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return fixed_point_m_token;}
-{integer_m}		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return integer_m_token;}
-
-{fixed_point_s}		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return fixed_point_s_token;}
-{integer_s}		{yylval.ID=strdup(yytext); yylval.ID[yyleng-1] = '\0'; return integer_s_token;}
-
-{fixed_point_ms}	{yylval.ID=strdup(yytext); yylval.ID[yyleng-2] = '\0'; return fixed_point_ms_token;}
-{integer_ms}		{yylval.ID=strdup(yytext); yylval.ID[yyleng-2] = '\0'; return integer_ms_token;}
-
-
+_			/* do nothing - eat it up!*/
+\#			{/*fprintf(stderr, "popping from time_literal_state (###)\n");*/ yy_pop_state(); return end_interval_token;}
+.			{/*fprintf(stderr, "time_literal_state: found invalid character '%s'. Aborting!\n", yytext);*/ ERROR;}
+\n			{ERROR;}
+}
 	/*******************************/
 	/* B.1.2.2   Character Strings */
 	/*******************************/
@@ -1643,6 +1705,20 @@ void unput_text(unsigned int n) {
   /* now return all the text back to the input stream... */
   yyless(n);
 }
+
+
+/* return all the text in the current token back to the input stream, 
+ * but first return to the stream an additional character to mark the end of the token. 
+ */
+void unput_and_mark(const char c) {
+  char *yycopy = strdup( yytext ); /* unput() destroys yytext, so we copy it first */
+  unput(c);
+  for (int i = yyleng-1; i >= 0; i--)
+    unput(yycopy[i]);
+
+  free(yycopy);
+}
+
 
 
 /* Called by flex when it reaches the end-of-file */

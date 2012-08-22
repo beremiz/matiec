@@ -58,6 +58,17 @@
 /**********************************************************************/
 /**********************************************************************/
 
+/* NOTE: the following file contains many rules used merely for detecting errors in
+ * the IEC source code being parsed.
+ * To remove all these rules, simply execute the command (first replace all '%' with '/'):
+ * $sed '\:%\* ERROR_CHECK_BEGIN \*%:,\:%\* ERROR_CHECK_END \*%: d' iec_bison.yy
+ *
+ * The above command had to be edited ('/' replaced by '%') so as not to include the C syntax that closes
+ * comments inside this comment!
+ * If you place the command in a shell script, be sure to remove the backslashes '\' before each asterisk '*' !!
+ */
+
+
 
 
 
@@ -150,10 +161,7 @@ void yyerror (const char *error_msg);
          while (0)
 
 
-/* A macro for printing out internal parser errors... */
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
 
@@ -250,17 +258,9 @@ void print_err_msg(int first_line,
  * declared twice.
  * We therefore use the #if !defined YYLTYPE ...
  * to make sure only the first declaration is parsed by the C++ compiler.
- *
- * At first glance it seems that what we really should do is delcare the
- * YYLTYPE directly as an anonymous struct, thus:
- * #define YYLTYPE struct{ ...}
- * however, this also results in compilation errors.
- *
- * I (Mario) think this is kind of a hack. If you know how to
- * do this re-declaration of YYLTYPE properly, please let me know!
  */
 #if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
-  typedef struct {
+typedef struct YYLTYPE {
     int         first_line;
     int         first_column;
     const char *first_file;
@@ -269,9 +269,11 @@ void print_err_msg(int first_line,
     int         last_column;
     const char *last_file;
     long int    last_order;
-  } yyltype__local;
-  #define YYLTYPE yyltype__local
+} YYLTYPE;
+#define YYLTYPE_IS_DECLARED 1
+#define YYLTYPE_IS_TRIVIAL 1
 #endif
+
 }
 
 
@@ -496,17 +498,6 @@ void print_err_msg(int first_line,
 %type  <leaf>	seconds
 %type  <leaf>	milliseconds
 
-%type  <leaf>	integer_d
-%type  <leaf>	integer_h
-%type  <leaf>	integer_m
-%type  <leaf>	integer_s
-%type  <leaf>	integer_ms
-%type  <leaf>	fixed_point_d
-%type  <leaf>	fixed_point_h
-%type  <leaf>	fixed_point_m
-%type  <leaf>	fixed_point_s
-%type  <leaf>	fixed_point_ms
-
 %token <ID>	fixed_point_token
 %token <ID>	fixed_point_d_token
 %token <ID>	integer_d_token
@@ -518,7 +509,8 @@ void print_err_msg(int first_line,
 %token <ID>	integer_s_token
 %token <ID>	fixed_point_ms_token
 %token <ID>	integer_ms_token
-
+%token <ID>	end_interval_token
+%token <ID>	erroneous_interval_token
 // %token TIME
 %token T_SHARP
 
@@ -1915,13 +1907,13 @@ numeric_literal:
 
 integer_literal:
   integer_type_name '#' signed_integer
-	{$$ = new integer_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new integer_literal_c($1, $3, locloc(@$));}
 | integer_type_name '#' binary_integer
-	{$$ = new integer_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new integer_literal_c($1, $3, locloc(@$));}
 | integer_type_name '#' octal_integer
-	{$$ = new integer_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new integer_literal_c($1, $3, locloc(@$));}
 | integer_type_name '#' hex_integer
-	{$$ = new integer_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new integer_literal_c($1, $3, locloc(@$));}
 /* NOTE: see note in the definition of constant for reason
  * why signed_integer, binary_integer, octal_integer
  * and hex_integer are missing here!
@@ -1957,7 +1949,7 @@ real_literal:
  */
 /*  signed_real */
   real_type_name '#' signed_real
-	{$$ = new real_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new real_literal_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | real_type_name signed_real
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'#' missing between real type name and value in real literal."); yynerrs++;}
@@ -1981,13 +1973,13 @@ signed_real:
 
 bit_string_literal:
   bit_string_type_name '#' integer  /* i.e. unsigned_integer */
-	{$$ = new bit_string_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new bit_string_literal_c($1, $3, locloc(@$));}
 | bit_string_type_name '#' binary_integer
-	{$$ = new bit_string_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new bit_string_literal_c($1, $3, locloc(@$));}
 | bit_string_type_name '#' octal_integer
-	{$$ = new bit_string_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new bit_string_literal_c($1, $3, locloc(@$));}
 | bit_string_type_name '#' hex_integer
-	{$$ = new bit_string_literal_c($1, $3, locf(@1), locl(@3));}
+	{$$ = new bit_string_literal_c($1, $3, locloc(@$));}
 /* NOTE: see note in the definition of constant for reason
  * why unsigned_integer, binary_integer, octal_integer
  * and hex_integer are missing here!
@@ -2144,156 +2136,56 @@ duration:
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'#' missing between 'TIME' and interval in duration."); yynerrs++;}
 | TIME '-' interval
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'#' missing between 'TIME' and interval in duration."); yynerrs++;}
-| TIME '#' error
-	{$$ = NULL;
-	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no value defined for duration.");}
-	 else {print_err_msg(locf(@3), locl(@3), "invalid value for duration."); yyclearin;}
-	 yyerrok;
-	}
-| T_SHARP error
-	{$$ = NULL;
-	 if (is_current_syntax_token()) {print_err_msg(locl(@1), locf(@2), "no value defined for duration.");}
-	 else {print_err_msg(locf(@2), locl(@2), "invalid value for duration."); yyclearin;}
-	 yyerrok;
-	}
+| TIME '#' erroneous_interval_token
+	{$$ = NULL; print_err_msg(locf(@3), locl(@3), "invalid value for duration."); yynerrs++;}
+| T_SHARP erroneous_interval_token
+	{$$ = NULL; print_err_msg(locf(@2), locl(@2), "invalid value for duration."); yynerrs++;}
+| TIME '#' '-' erroneous_interval_token
+	{$$ = NULL; print_err_msg(locf(@3), locl(@3), "invalid value for duration."); yynerrs++;}
+| T_SHARP '-' erroneous_interval_token
+	{$$ = NULL; print_err_msg(locf(@2), locl(@2), "invalid value for duration."); yynerrs++;}
 /* ERROR_CHECK_END */
 ;
+
+fixed_point:
+  integer
+| fixed_point_token	{$$ = new fixed_point_c($1, locloc(@$));};
 
 
 interval:
-  days
-| hours
-| minutes
-| seconds
-| milliseconds
-;
-
-integer_d:  integer_d_token  {$$ = new integer_c($1, locloc(@$));};
-integer_h:  integer_h_token  {$$ = new integer_c($1, locloc(@$));};
-integer_m:  integer_m_token  {$$ = new integer_c($1, locloc(@$));};
-integer_s:  integer_s_token  {$$ = new integer_c($1, locloc(@$));};
-integer_ms: integer_ms_token {$$ = new integer_c($1, locloc(@$));};
-
-fixed_point_d:
-  fixed_point_d_token
-	{$$ = new fixed_point_c($1, locloc(@$));}
-| integer_d
-;
-
-fixed_point_h:
-  fixed_point_h_token
-	{$$ = new fixed_point_c($1, locloc(@$));}
-| integer_h
-;
-
-fixed_point_m:
-  fixed_point_m_token
-	{$$ = new fixed_point_c($1, locloc(@$));}
-| integer_m
-;
-
-fixed_point_s:
-  fixed_point_s_token
-	{$$ = new fixed_point_c($1, locloc(@$));}
-| integer_s
-;
-
-fixed_point_ms:
-  fixed_point_ms_token
-	{$$ = new fixed_point_c($1, locloc(@$));}
-| integer_ms
+  days hours minutes seconds milliseconds end_interval_token
+	{$$ = new interval_c($1, $2, $3, $4, $5, locloc(@$));};
 ;
 
 
-fixed_point:
-  fixed_point_token
-	{$$ = new fixed_point_c($1, locloc(@$));}
-| integer
+days:   /*  fixed_point ('d') */
+  /* empty */		{$$ = NULL;}
+| fixed_point_d_token	{$$ = new fixed_point_c($1, locloc(@$));};
+| integer_d_token	{$$ = new integer_c($1, locloc(@$));};
 ;
 
-
-days:
-/*  fixed_point ('d') */
-  fixed_point_d
-	{$$ = new days_c($1, NULL, locloc(@$));}
-/*| integer ('d') ['_'] hours */
-| integer_d hours
-	{$$ = new days_c($1, $2, locloc(@$));}
-| integer_d '_' hours
-	{$$ = new days_c($1, $3, locloc(@$));}
-/* ERROR_CHECK_BEGIN */
-| integer_d '_' error
-	{$$ = NULL;
-	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no value defined for hours in duration.");}
-	 else {print_err_msg(locf(@3), locl(@3), "invalid value for hours in duration."); yyclearin;}
-	 yyerrok;
-	}
-/* ERROR_CHECK_END */
+hours:  /*  fixed_point ('h') */
+  /* empty */		{$$ = NULL;}
+| fixed_point_h_token	{$$ = new fixed_point_c($1, locloc(@$));};
+| integer_h_token	{$$ = new integer_c($1, locloc(@$));};
 ;
 
-
-hours:
-/*  fixed_point ('h') */
-  fixed_point_h
-	{$$ = new hours_c($1, NULL, locloc(@$));}
-/*| integer ('h') ['_'] minutes */
-| integer_h minutes
-	{$$ = new hours_c($1, $2, locloc(@$));}
-| integer_h '_' minutes
-	{$$ = new hours_c($1, $3, locloc(@$));}
-/* ERROR_CHECK_BEGIN */
-| integer_h '_' error
-	{$$ = NULL;
-	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no value defined for minutes in duration.");}
-	 else {print_err_msg(locf(@3), locl(@3), "invalid value for minutes in duration."); yyclearin;}
-	 yyerrok;
-	}
-/* ERROR_CHECK_END */
-
+minutes: /*  fixed_point ('m') */
+  /* empty */		{$$ = NULL;}
+| fixed_point_m_token	{$$ = new fixed_point_c($1, locloc(@$));};
+| integer_m_token	{$$ = new integer_c($1, locloc(@$));};
 ;
 
-minutes:
-/*  fixed_point ('m') */
-  fixed_point_m
-	{$$ = new minutes_c($1, NULL, locloc(@$));}
-/*| integer ('m') ['_'] seconds */
-| integer_m seconds
-	{$$ = new minutes_c($1, $2, locloc(@$));}
-| integer_m '_' seconds
-	{$$ = new minutes_c($1, $3, locloc(@$));}
-/* ERROR_CHECK_BEGIN */
-| integer_m '_' error
-	{$$ = NULL;
-	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no value defined for seconds in duration.");}
-	 else {print_err_msg(locf(@3), locl(@3), "invalid value for seconds in duration."); yyclearin;}
-	 yyerrok;
-	}
-/* ERROR_CHECK_END */
+seconds: /*  fixed_point ('s') */
+  /* empty */		{$$ = NULL;}
+| fixed_point_s_token	{$$ = new fixed_point_c($1, locloc(@$));};
+| integer_s_token	{$$ = new integer_c($1, locloc(@$));};
 ;
 
-seconds:
-/*  fixed_point ('s') */
-  fixed_point_s
-	{$$ = new seconds_c($1, NULL, locloc(@$));}
-/*| integer ('s') ['_'] milliseconds */
-| integer_s milliseconds
-	{$$ = new seconds_c($1, $2, locloc(@$));}
-| integer_s '_' milliseconds
-	{$$ = new seconds_c($1, $3, locloc(@$));}
-/* ERROR_CHECK_BEGIN */
-| integer_s '_' error
-	{$$ = NULL;
-	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no value defined for milliseconds in duration.");}
-	 else {print_err_msg(locf(@3), locl(@3), "invalid value for milliseconds in duration."); yyclearin;}
-	 yyerrok;
-	}
-/* ERROR_CHECK_END */
-;
-
-milliseconds:
-/*  fixed_point ('ms') */
-  fixed_point_ms
-	{$$ = new milliseconds_c($1, locloc(@$));}
+milliseconds: /*  fixed_point ('ms') */
+  /* empty */		{$$ = NULL;}
+| fixed_point_ms_token	{$$ = new fixed_point_c($1, locloc(@$));};
+| integer_ms_token	{$$ = new integer_c($1, locloc(@$));};
 ;
 
 
@@ -2991,13 +2883,18 @@ array_initial_elements_list:
 	{$$ = new array_initial_elements_list_c(locloc(@$)); $$->add_element($1);}
 | array_initial_elements_list ',' array_initial_elements
 	{$$ = $1; $$->add_element($3);}
-/* ERROR_CHECK_BEGIN 
+/* ERROR_CHECK_BEGIN */
+/* The following error checking rules have been commented out. Why? Was it a typo? 
+ * Lets keep them commented out for now...
+ */
+/*
 | array_initial_elements_list ',' error
 	{$$ = $1;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no array initial value in array initial values list.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid array initial value in array initial values list."); yyclearin;}
 	 yyerrok;
 	}
+*/
 /* ERROR_CHECK_END */
 ;
 
@@ -3151,7 +3048,11 @@ structure_element_initialization_list:
 	{$$ = new structure_element_initialization_list_c(locloc(@$)); $$->add_element($1);}
 | structure_element_initialization_list ',' structure_element_initialization
 	{$$ = $1; $$->add_element($3);}
-/* ERROR_CHECK_BEGIN 
+/* ERROR_CHECK_BEGIN */
+/* The following error checking rules have been commented out. Why? Was it a typo? 
+ * Lets keep them commented out for now...
+ */
+/*
 | structure_element_initialization_list structure_element_initialization
 	{$$ = $1; print_err_msg(locl(@1), locf(@2), "',' missing in structure element initialization list in structure initialization."); yynerrs++;}
 | structure_element_initialization_list ',' error
@@ -3160,6 +3061,7 @@ structure_element_initialization_list:
 	 else {print_err_msg(locf(@3), locl(@3), "invalid structure element initialization in structure initialization."); yyclearin;}
 	 yyerrok;
 	}
+*/
 /* ERROR_CHECK_END */
 ;
 
@@ -3407,7 +3309,7 @@ structured_variable:
   record_variable '.' field_selector
 	{$$ = new structured_variable_c($1, $3, locloc(@$));}
 | record_variable '.' il_simple_operator_clash3
-    {$$ = new structured_variable_c($1, $3, locloc(@$));}
+    {$$ = new structured_variable_c($1, il_operator_c_2_identifier_c($3), locloc(@$));}
 ;
 
 
@@ -5237,7 +5139,9 @@ sfc_network:
 initial_step:
   INITIAL_STEP step_name ':' action_association_list END_STEP
 //  INITIAL_STEP identifier ':' action_association_list END_STEP
-	{$$ = new initial_step_c($2, $4, locloc(@$));}
+	{$$ = new initial_step_c($2, $4, locloc(@$));
+	 variable_name_symtable.insert($2, prev_declared_variable_name_token); // A step name may later be used as a structured variable!!
+	}
 /* ERROR_CHECK_BEGIN */
 | INITIAL_STEP ':' action_association_list END_STEP
   {$$ = NULL; print_err_msg(locf(@1), locl(@2), "no step name defined in initial step declaration."); yynerrs++;}
@@ -5257,7 +5161,9 @@ initial_step:
 step:
   STEP step_name ':' action_association_list END_STEP
 //  STEP identifier ':' action_association_list END_STEP
-	{$$ = new step_c($2, $4, locloc(@$));}
+	{$$ = new step_c($2, $4, locloc(@$));
+	 variable_name_symtable.insert($2, prev_declared_variable_name_token); // A step name may later be used as a structured variable!!
+	}
 /* ERROR_CHECK_BEGIN */
 | STEP ':' action_association_list END_STEP
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "no step name defined in step declaration."); yynerrs++;}
@@ -5359,9 +5265,58 @@ timed_qualifier:
 | SL		{$$ = new timed_qualifier_c(strdup("SL"), locloc(@$));}
 ;
 
+/* NOTE: A step_name may be used as a structured vaqriable, in order to access the status bit (e.g. Step1.X) 
+ *       or the time it has been active (e.g. Step1.T). 
+ *       In order to allow the step name to be used as a variable inside ST expressions (only ST expressions ??)
+ *       when defining transitions, we need to add the step_name to the list of previously declared variables.
+ *       This allows the step name to be used as a variable inside all transition expressions, as the user
+ *       can clearly define the transition _after_ the step itself has been defined/declared, so the 
+ *       'variable' is previously 'declared'.
+ *
+ *       However, when defining/declaring a step, a variable name can also be used to define a timed
+ *       action association. In this case, we may have a circular reference:
+ *        e.g.
+ *            ...
+ *             STEP step1:
+ *                action1 (D,t#100ms);
+ *             end_step
+ *
+ *             STEP step2:
+ *                action1 (D,step3.T);  <---- forward reference to step3.T !!!!!!
+ *             end_step
+ *
+ *             STEP step3:
+ *                action1 (D,step2.T);  <---- back reference to step2.T
+ *             end_step
+ *
+ *
+ *         There is no way the user can always use the step3.T variable only after it has
+ *         been 'declared'. So adding the steps to the list of previously declared variables 
+ *         when the steps are declared is not a solution to the above situation.
+ *
+ *         Fortunately, the standard does not allow ST expressions in the above syntax
+ *         (i.e. when defining the delay of a timed actions), but only either a 
+ *         Time literal, or a variable.
+ *         This is why we change the definition of action_time from
+ *         action_time:
+ *           duration
+ *         | variable
+ *         ;
+ *
+ *         to:
+ *         action_time:
+ *           duration
+ *         | any_symbolic_variable
+ *         ;
+ *
+ *       NOTE that this same problem does not occur with the 'indicator_name': it does not
+ *       make sense to set/indicate a step1.X variable, as these variables are read-only!
+ */     
+    
 action_time:
   duration
-| variable
+//| variable
+  | any_symbolic_variable
 ;
 
 indicator_name: variable;
@@ -5460,12 +5415,15 @@ transition_priority:
   {$$ = NULL;}
 | '(' {cmd_goto_sfc_priority_state();} PRIORITY {cmd_pop_state();} ASSIGN integer ')'
 	{$$ = $6;}
-/* ERROR_CHECK_BEGIN 
+/* ERROR_CHECK_BEGIN */
+/* The following error checking rules have been intentionally commented out. */
+/*
 | '(' ASSIGN integer ')'
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'PRIORITY' missing between '(' and ':=' in transition declaration with priority."); yynerrs++;}
 | '(' error ASSIGN integer ')'
 	{$$ = NULL; print_err_msg(locf(@2), locl(@2), "expecting 'PRIORITY' between '(' and ':=' in transition declaration with priority."); yyerrok;}
- ERROR_CHECK_END */
+*/
+/* ERROR_CHECK_END */
 ;
 
 
@@ -6293,7 +6251,7 @@ instruction_list:
   il_instruction
 	{$$ = new instruction_list_c(locloc(@$)); $$->add_element($1);}
 | any_pragma eol_list
-	{$$ = new instruction_list_c(locloc(@$)); $$->add_element($1);}
+	{$$ = new instruction_list_c(locloc(@1)); $$->add_element($1);} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | instruction_list il_instruction
 	{$$ = $1; $$->add_element($2);}
 | instruction_list any_pragma
@@ -6304,11 +6262,11 @@ instruction_list:
 
 il_instruction:
   il_incomplete_instruction eol_list
-	{$$ = new il_instruction_c(NULL, $1, locloc(@$));}
+	{$$ = new il_instruction_c(NULL, $1, locloc(@1));} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | label ':' il_incomplete_instruction eol_list
-	{$$ = new il_instruction_c($1, $3, locloc(@$));}
+	{$$ = new il_instruction_c($1, $3, locf(@1), locl(@3));} /* locf(@1), locl(@3) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | label ':' eol_list
-	{$$ = new il_instruction_c($1, NULL, locloc(@$));}
+	{$$ = new il_instruction_c($1, NULL, locf(@1), locl(@2));} /* locf(@1), locl(@2) is not a bug! We ignore trailing EOLs when determining symbol location! */
 /* ERROR_CHECK_BEGIN */
 | error eol_list
 	{$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid IL instruction."); yyerrok;}
@@ -6643,8 +6601,11 @@ simple_instr_list:
 
 il_simple_instruction:
   il_simple_operation eol_list
+	{$$ = new il_simple_instruction_c($1, locloc(@1));} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | il_expression eol_list
+	{$$ = new il_simple_instruction_c($1, locloc(@1));} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | il_formal_funct_call eol_list
+	{$$ = new il_simple_instruction_c($1, locloc(@1));} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 /* ERROR_CHECK_BEGIN */
 | il_expression error
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "EOL missing after expression IL instruction."); yyerrok;}
@@ -8062,11 +8023,11 @@ void print_err_msg(int first_line,
 
   if (full_token_loc) {
     if (first_filename == last_filename)
-      fprintf(stderr, "%s:%d-%d..%d-%d: error : %s\n", first_filename, first_line, first_column, last_line, last_column, additional_error_msg);
+      fprintf(stderr, "%s:%d-%d..%d-%d: error: %s\n", first_filename, first_line, first_column, last_line, last_column, additional_error_msg);
     else
-      fprintf(stderr, "%s:%d-%d..%s:%d-%d: error : %s\n", first_filename, first_line, first_column, last_filename, last_line, last_column, additional_error_msg);
+      fprintf(stderr, "%s:%d-%d..%s:%d-%d: error: %s\n", first_filename, first_line, first_column, last_filename, last_line, last_column, additional_error_msg);
   } else {
-      fprintf(stderr, "%s:%d: error : %s\n", first_filename, first_line, additional_error_msg);
+      fprintf(stderr, "%s:%d: error: %s\n", first_filename, first_line, additional_error_msg);
   }
   //fprintf(stderr, "error %d: %s\n", yynerrs /* a global variable */, additional_error_msg);
   print_include_stack();
@@ -8253,6 +8214,7 @@ int stage2__(const char *filename,
   }
 
   /* first parse the standard library file... */
+  /* Do not debug the standard library, even if debug flag is set! */
   /*
   #if YYDEBUG
     yydebug = 1;
@@ -8268,7 +8230,7 @@ int stage2__(const char *filename,
       ERROR;
 
   if (yynerrs > 0) {
-    fprintf (stderr, "\nFound %d error(s) in %s. Bailing out!\n", yynerrs /* global variable */, libfilename);
+    fprintf (stderr, "\n%d error(s) found in %s. Bailing out!\n", yynerrs /* global variable */, libfilename);
     ERROR;
   }
   free(libfilename);
@@ -8301,7 +8263,7 @@ int stage2__(const char *filename,
   }
 
   if (yynerrs > 0) {
-    fprintf (stderr, "\nFound %d error(s). Bailing out!\n", yynerrs /* global variable */);
+    fprintf (stderr, "\n%d error(s) found. Bailing out!\n", yynerrs /* global variable */);
     exit(EXIT_FAILURE);
   }
   

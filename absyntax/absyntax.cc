@@ -40,12 +40,7 @@
 #include "absyntax.hh"
 //#include "../stage1_2/iec.hh" /* required for BOGUS_TOKEN_ID, etc... */
 #include "visitor.hh"
-
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
-
-#define ABORT(str) {printf("ERROR: %s\n", str); ERROR;}
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
 
@@ -61,6 +56,11 @@ symbol_c::symbol_c(
   this->last_line    = last_line;
   this->last_column  = last_column;
   this->last_order   = last_order;
+  this->datatype     = NULL;
+  this->const_value._real64.status   = cs_undefined;
+  this->const_value._int64.status    = cs_undefined;
+  this->const_value._uint64.status   = cs_undefined;
+  this->const_value._bool.status     = cs_undefined;
 }
 
 
@@ -101,7 +101,7 @@ void list_c::add_element(symbol_c *elem) {
   n++;
   elements = (symbol_c **)realloc(elements, n * sizeof(symbol_c *));
   if (elements == NULL)
-    ABORT("Out of memory");
+    ERROR_MSG("Out of memory");
   elements[n - 1] = elem;
  
   if (elem == NULL)
@@ -130,18 +130,27 @@ void list_c::add_element(symbol_c *elem) {
 /* To insert into the begining of list, call with pos=0  */
 /* To insert into the end of list, call with pos=list->n */
 void list_c::insert_element(symbol_c *elem, int pos) {
-  int i;
   if (pos > n) ERROR;
   
   /* add new element to end of list. Basically alocate required memory... */
   /* will also increment n by 1 ! */
   add_element(elem);
   /* if not inserting into end position, shift all elements up one position, to open up a slot in pos for new element */
-  if (pos < (n-1)) for (i = n-2; i >= pos; i--) elements[i+1] = elements[i];
+  if (pos < (n-1)) for (int i = n-2; i >= pos; i--) elements[i+1] = elements[i];
   elements[pos] = elem;
 }
 
 
+/* remove element at position pos. */
+void list_c::remove_element(int pos) {
+  if (pos > n) ERROR;
+  
+  /* Shift all elements down one position, starting at the entry to delete. */
+  for (int i = pos; i < n-1; i++) elements[i] = elements[i+1];
+  /* corrent the new size, and free unused memory */
+  n--;
+  elements = (symbol_c **)realloc(elements, n * sizeof(symbol_c *));
+}
 
 #define SYM_LIST(class_name_c, ...)								\
 class_name_c::class_name_c(									\

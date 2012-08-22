@@ -30,27 +30,51 @@
  *
  */
 
-/* Determine the data type of a specific variable instance, including
- * function block instances.
- * A reference to the relevant variable declaration is returned.
- * The variable instance may NOT be a member of a structure of a member
+/* Search in a VAR* END_VAR declaration for the delcration of the specified variable instance. 
+ * Will return:
+ *     - the declaration itself (get_decl() )
+ *     - the type of declaration in which the variable was declared (get_vartype() )
+ *
+ * The variable instance may NOT be a member of a structure of a memeber
  * of a structure of an element of an array of ...
  *
- * example:
+ * For example, considering the following 'variables':
  *    window.points[1].coordinate.x
  *    window.points[1].colour
- *    etc... ARE NOT ALLOWED!
+ *    offset[99]
+ *
+ *   passing a reference to 'points', 'points[1]', 'points[1].colour', 'colour'
+ *    ARE NOT ALLOWED!
  *
  * This class must only be passed the name of the variable that will appear
  * in the variable declaration. In the above examples, this would be
- *   'window' !!
+ *   'window.points[1].coordinate.x'
+ *   'window.points[1].coordinate'
+ *   'window.points[1]'
+ *   'window'
+ *   'window.points[1].colour'
+ *   'offset'
+ *   'offset[99]'
  *
  *
- * If you need to pass a complete name of a variable instance (such as
- * 'window.points[1].coordinate.x') use the search_varfb_instance_type_c instead!
+ */
+ 
+/* Note: 
+ * Determining the declaration type of a specific variable instance (including
+ * function block instances) really means determining whether the variable was declared in a
+ *  VAR_INPUT
+ *  VAR_OUTPUT
+ *  VAR_IN_OUT
+ *  VAR
+ *  VAR_TEMP
+ *  VAR_EXTERNAL
+ *  VAR_GLOBAL
+ *  VAR <var_name> AT <location>   -> Located variable!
+ * 
  */
 
-/* Note that current_type_decl that this class returns may reference the
+/* Note:
+ *  The current_type_decl that this class returns may reference the
  * name of a type, or the type declaration itself!
  * For an example of the first, consider a variable declared as ...
  * x : AAA;
@@ -61,7 +85,12 @@
  * If it is the first, we will return a reference to the name, if the second
  * we return a reference to the declaration!!
  */
+
+
 #include "absyntax_utils.hh"
+
+
+
 
 
 search_var_instance_decl_c::search_var_instance_decl_c(symbol_c *search_scope) {
@@ -69,17 +98,58 @@ search_var_instance_decl_c::search_var_instance_decl_c(symbol_c *search_scope) {
   this->search_scope = search_scope;
   this->search_name = NULL;
   this->current_type_decl = NULL;
+  this->current_option = none_opt;
 }
 
-symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable_instance_name) {
+symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable) {
   this->current_vartype = none_vt;
-  this->search_name = variable_instance_name;
+  this->current_option  = none_opt;
+  this->search_name = get_var_name_c::get_name(variable);
   return (symbol_c *)search_scope->accept(*this);
 }
 
-unsigned int search_var_instance_decl_c::get_vartype(void) {
-  return current_vartype;
+search_var_instance_decl_c::vt_t search_var_instance_decl_c::get_vartype(symbol_c *variable) {
+  this->current_vartype = none_vt;
+  this->current_option  = none_opt;
+  this->search_name = get_var_name_c::get_name(variable);
+  search_scope->accept(*this);
+  return this->current_vartype;
 }
+
+search_var_instance_decl_c::opt_t search_var_instance_decl_c::get_option(symbol_c *variable) {
+  this->current_vartype = none_vt;
+  this->current_option  = none_opt;
+  this->search_name = get_var_name_c::get_name(variable);
+  search_scope->accept(*this);
+  return this->current_option;
+}
+
+
+
+/* This is a temporary fix. Hopefully, once I clean up stage4 code, and I change the way
+ * we generate C code, this function will no longer be needed!
+ */
+#include <typeinfo>  /* required for typeid() */
+bool search_var_instance_decl_c::type_is_complex(symbol_c *symbol) {
+  symbol_c *decl;
+  search_base_type_c search_base_type;
+  
+  decl = this->get_decl(symbol);
+  if (NULL == decl) ERROR;
+  decl = search_base_type.get_basetype_decl(decl);
+  if (NULL == decl) ERROR;
+  
+  return ((typeid( *(decl) ) == typeid( array_specification_c                )) ||
+//        (typeid( *(decl) ) == typeid( array_spec_init_c                    )) ||  /* does not seem to be necessary */
+          (typeid( *(decl) ) == typeid( structure_type_declaration_c         )) ||  
+          (typeid( *(decl) ) == typeid( structure_element_declaration_list_c )) ||
+//        (typeid( *(decl) ) == typeid( structure_type_declaration_c         )) ||  /* does not seem to be necessary */
+          (typeid( *(decl) ) == typeid( initialized_structure_c              ))
+          
+         );
+}
+
+
 
 /***************************/
 /* B 0 - Programming Model */
@@ -100,12 +170,30 @@ void *search_var_instance_decl_c::visit(library_c *symbol) {
 /* edge -> The F_EDGE or R_EDGE directive */
 // SYM_REF2(edge_declaration_c, edge, var1_list)
 // TODO
+void *search_var_instance_decl_c::visit(constant_option_c *symbol) {
+  current_option = constant_opt;
+  return NULL;
+}
+
+void *search_var_instance_decl_c::visit(retain_option_c *symbol) {
+  current_option = retain_opt;
+  return NULL;
+}
+
+void *search_var_instance_decl_c::visit(non_retain_option_c *symbol) {
+  current_option = non_retain_opt;
+  return NULL;
+}
 
 void *search_var_instance_decl_c::visit(input_declarations_c *symbol) {
   current_vartype = input_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)  
+    symbol->option->accept(*this);
   void *res = symbol->input_declaration_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option  = none_opt;
   }
   return res;
 }
@@ -114,9 +202,13 @@ void *search_var_instance_decl_c::visit(input_declarations_c *symbol) {
 /* option -> may be NULL ! */
 void *search_var_instance_decl_c::visit(output_declarations_c *symbol) {
   current_vartype = output_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)
+    symbol->option->accept(*this);
   void *res = symbol->var_init_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option  = none_opt;
   }
   return res;
 }
@@ -124,6 +216,7 @@ void *search_var_instance_decl_c::visit(output_declarations_c *symbol) {
 /*  VAR_IN_OUT var_declaration_list END_VAR */
 void *search_var_instance_decl_c::visit(input_output_declarations_c *symbol) {
   current_vartype = inoutput_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
   void *res = symbol->var_declaration_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
@@ -144,9 +237,13 @@ void *search_var_instance_decl_c::visit(eno_param_declaration_c *symbol) {
 /* helper symbol for input_declarations */
 void *search_var_instance_decl_c::visit(var_declarations_c *symbol) {
   current_vartype = private_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)
+    symbol->option->accept(*this);
   void *res = symbol->var_init_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option = none_opt;
   }
   return res;
 }
@@ -154,9 +251,11 @@ void *search_var_instance_decl_c::visit(var_declarations_c *symbol) {
 /*  VAR RETAIN var_init_decl_list END_VAR */
 void *search_var_instance_decl_c::visit(retentive_var_declarations_c *symbol) {
   current_vartype = private_vt;
+  current_option  = retain_opt;
   void *res = symbol->var_init_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option = none_opt;
   }
   return res;
 }
@@ -166,9 +265,13 @@ void *search_var_instance_decl_c::visit(retentive_var_declarations_c *symbol) {
 //SYM_REF2(located_var_declarations_c, option, located_var_decl_list)
 void *search_var_instance_decl_c::visit(located_var_declarations_c *symbol) {
   current_vartype = located_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)
+    symbol->option->accept(*this);
   void *res = symbol->located_var_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option  = none_opt;
   }
   return res;
 }
@@ -178,9 +281,13 @@ void *search_var_instance_decl_c::visit(located_var_declarations_c *symbol) {
 //SYM_REF2(external_var_declarations_c, option, external_declaration_list)
 void *search_var_instance_decl_c::visit(external_var_declarations_c *symbol) {
   current_vartype = external_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)
+    symbol->option->accept(*this);
   void *res = symbol->external_declaration_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option = none_opt;
   }
   return res;
 }
@@ -190,9 +297,13 @@ void *search_var_instance_decl_c::visit(external_var_declarations_c *symbol) {
 //SYM_REF2(global_var_declarations_c, option, global_var_decl_list)
 void *search_var_instance_decl_c::visit(global_var_declarations_c *symbol) {
   current_vartype = global_vt;
+  current_option  = none_opt; /* not really required. Just to make the code more readable */
+  if (NULL != symbol->option)
+    symbol->option->accept(*this);
   void *res = symbol->global_var_decl_list->accept(*this);
   if (res == NULL) {
     current_vartype = none_vt;
+    current_option = none_opt;
   }
   return res;
 }
@@ -232,7 +343,7 @@ void *search_var_instance_decl_c::visit(fb_name_list_c *symbol) {
   list_c *list = symbol;
   for(int i = 0; i < list->n; i++) {
     if (compare_identifiers(list->elements[i], search_name) == 0)
-  /* by now, current_fb_declaration should be != NULL */
+    /* by now, current_fb_declaration should be != NULL */
       return current_type_decl;
   }
   return NULL;
@@ -262,7 +373,7 @@ void *search_var_instance_decl_c::visit(array_var_declaration_c *symbol) {
 /*  var1_list ':' structure_type_name */
 // SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
 void *search_var_instance_decl_c::visit(structured_var_declaration_c *symbol) {
-  current_type_decl = symbol;
+  current_type_decl = symbol->structure_type_name;
   return symbol->var1_list->accept(*this);
 }
 
@@ -400,21 +511,62 @@ void *search_var_instance_decl_c::visit(function_declaration_c *symbol) {
 /*****************************/
 /* B 1.5.2 - Function Blocks */
 /*****************************/
+/*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
+// SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
 void *search_var_instance_decl_c::visit(function_block_declaration_c *symbol) {
-  /* no need to search through all the body, so we only
-   * visit the variable declarations...!
-   */
-  return symbol->var_declarations->accept(*this);
+  /* visit the variable declarations...! */
+  void *res = symbol->var_declarations->accept(*this);
+  if (NULL != res)
+    return res;
+  
+  /* not yet found, so we look into the body, to see if it is an SFC step! */
+  return symbol->fblock_body->accept(*this);
 }
 
 /**********************/
 /* B 1.5.3 - Programs */
 /**********************/
+/*  PROGRAM program_type_name program_var_declarations_list function_block_body END_PROGRAM */
+// SYM_REF3(program_declaration_c, program_type_name, var_declarations, function_block_body)
 void *search_var_instance_decl_c::visit(program_declaration_c *symbol) {
-  /* no need to search through all the body, so we only
-   * visit the variable declarations...!
-   */
-  return symbol->var_declarations->accept(*this);
+  /* visit the variable declarations...! */
+  void *res = symbol->var_declarations->accept(*this);
+  if (NULL != res)
+    return res;
+  
+  /* not yet found, so we look into the body, to see if it is an SFC step! */
+  return symbol->function_block_body->accept(*this);
+}
+
+
+/*********************************************/
+/* B.1.6  Sequential function chart elements */
+/*********************************************/
+/* | sequential_function_chart sfc_network */
+// SYM_LIST(sequential_function_chart_c)
+/* search_var_instance_decl_c inherits from serach_visitor_c, so no need to implement the following method. */
+// void *search_var_instance_decl_c::visit(sequential_function_chart_c *symbol) {...}
+
+/* initial_step {step | transition | action} */
+// SYM_LIST(sfc_network_c)
+/* search_var_instance_decl_c inherits from serach_visitor_c, so no need to implement the following method. */
+// void *search_var_instance_decl_c::visit(sfc_network_c *symbol) {...}
+
+
+/* INITIAL_STEP step_name ':' action_association_list END_STEP */
+// SYM_REF2(initial_step_c, step_name, action_association_list)
+void *search_var_instance_decl_c::visit(initial_step_c *symbol) {
+  if (compare_identifiers(symbol->step_name, search_name) == 0)
+      return symbol;
+  return NULL;
+}
+
+/* STEP step_name ':' action_association_list END_STEP */
+// SYM_REF2(step_c, step_name, action_association_list)
+void *search_var_instance_decl_c::visit(step_c *symbol) {
+  if (compare_identifiers(symbol->step_name, search_name) == 0)
+      return symbol;
+  return NULL;
 }
 
 
@@ -469,35 +621,30 @@ void *search_var_instance_decl_c::visit(single_resource_declaration_c *symbol) {
   return NULL;
 }
 
-#if 0
-/*********************/
-/* B 1.4 - Variables */
-/*********************/
-SYM_REF2(symbolic_variable_c, var_name, unused)
-
-/********************************************/
-/* B.1.4.1   Directly Represented Variables */
-/********************************************/
-SYM_TOKEN(direct_variable_c)
-
-/*************************************/
-/* B.1.4.2   Multi-element Variables */
-/*************************************/
-/*  subscripted_variable '[' subscript_list ']' */
-SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
-
-/* subscript_list ',' subscript */
-SYM_LIST(subscript_list_c)
-
-/*  record_variable '.' field_selector */
-/*  WARNING: input and/or output variables of function blocks
- *           may be accessed as fields of a tructured variable!
- *           Code handling a structured_variable_c must take
- *           this into account!
- */
-SYM_REF2(structured_variable_c, record_variable, field_selector)
 
 
+/****************************************/
+/* B.2 - Language IL (Instruction List) */
+/****************************************/
+/***********************************/
+/* B 2.1 Instructions and Operands */
+/***********************************/
+/*| instruction_list il_instruction */
+// SYM_LIST(instruction_list_c)
+void *search_var_instance_decl_c::visit(instruction_list_c *symbol) {
+  /* IL code does not contain any variable declarations! */
+  return NULL;
+}
 
-};
-#endif
+
+/***************************************/
+/* B.3 - Language ST (Structured Text) */
+/***************************************/
+/********************/
+/* B 3.2 Statements */
+/********************/
+// SYM_LIST(statement_list_c)
+void *search_var_instance_decl_c::visit(statement_list_c *symbol) {
+  /* ST code does not contain any variable declarations! */
+  return NULL;
+}

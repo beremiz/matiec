@@ -30,6 +30,14 @@
  *
  */
 
+/* NOTE: The use of this visitor class is now deprecated.
+ *       The new version of stage3 data type checking adds an entry to
+ *       every relevant object in the abstract syntax tree defining
+ *       the data type of that object. Please use that instead!
+ */
+
+
+
 /* Determine the data type of a specific constant or variable.
  * A reference to the relevant type definition is returned.
  *
@@ -49,6 +57,10 @@
 class search_constant_type_c: public search_visitor_c {
 
   public:
+  /* object used to identify an entry in the abstract syntax tree with an invalid data type */
+  /* This is only used from stage3 onwards. Stages 1 and 2 will never create any instances of invalid_type_name_c */
+  static invalid_type_name_c     invalid_type_name;
+
   /**********************/
   /* B.1.3 - Data types */
   /**********************/
@@ -77,9 +89,6 @@ class search_constant_type_c: public search_visitor_c {
   static time_type_name_c     time_type_name;
   static int_type_name_c      int_type_name;
 
-/* temporarily here until we remove the st_code_gen.c and il_code_gen.c files... */
-  static integer_c      integer;
-  static real_c			real;
 
   /******************************************************/
   /* Extensions to the base standard as defined in      */
@@ -96,8 +105,24 @@ class search_constant_type_c: public search_visitor_c {
   static safetime_type_name_c     safetime_type_name;
   static safetod_type_name_c      safetod_type_name;
   static safedt_type_name_c       safedt_type_name;
-
-
+  static safedate_type_name_c     safedate_type_name;
+  static safereal_type_name_c     safereal_type_name;
+  static safesint_type_name_c     safesint_type_name;
+  static safelint_type_name_c     safelint_type_name;
+  static safedint_type_name_c     safedint_type_name;
+  static safedword_type_name_c    safedword_type_name;
+  static safeudint_type_name_c    safeudint_type_name;
+  static safeword_type_name_c     safeword_type_name;
+  static safewstring_type_name_c  safewstring_type_name;
+  static safestring_type_name_c   safestring_type_name;
+  static safelword_type_name_c    safelword_type_name;
+  static safeuint_type_name_c     safeuint_type_name;
+  static safelreal_type_name_c    safelreal_type_name;
+  static safebyte_type_name_c     safebyte_type_name;
+  static safeusint_type_name_c    safeusint_type_name;
+  static safeulint_type_name_c    safeulint_type_name;
+  static safebool_type_name_c     safebool_type_name;
+  static safeint_type_name_c      safeint_type_name;
 
   public:
     symbol_c *get_type(symbol_c *constant);
@@ -141,12 +166,8 @@ class search_constant_type_c: public search_visitor_c {
     /************************/
     void *visit(neg_time_c *symbol);
     void *visit(duration_c *symbol);
+    void *visit(interval_c *symbol);
     void *visit(fixed_point_c *symbol);
-    void *visit(days_c *symbol);
-    void *visit(hours_c *symbol);
-    void *visit(minutes_c *symbol);
-    void *visit(seconds_c *symbol);
-    void *visit(milliseconds_c *symbol);
 
     /************************************/
     /* B 1.2.3.2 - Time of day and Date */
@@ -162,7 +183,6 @@ class search_constant_type_c: public search_visitor_c {
     /********************************/
     void *visit(enumerated_value_c *symbol);
 };  // search_constant_type_c
-
 
 
 #endif /* ifndef _SEARCH_CONSTANT_TYPE_HH */

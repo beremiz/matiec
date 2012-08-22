@@ -89,24 +89,24 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           
           /* steps table declaration */
           s4o.print(s4o.indent_spaces + "STEP __step_list[");
-          s4o.print_integer(step_number);
+          s4o.print(step_number);
           s4o.print("];\n");
           s4o.print(s4o.indent_spaces + "UINT __nb_steps;\n");
           
           /* actions table declaration */
           s4o.print(s4o.indent_spaces + "ACTION __action_list[");
-          s4o.print_integer(action_number);
+          s4o.print(action_number);
           s4o.print("];\n");
           s4o.print(s4o.indent_spaces + "UINT __nb_actions;\n");
           
           /* transitions table declaration */
           s4o.print(s4o.indent_spaces + "__IEC_BOOL_t __transition_list[");
-          s4o.print_integer(transition_number);
+          s4o.print(transition_number);
           s4o.print("];\n");
           
           /* transitions debug table declaration */
           s4o.print(s4o.indent_spaces + "__IEC_BOOL_t __debug_transition_list[");
-          s4o.print_integer(transition_number);
+          s4o.print(transition_number);
           s4o.print("];\n");
           s4o.print(s4o.indent_spaces + "UINT __nb_transitions;\n");
           
@@ -124,7 +124,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
           s4o.print("__nb_steps = ");
-          s4o.print_integer(step_number);
+          s4o.print(step_number);
           s4o.print(";\n");
           step_number = 0;
           wanted_sfcdeclaration = sfcinit_sd;
@@ -150,7 +150,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
           s4o.print("__nb_actions = ");
-          s4o.print_integer(action_number);
+          s4o.print(action_number);
           s4o.print(";\n");
           action_number = 0;
           wanted_sfcdeclaration = sfcinit_sd;
@@ -174,7 +174,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(s4o.indent_spaces);
           print_variable_prefix();
           s4o.print("__nb_transitions = ");
-          s4o.print_integer(transition_number);
+          s4o.print(transition_number);
           s4o.print(";\n");
           transition_number = 0;
           wanted_sfcdeclaration = sfcinit_sd;
@@ -199,7 +199,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
               s4o.print(SFC_STEP_ACTION_PREFIX);
               pt->symbol->accept(*this);
               s4o.print(" ");
-              s4o.print_integer(action_number);
+              s4o.print(action_number);
               s4o.print("\n");
               action_number++;
             }
@@ -251,7 +251,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print("(");
           print_variable_prefix();
           s4o.print(",__step_list[");
-          s4o.print_integer(step_number);
+          s4o.print(step_number);
           s4o.print("].state,1);\n");
           step_number++;
           break;
@@ -260,7 +260,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->step_name->accept(*this);
           s4o.print(" ");
-          s4o.print_integer(step_number);
+          s4o.print(step_number);
           s4o.print("\n");
           step_number++;
           break;
@@ -292,7 +292,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->step_name->accept(*this);
           s4o.print(" ");
-          s4o.print_integer(step_number);
+          s4o.print(step_number);
           s4o.print("\n");
           step_number++;
           break;
@@ -346,7 +346,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->action_name->accept(*this);
           s4o.print(" ");
-          s4o.print_integer(action_number);
+          s4o.print(action_number);
           s4o.print("\n");
           action_number++;
           break;

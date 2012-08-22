@@ -81,28 +81,28 @@ typedef struct {
 #endif
 
 
-#define __lit(type,value,sfx) (type)value##sfx
-// Keep this macro expention step to let sfx change into L or LL
-#define __literal(type,value,sfx) __lit(type,value,sfx)
+#define __lit(type,value,...) (type)value##__VA_ARGS__
+// Keep this macro expention step to let sfx(__VA_ARGS__) change into L or LL
+#define __literal(type,value,...) __lit(type,value,##__VA_ARGS__)
 
-#define __BOOL_LITERAL(value) __literal(BOOL,value,)
-#define __SINT_LITERAL(value) __literal(SINT,value,)
-#define __INT_LITERAL(value) __literal(INT,value,)
+#define __BOOL_LITERAL(value) __literal(BOOL,value)
+#define __SINT_LITERAL(value) __literal(SINT,value)
+#define __INT_LITERAL(value) __literal(INT,value)
 #define __DINT_LITERAL(value) __literal(DINT,value,__32b_sufix)
 #define __LINT_LITERAL(value) __literal(LINT,value,__64b_sufix)
-#define __USINT_LITERAL(value) __literal(USINT,value,)
-#define __UINT_LITERAL(value) __literal(UINT,value,)
+#define __USINT_LITERAL(value) __literal(USINT,value)
+#define __UINT_LITERAL(value) __literal(UINT,value)
 #define __UDINT_LITERAL(value) __literal(UDINT,value,__32b_sufix)
 #define __ULINT_LITERAL(value) __literal(ULINT,value,__64b_sufix)
 #define __REAL_LITERAL(value) __literal(REAL,value,__32b_sufix)
 #define __LREAL_LITERAL(value) __literal(LREAL,value,__64b_sufix)
-#define __TIME_LITERAL(value) __literal(TIME,value,)
-#define __DATE_LITERAL(value) __literal(DATE,value,)
-#define __TOD_LITERAL(value) __literal(TOD,value,)
-#define __DT_LITERAL(value) __literal(DT,value,)
+#define __TIME_LITERAL(value) __literal(TIME,value)
+#define __DATE_LITERAL(value) __literal(DATE,value)
+#define __TOD_LITERAL(value) __literal(TOD,value)
+#define __DT_LITERAL(value) __literal(DT,value)
 #define __STRING_LITERAL(count,value) (STRING){count,value}
-#define __BYTE_LITERAL(value) __literal(BYTE,value,)
-#define __WORD_LITERAL(value) __literal(WORD,value,)
+#define __BYTE_LITERAL(value) __literal(BYTE,value)
+#define __WORD_LITERAL(value) __literal(WORD,value)
 #define __DWORD_LITERAL(value) __literal(DWORD,value,__32b_sufix)
 #define __LWORD_LITERAL(value) __literal(LWORD,value,__64b_sufix)
 
@@ -261,6 +261,7 @@ static inline IEC_TIMESPEC __dt_to_timespec(double seconds,  double minutes, dou
   broken_down_time.tm_mday = day;  /* day of month, from 1 to 31 */
   broken_down_time.tm_mon = month - 1;   /* month since January, in the range 0 to 11 */
   broken_down_time.tm_year = year - 1900;  /* number of years since 1900 */
+  broken_down_time.tm_isdst = 0; /* disable daylight savings time */
 
   epoch_seconds = mktime(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
   if ((time_t)(-1) == epoch_seconds)
@@ -568,16 +569,16 @@ static inline STRING __dt_to_string(DT IN){
     }
     if(IN.tv_nsec == 0){
         res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%d",
-                 broken_down_time->tm_year,
-                 broken_down_time->tm_mon,
+                 broken_down_time->tm_year + 1900,
+                 broken_down_time->tm_mon  + 1,
                  broken_down_time->tm_mday,
                  broken_down_time->tm_hour,
                  broken_down_time->tm_min,
                  broken_down_time->tm_sec);
     }else{
         res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%g",
-                 broken_down_time->tm_year,
-                 broken_down_time->tm_mon,
+                 broken_down_time->tm_year + 1900,
+                 broken_down_time->tm_mon  + 1,
                  broken_down_time->tm_mday,
                  broken_down_time->tm_hour,
                  broken_down_time->tm_min,
@@ -1752,7 +1753,6 @@ __compare_string(LE__BOOL__STRING, <= ) /* Overloaded function */
     /**************/
     /*     NE     */
     /**************/
-
 #define __ne_num(fname, TYPENAME) \
 static inline BOOL fname(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
   TEST_EN(BOOL)\

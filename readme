@@ -8,7 +8,64 @@
   FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
 
 
-  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
+  Copyright (C) 2003-2012  Mario de Sousa (msousa@fe.up.pt)
+
+
+****************************************************************
+****************************************************************
+****************************************************************
+*********                                              *********
+*********                                              *********
+*********         O V E R A L L    G O A L S           *********
+*********                                              *********
+*********                                              *********
+****************************************************************
+****************************************************************
+****************************************************************
+
+
+
+ This project has the goal of producing an open source compiler for the programming languages defined
+in the IEC 61131-3 standard. These programming languages are mostly used in the industrial automation 
+domain, to program PLCs (Programmable Logic Controllers).
+
+ This standard defines 5 programming languages:
+     - IL : Instructtion List
+            A textual programming language, somewhat similar to assembly.
+     - ST : Structured Text
+            A textual programming language, somewhat similar to Pascal.
+     - FBD: Function Block Diagram
+            A graphical programming language, somewhat similar to an electrical circuit diagram based on small 
+             scale integration ICs (Integrated Circuits) (counters, AND/OR/XOR/... logic gates, timers, ...).
+     - LD : Ladder Diagram
+            A graphical programming language, somewhat similar to an electrical circuit diagram based on 
+             relays (used for basic cabled logic controllers).
+     - SFC: Sequential Function Chart
+            A graphical programming language, that defines a state machine, based largely on Grafcet.
+            (may also be expressed in textual format).
+
+ Of the above 5 languages, the standard defines textual representations for IL, ST and SFC. 
+It is these 3 languages that we target, and we currently support all three, as long as they are
+expressed in the textual format as defined in the standard.
+
+ Currently the matiec project generates two compilers (more correctly, code translaters, but we like
+to call them compilers :-O ): iec2c, and iec2iec
+
+ Both compilers accept the same input: a text file with ST, IL and/or SFC code.
+
+ The iec2c compiler generates ANSI C code which is equivalent to the IEC 61131-3 code expressed in the input file.
+
+ The iec2iec compiler generates IEC61131-3 code which is equivalent to the IEC 61131-3 code expressed in the input file.
+This last compiler should generate and output file which should be almost identical to the input file (some formating 
+may change, as well as the case of letters, etc.). This 'compiler' is mostly used by the matiec project contributors
+to help debug the lexical and syntax portions of the compilers.
+
+
+
+ To compile/build these compilers, just
+$./configure; make
+
+
 
 
 
@@ -25,26 +82,111 @@
 ****************************************************************
 
  The compiler works in 4(+1) stages:
- Stage 1   - Lexical analyser      - implemented with flex (iec.flex)
- Stage 2   - Syntax parser         - implemented with bison (iec.y)
- Stage 3   - Semantics analyser    - currently in its early stages
- Stage 4   - Code generator        - implemented in C++
- Stage 4+1 - Binary code generator - gcc, javac, etc...
+ ==================================
+ Stage 1    - Lexical analyser       - implemented with flex (stage1_2/iec_flex.ll)
+ Stage 2    - Syntax parser          - implemented with bison (stage1_2/iec_bison.yy)
+ Stage pre3 - Populate symbol tables - Symbol tables that will ease searching for symbols in the abstract symbol tree.
+ Stage 3    - Semantics analyser     - currently does type checking only
+ Stage 4    - Code generator         - generates ANSI C code
+
+ Stage 5    - Binary code generator - gcc, javac, etc... (Not integrated into matiec compiler. Must be called explicitly by the user.)
+
 
 
  Data structures passed between stages, in global variables:
- 1->2   : tokens (int), and token values (char *)
- 2->1   : symbol tables (defined in symtable.hh)
- 2->3   : abstract syntax tree (tree of C++ classes, in absyntax.hh file)
- 3->4   : Same as 2->3
- 4->4+1 : file with program in c, java, etc...
+ ==========================================================
+   1->2   : tokens (int), and token values (char *) (defined in stage1_2/stage1_2_priv.hh)
+   2->1   : symbol tables (implemented in util/symtable.[hh|cc], and defined in stage1_2/stage1_2_priv.hh)
+   2->3   : abstract syntax tree (tree of C++ objects, whose classes are defined in absyntax/absyntax.hh)
+pre3->3,4 : global symbol tables (defined in util/[d]symtable.[hh|cc] and declared in absyntax_utils/absyntax_utils.hh)
+   3->4   : abstract syntax tree (same as 2->3), but now annotated (i.e. some extra data inserted into the absyntax tree)
+
+   4->5   : file with program in c, java, etc...
+
+
 
 
  The compiler works in several passes:
- Pass 1: executes stages 1 and 2 simultaneously
- Pass 2: executes stage 3
- Pass 3: executes stage 4
- Pass 4: executes stage 4+1
+ ====================================
+
+Stage 1 and Stage 2
+-------------------
+  Executed in one single pass. This pass will:
+  - Do lexical analysis
+  - Do syntax analysis
+  - Execute the absyntax_utils/add_en_eno_param_decl_c visitor class
+    This class will add the EN and ENO parameter declarations to all
+    functions that do not have them already explicitly declared by the user.
+    This will let us handle these parameters in the remaining compiler just as if
+    they were standard input/output parameters.
+
+
+Stage Pre3
+----------
+  Executed in one single pass. This pass will populate the following symbol tables:
+   - function_symtable;            /* A symbol table with all globally declared functions POUs. */
+   - function_block_type_symtable; /* A symbol table with all globally declared functions block POUs. */
+   - program_type_symtable;        /* A symbol table with all globally declared program POUs. */
+   - type_symtable;                /* A symbol table with all user declared (non elementary) datat type definitions. */
+   - enumerated_value_symtable;    /* A symbol table with all identifiers (values) declared for enumerated types. */
+
+
+Stage 3
+-------
+  Executes two algorithms (flow control analysis, and data type analysis) in several passes.
+
+  Flow control:
+     Pass 1: Does flow control analysis (for now only of IL code) 
+             Implemented in -> stage3/flow_control_analysis_c
+             This will anotate the abstract syntax tree 
+             (Every object of the class il_instruction_c that is in the abstract syntax tree will have the variable 'prev_il_instruction' correctly filled in.)
+
+  Data Type Analysis
+     Pass 1: Analyses the possible data types each expression/literal/IL instruction/etc. may take 
+             Implemented in -> stage3/fill_candidate_datatypes_c
+             This will anotate the abstract syntax tree 
+             (Every object of in the abstract syntax tree that may have a data type, will have the variable 'candidate_datatypes' correctly filled in.
+             Additionally, objects in the abstract syntax tree that represen function invocations will have the variable 
+              'candidate_functions' correctly filled in.)
+Pass 2: Narrows all the possible data types each expression/literal/IL instruction/etc. may take down to a single data type 
+             Implemented in -> stage3/narrow_candidate_datatypes_c
+             This will anotate the abstract syntax tree 
+             (Every object of in the abstract syntax tree that may have a data type, will have the variable 'datatype' correctly filled in.
+              Additionally, objects in the abstract syntax tree that represen function invocations will have the variables 
+              'called_function_declaration' and 'extensible_param_count' correctly filled in.
+              Additionally, objects in the abstract syntax tree that represen function block (FB) invocations will have the variable
+              'called_fb_declaration' correctly filled in.)
+     Pass 2: Prints error messages in the event of the IEC 61131-3 source code being analysed contains semantic data type incompatibility errors.
+             Implemented in -> stage3/print_datatype_errors_c
+
+  
+Stage 4
+-------
+  Has 2 possible implementations.
+  
+  iec2c  :  Generates C source code in a single pass (stage4/generate_c).
+  iec2iec:  Generates IEC61131 source code in a single pass (stage4/generate_iec).
+
+
+
+
+
+
+****************************************************************
+****************************************************************
+****************************************************************
+*********                                              *********
+*********                                              *********
+*********               N O T E S                      *********
+*********                                              *********
+*********                                              *********
+****************************************************************
+****************************************************************
+****************************************************************
+
+
+
+
 
 
  NOTE 1
@@ -388,4 +530,4 @@ the syntax to read
 
 **************************************************************************
 
-  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
+  Copyright (C) 2003-2012  Mario de Sousa (msousa@fe.up.pt)

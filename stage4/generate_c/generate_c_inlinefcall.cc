@@ -106,6 +106,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     search_expression_type_c *search_expression_type;
 
     search_varfb_instance_type_c *search_varfb_instance_type;
+    search_var_instance_decl_c   *search_var_instance_decl;
 
     search_base_type_c search_base_type;
 
@@ -119,6 +120,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     {
       search_expression_type = new search_expression_type_c(scope);
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
+      search_var_instance_decl   = new search_var_instance_decl_c(scope);
+      
       this->set_variable_prefix(variable_prefix);
       current_operand = NULL;
       current_operand_type = NULL;
@@ -132,6 +135,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     virtual ~generate_c_inlinefcall_c(void) {
       delete search_expression_type;
       delete search_varfb_instance_type;
+      delete search_var_instance_decl;
     }
 
     void print(symbol_c* symbol) {
@@ -175,7 +179,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       if (function_type_suffix) {
         function_type_suffix->accept(*this);
       }
-      s4o.print_integer(fcall_number);
+      s4o.print(fcall_number);
       s4o.print("(");
       s4o.indent_right();
 
@@ -309,7 +313,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 	}
 
     void *print_getter(symbol_c *symbol) {
-      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+      unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
       if (vartype == search_var_instance_decl_c::external_vt)
     	s4o.print(GET_EXTERNAL);
       else if (vartype == search_var_instance_decl_c::located_vt)
@@ -320,7 +324,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
       wanted_variablegeneration = complextype_base_vg;
       symbol->accept(*this);
-      if (search_varfb_instance_type->type_is_complex())
+      if (search_var_instance_decl->type_is_complex(symbol))
     	s4o.print(",");
       wanted_variablegeneration = complextype_suffix_vg;
       symbol->accept(*this);
@@ -332,7 +336,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     void *print_setter(symbol_c* symbol,
     		symbol_c* type,
     		symbol_c* value) {
-      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+      unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
       if (vartype == search_var_instance_decl_c::external_vt)
         s4o.print(SET_EXTERNAL);
       else if (vartype == search_var_instance_decl_c::located_vt)
@@ -346,7 +350,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       s4o.print(",");
       wanted_variablegeneration = expression_vg;
       print_check_function(type, value, NULL, true);
-      if (search_varfb_instance_type->type_is_complex()) {
+      if (search_var_instance_decl->type_is_complex(symbol)) {
         s4o.print(",");
         wanted_variablegeneration = complextype_suffix_vg;
         symbol->accept(*this);
@@ -397,8 +401,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     // SYM_REF2(structured_variable_c, record_variable, field_selector)
     void *visit(structured_variable_c *symbol) {
       TRACE("structured_variable_c");
-      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol->record_variable);
-      bool type_is_complex = search_varfb_instance_type->type_is_complex();
+      bool type_is_complex = search_var_instance_decl->type_is_complex(symbol->record_variable);
       if (generating_inlinefunction) {
         switch (wanted_variablegeneration) {
           case complextype_base_vg:
@@ -833,6 +836,11 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 	   */
 	  this->default_variable_back_name.current_type = this->default_variable_name.current_type;
 	  return NULL;
+    }
+    
+    // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
+    void *visit(il_simple_instruction_c *symbol)	{
+      return symbol->il_simple_instruction->accept(*this);
     }
 
     void *visit(LD_operator_c *symbol)	{

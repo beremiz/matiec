@@ -80,11 +80,23 @@
 #define HGVERSION ""
 #endif
 
-#define ERROR          error_exit(__FILE__,__LINE__)
-void error_exit(const char *file_name, int line_no) {
-  std::cerr << "\nInternal compiler error in file " << file_name
-            << " at line " << line_no << "\n";
-//   if (msg != NULL) std::cerr << message << "\n\n";
+#include "main.hh"  // symbol_c type
+#include <stdarg.h> // required for va_start(), va_list
+
+void error_exit(const char *file_name, int line_no, const char *errmsg, ...) {
+  va_list argptr;
+  va_start(argptr, errmsg); /* second argument is last fixed pamater of error_exit() */
+
+  fprintf(stderr, "\nInternal compiler error in file %s at line %d", file_name, line_no);
+  if (errmsg != NULL) {
+    fprintf(stderr, ": ");
+    vfprintf(stderr, errmsg, argptr);
+  } else {
+    fprintf(stderr, ".");
+  }
+  fprintf(stderr, "\n");
+  va_end(argptr);
+    
   exit(EXIT_FAILURE);
 }
 
@@ -124,6 +136,7 @@ int main(int argc, char **argv) {
   char * builddir = NULL;
   stage1_2_options_t stage1_2_options = {false, false, NULL};
   int optres, errflg = 0;
+  int path_len;
 /*
   extern char *optarg;
   extern int optind, optopt;
@@ -148,9 +161,19 @@ int main(int argc, char **argv) {
       stage1_2_options.safe_extensions = true;
       break;
     case 'I':
+      /* NOTE: To improve the usability under windows:
+       *       We delete last char's path if it ends with "\".
+       *       In this way compiler front-end accepts paths with or without
+       *       slash terminator.
+       */
+      path_len = strlen(optarg) - 1;
+      if (optarg[path_len] == '\\') optarg[path_len]= '\0';
       stage1_2_options.includedir = optarg;
       break;
     case 'T':
+      /* NOTE: see note above */
+      path_len = strlen(optarg) - 1;
+      if (optarg[path_len] == '\\') optarg[path_len]= '\0';
       builddir = optarg;
       break;
     case ':':       /* -I or -T without operand */
@@ -198,7 +221,7 @@ int main(int argc, char **argv) {
     /* moved to bison, although it could perfectly well still be here instead of in bison code. */
   //add_en_eno_param_decl_c::add_to(tree_root);
 
-  /* Only very simple (not yet complete) data type checking currently implemented... */
+  /* Do semantic verification of code (data type and lvalue checking currently implemented) */
   if (stage3(tree_root) < 0)
     return EXIT_FAILURE;
   

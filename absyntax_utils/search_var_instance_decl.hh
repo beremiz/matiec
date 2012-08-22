@@ -31,26 +31,51 @@
  */
 
 
-/* Determine the data type of a specific variable instance, including
- * function block instances.
- * A reference to the relevant variable declaration is returned.
+/* Search in a VAR* END_VAR declaration for the delcration of the specified variable instance. 
+ * Will return:
+ *     - the declaration itself (get_decl() )
+ *     - the type of declaration in which the variable was declared (get_vartype() )
+ *
  * The variable instance may NOT be a member of a structure of a memeber
  * of a structure of an element of an array of ...
  *
- * example:
+ * For example, considering the following 'variables':
  *    window.points[1].coordinate.x
  *    window.points[1].colour
- *    etc... ARE NOT ALLOWED!
+ *    offset[99]
+ *
+ *   passing a reference to 'points', 'points[1]', 'points[1].colour', 'colour'
+ *    ARE NOT ALLOWED!
  *
  * This class must only be passed the name of the variable that will appear
  * in the variable declaration. In the above examples, this would be
- *   'window' !!
+ *   'window.points[1].coordinate.x'
+ *   'window.points[1].coordinate'
+ *   'window.points[1]'
+ *   'window'
+ *   'window.points[1].colour'
+ *   'offset'
+ *   'offset[99]'
  *
  *
- * If you need to pass a complete name of a variable instance (such as
- * 'window.points[1].coordinate.x') use the search_varfb_instance_type_c instead!
  */
-/* Note that current_type_decl that this class returns may reference the
+ 
+/* Note: 
+ * Determining the declaration type of a specific variable instance (including
+ * function block instances) really means determining whether the variable was declared in a
+ *  VAR_INPUT
+ *  VAR_OUTPUT
+ *  VAR_IN_OUT
+ *  VAR
+ *  VAR_TEMP
+ *  VAR_EXTERNAL
+ *  VAR_GLOBAL
+ *  VAR <var_name> AT <location>   -> Located variable!
+ * 
+ */
+
+/* Note:
+ *  The current_type_decl that this class returns may reference the
  * name of a type, or the type declaration itself!
  * For an example of the first, consider a variable declared as ...
  * x : AAA;
@@ -65,22 +90,29 @@
 
 class search_var_instance_decl_c: public search_visitor_c {
 
-  private:
-    symbol_c *search_scope;
-    symbol_c *search_name;
-    symbol_c *current_type_decl;
-
-    /* variable used to store the type of variable currently being processed... */
-    /* Will contain a single value of generate_c_vardecl_c::XXXX_vt */
-    unsigned int current_vartype;
-
   public:
     search_var_instance_decl_c(symbol_c *search_scope);
-    symbol_c *get_decl(symbol_c *variable_instance_name);
-    unsigned int get_vartype(void);
 
   public:
-
+    typedef enum {
+        input_vt   ,  // VAR_INPUT
+        output_vt  ,  // VAR_OUTPUT
+        inoutput_vt,  // VAR_IN_OUT
+        private_vt ,  // VAR
+        temp_vt    ,  // VAR_TEMP
+        external_vt,  // VAR_EXTERNAL
+        global_vt  ,  // VAR_GLOBAL
+        located_vt ,   // VAR <var_name> AT <location>
+        none_vt
+      } vt_t;
+      
+    typedef enum {
+        constant_opt  ,
+        retain_opt    ,
+        non_retain_opt,
+        none_opt
+      } opt_t;
+#if 0        
     /* the types of variables that need to be processed... */
     static const unsigned int none_vt     = 0x0000;
     static const unsigned int input_vt    = 0x0001;  // VAR_INPUT
@@ -92,6 +124,34 @@ class search_var_instance_decl_c: public search_visitor_c {
     static const unsigned int global_vt   = 0x0040;  // VAR_GLOBAL
     static const unsigned int located_vt  = 0x0080;  // VAR <var_name> AT <location>
 
+    static const unsigned int none_opt        = 0x0000;
+    static const unsigned int constant_opt    = 0x0001;
+    static const unsigned int retain_opt      = 0x0002;
+    static const unsigned int non_retain_opt  = 0x0003;
+#endif    
+    
+    symbol_c *   get_decl   (symbol_c *variable_instance_name); 
+    vt_t         get_vartype(symbol_c *variable_instance_name);
+    opt_t        get_option (symbol_c *variable_instance_name);
+
+    /* NOTE: The following function will be completely deleted in the (hopefully near) future. */
+    /* Returns true if the variable is an ARRAY or a STRUCT, otherwise returns false.
+     * Note that for FB, also returns false!
+     */
+    bool type_is_complex(symbol_c *variable_name);
+
+    
+    
+  private:
+    symbol_c *search_scope;
+    symbol_c *search_name;
+    symbol_c *current_type_decl;
+    /* variable used to store the type of variable currently being processed... */
+    /* Will contain a single value of generate_c_vardecl_c::XXXX_vt */
+    vt_t  current_vartype;
+    opt_t current_option;
+
+    
   private:
     /***************************/
     /* B 0 - Programming Model */
@@ -105,6 +165,11 @@ class search_var_instance_decl_c: public search_visitor_c {
     /* edge -> The F_EDGE or R_EDGE directive */
     // SYM_REF2(edge_declaration_c, edge, var1_list)
     // TODO
+    void *visit(constant_option_c *symbol);
+    void *visit(retain_option_c *symbol);
+    void *visit(non_retain_option_c *symbol);
+
+
     void *visit(input_declarations_c *symbol);
     /* VAR_OUTPUT [RETAIN | NON_RETAIN] var_init_decl_list END_VAR */
     /* option -> may be NULL ! */
@@ -236,6 +301,28 @@ class search_var_instance_decl_c: public search_visitor_c {
     /**********************/
     void *visit(program_declaration_c *symbol);
 
+    /*********************************************/
+    /* B.1.6  Sequential function chart elements */
+    /*********************************************/
+    /* | sequential_function_chart sfc_network */
+    // SYM_LIST(sequential_function_chart_c)
+    /* search_var_instance_decl_c inherits from serach_visitor_c, so no need to implement the following method. */
+    // void *visit(sequential_function_chart_c *symbol);
+    
+    /* initial_step {step | transition | action} */
+    // SYM_LIST(sfc_network_c)
+    /* search_var_instance_decl_c inherits from serach_visitor_c, so no need to implement the following method. */
+    // void *visit(sfc_network_c *symbol);
+
+
+    /* INITIAL_STEP step_name ':' action_association_list END_STEP */
+    // SYM_REF2(initial_step_c, step_name, action_association_list)
+    void *visit(initial_step_c *symbol);
+
+    /* STEP step_name ':' action_association_list END_STEP */
+    // SYM_REF2(step_c, step_name, action_association_list)
+    void *visit(step_c *symbol);
+
     /********************************/
     /* B 1.7 Configuration elements */
     /********************************/
@@ -265,34 +352,26 @@ class search_var_instance_decl_c: public search_visitor_c {
     // SYM_REF2(single_resource_declaration_c, task_configuration_list, program_configuration_list)
     void *visit(single_resource_declaration_c *symbol);
 
-#if 0
-/*********************/
-/* B 1.4 - Variables */
-/*********************/
-SYM_REF2(symbolic_variable_c, var_name, unused)
+    
+    /****************************************/
+    /* B.2 - Language IL (Instruction List) */
+    /****************************************/
+    /***********************************/
+    /* B 2.1 Instructions and Operands */
+    /***********************************/
+    /*| instruction_list il_instruction */
+    // SYM_LIST(instruction_list_c)
+    void *visit(instruction_list_c *symbol);
 
-/********************************************/
-/* B.1.4.1   Directly Represented Variables */
-/********************************************/
-SYM_TOKEN(direct_variable_c)
 
-/*************************************/
-/* B.1.4.2   Multi-element Variables */
-/*************************************/
-/*  subscripted_variable '[' subscript_list ']' */
-SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
-
-/* subscript_list ',' subscript */
-SYM_LIST(subscript_list_c)
-
-/*  record_variable '.' field_selector */
-/*  WARNING: input and/or output variables of function blocks
- *           may be accessed as fields of a tructured variable!
- *           Code handling a structured_variable_c must take
- *           this into account!
- */
-SYM_REF2(structured_variable_c, record_variable, field_selector)
-#endif
+    /***************************************/
+    /* B.3 - Language ST (Structured Text) */
+    /***************************************/
+    /********************/
+    /* B 3.2 Statements */
+    /********************/
+    // SYM_LIST(statement_list_c)
+    void *visit(statement_list_c *symbol);
 
 }; // search_var_instance_decl_c
 

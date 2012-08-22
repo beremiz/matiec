@@ -232,6 +232,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     search_fb_instance_decl_c *search_fb_instance_decl;
 
     search_varfb_instance_type_c *search_varfb_instance_type;
+    search_var_instance_decl_c   *search_var_instance_decl;
 
     search_base_type_c search_base_type;
 
@@ -252,6 +253,8 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       search_expression_type = new search_expression_type_c(scope);
       search_fb_instance_decl = new search_fb_instance_decl_c(scope);
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
+      search_var_instance_decl   = new search_var_instance_decl_c(scope);
+      
       current_operand = NULL;
       current_operand_type = NULL;
       il_default_variable_init_value = NULL;
@@ -267,6 +270,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       delete search_fb_instance_decl;
       delete search_expression_type;
       delete search_varfb_instance_type;
+      delete search_var_instance_decl;
     }
 
     void generate(instruction_list_c *il) {
@@ -435,7 +439,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     }
 
     void *print_getter(symbol_c *symbol) {
-      unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
+      unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
       if (wanted_variablegeneration == fparam_output_vg) {
       	if (vartype == search_var_instance_decl_c::external_vt)
           s4o.print(GET_EXTERNAL_BY_REF);
@@ -457,7 +461,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       variablegeneration_t old_wanted_variablegeneration = wanted_variablegeneration;
       wanted_variablegeneration = complextype_base_vg;
       symbol->accept(*this);
-      if (search_varfb_instance_type->type_is_complex())
+      if (search_var_instance_decl->type_is_complex(symbol))
         s4o.print(",");
       wanted_variablegeneration = complextype_suffix_vg;
       symbol->accept(*this);
@@ -475,8 +479,8 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
 
       bool type_is_complex = false;
       if (fb_symbol == NULL) {
-        unsigned int vartype = search_varfb_instance_type->get_vartype(symbol);
-        type_is_complex = search_varfb_instance_type->type_is_complex();
+        unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
+        type_is_complex = search_var_instance_decl->type_is_complex(symbol);
         if (vartype == search_var_instance_decl_c::external_vt)
           s4o.print(SET_EXTERNAL);
         else if (vartype == search_var_instance_decl_c::located_vt)
@@ -520,19 +524,15 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
 
 public:
 void *visit(il_default_variable_c *symbol) {
-  //s4o.print("il_default_variable_c VISITOR!!\n");
   symbol->var_name->accept(*this);
   if (NULL != symbol->current_type) {
     s4o.print(".");
-    if (search_expression_type->is_literal_integer_type(symbol->current_type))
-      this->lint_type.accept(*this);
-    else if (search_expression_type->is_literal_real_type(this->default_variable_name.current_type))
-      this->lreal_type.accept(*this);
-    else
-      symbol->current_type->accept(*this);
+    if      ( search_expression_type->is_literal_integer_type(symbol->current_type))                  this->lint_type.accept(*this);
+    else if ( search_expression_type->is_literal_real_type(this->default_variable_name.current_type)) this->lreal_type.accept(*this);
+    else if ( search_expression_type->is_bool_type(this->default_variable_name.current_type))         this->bool_type.accept(*this); 
+    else symbol->current_type->accept(*this);
     s4o.print("var");
-  }
-  return NULL;
+  } return NULL;
 }
 
 
@@ -591,7 +591,7 @@ void *visit(symbolic_variable_c *symbol) {
 	  break;
     default:
       if (this->is_variable_prefix_null()) {
-	    vartype = search_varfb_instance_type->get_vartype(symbol);
+	    vartype = search_var_instance_decl->get_vartype(symbol);
         if (wanted_variablegeneration == fparam_output_vg) {
           s4o.print("&(");
           generate_c_base_c::visit(symbol);
@@ -649,8 +649,7 @@ void *visit(direct_variable_c *symbol) {
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
 void *visit(structured_variable_c *symbol) {
   TRACE("structured_variable_c");
-  unsigned int vartype = search_varfb_instance_type->get_vartype(symbol->record_variable);
-  bool type_is_complex = search_varfb_instance_type->type_is_complex();
+  bool type_is_complex = search_var_instance_decl->type_is_complex(symbol->record_variable);
   switch (wanted_variablegeneration) {
     case complextype_base_vg:
     case complextype_base_assignment_vg:
@@ -983,7 +982,7 @@ void *visit(il_function_call_c *symbol) {
       print_function_parameter_data_types_c overloaded_func_suf(&s4o);
       f_decl->accept(overloaded_func_suf);
     }
-    s4o.print_integer(fcall_number);
+    s4o.print(fcall_number);
   }
   else {
     if (function_name != NULL) {
@@ -1391,7 +1390,7 @@ void *visit(il_formal_funct_call_c *symbol) {
       print_function_parameter_data_types_c overloaded_func_suf(&s4o);
       f_decl->accept(overloaded_func_suf);
     }
-    s4o.print_integer(fcall_number);
+    s4o.print(fcall_number);
   }
   else {
     if (function_name != NULL) {
@@ -1574,6 +1573,12 @@ void *visit(simple_instr_list_c *symbol) {
   return NULL;
 }
 
+// SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
+void *visit(il_simple_instruction_c *symbol)	{
+  return symbol->il_simple_instruction->accept(*this);
+}
+
+
 /* | il_initial_param_list il_param_instruction */
 // SYM_LIST(il_param_list_c)
 void *visit(il_param_list_c *symbol) {ERROR; return NULL;} // should never get called!
@@ -1652,6 +1657,12 @@ void *visit(STN_operator_c *symbol)	{
 }
 
 void *visit(NOT_operator_c *symbol)	{
+  /* NOTE: the standard allows syntax in which the NOT operator is followed by an optional <il_operand>
+   *              NOT [<il_operand>]
+   *       However, it does not define the semantic of the NOT operation when the <il_operand> is specified.
+   *       We therefore consider it an error if an il_operand is specified!
+   *       The error is caught in stage 3!
+   */  
   if ((NULL != this->current_operand) || (NULL != this->current_operand_type)) ERROR;
   XXX_operator(&(this->default_variable_name),
                search_expression_type->is_bool_type(this->default_variable_name.current_type)?" = !":" = ~",

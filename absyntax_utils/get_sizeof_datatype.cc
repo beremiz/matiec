@@ -45,8 +45,10 @@
  *       NOTE: for base 10 numeric literals, any number taking up more than 64 bits
  *             will only return a bitsize of 1024!
  *
- *       For numeric literals, we return the minimum number of bits
- *       required to store the value.
+ *       NOTE: The code that does the following has been commented out, since we no longer need it!
+ *             It has been superceded by the constant_folding.cc class.
+ *       // For numeric literals, we return the minimum number of bits
+ *       // required to store the value.
  *
  * E.g. TYPE new_int_t : INT; END_TYPE;
  *      TYPE new_int2_t : INT = 2; END_TYPE;
@@ -57,19 +59,21 @@
  *    sizeof(DINT) -> 32
  *    sizeof(LINT) -> 64
  *
- *    sizeof('1')       ->  1
- *    sizeof('015')     ->  4    # Leading zeros are ignored!
- *    sizeof('0')       ->  1    # This is a special case! Even the value 0 needs at least 1 bit to store!
- *    sizeof('16')      ->  5
- *    sizeof('2#00101') ->  3
- *    sizeof('8#334')   ->  9
- *    sizeof('16#2A')   ->  8
+ *       NOTE: The code that does the following has been commented out, since we no longer need it!
+ *             It has been superceded by the constant_folding.cc class.
+ *    // sizeof('1')       ->  1
+ *    // sizeof('015')     ->  4    # Leading zeros are ignored!
+ *    // sizeof('0')       ->  1    # This is a special case! Even the value 0 needs at least 1 bit to store!
+ *    // sizeof('16')      ->  5
+ *    // sizeof('2#00101') ->  3
+ *    // sizeof('8#334')   ->  9
+ *    // sizeof('16#2A')   ->  8
  *
- *    sizeof('7.4')     ->  32   # all real literals return 32 bits, the size of a 'REAL'
- *                               # TODO: study IEC 60559 for the range of values that may be
- *                               #       stored in a REAL (basic single width floating point format)
- *                               #       and in a LREAL (basic double width floating point format)
- *                               #       and see if some real literals need to return 64 instead!
+ *    // sizeof('7.4')     ->  32   # all real literals return 32 bits, the size of a 'REAL'
+ *    //                            # TODO: study IEC 60559 for the range of values that may be
+ *    //                            #       stored in a REAL (basic single width floating point format)
+ *    //                            #       and in a LREAL (basic double width floating point format)
+ *    //                            #       and see if some real literals need to return 64 instead!
  */
 
 #include "get_sizeof_datatype.hh"
@@ -77,14 +81,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>  // get definition of ULLONG_MAX
-/* tell stdint.h we want the definition of UINT64_MAX */
-#define __STDC_LIMIT_MACROS
-#include <stdint.h>  // get definition of uint64_t and UINT64_MAX
+#include <errno.h>
 
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros, and uint64_t and UINT64_MAX
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 /* This class is a singleton.
@@ -97,8 +97,7 @@ get_sizeof_datatype_c *get_sizeof_datatype_c::singleton = NULL;
 #define _decode_int(ptr)     (((char *)ptr) - ((char *)NULL))
 
 
-
-
+#if 0   /* We no longer need the code for handling numeric literals. But keep it around for a little while longer... */
 /* divide a base 10 literal in a string by 2 */
 /* returns remainder of division (0 or 1)    */
 static int strdivby2(char **strptr) {
@@ -121,7 +120,7 @@ static int strdivby2(char **strptr) {
 
   return carry;
 }
-
+#endif
 
 /* Constructor for the singleton class */
 int get_sizeof_datatype_c::getsize(symbol_c *data_type_symbol) {
@@ -139,7 +138,7 @@ get_sizeof_datatype_c::~get_sizeof_datatype_c(void) {
       singleton = NULL;
     }
 
-
+#if 0   /* We no longer need the code for handling numeric literals. But keep it around for a little while longer... */
 /*********************/
 /* B 1.2 - Constants */
 /*********************/
@@ -158,8 +157,60 @@ get_sizeof_datatype_c::~get_sizeof_datatype_c(void) {
 /* NOTE: all integer_c and real_c tokens will always be positive (i.e. no leading '-')
  * due to the way the source code is parsed by iec.flex.
  */
+
+/*
+ * IEC6113-3 and C++ use IEC 60559 to rappresent floating point data types
+ * REAL  => float       => single precision 	32 bit
+ * LREAL => double      => double precision 	64 bit
+ * ????? => long double => quadruple precision 128 bit
+ */
 void *get_sizeof_datatype_c::visit(real_c *symbol) {
-  return _encode_int(32);
+  char *endp;
+  long double ld_test;
+  double d_test;
+  float  f_test;
+
+  /* copy the original string, but leave out any underscores... */
+  char *sval, *oval;
+  const char *pval;
+  oval = sval = (char *)malloc(strlen(symbol->value)+1);
+  if (NULL ==  sval) ERROR;
+  
+  for (pval = symbol->value, sval = oval; *pval != '\0'; pval++) {
+    if ('_' != *pval) {*sval = *pval; sval++;}
+  }  
+  *sval = '\0';  
+  
+  sval = oval;
+  if ('\0' == *sval) ERROR;
+
+  /* now do the conversion using the new string... */
+  f_test = strtof(sval, &endp);
+  if (*endp != '\0') ERROR;
+  if (ERANGE != errno) {
+    /* No overflow/underflow! => It fits in a float! */
+    free(oval);
+    return _encode_int(32);
+  }
+  
+  d_test = strtod(sval, &endp);
+  if (*endp != '\0') ERROR;
+  if (ERANGE != errno) {
+    /* No overflow/underflow! => It fits in a double! */
+    free(oval);
+    return _encode_int(64);
+  }
+  
+  ld_test = strtold(sval, &endp);
+  if (*endp != '\0') ERROR;
+  if (ERANGE != errno) {
+    /* No overflow/underflow! => It fits in a long double! */
+    free(oval);
+    return _encode_int(128);
+  }
+
+  free(oval);
+  return _encode_int(65535); /* a very large number!!! */
 }
 
 void *get_sizeof_datatype_c::visit(neg_real_c *symbol) {
@@ -282,7 +333,7 @@ void *get_sizeof_datatype_c::visit(binary_integer_c *symbol) {
     if (('0' != *sval) && ('1' != *sval) && ('_' != *sval))
       ERROR;
 
-    if ('_' != *sval) bitsize ++; /* 1 bits per binary digit */
+    if ('_' != *sval) bitsize++; /* 1 bits per binary digit */
   }
 
   /* special case... if (value == 0) <=> (bitsize == 0), return bit size of 1 ! */
@@ -352,7 +403,7 @@ void *get_sizeof_datatype_c::visit(hex_integer_c *symbol) {
     /* Assumes ASCII */
     if (!(('0' <= *sval) && ('9' >= *sval)) && 
         !(('A' <= *sval) && ('F' >= *sval)) &&
-        !(('a' <= *sval) && ('b' >= *sval)) &&
+        !(('a' <= *sval) && ('f' >= *sval)) &&
         ! ('_' == *sval))
       ERROR;
 
@@ -364,7 +415,7 @@ void *get_sizeof_datatype_c::visit(hex_integer_c *symbol) {
 
   return _encode_int(bitsize);
 }
-
+#endif
 
 /***********************************/
 /* B 1.3.1 - Elementary Data Types */

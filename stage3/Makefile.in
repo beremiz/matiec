@@ -33,7 +33,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 DIST_COMMON = $(srcdir)/../common.mk $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+	$(srcdir)/Makefile.in TODO
 subdir = stage3
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -71,7 +71,12 @@ ARFLAGS = cru
 libstage3_a_AR = $(AR) $(ARFLAGS)
 libstage3_a_LIBADD =
 am_libstage3_a_OBJECTS = stage3.$(OBJEXT) \
-	visit_expression_type.$(OBJEXT)
+	flow_control_analysis.$(OBJEXT) \
+	fill_candidate_datatypes.$(OBJEXT) \
+	narrow_candidate_datatypes.$(OBJEXT) \
+	print_datatypes_error.$(OBJEXT) datatype_functions.$(OBJEXT) \
+	lvalue_check.$(OBJEXT) array_range_check.$(OBJEXT) \
+	constant_folding.$(OBJEXT)
 libstage3_a_OBJECTS = $(am_libstage3_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/config
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -188,7 +193,14 @@ AM_CXXFLAGS = -g -Wall -Wpointer-arith -Wwrite-strings -Wno-unused
 lib_LIBRARIES = libstage3.a
 libstage3_a_SOURCES = \
 	stage3.cc \
-	visit_expression_type.cc 
+	flow_control_analysis.cc \
+	fill_candidate_datatypes.cc \
+	narrow_candidate_datatypes.cc \
+	print_datatypes_error.cc \
+	datatype_functions.cc \
+	lvalue_check.cc \
+	array_range_check.cc \
+        constant_folding.cc
 
 all: all-am
 
@@ -267,8 +279,15 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/array_range_check.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/constant_folding.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/datatype_functions.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fill_candidate_datatypes.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flow_control_analysis.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lvalue_check.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/narrow_candidate_datatypes.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/print_datatypes_error.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stage3.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/visit_expression_type.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

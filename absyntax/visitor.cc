@@ -73,13 +73,13 @@ null_visitor_c::~null_visitor_c(void) {return;}
 #define SYM_LIST(class_name_c)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_TOKEN(class_name_c)	\
+#define SYM_TOKEN(class_name_c, ...)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF0(class_name_c)	\
+#define SYM_REF0(class_name_c, ...)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF1(class_name_c, ref1)	\
+#define SYM_REF1(class_name_c, ref1, ...)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
 #define SYM_REF2(class_name_c, ref1, ref2, ...)	\
@@ -136,13 +136,13 @@ void *iterator_visitor_c::visit_list(list_c *list) {
 #define SYM_LIST(class_name_c)	\
   void *iterator_visitor_c::visit(class_name_c *symbol) {return visit_list(symbol);}
 
-#define SYM_TOKEN(class_name_c)	\
+#define SYM_TOKEN(class_name_c, ...)	\
   void *iterator_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF0(class_name_c)	\
+#define SYM_REF0(class_name_c, ...)	\
   void *iterator_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF1(class_name_c, ref1)			\
+#define SYM_REF1(class_name_c, ref1, ...)			\
 void *iterator_visitor_c::visit(class_name_c *symbol) {	\
   if (symbol->ref1!=NULL) symbol->ref1->accept(*this);	\
   return NULL;						\
@@ -238,13 +238,13 @@ void *search_visitor_c::visit_list(list_c *list) {
 #define SYM_LIST(class_name_c)	\
   void *search_visitor_c::visit(class_name_c *symbol) {return visit_list(symbol);}
 
-#define SYM_TOKEN(class_name_c)	\
+#define SYM_TOKEN(class_name_c, ...)	\
   void *search_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF0(class_name_c)	\
+#define SYM_REF0(class_name_c, ...)	\
   void *search_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
-#define SYM_REF1(class_name_c, ref1)				\
+#define SYM_REF1(class_name_c, ref1, ...)				\
 void *search_visitor_c::visit(class_name_c *symbol) {		\
   if (symbol->ref1) return symbol->ref1->accept(*this);		\
   return NULL;							\

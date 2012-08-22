@@ -49,6 +49,7 @@
 
 
 #include "case_element_iterator.hh"
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
 //#define DEBUG
@@ -59,9 +60,6 @@
 #endif
 
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 void* case_element_iterator_c::handle_case_element(symbol_c *case_element) {

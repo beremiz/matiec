@@ -84,6 +84,7 @@ class get_sizeof_datatype_c: public null_visitor_c {
     static get_sizeof_datatype_c *singleton;
 
   private:
+#if 0   /* We no longer need the code for handling numeric literals. But keep it around for a little while longer... */
     /*********************/
     /* B 1.2 - Constants */
     /*********************/
@@ -105,7 +106,7 @@ class get_sizeof_datatype_c: public null_visitor_c {
     void *visit(binary_integer_c *symbol);
     void *visit(octal_integer_c *symbol);
     void *visit(hex_integer_c *symbol);
-
+#endif
   /***********************************/
   /* B 1.3.1 - Elementary Data Types */
   /***********************************/

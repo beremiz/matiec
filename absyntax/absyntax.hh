@@ -47,9 +47,16 @@
 
 
 #include <stdio.h> // required for NULL
+#include <vector>
+#include <string>
+#include <stdint.h>  // required for uint64_t, etc...
+#include "../main.hh" // required for uint8_t, real_64_t, ..., and the macros INT8_MAX, REAL32_MAX, ... */
+
+
+
 
 /* Forward declaration of the visitor interface
- * dclared in the visitor.hh file
+ * declared in the visitor.hh file
  * We cannot include the visitor.hh file, as it will
  * include this same file first, as it too requires references
  * to the abstract syntax classes defined here.
@@ -61,12 +68,21 @@ class symbol_c; // forward declaration
 
 
 
+
+
+
+
+
+
+
+
 /* The base class of all symbols */
 class symbol_c {
 
   public:
     /*
-     * Line number for the purposes of error checking
+     * Line number for the purposes of error checking.
+     * Annotated (inserted) by stage1_2
      */
     int first_line;
     int first_column;
@@ -76,6 +92,49 @@ class symbol_c {
     int last_column;
     const char *last_file;  /* filename referenced by last line/column */
     long int last_order;    /* relative order in which it is read by lexcial analyser */
+
+
+    /*
+     * Annotations produced during stage 3
+     */
+    /*** Data type analysis ***/
+    std::vector <symbol_c *> candidate_datatypes; /* All possible data types the expression/literal/etc. may take. Filled in stage3 by fill_candidate_datatypes_c class */
+    /* Data type of the expression/literal/etc. Filled in stage3 by narrow_candidate_datatypes_c 
+     * If set to NULL, it means it has not yet been evaluated.
+     * If it points to an object of type invalid_type_name_c, it means it is invalid.
+     * Otherwise, it points to an object of the apropriate data type (e.g. int_type_name_c, bool_type_name_c, ...)
+     */
+    symbol_c *datatype;
+
+    /*** constant folding ***/
+    /* During stage 3 (semantic analysis/checking) we will be doing constant folding.
+     * That algorithm will anotate the abstract syntax tree with the result of operations
+     * on literals (i.e. 44 + 55 will store the result 99).
+     * Since the same source code (e.g. 1 + 0) may actually be a BOOL or an ANY_INT,
+     * or an ANY_BIT, we need to handle all possibilities, and determine the result of the
+     * operation assuming each type.
+     * For this reason, we have one entry for each possible type, with some expressions
+     * having more than one entry filled in!
+     */
+    typedef enum { cs_undefined,   /* not defined/not yet evaluated --> const_value is not valid! */
+                   cs_non_const,   /* we have deternmined that expression is not a const value --> const_value is not valid! */
+                   cs_const_value, /* const value is valid */
+                   cs_overflow     /* result produced overflow or underflow --> const_value is not valid! */
+                 } const_status_t;
+ 
+    typedef struct {const_status_t status;  real64_t  value; } const_value_real64_t;
+    typedef struct {const_status_t status;   int64_t  value; } const_value_int64_t;
+    typedef struct {const_status_t status;  uint64_t  value; } const_value_uint64_t;
+    typedef struct {const_status_t status;      bool  value; } const_value_bool_t;
+
+    typedef struct {
+      const_value_real64_t _real64; /* status is initialised to UNDEFINED */
+      const_value_int64_t   _int64; /* status is initialised to UNDEFINED */
+      const_value_uint64_t _uint64; /* status is initialised to UNDEFINED */
+      const_value_bool_t     _bool; /* status is initialised to UNDEFINED */
+    } const_value_t;
+    const_value_t const_value;
+    
 
   public:
     /* default constructor */
@@ -125,12 +184,14 @@ class list_c: public symbol_c {
      /* To insert into the begining of list, call with pos=0  */
      /* To insert into the end of list, call with pos=list->n */
     virtual void insert_element(symbol_c *elem, int pos = 0);
+     /* remove element at position pos. */
+    virtual void remove_element(int pos = 0);
 };
 
 
 
 
-#define SYM_LIST(class_name_c, ...)												\
+#define SYM_LIST(class_name_c, ...)											\
 class class_name_c:	public list_c {											\
   public:														\
     __VA_ARGS__														\
@@ -145,7 +206,7 @@ class class_name_c:	public list_c {											\
 };
 
 
-#define SYM_TOKEN(class_name_c, ...)												\
+#define SYM_TOKEN(class_name_c, ...)											\
 class class_name_c: 	public token_c {										\
   public:														\
     __VA_ARGS__														\
@@ -157,7 +218,7 @@ class class_name_c: 	public token_c {										\
 };
 
 
-#define SYM_REF0(class_name_c, ...)												\
+#define SYM_REF0(class_name_c, ...)											\
 class class_name_c: public symbol_c {											\
   public:														\
     __VA_ARGS__														\
@@ -233,7 +294,7 @@ class class_name_c: public symbol_c {											\
 };
 
 
-#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)								\
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)							\
 class class_name_c: public symbol_c {											\
   public:														\
     symbol_c *ref1;													\
@@ -290,7 +351,5 @@ class class_name_c: public symbol_c {											\
 #undef SYM_REF4
 #undef SYM_REF5
 #undef SYM_REF6
-
-
 
 #endif /*  _ABSYNTAX_HH */

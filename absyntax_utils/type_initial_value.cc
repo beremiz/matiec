@@ -84,7 +84,7 @@ type_initial_value_c *type_initial_value_c::instance(void) {
     date_literal_0 =  new date_literal_c(integer_1, integer_1, integer_1);
   date_literal_0 =  new date_literal_c(new integer_c("1970"), integer_1, integer_1);
   daytime_literal_0 = new daytime_c(integer_0, integer_0, real_0);
-  time_0 = new duration_c(new time_type_name_c(), NULL, new seconds_c(integer_0, NULL));  // T#0S
+  time_0 = new duration_c(new time_type_name_c(), NULL, new interval_c(NULL, NULL, NULL, integer_0, NULL));  // T#0s
   date_0 = new date_c(new date_type_name_c(), date_literal_0);  //  D#0001-01-01
   tod_0 = new time_of_day_c(new tod_type_name_c(), daytime_literal_0);  //  TOD#00:00:00
   dt_0 = new date_and_time_c(new dt_type_name_c(), date_literal_0, daytime_literal_0);  //  DT#0001-01-01-00:00:00
@@ -366,13 +366,13 @@ void *type_initial_value_c::visit(structure_element_initialization_c *symbol)	{r
  * as would be expected!
  */
 /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
-#if 0
-SYM_REF4(string_type_declaration_c,	string_type_name,
-					elementary_string_type_name,
-					string_type_declaration_size,
-					string_type_declaration_init) /* may be == NULL! */
-#endif
-void *type_initial_value_c::visit(string_type_declaration_c *symbol)	{return NULL;}
+// SYM_REF4(string_type_declaration_c,	string_type_name,
+// 					elementary_string_type_name,
+// 					string_type_declaration_size,
+// 					string_type_declaration_init) /* may be == NULL! */
+void *type_initial_value_c::visit(string_type_declaration_c *symbol)	{
+  return handle_type_spec(symbol->elementary_string_type_name, symbol->string_type_declaration_init);
+}
 
 
 type_initial_value_c	*type_initial_value_c::_instance = NULL;

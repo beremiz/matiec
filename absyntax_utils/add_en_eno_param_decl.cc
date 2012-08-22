@@ -44,6 +44,7 @@
 
 #include "add_en_eno_param_decl.hh"
 #include <strings.h>
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
 // #define DEBUG
@@ -54,9 +55,6 @@
 #endif
 
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 

@@ -50,12 +50,14 @@
 #include <typeinfo>
 #include <list>
 #include <strings.h>
-#include <string.h>  /* required for strlen() */
-#include <stdlib.h>  /* required for atoi() */
+// #include <string.h>  /* required for strlen() */
+// #include <stdlib.h>  /* required for atoi() */
+// #include <errno.h>   /* required for errno */
 
 #include "../util/symtable.hh"
 #include "../util/dsymtable.hh"
 #include "../absyntax/visitor.hh"
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
 
@@ -66,9 +68,6 @@
 #define TRACE(classname)
 #endif
 
-#define ERROR error_exit(__FILE__,__LINE__)
-/* function defined in main.cc */
-extern void error_exit(const char *file_name, int line_no);
 
 
 /***********************************************************************/
@@ -93,25 +92,6 @@ int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 
   /* identifiers do not match! */
   return 1;
-}
-
-
-/* extract the value of an integer from an integer_c object !! */
-/* NOTE: it must ignore underscores! */
-int extract_integer(symbol_c *sym) {
-  std::string str = "";
-  integer_c *integer;
-  neg_integer_c * neg_integer;
-
-  if ((neg_integer = dynamic_cast<neg_integer_c *>(sym)) != NULL)
-    return - extract_integer((integer_c *)neg_integer->exp);
-  
-  if ((integer = dynamic_cast<integer_c *>(sym)) == NULL) ERROR;
-
-  for(unsigned int i = 0; i < strlen(integer->value); i++)
-    if (integer->value[i] != '_')  str += integer->value[i];
-
-  return atoi(str.c_str());
 }
 
 
@@ -294,7 +274,17 @@ class populate_symtables_c: public iterator_visitor_c {
   }
   
   
-  
+  /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
+  // SYM_REF4(string_type_declaration_c,	string_type_name,
+  //    					elementary_string_type_name,
+  //    					string_type_declaration_size,
+  //    					string_type_declaration_init) /* may be == NULL! */
+  void *visit(string_type_declaration_c *symbol)	{
+    TRACE("string_type_declaration_c");
+    type_symtable.insert(symbol->string_type_name, symbol);
+    return NULL;
+}
+
   /*********************/
   /* B 1.4 - Variables */
   /*********************/
