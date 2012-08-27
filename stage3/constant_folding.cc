@@ -32,6 +32,16 @@
 
 
 
+/* TODO: 
+ *         - Add support for comparison (= and !=) of enumeration literals!
+ *              We will need to add another const_value entry to the symbol_c, containing the 
+ *              possible enumeration value of the enum constant!
+ *              Doing this will allow us to more easily implement a constant_propagation_c later on!
+ *
+ *         - Add support for comparison (= and !=) of the exact same variable
+ *                (e.g. if (int_v = int_v) then ...)
+ */
+
 
 
 /* Do constant folding...
@@ -215,7 +225,11 @@
    * by having it resolve the call to the overloaded function. For the C++ compiler to be able
    * to resolve this ambiguity, we need to add a dummy parameter to each function!
    *
-   * TODO: support platforms in which int64_t is mapped onto int !! Is this really needed?
+   * TODO: support platforms (where the compiler will run) in which int64_t is mapped onto int !!
+   *       Is this really needed?
+   *       Currently, when trying to compile matiec on sych a platform, the C++ compiler will not
+   *       find any apropriate matiec_strtoint64() to call, so matiec will not be able to be compiled.
+   *       If you need this, you are welcome to fix it yourself...
    */
 static  int64_t matiec_strtoint64 (         long      int *dummy, const char *nptr, char **endptr, int base) {return strtol  (nptr, endptr, base);}
 static  int64_t matiec_strtoint64 (         long long int *dummy, const char *nptr, char **endptr, int base) {return strtoll (nptr, endptr, base);}
@@ -544,6 +558,11 @@ static void *handle_move(symbol_c *to, symbol_c *from) {
 /* unary negation (multiply by -1) */
 static void *handle_neg(symbol_c *symbol, symbol_c *oper) {
 	DO_UNARY_OPER( int64, -, oper);	CHECK_OVERFLOW_int64_NEG(symbol, oper);
+	/*
+	 * NOTE : The syntax:   uint_v := -<INT_MIN>  may occur inside a neg_expression_c, but would always
+	 *        result in a data type error (in-> INT, out -> UINT). So, although we could handle it here, 
+	 *        it is not really necessary as it will later be caught by the data type checking classes.
+	 */
 	DO_UNARY_OPER(real64, -, oper);	CHECK_OVERFLOW_real64(symbol);
 	return NULL;
 }
@@ -755,6 +774,18 @@ void *constant_folding_c::visit(neg_integer_c *symbol) {
 	if (VALID_CVALUE(uint64, symbol->exp) && (GET_CVALUE(uint64, symbol->exp) == (uint64_t)INT64_MAX+1)) {
 		SET_CVALUE(int64, symbol, INT64_MIN);
 	}
+	/* NOTE 3: The standard allows considers the following strange syntax correct:
+	 *            int_v = ----------42;
+	 *         However, it will be parsed as multiple neg_expression_c, with a single final neg_integer_c.
+	 *         So, when parsing a neg_integer_c, we are guaranteed to always have a positive value in symbol->exp
+	 *         --> Conclusion: 
+	 *         We do not need to handle the situation where we are negating the INT_MIN value, whose
+	 *         result can only be stored inside an UINT (remember that INT_MIN is < 0 !!).
+	 *
+	 * NOTE 4: The syntax:   uint_v := -<INT_MIN>  may occur inside a neg_expression_c, but would always
+	 *         result in a data type error. So, although we could handle it here, it is not really
+	 *         necessary as it will later be caught by the data type checking classes.
+	 */
 	return NULL;
 }
 
