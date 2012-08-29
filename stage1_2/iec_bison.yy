@@ -433,7 +433,7 @@ typedef struct YYLTYPE {
 /* B 1.2 - Constants */
 /*********************/
 %type <leaf>	constant
-%type <leaf>	non_negative_constant
+%type <leaf>	non_int_or_real_constant
 
 /******************************/
 /* B 1.2.1 - Numeric Literals */
@@ -1297,7 +1297,7 @@ typedef struct YYLTYPE {
 %type  <leaf>	unary_expression
 // %type  <leaf>	unary_operator
 %type  <leaf>	primary_expression
-%type  <leaf>	non_negative_primary_expression
+%type  <leaf>	non_int_or_real_primary_expression
 /* intermediate helper symbol for primary_expression */
 %type  <leaf>	function_invocation
 
@@ -1728,91 +1728,64 @@ identifier:
 /* B 1.2 - Constants */
 /*********************/
 constant:
-  numeric_literal
-| character_string
+  character_string
 | time_literal
 | bit_string_literal
 | boolean_literal
+| numeric_literal  
+/* NOTE: Our definition of numeric_literal is diferent than the one in the standard.
+ *       We will now add what is missing in our definition of numeric literal, so our
+ *       definition of constant matches what the definition of constant in the standard.
+ */
 /* NOTE: in order to remove reduce/reduce conflicts,
  * [between -9.5 being parsed as 
  *     (i)   a signed real, 
  *     (ii)  or as a real preceded by the '-' operator
  *  ]
  *  we need to define a variant of the constant construct
- *  where any constant is never preceded by the '-' character.
- * In order to do this, we have borugh the signed_real 
- * directly into the definition of the constant construct
- * (so we can define another non_negative_constant
- * construct that does not include it!)
+ *  where any real or integer constant is always preceded by 
+ *  a sign (i.e. the '-' or '+' characters).
+ *  (For more info, see comment in the construct non_int_or_real_primary_expression)
+ *
+ * For the above reason, our definition of the numeric_literal construct
+ * is missing the integer and real constrcuts (when not preceded by a sign)
+ * so we add then here explicitly!
  */
-| signed_real
-/* NOTE: in order to remove reduce/reduce conflicts,
- * unsigned_integer, signed_integer, binary_integer, octal_integer
- * and hex_integer have been integrated directly into
- * the constants construct, instead of belonging to
- * both the bit_string_literal or integer_literal
- * construct.
- */
+| real
+| integer
 /* NOTE: unsigned_integer, although used in some
  * rules, is not defined in the spec!
  * We therefore replaced unsigned_integer as integer
  */
-/*| integer {} */  /* i.e. an unsigned_integer */ /* NOTE: already included as a signed integer! */
-| signed_integer
-| binary_integer
-| octal_integer
-| hex_integer
 ;
 
 
-/* NOTE: in order to remove reduce/reduce conflicts,
- * [between -9.5 being parsed as 
- *     (i)   a signed real, 
- *     (ii)  or as a real preceded by the '-' operator
- *  ]
- *  we need to define a variant of the constant construct
- *  where any constant is never preceded by the '-' character.
- * In order to do this, we have borugh the signed_real 
- * directly into the definition of the constant construct
- * (so we can define another non_negative_constant
- * construct that does not include it!)
- */
-non_negative_constant:
-  numeric_literal
-| character_string
+
+
+non_int_or_real_constant:
+  character_string
 | time_literal
 | bit_string_literal
 | boolean_literal
+| numeric_literal  
+/* NOTE: Our definition of numeric_literal is diferent than the one in the standard.
+ *       It is missing the integer and real when not prefixed by a sign 
+ *       (i.e. -54, +42 is included in numerical_literal,
+ *        but   54,  42 is not parsed as a numeric_literal!!)
+ */
 /* NOTE: in order to remove reduce/reduce conflicts,
  * [between -9.5 being parsed as 
  *     (i)   a signed real, 
  *     (ii)  or as a real preceded by the '-' operator
  *  ]
+ * [and a similar situation for integers!]
  *  we need to define a variant of the constant construct
- *  where any constant is never preceded by the '-' character.
- * In order to do this, we have borugh the signed_real 
- * directly into the definition of the constant construct
- * (so we can define another non_negative_constant
- * construct that does not include it!)
+ *  where any real or integer constant is always preceded by 
+ *  a sign (i.e. the '-' or '+' characters).
+ *
+ * For the above reason, our definition of the numeric_literal construct
+ * is missing the integer and real constrcuts (when not preceded by a sign)
  */
-/* | signed_real */
-| real /* an unsigned real */
-/* NOTE: in order to remove reduce/reduce conflicts,
- * unsigned_integer, signed_integer, binary_integer, octal_integer
- * and hex_integer have been integrated directly into
- * the constants construct, instead of belonging to
- * both the bit_string_literal or integer_literal
- * construct.
- */
-/* NOTE: unsigned_integer, although used in some
- * rules, is not defined in the spec!
- * We therefore replaced unsigned_integer as integer
- */
-| integer  /* i.e. an unsigned_integer */
-/* | signed_integer */
-| binary_integer
-| octal_integer
-| hex_integer
 ;
 
 
@@ -1914,10 +1887,13 @@ integer_literal:
 	{$$ = new integer_literal_c($1, $3, locloc(@$));}
 | integer_type_name '#' hex_integer
 	{$$ = new integer_literal_c($1, $3, locloc(@$));}
-/* NOTE: see note in the definition of constant for reason
- * why signed_integer, binary_integer, octal_integer
- * and hex_integer are missing here!
- */
+| binary_integer
+| octal_integer
+| hex_integer
+//|signed_integer  /* We expand the construct signed_integer here, so we can remove one of its constituents */
+//|  integer       /* REMOVED! see note in the definition of constant for reason why integer is missing here! */
+| '+' integer   {$$ = $2;}
+| '-' integer	{$$ = new neg_integer_c($2, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | integer_type_name signed_integer
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'#' missing between integer type name and value in integer literal."); yynerrs++;}
@@ -1936,6 +1912,13 @@ integer_literal:
 /* ERROR_CHECK_END */
 ;
 
+/* NOTE: this construct is used in the definition of integer_literal. However, in order to remove
+ *       a reduce/reduce conflict (see NOTE in definition of constant for reason why)
+ *       it is not used directly, but rather its expansion is copied there.
+ *
+ *       If for some reason you need to change the definition of signed_integer, don't forget
+ *       to change its expansion in integer_literal too!
+*/
 signed_integer:
   integer
 | '+' integer   {$$ = $2;}
@@ -1944,11 +1927,11 @@ signed_integer:
 
 
 real_literal:
-/* NOTE: see note in the definition of constant for reason
- * why signed_real is missing here!
- */
-/*  signed_real */
-  real_type_name '#' signed_real
+// signed_real /* We expand the construct signed_integer here, so we can remove one of its constituents */
+// real        /* REMOVED! see note in the definition of constant for reason why real is missing here! */
+  '+' real	{$$ = $2;}
+| '-' real	{$$ = new neg_real_c($2, locloc(@2));}
+| real_type_name '#' signed_real
 	{$$ = new real_literal_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | real_type_name signed_real
@@ -1962,13 +1945,18 @@ real_literal:
 /* ERROR_CHECK_END */
 ;
 
-
+/* NOTE: this construct is used in the definition of real_literal. However, in order to remove
+ *       a reduce/reduce conflict (see NOTE in definition of constant for reason why)
+ *       it is not used directly, but rather its expansion is copied there.
+ *
+ *       If for some reason you need to change the definition of signed_real, don't forget
+ *       to change its expansion in real_literal too!
+*/
 signed_real:
   real
 | '+' real	{$$ = $2;}
 | '-' real	{$$ = new neg_real_c($2, locloc(@2));}
 ;
-
 
 
 bit_string_literal:
@@ -7197,8 +7185,8 @@ power_expression:
 
 
 unary_expression:
-  non_negative_primary_expression
-| '-' non_negative_primary_expression
+  primary_expression
+| '-' non_int_or_real_primary_expression
 	{$$ = new neg_expression_c($2, locloc(@$));}
 | NOT primary_expression
 	{$$ = new not_expression_c($2, locloc(@$));}
@@ -7234,8 +7222,34 @@ unary_operator: '-' | 'NOT'
  *       (i.e. the constant 9, preceded by a unary negation)
  *
  *       To remove the conflict, we only allow constants without
- *       a preceding '-' to be used in primary_expression
+ *       integer or reals that are not preceded by a sign 
+ *       (i.e. a '-' or '+' character) to be used in primary_expression
  *       (i.e. as a parameter to the unary negation operator)
+ *
+ *       e.g.  '-42', '+54', '42', '54' are all allowed in primary expression
+ *       according to the standard. However, we will allow only '-42' and '+54'
+ *       to be used as an argument to the negation operator ('-').
+ */
+/* NOTE: Notice that the standard considers the following syntax correct:
+ *         VAR intv: INT; END_VAR
+ *         intv :=      42;         <----- OK
+ *         intv :=     -42;         <----- OK
+ *         intv :=     +42;         <----- OK
+ *         intv :=    --42;         <----- OK!!
+ *         intv :=    -+42;         <----- OK!!
+ *         intv :=  -(--42);        <----- OK!!
+ *         intv :=  -(-+42);        <----- OK!!
+ *         intv :=-(-(--42));       <----- OK!!
+ *         intv :=-(-(-+42));       <----- OK!!
+ *     but does NOT allow the following syntax:
+ *         VAR intv: INT; END_VAR
+ *         intv :=   ---42;       <----- ERROR!!
+ *         intv :=   --+42;       <----- ERROR!!
+ *         intv :=  ----42;       <----- ERROR!!
+ *         intv :=  ---+42;       <----- ERROR!!
+ *
+ *    Although strange, we follow the standard to the letter, and do exactly
+ *    as stated above!!
  */
 /* NOTE: We use enumerated_value_without_identifier instead of enumerated_value
  *       in order to remove a reduce/reduce conflict between reducing an
@@ -7247,8 +7261,8 @@ unary_operator: '-' | 'NOT'
  *       for a variable and an enumerated value, then the variable shall be
  *       considered.
  */
-non_negative_primary_expression:
-  non_negative_constant
+non_int_or_real_primary_expression:
+  non_int_or_real_constant
 //| enumerated_value_without_identifier
 | enumerated_value
 | variable

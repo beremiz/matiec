@@ -466,7 +466,7 @@ void *fill_candidate_datatypes_c::handle_any_literal(symbol_c *symbol, symbol_c 
 	if (search_in_candidate_datatype_list(symbol_type, symbol_value->candidate_datatypes) >= 0)
 		add_datatype_to_candidate_list(symbol, symbol_type);
 	remove_incompatible_datatypes(symbol);
-	if (debug) std::cout << "XXX_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
+	if (debug) std::cout << "ANY_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
 }
 

@@ -175,31 +175,27 @@
 
 
 
-#define SET_CVALUE(dtype, symbol, new_value)  ((symbol)->const_value._##dtype.value) = new_value; ((symbol)->const_value._##dtype.status) = symbol_c::cs_const_value;
+#define SET_CVALUE(dtype, symbol, new_value) {((symbol)->const_value._##dtype.value) = new_value; ((symbol)->const_value._##dtype.status) = symbol_c::cs_const_value;}
 #define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.value)
 #define SET_OVFLOW(dtype, symbol)             ((symbol)->const_value._##dtype.status) = symbol_c::cs_overflow
 #define SET_NONCONST(dtype, symbol)           ((symbol)->const_value._##dtype.status) = symbol_c::cs_non_const
 
 #define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
+#define IS_OVFLOW(dtype, symbol)              (symbol_c::cs_overflow    == (symbol)->const_value._##dtype.status)
 #define ISZERO_CVALUE(dtype, symbol)          ((VALID_CVALUE(dtype, symbol)) && (GET_CVALUE(dtype, symbol) == 0))
 
 #define ISEQUAL_CVALUE(dtype, symbol1, symbol2) \
 	(VALID_CVALUE(dtype, symbol1) && VALID_CVALUE(dtype, symbol2) && (GET_CVALUE(dtype, symbol1) == GET_CVALUE(dtype, symbol2))) 
 
-#define DO_BINARY_OPER(dtype, oper, otype)\
-	if (VALID_CVALUE(dtype, symbol->r_exp) && VALID_CVALUE(dtype, symbol->l_exp)) {                                \
-		SET_CVALUE(otype, symbol, GET_CVALUE(dtype, symbol->l_exp) oper GET_CVALUE(dtype, symbol->r_exp));     \
-	}
-
-#define DO_BINARY_OPER_(oper_type, operation, res_type, operand1, operand2)\
-	if (VALID_CVALUE(oper_type, operand1) && VALID_CVALUE(oper_type, operand2)) {                                     \
+#define DO_BINARY_OPER(oper_type, operation, res_type, operand1, operand2) {                                             \
+	if (VALID_CVALUE(oper_type, operand1) && VALID_CVALUE(oper_type, operand2))                                       \
 		SET_CVALUE(res_type, symbol, GET_CVALUE(oper_type, operand1) operation GET_CVALUE(oper_type, operand2));  \
-	}
+}
 
-#define DO_UNARY_OPER(dtype, operation, operand)\
-	if (VALID_CVALUE(dtype, operand)) {                                                                               \
+#define DO_UNARY_OPER(dtype, operation, operand) {                                                                        \
+	if (VALID_CVALUE(dtype, operand))                                                                                 \
 		SET_CVALUE(dtype, symbol, operation GET_CVALUE(dtype, operand));                                          \
-	}
+}
 
 
 
@@ -430,6 +426,18 @@ static void CHECK_OVERFLOW_uint64_MOD(symbol_c *res, symbol_c *a, symbol_c *b) {
 }
 
 
+/* res = - a */
+static void CHECK_OVERFLOW_uint64_NEG(symbol_c *res, symbol_c *a) {
+	/* The only legal operation is res = -0, everything else is an overflow! */
+	if (VALID_CVALUE(uint64, a) && (GET_CVALUE(uint64, a) != 0))
+		SET_OVFLOW(uint64, res);
+}
+
+
+
+
+
+
 /* res = a + b */
 static void CHECK_OVERFLOW_int64_SUM(symbol_c *res, symbol_c *a_ptr, symbol_c *b_ptr) {
 	if (!VALID_CVALUE(int64, res))
@@ -501,13 +509,13 @@ static void CHECK_OVERFLOW_int64_MOD(symbol_c *res, symbol_c *a_ptr, symbol_c *b
 
 
 /* res = - a */
-static void CHECK_OVERFLOW_int64_NEG(symbol_c *res, symbol_c *a_ptr) {
+static void CHECK_OVERFLOW_int64_NEG(symbol_c *res, symbol_c *a) {
 	if (!VALID_CVALUE(int64, res))
 		return;
-	int64_t a = GET_CVALUE(int64, a_ptr);
-	if (a == INT64_MIN)
+	if (GET_CVALUE(int64, a) == INT64_MIN)
 		SET_OVFLOW(int64, res);
 }
+
 
 
 
@@ -539,10 +547,10 @@ static void CHECK_OVERFLOW_real64(symbol_c *res_ptr) {
 /* static void *handle_cmp(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2, OPERATION) */
 #define handle_cmp(symbol, oper1, oper2, operation) {               \
 	if ((NULL == oper1) || (NULL == oper2)) return NULL;        \
-	DO_BINARY_OPER_(  bool, operation, bool, oper1, oper2);     \
-	DO_BINARY_OPER_(uint64, operation, bool, oper1, oper2);     \
-	DO_BINARY_OPER_( int64, operation, bool, oper1, oper2);     \
-	DO_BINARY_OPER_(real64, operation, bool, oper1, oper2);     \
+	DO_BINARY_OPER(  bool, operation, bool, oper1, oper2);     \
+	DO_BINARY_OPER(uint64, operation, bool, oper1, oper2);     \
+	DO_BINARY_OPER( int64, operation, bool, oper1, oper2);     \
+	DO_BINARY_OPER(real64, operation, bool, oper1, oper2);     \
 	return NULL;                                                \
 }
 
@@ -557,12 +565,17 @@ static void *handle_move(symbol_c *to, symbol_c *from) {
 
 /* unary negation (multiply by -1) */
 static void *handle_neg(symbol_c *symbol, symbol_c *oper) {
-	DO_UNARY_OPER( int64, -, oper);	CHECK_OVERFLOW_int64_NEG(symbol, oper);
-	/*
-	 * NOTE : The syntax:   uint_v := -<INT_MIN>  may occur inside a neg_expression_c, but would always
-	 *        result in a data type error (in-> INT, out -> UINT). So, although we could handle it here, 
-	 *        it is not really necessary as it will later be caught by the data type checking classes.
+	if (NULL == oper) return NULL;
+	/* NOTE: The oper may never be an integer/real literal, '-1' and '-2.2' are stored as an neg_integer_c/neg_real_c instead.
+	 *       Because of this, we MUST NOT handle the INT_MIN special situation that is handled in neg_integer_c visitor!
+	 *
+	 *       VAR v1, v2, v3 : UINT; END_VAR;
+	 *       v1 =  9223372036854775808 ; (* |INT64_MIN| == -INT64_MIN *)   <------ LEGAL
+	 *       v2 =  -(-v1);                                                 <------ ILLEGAL (since it -v1 is overflow!)
+	 *       v2 =  -(-9223372036854775808 );                               <------ MUST also be ILLEGAL 
 	 */
+	DO_UNARY_OPER(uint64, -, oper);	CHECK_OVERFLOW_uint64_NEG(symbol, oper);  /* handle the uint_v := -0 situation! */
+	DO_UNARY_OPER( int64, -, oper);	CHECK_OVERFLOW_int64_NEG (symbol, oper);
 	DO_UNARY_OPER(real64, -, oper);	CHECK_OVERFLOW_real64(symbol);
 	return NULL;
 }
@@ -579,60 +592,60 @@ static void *handle_not(symbol_c *symbol, symbol_c *oper) {
 
 static void *handle_or (symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
 	if ((NULL == oper1) || (NULL == oper2)) return NULL;
-	DO_BINARY_OPER_(  bool, ||, bool  , oper1, oper2);
-	DO_BINARY_OPER_(uint64, | , uint64, oper1, oper2);
+	DO_BINARY_OPER(  bool, ||, bool  , oper1, oper2);
+	DO_BINARY_OPER(uint64, | , uint64, oper1, oper2);
 	return NULL;
 }
 
 
 static void *handle_xor(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
 	if ((NULL == oper1) || (NULL == oper2)) return NULL;
-	DO_BINARY_OPER_(  bool, ^, bool  , oper1, oper2);
-	DO_BINARY_OPER_(uint64, ^, uint64, oper1, oper2);
+	DO_BINARY_OPER(  bool, ^, bool  , oper1, oper2);
+	DO_BINARY_OPER(uint64, ^, uint64, oper1, oper2);
 	return NULL;
 }
 
 
 static void *handle_and(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
 	if ((NULL == oper1) || (NULL == oper2)) return NULL;
-	DO_BINARY_OPER_(  bool, &&, bool, oper1, oper2);
-	DO_BINARY_OPER_(uint64, & , uint64, oper1, oper2);
+	DO_BINARY_OPER(  bool, &&, bool, oper1, oper2);
+	DO_BINARY_OPER(uint64, & , uint64, oper1, oper2);
 	return NULL;
 }
 
 
 static void *handle_add(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
 	if ((NULL == oper1) || (NULL == oper2)) return NULL;
-	DO_BINARY_OPER_(uint64, +, uint64, oper1, oper2);   CHECK_OVERFLOW_uint64_SUM(symbol, oper1, oper2);
-	DO_BINARY_OPER_( int64, +,  int64, oper1, oper2);   CHECK_OVERFLOW_int64_SUM (symbol, oper1, oper2);
-	DO_BINARY_OPER_(real64, +, real64, oper1, oper2);   CHECK_OVERFLOW_real64    (symbol);
+	DO_BINARY_OPER(uint64, +, uint64, oper1, oper2);   CHECK_OVERFLOW_uint64_SUM(symbol, oper1, oper2);
+	DO_BINARY_OPER( int64, +,  int64, oper1, oper2);   CHECK_OVERFLOW_int64_SUM (symbol, oper1, oper2);
+	DO_BINARY_OPER(real64, +, real64, oper1, oper2);   CHECK_OVERFLOW_real64    (symbol);
 	return NULL;
 }
 
 
 static void *handle_sub(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
 	if ((NULL == oper1) || (NULL == oper2)) return NULL;
-	DO_BINARY_OPER_(uint64, -, uint64, oper1, oper2);   CHECK_OVERFLOW_uint64_SUB(symbol, oper1, oper2);
-	DO_BINARY_OPER_( int64, -,  int64, oper1, oper2);   CHECK_OVERFLOW_int64_SUB (symbol, oper1, oper2);
-	DO_BINARY_OPER_(real64, -, real64, oper1, oper2);   CHECK_OVERFLOW_real64    (symbol);
+	DO_BINARY_OPER(uint64, -, uint64, oper1, oper2);   CHECK_OVERFLOW_uint64_SUB(symbol, oper1, oper2);
+	DO_BINARY_OPER( int64, -,  int64, oper1, oper2);   CHECK_OVERFLOW_int64_SUB (symbol, oper1, oper2);
+	DO_BINARY_OPER(real64, -, real64, oper1, oper2);   CHECK_OVERFLOW_real64    (symbol);
 	return NULL;
 }
 
 
 static void *handle_mul(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
 	if ((NULL == oper1) || (NULL == oper2)) return NULL;
-	DO_BINARY_OPER_(uint64, *, uint64, oper1, oper2);   CHECK_OVERFLOW_uint64_MUL(symbol, oper1, oper2);
-	DO_BINARY_OPER_( int64, *,  int64, oper1, oper2);   CHECK_OVERFLOW_int64_MUL (symbol, oper1, oper2);
-	DO_BINARY_OPER_(real64, *, real64, oper1, oper2);   CHECK_OVERFLOW_real64    (symbol);
+	DO_BINARY_OPER(uint64, *, uint64, oper1, oper2);   CHECK_OVERFLOW_uint64_MUL(symbol, oper1, oper2);
+	DO_BINARY_OPER( int64, *,  int64, oper1, oper2);   CHECK_OVERFLOW_int64_MUL (symbol, oper1, oper2);
+	DO_BINARY_OPER(real64, *, real64, oper1, oper2);   CHECK_OVERFLOW_real64    (symbol);
 	return NULL;
 }
 
 
 static void *handle_div(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
 	if ((NULL == oper1) || (NULL == oper2)) return NULL;
-	if (ISZERO_CVALUE(uint64, oper2))  {SET_OVFLOW(uint64, symbol);} else {DO_BINARY_OPER_(uint64, /, uint64, oper1, oper2); CHECK_OVERFLOW_uint64_DIV(symbol, oper1, oper2);};
-	if (ISZERO_CVALUE( int64, oper2))  {SET_OVFLOW( int64, symbol);} else {DO_BINARY_OPER_( int64, /,  int64, oper1, oper2); CHECK_OVERFLOW_int64_DIV (symbol, oper1, oper2);};
-	if (ISZERO_CVALUE(real64, oper2))  {SET_OVFLOW(real64, symbol);} else {DO_BINARY_OPER_(real64, /, real64, oper1, oper2); CHECK_OVERFLOW_real64(symbol);};
+	if (ISZERO_CVALUE(uint64, oper2))  {SET_OVFLOW(uint64, symbol);} else {DO_BINARY_OPER(uint64, /, uint64, oper1, oper2); CHECK_OVERFLOW_uint64_DIV(symbol, oper1, oper2);};
+	if (ISZERO_CVALUE( int64, oper2))  {SET_OVFLOW( int64, symbol);} else {DO_BINARY_OPER( int64, /,  int64, oper1, oper2); CHECK_OVERFLOW_int64_DIV (symbol, oper1, oper2);};
+	if (ISZERO_CVALUE(real64, oper2))  {SET_OVFLOW(real64, symbol);} else {DO_BINARY_OPER(real64, /, real64, oper1, oper2); CHECK_OVERFLOW_real64(symbol);};
 	return NULL;
 }
 
@@ -645,8 +658,8 @@ static void *handle_mod(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
 	 * Note that, when IN1 = INT64_MIN, and IN2 = -1, an overflow occurs in the division,
 	 * so although the MOD operation should be OK, acording to the above definition, we actually have an overflow!!
 	 */
-	if (ISZERO_CVALUE(uint64, oper2))  {SET_CVALUE(uint64, symbol, 0);} else {DO_BINARY_OPER_(uint64, %, uint64, oper1, oper2); CHECK_OVERFLOW_uint64_MOD(symbol, oper1, oper2);};
-	if (ISZERO_CVALUE( int64, oper2))  {SET_CVALUE( int64, symbol, 0);} else {DO_BINARY_OPER_( int64, %,  int64, oper1, oper2); CHECK_OVERFLOW_int64_MOD (symbol, oper1, oper2);};
+	if (ISZERO_CVALUE(uint64, oper2))  {SET_CVALUE(uint64, symbol, 0);} else {DO_BINARY_OPER(uint64, %, uint64, oper1, oper2); CHECK_OVERFLOW_uint64_MOD(symbol, oper1, oper2);};
+	if (ISZERO_CVALUE( int64, oper2))  {SET_CVALUE( int64, symbol, 0);} else {DO_BINARY_OPER( int64, %,  int64, oper1, oper2); CHECK_OVERFLOW_int64_MOD (symbol, oper1, oper2);};
 	return NULL;
 }
 
@@ -756,36 +769,44 @@ void *constant_folding_c::visit(integer_c *symbol) {
 
 void *constant_folding_c::visit(neg_real_c *symbol) {
 	symbol->exp->accept(*this);
-	DO_UNARY_OPER(real64, -, symbol->exp);
-	CHECK_OVERFLOW_real64(symbol);
+	DO_UNARY_OPER(real64, -, symbol->exp); CHECK_OVERFLOW_real64(symbol);
+	if (IS_OVFLOW(real64, symbol->exp)) SET_OVFLOW(real64, symbol);
 	return NULL;
 }
+
+
 
 /* | '-' integer	{$$ = new neg_integer_c($2, locloc(@$));} */
 void *constant_folding_c::visit(neg_integer_c *symbol) {
 	symbol->exp->accept(*this);
-	DO_UNARY_OPER(int64, -, symbol->exp);
-	CHECK_OVERFLOW_int64_NEG(symbol, symbol->exp);
+	/* Note that due to syntax restrictions, the value of symbol->exp will always be positive. 
+	 * However, the following code does not depend on that restriction.
+	 */
+	/* The remainder of the code (for example, data type checking) considers the neg_integer_c as a leaf of the
+	 * abstract syntax tree, and therefore simply ignores the values of neg_integer_c->exp.
+	 * For this reason only, and in only this situation, we must guarantee that any 'overflow' situation in 
+	 * the cvalue of neg_integer_c->exp is also reflected back to this neg_integer_c symbol.
+	 * For the rest of the code we do NOT do this, as it would gurantee that a single overflow deep inside
+	 * an expression would imply that the expression itself would also be set to 'overflow' condition.
+	 * This in turn would then have the compiler produce a whole load of error messages where they are not wanted!
+	 */
+	DO_UNARY_OPER(uint64, -, symbol->exp); CHECK_OVERFLOW_uint64_NEG(symbol, symbol->exp);  /* handle the uintv := -0 situation */
+	if (IS_OVFLOW(uint64, symbol->exp)) SET_OVFLOW(uint64, symbol);
+	DO_UNARY_OPER( int64, -, symbol->exp); CHECK_OVERFLOW_int64_NEG (symbol, symbol->exp);
+	if (IS_OVFLOW( int64, symbol->exp)) SET_OVFLOW( int64, symbol);
 	/* NOTE 1: INT64_MIN = -(INT64_MAX + 1)   ---> assuming two's complement representation!!!
 	 * NOTE 2: if the user happens to want INT_MIN, that value will first be parsed as a positive integer, before being negated here.
 	 * However, the positive value cannot be stored inside an int64! So, in this case, we will get the value from the uint64 cvalue.
+	 *
+	 * This same situation is usually considered an overflow (check handle_neg() function). However, here we have a special
+	 * situation. If we do not allow this, then the user would never the able to use the following code:
+	 *  VAR v : LINT; END_VAR
+	 *    v := -9223372036854775809 ; (* - |INT64_MIN| == INT64_MIN *)
 	 */
 	// if (INT64_MIN == -INT64_MAX - 1) // We do not really need to check that the platform uses two's complement
 	if (VALID_CVALUE(uint64, symbol->exp) && (GET_CVALUE(uint64, symbol->exp) == (uint64_t)INT64_MAX+1)) {
 		SET_CVALUE(int64, symbol, INT64_MIN);
 	}
-	/* NOTE 3: The standard allows considers the following strange syntax correct:
-	 *            int_v = ----------42;
-	 *         However, it will be parsed as multiple neg_expression_c, with a single final neg_integer_c.
-	 *         So, when parsing a neg_integer_c, we are guaranteed to always have a positive value in symbol->exp
-	 *         --> Conclusion: 
-	 *         We do not need to handle the situation where we are negating the INT_MIN value, whose
-	 *         result can only be stored inside an UINT (remember that INT_MIN is < 0 !!).
-	 *
-	 * NOTE 4: The syntax:   uint_v := -<INT_MIN>  may occur inside a neg_expression_c, but would always
-	 *         result in a data type error. So, although we could handle it here, it is not really
-	 *         necessary as it will later be caught by the data type checking classes.
-	 */
 	return NULL;
 }
 
