@@ -28,7 +28,8 @@ AC_PROG_RANLIB
 AC_PROG_AWK
 
 # Check bison version, we need a version great or equal than 2.4 to build matiec.
-[[[ $(bison --version) =~ ([0-9][.][0-9]*) ]]] && version_bison="${BASH_REMATCH[[1]]}"
+version_bison="$(bison --version | sed q | cut -d' ' -f4)"
+version_bison=${version_bison:0:3}
 
 AS_IF([awk -v ver="$version_bison" 'BEGIN { if (ver < 2.4) exit 1; }'],
 	[have_bison_correct=yes], [have_bison_correct=no])
