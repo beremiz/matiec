@@ -478,6 +478,7 @@ void *fill_candidate_datatypes_c::visit(neg_real_c *symbol) {return handle_any_r
 
 
 void *fill_candidate_datatypes_c::visit(neg_integer_c *symbol) {
+	/* Please read the comment in neg_expression_c method, as it also applies here */
 	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::int_type_name, &search_constant_type_c::safeint_type_name);
 	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::sint_type_name, &search_constant_type_c::safesint_type_name);
 	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::dint_type_name, &search_constant_type_c::safedint_type_name);
@@ -1371,11 +1372,19 @@ void *fill_candidate_datatypes_c::visit(neg_expression_c *symbol) {
    *
    *       However, this would then mean that the following ST code would be 
    *       syntactically and semantically correct:
+   *       VAR uint_var : UINT END_VAR;
    *       uint_var := - (uint_var);
    *
-   *       According to the standard, the above code should result in a 
-   *       runtime error, when we try to apply a negative value to the
-   *       UINT typed variable 'uint_var'.
+   *       Assuming uint_var is not 0, the standard states that the above code should result in a 
+   *       runtime error since the operation will result in an overflow. Since the above operation
+   *       is only valid when uint_var=0, it would probably make more sense for the programmer to
+   *       use if (uint_var=0) ..., so we will simply assume that the above statement simply
+   *       does not make sense in any situation (whether or not uint_var is 0), and therefore
+   *       we will not allow it.
+   *       (Notice that doing so does not ago against the standard, as the standard does not
+   *       explicitly define the semantics of the NEG operator, nor the data types it may accept
+   *       as input. We are simply assuming that the NEG operator may not be applied to unsigned
+   *       ANY_NUM data types!).
    *
    *       It is much easier for the compiler to detect this at compile time,
    *       and it is probably safer to the resulting code too.
@@ -1383,6 +1392,8 @@ void *fill_candidate_datatypes_c::visit(neg_expression_c *symbol) {
    *       To detect these tyes of errors at compile time, the easisest solution
    *       is to only allow ANY_NUM datatytpes that are signed.
    *        So, that is what we do here!
+   *
+   * NOTE: The above argument also applies to the neg_integer_c method!
    */
 	symbol->exp->accept(*this);
 	for (unsigned int i = 0; i < symbol->exp->candidate_datatypes.size(); i++) {
