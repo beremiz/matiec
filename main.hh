@@ -48,8 +48,6 @@ extern void error_exit(const char *file_name, int line_no, const char *errmsg = 
 
 
 
-
-
  /* Get the definition of INT16_MAX, INT16_MIN, UINT64_MAX, INT64_MAX, INT64_MIN, ... */
 
 #define __STDC_LIMIT_MACROS /* required to have UINTxx_MAX defined when including stdint.h from C++ source code. */
@@ -122,6 +120,13 @@ extern void error_exit(const char *file_name, int line_no, const char *errmsg = 
 
 
 
+/* get the printf format macros for printing variables of fixed data size
+ * e.g.  int64_t v; printf("value=%"PRId64" !!\n", v);
+ * e.g. uint64_t v; printf("value=%"PRIu64" !!\n", v);
+ * e.g. uint64_t v; printf("value=%"PRIx64" !!\n", v);  // hexadecimal format
+ */
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 
 
 #endif // #ifndef _MAIN_HH
