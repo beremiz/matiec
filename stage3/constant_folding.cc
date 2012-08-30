@@ -182,19 +182,28 @@
 
 #define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
 #define IS_OVFLOW(dtype, symbol)              (symbol_c::cs_overflow    == (symbol)->const_value._##dtype.status)
+#define IS_NONCONST(dtype, symbol)            (symbol_c::cs_non_const   == (symbol)->const_value._##dtype.status)
 #define ISZERO_CVALUE(dtype, symbol)          ((VALID_CVALUE(dtype, symbol)) && (GET_CVALUE(dtype, symbol) == 0))
 
 #define ISEQUAL_CVALUE(dtype, symbol1, symbol2) \
 	(VALID_CVALUE(dtype, symbol1) && VALID_CVALUE(dtype, symbol2) && (GET_CVALUE(dtype, symbol1) == GET_CVALUE(dtype, symbol2))) 
 
-#define DO_BINARY_OPER(oper_type, operation, res_type, operand1, operand2) {                                             \
-	if (VALID_CVALUE(oper_type, operand1) && VALID_CVALUE(oper_type, operand2))                                       \
-		SET_CVALUE(res_type, symbol, GET_CVALUE(oper_type, operand1) operation GET_CVALUE(oper_type, operand2));  \
+#define DO_BINARY_OPER(oper_type, operation, res_type, operand1, operand2) {                                              \
+	if      (VALID_CVALUE(oper_type, operand1) && VALID_CVALUE(oper_type, operand2))                                  \
+		{SET_CVALUE(res_type, symbol, GET_CVALUE(oper_type, operand1) operation GET_CVALUE(oper_type, operand2));}\
+	else if (IS_OVFLOW   (oper_type, operand1) || IS_OVFLOW   (oper_type, operand2))                                  \
+		{SET_OVFLOW(res_type, symbol);}  /* does it really make sense to set OVFLOW when restype is boolean??  */ \
+	else if (IS_NONCONST (oper_type, operand1) || IS_NONCONST (oper_type, operand2))                                  \
+		{SET_NONCONST(res_type, symbol);}                                                                         \
 }
 
 #define DO_UNARY_OPER(dtype, operation, operand) {                                                                        \
-	if (VALID_CVALUE(dtype, operand))                                                                                 \
-		SET_CVALUE(dtype, symbol, operation GET_CVALUE(dtype, operand));                                          \
+	if      (VALID_CVALUE(dtype, operand))                                                                            \
+		{SET_CVALUE(dtype, symbol, operation GET_CVALUE(dtype, operand));}                                        \
+	else if (IS_OVFLOW   (dtype, operand))                                                                            \
+		{SET_OVFLOW(dtype, symbol);}                                                                              \
+	else if (IS_NONCONST (dtype, operand))                                                                            \
+		{SET_NONCONST(dtype, symbol);}                                                                            \
 }
 
 
