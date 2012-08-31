@@ -965,57 +965,12 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       return NULL;
     }
 
-    void *visit(GT_operator_c *symbol)	{
-      if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-        CMP_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(GE_operator_c *symbol)	{
-      if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-        CMP_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(EQ_operator_c *symbol)	{
-      if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-        CMP_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(LT_operator_c *symbol)	{
-      if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-        CMP_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(LE_operator_c *symbol)	{
-      if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-          search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-        CMP_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(NE_operator_c *symbol)	{
-      if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-        CMP_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
+    void *visit(GT_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
+    void *visit(GE_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
+    void *visit(EQ_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
+    void *visit(LT_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
+    void *visit(LE_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
+    void *visit(NE_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
 
     /***************************************/
     /* B.3 - Language ST (Structured Text) */

@@ -482,8 +482,7 @@ void *visit(and_expression_c *symbol) {
 void *visit(equ_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (!search_expression_type->is_same_type(left_type, right_type))
-      ERROR;
+  // if (!search_expression_type->is_same_type(left_type, right_type))    ERROR;  // This check is no longer needed!
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
     return print_compare_function("EQ_", left_type, symbol->l_exp, symbol->r_exp);
@@ -493,8 +492,7 @@ void *visit(equ_expression_c *symbol) {
 void *visit(notequ_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (!search_expression_type->is_same_type(left_type, right_type))
-      ERROR;
+  // if (!search_expression_type->is_same_type(left_type, right_type))    ERROR;  // This check is no longer needed!
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
     return print_compare_function("NE_", left_type, symbol->l_exp, symbol->r_exp);
@@ -504,57 +502,41 @@ void *visit(notequ_expression_c *symbol) {
 void *visit(lt_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (!search_expression_type->is_same_type(left_type, right_type))
-      ERROR;
+  // if (!search_expression_type->is_same_type(left_type, right_type))    ERROR;  // This check is no longer needed!
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
     return print_compare_function("LT_", left_type, symbol->l_exp, symbol->r_exp);
-  if (!search_base_type.type_is_enumerated(left_type))
-    return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");
-  ERROR;
-  return NULL;
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");
 }
 
 void *visit(gt_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (!search_expression_type->is_same_type(left_type, right_type))
-      ERROR;
+  // if (!search_expression_type->is_same_type(left_type, right_type))    ERROR;  // This check is no longer needed!
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
     return print_compare_function("GT_", left_type, symbol->l_exp, symbol->r_exp);
-  if (!search_base_type.type_is_enumerated(left_type))
-    return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");
-  ERROR;
-  return NULL;
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");
 }
 
 void *visit(le_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (!search_expression_type->is_same_type(left_type, right_type))
-      ERROR;
+  // if (!search_expression_type->is_same_type(left_type, right_type))    ERROR;  // This check is no longer needed!
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
     return print_compare_function("LE_", left_type, symbol->l_exp, symbol->r_exp);
-  if (!search_base_type.type_is_enumerated(left_type))
-    return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");
-  ERROR;
-  return NULL;
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");
 }
 
 void *visit(ge_expression_c *symbol) {
   symbol_c *left_type = search_expression_type->get_type(symbol->l_exp);
   symbol_c *right_type = search_expression_type->get_type(symbol->r_exp);
-  if (!search_expression_type->is_same_type(left_type, right_type))
-      ERROR;
+  // if (!search_expression_type->is_same_type(left_type, right_type))    ERROR;  // This check is no longer needed!
   if (search_expression_type->is_time_type(left_type) ||
       search_expression_type->is_string_type(left_type))
     return print_compare_function("GE_", left_type, symbol->l_exp, symbol->r_exp);
-  if (!search_base_type.type_is_enumerated(left_type))
-    return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");
-  ERROR;
-  return NULL;
+  return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");
 }
 
 void *visit(add_expression_c *symbol) {

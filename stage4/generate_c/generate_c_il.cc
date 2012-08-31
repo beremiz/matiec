@@ -1878,63 +1878,12 @@ void *visit(MOD_operator_c *symbol)	{
   return NULL;
 }
 
-void *visit(GT_operator_c *symbol)	{
-  if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    CMP_operator(this->current_operand, "GT_");
-  } else {
-    ERROR;
-  }
-  return NULL;
-}
-
-void *visit(GE_operator_c *symbol)	{
-  if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    CMP_operator(this->current_operand, "GE_");
-  } else {
-    ERROR;
-  }
-  return NULL;
-}
-
-void *visit(EQ_operator_c *symbol)	{
-  if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    CMP_operator(this->current_operand, "EQ_");
-  } else {
-    ERROR;
-  }
-  return NULL;
-}
-
-void *visit(LT_operator_c *symbol)	{
-  if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    CMP_operator(this->current_operand, "LT_");
-  } else {
-    ERROR;
-  }
-  return NULL;
-}
-
-void *visit(LE_operator_c *symbol)	{
-  if (!search_base_type.type_is_enumerated(this->default_variable_name.current_type) &&
-      search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    CMP_operator(this->current_operand, "LE_");
-  } else {
-    ERROR;
-  }
-  return NULL;
-}
-
-void *visit(NE_operator_c *symbol)	{
-  if (search_expression_type->is_same_type(this->default_variable_name.current_type, this->current_operand_type)) {
-    CMP_operator(this->current_operand, "NE_");
-  } else {
-    ERROR;
-  }
-  return NULL;
-}
+void *visit(GT_operator_c *symbol)	{CMP_operator(this->current_operand, "GT_"); return NULL;}
+void *visit(GE_operator_c *symbol)	{CMP_operator(this->current_operand, "GE_"); return NULL;}
+void *visit(EQ_operator_c *symbol)	{CMP_operator(this->current_operand, "EQ_"); return NULL;}
+void *visit(LT_operator_c *symbol)	{CMP_operator(this->current_operand, "LT_"); return NULL;}
+void *visit(LE_operator_c *symbol)	{CMP_operator(this->current_operand, "LE_"); return NULL;}
+void *visit(NE_operator_c *symbol)	{CMP_operator(this->current_operand, "NE_"); return NULL;}
 
 
 //SYM_REF0(CAL_operator_c)
