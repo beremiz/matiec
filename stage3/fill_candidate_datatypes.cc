@@ -1331,27 +1331,6 @@ void *fill_candidate_datatypes_c::visit(    le_expression_c *symbol) {return han
 void *fill_candidate_datatypes_c::visit(    ge_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
 
 
-/* The following code is correct when handling the addition of 2 symbolic_variables
- * In this case, adding two variables (e.g. USINT_var1 + USINT_var2) will always yield
- * the same data type, even if the result of the adition could not fit inside the same
- * data type (due to overflowing)
- *
- * However, when adding two literals (e.g. USINT#42 + USINT#3)
- * we should be able to detect overflows of the result, and therefore not consider
- * that the result may be of type USINT.
- * Currently we do not yet detect these overflows, and allow handling the sum of two USINTs
- * as always resulting in an USINT, even in the following expression
- * (USINT#65535 + USINT#2).
- *
- * In the future we can add some code to reduce
- * all the expressions that are based on literals into the resulting literal
- * value (maybe some visitor class that will run before or after data type
- * checking). Since this class will have to be very careful to make sure it implements the same mathematical
- * details (e.g. how to round and truncate numbers) as defined in IEC 61131-3, we will leave this to the future.
- * Also, the question will arise if we should also replace calls to standard
- * functions if the input parameters are all literals (e.g. ADD(42, 42)). This
- * means this class will be more difficult than it appears at first.
- */
 void *fill_candidate_datatypes_c::visit(  add_expression_c *symbol) {return handle_binary_expression(widen_ADD_table,  symbol, symbol->l_exp, symbol->r_exp);}
 void *fill_candidate_datatypes_c::visit(  sub_expression_c *symbol) {return handle_binary_expression(widen_SUB_table,  symbol, symbol->l_exp, symbol->r_exp);}
 void *fill_candidate_datatypes_c::visit(  mul_expression_c *symbol) {return handle_binary_expression(widen_MUL_table,  symbol, symbol->l_exp, symbol->r_exp);}
