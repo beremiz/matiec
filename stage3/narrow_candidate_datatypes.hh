@@ -75,8 +75,9 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     void *narrow_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration);
 
     void *handle_il_instruction(symbol_c *symbol);
-    void *narrow_binary_operator  (const struct widen_entry widen_table[], symbol_c *symbol,                                     bool *deprecated_operation = NULL);
-    void *narrow_binary_expression(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL);
+    void *narrow_binary_operator    (const struct widen_entry widen_table[], symbol_c *symbol,                                     bool *deprecated_operation = NULL);
+    void *narrow_binary_expression  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL, bool allow_enums = false);
+    void *narrow_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL);
 
     void *narrow_conditional_flow_control_IL_instruction(symbol_c *symbol);
 

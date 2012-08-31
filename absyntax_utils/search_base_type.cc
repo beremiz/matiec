@@ -243,7 +243,10 @@ void *search_base_type_c::visit(enumerated_spec_init_c *symbol) {
 
 /* helper symbol for enumerated_specification->enumerated_spec_init */
 /* enumerated_value_list ',' enumerated_value */
-void *search_base_type_c::visit(enumerated_value_list_c *symbol)                        {return (void *)symbol;}
+void *search_base_type_c::visit(enumerated_value_list_c *symbol) {
+  this->is_enumerated = true;
+  return (void *)symbol;
+}
 
 /* enumerated_type_name '#' identifier */
 // SYM_REF2(enumerated_value_c, type, value)

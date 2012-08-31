@@ -1050,11 +1050,19 @@ void *narrow_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return narr
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
-void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation) {
+/* allow_enums is FALSE by default!!
+ * deprecated_operation is NULL by default!!
+ * if (allow_enums) then consider that we are ectually processing an equ_expression or notequ_expression, where two enums of the same data type may also be legally compared 
+ *  e.g.      symbol := l_expr == r_expr              
+ *            symbol := l_expr != r_expr
+ *  In the above situation it is a legal operation when (l_expr.datatype == r_expr.datatype) && is_enumerated(r/l_expr.datatype) && is_bool(symbol.datatype)
+ */
+void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation, bool allow_enums) {
 	symbol_c *l_type, *r_type;
 	int count = 0;
+	search_base_type_c search_base_type;
 
-        if (NULL != deprecated_operation)
+	if (NULL != deprecated_operation)
 		*deprecated_operation = false;
 
 	for(unsigned int i = 0; i < l_expr->candidate_datatypes.size(); i++) {
@@ -1062,11 +1070,17 @@ void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_
 			/* test widening compatibility */
 			l_type = l_expr->candidate_datatypes[i];
 			r_type = r_expr->candidate_datatypes[j];
-			if (is_widening_compatible(widen_table, l_type, r_type, symbol->datatype, deprecated_operation)) {
+			if        (is_widening_compatible(widen_table, l_type, r_type, symbol->datatype, deprecated_operation)) {
+				l_expr->datatype = l_type;
+				r_expr->datatype = r_type;
+				count ++;
+			} else if ((l_type == r_type) && search_base_type.type_is_enumerated(l_type) && is_ANY_BOOL_compatible(symbol->datatype)) {
+				if (NULL != deprecated_operation)  *deprecated_operation = false;
 				l_expr->datatype = l_type;
 				r_expr->datatype = r_type;
 				count ++;
 			}
+			  
 		}
 	}
 // 	if (count > 1) ERROR; /* Since we also support SAFE data types, this assertion is not necessarily always tru! */
@@ -1078,24 +1092,28 @@ void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_
 }
 
 
+void *narrow_candidate_datatypes_c::narrow_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation) {
+	return narrow_binary_expression(widen_table, symbol, l_expr, r_expr, deprecated_operation, true);
+}
 
-void *narrow_candidate_datatypes_c::visit(    or_expression_c *symbol) {return narrow_binary_expression( widen_OR_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *narrow_candidate_datatypes_c::visit(   xor_expression_c *symbol) {return narrow_binary_expression(widen_XOR_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *narrow_candidate_datatypes_c::visit(   and_expression_c *symbol) {return narrow_binary_expression(widen_AND_table, symbol, symbol->l_exp, symbol->r_exp);}
 
-void *narrow_candidate_datatypes_c::visit(   equ_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *narrow_candidate_datatypes_c::visit(notequ_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *narrow_candidate_datatypes_c::visit(    lt_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *narrow_candidate_datatypes_c::visit(    gt_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *narrow_candidate_datatypes_c::visit(    le_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *narrow_candidate_datatypes_c::visit(    ge_expression_c *symbol) {return narrow_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(    or_expression_c *symbol) {return narrow_binary_expression  ( widen_OR_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(   xor_expression_c *symbol) {return narrow_binary_expression  (widen_XOR_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(   and_expression_c *symbol) {return narrow_binary_expression  (widen_AND_table, symbol, symbol->l_exp, symbol->r_exp);}
 
-void *narrow_candidate_datatypes_c::visit(   add_expression_c *symbol) {return narrow_binary_expression(widen_ADD_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
-void *narrow_candidate_datatypes_c::visit(   sub_expression_c *symbol) {return narrow_binary_expression(widen_SUB_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
-void *narrow_candidate_datatypes_c::visit(   mul_expression_c *symbol) {return narrow_binary_expression(widen_MUL_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
-void *narrow_candidate_datatypes_c::visit(   div_expression_c *symbol) {return narrow_binary_expression(widen_DIV_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
-void *narrow_candidate_datatypes_c::visit(   mod_expression_c *symbol) {return narrow_binary_expression(widen_MOD_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *narrow_candidate_datatypes_c::visit( power_expression_c *symbol) {return narrow_binary_expression(widen_EXPT_table,symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(   equ_expression_c *symbol) {return narrow_equality_comparison(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(notequ_expression_c *symbol) {return narrow_equality_comparison(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(    lt_expression_c *symbol) {return narrow_binary_expression  (widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(    gt_expression_c *symbol) {return narrow_binary_expression  (widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(    le_expression_c *symbol) {return narrow_binary_expression  (widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit(    ge_expression_c *symbol) {return narrow_binary_expression  (widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+
+void *narrow_candidate_datatypes_c::visit(   add_expression_c *symbol) {return narrow_binary_expression  (widen_ADD_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
+void *narrow_candidate_datatypes_c::visit(   sub_expression_c *symbol) {return narrow_binary_expression  (widen_SUB_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
+void *narrow_candidate_datatypes_c::visit(   mul_expression_c *symbol) {return narrow_binary_expression  (widen_MUL_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
+void *narrow_candidate_datatypes_c::visit(   div_expression_c *symbol) {return narrow_binary_expression  (widen_DIV_table, symbol, symbol->l_exp, symbol->r_exp, &symbol->deprecated_operation);}
+void *narrow_candidate_datatypes_c::visit(   mod_expression_c *symbol) {return narrow_binary_expression  (widen_MOD_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *narrow_candidate_datatypes_c::visit( power_expression_c *symbol) {return narrow_binary_expression  (widen_EXPT_table,symbol, symbol->l_exp, symbol->r_exp);}
 
 
 void *narrow_candidate_datatypes_c::visit(neg_expression_c *symbol) {

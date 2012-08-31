@@ -403,6 +403,7 @@ void *fill_candidate_datatypes_c::handle_binary_operator(const struct widen_entr
 }
 
 
+
 /* handle a binary ST expression, like '+', '-', etc... */
 void *fill_candidate_datatypes_c::handle_binary_expression(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr) {
 	l_expr->accept(*this);
@@ -410,6 +411,22 @@ void *fill_candidate_datatypes_c::handle_binary_expression(const struct widen_en
 	return handle_binary_operator(widen_table, symbol, l_expr, r_expr);
 }
 
+
+
+/* handle the two equality comparison operations, i.e. = (euqal) and != (not equal) */
+/* This function is special, as it will also allow enumeration data types to be compared, with the result being a BOOL data type!
+ * This possibility os not expressed in the 'widening' tables, so we need to hard code it here
+ */
+void *fill_candidate_datatypes_c::handle_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr) {
+	search_base_type_c search_base_type;
+	handle_binary_expression(widen_table, symbol, l_expr, r_expr);
+	for(unsigned int i = 0; i < l_expr->candidate_datatypes.size(); i++)
+		for(unsigned int j = 0; j < r_expr->candidate_datatypes.size(); j++) {
+			if ((l_expr->candidate_datatypes[i] == r_expr->candidate_datatypes[j]) && search_base_type.type_is_enumerated(l_expr->candidate_datatypes[i]))
+				add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
+		}
+	return NULL;
+}
 
 
 
@@ -1319,24 +1336,23 @@ void *fill_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return handle
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
-void *fill_candidate_datatypes_c::visit(   or_expression_c  *symbol) {return handle_binary_expression(widen_OR_table,  symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(   xor_expression_c *symbol) {return handle_binary_expression(widen_XOR_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(   and_expression_c *symbol) {return handle_binary_expression(widen_AND_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   or_expression_c  *symbol) {return handle_binary_expression  (widen_OR_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   xor_expression_c *symbol) {return handle_binary_expression  (widen_XOR_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   and_expression_c *symbol) {return handle_binary_expression  (widen_AND_table, symbol, symbol->l_exp, symbol->r_exp);}
 
-void *fill_candidate_datatypes_c::visit(   equ_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(notequ_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(    lt_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(    gt_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(    le_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(    ge_expression_c *symbol) {return handle_binary_expression(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
-
-
-void *fill_candidate_datatypes_c::visit(  add_expression_c *symbol) {return handle_binary_expression(widen_ADD_table,  symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(  sub_expression_c *symbol) {return handle_binary_expression(widen_SUB_table,  symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(  mul_expression_c *symbol) {return handle_binary_expression(widen_MUL_table,  symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(  div_expression_c *symbol) {return handle_binary_expression(widen_DIV_table,  symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(  mod_expression_c *symbol) {return handle_binary_expression(widen_MOD_table,  symbol, symbol->l_exp, symbol->r_exp);}
-void *fill_candidate_datatypes_c::visit(power_expression_c *symbol) {return handle_binary_expression(widen_EXPT_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   equ_expression_c *symbol) {return handle_equality_comparison(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(notequ_expression_c *symbol) {return handle_equality_comparison(widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(    lt_expression_c *symbol) {return handle_binary_expression  (widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(    gt_expression_c *symbol) {return handle_binary_expression  (widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(    le_expression_c *symbol) {return handle_binary_expression  (widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(    ge_expression_c *symbol) {return handle_binary_expression  (widen_CMP_table, symbol, symbol->l_exp, symbol->r_exp);}
+ 
+void *fill_candidate_datatypes_c::visit(   add_expression_c *symbol) {return handle_binary_expression  (widen_ADD_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   sub_expression_c *symbol) {return handle_binary_expression  (widen_SUB_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   mul_expression_c *symbol) {return handle_binary_expression  (widen_MUL_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   div_expression_c *symbol) {return handle_binary_expression  (widen_DIV_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit(   mod_expression_c *symbol) {return handle_binary_expression  (widen_MOD_table,  symbol, symbol->l_exp, symbol->r_exp);}
+void *fill_candidate_datatypes_c::visit( power_expression_c *symbol) {return handle_binary_expression  (widen_EXPT_table, symbol, symbol->l_exp, symbol->r_exp);}
 
 
 void *fill_candidate_datatypes_c::visit(neg_expression_c *symbol) {
