@@ -346,7 +346,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
           break;
       }
     }
-    
+
     void print_var_number(void) {
       char str[10];
       sprintf(str, "%d", current_var_number);
@@ -554,6 +554,12 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       return NULL;
     }
 
+    /* enumerated_value_list ',' enumerated_value */
+    void *visit(enumerated_value_list_c *symbol) {
+      this->current_var_type_name->accept(*this);
+      return NULL;
+    }
+    
     /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
     /* structure_initialization -> may be NULL ! */
     void *visit(fb_name_decl_c *symbol) {
