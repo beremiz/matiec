@@ -1020,6 +1020,8 @@ typedef struct YYLTYPE {
 
 %token N
 %token P
+%token P0
+%token P1
 /* NOTE: the following two clash with the R and S IL operators.
  * It will have to be handled when we include parsing of SFC...
  */
@@ -5255,6 +5257,8 @@ qualifier:
 | R		{$$ = new qualifier_c(strdup("R"), locloc(@$));}
 | S		{$$ = new qualifier_c(strdup("S"), locloc(@$));}
 | P		{$$ = new qualifier_c(strdup("P"), locloc(@$));}
+| P0	{$$ = new qualifier_c(strdup("P0"), locloc(@$));}
+| P1	{$$ = new qualifier_c(strdup("P1"), locloc(@$));}
 ;
 
 timed_qualifier:

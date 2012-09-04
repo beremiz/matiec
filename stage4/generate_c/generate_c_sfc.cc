@@ -519,11 +519,15 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
                 strcmp(qualifier, "R") == 0) {
               s4o.print("active");
             }
-            if (strcmp(qualifier, "P") == 0 || strcmp(qualifier, "SD") == 0 || 
-                strcmp(qualifier, "DS") == 0 || strcmp(qualifier, "SL") == 0) {
+            else if (strcmp(qualifier, "P") == 0 || strcmp(qualifier, "SD") == 0 ||
+            		 strcmp(qualifier, "DS") == 0 || strcmp(qualifier, "SL") == 0 ||
+            		 strcmp(qualifier, "P0") == 0) {
               s4o.print("activated");
             }
-            if (strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
+            else if (strcmp(qualifier, "P1") == 0) {
+              s4o.print("desactivated");
+            }
+            else if (strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
               s4o.print("active && __time_cmp(");
               print_step_argument(current_step, "elapsed_time");
               s4o.print(", ");
@@ -539,11 +543,12 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.indent_right();
             s4o.print(s4o.indent_spaces);
             if (strcmp(qualifier, "N") == 0 || strcmp(qualifier, "P") == 0 ||
-                strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
+                strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0 ||
+                strcmp(qualifier, "P0") == 0 || strcmp(qualifier, "P1") == 0) {
               print_action_argument(current_action, "state");
               s4o.print(" = 1;\n");  
             }
-            if (strcmp(qualifier, "S") == 0) {
+            if (strcmp(qualifier, "S") == 0 || strcmp(qualifier, "SL") == 0) {
               print_action_argument(current_action, "set");
               s4o.print(" = 1;\n");
             }
