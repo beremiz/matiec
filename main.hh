@@ -40,8 +40,7 @@
 #include <stddef.h>  /* required for NULL */
  
 #define ERROR               error_exit(__FILE__,__LINE__)
-#define ERROR_MSG(msg, ...) error_exit(__FILE__,__LINE__, msg)
-// #define ERROR_MSG(msg, ...) error_exit(__FILE__,__LINE__, msg, __VA_ARGS__)
+#define ERROR_MSG(msg, ...) error_exit(__FILE__,__LINE__, msg, ## __VA_ARGS__)
 
 extern void error_exit(const char *file_name, int line_no, const char *errmsg = NULL, ...);
 

@@ -166,7 +166,7 @@ class token_c: public symbol_c {
  /* a list of symbols... */
 class list_c: public symbol_c {
   public:
-    int n;
+    int c,n;
     symbol_c **elements;
 
   public:
