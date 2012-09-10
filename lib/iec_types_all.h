@@ -131,7 +131,7 @@ typedef struct {
 
 typedef struct {
   BOOL stored;  // action storing state. 0 : not stored, 1: stored
-  BOOL state; // current action state. 0 : inative, 1: active
+  __IEC_BOOL_t state; // current action state. 0 : inative, 1: active
   BOOL set;   // set have been requested (reset each time the body is evaluated)
   BOOL reset; // reset have been requested (reset each time the body is evaluated)
   TIME set_remaining_time;    // time before set will be requested
