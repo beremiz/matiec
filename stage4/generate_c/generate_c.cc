@@ -353,11 +353,12 @@ unsigned long long calculate_time(symbol_c *symbol) {
   duration_c *duration = dynamic_cast<duration_c *>(symbol);
   
   if ((NULL == interval) && (NULL == duration)) ERROR;
+  	  {STAGE4_ERROR(symbol, symbol, "This type of interval value is not currently supported"); ERROR;}
 
   if (NULL != duration) {
     /* SYM_REF2(duration_c, neg, interval) */
     if (duration->neg != NULL)
-      {STAGE4_ERROR(duration, duration, "Negative TIME literals are not currently supported"); ERROR;}
+      {STAGE4_ERROR(duration, duration, "Negative TIME literals for interval are not currently supported"); ERROR;}
     return calculate_time(duration->interval);
   }
 
