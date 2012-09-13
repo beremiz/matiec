@@ -82,21 +82,33 @@ token_c::token_c(const char *value,
 list_c::list_c(
                int fl, int fc, const char *ffile, long int forder,
                int ll, int lc, const char *lfile, long int lorder)
-  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder),c(LIST_CAP_INIT),n(0),elements((symbol_c**)malloc(LIST_CAP_INIT*sizeof(symbol_c*))) {}
+  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder),c(LIST_CAP_INIT) {
+  n = 0;
+  elements = (symbol_c**)malloc(LIST_CAP_INIT*sizeof(symbol_c*));
+  if (NULL == elements) ERROR_MSG("out of memory");
+}
+
 
 list_c::list_c(symbol_c *elem, 
                int fl, int fc, const char *ffile, long int forder,
                int ll, int lc, const char *lfile, long int lorder)
-  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder),c(LIST_CAP_INIT),n(0),elements((symbol_c**)malloc(LIST_CAP_INIT*sizeof(symbol_c*))) 
-  { add_element(elem); }
+  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder),c(LIST_CAP_INIT) { 
+  n = 0;
+  elements = (symbol_c**)malloc(LIST_CAP_INIT*sizeof(symbol_c*));
+  if (NULL == elements) ERROR_MSG("out of memory");
+  add_element(elem); 
+}
+
 
 /* append a new element to the end of the list */
 void list_c::add_element(symbol_c *elem) {
   // printf("list_c::add_element()\n");
-  if((c <= n) && !(elements=(symbol_c**)realloc(elements,(c+=LIST_CAP_INCR)*sizeof(symbol_c *)))) ERROR_MSG("out of memory");
+  if (c <= n)
+    if (!(elements=(symbol_c**)realloc(elements,(c+=LIST_CAP_INCR)*sizeof(symbol_c *))))
+      ERROR_MSG("out of memory");
   elements[n++] = elem;
  
-  if(elem == NULL) return;
+  if (NULL == elem) return;
 
   /* adjust the location parameters, taking into account the new element. */
   if ((first_line == elem->first_line) &&

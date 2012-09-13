@@ -166,7 +166,7 @@ class token_c: public symbol_c {
  /* a list of symbols... */
 class list_c: public symbol_c {
   public:
-    int c,n;
+    int c,n; /* c: current capacity of list (malloc'd memory);  n: current number of elements in list */
     symbol_c **elements;
 
   public:
