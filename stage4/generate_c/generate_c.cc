@@ -352,7 +352,7 @@ unsigned long long calculate_time(symbol_c *symbol) {
   interval_c *interval = dynamic_cast<interval_c *>(symbol);
   duration_c *duration = dynamic_cast<duration_c *>(symbol);
   
-  if ((NULL == interval) && (NULL == duration)) ERROR;
+  if ((NULL == interval) && (NULL == duration))
   	  {STAGE4_ERROR(symbol, symbol, "This type of interval value is not currently supported"); ERROR;}
 
   if (NULL != duration) {
