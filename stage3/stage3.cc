@@ -41,8 +41,13 @@
 #include "lvalue_check.hh"
 #include "array_range_check.hh"
 #include "constant_folding.hh"
+#include "declaration_check.hh"
 
-
+static int declaration_safety(symbol_c *tree_root){
+    declaration_check_c declaration_check(tree_root);
+    tree_root->accept(declaration_check);
+    return declaration_check.get_error_count();
+}
 
 static int flow_control_analysis(symbol_c *tree_root){
     flow_control_analysis_c flow_control_analysis(tree_root);
@@ -99,6 +104,7 @@ static int array_range_check(symbol_c *tree_root){
 
 int stage3(symbol_c *tree_root){
 	int error_count = 0;
+	error_count += declaration_safety(tree_root);
 	error_count += flow_control_analysis(tree_root);
 	error_count += constant_folding(tree_root);
 	error_count += type_safety(tree_root);

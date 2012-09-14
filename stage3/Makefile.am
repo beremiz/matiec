@@ -11,5 +11,6 @@ libstage3_a_SOURCES = \
 	datatype_functions.cc \
 	lvalue_check.cc \
 	array_range_check.cc \
-        constant_folding.cc
+        constant_folding.cc \
+        declaration_check.cc
 

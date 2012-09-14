@@ -1,0 +1,135 @@
+/*
+ *  matiec - a compiler for the programming languages defined in IEC 61131-3
+ *
+ *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
+ *  Copyright (C) 2012       Manuele Conti (conti.ma@alice.it)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *
+ * This code is made available on the understanding that it will not be
+ * used in safety-critical situations without a full and competent review.
+ */
+
+/*
+ * An IEC 61131-3 compiler.
+ *
+ * Based on the
+ * FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10)
+ *
+ */
+
+
+/* Declaration sequence is a source code part needed to declare variables.
+ * There are some checks we need to do before start with other analysis:
+ *
+ *   - Check external option redefinition.
+ *   - Check external data type redefinition.
+ *   - Check initial values consistently with the data types of the variables/data types being declared.
+ *   - Check whether a function block uses a CONSTANT qualifier as described in 2.5.2.1.
+ *
+ */
+
+
+#include "declaration_check.hh"
+#include "datatype_functions.hh"
+
+#define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
+#define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
+
+#define STAGE3_ERROR(error_level, symbol1, symbol2, ...) {                                                                  \
+  if (current_display_error_level >= error_level) {                                                                         \
+    fprintf(stderr, "%s:%d-%d..%d-%d: error: ",                                                                             \
+            FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,\
+                                                 LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column);\
+    fprintf(stderr, __VA_ARGS__);                                                                                           \
+    fprintf(stderr, "\n");                                                                                                  \
+    error_count++;                                                                                                     \
+  }                                                                                                                         \
+}
+
+
+#define STAGE3_WARNING(symbol1, symbol2, ...) {                                                                             \
+    fprintf(stderr, "%s:%d-%d..%d-%d: warning: ",                                                                           \
+            FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,\
+                                                 LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column);\
+    fprintf(stderr, __VA_ARGS__);                                                                                           \
+    fprintf(stderr, "\n");                                                                                                  \
+    warning_found = true;                                                                                                   \
+}
+
+
+declaration_check_c::declaration_check_c(symbol_c *ignore) {
+  error_count = 0;
+}
+
+declaration_check_c::~declaration_check_c(void) {
+
+}
+
+int declaration_check_c::get_error_count() {
+  return error_count;
+}
+
+void declaration_check_c::check_global_decl(symbol_c *p_decl) {
+	symbol_c *var_name;
+	search_base_type_c search_base_type;
+
+	search_var_instance_decl_c search_var_instance_glo_decl(global_var_decls);
+	search_var_instance_decl_c search_var_instance_ext_decl(p_decl);
+	function_param_iterator_c fpi(p_decl);
+	while((var_name = fpi.next()) != NULL) {
+      if (fpi.param_direction() == function_param_iterator_c::direction_extref) {
+     	 /* found an external reference parameter. */
+     	symbol_c *glo_decl = search_var_instance_glo_decl.get_decl(var_name);
+        symbol_c *ext_decl = search_var_instance_ext_decl.get_decl(var_name);
+    	if (search_var_instance_glo_decl.get_option(var_name) != search_var_instance_ext_decl.get_option(var_name))
+          STAGE3_ERROR(0, glo_decl, glo_decl, "Declaration error an external redefinition option.");
+
+        /* TODO: Check redefinition data type.
+         *       We need a new class (like search_base_type class) to get type id by variable declaration.
+         *  symbol_c *glo_type = ????;
+         *  symbol_c *ext_type = fpi.param_type();
+         *  if (! is_type_equal(glo_type, ext_type))
+         *	 STAGE3_ERROR(0, glo_decl, glo_decl, "Declaration error an external redefinition data type.");
+         */
+      }
+	}
+
+}
+
+/******************************************/
+/* B 1.4.3 - Declaration & Initialisation */
+/******************************************/
+void *declaration_check_c::visit(global_var_declarations_c *symbol) {
+  global_var_decls = dynamic_cast<list_c *>(symbol->global_var_decl_list);
+  if (NULL == global_var_decls)
+	  ERROR;
+  return NULL;
+}
+
+/********************************/
+/* B 1.7 Configuration elements */
+/********************************/
+void *declaration_check_c::visit(program_configuration_c *symbol) {
+	symbol_c *p_decl = program_type_symtable.find_value(symbol->program_type_name);
+	if (p_decl == program_type_symtable.end_value())
+	  p_decl = function_block_type_symtable.find_value(symbol->program_type_name);
+	/* stage1_2 guarantees that we are sure to find a declaration in FB or Program symtable. */
+	if (p_decl == function_block_type_symtable.end_value())
+      ERROR;
+	check_global_decl(p_decl);
+	return NULL;
+}
+
