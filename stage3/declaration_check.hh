@@ -1,7 +1,7 @@
 /*
  *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
+ *  Copyright (C) 2003-2012  Mario de Sousa (msousa@fe.up.pt)
  *  Copyright (C) 2012       Manuele Conti (conti.ma@alice.it)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -39,7 +39,7 @@ class declaration_check_c : public iterator_visitor_c {
     int error_count;
     int current_display_error_level;
     search_base_type_c search_base_type;
-    list_c *global_var_decls;
+    symbol_c *current_pou_decl;
 
 public:
     declaration_check_c(symbol_c *ignore);
@@ -48,9 +48,9 @@ public:
 
     void check_global_decl(symbol_c *p_decl);
     /******************************************/
-    /* B 1.4.3 - Declaration & Initialisation */
+    /* B 1.5.3 - Declaration & Initialisation */
     /******************************************/
-    void *visit(global_var_declarations_c *symbol);
+    void *visit(program_declaration_c *symbol);
     /********************************/
     /* B 1.7 Configuration elements */
     /********************************/

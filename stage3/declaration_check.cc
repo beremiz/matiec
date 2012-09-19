@@ -1,7 +1,7 @@
 /*
  *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
+ *  Copyright (C) 2003-2012  Mario de Sousa (msousa@fe.up.pt)
  *  Copyright (C) 2012       Manuele Conti (conti.ma@alice.it)
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -86,7 +86,7 @@ void declaration_check_c::check_global_decl(symbol_c *p_decl) {
 	symbol_c *var_name;
 	search_base_type_c search_base_type;
 
-	search_var_instance_decl_c search_var_instance_glo_decl(global_var_decls);
+	search_var_instance_decl_c search_var_instance_glo_decl(current_pou_decl);
 	search_var_instance_decl_c search_var_instance_ext_decl(p_decl);
 	function_param_iterator_c fpi(p_decl);
 	while((var_name = fpi.next()) != NULL) {
@@ -101,21 +101,22 @@ void declaration_check_c::check_global_decl(symbol_c *p_decl) {
          *       We need a new class (like search_base_type class) to get type id by variable declaration.
          *  symbol_c *glo_type = ????;
          *  symbol_c *ext_type = fpi.param_type();
-         *  if (! is_type_equal(glo_type, ext_type))
-         *	 STAGE3_ERROR(0, glo_decl, glo_decl, "Declaration error an external redefinition data type.");
-         */
+	 */
+	/* For the moment, we will just use search_base_type_c instead... */
+        symbol_c *glo_type = search_base_type.get_basetype_decl(glo_decl);
+        symbol_c *ext_type = search_base_type.get_basetype_decl(ext_decl);
+        if (! is_type_equal(glo_type, ext_type))
+          STAGE3_ERROR(0, ext_decl, ext_decl, "Declaration error an external redefinition data type.");
       }
 	}
 
 }
 
 /******************************************/
-/* B 1.4.3 - Declaration & Initialisation */
+/* B 1.5.3 - Declaration & Initialisation */
 /******************************************/
-void *declaration_check_c::visit(global_var_declarations_c *symbol) {
-  global_var_decls = dynamic_cast<list_c *>(symbol->global_var_decl_list);
-  if (NULL == global_var_decls)
-	  ERROR;
+void *declaration_check_c::visit(program_declaration_c *symbol) {
+  current_pou_decl = symbol;
   return NULL;
 }
 
