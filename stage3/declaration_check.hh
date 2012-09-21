@@ -47,12 +47,20 @@ public:
     int get_error_count();
 
     void check_global_decl(symbol_c *p_decl);
+
+    /*****************************/
+    /* B 1.5.2 - Function Blocks */
+    /*****************************/
+    void *visit(function_block_declaration_c *symbol);
+
     /******************************************/
     /* B 1.5.3 - Declaration & Initialisation */
     /******************************************/
     void *visit(program_declaration_c *symbol);
+
     /********************************/
     /* B 1.7 Configuration elements */
     /********************************/
+    void *visit(configuration_declaration_c *symbol);
     void *visit(program_configuration_c *symbol);
 };

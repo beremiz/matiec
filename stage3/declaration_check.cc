@@ -112,25 +112,62 @@ void declaration_check_c::check_global_decl(symbol_c *p_decl) {
 
 }
 
+
+
+/*****************************/
+/* B 1.5.2 - Function Blocks */
+/*****************************/
+/*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
+// SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
+void *declaration_check_c::visit(function_block_declaration_c *symbol) {
+  current_pou_decl = symbol;
+  /* check if any FB declared as a VAR has any incompatible VAR_EXTERNAL declarations */
+  if (NULL != symbol->var_declarations)
+    symbol->var_declarations->accept(*this);
+  return NULL;
+}
+
 /******************************************/
 /* B 1.5.3 - Declaration & Initialisation */
 /******************************************/
+/*  PROGRAM program_type_name program_var_declarations_list function_block_body END_PROGRAM */
+// SYM_REF3(program_declaration_c, program_type_name, var_declarations, function_block_body)
 void *declaration_check_c::visit(program_declaration_c *symbol) {
   current_pou_decl = symbol;
+  /* check if any FB declared as a VAR has any incompatible VAR_EXTERNAL declarations */
+  if (NULL != symbol->var_declarations)
+    symbol->var_declarations->accept(*this);
   return NULL;
 }
 
 /********************************/
 /* B 1.7 Configuration elements */
 /********************************/
+/*
+ * CONFIGURATION configuration_name
+ *    optional_global_var_declarations
+ *    (resource_declaration_list | single_resource_declaration)
+ *    optional_access_declarations
+ *    optional_instance_specific_initializations
+ * END_CONFIGURATION
+ */
+//SYM_REF5(configuration_declaration_c, configuration_name, global_var_declarations, resource_declarations, access_declarations, instance_specific_initializations)
+void *declaration_check_c::visit(configuration_declaration_c *symbol) {
+  current_pou_decl = symbol;
+  /* check if any FB declared as a VAR has any incompatible VAR_EXTERNAL declarations */
+  if (NULL != symbol->resource_declarations)
+    symbol->resource_declarations->accept(*this);
+  return NULL;
+}
+
 void *declaration_check_c::visit(program_configuration_c *symbol) {
-	symbol_c *p_decl = program_type_symtable.find_value(symbol->program_type_name);
-	if (p_decl == program_type_symtable.end_value())
-	  p_decl = function_block_type_symtable.find_value(symbol->program_type_name);
-	/* stage1_2 guarantees that we are sure to find a declaration in FB or Program symtable. */
-	if (p_decl == function_block_type_symtable.end_value())
-      ERROR;
-	check_global_decl(p_decl);
-	return NULL;
+  symbol_c *p_decl = program_type_symtable.find_value(symbol->program_type_name);
+  if (p_decl == program_type_symtable.end_value())
+    p_decl = function_block_type_symtable.find_value(symbol->program_type_name);
+  /* stage1_2 guarantees that we are sure to find a declaration in FB or Program symtable. */
+  if (p_decl == function_block_type_symtable.end_value())
+    ERROR;
+  check_global_decl(p_decl);
+  return NULL;
 }
 
