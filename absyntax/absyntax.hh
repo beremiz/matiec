@@ -80,6 +80,9 @@ class symbol_c; // forward declaration
 class symbol_c {
 
   public:
+    /* WARNING: only use this method for debugging purposes!! */
+    virtual const char *absyntax_cname(void) {return "symbol_c";};
+
     /*
      * Line number for the purposes of error checking.
      * Annotated (inserted) by stage1_2
@@ -152,6 +155,9 @@ class symbol_c {
 
 class token_c: public symbol_c {
   public:
+    /* WARNING: only use this method for debugging purposes!! */
+    virtual const char *absyntax_cname(void) {return "token_c";};
+
     /* the value of the symbol. */
     const char *value;
 
@@ -166,6 +172,9 @@ class token_c: public symbol_c {
  /* a list of symbols... */
 class list_c: public symbol_c {
   public:
+    /* WARNING: only use this method for debugging purposes!! */
+    virtual const char *absyntax_cname(void) {return "list_c";};
+
     int c,n; /* c: current capacity of list (malloc'd memory);  n: current number of elements in list */
     symbol_c **elements;
 
@@ -203,6 +212,8 @@ class class_name_c:	public list_c {											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
+    /* WARNING: only use this method for debugging purposes!! */							\
+    virtual const char *absyntax_cname(void) {return #class_name_c;};							\
 };
 
 
@@ -215,6 +226,8 @@ class class_name_c: 	public token_c {										\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
+    /* WARNING: only use this method for debugging purposes!! */							\
+    virtual const char *absyntax_cname(void) {return #class_name_c;};							\
 };
 
 
@@ -227,6 +240,8 @@ class class_name_c: public symbol_c {											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
+    /* WARNING: only use this method for debugging purposes!! */							\
+    virtual const char *absyntax_cname(void) {return #class_name_c;};							\
 };
 
 
@@ -240,6 +255,8 @@ class class_name_c: public symbol_c {											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
+    /* WARNING: only use this method for debugging purposes!! */							\
+    virtual const char *absyntax_cname(void) {return #class_name_c;};							\
 };
 
 
@@ -255,6 +272,8 @@ class class_name_c: public symbol_c {											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
+    /* WARNING: only use this method for debugging purposes!! */							\
+    virtual const char *absyntax_cname(void) {return #class_name_c;};							\
 };
 
 
@@ -272,6 +291,8 @@ class class_name_c: public symbol_c {											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
+    /* WARNING: only use this method for debugging purposes!! */							\
+    virtual const char *absyntax_cname(void) {return #class_name_c;};							\
 };
 
 
@@ -291,6 +312,8 @@ class class_name_c: public symbol_c {											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
+    /* WARNING: only use this method for debugging purposes!! */							\
+    virtual const char *absyntax_cname(void) {return #class_name_c;};							\
 };
 
 
@@ -312,6 +335,8 @@ class class_name_c: public symbol_c {											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
+    /* WARNING: only use this method for debugging purposes!! */							\
+    virtual const char *absyntax_cname(void) {return #class_name_c;};							\
 };
 
 
@@ -335,6 +360,8 @@ class class_name_c: public symbol_c {											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
+    /* WARNING: only use this method for debugging purposes!! */							\
+    virtual const char *absyntax_cname(void) {return #class_name_c;};							\
 };
 
 
