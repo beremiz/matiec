@@ -72,6 +72,9 @@
 static int debug = 0;
 
 fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
+	il_operand = NULL;
+	prev_il_instruction = NULL;
+	search_varfb_instance_type = NULL;
 }
 
 fill_candidate_datatypes_c::~fill_candidate_datatypes_c(void) {

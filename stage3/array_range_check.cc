@@ -89,6 +89,7 @@ static inline int cmp_unsigned_signed(const uint64_t u, const int64_t s) {
 array_range_check_c::array_range_check_c(symbol_c *ignore) {
 	error_count = 0;
 	current_display_error_level = 0;
+	search_varfb_instance_type = NULL;
 }
 
 

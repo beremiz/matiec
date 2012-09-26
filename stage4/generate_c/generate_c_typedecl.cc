@@ -58,7 +58,7 @@ class generate_c_typedecl_c: public generate_c_base_c {
       enumerated_td,
       subrange_td,
       array_td,
-      struct_td,
+      struct_td
     } typedefinition_t;
 
     typedefinition_t current_typedefinition;

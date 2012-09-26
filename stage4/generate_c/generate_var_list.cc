@@ -206,7 +206,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       external_vcc,
       located_input_vcc,
       located_memory_vcc,
-      located_output_vcc,
+      located_output_vcc
     } varclasscategory_t;
 
     varclasscategory_t current_var_class_category;

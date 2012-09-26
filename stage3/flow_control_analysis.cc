@@ -123,6 +123,8 @@ static int debug = 0;
 flow_control_analysis_c::flow_control_analysis_c(symbol_c *ignore) {
   prev_il_instruction = NULL;
   curr_il_instruction = NULL;
+  prev_il_instruction_is_JMP_or_RET = false;
+  search_il_label = NULL;
 }
 
 flow_control_analysis_c::~flow_control_analysis_c(void) {

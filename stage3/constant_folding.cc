@@ -732,6 +732,9 @@ constant_folding_c::constant_folding_c(symbol_c *symbol) {
     error_count = 0;
     warning_found = false;
     current_display_error_level = 0;
+    il_operand = NULL;
+    search_varfb_instance_type = NULL;
+    prev_il_instruction = NULL;
     
     /* check whether the platform on which the compiler is being run implements IEC 559 floating point data types. */
     symbol_c null_symbol;

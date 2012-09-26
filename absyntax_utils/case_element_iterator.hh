@@ -55,7 +55,7 @@ class case_element_iterator_c : public null_visitor_c {
      */
     typedef enum {
       element_single,
-      element_subrange,
+      element_subrange
     } case_element_t ;
 
 

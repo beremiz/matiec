@@ -826,7 +826,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
                   init_vf,
                   constructorinit_vf,
                   globalinit_vf,
-                  globalprototype_vf,
+                  globalprototype_vf
                  } varformat_t;
 
 

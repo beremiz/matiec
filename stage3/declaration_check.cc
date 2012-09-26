@@ -71,6 +71,8 @@
 
 
 declaration_check_c::declaration_check_c(symbol_c *ignore) {
+  current_display_error_level = 0;
+  current_pou_decl = NULL;
   error_count = 0;
 }
 

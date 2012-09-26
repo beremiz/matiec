@@ -415,7 +415,7 @@ unsigned long long calculate_time(symbol_c *symbol) {
   };
   ERROR; // should never reach this point!
   return 0; // humour the compiler!
-};
+}
 
 /***********************************************************************/
 /***********************************************************************/
@@ -574,7 +574,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     typedef enum {
       none_im,
       arrayname_im,
-      arraydeclaration_im,
+      arraydeclaration_im
     } inlinearray_mode_t;
 
   private:
@@ -2286,7 +2286,7 @@ class generate_c_c: public iterator_visitor_c {
     typedef enum {
       none_gm,
       datatypes_gm,
-      pous_gm,
+      pous_gm
     } generate_mode_t;
 
   protected:
