@@ -193,15 +193,15 @@ class function_param_iterator_c : public null_visitor_c {
     //SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
     void *visit(structured_var_init_decl_c *symbol);
     
-#if 0
-/* name_list ':' function_block_type_name ASSIGN structure_initialization */
-/* structure_initialization -> may be NULL ! */
-SYM_REF4(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization, unused)
+    /* name_list ':' function_block_type_name ASSIGN structure_initialization */
+    /* structure_initialization -> may be NULL ! */
+    // SYM_REF4(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization, unused)
+    void *visit(fb_name_decl_c *symbol);
 
-/* name_list ',' fb_name */
-SYM_LIST(fb_name_list_c)
-#endif
-
+    /* name_list ',' fb_name */
+    // SYM_LIST(fb_name_list_c)
+    void *visit(fb_name_list_c *symbol);
+    
     void *visit(output_declarations_c *symbol);
     void *visit(eno_param_declaration_c *symbol);
     void *visit(input_output_declarations_c *symbol);

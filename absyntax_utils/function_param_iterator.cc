@@ -442,7 +442,6 @@ void *function_param_iterator_c::visit(en_param_declaration_c *symbol) {
 //SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
 void *function_param_iterator_c::visit(array_var_init_decl_c *symbol) {
   TRACE("array_var_init_decl_c");
-
   current_param_default_value = spec_init_sperator_c::get_init(symbol->array_spec_init);
   current_param_type = spec_init_sperator_c::get_spec(symbol->array_spec_init);
 
@@ -459,6 +458,26 @@ void *function_param_iterator_c::visit(structured_var_init_decl_c *symbol) {
 
   return symbol->var1_list->accept(*this);
 }
+
+
+
+
+/* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
+/* structure_initialization -> may be NULL ! */
+// SYM_REF3(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization)
+void *function_param_iterator_c::visit(fb_name_decl_c *symbol) {
+  TRACE("structured_var_init_decl_c");
+  current_param_default_value = symbol->structure_initialization ; 
+  current_param_type          = symbol->function_block_type_name ;
+
+  return symbol->fb_name_list->accept(*this);
+}
+
+
+/* fb_name_list ',' fb_name */
+// SYM_LIST(fb_name_list_c)
+void *function_param_iterator_c::visit(fb_name_list_c *symbol) {TRACE("fb_name_list_c"); return handle_param_list(symbol);}
+
 
 void *function_param_iterator_c::visit(output_declarations_c *symbol) {
   TRACE("output_declarations_c");
@@ -496,22 +515,18 @@ void *function_param_iterator_c::visit(var_declaration_list_c *symbol) {TRACE("v
 /*  var1_list ':' array_specification */
 //SYM_REF2(array_var_declaration_c, var1_list, array_specification)
 void *function_param_iterator_c::visit(array_var_declaration_c *symbol) {
-	TRACE("array_var_declaration_c");
-
-	current_param_default_value = NULL;
-	current_param_type = symbol->array_specification;
-
-	return symbol->var1_list->accept(*this);
+  TRACE("array_var_declaration_c");
+  current_param_default_value = NULL;
+  current_param_type = symbol->array_specification;
+  return symbol->var1_list->accept(*this);
 }
 
 /*  var1_list ':' structure_type_name */
 //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
 void *function_param_iterator_c::visit(structured_var_declaration_c *symbol) {
   TRACE("structured_var_declaration_c");
-
   current_param_default_value = NULL;
   current_param_type = symbol->structure_type_name;
-
   return symbol->var1_list->accept(*this);
 }
 
