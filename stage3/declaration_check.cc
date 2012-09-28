@@ -96,7 +96,11 @@ void declaration_check_c::check_global_decl(symbol_c *p_decl) {
      	 /* found an external reference parameter. */
      	symbol_c *glo_decl = search_var_instance_glo_decl.get_decl(var_name);
         symbol_c *ext_decl = search_var_instance_ext_decl.get_decl(var_name);
-    	if (search_var_instance_glo_decl.get_option(var_name) != search_var_instance_ext_decl.get_option(var_name))
+    	if (glo_decl == NULL) {
+    	  STAGE3_ERROR(0, ext_decl, ext_decl, "Declaration error an external doesn't mach with any global var.");
+    	  continue;
+    	}
+        if (search_var_instance_glo_decl.get_option(var_name) != search_var_instance_ext_decl.get_option(var_name))
           STAGE3_ERROR(0, glo_decl, glo_decl, "Declaration error an external redefinition option.");
 
         /* TODO: Check redefinition data type.
