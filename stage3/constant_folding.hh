@@ -47,7 +47,6 @@
 class constant_folding_c : public iterator_visitor_c {
   private:
     search_varfb_instance_type_c *search_varfb_instance_type;
-    search_base_type_c search_base_type;
     int error_count;
     bool warning_found;
     int current_display_error_level;
