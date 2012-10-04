@@ -647,17 +647,28 @@ void *visit(direct_variable_c *symbol) {
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
 void *visit(structured_variable_c *symbol) {
   TRACE("structured_variable_c");
+  bool type_is_complex = search_var_instance_decl->type_is_complex(symbol->record_variable);
   switch (wanted_variablegeneration) {
     case complextype_base_vg:
     case complextype_base_assignment_vg:
       symbol->record_variable->accept(*this);
+      if (!type_is_complex) {
+        s4o.print(".");
+        symbol->field_selector->accept(*this);
+      }
       break;
     case complextype_suffix_vg:
-    case assignment_vg:
-      symbol->record_variable->accept(*this);
-      s4o.print(".");
-      symbol->field_selector->accept(*this);
-      break;
+	  symbol->record_variable->accept(*this);
+	  if (type_is_complex) {
+		s4o.print(".");
+		symbol->field_selector->accept(*this);
+	  }
+	  break;
+	case assignment_vg:
+	  symbol->record_variable->accept(*this);
+	  s4o.print(".");
+	  symbol->field_selector->accept(*this);
+	  break;
     default:
       if (this->is_variable_prefix_null()) {
     	symbol->record_variable->accept(*this);

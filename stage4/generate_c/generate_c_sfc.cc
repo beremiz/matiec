@@ -51,6 +51,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
     generate_c_il_c *generate_c_il;
     generate_c_st_c *generate_c_st;
     generate_c_SFC_IL_ST_c *generate_c_code;
+    search_var_instance_decl_c *search_var_instance_decl;
     
     int transition_number;
     std::list<TRANSITION> transition_list;
@@ -66,6 +67,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       generate_c_il = new generate_c_il_c(s4o_ptr, name, scope, variable_prefix);
       generate_c_st = new generate_c_st_c(s4o_ptr, name, scope, variable_prefix);
       generate_c_code = new generate_c_SFC_IL_ST_c(s4o_ptr, name, scope, variable_prefix);
+      search_var_instance_decl = new search_var_instance_decl_c(scope);
       this->set_variable_prefix(variable_prefix);
     }
     
@@ -74,7 +76,16 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       delete generate_c_il;
       delete generate_c_st;
       delete generate_c_code;
+      delete search_var_instance_decl;
     }
+
+
+	bool is_variable(symbol_c *symbol) {
+	  /* we try to find the variable instance declaration, to determine if symbol is variable... */
+	  symbol_c *var_decl = search_var_instance_decl->get_decl(symbol);
+
+	  return var_decl != NULL;
+	}
 
     void reset_transition_number(void) {transition_number = 0;}
 
@@ -398,11 +409,13 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       switch (wanted_sfcgeneration) {
         case actionbody_sg:
           s4o.print(s4o.indent_spaces + "if(");
+          s4o.print(GET_VAR);
+          s4o.print("(");
           print_variable_prefix();
           s4o.print("__action_list[");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->action_name->accept(*this);
-          s4o.print("].state) {\n");
+          s4o.print("].state)) {\n");
           s4o.indent_right();
           
           // generate action code
@@ -421,8 +434,8 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       if (symbol->step_name != NULL) {
         switch (wanted_sfcgeneration) {
           case transitiontest_sg:
-        	s4o.print(GET_VAR);
-        	s4o.print("(");
+            s4o.print(GET_VAR);
+            s4o.print("(");
             print_step_argument(symbol->step_name, "state");
             s4o.print(")");
             break;
@@ -446,8 +459,8 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       switch (wanted_sfcgeneration) {
         case transitiontest_sg:
           for(int i = 0; i < symbol->n; i++) {
-        	s4o.print(GET_VAR);
-        	s4o.print("(");
+            s4o.print(GET_VAR);
+            s4o.print("(");
             print_step_argument(symbol->elements[i], "state");
             s4o.print(")");
             if (i < symbol->n - 1) {
@@ -497,8 +510,10 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print(")) {\n");
             s4o.indent_right();
             s4o.print(s4o.indent_spaces);
-            print_action_argument(symbol->action_name, "state");
-            s4o.print(" = 1;\n");
+            s4o.print(SET_VAR);
+            s4o.print("(");
+            print_action_argument(symbol->action_name, "state", true);
+            s4o.print(",1);\n");
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}");
           }
@@ -519,11 +534,15 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
                 strcmp(qualifier, "R") == 0) {
               s4o.print("active");
             }
-            if (strcmp(qualifier, "P") == 0 || strcmp(qualifier, "SD") == 0 || 
-                strcmp(qualifier, "DS") == 0 || strcmp(qualifier, "SL") == 0) {
+            else if (strcmp(qualifier, "P") == 0 || strcmp(qualifier, "SD") == 0 ||
+                     strcmp(qualifier, "DS") == 0 || strcmp(qualifier, "SL") == 0 ||
+                     strcmp(qualifier, "P0") == 0) {
               s4o.print("activated");
             }
-            if (strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
+            else if (strcmp(qualifier, "P1") == 0) {
+              s4o.print("desactivated");
+            }
+            else if (strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
               s4o.print("active && __time_cmp(");
               print_step_argument(current_step, "elapsed_time");
               s4o.print(", ");
@@ -539,11 +558,48 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.indent_right();
             s4o.print(s4o.indent_spaces);
             if (strcmp(qualifier, "N") == 0 || strcmp(qualifier, "P") == 0 ||
-                strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
-              print_action_argument(current_action, "state");
-              s4o.print(" = 1;\n");  
+                strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0 ||
+                strcmp(qualifier, "P0") == 0 || strcmp(qualifier, "P1") == 0) {
+
+              if (is_variable(current_action)) {
+                unsigned int vartype = search_var_instance_decl->get_vartype(current_action);
+
+                if (vartype == search_var_instance_decl_c::external_vt)
+                  s4o.print(SET_EXTERNAL);
+                else if (vartype == search_var_instance_decl_c::located_vt)
+                  s4o.print(SET_LOCATED);
+                else
+                  s4o.print(SET_VAR);
+                s4o.print("(");
+                print_variable_prefix();
+                s4o.print(",");
+                current_action->accept(*this);
+                s4o.print(",1);\n");
+                s4o.indent_left();
+                s4o.print("}\n");
+                s4o.print(s4o.indent_spaces + "else if (active) {\n");
+                s4o.indent_right();
+                if (vartype == search_var_instance_decl_c::external_vt)
+                  s4o.print(SET_EXTERNAL);
+                else if (vartype == search_var_instance_decl_c::located_vt)
+                  s4o.print(SET_LOCATED);
+                else
+                  s4o.print(SET_VAR);
+                s4o.print("(");
+                print_variable_prefix();
+                s4o.print(",");
+                current_action->accept(*this);
+                s4o.print(",0);\n");
+              }
+
+              else {
+                s4o.print(SET_VAR);
+                s4o.print("(");
+                print_action_argument(current_action, "state", true);
+                s4o.print(",1);\n");
+              }
             }
-            if (strcmp(qualifier, "S") == 0) {
+            if (strcmp(qualifier, "S") == 0 || strcmp(qualifier, "SL") == 0) {
               print_action_argument(current_action, "set");
               s4o.print(" = 1;\n");
             }
@@ -714,8 +770,10 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       s4o.print("__nb_actions; i++) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
+      s4o.print(SET_VAR);
+      s4o.print("(");
       print_variable_prefix();
-      s4o.print("__action_list[i].state = 0;\n");
+      s4o.print(",__action_list[i].state,0);\n");
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
       s4o.print("__action_list[i].set = 0;\n");
@@ -834,10 +892,16 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       s4o.print("__action_list[i].stored = 0;\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n" + s4o.indent_spaces);
+      s4o.print(SET_VAR);
+      s4o.print("(");
       print_variable_prefix();
-      s4o.print("__action_list[i].state |= ");
+      s4o.print(",__action_list[i].state,");
+      s4o.print(GET_VAR);
+      s4o.print("(");
       print_variable_prefix();
-      s4o.print("__action_list[i].stored;\n");
+      s4o.print("__action_list[i].state) | ");
+      print_variable_prefix();
+      s4o.print("__action_list[i].stored);\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n\n");
       
@@ -846,27 +910,52 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       {
         std::list<VARIABLE>::iterator pt;
         for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
-          symbol_c *var_decl = search_var_instance_decl->get_decl(pt->symbol);
-          if (var_decl != NULL) {
+
+          if (is_variable(pt->symbol)) {
             unsigned int vartype = search_var_instance_decl->get_vartype(pt->symbol);
 
-            s4o.print(s4o.indent_spaces);
-            if (vartype == search_var_instance_decl_c::external_vt)
-          	  s4o.print(SET_EXTERNAL);
-          	else if (vartype == search_var_instance_decl_c::located_vt)
-          	  s4o.print(SET_LOCATED);
-          	else
-          	  s4o.print(SET_VAR);
-            s4o.print("(");
-          	print_variable_prefix();
-          	s4o.print(",");
-          	pt->symbol->accept(*this);
-            s4o.print(",");
+            s4o.print(s4o.indent_spaces + "if (");
             print_variable_prefix();
             s4o.print("__action_list[");
             s4o.print(SFC_STEP_ACTION_PREFIX);
             pt->symbol->accept(*this);
-            s4o.print("].state);\n");
+            s4o.print("].reset) {\n");
+            s4o.indent_right();
+            s4o.print(s4o.indent_spaces);
+            if (vartype == search_var_instance_decl_c::external_vt)
+              s4o.print(SET_EXTERNAL);
+            else if (vartype == search_var_instance_decl_c::located_vt)
+              s4o.print(SET_LOCATED);
+            else
+              s4o.print(SET_VAR);
+            s4o.print("(");
+            print_variable_prefix();
+            s4o.print(",");
+            pt->symbol->accept(*this);
+            s4o.print(",0);\n");
+            s4o.indent_left();
+            s4o.print(s4o.indent_spaces + "}\n");
+            s4o.print(s4o.indent_spaces + "else if (");
+            print_variable_prefix();
+            s4o.print("__action_list[");
+            s4o.print(SFC_STEP_ACTION_PREFIX);
+            pt->symbol->accept(*this);
+            s4o.print("].set) {\n");
+            s4o.indent_right();
+            s4o.print(s4o.indent_spaces);
+            if (vartype == search_var_instance_decl_c::external_vt)
+              s4o.print(SET_EXTERNAL);
+            else if (vartype == search_var_instance_decl_c::located_vt)
+              s4o.print(SET_LOCATED);
+            else
+              s4o.print(SET_VAR);
+            s4o.print("(");
+            print_variable_prefix();
+            s4o.print(",");
+            pt->symbol->accept(*this);
+            s4o.print(",1);\n");
+            s4o.indent_left();
+            s4o.print(s4o.indent_spaces + "}\n");
           }
         }
       }
@@ -889,9 +978,7 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
     }
 
     void *visit(action_association_c *symbol) {
-      symbol_c *var_decl = search_var_instance_decl->get_decl(symbol->action_name);
-
-      if (var_decl != NULL) {
+      if (is_variable(symbol->action_name)) {
         std::list<VARIABLE>::iterator pt;
         for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
           if (!compare_identifiers(pt->symbol, symbol->action_name))

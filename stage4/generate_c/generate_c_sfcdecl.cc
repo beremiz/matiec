@@ -156,7 +156,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           wanted_sfcdeclaration = sfcinit_sd;
           
           /* actions table initialisation */
-          s4o.print(s4o.indent_spaces + "static const ACTION temp_action = {0, 0, 0, 0, {0, 0}, {0, 0}};\n");
+          s4o.print(s4o.indent_spaces + "static const ACTION temp_action = {0, {0, 0}, 0, 0, {0, 0}, {0, 0}};\n");
           s4o.print(s4o.indent_spaces + "for(i = 0; i < ");
           print_variable_prefix();
           s4o.print("__nb_actions; i++) {\n");
@@ -192,6 +192,8 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
           break;
         case actiondef_sd:
           s4o.print("// Actions definitions\n");
+          for(int i = 0; i < symbol->n; i++)
+             symbol->elements[i]->accept(*this);
           {
             std::list<VARIABLE>::iterator pt;
             for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
@@ -204,8 +206,6 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
               action_number++;
             }
           }
-          for(int i = 0; i < symbol->n; i++)
-            symbol->elements[i]->accept(*this);
           s4o.print("\n");
           break;
         case stepundef_sd:

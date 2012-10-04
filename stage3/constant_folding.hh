@@ -81,6 +81,11 @@ class constant_folding_c : public iterator_visitor_c {
     void *visit(boolean_true_c *symbol);
     void *visit(boolean_false_c *symbol);
 
+    /************************/
+    /* B 1.2.3.1 - Duration */
+    /********* **************/
+    void *visit(fixed_point_c *symbol);
+
     /****************************************/
     /* B.2 - Language IL (Instruction List) */
     /****************************************/

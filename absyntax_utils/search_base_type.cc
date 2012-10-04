@@ -295,6 +295,11 @@ void *search_base_type_c::visit(structure_type_declaration_c *symbol)  {
   return symbol->structure_specification->accept(*this);
 }
 
+/*  var1_list ':' structure_type_name */
+void *search_base_type_c::visit(structured_var_declaration_c *symbol) {
+	return symbol;
+}
+
 /* structure_type_name ASSIGN structure_initialization */
 /* structure_initialization may be NULL ! */
 void *search_base_type_c::visit(initialized_structure_c *symbol)	{

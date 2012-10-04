@@ -1387,6 +1387,8 @@ DS		return DS;
 SL		return SL;
 N		return N;
 P		return P;
+P0		return P0;
+P1		return P1;
 R		return R;
 S		return S;
 }

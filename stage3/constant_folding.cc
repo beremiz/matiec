@@ -332,12 +332,19 @@ uint64_t extract_uint64_value(symbol_c *sym, bool *overflow) {
 real64_t extract_real_value(symbol_c *sym, bool *overflow) {
   std::string str = "";
   real_c *real_sym;
+  fixed_point_c *fixed_point_sym;
   char   *endptr;
   real64_t ret;
 
-  if ((real_sym = dynamic_cast<real_c *>(sym)) == NULL) ERROR;
-  for(unsigned int i = 0; i < strlen(real_sym->value); i++)
-    if (real_sym->value[i] != '_') str += real_sym->value[i];
+  if ((real_sym = dynamic_cast<real_c *>(sym)) != NULL) {
+	for(unsigned int i = 0; i < strlen(real_sym->value); i++)
+      if (real_sym->value[i] != '_') str += real_sym->value[i];
+  }
+  else if ((fixed_point_sym = dynamic_cast<fixed_point_c *>(sym)) != NULL) {
+    for(unsigned int i = 0; i < strlen(fixed_point_sym->value); i++)
+      if (fixed_point_sym->value[i] != '_') str += fixed_point_sym->value[i];
+  }
+  else ERROR;
     
   errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
   #if    (real64_t  == float)
@@ -899,7 +906,15 @@ void *constant_folding_c::visit(boolean_false_c *symbol) {
 	return NULL;
 }
 
-
+/************************/
+/* B 1.2.3.1 - Duration */
+/********* **************/
+void *constant_folding_c::visit(fixed_point_c *symbol) {
+	bool overflow;
+	SET_CVALUE(real64, symbol, extract_real_value(symbol, &overflow));
+	if (overflow) SET_OVFLOW(real64, symbol);
+	return NULL;
+}
 
 
 

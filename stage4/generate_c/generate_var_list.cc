@@ -349,7 +349,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
           break;
       }
     }
-    
+
     void print_var_number(void) {
       char str[10];
       sprintf(str, "%d", current_var_number);
@@ -477,7 +477,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       update_var_type_symbol(symbol->array_spec_init);
       
       declare_variables(symbol->var1_list);
-    
+
       /* Values no longer in scope, and therefore no longer used.
        * Make an effort to keep them set to NULL when not in use
        * in order to catch bugs as soon as possible...
@@ -485,6 +485,26 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       reset_var_type_symbol();
     
       return NULL;
+    }
+
+    /*  var1_list ':' array_specification */
+    //SYM_REF2(array_var_declaration_c, var1_list, array_specification)
+    void *visit(array_var_declaration_c *symbol) {
+       TRACE("array_var_declaration_c");
+       /* Start off by setting the current_var_type_symbol and
+        * current_var_init_symbol private variables...
+        */
+       update_var_type_symbol(symbol->array_specification);
+
+       declare_variables(symbol->var1_list);
+
+       /* Values no longer in scope, and therefore no longer used.
+        * Make an effort to keep them set to NULL when not in use
+        * in order to catch bugs as soon as possible...
+        */
+       reset_var_type_symbol();
+
+       return NULL;
     }
 
     /*  var1_list ':' initialized_structure */
@@ -509,6 +529,37 @@ class generate_var_list_c: protected generate_c_typedecl_c {
        */
       reset_var_type_symbol();
     
+      return NULL;
+    }
+    
+    /*  var1_list ':' structure_type_name */
+    //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
+    void *visit(structured_var_declaration_c *symbol) {
+      TRACE("structured_var_declaration_c");
+      /* Please read the comments inside the var1_init_decl_c
+       * visitor, as they apply here too.
+       */
+
+      /* Start off by setting the current_var_type_symbol and
+       * current_var_init_symbol private variables...
+       */
+      update_var_type_symbol(symbol->structure_type_name);
+
+      /* now to produce the c equivalent... */
+      declare_variables(symbol->var1_list);
+
+      /* Values no longer in scope, and therefore no longer used.
+       * Make an effort to keep them set to NULL when not in use
+       * in order to catch bugs as soon as possible...
+       */
+      reset_var_type_symbol();
+
+      return NULL;
+    }
+
+    /* enumerated_value_list ',' enumerated_value */
+    void *visit(enumerated_value_list_c *symbol) {
+      this->current_var_type_name->accept(*this);
       return NULL;
     }
     
