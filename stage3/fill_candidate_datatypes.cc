@@ -1175,7 +1175,7 @@ void *fill_candidate_datatypes_c::visit(LD_operator_c *symbol) {
 
 void *fill_candidate_datatypes_c::visit(LDN_operator_c *symbol) {
 	for(unsigned int i = 0; i < il_operand->candidate_datatypes.size(); i++) {
-		if      (is_ANY_BIT_compatible(il_operand->candidate_datatypes[i]))
+		if      (get_datatype_info_c::is_ANY_BIT_compatible(il_operand->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, il_operand->candidate_datatypes[i]);
 	}
 	if (debug) std::cout << "LDN [" << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1206,7 +1206,7 @@ void *fill_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BIT_compatible(operand_type))
+			if (is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_ANY_BIT_compatible(operand_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 		}
 	}
@@ -1223,7 +1223,7 @@ void *fill_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
 	 */
 	if (NULL == prev_il_instruction) return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_ANY_BIT_compatible(prev_il_instruction->candidate_datatypes[i]))
+		if (get_datatype_info_c::is_ANY_BIT_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
 	}
 	if (debug) std::cout <<  "NOT_operator [" << prev_il_instruction->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1244,7 +1244,7 @@ void *fill_candidate_datatypes_c::visit(S_operator_c *symbol) {
 			 * the prev_instruction_type MUST be BOOL compatible.
 			 * I am not too sure about operand_type, does it have to be BOOL compatible, or can it be ANY_BIT compatible? Must check!
 			 */
-			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(operand_type))
+			if (is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_BOOL_compatible(operand_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 		}
 	}
@@ -1266,7 +1266,7 @@ void *fill_candidate_datatypes_c::visit(R_operator_c *symbol) {
 			 * the prev_instruction_type MUST be BOOL compatible.
 			 * I am not too sure about operand_type, does it have to be BOOL compatible, or can it be ANY_BIT compatible? Must check!
 			 */
-			if (is_type_equal(prev_instruction_type,operand_type) && is_ANY_BOOL_compatible(operand_type))
+			if (is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_BOOL_compatible(operand_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 		}
 	}
@@ -1309,7 +1309,7 @@ void *fill_candidate_datatypes_c::visit(  NE_operator_c *symbol) {return handle_
 void *fill_candidate_datatypes_c::handle_conditional_il_flow_control_operator(symbol_c *symbol) {
 	if (NULL == prev_il_instruction) return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		if (is_ANY_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
+		if (get_datatype_info_c::is_BOOL_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
 	}
 	return NULL;
@@ -1395,7 +1395,7 @@ void *fill_candidate_datatypes_c::visit(neg_expression_c *symbol) {
    */
 	symbol->exp->accept(*this);
 	for (unsigned int i = 0; i < symbol->exp->candidate_datatypes.size(); i++) {
-		if (is_ANY_signed_MAGNITUDE_compatible(symbol->exp->candidate_datatypes[i]))
+		if (get_datatype_info_c::is_ANY_signed_MAGNITUDE_compatible(symbol->exp->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, symbol->exp->candidate_datatypes[i]);
 	}
 	if (debug) std::cout << "neg [" << symbol->exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
@@ -1406,7 +1406,7 @@ void *fill_candidate_datatypes_c::visit(neg_expression_c *symbol) {
 void *fill_candidate_datatypes_c::visit(not_expression_c *symbol) {
 	symbol->exp->accept(*this);
 	for (unsigned int i = 0; i < symbol->exp->candidate_datatypes.size(); i++) {
-		if      (is_ANY_BIT_compatible(symbol->exp->candidate_datatypes[i]))
+		if      (get_datatype_info_c::is_ANY_BIT_compatible(symbol->exp->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, symbol->exp->candidate_datatypes[i]);
 	}
 	if (debug) std::cout << "not [" << symbol->exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";

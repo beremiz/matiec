@@ -26,8 +26,5 @@ libabsyntax_utils_a_SOURCES = \
 	search_varfb_instance_type.cc \
 	search_var_instance_decl.cc \
 	spec_init_separator.cc \
-	type_initial_value.cc 
-
-#search_il_operand_type.cc 
-#search_type_code.c
-
+	type_initial_value.cc \
+	get_datatype_info.cc

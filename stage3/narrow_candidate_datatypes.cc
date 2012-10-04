@@ -481,7 +481,7 @@ void *narrow_candidate_datatypes_c::visit(array_variable_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(subscript_list_c *symbol) {
 	for (int i = 0; i < symbol->n; i++) {
 		for (unsigned int k = 0; k < symbol->elements[i]->candidate_datatypes.size(); k++) {
-			if (is_ANY_INT_type(symbol->elements[i]->candidate_datatypes[k]))
+			if (get_datatype_info_c::is_ANY_INT(symbol->elements[i]->candidate_datatypes[k]))
 				symbol->elements[i]->datatype = symbol->elements[i]->candidate_datatypes[k];
 		}
 		symbol->elements[i]->accept(*this);
@@ -1010,7 +1010,7 @@ void *narrow_candidate_datatypes_c::narrow_conditional_flow_control_IL_instructi
 	/* if the next IL instructions needs us to provide a datatype other than a bool, 
 	 * then we have an internal compiler error - most likely in fill_candidate_datatypes_c 
 	 */
-	if ((NULL != symbol->datatype) && (!is_ANY_BOOL_compatible(symbol->datatype))) ERROR;
+	if ((NULL != symbol->datatype) && (!get_datatype_info_c::is_BOOL_compatible(symbol->datatype))) ERROR;
 	if (symbol->candidate_datatypes.size() > 1) ERROR;
 
 	/* NOTE: If there is no IL instruction following this CALC, CALCN, JMPC, JMPC, ..., instruction,
@@ -1019,7 +1019,7 @@ void *narrow_candidate_datatypes_c::narrow_conditional_flow_control_IL_instructi
 	 */
 	if (symbol->candidate_datatypes.size() == 0)    symbol->datatype = NULL;
 	else    symbol->datatype = symbol->candidate_datatypes[0]; /* i.e. a bool_type_name_c! */
-	if ((NULL != symbol->datatype) && (!is_ANY_BOOL_compatible(symbol->datatype))) ERROR;
+	if ((NULL != symbol->datatype) && (!get_datatype_info_c::is_BOOL_compatible(symbol->datatype))) ERROR;
 
 	/* set the required datatype of the previous IL instruction, i.e. a bool_type_name_c! */
 	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
@@ -1079,7 +1079,7 @@ void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_
 				l_expr->datatype = l_type;
 				r_expr->datatype = r_type;
 				count ++;
-			} else if ((l_type == r_type) && search_base_type.type_is_enumerated(l_type) && is_ANY_BOOL_compatible(symbol->datatype)) {
+			} else if ((l_type == r_type) && search_base_type.type_is_enumerated(l_type) && get_datatype_info_c::is_BOOL_compatible(symbol->datatype)) {
 				if (NULL != deprecated_operation)  *deprecated_operation = false;
 				l_expr->datatype = l_type;
 				r_expr->datatype = r_type;
@@ -1205,7 +1205,7 @@ void *narrow_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
 
 void *narrow_candidate_datatypes_c::visit(if_statement_c *symbol) {
 	for(unsigned int i = 0; i < symbol->expression->candidate_datatypes.size(); i++) {
-		if (is_ANY_BOOL_compatible(symbol->expression->candidate_datatypes[i]))
+		if (get_datatype_info_c::is_BOOL_compatible(symbol->expression->candidate_datatypes[i]))
 			symbol->expression->datatype = symbol->expression->candidate_datatypes[i];
 	}
 	symbol->expression->accept(*this);
@@ -1221,7 +1221,7 @@ void *narrow_candidate_datatypes_c::visit(if_statement_c *symbol) {
 
 void *narrow_candidate_datatypes_c::visit(elseif_statement_c *symbol) {
 	for (unsigned int i = 0; i < symbol->expression->candidate_datatypes.size(); i++) {
-		if (is_ANY_BOOL_compatible(symbol->expression->candidate_datatypes[i]))
+		if (get_datatype_info_c::is_BOOL_compatible(symbol->expression->candidate_datatypes[i]))
 			symbol->expression->datatype = symbol->expression->candidate_datatypes[i];
 	}
 	symbol->expression->accept(*this);
@@ -1234,7 +1234,7 @@ void *narrow_candidate_datatypes_c::visit(elseif_statement_c *symbol) {
 // SYM_REF3(case_statement_c, expression, case_element_list, statement_list)
 void *narrow_candidate_datatypes_c::visit(case_statement_c *symbol) {
 	for (unsigned int i = 0; i < symbol->expression->candidate_datatypes.size(); i++) {
-		if ((is_ANY_INT_type(symbol->expression->candidate_datatypes[i]))
+		if ((get_datatype_info_c::is_ANY_INT(symbol->expression->candidate_datatypes[i]))
 				 || (search_base_type.type_is_enumerated(symbol->expression->candidate_datatypes[i])))
 			symbol->expression->datatype = symbol->expression->candidate_datatypes[i];
 	}
@@ -1287,7 +1287,7 @@ void *narrow_candidate_datatypes_c::visit(case_list_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(for_statement_c *symbol) {
 	/* Control variable */
 	for(unsigned int i = 0; i < symbol->control_variable->candidate_datatypes.size(); i++) {
-		if (is_ANY_INT_type(symbol->control_variable->candidate_datatypes[i])) {
+		if (get_datatype_info_c::is_ANY_INT(symbol->control_variable->candidate_datatypes[i])) {
 			symbol->control_variable->datatype = symbol->control_variable->candidate_datatypes[i];
 		}
 	}
@@ -1295,7 +1295,7 @@ void *narrow_candidate_datatypes_c::visit(for_statement_c *symbol) {
 	/* BEG expression */
 	for(unsigned int i = 0; i < symbol->beg_expression->candidate_datatypes.size(); i++) {
 		if (is_type_equal(symbol->control_variable->datatype,symbol->beg_expression->candidate_datatypes[i]) &&
-				is_ANY_INT_type(symbol->beg_expression->candidate_datatypes[i])) {
+				get_datatype_info_c::is_ANY_INT(symbol->beg_expression->candidate_datatypes[i])) {
 			symbol->beg_expression->datatype = symbol->beg_expression->candidate_datatypes[i];
 		}
 	}
@@ -1303,7 +1303,7 @@ void *narrow_candidate_datatypes_c::visit(for_statement_c *symbol) {
 	/* END expression */
 	for(unsigned int i = 0; i < symbol->end_expression->candidate_datatypes.size(); i++) {
 		if (is_type_equal(symbol->control_variable->datatype,symbol->end_expression->candidate_datatypes[i]) &&
-				is_ANY_INT_type(symbol->end_expression->candidate_datatypes[i])) {
+				get_datatype_info_c::is_ANY_INT(symbol->end_expression->candidate_datatypes[i])) {
 			symbol->end_expression->datatype = symbol->end_expression->candidate_datatypes[i];
 		}
 	}
@@ -1312,7 +1312,7 @@ void *narrow_candidate_datatypes_c::visit(for_statement_c *symbol) {
 	if (NULL != symbol->by_expression) {
 		for(unsigned int i = 0; i < symbol->by_expression->candidate_datatypes.size(); i++) {
 			if (is_type_equal(symbol->control_variable->datatype,symbol->by_expression->candidate_datatypes[i]) &&
-					is_ANY_INT_type(symbol->by_expression->candidate_datatypes[i])) {
+					get_datatype_info_c::is_ANY_INT(symbol->by_expression->candidate_datatypes[i])) {
 				symbol->by_expression->datatype = symbol->by_expression->candidate_datatypes[i];
 			}
 		}
@@ -1325,7 +1325,7 @@ void *narrow_candidate_datatypes_c::visit(for_statement_c *symbol) {
 
 void *narrow_candidate_datatypes_c::visit(while_statement_c *symbol) {
 	for (unsigned int i = 0; i < symbol->expression->candidate_datatypes.size(); i++) {
-		if(is_BOOL_type(symbol->expression->candidate_datatypes[i]))
+		if(get_datatype_info_c::is_BOOL(symbol->expression->candidate_datatypes[i]))
 			symbol->expression->datatype = symbol->expression->candidate_datatypes[i];
 	}
 	symbol->expression->accept(*this);
@@ -1336,7 +1336,7 @@ void *narrow_candidate_datatypes_c::visit(while_statement_c *symbol) {
 
 void *narrow_candidate_datatypes_c::visit(repeat_statement_c *symbol) {
 	for (unsigned int i = 0; i < symbol->expression->candidate_datatypes.size(); i++) {
-		if(is_BOOL_type(symbol->expression->candidate_datatypes[i]))
+		if(get_datatype_info_c::is_BOOL(symbol->expression->candidate_datatypes[i]))
 			symbol->expression->datatype = symbol->expression->candidate_datatypes[i];
 	}
 	symbol->expression->accept(*this);

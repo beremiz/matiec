@@ -94,7 +94,9 @@ am_libabsyntax_utils_a_OBJECTS = absyntax_utils.$(OBJEXT) \
 	spec_init_separator.$(OBJEXT) type_initial_value.$(OBJEXT) \
 	search_varfb_instance_type.$(OBJEXT) \
 	search_var_instance_decl.$(OBJEXT) \
-	spec_init_separator.$(OBJEXT) type_initial_value.$(OBJEXT)
+	spec_init_separator.$(OBJEXT) type_initial_value.$(OBJEXT) \
+	get_datatype_info.$(OBJEXT)
+
 libabsyntax_utils_a_OBJECTS = $(am_libabsyntax_utils_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/config
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -233,7 +235,9 @@ libabsyntax_utils_a_SOURCES = \
 	search_varfb_instance_type.cc \
 	search_var_instance_decl.cc \
 	spec_init_separator.cc \
-	type_initial_value.cc 
+	type_initial_value.cc \
+	get_datatype_info.cc
+
 
 all: all-am
 
@@ -319,6 +323,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function_call_iterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function_call_param_iterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function_param_iterator.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/get_datatype_info.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/get_sizeof_datatype.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/get_var_name.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search_base_type.Po@am__quote@
@@ -549,9 +554,6 @@ uninstall-am: uninstall-libLIBRARIES
 	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
 	uninstall-am uninstall-libLIBRARIES
 
-
-#search_il_operand_type.cc 
-#search_type_code.c
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
