@@ -57,6 +57,9 @@ class get_datatype_info_c {
 
  
   public:
+    static bool is_ANY_REAL_literal(symbol_c *type_symbol); /* Can't we do away with this?? */
+    static bool is_ANY_INT_literal (symbol_c *type_symbol); /* Can't we do away with this?? */
+
     static bool is_sfc_initstep                    (symbol_c *type_symbol);
     static bool is_sfc_step                        (symbol_c *type_symbol);
     static bool is_function_block                  (symbol_c *type_symbol);
@@ -87,14 +90,6 @@ class get_datatype_info_c {
     static bool is_ANY_signed_SAFENUM              (symbol_c *type_symbol);
     static bool is_ANY_signed_NUM_compatible       (symbol_c *type_symbol);
 
-    static bool is_ANY_DATE                        (symbol_c *type_symbol);
-    static bool is_ANY_SAFEDATE                    (symbol_c *type_symbol);
-    static bool is_ANY_DATE_compatible             (symbol_c *type_symbol);
-
-    static bool is_ANY_STRING                      (symbol_c *type_symbol);
-    static bool is_ANY_SAFESTRING                  (symbol_c *type_symbol);
-    static bool is_ANY_STRING_compatible           (symbol_c *type_symbol);
-
     static bool is_ANY_INT                         (symbol_c *type_symbol);
     static bool is_ANY_SAFEINT                     (symbol_c *type_symbol);
     static bool is_ANY_INT_compatible              (symbol_c *type_symbol);
@@ -122,5 +117,18 @@ class get_datatype_info_c {
     static bool is_ANY_BIT                         (symbol_c *type_symbol);
     static bool is_ANY_SAFEBIT                     (symbol_c *type_symbol);
     static bool is_ANY_BIT_compatible              (symbol_c *type_symbol);
+
+    static bool is_ANY_DATE                        (symbol_c *type_symbol);
+    static bool is_ANY_SAFEDATE                    (symbol_c *type_symbol);
+    static bool is_ANY_DATE_compatible             (symbol_c *type_symbol);
+
+    static bool is_TIME                            (symbol_c *type_symbol);
+    static bool is_SAFETIME                        (symbol_c *type_symbol);
+    static bool is_TIME_compatible                 (symbol_c *type_symbol);
+
+    static bool is_ANY_STRING                      (symbol_c *type_symbol);
+    static bool is_ANY_SAFESTRING                  (symbol_c *type_symbol);
+    static bool is_ANY_STRING_compatible           (symbol_c *type_symbol);
+
 };
 

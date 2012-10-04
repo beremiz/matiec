@@ -192,7 +192,7 @@ bool get_datatype_info_c::is_ANY_ELEMENTARY_compatible(symbol_c *type_symbol) {
 
 bool get_datatype_info_c::is_ANY_MAGNITUDE(symbol_c *type_symbol) {
   if (type_symbol == NULL)                                     {return false;}
-  if (typeid(*type_symbol) == typeid(time_type_name_c))        {return true;}
+  if (is_TIME(type_symbol))                                    {return true;}
   if (is_ANY_NUM(type_symbol))                                 {return true;}
   return false;
 }
@@ -200,7 +200,7 @@ bool get_datatype_info_c::is_ANY_MAGNITUDE(symbol_c *type_symbol) {
 
 bool get_datatype_info_c::is_ANY_SAFEMAGNITUDE(symbol_c *type_symbol) {
   if (type_symbol == NULL)                                     {return false;}
-  if (typeid(*type_symbol) == typeid(safetime_type_name_c))    {return true;}
+  if (is_SAFETIME(type_symbol))                                {return true;}
   if (is_ANY_SAFENUM(type_symbol))                             {return true;}
   return false;
 }
@@ -303,66 +303,6 @@ bool get_datatype_info_c::is_ANY_signed_NUM_compatible(symbol_c *type_symbol) {
 
 
 
-bool get_datatype_info_c::is_ANY_DATE(symbol_c *type_symbol) {
-  if (type_symbol == NULL)                                     {return false;}
-  if (typeid(*type_symbol) == typeid(date_type_name_c))        {return true;}
-  if (typeid(*type_symbol) == typeid(tod_type_name_c))         {return true;}
-  if (typeid(*type_symbol) == typeid(dt_type_name_c))          {return true;}
-  return false;
-}
-
-
-bool get_datatype_info_c::is_ANY_SAFEDATE(symbol_c *type_symbol) {
-  if (type_symbol == NULL)                                     {return false;}
-  if (typeid(*type_symbol) == typeid(safedate_type_name_c))    {return true;}
-  if (typeid(*type_symbol) == typeid(safetod_type_name_c))     {return true;}
-  if (typeid(*type_symbol) == typeid(safedt_type_name_c))      {return true;}
-  return false;
-}
-
-
-bool get_datatype_info_c::is_ANY_DATE_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL)                                     {return false;}
-  if (is_ANY_DATE    (type_symbol))                            {return true;}
-  if (is_ANY_SAFEDATE(type_symbol))                            {return true;}
-  return false;
-}
-
-
-
-
-
-
-
-bool get_datatype_info_c::is_ANY_STRING(symbol_c *type_symbol) {
-  if (type_symbol == NULL)                                     {return false;}
-  if (typeid(*type_symbol) == typeid(string_type_name_c))      {return true;}
-  if (typeid(*type_symbol) == typeid(wstring_type_name_c))     {return true;}
-  return false;
-}
-
-
-bool get_datatype_info_c::is_ANY_SAFESTRING(symbol_c *type_symbol) {
-  if (type_symbol == NULL)                                     {return false;}
-  if (typeid(*type_symbol) == typeid(safestring_type_name_c))  {return true;}
-  if (typeid(*type_symbol) == typeid(safewstring_type_name_c)) {return true;}
-  return false;
-}
-
-
-bool get_datatype_info_c::is_ANY_STRING_compatible(symbol_c *type_symbol) {
-  if (type_symbol == NULL)                                     {return false;}
-  if (is_ANY_STRING    (type_symbol))                          {return true;}
-  if (is_ANY_SAFESTRING(type_symbol))                          {return true;}
-  return false;
-}
-
-
-
-
-
-
-
 bool get_datatype_info_c::is_ANY_INT(symbol_c *type_symbol) {
   if (type_symbol == NULL)                                     {return false;}
   if (is_ANY_signed_INT  (type_symbol))                        {return true;}
@@ -452,7 +392,6 @@ bool get_datatype_info_c::is_ANY_unsigned_INT_compatible(symbol_c *type_symbol) 
   if (is_ANY_unsigned_SAFEINT(type_symbol))                    {return true;}
   return false;
 }
-
 
 
 
@@ -580,4 +519,120 @@ bool get_datatype_info_c::is_ANY_BIT_compatible(symbol_c *type_symbol) {
 }
 
 
+
+
+
+
+
+
+bool get_datatype_info_c::is_TIME(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                                     {return false;}
+  if (typeid(*type_symbol) == typeid(time_type_name_c))        {return true;}
+  return false;
+}
+
+
+bool get_datatype_info_c::is_SAFETIME(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                                     {return false;}
+  if (typeid(*type_symbol) == typeid(safetime_type_name_c))    {return true;}
+  return false;
+}
+
+
+bool get_datatype_info_c::is_TIME_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                                     {return false;}
+  if (is_TIME    (type_symbol))                                {return true;}
+  if (is_SAFETIME(type_symbol))                                {return true;}
+  return false;
+}
+
+
+
+
+
+
+
+
+bool get_datatype_info_c::is_ANY_DATE(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                                     {return false;}
+  if (typeid(*type_symbol) == typeid(date_type_name_c))        {return true;}
+  if (typeid(*type_symbol) == typeid(tod_type_name_c))         {return true;}
+  if (typeid(*type_symbol) == typeid(dt_type_name_c))          {return true;}
+  return false;
+}
+
+
+bool get_datatype_info_c::is_ANY_SAFEDATE(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                                     {return false;}
+  if (typeid(*type_symbol) == typeid(safedate_type_name_c))    {return true;}
+  if (typeid(*type_symbol) == typeid(safetod_type_name_c))     {return true;}
+  if (typeid(*type_symbol) == typeid(safedt_type_name_c))      {return true;}
+  return false;
+}
+
+
+bool get_datatype_info_c::is_ANY_DATE_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                                     {return false;}
+  if (is_ANY_DATE    (type_symbol))                            {return true;}
+  if (is_ANY_SAFEDATE(type_symbol))                            {return true;}
+  return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+bool get_datatype_info_c::is_ANY_STRING(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                                     {return false;}
+  if (typeid(*type_symbol) == typeid(string_type_name_c))      {return true;}
+  if (typeid(*type_symbol) == typeid(wstring_type_name_c))     {return true;}
+  return false;
+}
+
+
+bool get_datatype_info_c::is_ANY_SAFESTRING(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                                     {return false;}
+  if (typeid(*type_symbol) == typeid(safestring_type_name_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(safewstring_type_name_c)) {return true;}
+  return false;
+}
+
+
+bool get_datatype_info_c::is_ANY_STRING_compatible(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                                     {return false;}
+  if (is_ANY_STRING    (type_symbol))                          {return true;}
+  if (is_ANY_SAFESTRING(type_symbol))                          {return true;}
+  return false;
+}
+
+
+
+
+
+
+
+/* Can't we do away with this?? */
+bool get_datatype_info_c::is_ANY_REAL_literal(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                              {return true;} /* Please make sure things will work correctly before changing this to false!! */
+  if (typeid(*type_symbol) == typeid(real_c))           {return true;}
+  if (typeid(*type_symbol) == typeid(neg_real_c))       {return true;}
+  return false;
+}
+
+/* Can't we do away with this?? */
+bool get_datatype_info_c::is_ANY_INT_literal(symbol_c *type_symbol) {
+  if (type_symbol == NULL)                              {return true;} /* Please make sure things will work correctly before changing this to false!! */
+  if (typeid(*type_symbol) == typeid(integer_c))        {return true;}
+  if (typeid(*type_symbol) == typeid(neg_integer_c))    {return true;}
+  if (typeid(*type_symbol) == typeid(binary_integer_c)) {return true;}
+  if (typeid(*type_symbol) == typeid(octal_integer_c))  {return true;}
+  if (typeid(*type_symbol) == typeid(hex_integer_c))    {return true;}
+  return false;
+}
 
