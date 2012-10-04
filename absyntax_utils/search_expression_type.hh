@@ -78,14 +78,6 @@ class search_expression_type_c: public search_constant_type_c {
     symbol_c* common_type(symbol_c *first_type, symbol_c *second_type);
     symbol_c* default_literal_type(symbol_c *symbol);
 
-    /*
-    #include "search_type_code.c"
-    */
-    void *compute_standard_function_default(function_invocation_c *st_symbol, il_formal_funct_call_c *il_symbol);
-    void *compute_standard_function_il(il_function_call_c *symbol, symbol_c *param_data_type);
-
-
-
     /*static bool_type_name_c bool_type_name;*/
 
     /* A helper function... */

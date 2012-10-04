@@ -234,8 +234,6 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     search_varfb_instance_type_c *search_varfb_instance_type;
     search_var_instance_decl_c   *search_var_instance_decl;
 
-    search_base_type_c search_base_type;
-
     symbol_c* current_array_type;
     symbol_c* current_param_type;
 
