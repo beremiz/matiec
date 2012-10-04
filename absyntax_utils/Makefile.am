@@ -16,7 +16,6 @@ libabsyntax_utils_a_SOURCES = \
 	search_il_label.cc \
 	search_base_type.cc \
 	search_constant_type.cc \
-	search_expression_type.cc \
 	search_fb_instance_decl.cc \
 	search_fb_typedecl.cc \
 	search_varfb_instance_type.cc \
