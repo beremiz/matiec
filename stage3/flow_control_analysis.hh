@@ -49,9 +49,13 @@ class flow_control_analysis_c: public iterator_visitor_c {
 
   private:
     search_il_label_c *search_il_label;
-    symbol_c *prev_il_instruction;
-    symbol_c *curr_il_instruction;
+    symbol_c          *prev_il_instruction;
+    symbol_c          *curr_il_instruction;
     bool      prev_il_instruction_is_JMP_or_RET;
+
+  private:
+    void link_insert  (symbol_c *prev_instruction, symbol_c *next_instruction);
+    void link_pushback(symbol_c *prev_instruction, symbol_c *next_instruction);
 
   public:
     flow_control_analysis_c(symbol_c *ignore);

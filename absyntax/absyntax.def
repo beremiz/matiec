@@ -908,11 +908,11 @@ SYM_REF2(fb_initialization_c, function_block_type_name, structure_initialization
 SYM_LIST(instruction_list_c)
 
 /* | label ':' [il_incomplete_instruction] eol_list */
-/* NOTE: The parameter 'prev_il_instruction' is used to point to all previous il instructions that may be executed imedaitely before this instruction.
- *       In case of an il instruction preceded by a label, this will include all IL instructions that jump to this label!
+/* NOTE: The parameters 'prev_il_instruction'/'next_il_instruction' are used to point to all previous/next il instructions that may be executed imedaitely before/after this instruction.
+ *       In case of an il instruction preceded by a label, the previous_il_instruction will include all IL instructions that jump to this label!
  *       It is filled in by the flow_control_analysis_c during stage 3.
  */
-SYM_REF2(il_instruction_c, label, il_instruction, std::vector <symbol_c *> prev_il_instruction;)
+SYM_REF2(il_instruction_c, label, il_instruction, std::vector <symbol_c *> prev_il_instruction, next_il_instruction;)
 
 
 /* | il_simple_operator [il_operand] */

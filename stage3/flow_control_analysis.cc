@@ -131,6 +131,25 @@ flow_control_analysis_c::~flow_control_analysis_c(void) {
 }
 
 
+void flow_control_analysis_c::link_insert(symbol_c *prev_instruction, symbol_c *next_instruction) {
+	il_instruction_c *next = dynamic_cast<il_instruction_c *>(next_instruction);
+	il_instruction_c *prev = dynamic_cast<il_instruction_c *>(prev_instruction);
+	if ((NULL == next) || (NULL == prev)) ERROR;
+
+	next->prev_il_instruction.insert(next->prev_il_instruction.begin(), prev);
+	prev->next_il_instruction.insert(prev->next_il_instruction.begin(), next);
+}
+
+
+void flow_control_analysis_c::link_pushback(symbol_c *prev_instruction, symbol_c *next_instruction) {
+	il_instruction_c *next = dynamic_cast<il_instruction_c *>(next_instruction);
+	il_instruction_c *prev = dynamic_cast<il_instruction_c *>(prev_instruction);
+	if ((NULL == next) || (NULL == prev)) ERROR;
+
+	next->prev_il_instruction.push_back(prev);
+	prev->next_il_instruction.push_back(next);
+}
+
 
 /************************************/
 /* B 1.5 Program organization units */
@@ -209,7 +228,7 @@ void *flow_control_analysis_c::visit(il_instruction_c *symbol) {
 		/* We try to guarantee that the previous il instruction that is in the previous line, will occupy the first element of the vector.
 		 * In order to do that, we use insert() instead of push_back()
 		 */
-		symbol->prev_il_instruction.insert(symbol->prev_il_instruction.begin() , prev_il_instruction);
+		link_insert(prev_il_instruction, symbol);
 
 	/* check if it is an il_expression_c, a JMP[C[N]], or a RET, and if so, handle it correctly */
 	prev_il_instruction_is_JMP_or_RET = false;
@@ -255,9 +274,8 @@ void *flow_control_analysis_c::visit(il_jump_operation_c *symbol) {
 
   /* give the visit(JMP_operator *) an oportunity to set the prev_il_instruction_is_JMP_or_RET flag! */
   symbol->il_jump_operator->accept(*this);
-  /* add, to that il_instruction's list of prev_il_intsructions, the curr_il_instruction */
   if (NULL != destination)
-    destination->prev_il_instruction.push_back(curr_il_instruction);
+    link_pushback(curr_il_instruction, destination);
   return NULL;
 }
 
@@ -297,7 +315,8 @@ void *flow_control_analysis_c::visit(il_simple_instruction_c*symbol) {
 		/* We try to guarantee that the previous il instruction that is in the previous line, will occupy the first element of the vector.
 		 * In order to do that, we use insert() instead of push_back()
 		 */
-		symbol->prev_il_instruction.insert(symbol->prev_il_instruction.begin() , prev_il_instruction);
+		link_insert(prev_il_instruction, symbol);
+
 	return NULL;
 }
 
