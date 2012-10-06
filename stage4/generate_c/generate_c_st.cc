@@ -467,50 +467,50 @@ return NULL;
 }
 
 void *visit(equ_expression_c *symbol) {
-  if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_STRING_compatible(symbol->datatype))
-    return print_compare_function("EQ_", symbol->datatype, symbol->l_exp, symbol->r_exp);
+  if (get_datatype_info_c::is_TIME_compatible      (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_STRING_compatible(symbol->l_exp->datatype))
+    return print_compare_function("EQ_", symbol->l_exp->datatype, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " == ");
 }
 
 void *visit(notequ_expression_c *symbol) {
-  if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_STRING_compatible(symbol->datatype))
-    return print_compare_function("NE_", symbol->datatype, symbol->l_exp, symbol->r_exp);
+  if (get_datatype_info_c::is_TIME_compatible      (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_STRING_compatible(symbol->l_exp->datatype))
+    return print_compare_function("NE_", symbol->l_exp->datatype, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " != ");
 }
 
 void *visit(lt_expression_c *symbol) {
-  if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_STRING_compatible(symbol->datatype))
-    return print_compare_function("LT_", symbol->datatype, symbol->l_exp, symbol->r_exp);
+  if (get_datatype_info_c::is_TIME_compatible      (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_STRING_compatible(symbol->l_exp->datatype))
+    return print_compare_function("LT_", symbol->l_exp->datatype, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " < ");
 }
 
 void *visit(gt_expression_c *symbol) {
-  if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_STRING_compatible(symbol->datatype))
-    return print_compare_function("GT_", symbol->datatype, symbol->l_exp, symbol->r_exp);
+  if (get_datatype_info_c::is_TIME_compatible      (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_STRING_compatible(symbol->l_exp->datatype))
+    return print_compare_function("GT_", symbol->l_exp->datatype, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " > ");
 }
 
 void *visit(le_expression_c *symbol) {
-  if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_STRING_compatible(symbol->datatype))
-    return print_compare_function("LE_", symbol->datatype, symbol->l_exp, symbol->r_exp);
+  if (get_datatype_info_c::is_TIME_compatible      (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_STRING_compatible(symbol->l_exp->datatype))
+    return print_compare_function("LE_", symbol->l_exp->datatype, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " <= ");
 }
 
 void *visit(ge_expression_c *symbol) {
-  if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype) ||
-      get_datatype_info_c::is_ANY_STRING_compatible(symbol->datatype))
-    return print_compare_function("GE_", symbol->datatype, symbol->l_exp, symbol->r_exp);
+  if (get_datatype_info_c::is_TIME_compatible      (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_DATE_compatible  (symbol->l_exp->datatype) ||
+      get_datatype_info_c::is_ANY_STRING_compatible(symbol->l_exp->datatype))
+    return print_compare_function("GE_", symbol->l_exp->datatype, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " >= ");
 }
 
