@@ -68,6 +68,7 @@ static int debug = 0;
 narrow_candidate_datatypes_c::narrow_candidate_datatypes_c(symbol_c *ignore) {
 	search_varfb_instance_type = NULL;
 	fake_prev_il_instruction = NULL;
+	current_il_instruction   = NULL;
 	il_operand = NULL;
 }
 
@@ -635,9 +636,11 @@ void *narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 		intersect_prev_candidate_datatype_lists(&tmp_prev_il_instruction);
 		/* Tell the il_instruction the datatype that it must generate - this was chosen by the next il_instruction (remember: we are iterating backwards!) */
 		fake_prev_il_instruction = &tmp_prev_il_instruction;
+		current_il_instruction   = symbol;
 		symbol->il_instruction->datatype = symbol->datatype;
 		symbol->il_instruction->accept(*this);
 		fake_prev_il_instruction = NULL;
+		current_il_instruction   = NULL;
 	}
 	return NULL;
 }
@@ -937,6 +940,10 @@ void *narrow_candidate_datatypes_c::visit(ST_operator_c *symbol) {
 	il_operand->accept(*this);
 	/* set the desired datatype of the previous il instruction */
 	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
+	/* In the case of the ST operator, we must set the datatype of the il_instruction_c object that points to this ST_operator_c ourselves,
+	 * since the following il_instruction_c objects have not done it, as is normal/standard for other instructions!
+	 */
+	current_il_instruction->datatype = symbol->datatype;
 	return NULL;
 }
 

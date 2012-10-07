@@ -68,6 +68,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     search_base_type_c search_base_type;
     symbol_c *il_operand;
     il_instruction_c *fake_prev_il_instruction;
+    il_instruction_c   *current_il_instruction;
 
     bool is_widening_compatible(const struct widen_entry widen_table[], symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, bool *deprecated_status = NULL);
 
