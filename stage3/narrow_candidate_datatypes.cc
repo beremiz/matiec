@@ -66,9 +66,7 @@
 static int debug = 0;
 
 narrow_candidate_datatypes_c::narrow_candidate_datatypes_c(symbol_c *ignore) {
-	prev_il_instructions = NULL;
 	search_varfb_instance_type = NULL;
-	prev_il_instructions_intersected_datatypes = NULL;
 	fake_prev_il_instruction = NULL;
 	il_operand = NULL;
 }
