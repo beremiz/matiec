@@ -1836,8 +1836,8 @@ static inline STRING LEFT__STRING__STRING__##TYPENAME(EN_ENO_PARAMS, STRING IN, 
     TEST_EN_COND(STRING, L < 0)\
     res = __INIT_STRING;\
     L = L < (TYPENAME)IN.len ? L : (TYPENAME)IN.len;\
-    memcpy(&res.body, &IN.body, L);\
-    res.len = L;\
+    memcpy(&res.body, &IN.body, (size_t)L);\
+    res.len = (__strlen_t)L;\
     return res;\
 }
 __ANY_INT(__left)
@@ -1853,8 +1853,8 @@ static inline STRING RIGHT__STRING__STRING__##TYPENAME(EN_ENO_PARAMS, STRING IN,
   TEST_EN_COND(STRING, L < 0)\
   res = __INIT_STRING;\
   L = L < (TYPENAME)IN.len ? L : (TYPENAME)IN.len;\
-  memcpy(&res.body, &IN.body[(TYPENAME)IN.len - L], L);\
-  res.len = L;\
+  memcpy(&res.body, &IN.body[(TYPENAME)IN.len - L], (size_t)L);\
+  res.len = (__strlen_t)L;\
   return res;\
 }
 __ANY_INT(__right)
@@ -1872,8 +1872,8 @@ static inline STRING MID__STRING__STRING__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS
   if(P <= (TYPENAME)IN.len){\
 	P -= 1; /* now can be used as [index]*/\
 	L = L + P <= (TYPENAME)IN.len ? L : (TYPENAME)IN.len - P;\
-	memcpy(&res.body, &IN.body[P] , L);\
-	res.len = L;\
+	memcpy(&res.body, &IN.body[P] , (size_t)L);\
+	res.len = (__strlen_t)L;\
   }\
   return res;\
 }
@@ -1937,7 +1937,7 @@ static inline STRING __insert(STRING IN1, STRING IN2, __strlen_t P){
 #define __iec_(TYPENAME) \
 static inline STRING INSERT__STRING__STRING__STRING__##TYPENAME(EN_ENO_PARAMS, STRING str1, STRING str2, TYPENAME P){\
   TEST_EN_COND(STRING, P < 0)\
-  return (STRING)__insert(str1,str2,P);\
+  return (STRING)__insert(str1,str2,(__strlen_t)P);\
 }
 __ANY_INT(__iec_)
 #undef __iec_
@@ -1968,7 +1968,7 @@ static inline STRING __delete(STRING IN, __strlen_t L, __strlen_t P){
 #define __iec_(TYPENAME) \
 static inline STRING DELETE__STRING__STRING__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, STRING str, TYPENAME L, TYPENAME P){\
   TEST_EN_COND(STRING, L < 0 || P < 0)\
-  return (STRING)__delete(str,L,P);\
+  return (STRING)__delete(str,(__strlen_t)L,(__strlen_t)P);\
 }
 __ANY_INT(__iec_)
 #undef __iec_
@@ -2009,7 +2009,7 @@ static inline STRING __replace(STRING IN1, STRING IN2, __strlen_t L, __strlen_t 
 #define __iec_(TYPENAME) \
 static inline STRING REPLACE__STRING__STRING__STRING__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS, STRING str1, STRING str2, TYPENAME L, TYPENAME P){\
   TEST_EN_COND(STRING, L < 0 || P < 0)\
-  return (STRING)__replace(str1,str2,L,P);\
+  return (STRING)__replace(str1,str2,(__strlen_t)L,(__strlen_t)P);\
 }
 __ANY_INT(__iec_)
 #undef __iec_
@@ -2105,7 +2105,7 @@ static inline TIME SUB_DT_DT(EN_ENO_PARAMS, DT IN1, DT IN2){
 #define __iec_(TYPENAME)\
 static inline TIME MULTIME__TIME__TIME__##TYPENAME(EN_ENO_PARAMS, TIME IN1, TYPENAME IN2){\
   TEST_EN(TIME)\
-  return __time_mul(IN1, IN2);\
+  return __time_mul(IN1, (LREAL)IN2);\
 }
 __ANY_NUM(__iec_)
 #undef __iec_
@@ -2114,7 +2114,7 @@ __ANY_NUM(__iec_)
 #define __iec_(TYPENAME)\
 static inline TIME MUL__TIME__TIME__##TYPENAME(EN_ENO_PARAMS, TIME IN1, TYPENAME IN2){\
   TEST_EN(TIME)\
-  return __time_mul(IN1, IN2);\
+  return __time_mul(IN1, (LREAL)IN2);\
 }
 __ANY_NUM(__iec_)
 #undef __iec_
@@ -2123,7 +2123,7 @@ __ANY_NUM(__iec_)
 #define __iec_(TYPENAME)\
 static inline TIME DIVTIME__TIME__TIME__##TYPENAME(EN_ENO_PARAMS, TIME IN1, TYPENAME IN2){\
   TEST_EN(TIME)\
-  return __time_div(IN1, IN2);\
+  return __time_div(IN1, (LREAL)IN2);\
 }
 __ANY_NUM(__iec_)
 #undef __iec_
@@ -2132,7 +2132,7 @@ __ANY_NUM(__iec_)
 #define __iec_(TYPENAME)\
 static inline TIME DIV__TIME__TIME__##TYPENAME(EN_ENO_PARAMS, TIME IN1, TYPENAME IN2){\
   TEST_EN(TIME)\
-  return __time_div(IN1, IN2);\
+  return __time_div(IN1, (LREAL)IN2);\
 }
 __ANY_NUM(__iec_)
 #undef __iec_
