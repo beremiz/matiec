@@ -863,15 +863,17 @@ void *narrow_candidate_datatypes_c::narrow_binary_operator(const struct widen_en
 				set_datatype_in_prev_il_instructions(prev_instruction_type, fake_prev_il_instruction);
 				/* set the datatype for the operand */
 				il_operand->datatype = operand_type;
+				il_operand->accept(*this);
 				
-				count ++;
+				/* NOTE: DO NOT search any further! Return immediately!
+				 * Since we support SAFE*** datatypes, multiple entries in the widen_table may be compatible.
+				 * If we try to set more than one distinct datatype on the same symbol, then the datatype will be set to
+				 * an invalid_datatype, which is NOT what we want!
+				 */
+				return NULL;
 			}
 		}
 	}
-// 	if (count > 1) ERROR; /* Since we also support SAFE data types, this assertion is not necessarily always tru! */
-	if (is_type_valid(symbol->datatype) && (count <= 0)) ERROR;
-
-	il_operand->accept(*this);
 	return NULL;
 }
 
