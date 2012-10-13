@@ -96,7 +96,7 @@ static void set_datatype(symbol_c *datatype, symbol_c *symbol) {
 			symbol->datatype = datatype; 
 		else {
 			/* had already been set previously to some data type. Let's check if they are the same! */
-			if (!is_type_equal(symbol->datatype, datatype))
+			if (!get_datatype_info_c::is_type_equal(symbol->datatype, datatype))
 				symbol->datatype = &(search_constant_type_c::invalid_type_name);
 // 			else 
 				/* we leave it unchanged, as it is the same as the requested data type! */
@@ -273,7 +273,7 @@ void narrow_candidate_datatypes_c::narrow_function_invocation(symbol_c *fcall, g
 
 	/* set the called_function_declaration taking into account the datatype that we need to return */
 	for(unsigned int i = 0; i < fcall->candidate_datatypes.size(); i++) {
-		if (is_type_equal(fcall->candidate_datatypes[i], fcall->datatype)) {
+		if (get_datatype_info_c::is_type_equal(fcall->candidate_datatypes[i], fcall->datatype)) {
 			fcall_data.called_function_declaration = fcall_data.candidate_functions[i];
 			break;
 		}
@@ -398,7 +398,7 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 	 *     FB call for any datatype. In that case, then the datatype required to pass to the first parameter of the
 	 *     FB call must be left unchanged!
 	 */
-	if ((NULL == il_instruction->datatype) || (is_type_equal(param_value.datatype, il_instruction->datatype))) {
+	if ((NULL == il_instruction->datatype) || (get_datatype_info_c::is_type_equal(param_value.datatype, il_instruction->datatype))) {
 		set_datatype_in_prev_il_instructions(param_value.datatype, fake_prev_il_instruction);
 	} else {
 		set_datatype_in_prev_il_instructions(&search_constant_type_c::invalid_type_name, fake_prev_il_instruction);
@@ -1096,7 +1096,7 @@ void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_
 		}
 	}
 // 	if (count > 1) ERROR; /* Since we also support SAFE data types, this assertion is not necessarily always tru! */
-	if (is_type_valid(symbol->datatype) && (count <= 0)) ERROR;
+	if (get_datatype_info_c::is_type_valid(symbol->datatype) && (count <= 0)) ERROR;
 	
 	l_expr->accept(*this);
 	r_expr->accept(*this);
@@ -1278,7 +1278,7 @@ void *narrow_candidate_datatypes_c::visit(case_element_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(case_list_c *symbol) {
 	for (int i = 0; i < symbol->n; i++) {
 		for (unsigned int k = 0; k < symbol->elements[i]->candidate_datatypes.size(); k++) {
-			if (is_type_equal(symbol->datatype, symbol->elements[i]->candidate_datatypes[k]))
+			if (get_datatype_info_c::is_type_equal(symbol->datatype, symbol->elements[i]->candidate_datatypes[k]))
 				symbol->elements[i]->datatype = symbol->elements[i]->candidate_datatypes[k];
 		}
 		/* NOTE: this may be an integer, a subrange_c, or a enumerated value! */
@@ -1301,7 +1301,7 @@ void *narrow_candidate_datatypes_c::visit(for_statement_c *symbol) {
 	symbol->control_variable->accept(*this);
 	/* BEG expression */
 	for(unsigned int i = 0; i < symbol->beg_expression->candidate_datatypes.size(); i++) {
-		if (is_type_equal(symbol->control_variable->datatype,symbol->beg_expression->candidate_datatypes[i]) &&
+		if (get_datatype_info_c::is_type_equal(symbol->control_variable->datatype,symbol->beg_expression->candidate_datatypes[i]) &&
 				get_datatype_info_c::is_ANY_INT(symbol->beg_expression->candidate_datatypes[i])) {
 			symbol->beg_expression->datatype = symbol->beg_expression->candidate_datatypes[i];
 		}
@@ -1309,7 +1309,7 @@ void *narrow_candidate_datatypes_c::visit(for_statement_c *symbol) {
 	symbol->beg_expression->accept(*this);
 	/* END expression */
 	for(unsigned int i = 0; i < symbol->end_expression->candidate_datatypes.size(); i++) {
-		if (is_type_equal(symbol->control_variable->datatype,symbol->end_expression->candidate_datatypes[i]) &&
+		if (get_datatype_info_c::is_type_equal(symbol->control_variable->datatype,symbol->end_expression->candidate_datatypes[i]) &&
 				get_datatype_info_c::is_ANY_INT(symbol->end_expression->candidate_datatypes[i])) {
 			symbol->end_expression->datatype = symbol->end_expression->candidate_datatypes[i];
 		}
@@ -1318,7 +1318,7 @@ void *narrow_candidate_datatypes_c::visit(for_statement_c *symbol) {
 	/* BY expression */
 	if (NULL != symbol->by_expression) {
 		for(unsigned int i = 0; i < symbol->by_expression->candidate_datatypes.size(); i++) {
-			if (is_type_equal(symbol->control_variable->datatype,symbol->by_expression->candidate_datatypes[i]) &&
+			if (get_datatype_info_c::is_type_equal(symbol->control_variable->datatype,symbol->by_expression->candidate_datatypes[i]) &&
 					get_datatype_info_c::is_ANY_INT(symbol->by_expression->candidate_datatypes[i])) {
 				symbol->by_expression->datatype = symbol->by_expression->candidate_datatypes[i];
 			}

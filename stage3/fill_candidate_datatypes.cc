@@ -96,7 +96,7 @@ bool fill_candidate_datatypes_c::add_datatype_to_candidate_list(symbol_c *symbol
   /* If it is an invalid data type, do not insert!
    * NOTE: it reduces overall code size to do this test here, instead of doing every time before calling the add_datatype_to_candidate_list() function. 
    */
-  if (!is_type_valid(datatype)) /* checks for NULL and invalid_type_name_c */
+  if (!get_datatype_info_c::is_type_valid(datatype)) /* checks for NULL and invalid_type_name_c */
     return false;
 
   if (search_in_candidate_datatype_list(datatype, symbol->candidate_datatypes) >= 0) 
@@ -612,7 +612,7 @@ void *fill_candidate_datatypes_c::visit(subrange_c *symbol) {
 	
 	for (unsigned int u = 0; u < symbol->upper_limit->candidate_datatypes.size(); u++) {
 		for(unsigned int l = 0; l < symbol->lower_limit->candidate_datatypes.size(); l++) {
-			if (is_type_equal(symbol->upper_limit->candidate_datatypes[u], symbol->lower_limit->candidate_datatypes[l]))
+			if (get_datatype_info_c::is_type_equal(symbol->upper_limit->candidate_datatypes[u], symbol->lower_limit->candidate_datatypes[l]))
 				add_datatype_to_candidate_list(symbol, symbol->lower_limit->candidate_datatypes[l]);
 		}
 	}
@@ -1190,7 +1190,7 @@ void *fill_candidate_datatypes_c::visit(ST_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type, operand_type))
+			if (get_datatype_info_c::is_type_equal(prev_instruction_type, operand_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 		}
 	}
@@ -1206,7 +1206,7 @@ void *fill_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
 			operand_type = il_operand->candidate_datatypes[j];
-			if (is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_ANY_BIT_compatible(operand_type))
+			if (get_datatype_info_c::is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_ANY_BIT_compatible(operand_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 		}
 	}
@@ -1244,7 +1244,7 @@ void *fill_candidate_datatypes_c::visit(S_operator_c *symbol) {
 			 * the prev_instruction_type MUST be BOOL compatible.
 			 * I am not too sure about operand_type, does it have to be BOOL compatible, or can it be ANY_BIT compatible? Must check!
 			 */
-			if (is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_BOOL_compatible(operand_type))
+			if (get_datatype_info_c::is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_BOOL_compatible(operand_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 		}
 	}
@@ -1266,7 +1266,7 @@ void *fill_candidate_datatypes_c::visit(R_operator_c *symbol) {
 			 * the prev_instruction_type MUST be BOOL compatible.
 			 * I am not too sure about operand_type, does it have to be BOOL compatible, or can it be ANY_BIT compatible? Must check!
 			 */
-			if (is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_BOOL_compatible(operand_type))
+			if (get_datatype_info_c::is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_BOOL_compatible(operand_type))
 				add_datatype_to_candidate_list(symbol, prev_instruction_type);
 		}
 	}
@@ -1458,7 +1458,7 @@ void *fill_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 		for(unsigned int j = 0; j < symbol->r_exp->candidate_datatypes.size(); j++) {
 			left_type = symbol->l_exp->candidate_datatypes[i];
 			right_type = symbol->r_exp->candidate_datatypes[j];
-			if (is_type_equal(left_type, right_type))
+			if (get_datatype_info_c::is_type_equal(left_type, right_type))
 				add_datatype_to_candidate_list(symbol, left_type);
 		}
 	}

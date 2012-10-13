@@ -57,6 +57,9 @@ class get_datatype_info_c {
 
  
   public:
+    static bool is_type_equal(symbol_c *first_type, symbol_c *second_type);
+    static bool is_type_valid(symbol_c *type);
+      
     static bool is_ANY_REAL_literal(symbol_c *type_symbol); /* Can't we do away with this?? */
     static bool is_ANY_INT_literal (symbol_c *type_symbol); /* Can't we do away with this?? */
 

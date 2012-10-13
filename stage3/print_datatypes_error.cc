@@ -109,10 +109,10 @@ static bool are_all_datatypes_of_prev_il_instructions_datatypes_equal(il_instruc
 	bool res;
 	
 	if (symbol->prev_il_instruction.size() > 0)
-		res = is_type_valid(symbol->prev_il_instruction[0]->datatype);
+		res = get_datatype_info_c::is_type_valid(symbol->prev_il_instruction[0]->datatype);
 
 	for (unsigned int i = 1; i < symbol->prev_il_instruction.size(); i++)
-		res &= is_type_equal(symbol->prev_il_instruction[i-1]->datatype, symbol->prev_il_instruction[i]->datatype);
+		res &= get_datatype_info_c::is_type_equal(symbol->prev_il_instruction[i-1]->datatype, symbol->prev_il_instruction[i]->datatype);
 	
 	return res;
 }
@@ -250,14 +250,14 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 					 */
 					for (unsigned int p = 0; p < il_instruction_symbol->prev_il_instruction.size(); p++) {
 						symbol_c *value = il_instruction_symbol->prev_il_instruction[p];  
-						if (!is_type_valid(value->datatype)) {
+						if (!get_datatype_info_c::is_type_valid(value->datatype)) {
 							function_invocation_error = true;
 							STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility for value passed to first parameter when invoking function '%s'", ((identifier_c *)fcall_data.function_name)->value);
 							STAGE3_ERROR(0, value, value, "This is the IL instruction producing the incompatible data type to first parameter of function '%s'", ((identifier_c *)fcall_data.function_name)->value);
 						}
 					}
 #else
-					if (!is_type_valid(il_instruction_symbol->datatype)) {
+					if (!get_datatype_info_c::is_type_valid(il_instruction_symbol->datatype)) {
 						function_invocation_error = true;
 						STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility between value in IL 'accumulator' and first parameter of function '%s'", ((identifier_c *)fcall_data.function_name)->value);
 					}
@@ -266,7 +266,7 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 						/* when handling a IL function call, and an error is found in the first parameter, then we bug out and do not print out any more error messages. */
 						return;
 				}
-				else if (!is_type_valid(param_value->datatype)) {
+				else if (!get_datatype_info_c::is_type_valid(param_value->datatype)) {
 					function_invocation_error = true;
 					STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((identifier_c *)fcall_data.function_name)->value);
 				}
@@ -537,12 +537,12 @@ void *print_datatypes_error_c::visit(date_and_time_c *symbol) {
 /* B 1.3.3 - Derived data types */
 /********************************/
 void *print_datatypes_error_c::visit(simple_spec_init_c *symbol) {
-	if (!is_type_valid(symbol->simple_specification->datatype)) {
+	if (!get_datatype_info_c::is_type_valid(symbol->simple_specification->datatype)) {
 		STAGE3_ERROR(0, symbol->simple_specification, symbol->simple_specification, "Invalid data type.");
 	} else if (NULL != symbol->constant) {
-		if (!is_type_valid(symbol->constant->datatype))
+		if (!get_datatype_info_c::is_type_valid(symbol->constant->datatype))
 			STAGE3_ERROR(0, symbol->constant, symbol->constant, "Initial value has incompatible data type.");
-	} else if (!is_type_valid(symbol->datatype)) {
+	} else if (!get_datatype_info_c::is_type_valid(symbol->datatype)) {
 		ERROR; /* If we have an error here, then we must also have an error in one of
 		        * the two previous tests. If we reach this point, some strange error is ocurring!
 			*/
@@ -577,7 +577,7 @@ void *print_datatypes_error_c::visit(symbolic_variable_c *symbol) {
 /********************************************/
 void *print_datatypes_error_c::visit(direct_variable_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) ERROR;
-	if (!is_type_valid(symbol->datatype))
+	if (!get_datatype_info_c::is_type_valid(symbol->datatype))
 		STAGE3_ERROR(4, symbol, symbol, "Direct variable has incompatible data type with expression.");
 	return NULL;
 }
@@ -648,7 +648,7 @@ void *print_datatypes_error_c::visit(located_var_decl_c *symbol) {
   symbol->located_var_spec_init->accept(*this);
   /* It does not make sense to call symbol->location->accept(*this). The check is done right here if the following if() */
   // symbol->location->accept(*this); 
-  if ((is_type_valid(symbol->located_var_spec_init->datatype)) && (!is_type_valid(symbol->location->datatype)))
+  if ((get_datatype_info_c::is_type_valid(symbol->located_var_spec_init->datatype)) && (!get_datatype_info_c::is_type_valid(symbol->location->datatype)))
     STAGE3_ERROR(0, symbol, symbol, "Bit size of data type is incompatible with bit size of location.");
   return NULL;
 }  
@@ -1264,7 +1264,7 @@ void *print_datatypes_error_c::visit(for_statement_c *symbol) {
 
 void *print_datatypes_error_c::visit(while_statement_c *symbol) {
 	symbol->expression->accept(*this);
-	if (!is_type_valid(symbol->expression->datatype)) {
+	if (!get_datatype_info_c::is_type_valid(symbol->expression->datatype)) {
 		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'WHILE' condition.");
 		return NULL;
 	}
@@ -1274,7 +1274,7 @@ void *print_datatypes_error_c::visit(while_statement_c *symbol) {
 }
 
 void *print_datatypes_error_c::visit(repeat_statement_c *symbol) {
-	if (!is_type_valid(symbol->expression->datatype)) {
+	if (!get_datatype_info_c::is_type_valid(symbol->expression->datatype)) {
 		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'REPEAT' condition.");
 		return NULL;
 	}

@@ -403,7 +403,7 @@ int search_in_candidate_datatype_list(symbol_c *datatype, const std::vector <sym
 		return -1;
 
 	for(unsigned int i = 0; i < candidate_datatypes.size(); i++)
-		if (is_type_equal(datatype, candidate_datatypes[i]))
+		if (get_datatype_info_c::is_type_equal(datatype, candidate_datatypes[i]))
 			return i;
 	/* Not found ! */
 	return -1;
@@ -464,30 +464,3 @@ void intersect_prev_candidate_datatype_lists(il_instruction_c *symbol) {
 
 
 
-bool is_type_equal(symbol_c *first_type, symbol_c *second_type) {
-  if ((NULL == first_type) || (NULL == second_type))
-      return false;
-  if (typeid(* first_type) == typeid(invalid_type_name_c))
-      return false;
-  if (typeid(*second_type) == typeid(invalid_type_name_c))
-      return false;
-    
-  if (get_datatype_info_c::is_ANY_ELEMENTARY(first_type)) {
-      if (typeid(*first_type) == typeid(*second_type))
-          return true;
-  } else   /* ANY_DERIVED */
-      return (first_type == second_type);
-
-  return false;
-}
-
-
-
-bool is_type_valid(symbol_c *type) {
-  if (NULL == type)
-      return false;
-  if (typeid(*type) == typeid(invalid_type_name_c))
-      return false;
-
-  return true;
-}

@@ -3,6 +3,7 @@
  *
  *  Copyright (C) 2003-2012  Mario de Sousa (msousa@fe.up.pt)
  *  Copyright (C) 2007-2011  Laurent Bessard and Edouard Tisserant
+ *  Copyright (C) 2012       Manuele Conti  (conti.ma@alice.it)
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -54,6 +55,40 @@
 
 
 static search_base_type_c search_base_type;
+
+
+
+
+
+bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_type) {
+  if ((NULL == first_type) || (NULL == second_type))
+      return false;
+  if (typeid(* first_type) == typeid(invalid_type_name_c))
+      return false;
+  if (typeid(*second_type) == typeid(invalid_type_name_c))
+      return false;
+    
+  if (get_datatype_info_c::is_ANY_ELEMENTARY(first_type)) {
+      if (typeid(*first_type) == typeid(*second_type))
+          return true;
+  } else   /* ANY_DERIVED */
+      return (first_type == second_type);
+
+  return false;
+}
+
+
+
+bool get_datatype_info_c::is_type_valid(symbol_c *type) {
+  if (NULL == type)
+      return false;
+  if (typeid(*type) == typeid(invalid_type_name_c))
+      return false;
+
+  return true;
+}
+
+
 
 
 
@@ -259,6 +294,7 @@ bool get_datatype_info_c::is_ANY_SAFENUM(symbol_c *type_symbol) {
   if (type_symbol == NULL)                                     {return false;}
   if (is_ANY_SAFEREAL(type_symbol))                            {return true;}
   if (is_ANY_SAFEINT (type_symbol))                            {return true;}
+  return false;
 }
 
 
@@ -287,6 +323,7 @@ bool get_datatype_info_c::is_ANY_signed_SAFENUM(symbol_c *type_symbol) {
   if (type_symbol == NULL)                                     {return false;}
   if (is_ANY_SAFEREAL      (type_symbol))                      {return true;}
   if (is_ANY_signed_SAFEINT(type_symbol))                      {return true;}
+  return false;
 }
 
 

@@ -111,7 +111,7 @@ void declaration_check_c::check_global_decl(symbol_c *p_decl) {
 	/* For the moment, we will just use search_base_type_c instead... */
         symbol_c *glo_type = search_base_type.get_basetype_decl(glo_decl);
         symbol_c *ext_type = search_base_type.get_basetype_decl(ext_decl);
-        if (! is_type_equal(glo_type, ext_type))
+        if (! get_datatype_info_c::is_type_equal(glo_type, ext_type))
           STAGE3_ERROR(0, ext_decl, ext_decl, "Declaration error an external redefinition data type.");
       }
 	}

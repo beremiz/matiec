@@ -163,10 +163,4 @@ void intersect_prev_candidate_datatype_lists(il_instruction_c *symbol);
 
 
 
-bool is_type_equal(symbol_c *first_type, symbol_c *second_type);
-bool is_type_valid(symbol_c *type);
-
-
-
-
 #endif /* _HELPER_FUNCTIONS_HH_ */
