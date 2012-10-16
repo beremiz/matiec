@@ -118,6 +118,47 @@ null_visitor_c::~null_visitor_c(void) {return;}
 
 
 
+
+/*******************/
+/* fcall_visitor_c */
+/*******************/
+
+//fcall_visitor_c::~fcall_visitor_c(void) {return;};
+
+
+// void fcall_visitor_c::fcall(symbol_c *symbol) {return;};
+
+#define VISIT_METHOD {fcall(symbol); return NULL;}
+
+#define SYM_LIST(class_name_c, ...)                                             void *fcall_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_TOKEN(class_name_c, ...)                                            void *fcall_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF0(class_name_c, ...)                                             void *fcall_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF1(class_name_c, ref1, ...)                                       void *fcall_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF2(class_name_c, ref1, ref2, ...)                                 void *fcall_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF3(class_name_c, ref1, ref2, ref3, ...)                           void *fcall_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4, ...)                     void *fcall_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)               void *fcall_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6, ...)         void *fcall_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+
+#include "../absyntax/absyntax.def"
+
+#undef VISIT_METHOD
+
+#undef SYM_LIST
+#undef SYM_TOKEN
+#undef SYM_REF0
+#undef SYM_REF1
+#undef SYM_REF2
+#undef SYM_REF3
+#undef SYM_REF4
+#undef SYM_REF5
+#undef SYM_REF6
+
+
+
+
+
+
 /**********************/
 /* iterator_visitor_c */
 /**********************/
@@ -210,6 +251,48 @@ void *iterator_visitor_c::visit(class_name_c *symbol) {			\
 #undef SYM_REF6
 
 
+
+
+
+/****************************/
+/* fcall_iterator_visitor_c */
+/****************************/
+
+fcall_iterator_visitor_c::~fcall_iterator_visitor_c(void) {return;};
+
+void fcall_iterator_visitor_c::prefix_fcall(symbol_c *symbol) {return;};
+void fcall_iterator_visitor_c::suffix_fcall(symbol_c *symbol) {return;};
+
+#define VISIT_METHOD {\
+  prefix_fcall(symbol);                \
+  iterator_visitor_c::visit(symbol);   \
+  suffix_fcall(symbol);                \
+  return NULL;                         \
+}
+
+#define SYM_LIST(class_name_c, ...)                                             void *fcall_iterator_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_TOKEN(class_name_c, ...)                                            void *fcall_iterator_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF0(class_name_c, ...)                                             void *fcall_iterator_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF1(class_name_c, ref1, ...)                                       void *fcall_iterator_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF2(class_name_c, ref1, ref2, ...)                                 void *fcall_iterator_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF3(class_name_c, ref1, ref2, ref3, ...)                           void *fcall_iterator_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF4(class_name_c, ref1, ref2, ref3, ref4, ...)                     void *fcall_iterator_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF5(class_name_c, ref1, ref2, ref3, ref4, ref5, ...)               void *fcall_iterator_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+#define SYM_REF6(class_name_c, ref1, ref2, ref3, ref4, ref5, ref6, ...)         void *fcall_iterator_visitor_c::visit(class_name_c *symbol) VISIT_METHOD;
+
+#include "../absyntax/absyntax.def"
+
+#undef VISIT_METHOD
+
+#undef SYM_LIST
+#undef SYM_TOKEN
+#undef SYM_REF0
+#undef SYM_REF1
+#undef SYM_REF2
+#undef SYM_REF3
+#undef SYM_REF4
+#undef SYM_REF5
+#undef SYM_REF6
 
 
 
