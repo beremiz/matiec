@@ -118,6 +118,7 @@ extern symtable_c<symbol_c *, &null_symbol5> enumerated_value_symtable;
 #include "search_il_label.hh"
 #include "get_var_name.hh"
 #include "get_datatype_info.hh"
+#include "debug_ast.hh"
 
 /***********************************************************************/
 /***********************************************************************/

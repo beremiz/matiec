@@ -94,6 +94,7 @@ am_libabsyntax_utils_a_OBJECTS = absyntax_utils.$(OBJEXT) \
 	search_varfb_instance_type.$(OBJEXT) \
 	search_var_instance_decl.$(OBJEXT) \
 	spec_init_separator.$(OBJEXT) type_initial_value.$(OBJEXT) \
+	debug_ast.$(OBJEXT) \
 	get_datatype_info.$(OBJEXT)
 
 libabsyntax_utils_a_OBJECTS = $(am_libabsyntax_utils_a_OBJECTS)
@@ -234,6 +235,7 @@ libabsyntax_utils_a_SOURCES = \
 	search_var_instance_decl.cc \
 	spec_init_separator.cc \
 	type_initial_value.cc \
+	debug_ast.cc \
 	get_datatype_info.cc
 
 
@@ -317,6 +319,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/add_en_eno_param_decl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/array_dimension_iterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/case_element_iterator.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/debug_ast.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/decompose_var_instance_name.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function_call_iterator.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/function_call_param_iterator.Po@am__quote@
