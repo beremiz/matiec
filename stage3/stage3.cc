@@ -37,6 +37,7 @@
 #include "flow_control_analysis.hh"
 #include "fill_candidate_datatypes.hh"
 #include "narrow_candidate_datatypes.hh"
+#include "forced_narrow_candidate_datatypes.hh"
 #include "print_datatypes_error.hh"
 #include "lvalue_check.hh"
 #include "array_range_check.hh"
@@ -79,6 +80,8 @@ static int type_safety(symbol_c *tree_root){
 	tree_root->accept(narrow_candidate_datatypes);
 	print_datatypes_error_c print_datatypes_error(tree_root);
 	tree_root->accept(print_datatypes_error);
+	forced_narrow_candidate_datatypes_c forced_narrow_candidate_datatypes(tree_root);
+	tree_root->accept(forced_narrow_candidate_datatypes);
 	return print_datatypes_error.get_error_count();
 }
 
