@@ -55,48 +55,48 @@
  * --- --> NULL (undefined datatype)
  * *** --> invalid_type_name_c (invalid datatype)
  *
- * (0)       (1)   (2)
+ * (0)   PASS1   (1)    PASS2   (2)
  *      
- * ---       ***   ***       CAL tonv (                          
- *                                  PT := T#1s                   
- *                               )                               
- * ---       ***   ***       JMP l4                              
+ * ---     (e)   ***            ***       CAL tonv (                          
+ *                                               PT := T#1s                   
+ *                                            )                               
+ * ---     (e)   ***            ***       JMP l4                              
  *
- * ---       sint  sint  l0: LD  1                               
- * ---       sint  sint      ADD 2                               
- * --- (c)   sint  sint      CAL tonv (                          
- *                               PT := T#1s                      
- *                               )                               
- *                                                               
- * ---       sint  sint      LD  45                              
- * --- (c)   sint  sint      ADD 45                              
+ * ---     (e)   sint           sint  l0: LD  1                               
+ * ---     (e)   sint           sint      ADD 2                               
+ * ---  (c)      sint           sint      CAL tonv (                          
+ *                                            PT := T#1s                      
+ *                                            )                               
+ *                                                                            
+ * ---     (e)   sint           sint      LD  45                              
+ * ---  (c)      sint           sint      ADD 45                              
  *
  *
- * ---       sint  sint      LD  3                               
- * ---       sint  sint  l1:                                     
- * --- (c)   sint  sint  l2: ADD 4                               
- * int       int   int       LD  5                               
- * int       int   int       ST  n                               
- * int       int   int       JMP l3                              
- *                                                               
- * --- (d)   ---   sint      LD  5                               
- * --- (d)   ---   sint      SUB 6                               
- * --- (d)   sint  sint      JMP l1                              
+ * ---     (e)   sint           sint      LD  3                               
+ * ---     (e)   sint           sint  l1:                                     
+ * ---  (c)      sint           sint  l2: ADD 4                               
+ * int           int            int       LD  5                               
+ * int           int            int       ST  n                               
+ * int           int            int       JMP l3                              
+ *                                                                            
+ * ---  (d)      ---      (e)   sint      LD  5                               
+ * ---  (d)      ---      (e)   sint      SUB 6                               
+ * ---  (d)(e)   sint           sint      JMP l1                              
  *
- * ---       bool  bool      LD  FALSE                           
- * ---       bool  bool      NOT                                 
- * --- (b)   bool  bool      RET                                 
+ * ---     (e)   bool           bool      LD  FALSE                           
+ * ---     (e)   bool           bool      NOT                                 
+ * ---  (b)      bool           bool      RET                                 
  *
- * int       int   int   l3:                                     
- * int       int   int       ST  n                               
- * --- (b)   int   int       RET                                 
+ * int           int            int   l3:                                     
+ * int           int            int       ST  n                               
+ * ---  (b)      int            int       RET                                 
  *
- * ---       ***   ***   l4:                                     
- * ---       ***   ***       CAL tonv (                          
- *                                  PT := T#1s                   
- *                               )                               
- * --- (a)   ***   ***       JMP l0                              
- * --- (b)   byte  byte      LD  88                              
+ * ---     (e)   ***            ***   l4:                                     
+ * ---     (e)   ***            ***       CAL tonv (                          
+ *                                               PT := T#1s                   
+ *                                            )                               
+ * ---  (a)      ***            ***       JMP l0                              
+ * ---  (b)      byte           byte      LD  88                              
  *
  *
  *   
@@ -117,6 +117,7 @@ forced_narrow_candidate_datatypes_c::forced_narrow_candidate_datatypes_c(symbol_
 
 forced_narrow_candidate_datatypes_c::~forced_narrow_candidate_datatypes_c(void) {
 }
+
 
 
 
@@ -168,14 +169,10 @@ void *forced_narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
           if (NULL != symbol->next_il_instruction[i]->datatype)
             next_datatype = symbol->next_il_instruction[i]->datatype;
         if (get_datatype_info_c::is_type_valid(next_datatype)) {
-          /* This will occur in the following situations from the above example	   
-           *    (d)   during the second pass of this algorithm (remember, we execute this algorithm twice, because of backward JMPs!)
-           */
+          //  This will occur in the situations (c) in the above example
           symbol->datatype = symbol->candidate_datatypes[0]; 
         } else {
-          /* This will occur in the following situations from the above example	   
-           *    (d)   during the first pass of this algorithm (remember, we execute this algorithm twice, because of backward JMPs!)
-           */
+          //  This will occur in the situations (d) in the above example
           // it is not possible to determine the exact situation in the current pass, so we can't do anything just yet. Leave it for the next time around!
         }
       }
@@ -183,7 +180,7 @@ void *forced_narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
   }
   
   /* return control to the visit() method of the base class! */
-  narrow_candidate_datatypes_c::visit(symbol);
+  narrow_candidate_datatypes_c::visit(symbol);  //  This handle the situations (e) in the above example
   
   return NULL;
 }
@@ -235,4 +232,16 @@ void *forced_narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
     void *visit(il_param_assignment_c *symbol);
     void *visit(il_param_out_assignment_c *symbol);
  */
+
+
+
+/***************************************/
+/* B.3 - Language ST (Structured Text) */
+/***************************************/
+// SYM_LIST(statement_list_c)
+/* The normal narrow_candidate_datatypes_c algorithm does not leave any symbol, in an ST code, with an undefined datatype.
+ * There is therefore no need to re-run the narrow algorithm here, so we overide the narrow_candidate_datatypes_c visitor,
+ * and simply bug out!
+ */
+void *forced_narrow_candidate_datatypes_c::visit(statement_list_c *symbol) {return NULL;}
 

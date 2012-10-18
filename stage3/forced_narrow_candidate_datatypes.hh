@@ -75,8 +75,13 @@ class forced_narrow_candidate_datatypes_c: public narrow_candidate_datatypes_c {
 //  void *visit(il_param_out_assignment_c *symbol);
 //  void *visit(il_assign_operator_c *symbol);
 //  void *visit(il_assign_operator_c *symbol);
-
+ 
+    /***************************************/
+    /* B.3 - Language ST (Structured Text) */
+    /***************************************/
+    void *visit(statement_list_c *symbol);
 }; // forced_narrow_candidate_datatypes_c
+
 
 
 
