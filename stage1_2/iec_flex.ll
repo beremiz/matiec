@@ -513,7 +513,7 @@ enable_code_generation_pragma	"{enable code generation}"
 
 /* Any other pragma... */
 
-pragma "{"[^}]*"}"
+pragma "{"[^}]*"}"|"{{"([^}]|"}"[^}])*"}}"
 
 /* NOTE: this seemingly unnecessary complex definition is required
  *       to be able to eat up comments such as:
@@ -849,8 +849,9 @@ incompl_location	%[IQM]\*
 	/* Any other pragma we find, we just pass it up to the syntax parser...   */
 	/* Note that the <body_state> state is exclusive, so we have to include it here too. */
 {pragma}	{/* return the pragmma without the enclosing '{' and '}' */
-		 yytext[strlen(yytext)-1] = '\0';
-		 yylval.ID=strdup(yytext+1);
+         uint cut = yytext[1]=='{'?2:1;
+		 yytext[strlen(yytext)-cut] = '\0';
+		 yylval.ID=strdup(yytext+cut);
 		 return pragma_token;
 		}
 <body_state>{pragma} {/* return the pragmma without the enclosing '{' and '}' */

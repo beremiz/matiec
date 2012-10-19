@@ -962,8 +962,7 @@ class generate_c_pous_c: public generate_c_typedecl_c {
        * To work around this we introduce the useless goto.
        */
       s4o.print("\n");
-      s4o.print(s4o.indent_spaces);
-      s4o.print("/* to humour the compiler, we insert a goto */\n");
+      /* to humour the compiler, we insert a goto */
       s4o.print(s4o.indent_spaces);
       s4o.print("goto ");
       s4o.print(END_LABEL);
