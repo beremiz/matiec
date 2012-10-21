@@ -684,6 +684,56 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
 	HANDLE_ELEMENTARY_DATA_TYPE(safestring_type_name_c, "STRING")
 	HANDLE_ELEMENTARY_DATA_TYPE(safewstring_type_name_c, "WSTRING")
 
+    /***********************************/
+    /* B 1.3.2 - Generic Data Types    */
+    /***********************************/
+
+	/*  structure_type_name ':' structure_specification */
+	//SYM_REF2(structure_type_declaration_c, structure_type_name, structure_specification)
+	void *visit(structure_type_declaration_c *symbol) {
+      current_mode = arraydeclaration_im;
+      symbol->structure_specification->accept(*this);
+      current_mode = arrayname_im;
+      generate_c_typedecl_c::visit(symbol);
+	  current_mode = none_im;
+	  return NULL;
+	}
+
+    /* helper symbol for structure_declaration */
+    /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
+    /* structure_element_declaration_list structure_element_declaration ';' */
+    //SYM_LIST(structure_element_declaration_list_c)
+    void *visit(structure_element_declaration_list_c *symbol) {
+      switch (current_mode) {
+    	case arraydeclaration_im:
+    	  iterator_visitor_c::visit(symbol);
+    	  break;
+        default:
+    	  generate_c_typedecl_c::visit(symbol);
+    	  break;
+      }
+      return NULL;
+    }
+
+    /*  structure_element_name ':' spec_init */
+    //SYM_REF2(structure_element_declaration_c, structure_element_name, spec_init)
+    void *visit(structure_element_declaration_c *symbol) {
+      switch (current_mode) {
+    	case arraydeclaration_im:
+    	  {
+			array_spec_init_c *spec_init = dynamic_cast<array_spec_init_c*>(symbol->spec_init);
+			if (spec_init != NULL) {
+			  symbol->spec_init->accept(*this);
+			}
+		  }
+    	  break;
+    	default:
+    	  generate_c_typedecl_c::visit(symbol);
+          break;
+      }
+      return NULL;
+    }
+
     /******************************************/
     /* B 1.4.3 - Declaration & Initialization */
     /******************************************/
@@ -712,7 +762,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     /*  var1_list ':' array_spec_init */
     // SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
     void *visit(array_var_init_decl_c *symbol) {
-      current_mode = arrayname_im;
+      current_mode = arraydeclaration_im;
       symbol->array_spec_init->accept(*this);
       current_mode = none_im;
       return NULL;
@@ -722,6 +772,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     /* array_initialization may be NULL ! */
     void *visit(array_spec_init_c *symbol) {
       switch (current_mode) {
+    	case arraydeclaration_im:
     	case arrayname_im:
     	  {
     	    array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
@@ -739,17 +790,17 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
     void *visit(array_specification_c *symbol) {
       switch (current_mode) {
-        case arrayname_im:
+        case arraydeclaration_im:
           {
+        	current_mode = arrayname_im;
             std::map<std::string,int>::iterator definition;
             current_array_name = "__";
             symbol->non_generic_type_name->accept(*this);
             symbol->array_subrange_list->accept(*this);
+            current_mode = arraydeclaration_im;
 
             definition = inline_array_defined.find(current_array_name);
             if (definition == inline_array_defined.end()) {
-              current_mode = arraydeclaration_im;
-
               s4o_incl.print("__DECLARE_ARRAY_TYPE(");
               s4o_incl.print(current_array_name);
               s4o_incl.print(",");
@@ -760,6 +811,15 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
 
               inline_array_defined[current_array_name] = 0;
             }
+          }
+          break;
+        case arrayname_im:
+          {
+        	  std::map<std::string,int>::iterator definition;
+			  current_array_name = "__";
+			  symbol->non_generic_type_name->accept(*this);
+			  symbol->array_subrange_list->accept(*this);
+			  s4o_incl.print(current_array_name);
           }
           break;
         default:
@@ -822,7 +882,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     void *visit(array_var_declaration_c *symbol) {
       array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
 	  if (specification != NULL) {
-        current_mode = arrayname_im;
+        current_mode = arraydeclaration_im;
         symbol->array_specification->accept(*this);
         current_mode = none_im;
       }
@@ -863,7 +923,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     void *visit(located_var_decl_c *symbol) {
       array_spec_init_c* array_spec_init = dynamic_cast<array_spec_init_c*>(symbol->located_var_spec_init);
       if (array_spec_init != NULL) {
-    	current_mode = arrayname_im;
+    	current_mode = arraydeclaration_im;
     	symbol->located_var_spec_init->accept(*this);
     	current_mode = none_im;
       }
@@ -883,7 +943,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     void *visit(external_declaration_c *symbol) {
       array_specification_c* array_specification = dynamic_cast<array_specification_c*>(symbol->specification);
       if (array_specification != NULL) {
-        current_mode = arrayname_im;
+        current_mode = arraydeclaration_im;
         symbol->specification->accept(*this);
         current_mode = none_im;
       }
@@ -904,7 +964,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     void *visit(global_var_decl_c *symbol) {
       array_spec_init_c* array_spec_init = dynamic_cast<array_spec_init_c*>(symbol->type_specification);
       if (array_spec_init != NULL) {
-        current_mode = arrayname_im;
+        current_mode = arraydeclaration_im;
         symbol->type_specification->accept(*this);
         current_mode = none_im;
       }
