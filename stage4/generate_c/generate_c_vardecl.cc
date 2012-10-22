@@ -94,6 +94,10 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       array_specification->accept(*this);
     }
 
+    void set_array_default_initialisation(symbol_c *array_initialization) {
+      array_default_initialization = array_initialization;
+    }
+
     void init_array(symbol_c *var1_list, symbol_c *array_specification, symbol_c *array_initialization) {
       int i;
       
@@ -421,6 +425,7 @@ class structure_element_iterator_c : public null_visitor_c {
       if (next_element == element_count) {
         current_element_default_value = spec_init_sperator_c::get_init(symbol->spec_init);
         current_element_type = spec_init_sperator_c::get_spec(symbol->spec_init);
+        if (current_element_type == NULL) ERROR;
         return symbol->structure_element_name;
       }
       /* not yet the desired element... */
@@ -500,6 +505,7 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
   private:
     symbol_c* structure_type_decl;
     symbol_c* current_element_type;
+    symbol_c* current_element_default_value;
 
   public:
     generate_c_structure_initialization_c(stage4out_c *s4o_ptr): generate_c_typedecl_c(s4o_ptr) {}
@@ -508,6 +514,7 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
     void init_structure_default(symbol_c *structure_type_name) {
       structure_type_decl = NULL;
       current_element_type = NULL;
+      current_element_default_value = NULL;
       
       current_mode = initdefault_sm;
       structure_type_name->accept(*this);
@@ -604,19 +611,21 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
         if (i > 1)
           s4o.print(",");
         
+        current_element_type = structure_iterator.element_type();
+        if (current_element_type == NULL) ERROR;
+
+        /* Check whether default value specified in structure declaration...*/
+        current_element_default_value = structure_iterator.default_value();
+
         /* Get the value from an initialization */
         symbol_c *element_value = structure_init_element_iterator.search(element_name);
         
         if (element_value == NULL) {
           /* No value given for parameter, so we must use the default... */
-          /* First check whether default value specified in function declaration...*/
-          element_value = structure_iterator.default_value();
-          current_element_type = structure_iterator.element_type();
+          element_value = current_element_default_value;
         }
         
         if (element_value == NULL) {
-          if (current_element_type == NULL) ERROR;
-          
           /* If not, get the default value of this variable's type */
           element_value = (symbol_c *)current_element_type->accept(*type_initial_value_c::instance());
         }
@@ -644,6 +653,8 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
     void *visit(array_initial_elements_list_c *symbol) {
       generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
       array_initialization->init_array_size(current_element_type);
+      if (current_element_default_value != NULL)
+    	array_initialization->set_array_default_initialisation(current_element_default_value);
       array_initialization->init_array_values(symbol);
       delete array_initialization;
       return NULL;
