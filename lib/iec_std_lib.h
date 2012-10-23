@@ -295,18 +295,18 @@ static inline TIME __time_sub(TIME IN1, TIME IN2){
 }
 static inline TIME __time_mul(TIME IN1, LREAL IN2){
   LREAL s_f = IN1.tv_sec * IN2;
-  time_t s = s_f;
-  div_t ns = div((LREAL)IN1.tv_nsec * IN2, 1000000000);
-  TIME res = {s + ns.quot,
-              ns.rem + (s_f - s) * 1000000000 };
+  time_t s = (time_t)s_f;
+  div_t ns = div((int)((LREAL)IN1.tv_nsec * IN2), 1000000000);
+  TIME res = {(long)s + ns.quot,
+		      (long)ns.rem + (s_f - s) * 1000000000 };
   __normalize_timespec(&res);
   return res;
 }
 static inline TIME __time_div(TIME IN1, LREAL IN2){
   LREAL s_f = IN1.tv_sec / IN2;
-  time_t s = s_f;
-  TIME res = {s,
-              IN1.tv_nsec / IN2 + (s_f - s) * 1000000000 };
+  time_t s = (time_t)s_f;
+  TIME res = {(long)s,
+              (long)(IN1.tv_nsec / IN2 + (s_f - s) * 1000000000) };
   __normalize_timespec(&res);
   return res;
 }
@@ -482,9 +482,9 @@ static inline TIME __string_to_time(STRING IN){
     while(--l > 0 && IN.body[l] != '.');
     if(l != 0){
         LREAL IN_val = atof((const char *)&IN.body);
-        return  (TIME){IN_val, (IN_val - (LINT)IN_val)*1000000000};
+        return  (TIME){(long)IN_val, (long)(IN_val - (LINT)IN_val)*1000000000};
     }else{
-        return  (TIME){__pstring_to_sint(&IN), 0};
+        return  (TIME){(long)__pstring_to_sint(&IN), 0};
     }
 }
 
