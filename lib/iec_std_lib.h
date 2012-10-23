@@ -83,7 +83,7 @@ typedef struct {
 
 #define __lit(type,value,...) (type)value##__VA_ARGS__
 // Keep this macro expention step to let sfx(__VA_ARGS__) change into L or LL
-#define __literal(type,value,...) __lit(type,value,##__VA_ARGS__)
+#define __literal(type,value,...) __lit(type,value,__VA_ARGS__)
 
 #define __BOOL_LITERAL(value) __literal(BOOL,value)
 #define __SINT_LITERAL(value) __literal(SINT,value)
@@ -1765,6 +1765,11 @@ static inline BOOL fname(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
   return __time_cmp(op1, op2) != 0 ? 1 : 0;\
 }
 
+#define __ne_string(fname, TYPENAME) \
+static inline BOOL fname(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
+  TEST_EN(BOOL)\
+  return __STR_CMP(op1, op2) != 0 ? 1 : 0;\
+}
 
 /* Comparison for numerical data types */
 #define __iec_(TYPENAME) \
@@ -1783,8 +1788,8 @@ __iec_(TIME)
 #undef __iec_
 
 /* Comparison for string data types */	
-__compare_string(NE_STRING, != ) /* The explicitly typed standard functions */
-__compare_string(NE__BOOL__STRING__STRING, != ) /* Overloaded function */
+__ne_string(NE_STRING, STRING) /* The explicitly typed standard functions */
+__ne_string(NE__BOOL__STRING__STRING, STRING) /* Overloaded function */
 
 
 
