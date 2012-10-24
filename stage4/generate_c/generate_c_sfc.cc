@@ -344,7 +344,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
         case transitiontestdebug_sg:
           // Transition condition is in IL
           if (symbol->transition_condition_il != NULL) {
-            generate_c_il->declare_backup_variable();
+            generate_c_il->declare_implicit_variable_back();
             s4o.print(s4o.indent_spaces);
             symbol->transition_condition_il->accept(*generate_c_il);
             s4o.print(SET_VAR);
@@ -358,8 +358,8 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print("transition_list[");
             print_transition_number();
             s4o.print("],");
-            generate_c_il->print_backup_variable();
-            generate_c_il->reset_default_variable_name();
+            generate_c_il->print_implicit_variable_back();
+            // generate_c_il->reset_default_variable_name(); // generate_c_il does not require his anymore
             s4o.print(");\n");
           }
           // Transition condition is in ST
