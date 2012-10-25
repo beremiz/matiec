@@ -805,6 +805,7 @@ void *visit(il_function_call_c *symbol) {
      * use the IL implicit variable as a source of data to pass to those parameters!
      */
     if ((param_value == NULL) &&  (!used_defvar) && !fp_iterator.is_en_eno_param_implicit()) {
+      if (NULL == implicit_variable_current.datatype) ERROR;
       param_value = &this->implicit_variable_current;
       used_defvar = true;
     }

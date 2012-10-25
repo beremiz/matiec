@@ -1,7 +1,7 @@
 /*
  *  matiec - a compiler for the programming languages defined in IEC 61131-3
  *
- *  Copyright (C) 2003-2011  Mario de Sousa (msousa@fe.up.pt)
+ *  Copyright (C) 2003-2012  Mario de Sousa (msousa@fe.up.pt)
  *  Copyright (C) 2007-2011  Laurent Bessard and Edouard Tisserant
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -61,15 +61,6 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 	 */
 	symbol_c *il_default_variable_init_value;
 
-    /* Operand to the IL operation currently being processed... */
-	/* These variables are used to pass data from the
-	 * il_simple_operation_c and il_expression_c visitors
-	 * to the il operator visitors (i.e. LD_operator_c,
-	 * LDN_operator_c, ST_operator_c, STN_operator_c, ...)
-	 */
-	symbol_c *current_operand;
-	symbol_c *current_operand_type;
-
 	 /* The result of the comparison IL operations (GT, EQ, LT, ...)
 	 * is a boolean variable.
 	 * This class keeps track of the current data type stored in the
@@ -94,14 +85,13 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 	 * scope ...
 	 */
     #define IL_DEFVAR_BACK   VAR_LEADER "IL_DEFVAR_BACK"
-    il_default_variable_c default_variable_name;
-	il_default_variable_c default_variable_back_name;
+    il_default_variable_c implicit_variable_current;
 
-	symbol_c* current_array_type;
+    symbol_c* current_array_type;
 
-	int fcall_number;
-	bool generating_inlinefunction;
-	symbol_c *fbname;
+    int fcall_number;
+    bool generating_inlinefunction;
+    symbol_c *fbname;
 
     search_varfb_instance_type_c *search_varfb_instance_type;
     search_var_instance_decl_c   *search_var_instance_decl;
@@ -113,15 +103,12 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
   public:
     generate_c_inlinefcall_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
     : generate_c_typedecl_c(s4o_ptr),
-      default_variable_name(IL_DEFVAR, NULL),
-      default_variable_back_name(IL_DEFVAR_BACK, NULL)
+      implicit_variable_current(IL_DEFVAR, NULL)
     {
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
       search_var_instance_decl   = new search_var_instance_decl_c  (scope);
       
       this->set_variable_prefix(variable_prefix);
-      current_operand = NULL;
-      current_operand_type = NULL;
       il_default_variable_init_value = NULL;
       fcall_number = 0;
       fbname = name;
@@ -278,60 +265,22 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       return symbol;
     }
 
-    /* A helper function... */
-	void CMP_operator_result_type() {
-	  /* the data type resulting from this operation... */
-	  this->default_variable_name.current_type = &(this->bool_type);
-	}
 
-	/* A helper function... */
-    void BYTE_operator_result_type(void) {
-	  if (get_datatype_info_c::is_ANY_INT_literal(this->default_variable_name.current_type)) {
-		if (get_datatype_info_c::is_ANY_INT_literal(this->current_operand_type))
-		  this->default_variable_name.current_type = &(this->lword_type);
-		else
-		  this->default_variable_name.current_type = this->current_operand_type;
-	  }
-	  else if (get_datatype_info_c::is_ANY_INT_literal(this->current_operand_type))
-		  this->current_operand_type = this->default_variable_name.current_type;
-	}
-
-    /* A helper function... */
-    void NUM_operator_result_type(void) {
-	  if (get_datatype_info_c::is_ANY_REAL_literal(this->default_variable_name.current_type)) {
-		if (get_datatype_info_c::is_ANY_INT_literal(this->current_operand_type) ||
-			get_datatype_info_c::is_ANY_REAL_literal(this->current_operand_type))
-		  this->default_variable_name.current_type = &(this->lreal_type);
-		else
-		  this->default_variable_name.current_type = this->current_operand_type;
-	  }
-	  else if (get_datatype_info_c::is_ANY_INT_literal(this->default_variable_name.current_type)) {
-		if (get_datatype_info_c::is_ANY_INT_literal(this->current_operand_type))
-		  this->default_variable_name.current_type = &(this->lint_type);
-		else if (get_datatype_info_c::is_ANY_REAL_literal(this->current_operand_type))
-		  this->default_variable_name.current_type = &(this->lreal_type);
-		else
-		  this->default_variable_name.current_type = this->current_operand_type;
-	  }
-	  else if (get_datatype_info_c::is_ANY_INT_literal(this->current_operand_type) ||
-			   get_datatype_info_c::is_ANY_REAL_literal(this->current_operand_type))
-		this->current_operand_type = this->default_variable_name.current_type;
-	}
 
     void *print_getter(symbol_c *symbol) {
       unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
       if (vartype == search_var_instance_decl_c::external_vt)
-    	s4o.print(GET_EXTERNAL);
+        s4o.print(GET_EXTERNAL);
       else if (vartype == search_var_instance_decl_c::located_vt)
-    	s4o.print(GET_LOCATED);
+        s4o.print(GET_LOCATED);
       else
-    	s4o.print(GET_VAR);
+        s4o.print(GET_VAR);
       s4o.print("(");
 
       wanted_variablegeneration = complextype_base_vg;
       symbol->accept(*this);
       if (search_var_instance_decl->type_is_complex(symbol))
-    	s4o.print(",");
+        s4o.print(",");
       wanted_variablegeneration = complextype_suffix_vg;
       symbol->accept(*this);
       s4o.print(")");
@@ -470,37 +419,27 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     /* | label ':' [il_incomplete_instruction] eol_list */
     // SYM_REF2(il_instruction_c, label, il_instruction)
     void *visit(il_instruction_c *symbol) {
-      if (NULL != symbol->il_instruction) {
-        symbol->il_instruction->accept(*this);
-      }
+      /* all previous IL instructions should have the same datatype (checked in stage3), so we get the datatype from the first previous IL instruction we find */
+      implicit_variable_current.datatype = (symbol->prev_il_instruction.empty())? NULL : symbol->prev_il_instruction[0]->datatype;
+      if (NULL != symbol->il_instruction)  symbol->il_instruction->accept(*this); 
+      implicit_variable_current.datatype = NULL;
       return NULL;
     }
+
 
     /* | il_simple_operator [il_operand] */
     //SYM_REF2(il_simple_operation_c, il_simple_operator, il_operand)
     void *visit(il_simple_operation_c *symbol) {
-      this->current_operand = symbol->il_operand;
-      if (NULL == this->current_operand) {
-        this->current_operand_type = NULL;
-      } else {
-        this->current_operand_type = this->current_operand->datatype;
-        if (NULL == this->current_operand_type) ERROR;
-      }
-
       symbol->il_simple_operator->accept(*this);
-
-      this->current_operand = NULL;
-      this->current_operand_type = NULL;
       return NULL;
     }
+
 
     void *visit(il_function_call_c *symbol) {
       symbol_c* function_type_prefix = NULL;
       symbol_c* function_name = NULL;     
       symbol_c* function_type_suffix = NULL;
       DECLARE_PARAM_LIST()
-
-      symbol_c *param_data_type = default_variable_name.current_type;
 
       function_call_param_iterator_c function_call_param_iterator(symbol);
 
@@ -575,7 +514,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
          * use the default variable as a source of data to pass to those parameters!
          */
         if ((param_value == NULL) && (!used_defvar) && !fp_iterator.is_en_eno_param_implicit()) {
-          param_value = &this->default_variable_name;
+	  if (NULL == implicit_variable_current.datatype) ERROR;
+          param_value = &this->implicit_variable_current;
           used_defvar = true;
         }
 
@@ -626,21 +566,19 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
         generate_inline(function_name, function_type_prefix, function_type_suffix, param_list, f_decl);
 
       CLEAR_PARAM_LIST()
-
-      /* the data type resulting from this operation... */
-      default_variable_name.current_type = function_type_prefix;
       return NULL;
     }
+
+
 
     /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
     //SYM_REF4(il_expression_c, il_expr_operator, il_operand, simple_instr_list, unused)
     void *visit(il_expression_c *symbol) {
-      /* We will be recursevely interpreting an instruction list,
-       * so we store a backup of the data type of the value currently stored
-       * in the default variable, and set the current data type to NULL
+      /* We will be recursevely interpreting an instruction list, so we store a backup of the implicit_variable_result/current.
+       * Notice that they will be overwriten while processing the parenthsized instruction list.
        */
-      symbol_c *old_current_default_variable_data_type = this->default_variable_name.current_type;
-      this->default_variable_name.current_type = NULL;
+      // il_default_variable_c old_implicit_variable_current = this->implicit_variable_current;      // no longer needed!
+      
 
      /* Pass the symbol->il_operand to the simple_instr_list visitor
       * using the il_default_variable_init_value parameter...
@@ -653,29 +591,16 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       this->il_default_variable_init_value = symbol->il_operand;
 
       /* Now do the parenthesised instructions... */
-      /* NOTE: the following code line will get the variable
-       * this->default_variable_name.current_type updated!
-       */
+      /* NOTE: the following code line will get the variable this->implicit_variable_current.datatype updated!  */
       symbol->simple_instr_list->accept(*this);
 
       /* Now do the operation, using the previous result! */
-      /* NOTE: The result of the previous instruction list will be stored
-       * in a variable named IL_DEFVAR_BACK. This is done in the visitor
-       * to instruction_list_c objects...
-       */
-      this->current_operand = &(this->default_variable_back_name);
-      this->current_operand_type = this->default_variable_back_name.current_type;
-
-      this->default_variable_name.current_type = old_current_default_variable_data_type;
-      if (NULL == this->current_operand_type) ERROR;
-
-      symbol->il_expr_operator->accept(*this);
-
-      this->current_operand = NULL;
-      this->current_operand_type = NULL;
-      this->default_variable_back_name.current_type = NULL;
+      /* NOTE: Actually, we do not need to call this, as it can never be a function call, which is what we are handling here... */
+      // this->implicit_variable_current.datatype = old_current_default_variable_data_type;
+      // symbol->il_expr_operator->accept(*this);
       return NULL;
     }
+
 
     /* | function_name '(' eol_list [il_param_list] ')' */
     // SYM_REF2(il_formal_funct_call_c, function_name, il_param_list)
@@ -807,159 +732,30 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
         generate_inline(function_name, function_type_prefix, function_type_suffix, param_list, f_decl);
 
       CLEAR_PARAM_LIST()
-
-      /* the data type resulting from this operation... */
-      default_variable_name.current_type = function_type_prefix;
       return NULL;
     }
+
+
 
     /* | simple_instr_list il_simple_instruction */
     // SYM_LIST(simple_instr_list_c)
     void *visit(simple_instr_list_c *symbol) {
       /* Check whether we should initiliase the il default variable... */
-      if (NULL != this->il_default_variable_init_value) {
-        /* Yes, we must... */
-        /* We will do it by instatiating a LD operator, and having this
-         * same generate_c_il_c class visiting it!
-         */
-        LD_operator_c ld_oper;
-        il_simple_operation_c il_simple_oper(&ld_oper, this->il_default_variable_init_value);
-
-        il_simple_oper.accept(*this);
-      }
-
-      /* this parameter no longer required... */
-      this->il_default_variable_init_value = NULL;
+      // TODO: fix the way we handle this... It is currently not working!!
+//      if (NULL != this->il_default_variable_init_value)   implicit_variable_current = il_default_variable_init_value;
+      this->il_default_variable_init_value = NULL;       // this parameter no longer required...
 
       iterator_visitor_c::visit(symbol);
-
-      /* copy the result in the default variable to the variable
-	   * used to pass the data out to the scope enclosing
-	   * the current scope!
-	   *
-	   * We also need to update the data type currently stored within
-	   * the variable used to pass the data to the outside scope...
-	   */
-	  this->default_variable_back_name.current_type = this->default_variable_name.current_type;
-	  return NULL;
+      return NULL;
     }
-    
+
+
     // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
     void *visit(il_simple_instruction_c *symbol)	{
       return symbol->il_simple_instruction->accept(*this);
     }
 
-    void *visit(LD_operator_c *symbol)	{
-      /* the data type resulting from this operation... */
-      this->default_variable_name.current_type = this->current_operand_type;
-      return NULL;
-    }
 
-    void *visit(LDN_operator_c *symbol)	{
-      /* the data type resulting from this operation... */
-      this->default_variable_name.current_type = this->current_operand_type;
-      return NULL;
-    }
-
-    void *visit(AND_operator_c *symbol)	{
-      if (get_datatype_info_c::is_ANY_BIT_compatible(this->default_variable_name.current_type)) {
-    	BYTE_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(OR_operator_c *symbol)	{
-      if (get_datatype_info_c::is_ANY_BIT_compatible(this->default_variable_name.current_type)) {
-    	BYTE_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(XOR_operator_c *symbol)	{
-      if (get_datatype_info_c::is_ANY_BIT_compatible(this->default_variable_name.current_type)) {
-    	BYTE_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(ANDN_operator_c *symbol)	{
-      if (get_datatype_info_c::is_ANY_BIT_compatible(this->default_variable_name.current_type)) {
-    	BYTE_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(ORN_operator_c *symbol)	{
-      if (get_datatype_info_c::is_ANY_BIT_compatible(this->default_variable_name.current_type)) {
-    	BYTE_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(XORN_operator_c *symbol)	{
-      if (get_datatype_info_c::is_ANY_BIT_compatible(this->default_variable_name.current_type)) {
-    	BYTE_operator_result_type();
-      }
-      else {ERROR;}
-      return NULL;
-    }
-
-    void *visit(ADD_operator_c *symbol)	{
-      if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype) ||
-          get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype)) {
-        /* the data type resulting from this operation... */
-        this->default_variable_name.current_type = this->current_operand_type;
-      } else {
-        NUM_operator_result_type();
-      }
-      return NULL;
-    }
-
-    void *visit(SUB_operator_c *symbol)	{
-      if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype) ||
-          get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype)) {
-        /* the data type resulting from this operation... */
-        this->default_variable_name.current_type = this->current_operand_type;
-      } else {
-        NUM_operator_result_type();
-      }
-      return NULL;
-    }
-
-    void *visit(MUL_operator_c *symbol)	{
-      if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype)) {
-        /* the data type resulting from this operation is unchanged! */
-      } else {
-        NUM_operator_result_type();
-      }
-      return NULL;
-    }
-
-    void *visit(DIV_operator_c *symbol)	{
-      if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype)) {
-        /* the data type resulting from this operation is unchanged! */
-      } else {
-        NUM_operator_result_type();
-      }
-      return NULL;
-    }
-
-    void *visit(MOD_operator_c *symbol)	{
-      NUM_operator_result_type();
-      return NULL;
-    }
-
-    void *visit(GT_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
-    void *visit(GE_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
-    void *visit(EQ_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
-    void *visit(LT_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
-    void *visit(LE_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
-    void *visit(NE_operator_c *symbol)	{CMP_operator_result_type(); return NULL;}
 
     /***************************************/
     /* B.3 - Language ST (Structured Text) */
