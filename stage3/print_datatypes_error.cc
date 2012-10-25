@@ -103,17 +103,13 @@ int print_datatypes_error_c::get_error_count() {
 
 
 
-/* Verify if the datatypes of all prev_il_instructions are valid and equal!  */
-static bool are_all_datatypes_of_prev_il_instructions_datatypes_equal(il_instruction_c *symbol) {
-	if (NULL == symbol) ERROR;
-	bool res;
-	
-	if (symbol->prev_il_instruction.size() > 0)
-		res = get_datatype_info_c::is_type_valid(symbol->prev_il_instruction[0]->datatype);
+/* Verify if the datatypes of all symbols in the vector are valid and equal!  */
+static bool are_all_datatypes_equal(std::vector <symbol_c *> &symbol_vect) {
+	if (symbol_vect.size() <= 0) return false;
 
-	for (unsigned int i = 1; i < symbol->prev_il_instruction.size(); i++)
-		res &= get_datatype_info_c::is_type_equal(symbol->prev_il_instruction[i-1]->datatype, symbol->prev_il_instruction[i]->datatype);
-	
+	bool res = get_datatype_info_c::is_type_valid(symbol_vect[0]->datatype);
+	for (unsigned int i = 1; i < symbol_vect.size(); i++)
+		res &= get_datatype_info_c::is_type_equal(symbol_vect[i-1]->datatype, symbol_vect[i]->datatype);	
 	return res;
 }
 
@@ -318,7 +314,7 @@ void *print_datatypes_error_c::handle_implicit_il_fb_invocation(const char *para
 		STAGE3_ERROR(0, il_operator, il_operand, "FB called by '%s' operator does not have a parameter named '%s'", param_name, param_name);	
 		return NULL;
 	}
-	if (!are_all_datatypes_of_prev_il_instructions_datatypes_equal(fake_prev_il_instruction)) {
+	if (!are_all_datatypes_equal(fake_prev_il_instruction->prev_il_instruction)) {
 		STAGE3_ERROR(0, il_operator, il_operand, "Data type incompatibility between parameter '%s' and value being passed.", param_name);
 		return NULL;
 	}
@@ -762,7 +758,7 @@ void *print_datatypes_error_c::visit(il_instruction_c *symbol) {
 		 */
 		tmp_prev_il_instruction.prev_il_instruction = symbol->prev_il_instruction;
 		intersect_prev_candidate_datatype_lists(&tmp_prev_il_instruction);
-		if (are_all_datatypes_of_prev_il_instructions_datatypes_equal(symbol))
+		if (are_all_datatypes_equal(symbol->prev_il_instruction))
 			if (symbol->prev_il_instruction.size() > 0)
 				tmp_prev_il_instruction.datatype = (symbol->prev_il_instruction[0])->datatype;
 		
@@ -835,6 +831,8 @@ void *print_datatypes_error_c::visit(il_function_call_c *symbol) {
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
 // SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list);
 void *print_datatypes_error_c::visit(il_expression_c *symbol) {
+  /* Stage2 will insert an artificial (and equivalent) LD <il_operand> to the simple_instr_list if necessary. We can therefore ignore the 'il_operand' entry! */
+  
   /* first give the parenthesised IL list a chance to print errors */
   il_instruction_c *save_fake_prev_il_instruction = fake_prev_il_instruction;
   symbol->simple_instr_list->accept(*this);
@@ -902,6 +900,7 @@ void *print_datatypes_error_c::visit(il_simple_instruction_c *symbol)	{
   if (symbol->prev_il_instruction.size() > 1) ERROR; /* There should be no labeled insructions inside an IL expression! */
     
   il_instruction_c tmp_prev_il_instruction(NULL, NULL);
+#if 0
   /* the print error algorithm will need access to the intersected candidate_datatype lists of all prev_il_instructions, as well as the 
    * list of the prev_il_instructions.
    * Instead of creating two 'global' (within the class) variables, we create a single il_instruction_c variable (fake_prev_il_instruction),
@@ -910,6 +909,19 @@ void *print_datatypes_error_c::visit(il_simple_instruction_c *symbol)	{
   if (symbol->prev_il_instruction.size() > 0)
     tmp_prev_il_instruction.candidate_datatypes = symbol->prev_il_instruction[0]->candidate_datatypes;
   tmp_prev_il_instruction.prev_il_instruction = symbol->prev_il_instruction;
+#endif
+  
+  /* the print error algorithm will need access to the intersected candidate_datatype lists of all prev_il_instructions, as well as the 
+   * list of the prev_il_instructions.
+   * Instead of creating two 'global' (within the class) variables, we create a single il_instruction_c variable (fake_prev_il_instruction),
+   * and shove that data into this single variable.
+   */
+  tmp_prev_il_instruction.prev_il_instruction = symbol->prev_il_instruction;
+  intersect_prev_candidate_datatype_lists(&tmp_prev_il_instruction);
+  if (are_all_datatypes_equal(symbol->prev_il_instruction))
+    if (symbol->prev_il_instruction.size() > 0)
+      tmp_prev_il_instruction.datatype = (symbol->prev_il_instruction[0])->datatype;
+  
   
    /* copy the candidate_datatypes list */
   fake_prev_il_instruction = &tmp_prev_il_instruction;
