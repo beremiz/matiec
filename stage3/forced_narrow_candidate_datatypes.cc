@@ -140,11 +140,15 @@ void *forced_narrow_candidate_datatypes_c::visit(instruction_list_c *symbol) {
   }
 
   /* Assert that this algorithm managed to remove all NULL datatypes! */
+  /* NOTE: The forced_narrow_candidate_datatypes_c assumes that the original IEC 61131-3 source code does not have any bugs!
+   *       This means we cannot run this assertion here, as the compiler will bork in the presence of bug in the code being compiled! Not good!!
+   */
+  /*
   for(int i = symbol->n-1; i >= 0; i--) {
     if (NULL == symbol->elements[i]->datatype)
       ERROR;
   }
-
+  */
   return NULL;
 }
 
