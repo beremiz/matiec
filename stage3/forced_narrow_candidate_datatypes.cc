@@ -149,9 +149,6 @@ void *forced_narrow_candidate_datatypes_c::visit(instruction_list_c *symbol) {
       ERROR;
   }
   */
-printf("\n\n result of forced_narrow...\n");
-print_ast_c::print(symbol);
-// for(int i = 0; i < symbol->n; i++)  print_symbol_c::print(symbol->elements[i]);
   
   return NULL;
 }
