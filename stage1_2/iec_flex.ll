@@ -728,9 +728,9 @@ fixed_point		{integer}\.{integer}
  */
 
 interval_ms_X		({integer_0_999}(\.{integer})?)ms
-interval_s_X		{integer_0_59}s(_?{interval_ms_X})?
-interval_m_X		{integer_0_59}m(_?{interval_s_X})?
-interval_h_X		{integer_0_23}h(_?{interval_m_X})?
+interval_s_X		{integer_0_59}s(_?{interval_ms_X})?|({integer_0_59}(\.{integer})?s)
+interval_m_X		{integer_0_59}m(_?{interval_s_X})?|({integer_0_59}(\.{integer})?m)
+interval_h_X		{integer_0_23}h(_?{interval_m_X})?|({integer_0_23}(\.{integer})?h)
 
 interval_ms		{integer}ms|({fixed_point}ms)
 interval_s		{integer}s(_?{interval_ms_X})?|({fixed_point}s)
@@ -739,6 +739,7 @@ interval_h		{integer}h(_?{interval_m_X})?|({fixed_point}h)
 interval_d		{integer}d(_?{interval_h_X})?|({fixed_point}d)
 
 interval		{interval_ms}|{interval_s}|{interval_m}|{interval_h}|{interval_d}
+
 
 /* to help provide nice error messages, we also parse an incorrect but plausible interval... */
 /* NOTE that this erroneous interval will be parsed outside the time_literal_state, so must not 
