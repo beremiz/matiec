@@ -120,6 +120,32 @@ forced_narrow_candidate_datatypes_c::~forced_narrow_candidate_datatypes_c(void) 
 
 
 
+void forced_narrow_candidate_datatypes_c::forced_narrow_il_instruction(symbol_c *symbol, std::vector <symbol_c *> &next_il_instruction) {
+  if (NULL == symbol->datatype) {
+    if (symbol->candidate_datatypes.empty()) {
+      symbol->datatype = &(search_constant_type_c::invalid_type_name); // This will occur in the situations (a) in the above example
+      // return NULL; // No need to return control to the visit() method of the base class... But we do so, just to be safe (called at the end of this function)!
+    } else {
+      if (next_il_instruction.empty()) {
+        symbol->datatype = symbol->candidate_datatypes[0]; // This will occur in the situations (b) in the above example
+      } else {
+        symbol_c *next_datatype = NULL;
+
+        /* find the datatype of the following IL instructions (they should all be identical by now, but we don't have an assertion checking for this. */
+        for (unsigned int i=0; i < next_il_instruction.size(); i++)
+          if (NULL != next_il_instruction[i]->datatype)
+            next_datatype = next_il_instruction[i]->datatype;
+        if (get_datatype_info_c::is_type_valid(next_datatype)) {
+          //  This will occur in the situations (c) in the above example
+          symbol->datatype = symbol->candidate_datatypes[0]; 
+        } else {
+          //  This will occur in the situations (d) in the above example
+          // it is not possible to determine the exact situation in the current pass, so we can't do anything just yet. Leave it for the next time around!
+        }
+      }
+    }
+  }
+}
 
 
 
@@ -159,35 +185,10 @@ void *forced_narrow_candidate_datatypes_c::visit(instruction_list_c *symbol) {
 // SYM_REF2(il_instruction_c, label, il_instruction)
 // void *visit(instruction_list_c *symbol);
 void *forced_narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
-  if (NULL == symbol->datatype) {
-    if (symbol->candidate_datatypes.empty()) {
-      symbol->datatype = &(search_constant_type_c::invalid_type_name); // This will occur in the situations (a) in the above example
-      // return NULL; // No need to return control to the visit() method of the base class... But we do so, just to be safe (called at the end of this function)!
-    } else {
-      if (symbol->next_il_instruction.empty()) {
-        symbol->datatype = symbol->candidate_datatypes[0]; // This will occur in the situations (b) in the above example
-      } else {
-        symbol_c *next_datatype = NULL;
-
-        /* find the datatype of the following IL instructions (they should all be identical by now, but we don't have an assertion checking for this. */
-        for (unsigned int i=0; i < symbol->next_il_instruction.size(); i++)
-          if (NULL != symbol->next_il_instruction[i]->datatype)
-            next_datatype = symbol->next_il_instruction[i]->datatype;
-        if (get_datatype_info_c::is_type_valid(next_datatype)) {
-          //  This will occur in the situations (c) in the above example
-          symbol->datatype = symbol->candidate_datatypes[0]; 
-        } else {
-          //  This will occur in the situations (d) in the above example
-          // it is not possible to determine the exact situation in the current pass, so we can't do anything just yet. Leave it for the next time around!
-        }
-      }
-    }
-  }
+  forced_narrow_il_instruction(symbol, symbol->next_il_instruction);
   
   /* return control to the visit() method of the base class! */
-  narrow_candidate_datatypes_c::visit(symbol);  //  This handle the situations (e) in the above example
-  
-  return NULL;
+  return narrow_candidate_datatypes_c::visit(symbol);  //  This handles the situations (e) in the above example
 }
 
 
@@ -230,7 +231,13 @@ void *forced_narrow_candidate_datatypes_c::visit(il_instruction_c *symbol) {
 // void *forced_narrow_candidate_datatypes_c::visit(simple_instr_list_c *symbol)
 
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
-// void *forced_narrow_candidate_datatypes_c::visit(il_simple_instruction_c*symbol)
+void *forced_narrow_candidate_datatypes_c::visit(il_simple_instruction_c*symbol) {
+  forced_narrow_il_instruction(symbol, symbol->next_il_instruction);
+  
+  /* return control to the visit() method of the base class! */
+  return narrow_candidate_datatypes_c::visit(symbol);  //  This handle the situations (e) in the above example
+}
+
 
 /*
     void *visit(il_param_list_c *symbol);

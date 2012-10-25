@@ -46,13 +46,12 @@
 class forced_narrow_candidate_datatypes_c: public narrow_candidate_datatypes_c {
 
   private:
-
-  private:
-
+    void forced_narrow_il_instruction(symbol_c *symbol, std::vector <symbol_c *> &next_il_instruction);
+    
   public:
     forced_narrow_candidate_datatypes_c(symbol_c *ignore);
     virtual ~forced_narrow_candidate_datatypes_c(void);
-    
+   
     /****************************************/
     /* B.2 - Language IL (Instruction List) */
     /****************************************/
@@ -69,7 +68,7 @@ class forced_narrow_candidate_datatypes_c: public narrow_candidate_datatypes_c {
 //  void *visit(il_formal_funct_call_c *symbol);
 //  void *visit(il_operand_list_c *symbol);
 //  void *visit(simple_instr_list_c *symbol);
-//  void *visit(il_simple_instruction_c*symbol);
+    void *visit(il_simple_instruction_c*symbol);
 //  void *visit(il_param_list_c *symbol);
 //  void *visit(il_param_assignment_c *symbol);
 //  void *visit(il_param_out_assignment_c *symbol);
