@@ -132,12 +132,18 @@ flow_control_analysis_c::~flow_control_analysis_c(void) {
 
 
 void flow_control_analysis_c::link_insert(symbol_c *prev_instruction, symbol_c *next_instruction) {
-	il_instruction_c *next = dynamic_cast<il_instruction_c *>(next_instruction);
-	il_instruction_c *prev = dynamic_cast<il_instruction_c *>(prev_instruction);
-	if ((NULL == next) || (NULL == prev)) ERROR;
-
-	next->prev_il_instruction.insert(next->prev_il_instruction.begin(), prev);
-	prev->next_il_instruction.insert(prev->next_il_instruction.begin(), next);
+	il_instruction_c        *next_a = dynamic_cast<il_instruction_c        *>(next_instruction);
+	il_instruction_c        *prev_a = dynamic_cast<il_instruction_c        *>(prev_instruction);
+	il_simple_instruction_c *next_b = dynamic_cast<il_simple_instruction_c *>(next_instruction);
+	il_simple_instruction_c *prev_b = dynamic_cast<il_simple_instruction_c *>(prev_instruction);
+	
+	if       (NULL != next_a)  next_a->prev_il_instruction.insert(next_a->prev_il_instruction.begin(), prev_instruction);
+	else if  (NULL != next_b)  next_b->prev_il_instruction.insert(next_b->prev_il_instruction.begin(), prev_instruction);
+	else ERROR;
+	
+	if       (NULL != prev_a)  prev_a->next_il_instruction.insert(prev_a->next_il_instruction.begin(), next_instruction);
+	else if  (NULL != prev_b)  prev_b->next_il_instruction.insert(prev_b->next_il_instruction.begin(), next_instruction);
+	else ERROR;
 }
 
 

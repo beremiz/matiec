@@ -911,6 +911,7 @@ SYM_LIST(instruction_list_c)
 /* NOTE: The parameters 'prev_il_instruction'/'next_il_instruction' are used to point to all previous/next il instructions that may be executed imedaitely before/after this instruction.
  *       In case of an il instruction preceded by a label, the previous_il_instruction will include all IL instructions that jump to this label!
  *       It is filled in by the flow_control_analysis_c during stage 3.
+ *       This will essentially be a doubly linked list of il_instruction_c and il_simple_instruction_c objects!!
  */
 SYM_REF2(il_instruction_c, label, il_instruction, std::vector <symbol_c *> prev_il_instruction, next_il_instruction;)
 
@@ -960,8 +961,12 @@ SYM_LIST(simple_instr_list_c)
  * | il_expression eol_list
  * | il_formal_funct_call eol_list
  */
-/* NOTE: The parameter 'prev_il_instruction' is used to point to all previous il instructions that may be executed imedaitely before this instruction. */
-SYM_REF1(il_simple_instruction_c, il_simple_instruction, std::vector <symbol_c *> prev_il_instruction;)
+/* NOTE: The parameters 'prev_il_instruction'/'next_il_instruction' are used to point to all previous/next il instructions that may be executed imedaitely before/after this instruction.
+ *       In case of an il instruction preceded by a label, the previous_il_instruction will include all IL instructions that jump to this label!
+ *       It is filled in by the flow_control_analysis_c during stage 3.
+ *       This will essentially be a doubly linked list of il_instruction_c and il_simple_instruction_c objects!!
+ */
+SYM_REF1(il_simple_instruction_c, il_simple_instruction, std::vector <symbol_c *> prev_il_instruction, next_il_instruction;)
 
 /* | il_initial_param_list il_param_instruction */
 SYM_LIST(il_param_list_c)
