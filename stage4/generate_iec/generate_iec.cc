@@ -1661,6 +1661,14 @@ void *visit(il_function_call_c *symbol) {
 
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
 void *visit(il_expression_c *symbol) {
+  /* Since stage2 will insert an artificial (and equivalent) LD <il_operand> to the simple_instr_list when an 'il_operand' exists, we know
+   * that if (symbol->il_operand != NULL), then the first IL instruction in the simple_instr_list will be the equivalent and artificial
+   * 'LD <il_operand>' IL instruction.
+   * Since we do not want the extra LD instruction, we simply remove it!
+   */
+  if (symbol->il_operand != NULL)
+    ((list_c *)symbol->simple_instr_list)->remove_element(0);
+
   symbol->il_expr_operator->accept(*this);
   s4o.print("(");
   if (symbol->il_operand != NULL)

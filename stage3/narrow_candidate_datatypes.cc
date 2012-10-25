@@ -719,6 +719,16 @@ void *narrow_candidate_datatypes_c::visit(il_expression_c *symbol) {
   il_instruction_c *save_fake_prev_il_instruction = fake_prev_il_instruction; /*this is not really necessary, but lets play it safe */
   symbol->simple_instr_list->accept(*this);
   fake_prev_il_instruction = save_fake_prev_il_instruction;
+  
+  /* Since stage2 will insert an artificial (and equivalent) LD <il_operand> to the simple_instr_list when an 'il_operand' exists, we know
+   * that if (symbol->il_operand != NULL), then the first IL instruction in the simple_instr_list will be the equivalent and artificial
+   * 'LD <il_operand>' IL instruction.
+   * Just to be consistent, we will copy the datatype info back into the il_operand, even though this should not be necessary!
+   */
+  if ((NULL != symbol->il_operand) && ((NULL == symbol->simple_instr_list) || (0 == ((list_c *)symbol->simple_instr_list)->n))) ERROR; // stage2 is not behaving as we expect it to!
+  if  (NULL != symbol->il_operand)
+    symbol->il_operand->datatype = ((list_c *)symbol->simple_instr_list)->elements[0]->datatype;
+  
   return NULL;
 }
 

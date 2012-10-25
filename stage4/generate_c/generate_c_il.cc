@@ -965,54 +965,12 @@ void *visit(il_expression_c *symbol) {
   il_default_variable_c old_implicit_variable_current = this->implicit_variable_current;
   il_default_variable_c old_implicit_variable_result  = this->implicit_variable_result;
 
-  /* If the symbol->il_operand is not NULL, then we instantiate a 'LD' operation and insert it into the simple_instr_list
-   * (i.e. add an equivalent LD operation to the Abstract Syntax Tree), and let it be handled like any other LD operation!
-   */
-  if (NULL != symbol->il_operand) {
-    tmp_LD_operator = new LD_operator_c();
-    if (NULL == tmp_LD_operator)  ERROR;
-    /* copy all the location, datatpe, etc.. data from symbol->il_operand to the new object! */
-    *((symbol_c *)tmp_LD_operator) = *(symbol->il_operand);
-    
-    tmp_il_simple_operation = new il_simple_operation_c(tmp_LD_operator, symbol->il_operand);
-    if (NULL == tmp_il_simple_operation)  ERROR;
-    /* copy all the location, datatpe, etc.. data from symbol->il_operand to the new object! */
-    *((symbol_c *)tmp_il_simple_operation) = *(symbol->il_operand);
-    
-    tmp_il_simple_instruction = new il_simple_instruction_c(tmp_il_simple_operation);
-    if (NULL == tmp_il_simple_instruction)  ERROR;
-    /* copy all the location, datatpe, etc.. data from symbol->il_operand to the new object! */
-    *((symbol_c *)tmp_il_simple_instruction) = *(symbol->il_operand);
-
-    if (NULL == symbol->simple_instr_list)  {
-      symbol->simple_instr_list = new simple_instr_list_c();
-      if (NULL == symbol->simple_instr_list)  ERROR;
-      /* copy all the location, datatpe, etc.. data from symbol->il_operand to the new object! */
-      *((symbol_c *)symbol->simple_instr_list) = *(symbol->il_operand);
-    }
-    list_c *tmp_list = dynamic_cast <list_c *>(symbol->simple_instr_list);
-    if (NULL == tmp_list)  ERROR;
-    tmp_list->insert_element(tmp_il_simple_instruction, 0);
-  }
+  /* Stage2 will insert an artificial (and equivalent) LD <il_operand> to the simple_instr_list if necessary. We can therefore ignore the 'il_operand' entry! */
+  //if (NULL != symbol->il_operand) { do nothing!! }
 
   /* Now do the parenthesised instructions... */
   /* NOTE: the following code line will overwrite the variables implicit_variable_current and implicit_variable_result */
   symbol->simple_instr_list->accept(*this);
-
-  /* delete/undo any changes made to the AST above */
-  if (NULL != symbol->il_operand) {
-    delete tmp_LD_operator;
-    delete tmp_il_simple_operation;
-    delete tmp_il_simple_instruction;
-    list_c *tmp_list = dynamic_cast <list_c *>(symbol->simple_instr_list);
-    if (NULL == tmp_list)  ERROR;
-    delete tmp_list->elements[0];
-    tmp_list->remove_element(0);
-    if (0 == tmp_list->n) {
-      delete symbol->simple_instr_list;
-      symbol->simple_instr_list = NULL;
-    }
-  }
   
   /* Now do the operation, using the previous result! */
   /* NOTE: The result of the previous instruction list in the parenthesis will be stored
@@ -1428,8 +1386,8 @@ void *visit(simple_instr_list_c *symbol) {
    *
    * NOTE 2:
    *  If the intial value of the il implicit variable (in the above
-   * example 'var2') exists, then the il_expression_c will insert an equivalent
-   * LD operation into the parenthesized instruction list- This means we do not
+   * example 'var2') exists, then stage2 will insert an equivalent
+   * LD operation into the parenthesized instruction list. This means we do not
    * need to do anything here to handle this special situation!
    */
 

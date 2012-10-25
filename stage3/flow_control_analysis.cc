@@ -265,7 +265,9 @@ void *flow_control_analysis_c::visit(il_expression_c *symbol) {
 		return NULL;
   
 	symbol_c *save_prev_il_instruction = prev_il_instruction;
-	prev_il_instruction = symbol->il_operand;
+	/* Stage2 will insert an artificial (and equivalent) LD <il_operand> to the simple_instr_list if necessary. We can therefore ignore the 'il_operand' entry! */
+	// prev_il_instruction = symbol->il_operand;
+	prev_il_instruction = NULL;
 	symbol->simple_instr_list->accept(*this);
 	prev_il_instruction = save_prev_il_instruction;
 	return NULL;

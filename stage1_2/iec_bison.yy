@@ -6366,6 +6366,26 @@ il_simple_operation:
 
 il_expression:
 // il_expr_operator '(' [il_operand] EOL {EOL} [simple_instr_list] ')'
+/* IMPORTANT NOTE:
+ *  When the <il_operand> exists, and to make it easier to handle the <il_operand> as a general case (i.e. without C++ code handling this as a special case), 
+ *  we will create an equivalent LD <il_operand> IL instruction, and prepend it into the <simple_instr_list>. 
+ *  The remainder of the compiler may from now on assume that the code being compiled does not contain any IL code like
+ *     LD 1
+ *     ADD ( 2
+ *        SUB 3
+ *        )
+ *
+ * but instead, the equivalent code
+ *     LD 1
+ *     ADD ( 
+ *        LD  2
+ *        SUB 3
+ *        )
+ *
+ * Note, however, that in the first case, we still store in the il_expression_c a pointer to the <il_operand> (the literal '2' in the above example), in case
+ * somewhere further on in the compiler we really want to handle it as a special case. To handle it as a special case, it should be easy to simply delete the first
+ * artificial entry in <simple_instr_list> with il_expression->simple_instr_list->remove_element(0)  !!
+ */
 /*
  * Note: Bison is getting confused with the use of il_expr_operator,
  *       i.e. it is finding conflicts where there seemingly are really none.
@@ -6375,17 +6395,29 @@ il_expression:
   il_expr_operator_noclash '(' eol_list ')'
 	{$$ = new il_expression_c($1, NULL, NULL, locloc(@$));}
 | il_expr_operator_noclash '(' il_operand eol_list ')'
-	{$$ = new il_expression_c($1, $3, NULL, locloc(@$));}
+	{ simple_instr_list_c *tmp_simple_instr_list = new simple_instr_list_c(locloc(@3));
+	  tmp_simple_instr_list ->insert_element(new il_simple_instruction_c(new il_simple_operation_c(new LD_operator_c(locloc(@3)), $3, locloc(@3)), locloc(@3)), 0);
+	  $$ = new il_expression_c($1, $3, tmp_simple_instr_list, locloc(@$));
+	}
 | il_expr_operator_noclash '(' eol_list simple_instr_list ')'
 	{$$ = new il_expression_c($1, NULL, $4, locloc(@$));}
 | il_expr_operator_noclash '(' il_operand eol_list simple_instr_list ')'
-	{$$ = new il_expression_c($1, $3, $5, locloc(@$));}
+	{ simple_instr_list_c *tmp_simple_instr_list = dynamic_cast <simple_instr_list_c *> $5;
+	  tmp_simple_instr_list ->insert_element(new il_simple_instruction_c(new il_simple_operation_c(new LD_operator_c(locloc(@3)), $3, locloc(@3)), locloc(@3)), 0);
+	  $$ = new il_expression_c($1, $3, $5, locloc(@$));
+	}
 | il_expr_operator_clash '(' eol_list ')'
 	{$$ = new il_expression_c($1, NULL, NULL, locloc(@$));}
 | il_expr_operator_clash '(' il_operand eol_list ')'
-	{$$ = new il_expression_c($1, $3, NULL, locloc(@$));}
+	{ simple_instr_list_c *tmp_simple_instr_list = new simple_instr_list_c(locloc(@3));
+	  tmp_simple_instr_list ->insert_element(new il_simple_instruction_c(new il_simple_operation_c(new LD_operator_c(locloc(@3)), $3, locloc(@3)), locloc(@3)), 0);
+	  $$ = new il_expression_c($1, $3, tmp_simple_instr_list, locloc(@$));
+	}
 | il_expr_operator_clash '(' il_operand eol_list simple_instr_list ')'
-	{$$ = new il_expression_c($1, $3, $5, locloc(@$));}
+	{ simple_instr_list_c *tmp_simple_instr_list = dynamic_cast <simple_instr_list_c *> $5;
+	  tmp_simple_instr_list ->insert_element(new il_simple_instruction_c(new il_simple_operation_c(new LD_operator_c(locloc(@3)), $3, locloc(@3)), locloc(@3)), 0);
+	  $$ = new il_expression_c($1, $3, $5, locloc(@$));
+	}
 | il_expr_operator_clash_eol_list simple_instr_list ')'
 	{$$ = new il_expression_c($1, NULL, $2, locloc(@$));}
 /* ERROR_CHECK_BEGIN */

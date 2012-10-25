@@ -37,30 +37,6 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     } variablegeneration_t;
 
   private:
-
-    /* The initial value that should be given to the IL default variable
-	 * imediately after a parenthesis is opened.
-	 * This variable is only used to pass data from the
-	 * il_expression_c visitor to the simple_instr_list_c visitor.
-	 *
-	 * e.g.:
-	 *         LD var1
-	 *         AND ( var2
-	 *         OR var3
-	 *         )
-	 *
-	 * In the above code sample, the line 'AND ( var2' constitutes
-	 * an il_expression_c, where var2 should be loaded into the
-	 * il default variable before continuing with the expression
-	 * inside the parenthesis.
-	 * Unfortunately, only the simple_instr_list_c may do the
-	 * initial laoding of the var2 bariable following the parenthesis,
-	 * so the il_expression_c visitor will have to pass 'var2' as a
-	 * parameter to the simple_instr_list_c visitor.
-	 * Ergo, the existance of the following parameter...!
-	 */
-	symbol_c *il_default_variable_init_value;
-
 	 /* The result of the comparison IL operations (GT, EQ, LT, ...)
 	 * is a boolean variable.
 	 * This class keeps track of the current data type stored in the
@@ -109,7 +85,6 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       search_var_instance_decl   = new search_var_instance_decl_c  (scope);
       
       this->set_variable_prefix(variable_prefix);
-      il_default_variable_init_value = NULL;
       fcall_number = 0;
       fbname = name;
       wanted_variablegeneration = expression_vg;
@@ -577,18 +552,10 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       /* We will be recursevely interpreting an instruction list, so we store a backup of the implicit_variable_result/current.
        * Notice that they will be overwriten while processing the parenthsized instruction list.
        */
-      // il_default_variable_c old_implicit_variable_current = this->implicit_variable_current;      // no longer needed!
+      // il_default_variable_c old_implicit_variable_current = this->implicit_variable_current;      // no longer needed as we do not call symbol->il_expr_operator->accept(*this);
       
-
-     /* Pass the symbol->il_operand to the simple_instr_list visitor
-      * using the il_default_variable_init_value parameter...
-      * Note that the simple_instr_list_c visitor will set this parameter
-      * to NULL as soon as it does not require it any longer,
-      * so we don't do it here again after the
-      *   symbol->simple_instr_list->accept(*this);
-      * returns...
-      */
-      this->il_default_variable_init_value = symbol->il_operand;
+      /* Stage2 will insert an artificial (and equivalent) LD <il_operand> to the simple_instr_list if necessary. We can therefore ignore the 'il_operand' entry! */
+      //if (NULL != symbol->il_operand) { do nothing!! }
 
       /* Now do the parenthesised instructions... */
       /* NOTE: the following code line will get the variable this->implicit_variable_current.datatype updated!  */
@@ -739,20 +706,16 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
     /* | simple_instr_list il_simple_instruction */
     // SYM_LIST(simple_instr_list_c)
-    void *visit(simple_instr_list_c *symbol) {
-      /* Check whether we should initiliase the il default variable... */
-      // TODO: fix the way we handle this... It is currently not working!!
-//      if (NULL != this->il_default_variable_init_value)   implicit_variable_current = il_default_variable_init_value;
-      this->il_default_variable_init_value = NULL;       // this parameter no longer required...
-
-      iterator_visitor_c::visit(symbol);
-      return NULL;
-    }
+    void *visit(simple_instr_list_c *symbol) {return iterator_visitor_c::visit(symbol);}
 
 
     // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
     void *visit(il_simple_instruction_c *symbol)	{
-      return symbol->il_simple_instruction->accept(*this);
+      /* all previous IL instructions should have the same datatype (checked in stage3), so we get the datatype from the first previous IL instruction we find */
+      implicit_variable_current.datatype = (symbol->prev_il_instruction.empty())? NULL : symbol->prev_il_instruction[0]->datatype;
+      symbol->il_simple_instruction->accept(*this);
+      implicit_variable_current.datatype = NULL;
+      return NULL;      
     }
 
 

@@ -928,6 +928,12 @@ SYM_REF2(il_function_call_c, function_name, il_operand_list, symbol_c *called_fu
 
 
 /* | il_expr_operator '(' [il_operand] eol_list [simple_instr_list] ')' */
+/* WARNING
+ *   The semantics of the il_expression_c.il_operand member is NOT what you may expect!
+ *   In order to simplify processing of the IL code, stage2 will prepend an artifical (and equivalent) 'LD <il_operand>' IL instruction into the simple_instr_list
+ *   The il_expression_c.il_operand is maintained, in case we really need to handle it as a special case!
+ *   See the comments in iec_bison.yy for details and an example.
+ */
 SYM_REF3(il_expression_c, il_expr_operator, il_operand, simple_instr_list)
 
 /*  il_jump_operator label */

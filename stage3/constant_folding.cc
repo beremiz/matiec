@@ -982,8 +982,9 @@ void *constant_folding_c::visit(il_simple_operation_c *symbol) {
 void *constant_folding_c::visit(il_expression_c *symbol) {
   symbol_c *prev_il_instruction_backup = prev_il_instruction;
   
-  if (NULL != symbol->il_operand)
-    symbol->il_operand->accept(*this);
+  /* Stage2 will insert an artificial (and equivalent) LD <il_operand> to the simple_instr_list if necessary. We can therefore ignore the 'il_operand' entry! */
+  // if (NULL != symbol->il_operand)
+  //   symbol->il_operand->accept(*this);
 
   if(symbol->simple_instr_list != NULL)
     symbol->simple_instr_list->accept(*this);
@@ -996,6 +997,16 @@ void *constant_folding_c::visit(il_expression_c *symbol) {
   
   /* This object has (inherits) the same cvalues as the il_instruction */
   symbol->const_value = symbol->il_expr_operator->const_value;
+  
+  /* Since stage2 will insert an artificial (and equivalent) LD <il_operand> to the simple_instr_list when an 'il_operand' exists, we know
+   * that if (symbol->il_operand != NULL), then the first IL instruction in the simple_instr_list will be the equivalent and artificial
+   * 'LD <il_operand>' IL instruction.
+   * Just to be cosistent, we will copy the constant info back into the il_operand, even though this should not be necessary!
+   */
+  if ((NULL != symbol->il_operand) && ((NULL == symbol->simple_instr_list) || (0 == ((list_c *)symbol->simple_instr_list)->n))) ERROR; // stage2 is not behaving as we expect it to!
+  if  (NULL != symbol->il_operand)
+    symbol->il_operand->const_value = ((list_c *)symbol->simple_instr_list)->elements[0]->const_value;
+
   return NULL;
 }
 
