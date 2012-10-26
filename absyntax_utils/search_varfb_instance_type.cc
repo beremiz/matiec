@@ -383,10 +383,11 @@ void *search_varfb_instance_type_c::visit(initial_step_c *symbol) {
   identifier_c T("T");
   identifier_c X("X");
   
+  /* Hard code the datatypes of the implicit variables Stepname.X and Stepname.T */
   if (compare_identifiers(&T, current_field_selector) == 0)   
-    current_type_id = &search_constant_type_c::time_type_name;
+    current_type_id = &get_datatype_info_c::time_type_name;
   if (compare_identifiers(&X, current_field_selector) == 0)   
-    current_type_id = &search_constant_type_c::bool_type_name;
+    current_type_id = &get_datatype_info_c::bool_type_name;
   
   current_basetype_decl = search_base_type.get_basetype_decl(current_type_id);
   current_basetype_id   = search_base_type.get_basetype_id  (current_type_id);

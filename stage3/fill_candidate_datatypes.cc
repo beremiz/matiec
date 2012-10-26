@@ -122,8 +122,8 @@ void fill_candidate_datatypes_c::remove_incompatible_datatypes(symbol_c *symbol)
     #error __REMOVE__ macro already exists. Choose another name!
   #endif
   #define __REMOVE__(datatype)\
-      remove_from_candidate_datatype_list(&search_constant_type_c::datatype,       symbol->candidate_datatypes);\
-      remove_from_candidate_datatype_list(&search_constant_type_c::safe##datatype, symbol->candidate_datatypes);
+      remove_from_candidate_datatype_list(&get_datatype_info_c::datatype,       symbol->candidate_datatypes);\
+      remove_from_candidate_datatype_list(&get_datatype_info_c::safe##datatype, symbol->candidate_datatypes);
   
   {/* Remove unsigned data types */
     uint64_t value = 0;
@@ -426,7 +426,7 @@ void *fill_candidate_datatypes_c::handle_equality_comparison(const struct widen_
 	for(unsigned int i = 0; i < l_expr->candidate_datatypes.size(); i++)
 		for(unsigned int j = 0; j < r_expr->candidate_datatypes.size(); j++) {
 			if ((l_expr->candidate_datatypes[i] == r_expr->candidate_datatypes[j]) && search_base_type.type_is_enumerated(l_expr->candidate_datatypes[i]))
-				add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
+				add_datatype_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name);
 		}
 	return NULL;
 }
@@ -451,19 +451,19 @@ symbol_c *fill_candidate_datatypes_c::base_type(symbol_c *symbol) {
 #define sizeoftype(symbol) get_sizeof_datatype_c::getsize(symbol)
 
 void *fill_candidate_datatypes_c::handle_any_integer(symbol_c *symbol) {
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name,  &search_constant_type_c::safebool_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::byte_type_name,  &search_constant_type_c::safebyte_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::word_type_name,  &search_constant_type_c::safeword_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::dword_type_name, &search_constant_type_c::safedword_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lword_type_name, &search_constant_type_c::safelword_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::sint_type_name,  &search_constant_type_c::safesint_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::int_type_name,   &search_constant_type_c::safeint_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::dint_type_name,  &search_constant_type_c::safedint_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lint_type_name,  &search_constant_type_c::safelint_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::usint_type_name, &search_constant_type_c::safeusint_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::uint_type_name,  &search_constant_type_c::safeuint_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::udint_type_name, &search_constant_type_c::safeudint_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::ulint_type_name, &search_constant_type_c::safeulint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name,  &get_datatype_info_c::safebool_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::byte_type_name,  &get_datatype_info_c::safebyte_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::word_type_name,  &get_datatype_info_c::safeword_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::dword_type_name, &get_datatype_info_c::safedword_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::lword_type_name, &get_datatype_info_c::safelword_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::sint_type_name,  &get_datatype_info_c::safesint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::int_type_name,   &get_datatype_info_c::safeint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::dint_type_name,  &get_datatype_info_c::safedint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::lint_type_name,  &get_datatype_info_c::safelint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::usint_type_name, &get_datatype_info_c::safeusint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::uint_type_name,  &get_datatype_info_c::safeuint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::udint_type_name, &get_datatype_info_c::safeudint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::ulint_type_name, &get_datatype_info_c::safeulint_type_name);
 	remove_incompatible_datatypes(symbol);
 	if (debug) std::cout << "ANY_INT [" << symbol->candidate_datatypes.size()<< "]" << std::endl;
 	return NULL;
@@ -472,8 +472,8 @@ void *fill_candidate_datatypes_c::handle_any_integer(symbol_c *symbol) {
 
 
 void *fill_candidate_datatypes_c::handle_any_real(symbol_c *symbol) {
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::real_type_name,  &search_constant_type_c::safereal_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lreal_type_name, &search_constant_type_c::safelreal_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::real_type_name,  &get_datatype_info_c::safereal_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::lreal_type_name, &get_datatype_info_c::safelreal_type_name);
 	remove_incompatible_datatypes(symbol);
 	if (debug) std::cout << "ANY_REAL [" << symbol->candidate_datatypes.size() << "]" << std::endl;
 	return NULL;
@@ -499,10 +499,10 @@ void *fill_candidate_datatypes_c::visit(neg_real_c *symbol) {return handle_any_r
 
 void *fill_candidate_datatypes_c::visit(neg_integer_c *symbol) {
 	/* Please read the comment in neg_expression_c method, as it also applies here */
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::int_type_name, &search_constant_type_c::safeint_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::sint_type_name, &search_constant_type_c::safesint_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::dint_type_name, &search_constant_type_c::safedint_type_name);
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::lint_type_name, &search_constant_type_c::safelint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::int_type_name, &get_datatype_info_c::safeint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::sint_type_name, &get_datatype_info_c::safesint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::dint_type_name, &get_datatype_info_c::safedint_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::lint_type_name, &get_datatype_info_c::safelint_type_name);
 	remove_incompatible_datatypes(symbol);
 	if (debug) std::cout << "neg ANY_INT [" << symbol->candidate_datatypes.size() << "]" << std::endl;
 	return NULL;
@@ -539,12 +539,12 @@ void *fill_candidate_datatypes_c::visit(   boolean_literal_c *symbol) {
 
 
 void *fill_candidate_datatypes_c::visit(boolean_true_c *symbol) {
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name, &get_datatype_info_c::safebool_type_name);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(boolean_false_c *symbol) {
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::bool_type_name, &search_constant_type_c::safebool_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name, &get_datatype_info_c::safebool_type_name);
 	return NULL;
 }
 
@@ -552,12 +552,12 @@ void *fill_candidate_datatypes_c::visit(boolean_false_c *symbol) {
 /* B.1.2.2   Character Strings */
 /*******************************/
 void *fill_candidate_datatypes_c::visit(double_byte_character_string_c *symbol) {
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::wstring_type_name, &search_constant_type_c::safewstring_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::wstring_type_name, &get_datatype_info_c::safewstring_type_name);
 	return NULL;
 }
 
 void *fill_candidate_datatypes_c::visit(single_byte_character_string_c *symbol) {
-	add_2datatypes_to_candidate_list(symbol, &search_constant_type_c::string_type_name, &search_constant_type_c::safestring_type_name);
+	add_2datatypes_to_candidate_list(symbol, &get_datatype_info_c::string_type_name, &get_datatype_info_c::safestring_type_name);
 	return NULL;
 }
 
@@ -671,13 +671,13 @@ void *fill_candidate_datatypes_c::visit(direct_variable_c *symbol) {
 	 * if (symbol->value[1] == '\0') ERROR;
 	 */
 	switch (symbol->value[2]) {
-		case 'x': case 'X': /* bit   -  1 bit  */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);  break;
-		case 'b': case 'B': /* byte  -  8 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);  break;
-		case 'w': case 'W': /* word  - 16 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);  break;
-		case 'd': case 'D': /* dword - 32 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name); break;
-		case 'l': case 'L': /* lword - 64 bits */ add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name); break;
+		case 'x': case 'X': /* bit   -  1 bit  */ add_datatype_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name);  break;
+		case 'b': case 'B': /* byte  -  8 bits */ add_datatype_to_candidate_list(symbol, &get_datatype_info_c::byte_type_name);  break;
+		case 'w': case 'W': /* word  - 16 bits */ add_datatype_to_candidate_list(symbol, &get_datatype_info_c::word_type_name);  break;
+		case 'd': case 'D': /* dword - 32 bits */ add_datatype_to_candidate_list(symbol, &get_datatype_info_c::dword_type_name); break;
+		case 'l': case 'L': /* lword - 64 bits */ add_datatype_to_candidate_list(symbol, &get_datatype_info_c::lword_type_name); break;
         	          /* if none of the above, then the empty string was used <=> boolean */
-		default:                        add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);  break;
+		default:                        add_datatype_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name);  break;
 	}
 	return NULL;
 }
@@ -776,44 +776,44 @@ void *fill_candidate_datatypes_c::visit(location_c *symbol) {
 	for (unsigned int i = 0; i < symbol->direct_variable->candidate_datatypes.size(); i++) {
         	switch (get_sizeof_datatype_c::getsize(symbol->direct_variable->candidate_datatypes[i])) {
 			case  1: /* bit   -  1 bit  */
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::bool_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safebool_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safebool_type_name);
 					break;
 			case  8: /* byte  -  8 bits */
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::byte_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safebyte_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::sint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safesint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::usint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeusint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::byte_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safebyte_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::sint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safesint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::usint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safeusint_type_name);
 					break;
 			case 16: /* word  - 16 bits */
-	 				add_datatype_to_candidate_list(symbol, &search_constant_type_c::word_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeword_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::int_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::uint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeuint_type_name);
+	 				add_datatype_to_candidate_list(symbol, &get_datatype_info_c::word_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safeword_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::int_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safeint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::uint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safeuint_type_name);
 					break;
 			case 32: /* dword - 32 bits */
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::dword_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safedword_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::dint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safedint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::udint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeudint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::real_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safereal_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::dword_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safedword_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::dint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safedint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::udint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safeudint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::real_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safereal_type_name);
 					break;
 			case 64: /* lword - 64 bits */
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::lword_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safelword_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::lint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safelint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::ulint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safeulint_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::lreal_type_name);
-					add_datatype_to_candidate_list(symbol, &search_constant_type_c::safelreal_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::lword_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safelword_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::lint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safelint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::ulint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safeulint_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::lreal_type_name);
+					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safelreal_type_name);
 					break;
 			default: /* if none of the above, then no valid datatype allowed... */
 					break;

@@ -232,10 +232,10 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     /* a small helper function */
     symbol_c *default_literal_type(symbol_c *symbol) {
       if (get_datatype_info_c::is_ANY_INT_literal(symbol)) {
-        return &search_constant_type_c::lint_type_name;
+        return &get_datatype_info_c::lint_type_name;
       }
       else if (get_datatype_info_c::is_ANY_REAL_literal(symbol)) {
-        return &search_constant_type_c::lreal_type_name;
+        return &get_datatype_info_c::lreal_type_name;
       }
       return symbol;
     }

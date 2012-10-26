@@ -55,7 +55,7 @@ class get_datatype_info_c {
      get_datatype_info_c(void) {};
     ~get_datatype_info_c(void) {};
 
- 
+  
   public:
     static bool is_type_equal(symbol_c *first_type, symbol_c *second_type);
     static bool is_type_valid(symbol_c *type);
@@ -71,7 +71,6 @@ class get_datatype_info_c {
     static bool is_array                           (symbol_c *type_symbol);
     static bool is_structure                       (symbol_c *type_symbol);
 
-  
   
     static bool is_ANY_ELEMENTARY                  (symbol_c *type_symbol);
     static bool is_ANY_SAFEELEMENTARY              (symbol_c *type_symbol);
@@ -133,5 +132,80 @@ class get_datatype_info_c {
     static bool is_ANY_SAFESTRING                  (symbol_c *type_symbol);
     static bool is_ANY_STRING_compatible           (symbol_c *type_symbol);
 
+    
+    
+    
+  public:
+    /* object used to identify an entry in the abstract syntax tree with an invalid data type */
+    /* This is only used from stage3 onwards. Stages 1 and 2 will never create any instances of invalid_type_name_c */
+    static invalid_type_name_c     invalid_type_name;
+
+    /**********************/
+    /* B.1.3 - Data types */
+    /**********************/
+    /***********************************/
+    /* B 1.3.1 - Elementary Data Types */
+    /***********************************/
+    static real_type_name_c         lreal_type_name;
+    static real_type_name_c         real_type_name;
+    
+    static lint_type_name_c         lint_type_name;
+    static dint_type_name_c         dint_type_name;
+    static int_type_name_c          int_type_name;
+    static sint_type_name_c         sint_type_name;
+    
+    static ulint_type_name_c        ulint_type_name;
+    static udint_type_name_c        udint_type_name;
+    static uint_type_name_c         uint_type_name;
+    static usint_type_name_c        usint_type_name;
+
+    static lword_type_name_c        lword_type_name;
+    static dword_type_name_c        dword_type_name;
+    static word_type_name_c         word_type_name;
+    static byte_type_name_c         byte_type_name;
+    static bool_type_name_c         bool_type_name;
+    
+    static wstring_type_name_c      wstring_type_name;
+    static string_type_name_c       string_type_name;
+    
+    static dt_type_name_c           dt_type_name;
+    static date_type_name_c         date_type_name;
+    static tod_type_name_c          tod_type_name;
+    static time_type_name_c         time_type_name;
+
+
+    /******************************************************/
+    /* Extensions to the base standard as defined in      */
+    /* "Safety Software Technical Specification,          */
+    /*  Part 1: Concepts and Function Blocks,             */
+    /*  Version 1.0 – Official Release"                   */
+    /* by PLCopen - Technical Committee 5 - 2006-01-31    */
+    /******************************************************/  
+    static safereal_type_name_c     safelreal_type_name;
+    static safereal_type_name_c     safereal_type_name;
+    
+    static safelint_type_name_c     safelint_type_name;
+    static safedint_type_name_c     safedint_type_name;
+    static safeint_type_name_c      safeint_type_name;
+    static safesint_type_name_c     safesint_type_name;
+           
+    static safeulint_type_name_c    safeulint_type_name;
+    static safeudint_type_name_c    safeudint_type_name;
+    static safeuint_type_name_c     safeuint_type_name;
+    static safeusint_type_name_c    safeusint_type_name;
+           
+    static safelword_type_name_c    safelword_type_name;
+    static safedword_type_name_c    safedword_type_name;
+    static safeword_type_name_c     safeword_type_name;
+    static safebyte_type_name_c     safebyte_type_name;
+    static safebool_type_name_c     safebool_type_name;
+    
+    static safewstring_type_name_c  safewstring_type_name;
+    static safestring_type_name_c   safestring_type_name;
+    
+    static safedt_type_name_c       safedt_type_name;
+    static safedate_type_name_c     safedate_type_name;
+    static safetod_type_name_c      safetod_type_name;
+    static safetime_type_name_c     safetime_type_name;               
 };
 

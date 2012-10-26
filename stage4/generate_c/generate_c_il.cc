@@ -256,10 +256,10 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     /* a small helper function */
     symbol_c *default_literal_type(symbol_c *symbol) {
       if (get_datatype_info_c::is_ANY_INT_literal(symbol)) {
-        return &search_constant_type_c::lint_type_name;
+        return &get_datatype_info_c::lint_type_name;
       }
       else if (get_datatype_info_c::is_ANY_REAL_literal(symbol)) {
-        return &search_constant_type_c::lreal_type_name;
+        return &get_datatype_info_c::lreal_type_name;
       }
       return symbol;
     }
@@ -908,9 +908,9 @@ void *visit(il_function_call_c *symbol) {
         if (param_value == NULL) ERROR;
         s4o.print("(");
         if (get_datatype_info_c::is_ANY_INT_literal(current_param_type))
-          search_constant_type_c::lint_type_name.accept(*this);
+          get_datatype_info_c::lint_type_name.accept(*this);
         else if (get_datatype_info_c::is_ANY_REAL_literal(current_param_type))
-          search_constant_type_c::lreal_type_name.accept(*this);
+          get_datatype_info_c::lreal_type_name.accept(*this);
         else
           current_param_type->accept(*this);
         s4o.print(")");
@@ -1296,10 +1296,10 @@ void *visit(il_formal_funct_call_c *symbol) {
         }
         if (param_value == NULL) ERROR;
         s4o.print("(");
-        if (get_datatype_info_c::is_ANY_INT_literal(current_param_type))
-          search_constant_type_c::lint_type_name.accept(*this);
+        if      (get_datatype_info_c::is_ANY_INT_literal(current_param_type))
+                 get_datatype_info_c::lint_type_name.accept(*this);
         else if (get_datatype_info_c::is_ANY_REAL_literal(current_param_type))
-          search_constant_type_c::lreal_type_name.accept(*this);
+                 get_datatype_info_c::lreal_type_name.accept(*this);
         else
           current_param_type->accept(*this);
         s4o.print(")");

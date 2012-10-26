@@ -89,7 +89,7 @@ static void set_datatype(symbol_c *datatype, symbol_c *symbol) {
 	if ((NULL == datatype) && (NULL == symbol->datatype)) return;
 	
 	if (search_in_candidate_datatype_list(datatype, symbol->candidate_datatypes) < 0)
-		symbol->datatype = &(search_constant_type_c::invalid_type_name);   
+		symbol->datatype = &(get_datatype_info_c::invalid_type_name);   
 	else {
 		if (NULL == symbol->datatype)   
 			/* not yet set to anything, so we set it to the requested data type */
@@ -97,7 +97,7 @@ static void set_datatype(symbol_c *datatype, symbol_c *symbol) {
 		else {
 			/* had already been set previously to some data type. Let's check if they are the same! */
 			if (!get_datatype_info_c::is_type_equal(symbol->datatype, datatype))
-				symbol->datatype = &(search_constant_type_c::invalid_type_name);
+				symbol->datatype = &(get_datatype_info_c::invalid_type_name);
 // 			else 
 				/* we leave it unchanged, as it is the same as the requested data type! */
 		}
@@ -401,7 +401,7 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 	if ((NULL == il_instruction->datatype) || (get_datatype_info_c::is_type_equal(param_value.datatype, il_instruction->datatype))) {
 		set_datatype_in_prev_il_instructions(param_value.datatype, fake_prev_il_instruction);
 	} else {
-		set_datatype_in_prev_il_instructions(&search_constant_type_c::invalid_type_name, fake_prev_il_instruction);
+		set_datatype_in_prev_il_instructions(&get_datatype_info_c::invalid_type_name, fake_prev_il_instruction);
 	}
 	return NULL;
 }

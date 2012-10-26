@@ -123,7 +123,7 @@ forced_narrow_candidate_datatypes_c::~forced_narrow_candidate_datatypes_c(void) 
 void forced_narrow_candidate_datatypes_c::forced_narrow_il_instruction(symbol_c *symbol, std::vector <symbol_c *> &next_il_instruction) {
   if (NULL == symbol->datatype) {
     if (symbol->candidate_datatypes.empty()) {
-      symbol->datatype = &(search_constant_type_c::invalid_type_name); // This will occur in the situations (a) in the above example
+      symbol->datatype = &(get_datatype_info_c::invalid_type_name); // This will occur in the situations (a) in the above example
       // return NULL; // No need to return control to the visit() method of the base class... But we do so, just to be safe (called at the end of this function)!
     } else {
       if (next_il_instruction.empty()) {

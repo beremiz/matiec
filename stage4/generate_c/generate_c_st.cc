@@ -759,9 +759,9 @@ void *visit(function_invocation_c *symbol) {
         if (param_value == NULL) ERROR;
         s4o.print("(");
         if      (get_datatype_info_c::is_ANY_INT_literal(current_param_type))
-          search_constant_type_c::lint_type_name.accept(*this);
+          get_datatype_info_c::lint_type_name.accept(*this);
         else if (get_datatype_info_c::is_ANY_REAL_literal(current_param_type))
-          search_constant_type_c::lreal_type_name.accept(*this);
+          get_datatype_info_c::lreal_type_name.accept(*this);
         else
           current_param_type->accept(*this);
         s4o.print(")");
@@ -1037,9 +1037,9 @@ void *visit(case_statement_c *symbol) {
   s4o.indent_right();
   s4o.print(s4o.indent_spaces);
   if      (get_datatype_info_c::is_ANY_INT_literal(expression_type))
-        search_constant_type_c::lint_type_name.accept(*this);
+           get_datatype_info_c::lint_type_name.accept(*this);
   else if (get_datatype_info_c::is_ANY_REAL_literal(expression_type))
-        search_constant_type_c::lreal_type_name.accept(*this);
+           get_datatype_info_c::lreal_type_name.accept(*this);
   else
     expression_type->accept(*this);
   s4o.print(" __case_expression = ");

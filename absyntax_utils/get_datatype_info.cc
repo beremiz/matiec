@@ -673,3 +673,86 @@ bool get_datatype_info_c::is_ANY_INT_literal(symbol_c *type_symbol) {
   return false;
 }
 
+
+
+
+
+
+
+
+
+
+invalid_type_name_c      get_datatype_info_c::invalid_type_name;
+
+/**********************/
+/* B.1.3 - Data types */
+/**********************/
+/***********************************/
+/* B 1.3.1 - Elementary Data Types */
+/***********************************/
+real_type_name_c         get_datatype_info_c::lreal_type_name;
+real_type_name_c         get_datatype_info_c::real_type_name;
+
+lint_type_name_c         get_datatype_info_c::lint_type_name;
+dint_type_name_c         get_datatype_info_c::dint_type_name;
+int_type_name_c          get_datatype_info_c::int_type_name;
+sint_type_name_c         get_datatype_info_c::sint_type_name;
+
+ulint_type_name_c        get_datatype_info_c::ulint_type_name;
+udint_type_name_c        get_datatype_info_c::udint_type_name;
+uint_type_name_c         get_datatype_info_c::uint_type_name;
+usint_type_name_c        get_datatype_info_c::usint_type_name;
+
+lword_type_name_c        get_datatype_info_c::lword_type_name;
+dword_type_name_c        get_datatype_info_c::dword_type_name;
+word_type_name_c         get_datatype_info_c::word_type_name;
+byte_type_name_c         get_datatype_info_c::byte_type_name;
+bool_type_name_c         get_datatype_info_c::bool_type_name;
+
+wstring_type_name_c      get_datatype_info_c::wstring_type_name;
+string_type_name_c       get_datatype_info_c::string_type_name;
+
+dt_type_name_c           get_datatype_info_c::dt_type_name;
+date_type_name_c         get_datatype_info_c::date_type_name;
+tod_type_name_c          get_datatype_info_c::tod_type_name;
+time_type_name_c         get_datatype_info_c::time_type_name;
+
+
+/******************************************************/
+/* Extensions to the base standard as defined in      */
+/* "Safety Software Technical Specification,          */
+/*  Part 1: Concepts and Function Blocks,             */
+/*  Version 1.0 – Official Release"                   */
+/* by PLCopen - Technical Committee 5 - 2006-01-31    */
+/******************************************************/  
+safereal_type_name_c     get_datatype_info_c::safelreal_type_name;
+safereal_type_name_c     get_datatype_info_c::safereal_type_name;
+
+safelint_type_name_c     get_datatype_info_c::safelint_type_name;
+safedint_type_name_c     get_datatype_info_c::safedint_type_name;
+safeint_type_name_c      get_datatype_info_c::safeint_type_name;
+safesint_type_name_c     get_datatype_info_c::safesint_type_name;
+
+safeulint_type_name_c    get_datatype_info_c::safeulint_type_name;
+safeudint_type_name_c    get_datatype_info_c::safeudint_type_name;
+safeuint_type_name_c     get_datatype_info_c::safeuint_type_name;
+safeusint_type_name_c    get_datatype_info_c::safeusint_type_name;
+
+safelword_type_name_c    get_datatype_info_c::safelword_type_name;
+safedword_type_name_c    get_datatype_info_c::safedword_type_name;
+safeword_type_name_c     get_datatype_info_c::safeword_type_name;
+safebyte_type_name_c     get_datatype_info_c::safebyte_type_name;
+safebool_type_name_c     get_datatype_info_c::safebool_type_name;
+
+safewstring_type_name_c  get_datatype_info_c::safewstring_type_name;
+safestring_type_name_c   get_datatype_info_c::safestring_type_name;
+
+safedt_type_name_c       get_datatype_info_c::safedt_type_name;
+safedate_type_name_c     get_datatype_info_c::safedate_type_name;
+safetod_type_name_c      get_datatype_info_c::safetod_type_name;
+safetime_type_name_c     get_datatype_info_c::safetime_type_name;
+
+
+
+
+
