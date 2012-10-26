@@ -32,7 +32,6 @@ class generate_c_typedecl_c: public generate_c_base_c {
     symbol_c* current_type_name;
     bool array_is_derived;
     search_base_type_c search_base_type;
-    search_constant_type_c search_constant_type;
 
     generate_c_base_c *basedecl;
 

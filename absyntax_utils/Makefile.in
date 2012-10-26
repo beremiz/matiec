@@ -86,7 +86,6 @@ am_libabsyntax_utils_a_OBJECTS = absyntax_utils.$(OBJEXT) \
 	function_param_iterator.$(OBJEXT) \
 	get_sizeof_datatype.$(OBJEXT) get_var_name.$(OBJEXT) \
 	search_il_label.$(OBJEXT) search_base_type.$(OBJEXT) \
-	search_constant_type.$(OBJEXT) \
 	search_fb_instance_decl.$(OBJEXT) search_fb_typedecl.$(OBJEXT) \
 	search_varfb_instance_type.$(OBJEXT) \
 	search_var_instance_decl.$(OBJEXT) \
@@ -224,7 +223,6 @@ libabsyntax_utils_a_SOURCES = \
 	get_var_name.cc \
 	search_il_label.cc \
 	search_base_type.cc \
-	search_constant_type.cc \
 	search_fb_instance_decl.cc \
 	search_fb_typedecl.cc \
 	search_varfb_instance_type.cc \
@@ -328,7 +326,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/get_sizeof_datatype.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/get_var_name.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search_base_type.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search_constant_type.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search_fb_instance_decl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search_fb_typedecl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/search_il_label.Po@am__quote@
