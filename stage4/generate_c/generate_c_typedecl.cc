@@ -316,14 +316,11 @@ void *visit(enumerated_value_list_c *symbol) {
 
 /* enumerated_type_name '#' identifier */
 void *visit(enumerated_value_c *symbol) {
-  symbol_c *value_type;
   if (current_typedefinition == enumerated_td)
     current_type_name->accept(*basedecl);
   else {
-    value_type = (symbol_c *)symbol->accept(search_constant_type);
-    if (value_type == NULL) ERROR;
-
-    value_type->accept(*basedecl);
+    if (NULL == symbol->datatype) ERROR;
+    symbol->datatype->accept(*basedecl);
   }
   s4o_incl.print("__");
   symbol->value->accept(*basedecl);
