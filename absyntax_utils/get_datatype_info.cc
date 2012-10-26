@@ -61,30 +61,21 @@ static search_base_type_c search_base_type;
 
 
 bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_type) {
-  if ((NULL == first_type) || (NULL == second_type))
-      return false;
-  if (typeid(* first_type) == typeid(invalid_type_name_c))
-      return false;
-  if (typeid(*second_type) == typeid(invalid_type_name_c))
-      return false;
+  if ((NULL == first_type) || (NULL == second_type))                 {return false;}
+  if (typeid(* first_type) == typeid(invalid_type_name_c))           {return false;}
+  if (typeid(*second_type) == typeid(invalid_type_name_c))           {return false;}
     
-  if (get_datatype_info_c::is_ANY_ELEMENTARY(first_type)) {
-      if (typeid(*first_type) == typeid(*second_type))
-          return true;
-  } else   /* ANY_DERIVED */
-      return (first_type == second_type);
-
-  return false;
+  if ((get_datatype_info_c::is_ANY_ELEMENTARY(first_type)) &&
+      (typeid(*first_type) == typeid(*second_type)))                 {return true;}
+  /* ANY_DERIVED */
+  return (first_type == second_type);
 }
 
 
 
 bool get_datatype_info_c::is_type_valid(symbol_c *type) {
-  if (NULL == type)
-      return false;
-  if (typeid(*type) == typeid(invalid_type_name_c))
-      return false;
-
+  if (NULL == type)                                                  {return false;}
+  if (typeid(*type) == typeid(invalid_type_name_c))                  {return false;}
   return true;
 }
 
