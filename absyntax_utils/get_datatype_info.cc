@@ -681,7 +681,7 @@ invalid_type_name_c      get_datatype_info_c::invalid_type_name;
 /***********************************/
 /* B 1.3.1 - Elementary Data Types */
 /***********************************/
-real_type_name_c         get_datatype_info_c::lreal_type_name;
+lreal_type_name_c        get_datatype_info_c::lreal_type_name;
 real_type_name_c         get_datatype_info_c::real_type_name;
 
 lint_type_name_c         get_datatype_info_c::lint_type_name;
@@ -716,7 +716,7 @@ time_type_name_c         get_datatype_info_c::time_type_name;
 /*  Version 1.0 – Official Release"                   */
 /* by PLCopen - Technical Committee 5 - 2006-01-31    */
 /******************************************************/  
-safereal_type_name_c     get_datatype_info_c::safelreal_type_name;
+safelreal_type_name_c    get_datatype_info_c::safelreal_type_name;
 safereal_type_name_c     get_datatype_info_c::safereal_type_name;
 
 safelint_type_name_c     get_datatype_info_c::safelint_type_name;

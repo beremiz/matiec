@@ -146,7 +146,7 @@ class get_datatype_info_c {
     /***********************************/
     /* B 1.3.1 - Elementary Data Types */
     /***********************************/
-    static real_type_name_c         lreal_type_name;
+    static lreal_type_name_c        lreal_type_name;
     static real_type_name_c         real_type_name;
     
     static lint_type_name_c         lint_type_name;
@@ -181,7 +181,7 @@ class get_datatype_info_c {
     /*  Version 1.0 – Official Release"                   */
     /* by PLCopen - Technical Committee 5 - 2006-01-31    */
     /******************************************************/  
-    static safereal_type_name_c     safelreal_type_name;
+    static safelreal_type_name_c    safelreal_type_name;
     static safereal_type_name_c     safereal_type_name;
     
     static safelint_type_name_c     safelint_type_name;
