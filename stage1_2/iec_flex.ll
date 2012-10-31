@@ -855,8 +855,9 @@ incompl_location	%[IQM]\*
 		 return pragma_token;
 		}
 <body_state>{pragma} {/* return the pragmma without the enclosing '{' and '}' */
-		 yytext[strlen(yytext)-1] = '\0';
-		 yylval.ID=strdup(yytext+1);
+		 int cut = yytext[1]=='{'?2:1;
+         yytext[strlen(yytext)-cut] = '\0';
+		 yylval.ID=strdup(yytext+cut);
 		 return pragma_token;
 		}
 
