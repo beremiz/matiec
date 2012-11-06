@@ -612,7 +612,8 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             if (strcmp(qualifier, "SD") == 0 || strcmp(qualifier, "DS") == 0 || 
                 strcmp(qualifier, "SL") == 0) {
               if (strcmp(qualifier, "SL") == 0) {
-                print_action_argument(current_action, "reset_remaining_time");
+            	s4o.print(s4o.indent_spaces);
+            	print_action_argument(current_action, "reset_remaining_time");
               }
               else {
                 print_action_argument(current_action, "set_remaining_time");
