@@ -203,21 +203,22 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             current_step = symbol->step_name;
             s4o.print(s4o.indent_spaces + "{\n");
             s4o.indent_right();
-            s4o.print(s4o.indent_spaces + "char activated = ");
+            s4o.print(s4o.indent_spaces + "char activated, desactivated, active;\n");
+            s4o.print(s4o.indent_spaces + "activated = ");
             s4o.print(GET_VAR);
             s4o.print("(");
             print_step_argument(current_step, "state");
             s4o.print(") && !");
             print_step_argument(current_step, "prev_state");
             s4o.print(";\n");
-            s4o.print(s4o.indent_spaces + "char desactivated = !");
+            s4o.print(s4o.indent_spaces + "desactivated = !");
             s4o.print(GET_VAR);
             s4o.print("(");
             print_step_argument(current_step, "state");
             s4o.print(") && ");
             print_step_argument(current_step, "prev_state");
             s4o.print(";\n");
-            s4o.print(s4o.indent_spaces + "char active = ");
+            s4o.print(s4o.indent_spaces + "active = ");
             s4o.print(GET_VAR);
             s4o.print("(");
             print_step_argument(current_step, "state");
@@ -576,9 +577,10 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
                 current_action->accept(*this);
                 s4o.print(",1);\n");
                 s4o.indent_left();
-                s4o.print("}\n");
+                s4o.print(s4o.indent_spaces + "}\n");
                 s4o.print(s4o.indent_spaces + "else if (active) {\n");
                 s4o.indent_right();
+                s4o.print(s4o.indent_spaces);
                 if (vartype == search_var_instance_decl_c::external_vt)
                   s4o.print(SET_EXTERNAL);
                 else if (vartype == search_var_instance_decl_c::located_vt)
@@ -699,7 +701,6 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
       }
       
       s4o.print(s4o.indent_spaces +"INT i;\n");
-      s4o.print(s4o.indent_spaces +"BOOL transition;\n");
       s4o.print(s4o.indent_spaces +"TIME elapsed_time, current_time;\n\n");
       
       /* generate elapsed_time initializations */
