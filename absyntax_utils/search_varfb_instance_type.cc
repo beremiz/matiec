@@ -136,8 +136,8 @@ void *search_varfb_instance_type_c::visit(identifier_c *variable_name) {
   /* symbol should be a variable name!! */
   /* Note: although the method is called get_decl(), it is getting the declaration of the variable, which for us is the type_id of that variable! */
   current_type_id       = search_var_instance_decl.get_decl (variable_name);
-  current_basetype_decl = search_base_type.get_basetype_decl(current_type_id);
-  current_basetype_id   = search_base_type.get_basetype_id  (current_type_id);
+  current_basetype_decl = search_base_type_c::get_basetype_decl(current_type_id);
+  current_basetype_id   = search_base_type_c::get_basetype_id  (current_type_id);
     
   /* What if the variable has not been declared?  Then this should not be a compiler error! 
    * However, currently stage 2 of the compiler already detects when variables have not been delcared,
@@ -193,8 +193,8 @@ void *search_varfb_instance_type_c::visit(array_spec_init_c *symbol) {
 void *search_varfb_instance_type_c::visit(array_specification_c *symbol) {
   /* found the type of the element we were looking for! */
   current_type_id       = symbol->non_generic_type_name;
-  current_basetype_decl = search_base_type.get_basetype_decl(current_type_id);
-  current_basetype_id   = search_base_type.get_basetype_id  (current_type_id);
+  current_basetype_decl = search_base_type_c::get_basetype_decl(current_type_id);
+  current_basetype_id   = search_base_type_c::get_basetype_id  (current_type_id);
     
   return NULL; 
 }
@@ -256,8 +256,8 @@ void *search_varfb_instance_type_c::visit(structure_element_declaration_c *symbo
   if (compare_identifiers(symbol->structure_element_name, current_field_selector) == 0) {
     /* found the type of the element we were looking for! */
     current_type_id       = symbol->spec_init;
-    current_basetype_decl = search_base_type.get_basetype_decl(current_type_id);
-    current_basetype_id   = search_base_type.get_basetype_id  (current_type_id);
+    current_basetype_decl = search_base_type_c::get_basetype_decl(current_type_id);
+    current_basetype_id   = search_base_type_c::get_basetype_id  (current_type_id);
   }  
 
   /* Did not find the type of the element we were looking for! */
@@ -363,8 +363,8 @@ void *search_varfb_instance_type_c::visit(function_block_declaration_c *symbol) 
   /* If not found, these pointers will all be set to NULL!! */
   search_var_instance_decl_c search_decl(symbol);
   current_type_id       = search_decl.get_decl(current_field_selector);
-  current_basetype_decl = search_base_type.get_basetype_decl(current_type_id);
-  current_basetype_id   = search_base_type.get_basetype_id  (current_type_id);
+  current_basetype_decl = search_base_type_c::get_basetype_decl(current_type_id);
+  current_basetype_id   = search_base_type_c::get_basetype_id  (current_type_id);
   
   return NULL;
 }
@@ -389,8 +389,8 @@ void *search_varfb_instance_type_c::visit(initial_step_c *symbol) {
   if (compare_identifiers(&X, current_field_selector) == 0)   
     current_type_id = &get_datatype_info_c::bool_type_name;
   
-  current_basetype_decl = search_base_type.get_basetype_decl(current_type_id);
-  current_basetype_id   = search_base_type.get_basetype_id  (current_type_id);
+  current_basetype_decl = search_base_type_c::get_basetype_decl(current_type_id);
+  current_basetype_id   = search_base_type_c::get_basetype_id  (current_type_id);
 
   return NULL;
 }

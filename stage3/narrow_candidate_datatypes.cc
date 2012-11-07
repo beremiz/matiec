@@ -409,11 +409,9 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 
 /* a helper function... */
 symbol_c *narrow_candidate_datatypes_c::base_type(symbol_c *symbol) {
-	/* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used
-	 *       in the code.
-	 */
+	/* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used in the code. */
 	if (symbol == NULL) return NULL;
-	return (symbol_c *)symbol->accept(search_base_type);	
+	return search_base_type_c::get_basetype_decl(symbol);
 }
 
 /*********************/
@@ -1082,7 +1080,6 @@ void *narrow_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return narr
 void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation, bool allow_enums) {
 	symbol_c *l_type, *r_type;
 	int count = 0;
-	search_base_type_c search_base_type;
 
 	if (NULL != deprecated_operation)
 		*deprecated_operation = false;
@@ -1096,7 +1093,7 @@ void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_
 				l_expr->datatype = l_type;
 				r_expr->datatype = r_type;
 				count ++;
-			} else if ((l_type == r_type) && search_base_type.type_is_enumerated(l_type) && get_datatype_info_c::is_BOOL_compatible(symbol->datatype)) {
+			} else if ((l_type == r_type) && search_base_type_c::type_is_enumerated(l_type) && get_datatype_info_c::is_BOOL_compatible(symbol->datatype)) {
 				if (NULL != deprecated_operation)  *deprecated_operation = false;
 				l_expr->datatype = l_type;
 				r_expr->datatype = r_type;
@@ -1252,7 +1249,7 @@ void *narrow_candidate_datatypes_c::visit(elseif_statement_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(case_statement_c *symbol) {
 	for (unsigned int i = 0; i < symbol->expression->candidate_datatypes.size(); i++) {
 		if ((get_datatype_info_c::is_ANY_INT(symbol->expression->candidate_datatypes[i]))
-				 || (search_base_type.type_is_enumerated(symbol->expression->candidate_datatypes[i])))
+				 || (search_base_type_c::type_is_enumerated(symbol->expression->candidate_datatypes[i])))
 			symbol->expression->datatype = symbol->expression->candidate_datatypes[i];
 	}
 	symbol->expression->accept(*this);

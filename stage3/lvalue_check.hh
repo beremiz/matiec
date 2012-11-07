@@ -50,7 +50,6 @@ class lvalue_check_c: public iterator_visitor_c {
   private:
     search_varfb_instance_type_c *search_varfb_instance_type;
     search_var_instance_decl_c *search_var_instance_decl;
-    search_base_type_c search_base_type;
     int error_count;
     int current_display_error_level;
     std::vector <token_c *> control_variables;

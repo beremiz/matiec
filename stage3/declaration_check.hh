@@ -38,7 +38,6 @@
 class declaration_check_c : public iterator_visitor_c {
     int error_count;
     int current_display_error_level;
-    search_base_type_c search_base_type;
     symbol_c *current_pou_decl;
 
 public:

@@ -107,7 +107,6 @@ class search_type_symbol_c: public iterator_visitor_c {
   private:
     symbol_c *current_var_type_symbol;
     symbol_c *current_var_type_name;
-    search_base_type_c search_base_type;
     search_fb_typedecl_c *search_fb_typedecl;
 
   public:
@@ -153,7 +152,7 @@ class search_type_symbol_c: public iterator_visitor_c {
           this->current_var_type_category = function_block_vtc;
 
         else {
-          this->current_var_type_symbol = (symbol_c *)(this->current_var_type_name->accept(search_base_type));
+          this->current_var_type_symbol = search_base_type_c::get_basetype_decl(this->current_var_type_name);
           this->current_var_type_symbol->accept(*this);
         }
       }

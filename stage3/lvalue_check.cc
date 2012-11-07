@@ -107,7 +107,6 @@ void lvalue_check_c::check_assignment_to_controlvar(symbol_c *lvalue) {
  */
 void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 	decompose_var_instance_name_c decompose_lvalue(lvalue);
-	search_base_type_c            search_base_type;
 
 	/* Get the first element/record of the potentially structured variable symbol */
 	/* Note that if symbol is pointing to an expression (or simply a literal value), it will return a NULL.
@@ -120,7 +119,7 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 	
 	symbol_c *type_decl   = search_var_instance_decl->get_decl(struct_elem);
 	// symbol_c *type_id  = spec_init_sperator_c::get_spec(type_decl); /* this is not required! search_base_type_c can handle spec_init symbols! */
-	symbol_c *basetype_id = search_base_type.get_basetype_id(/*type_id*/ type_decl);
+	symbol_c *basetype_id = search_base_type_c::get_basetype_id(/*type_id*/ type_decl);
 	/* If we can not determine the data type of the element, then the code must have a data type semantic error.
 	 * This will have been caught by the data type semantic verifier, so we do not bother with this anymore!
 	 */
@@ -145,7 +144,7 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 
 		/* prepare for any possible further record/structure elements */
 		type_decl   = fb_search_var_instance_decl.get_decl(struct_elem);
-		basetype_id = search_base_type.get_basetype_id(type_decl);
+		basetype_id = search_base_type_c::get_basetype_id(type_decl);
 		if (NULL == basetype_id) return; /* same comment as above... */
 		fb_decl = function_block_type_symtable.find_value(basetype_id);
 		if (function_block_type_symtable.end_value() == fb_decl) return; /* same comment as above... */

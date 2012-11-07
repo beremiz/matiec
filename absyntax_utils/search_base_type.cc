@@ -49,43 +49,55 @@
 #include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 
+/* pointer to singleton instance */
+search_base_type_c *search_base_type_c::search_base_type_singleton = NULL;
+
+
 
 search_base_type_c::search_base_type_c(void) {current_type_name = NULL;}
 
-
-
-
-symbol_c *search_base_type_c::get_basetype_decl(symbol_c *symbol) {
-  if (NULL == symbol)
-    return NULL;
-  
-  return (symbol_c *)symbol->accept(*this);
+/* static method! */
+void search_base_type_c::create_singleton(void) {
+  if (NULL == search_base_type_singleton)   search_base_type_singleton = new search_base_type_c();
+  if (NULL == search_base_type_singleton)   ERROR;
 }
 
+/* static method! */
+symbol_c *search_base_type_c::get_basetype_decl(symbol_c *symbol) {
+  create_singleton();
+  if (NULL == symbol)    return NULL; 
+  return (symbol_c *)symbol->accept(*search_base_type_singleton);
+}
+
+/* static method! */
 symbol_c *search_base_type_c::get_basetype_id  (symbol_c *symbol) {
-  if (NULL == symbol)
-    return NULL;
+  create_singleton();
+  if (NULL == symbol)    return NULL;
   
-  current_type_name = NULL; /* just to be on the safe side... */
-  symbol->accept(*this);
-  return (symbol_c *)current_type_name;
+  search_base_type_singleton->current_type_name = NULL;
+  symbol->accept(*search_base_type_singleton);
+  return (symbol_c *)search_base_type_singleton->current_type_name;
 }
 
 
 /* Note by MJS: The following two functions definately do not belong in this class!! Maybe create a new utility class?
  * I will need to clean this up when the opportunity arises!
  */
-
+/* static method! */
 bool search_base_type_c::type_is_subrange(symbol_c* type_decl) {
-  this->is_subrange = false;
-  type_decl->accept(*this);
-  return this->is_subrange;
+  create_singleton();
+  search_base_type_singleton->is_subrange = false;
+  type_decl->accept(*search_base_type_singleton);
+  return search_base_type_singleton->is_subrange;
 }
 
+
+/* static method! */
 bool search_base_type_c::type_is_enumerated(symbol_c* type_decl) {
-  this->is_enumerated = false;
-  type_decl->accept(*this);
-  return this->is_enumerated;
+  create_singleton();
+  search_base_type_singleton->is_enumerated = false;
+  type_decl->accept(*search_base_type_singleton);
+  return search_base_type_singleton->is_enumerated;
 }
 
 

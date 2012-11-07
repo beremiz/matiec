@@ -86,7 +86,6 @@ int declaration_check_c::get_error_count() {
 
 void declaration_check_c::check_global_decl(symbol_c *p_decl) {
 	symbol_c *var_name;
-	search_base_type_c search_base_type;
 
 	search_var_instance_decl_c search_var_instance_glo_decl(current_pou_decl);
 	search_var_instance_decl_c search_var_instance_ext_decl(p_decl);
@@ -109,8 +108,8 @@ void declaration_check_c::check_global_decl(symbol_c *p_decl) {
          *  symbol_c *ext_type = fpi.param_type();
 	 */
 	/* For the moment, we will just use search_base_type_c instead... */
-        symbol_c *glo_type = search_base_type.get_basetype_decl(glo_decl);
-        symbol_c *ext_type = search_base_type.get_basetype_decl(ext_decl);
+        symbol_c *glo_type = search_base_type_c::get_basetype_decl(glo_decl);
+        symbol_c *ext_type = search_base_type_c::get_basetype_decl(ext_decl);
         if (! get_datatype_info_c::is_type_equal(glo_type, ext_type))
           STAGE3_ERROR(0, ext_decl, ext_decl, "Declaration error an external redefinition data type.");
       }

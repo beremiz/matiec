@@ -132,11 +132,10 @@ search_var_instance_decl_c::opt_t search_var_instance_decl_c::get_option(symbol_
 #include <typeinfo>  /* required for typeid() */
 bool search_var_instance_decl_c::type_is_complex(symbol_c *symbol) {
   symbol_c *decl;
-  search_base_type_c search_base_type;
   
   decl = this->get_decl(symbol);
   if (NULL == decl) ERROR;
-  decl = search_base_type.get_basetype_decl(decl);
+  decl = search_base_type_c::get_basetype_decl(decl);
   if (NULL == decl) ERROR;
   
   return ((typeid( *(decl) ) == typeid( array_specification_c                )) ||

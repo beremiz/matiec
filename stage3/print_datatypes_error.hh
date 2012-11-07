@@ -58,7 +58,6 @@ class print_datatypes_error_c: public iterator_visitor_c {
     unsigned int current_display_error_level;
     
     search_varfb_instance_type_c *search_varfb_instance_type;
-    search_base_type_c search_base_type;
     /* When calling a function block, we must first find it's type,
      * by searching through the declarations of the variables currently
      * in scope.
@@ -98,7 +97,6 @@ class print_datatypes_error_c: public iterator_visitor_c {
     symbol_c *il_operand;
 
     /* some helper functions... */
-    symbol_c *base_type(symbol_c *symbol);
     void handle_function_invocation(symbol_c *fcall, generic_function_call_t fcall_data);
     void *handle_implicit_il_fb_invocation(const char *param_name, symbol_c *il_operator, symbol_c *called_fb_declaration);  
     void *handle_conditional_flow_control_IL_instruction(symbol_c *symbol, const char *oper);

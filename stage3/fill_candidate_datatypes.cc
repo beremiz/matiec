@@ -533,11 +533,10 @@ void *fill_candidate_datatypes_c::handle_binary_expression(const struct widen_en
  * This possibility os not expressed in the 'widening' tables, so we need to hard code it here
  */
 void *fill_candidate_datatypes_c::handle_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr) {
-	search_base_type_c search_base_type;
 	handle_binary_expression(widen_table, symbol, l_expr, r_expr);
 	for(unsigned int i = 0; i < l_expr->candidate_datatypes.size(); i++)
 		for(unsigned int j = 0; j < r_expr->candidate_datatypes.size(); j++) {
-			if ((l_expr->candidate_datatypes[i] == r_expr->candidate_datatypes[j]) && search_base_type.type_is_enumerated(l_expr->candidate_datatypes[i]))
+			if ((l_expr->candidate_datatypes[i] == r_expr->candidate_datatypes[j]) && search_base_type_c::type_is_enumerated(l_expr->candidate_datatypes[i]))
 				add_datatype_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name);
 		}
 	return NULL;
@@ -547,11 +546,9 @@ void *fill_candidate_datatypes_c::handle_equality_comparison(const struct widen_
 
 /* a helper function... */
 symbol_c *fill_candidate_datatypes_c::base_type(symbol_c *symbol) {
-	/* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used
-	 *       in the code.
-	 */
+	/* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used in the code. */
 	if (symbol == NULL) return NULL;
-	return (symbol_c *)symbol->accept(search_base_type);
+	return search_base_type_c::get_basetype_decl(symbol);
 }
 
 /*********************/

@@ -65,7 +65,6 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
 
   private:
     search_varfb_instance_type_c *search_varfb_instance_type;
-    search_base_type_c search_base_type;
     symbol_c *il_operand;
     il_instruction_c *fake_prev_il_instruction;
     il_instruction_c   *current_il_instruction;

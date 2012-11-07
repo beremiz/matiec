@@ -116,16 +116,6 @@ static bool are_all_datatypes_equal(std::vector <symbol_c *> &symbol_vect) {
 
 
 
-/* a helper function... */
-symbol_c *print_datatypes_error_c::base_type(symbol_c *symbol) {
-	/* NOTE: symbol == NULL is valid. It will occur when, for e.g., an undefined/undeclared symbolic_variable is used
-	 *       in the code.
-	 */
-	if (symbol == NULL) return NULL;
-	return (symbol_c *)symbol->accept(search_base_type);
-}
-
-
 
 /*
 typedef struct {

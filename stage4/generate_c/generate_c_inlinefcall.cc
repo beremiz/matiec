@@ -72,8 +72,6 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     search_varfb_instance_type_c *search_varfb_instance_type;
     search_var_instance_decl_c   *search_var_instance_decl;
 
-    search_base_type_c search_base_type;
-
     variablegeneration_t wanted_variablegeneration;
 
   public:
@@ -422,8 +420,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       if (f_decl == NULL) ERROR;
       
       /* determine the base data type returned by the function being called... */
-      search_base_type_c search_base_type;
-      function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
+      function_type_prefix = search_base_type_c::get_basetype_decl(f_decl->type_name);
       
       function_name = symbol->function_name;      
       
@@ -583,8 +580,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       if (f_decl == NULL) ERROR;
 
       /* determine the base data type returned by the function being called... */
-      search_base_type_c search_base_type;
-      function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
+      function_type_prefix = search_base_type_c::get_basetype_decl(f_decl->type_name);
       if (NULL == function_type_prefix) ERROR;
       
       function_name = symbol->function_name;
@@ -755,8 +751,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       function_name = symbol->function_name;
 
       /* determine the base data type returned by the function being called... */
-      search_base_type_c search_base_type;
-      function_type_prefix = (symbol_c *)f_decl->type_name->accept(search_base_type);
+      function_type_prefix = search_base_type_c::get_basetype_decl(f_decl->type_name);
       if (NULL == function_type_prefix) ERROR;
 
       /* loop through each function parameter, find the value we should pass

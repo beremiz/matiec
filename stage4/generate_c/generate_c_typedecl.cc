@@ -31,7 +31,6 @@ class generate_c_typedecl_c: public generate_c_base_c {
   private:
     symbol_c* current_type_name;
     bool array_is_derived;
-    search_base_type_c search_base_type;
 
     generate_c_base_c *basedecl;
 
@@ -206,7 +205,7 @@ void *visit(subrange_specification_c *symbol) {
           s4o.print(" value) {\n");
           s4o.indent_right();
 
-          if (search_base_type.type_is_subrange(symbol->integer_type_name)) {
+          if (search_base_type_c::type_is_subrange(symbol->integer_type_name)) {
             s4o.print(s4o.indent_spaces + "value = __CHECK_");
             symbol->integer_type_name->accept(*this);
             s4o.print("(value);\n");
@@ -434,7 +433,7 @@ void *visit(simple_type_declaration_c *symbol) {
   symbol->simple_spec_init->accept(*this);
   s4o_incl.print(")\n");
 
-  if (search_base_type.type_is_subrange(symbol->simple_type_name)) {
+  if (search_base_type_c::type_is_subrange(symbol->simple_type_name)) {
 	s4o.print("#define __CHECK_");
 	current_type_name->accept(*this);
 	s4o.print(" __CHECK_");

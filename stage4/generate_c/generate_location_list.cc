@@ -30,7 +30,6 @@ class generate_location_list_c: public iterator_visitor_c {
   private:
     symbol_c *current_var_type_symbol;
     generate_c_base_c *generate_c_base;
-    search_base_type_c search_base_type;
     
   public:
     generate_location_list_c(stage4out_c *s4o_ptr): s4o(*s4o_ptr) {
@@ -114,7 +113,7 @@ class generate_location_list_c: public iterator_visitor_c {
         if (current_var_type_symbol == NULL)
           ERROR;
         
-        current_var_type_symbol = (symbol_c *)(current_var_type_symbol->accept(search_base_type));
+        current_var_type_symbol = search_base_type_c::get_basetype_decl(current_var_type_symbol);
         if (current_var_type_symbol == NULL)
           ERROR;
         
@@ -132,7 +131,7 @@ class generate_location_list_c: public iterator_visitor_c {
         if (current_var_type_symbol == NULL)
           ERROR;
         
-        current_var_type_symbol = (symbol_c *)(current_var_type_symbol->accept(search_base_type));
+        current_var_type_symbol = search_base_type_c::get_basetype_decl(current_var_type_symbol);
         if (current_var_type_symbol == NULL)
           ERROR;
         

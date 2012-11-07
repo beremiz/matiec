@@ -227,8 +227,7 @@ class generate_c_base_c: public iterator_visitor_c {
           symbol_c *value,
           symbol_c *fb_name = NULL,
           bool temp = false) {
-      search_base_type_c search_base_type;
-      bool is_subrange = search_base_type.type_is_subrange(type);
+      bool is_subrange = search_base_type_c::type_is_subrange(type);
       if (is_subrange) {
 		s4o.print("__CHECK_");
 		type->accept(*this);

@@ -89,7 +89,6 @@ class search_varfb_instance_type_c : null_visitor_c {
 
   private:
     search_var_instance_decl_c search_var_instance_decl;
-    search_base_type_c         search_base_type;
 
 //  symbol_c *current_type_decl;
     symbol_c *current_type_id;
