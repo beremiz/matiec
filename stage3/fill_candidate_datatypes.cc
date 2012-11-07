@@ -186,6 +186,7 @@ fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
 	il_operand = NULL;
 	prev_il_instruction = NULL;
 	search_varfb_instance_type = NULL;
+	current_enumerated_spec_type = NULL;
 }
 
 fill_candidate_datatypes_c::~fill_candidate_datatypes_c(void) {
@@ -699,6 +700,17 @@ void *fill_candidate_datatypes_c::visit(date_and_time_c *symbol) {add_datatype_t
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/
+/*  TYPE type_declaration_list END_TYPE */
+// SYM_REF1(data_type_declaration_c, type_declaration_list)
+/* NOTE: Not required. already handled by iterator_visitor_c base class */
+
+/* helper symbol for data_type_declaration */
+// SYM_LIST(type_declaration_list_c)
+/* NOTE: Not required. already handled by iterator_visitor_c base class */
+
+/*  simple_type_name ':' simple_spec_init */
+// SYM_REF2(simple_type_declaration_c, simple_type_name, simple_spec_init)
+/* NOTE: Not required. already handled by iterator_visitor_c base class */
 
 /* simple_specification ASSIGN constant */
 // SYM_REF2(simple_spec_init_c, simple_specification, constant)
@@ -715,8 +727,19 @@ void *fill_candidate_datatypes_c::visit(simple_spec_init_c *symbol) {
 	return NULL;
 }
 
+
+/*  subrange_type_name ':' subrange_spec_init */
+// SYM_REF2(subrange_type_declaration_c, subrange_type_name, subrange_spec_init)
+
+/* subrange_specification ASSIGN signed_integer */
+// SYM_REF2(subrange_spec_init_c, subrange_specification, signed_integer)
+
+/*  integer_type_name '(' subrange')' */
+// SYM_REF2(subrange_specification_c, integer_type_name, subrange)
+
 /*  signed_integer DOTDOT signed_integer */
-// SYM_REF2(subrange_c, lower_limit, upper_limit)
+/* dimension will be filled in during stage 3 (array_range_check_c) with the number of elements in this subrange */
+// SYM_REF2(subrange_c, lower_limit, upper_limit, unsigned long long int dimension;)
 void *fill_candidate_datatypes_c::visit(subrange_c *symbol) {
 	symbol->lower_limit->accept(*this);
 	symbol->upper_limit->accept(*this);
@@ -730,16 +753,57 @@ void *fill_candidate_datatypes_c::visit(subrange_c *symbol) {
 	return NULL;
 }
 
-/*  TYPE type_declaration_list END_TYPE */
-// SYM_REF1(data_type_declaration_c, type_declaration_list)
-/* NOTE: Not required. already handled by iterator_visitor_c base class */
-/*
-void *fill_candidate_datatypes_c::visit(data_type_declaration_c *symbol) {
-	symbol->type_declaration_list->accept(*this);
-	return NULL;
-}
-*/
 
+/*  enumerated_type_name ':' enumerated_spec_init */
+// SYM_REF2(enumerated_type_declaration_c, enumerated_type_name, enumerated_spec_init)
+/* NOTE: Not required. already handled by iterator_visitor_c base class */
+
+
+/* enumerated_specification ASSIGN enumerated_value */
+// SYM_REF2(enumerated_spec_init_c, enumerated_specification, enumerated_value)
+void *fill_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) {
+  current_enumerated_spec_type = symbol;
+  symbol->enumerated_specification->accept(*this); /* calls enumerated_value_list_c (or identifier_c, which we ignore!) visit method */
+  current_enumerated_spec_type = NULL;  
+  if (NULL != symbol->enumerated_value) symbol->enumerated_value->accept(*this);
+  return NULL;
+}
+
+/* helper symbol for enumerated_specification->enumerated_spec_init */
+/* enumerated_value_list ',' enumerated_value */
+// SYM_LIST(enumerated_value_list_c)
+void *fill_candidate_datatypes_c::visit(enumerated_value_list_c *symbol) {
+  if (NULL == current_enumerated_spec_type) ERROR;
+  
+  /* Actually, all this passing of symbol_c * through the  current_enumerated_spec_type is actually useless, as the base type
+   * is actually this enumerated_value_list_c symbol!!! However, it is safer to do it this way, as we can then later change 
+   * search_base_type_c without having to change this fill_candidate_datatypes_c class too!!
+   */
+  current_enumerated_spec_type = base_type(current_enumerated_spec_type);
+  if (NULL == current_enumerated_spec_type) ERROR;
+  
+  /* We already know the datatype of the enumerated_value(s) in the list, so we set them directly instead of recursively calling the enumerated_value_c visit method! */
+  for(int i = 0; i < symbol->n; i++) {
+    add_datatype_to_candidate_list(symbol->elements[i], current_enumerated_spec_type);
+    symbol->elements[i]->datatype = current_enumerated_spec_type; // To be consistent, this should really be done in the narrow_candidate_datatypes_c !!
+  }
+  return NULL;  
+}
+
+
+/* enumerated_type_name '#' identifier */
+// SYM_REF2(enumerated_value_c, type, value)
+/* WARNING: The enumerated_value_c is used when delcaring an enumerated datatype
+ *          (e.g.   TYPE enumT: (xxx1, xxx2); END_TYPE ---> xxx1 and xxx2 will be enumerated_value_c)
+ *          as well as in the source code of POU bodies
+ *          (e.g.    enumVar := xxx1    ---> xxx1 will be enumerated_value_c)
+ *
+ *          The following method will only be used to visit enumerated_value_c that show up inside the 
+ *          source code of POU bodies (or the initial values of an enumerated type). When used inside an 
+ *          enumerated type declaration to list the possible enum values (whether inside
+ *          a TYPE ... END_TYPE, or inside a VAR .. END_VAR), the visitor method for enumerated_value_list_c
+ *          will NOT recursively call the following enumerated_value_c visitor method!
+ */
 void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 	symbol_c *global_enumerated_type;
 	symbol_c *local_enumerated_type;
@@ -769,6 +833,58 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 	if (debug) std::cout << "ENUMERATE [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
 }
+
+
+/*  identifier ':' array_spec_init */
+// SYM_REF2(array_type_declaration_c, identifier, array_spec_init)
+
+/* array_specification [ASSIGN array_initialization} */
+/* array_initialization may be NULL ! */
+// SYM_REF2(array_spec_init_c, array_specification, array_initialization)
+
+/* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+// SYM_REF2(array_specification_c, array_subrange_list, non_generic_type_name)
+
+/* helper symbol for array_specification */
+/* array_subrange_list ',' subrange */
+// SYM_LIST(array_subrange_list_c)
+
+/* array_initialization:  '[' array_initial_elements_list ']' */
+/* helper symbol for array_initialization */
+/* array_initial_elements_list ',' array_initial_elements */
+// SYM_LIST(array_initial_elements_list_c)
+
+/* integer '(' [array_initial_element] ')' */
+/* array_initial_element may be NULL ! */
+// SYM_REF2(array_initial_elements_c, integer, array_initial_element)
+
+/*  structure_type_name ':' structure_specification */
+// SYM_REF2(structure_type_declaration_c, structure_type_name, structure_specification)
+
+/* structure_type_name ASSIGN structure_initialization */
+/* structure_initialization may be NULL ! */
+// SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
+
+/* helper symbol for structure_declaration */
+/* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
+/* structure_element_declaration_list structure_element_declaration ';' */
+// SYM_LIST(structure_element_declaration_list_c)
+
+/*  structure_element_name ':' *_spec_init */
+// SYM_REF2(structure_element_declaration_c, structure_element_name, spec_init)
+
+/* helper symbol for structure_initialization */
+/* structure_initialization: '(' structure_element_initialization_list ')' */
+/* structure_element_initialization_list ',' structure_element_initialization */
+// SYM_LIST(structure_element_initialization_list_c)
+
+/*  structure_element_name ASSIGN value */
+// SYM_REF2(structure_element_initialization_c, structure_element_name, value)
+
+/*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
+// SYM_REF4(string_type_declaration_c, string_type_name, elementary_string_type_name, string_type_declaration_size, string_type_declaration_init/* may be == NULL! */) 
+
+
 
 
 /*********************/

@@ -87,6 +87,12 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
 //     int  il_parenthesis_level;
 //     bool error_found;
 
+    /* This variable was created to pass information from
+     * fill_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) function to
+     * fill_candidate_datatypes_c::visit(enumerated_value_list_c *symbol) function.
+     */
+    symbol_c *current_enumerated_spec_type;
+    
     /* Pointer to the previous IL instruction, which contains the current data type (actually, the list of candidate data types) of the data stored in the IL stack, i.e. the default variable, a.k.a. accumulator */
     symbol_c *prev_il_instruction;
     /* the current IL operand being analyzed */
@@ -171,11 +177,33 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /********************************/
     /* B 1.3.3 - Derived data types */
     /********************************/
+//  void *visit(data_type_declaration_c *symbol);   /* Not required. already handled by iterator_visitor_c base class */
+//  void *visit(type_declaration_list_c *symbol);   /* Not required. already handled by iterator_visitor_c base class */
+//  void *visit(simple_type_declaration_c *symbol); /* Not required. already handled by iterator_visitor_c base class */
     void *visit(simple_spec_init_c *symbol);
+//  void *visit(subrange_type_declaration_c *symbol);
+//  void *visit(subrange_spec_init_c *symbol);
+//  void *visit(subrange_specification_c *symbol);
     void *visit(subrange_c *symbol);
-//  void *visit(data_type_declaration_c *symbol);
+//  void *visit(enumerated_type_declaration_c *symbol); /* Not required. already handled by iterator_visitor_c base class */
+    void *visit(enumerated_spec_init_c *symbol);
+    void *visit(enumerated_value_list_c *symbol);
     void *visit(enumerated_value_c *symbol);
+//  void *visit(array_type_declaration_c *symbol);
+//  void *visit(array_spec_init_c *symbol);
+//  void *visit(array_specification_c *symbol);
+//  void *visit(array_subrange_list_c *symbol);
+//  void *visit(array_initial_elements_list_c *symbol);
+//  void *visit(array_initial_elements_c *symbol);
+//  void *visit(structure_type_declaration_c *symbol);
+//  void *visit(initialized_structure_c *symbol);
+//  void *visit(structure_element_declaration_list_c *symbol);
+//  void *visit(structure_element_declaration_c *symbol);
+//  void *visit(structure_element_initialization_list_c *symbol);
+//  void *visit(structure_element_initialization_c *symbol);
+//  void *visit(string_type_declaration_c *symbol);
 
+    
     /*********************/
     /* B 1.4 - Variables */
     /*********************/
