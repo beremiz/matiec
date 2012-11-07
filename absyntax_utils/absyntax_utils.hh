@@ -77,16 +77,21 @@ extern symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
 extern symbol_c null_symbol4;
 extern symtable_c<symbol_c *, &null_symbol4> type_symtable;
 
-/* A symbol table with all values declared for enumerated type... */
+/* A symbol table with all values declared for enumerated types declared in global scope
+ * (i.e. declared inside a TYPE ... END_TYPE declaration.
+ */
 /* Notes:
- * - if the value is defined multiple times the value
- * is the null pointer.
+ * (A) - Some enumerations are implicitly declared inside a VAR ... END_VAR declaration
+ *   (e.g. VAR enum_var : (enumvalue1, enumvalue2); END_VAR)
+ *   These enumvalueX will only be valid (in scope) inside the POU in which the enum_var is declared. 
+ *   Because of this, they are not stored in this symbol table
  *
- * - The stored symbol_c * associated to the value points to the enumerated_type_name
- * (i.e. the name of the enumerated data type) in which the the value/identifier
- * is used/declared.
+ * (B) - if the value is defined multiple times the value is the null pointer.
  *
- * - We could re-use the null_symbol4 object, but it is safer to use a distinct object
+ * (C) - The stored symbol_c * associated to the value points to the enumerated_type_name
+ *   (i.e. the name of the enumerated data type) in which the the value/identifier is used/declared.
+ *
+ * (D) - We could re-use the null_symbol4 object, but it is safer to use a distinct object
  *   (i.e. it might make it easier to find strange bugs).
  */
 extern symbol_c null_symbol5;

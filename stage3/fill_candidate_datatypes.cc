@@ -71,6 +71,117 @@
 /* set to 1 to see debug info during execution */
 static int debug = 0;
 
+
+
+
+/*****************************************************/
+/*                                                   */
+/*  A small helper class...                          */
+/*                                                   */
+/*****************************************************/
+
+/* Add to the local_enumerated_value_symtable the local enum value constants */
+/* WARNING: This visitor expects to visit a POU (function, FB, program, ...)
+ *          It should not be called to visit any symbol that may include a TYPE .., END_TYPE declaration!
+ */
+/* Notes:
+ * Some enumerations are 
+ *   (A) declared anonymously inside a VAR ... END_VAR declaration
+ *       (e.g. VAR enum_var : (enumvalue1, enumvalue2); END_VAR)
+ *  while others are 
+ *   (B) declared (with a name) inside a TYPE .. END_TYPE declaration.
+ *
+ *  Values in (A) are added to the enumerated_value_symtable in absyntaxt_utils.cc.
+ *  Values in (B) are only in scope inside the POU with the VAR END_VAR declaration.
+ *
+ * This class will add the enum values in (B) to the local_enumerated_value_symtable.
+ *
+ * If a locally defined enum value is identical to another locally defined enum_value, the
+ *  corresponding entry in local_enumerated_value_symtable is set to NULL.
+ *  However, if a locally defined enum value is identical to another globally defined enum_value, the
+ *  corresponding entry in local_enumerated_value_symtable is set to the local datatype (and not NULL).
+ *  This is because anonynous locally feined enum datatypes are anonymous, and its enum values cannot therefore
+ *  be disambiguated using EnumType#enum_value (since the enum type does not have a name, it is anonymous!).
+ *  For this reason we implement the semantics where locally defined enum values, when in scope, will 'cover'
+ *  the globally defined enum value with the same name/identifier.
+ *  For example:
+ *
+ *  TYPE  GlobalEnumT: (xxx1, xxx2, xxx3) END_TYPE
+ * 
+ *   FUNCTION_BLOCK FOO
+ *    VAR_INPUT
+ *       GlobalEnumVar: GlobalEnumT;
+ *      LocalEnumVar : (xxx1, yyy2, yyy3);
+ *     END_VAR
+ *     LocalEnumVar  := xxx1;   <-- We consider it OK!!!     xxx1 will reference the anonymous type used for LocalEnumVar
+ *     GlobalEnumVar := xxx1;   <-- We consider it an error. xxx1 will reference the anonymous type used for LocalEnumVar
+ *     GlobalEnumVar := GlobalEnumT#xxx1;
+ *     END_FUNCTION_BLOCK
+ */
+ 
+ symbol_c null_enumvalue_symbol; /* cannot be static, so it may be used in the template!! */
+ static symtable_c<symbol_c *, &null_enumvalue_symbol> local_enumerated_value_symtable;
+
+
+class populate_enumvalue_symtable_c: public iterator_visitor_c {
+  private:
+    symbol_c *current_enumerated_type;
+
+  public:
+     populate_enumvalue_symtable_c(void) {current_enumerated_type = NULL;};
+    ~populate_enumvalue_symtable_c(void) {}
+
+  public:
+  /*************************/
+  /* B.1 - Common elements */
+  /*************************/
+  /**********************/
+  /* B.1.3 - Data types */
+  /**********************/
+  /********************************/
+  /* B 1.3.3 - Derived data types */
+  /********************************/
+  /* enumerated_specification ASSIGN enumerated_value */
+  void *visit(enumerated_spec_init_c *symbol) {
+    current_enumerated_type = symbol;
+    symbol->enumerated_specification->accept(*this);
+    /* DO NOT visit the symbol->enumerated_value   !!! */
+    current_enumerated_type = NULL;
+    return NULL;
+  }
+
+  /* [enumerated_type_name '#'] identifier */
+  void *visit(enumerated_value_c *symbol) {
+    /* if the enumerated_value_c is not inside a enumerated_spec_init_c (e.g. used as the inital value of a variable), we simply return */
+    if (current_enumerated_type == NULL) return NULL;  
+    /* this is really an ERROR! The initial value may use the syntax NUM_TYPE#enum_value, but in that case we should have return'd in the above statement !! */
+    if (symbol->type != NULL) ERROR;  
+
+    // symbol_c *global_value_type =       enumerated_value_symtable.find_value(symbol->value);
+    symbol_c *local_value_type  = local_enumerated_value_symtable.find_value(symbol->value);
+    if (local_value_type == local_enumerated_value_symtable.end_value())
+      /* This identifier has not yet been used in any previous local declaration of an enumeration data type, so we add it to the local symbol table. */
+      local_enumerated_value_symtable.insert(symbol->value, current_enumerated_type);
+    else 
+      /* This identifier has already been used in a previous declaration of an enumeration data type. so we set the symbol in symbol table pointing to NULL. */
+      local_enumerated_value_symtable.set(symbol->value, NULL);
+    return NULL;
+  }
+}; // class populate_enumvalue_symtable_c
+
+static populate_enumvalue_symtable_c populate_enumvalue_symtable;
+
+
+
+
+/*****************************************************/
+/*                                                   */
+/*  Main  FILL candidate datatypes algorithm...      */
+/*                                                   */
+/*****************************************************/
+
+
+
 fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
 	il_operand = NULL;
 	prev_il_instruction = NULL;
@@ -630,14 +741,26 @@ void *fill_candidate_datatypes_c::visit(data_type_declaration_c *symbol) {
 */
 
 void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
+	symbol_c *global_enumerated_type;
+	symbol_c *local_enumerated_type;
 	symbol_c *enumerated_type;
 
 	if (NULL != symbol->type)
-		enumerated_type = symbol->type;
+		enumerated_type = symbol->type; /* TODO: check whether the value really belongs to that datatype!! */
 	else {
-		enumerated_type = enumerated_value_symtable.find_value(symbol->value);
-		if (enumerated_type == enumerated_value_symtable.end_value())
-			enumerated_type = NULL;
+		global_enumerated_type =       enumerated_value_symtable.find_value(symbol->value);
+		local_enumerated_type  = local_enumerated_value_symtable.find_value(symbol->value);
+		if      ((local_enumerated_type == local_enumerated_value_symtable.end_value()) && (global_enumerated_type == enumerated_value_symtable.end_value()))
+		  enumerated_type = NULL; // not found!
+		else if ((local_enumerated_type != local_enumerated_value_symtable.end_value()) && (local_enumerated_type == NULL))
+			enumerated_type = NULL; // Duplicate, so it is ambiguous!
+		else if ((local_enumerated_type != local_enumerated_value_symtable.end_value()))
+			enumerated_type = local_enumerated_type;
+		else if ((global_enumerated_type !=      enumerated_value_symtable.end_value()) && (global_enumerated_type == NULL))
+			enumerated_type = NULL; // Duplicate, so it is ambiguous!
+		else if ((global_enumerated_type !=      enumerated_value_symtable.end_value()))
+			enumerated_type = global_enumerated_type;
+		else ERROR;
 	}
 	enumerated_type = base_type(enumerated_type);
 	if (NULL != enumerated_type)
@@ -849,11 +972,16 @@ void *fill_candidate_datatypes_c::visit(located_var_decl_c *symbol) {
 /*********************/
 void *fill_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 	if (debug) printf("Filling candidate data types list of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
+	local_enumerated_value_symtable.reset();
+	symbol->var_declarations_list->accept(populate_enumvalue_symtable);
+
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	symbol->var_declarations_list->accept(*this);
 	symbol->function_body->accept(*this);
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
+
+	local_enumerated_value_symtable.reset();
 	return NULL;
 }
 
@@ -862,11 +990,16 @@ void *fill_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 /***************************/
 void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 	if (debug) printf("Filling candidate data types list of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
+	local_enumerated_value_symtable.reset();
+	symbol->var_declarations->accept(populate_enumvalue_symtable);
+
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	symbol->var_declarations->accept(*this);
 	symbol->fblock_body->accept(*this);
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
+
+	local_enumerated_value_symtable.reset();
 	return NULL;
 }
 
@@ -875,11 +1008,16 @@ void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 /**********************/
 void *fill_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 	if (debug) printf("Filling candidate data types list in program %s\n", ((token_c *)(symbol->program_type_name))->value);
+	local_enumerated_value_symtable.reset();
+	symbol->var_declarations->accept(populate_enumvalue_symtable);
+	
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	symbol->var_declarations->accept(*this);
 	symbol->function_block_body->accept(*this);
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
+
+	local_enumerated_value_symtable.reset();
 	return NULL;
 }
 

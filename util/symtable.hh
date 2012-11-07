@@ -77,10 +77,11 @@ template<typename value_type, value_type null_value> class symtable_c {
   private:
       /* pointer to symbol table of the next inner scope */
     symtable_c *inner_scope;
-    void reset(void); /* clear all entries... */
 
   public:
     symtable_c(void);
+
+    void reset(void); /* clear all entries... */
 
     void push(void); /* create new inner scope */
     int  pop(void);  /* clear most inner scope */
