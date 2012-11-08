@@ -234,11 +234,14 @@ static inline IEC_TIMESPEC __date_to_timespec(int day, int month, int year) {
   broken_down_time.tm_mday = day;  /* day of month, from 1 to 31 */
   broken_down_time.tm_mon = month - 1;   /* month since January, in the range 0 to 11 */
   broken_down_time.tm_year = year - 1900;  /* number of years since 1900 */
-
-  epoch_seconds = mktime(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
+  broken_down_time.tm_isdst = -1; /* disable daylight savings time */
+  
+  epoch_seconds = timegm(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
 
   if ((time_t)(-1) == epoch_seconds)
     __iec_error();
+
+  printf("Seconds = %d\n", (int)epoch_seconds);
 
   ts.tv_sec = epoch_seconds;
   ts.tv_nsec = 0;
@@ -246,31 +249,11 @@ static inline IEC_TIMESPEC __date_to_timespec(int day, int month, int year) {
   return ts;
 }
 
-static inline IEC_TIMESPEC __dt_to_timespec(double seconds,  double minutes, double hours, int day, int month, int year) {
-  IEC_TIMESPEC ts;
-  struct tm broken_down_time;
-  time_t epoch_seconds;
+static inline IEC_TIMESPEC __dt_to_timespec(double seconds, double minutes, double hours, int day, int month, int year) {
+  IEC_TIMESPEC ts_date = __date_to_timespec(day, month, year);
+  IEC_TIMESPEC ts = __tod_to_timespec(seconds, minutes, hours);
 
-  long double total_sec = (hours*60 + minutes)*60 + seconds;
-  ts.tv_sec = (long int)total_sec;
-  ts.tv_nsec = (long int)((total_sec - ts.tv_sec)*1e9);
-
-  broken_down_time.tm_sec = 0;
-  broken_down_time.tm_min = 0;
-  broken_down_time.tm_hour = 0;
-  broken_down_time.tm_mday = day;  /* day of month, from 1 to 31 */
-  broken_down_time.tm_mon = month - 1;   /* month since January, in the range 0 to 11 */
-  broken_down_time.tm_year = year - 1900;  /* number of years since 1900 */
-  broken_down_time.tm_isdst = 0; /* disable daylight savings time */
-
-  epoch_seconds = mktime(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
-  if ((time_t)(-1) == epoch_seconds)
-    __iec_error();
-
-  ts.tv_sec += epoch_seconds;
-  if (ts.tv_sec < epoch_seconds)
-    /* since the TOD is always positive, if the above happens then we had an overflow */
-    __iec_error();
+  ts.tv_sec += ts_date.tv_sec;
 
   return ts;
 }
@@ -370,7 +353,10 @@ static inline STRING __uint_to_string(ULINT IN) {
     /* FROM_STRING */
     /***************/
 static inline BOOL __string_to_bool(STRING IN) {
-    return IN.len == 5 ? !memcmp(&IN.body,"TRUE", IN.len) : 0;
+    int i;
+    if (IN.len == 1) return !memcmp(&IN.body,"1", IN.len);
+    for (i = 0; i < IN.len; i++) IN.body[i] = toupper(IN.body[i]);
+    return IN.len == 4 ? !memcmp(&IN.body,"TRUE", IN.len) : 0;
 }
 
 static inline LINT __pstring_to_sint(STRING* IN) {
@@ -530,7 +516,7 @@ static inline STRING __date_to_string(DATE IN){
     /* D#1984-06-25 */
     res = __INIT_STRING;
     seconds = IN.tv_sec;
-    if (NULL == (broken_down_time = localtime(&seconds))){ /* get the UTC (GMT) broken down time */
+    if (NULL == (broken_down_time = gmtime(&seconds))){ /* get the UTC (GMT) broken down time */
         __iec_error();
         return (STRING){7,"D#ERROR"};
     }
@@ -545,14 +531,14 @@ static inline STRING __tod_to_string(TOD IN){
     /* TOD#15:36:55.36 */
     res = __INIT_STRING;
     seconds = IN.tv_sec;
-    if (NULL == (broken_down_time = localtime(&seconds))){ /* get the UTC (GMT) broken down time */
+    if (NULL == (broken_down_time = gmtime(&seconds))){ /* get the UTC (GMT) broken down time */
         __iec_error();
         return (STRING){9,"TOD#ERROR"};
     }
     if(IN.tv_nsec == 0){
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%d", broken_down_time->tm_hour, broken_down_time->tm_min, broken_down_time->tm_sec);
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%2.2d", broken_down_time->tm_hour, broken_down_time->tm_min, broken_down_time->tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%g", broken_down_time->tm_hour, broken_down_time->tm_min, (LREAL)broken_down_time->tm_sec + (LREAL)IN.tv_nsec / 1e9);
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%09.6g", broken_down_time->tm_hour, broken_down_time->tm_min, (LREAL)broken_down_time->tm_sec + (LREAL)IN.tv_nsec / 1e9);
     }
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
@@ -563,12 +549,12 @@ static inline STRING __dt_to_string(DT IN){
     time_t seconds;
     /* DT#1984-06-25-15:36:55.36 */
     seconds = IN.tv_sec;
-    if (NULL == (broken_down_time = localtime(&seconds))){ /* get the UTC (GMT) broken down time */
+    if (NULL == (broken_down_time = gmtime(&seconds))){ /* get the UTC (GMT) broken down time */
         __iec_error();
         return (STRING){8,"DT#ERROR"};
     }
     if(IN.tv_nsec == 0){
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%d",
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%2.2d",
                  broken_down_time->tm_year + 1900,
                  broken_down_time->tm_mon  + 1,
                  broken_down_time->tm_mday,
@@ -576,7 +562,7 @@ static inline STRING __dt_to_string(DT IN){
                  broken_down_time->tm_min,
                  broken_down_time->tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%g",
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%09.6g",
                  broken_down_time->tm_year + 1900,
                  broken_down_time->tm_mon  + 1,
                  broken_down_time->tm_mday,
@@ -592,7 +578,7 @@ static inline STRING __dt_to_string(DT IN){
     /*  [ANY_DATE | TIME] _TO_ [ANY_DATE | TIME]  */
     /**********************************************/
 
-static inline TOD __date_and_time_to_time_of_day(DT IN) {return (TOD){IN.tv_sec % 86400, IN.tv_nsec};}
+static inline TOD __date_and_time_to_time_of_day(DT IN) {return (TOD){IN.tv_sec % (24*60*60), IN.tv_nsec};}
 static inline DATE __date_and_time_to_date(DT IN){return (DATE){IN.tv_sec - (IN.tv_sec % (24*60*60)), 0};}
 
     /*****************/
@@ -819,8 +805,14 @@ __ANY_DATE(__to_anyreal_)
 /******** [ANY_DATE]_TO_[ANY_DATE | TIME]   ************/ 
 /* Not supported: DT_TO_TIME */
 __convert_type(DT, DATE,  __date_and_time_to_date)
+static inline DATE DATE_AND_TIME_TO_DATE(EN_ENO_PARAMS, DT op){
+	return DT_TO_DATE(EN_ENO, op);
+}
 __convert_type(DT, DT,    __move_DT)
 __convert_type(DT, TOD,   __date_and_time_to_time_of_day)
+static inline DATE DATE_AND_TIME_TO_TIME_OF_DAY(EN_ENO_PARAMS, DT op){
+	return DT_TO_TOD(EN_ENO, op);
+}
 /* Not supported: DATE_TO_TIME */
 __convert_type(DATE, DATE, __move_DATE)
 /* Not supported: DATE_TO_DT */

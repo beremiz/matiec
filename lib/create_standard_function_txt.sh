@@ -206,8 +206,10 @@ __ANY_DATE(__to_anybit_)
 /* Not supported: DT_TO_TIME */
 /*__iec_(to_TYPENAME,from_TYPENAME)*/
 __iec_(DATE,DT)
+__function_1p(DATE_AND_TIME_TO_DATE, DATE, IN, DT)
 __iec_(DT,DT)
 __iec_(TOD,DT)
+__function_1p(DATE_AND_TIME_TO_TIME_OF_DAY, TOD, IN, DT)
 /* Not supported: DATE_TO_TIME */
 __iec_(DATE,DATE)
 /* Not supported: DATE_TO_DT */
@@ -216,7 +218,6 @@ __iec_(DATE,DATE)
 /* Not supported: TOD_TO_DATE */
 /* Not supported: TOD_TO_DT */
 __iec_(TOD,TOD)
-
 
 /******** TIME_TO_[ANY_DATE]   ************/ 
 /* Not supported: TIME_TO_DATE */
