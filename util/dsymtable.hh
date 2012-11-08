@@ -93,7 +93,7 @@ template<typename value_type, value_type null_value> class dsymtable_c {
     int count(const symbol_c *symbol)        {return count(symbol_to_string(symbol));}
     
     /* Search for an entry. Will return end_value() if not found */
-    value_t end_value(void)                          {return _base.end(); return null_value;}
+    value_t end_value(void)                          {return null_value;}
     value_t find_value(const char *identifier_str);
     value_t find_value(const symbol_c *symbol)       {return find_value(symbol_to_string(symbol));}
 
@@ -101,9 +101,8 @@ template<typename value_type, value_type null_value> class dsymtable_c {
     iterator find(const char *identifier_str)        {return _base.find(identifier_str);}
     iterator find(const symbol_c *symbol)            {return find(symbol_to_string(symbol));}
     
-    /* Search for the first entry associated with (i.e. with key ==) identifier_str. Will return end() if not found */
-    /* Basically, the same as find() */
-    iterator lower_bound(const char *identifier_str) {return _base.lower_bound(identifier_str);}
+    /* Search for the first entry associated with (i.e. with key ==) identifier_str. Will return end() if not found (NOTE: end() != end_value()) */
+    iterator lower_bound(const char *identifier_str) {return ((count(identifier_str) == 0)? _base.end() : _base.lower_bound(identifier_str));}
     iterator lower_bound(const symbol_c *symbol)     {return lower_bound(symbol_to_string(symbol));}
     
     /* Search for the first entry with key greater than identifier_str. Will return end() if not found */
