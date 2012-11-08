@@ -77,26 +77,23 @@ template<typename value_type, value_type null_value> class dsymtable_c {
   typedef typename base_t::const_reverse_iterator const_reverse_iterator;
 
   private:
-    void reset(void); /* clear all entries... */
     const char *symbol_to_string(const symbol_c *symbol);
 
   public:
     dsymtable_c(void) {};
 
+    void reset(void); /* clear all entries... */
+    
     void insert(const char *identifier_str, value_t value);
     void insert(const symbol_c *symbol, value_t value);
 
     /* Determine how many entries are associated to key identifier_str */ 
-    /* returns:
-     *         0: if no entry is found
-     *         1: if 1 entry is found
-     *         2: if more than 1 entry is found 
-     */
-    int multiplicity(const char *identifier_str);
-    int multiplicity(const symbol_c *symbol)        {return multiplicity(symbol_to_string(symbol));}
+    /* returns: 0 if no entry is found, 1 if 1 entry is found, ..., n if n entries are found */
+    int count(const char *identifier_str)    {return _base.count(identifier_str);}
+    int count(const symbol_c *symbol)        {return count(symbol_to_string(symbol));}
     
     /* Search for an entry. Will return end_value() if not found */
-    value_t end_value(void) {return null_value;}
+    value_t end_value(void)                          {return _base.end(); return null_value;}
     value_t find_value(const char *identifier_str);
     value_t find_value(const symbol_c *symbol)       {return find_value(symbol_to_string(symbol));}
 

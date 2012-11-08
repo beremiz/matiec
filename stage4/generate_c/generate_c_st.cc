@@ -711,8 +711,8 @@ void *visit(function_invocation_c *symbol) {
   }
 
   /* Check whether we are calling an overloaded function! */
-  /* (fdecl_mutiplicity==2)  => calling overloaded function */
-  int fdecl_mutiplicity =  function_symtable.multiplicity(symbol->function_name);
+  /* (fdecl_mutiplicity > 1)  => calling overloaded function */
+  int fdecl_mutiplicity =  function_symtable.count(symbol->function_name);
   if (fdecl_mutiplicity == 0) ERROR;
 
   if (has_output_params) {
@@ -721,7 +721,7 @@ void *visit(function_invocation_c *symbol) {
     fbname->accept(*this);
     s4o.print("_");
     function_name->accept(*this);
-    if (fdecl_mutiplicity == 2) {
+    if (fdecl_mutiplicity > 1) {
       /* function being called is overloaded! */
       s4o.print("__");
       print_function_parameter_data_types_c overloaded_func_suf(&s4o);
@@ -731,7 +731,7 @@ void *visit(function_invocation_c *symbol) {
   }
   else {
     function_name->accept(*this);
-    if (fdecl_mutiplicity == 2) {
+    if (fdecl_mutiplicity > 1) {
       /* function being called is overloaded! */
       s4o.print("__");
       print_function_parameter_data_types_c overloaded_func_suf(&s4o);

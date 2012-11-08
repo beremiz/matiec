@@ -37,9 +37,6 @@
 
 
 
-
-
-
  /* clear all entries... */
 template<typename value_type, value_type null_value>
 void dsymtable_c<value_type, null_value>::reset(void) {
@@ -87,26 +84,6 @@ void dsymtable_c<value_type, null_value>::insert_noduplicate(const symbol_c *sym
 #endif
 
 
-
-/* Determine how many entries are associated to key identifier_str */ 
-/* returns:
- *         0: if no entry is found
- *         1: if 1 entry is found
- *         2: if more than 1 entry is found 
- */
-template<typename value_type, value_type null_value>
-int dsymtable_c<value_type, null_value>::multiplicity(const char *identifier_str) {
-  iterator lower = _base.lower_bound(identifier_str);
-  if (lower == _base.end()) return 0;
-
-  iterator upper = _base.upper_bound(identifier_str);
-  iterator second = lower;
-  second++;
-  
-  if (second == upper) return 1;
-  
-  return 2;
-}
 
 
 /* returns null_value if not found! */

@@ -527,8 +527,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       }
 
       /* Check whether we are calling an overloaded function! */
-      /* (fdecl_mutiplicity==2)  => calling overloaded function */
-      int fdecl_mutiplicity =  function_symtable.multiplicity(symbol->function_name);
+      /* (fdecl_mutiplicity > 1)  => calling overloaded function */
+      int fdecl_mutiplicity =  function_symtable.count(symbol->function_name);
       if (fdecl_mutiplicity == 0) ERROR;
       if (fdecl_mutiplicity == 1) 
         /* function being called is NOT overloaded! */
@@ -684,8 +684,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       }
 
       /* Check whether we are calling an overloaded function! */
-      /* (fdecl_mutiplicity==2)  => calling overloaded function */
-      int fdecl_mutiplicity =  function_symtable.multiplicity(symbol->function_name);
+      /* (fdecl_mutiplicity > 1)  => calling overloaded function */
+      int fdecl_mutiplicity =  function_symtable.count(symbol->function_name);
       if (fdecl_mutiplicity == 0) ERROR;
       if (fdecl_mutiplicity == 1) 
         /* function being called is NOT overloaded! */
@@ -846,8 +846,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       }
 
       /* Check whether we are calling an overloaded function! */
-      /* (fdecl_mutiplicity==2)  => calling overloaded function */
-      int fdecl_mutiplicity =  function_symtable.multiplicity(symbol->function_name);
+      /* (fdecl_mutiplicity > 1)  => calling overloaded function */
+      int fdecl_mutiplicity =  function_symtable.count(symbol->function_name);
       if (fdecl_mutiplicity == 0) ERROR;
       if (fdecl_mutiplicity == 1) 
         /* function being called is NOT overloaded! */
