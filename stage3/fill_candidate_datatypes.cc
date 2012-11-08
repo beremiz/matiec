@@ -53,6 +53,10 @@
  *  The candidate datatype list will be filled with a list of all the data types that expression may legally take.
  *  For example, the very simple literal '0' (as in foo := 0), may represent a:
  *    BOOL, BYTE, WORD, DWORD, LWORD, USINT, SINT, UINT, INT, UDINT, DINT, ULINT, LINT (as well as the SAFE versions of these data tyes too!)
+ *
+ * WARNING: This visitor class starts off by building a map of all enumeration constants that are defined in the source code (i.e. a library_c symbol),
+ *          and this map is later used to determine the datatpe of each use of an enumeration constant. By implication, the fill_candidate_datatypes_c 
+ *          visitor class will only work corretly if it is asked to visit a symbol of class library_c!!
  */
 
 #include <../main.hh>         /* required for UINT64_MAX, INT64_MAX, INT64_MIN, ... */
@@ -73,6 +77,96 @@ static int debug = 0;
 
 
 
+/*****************************************************/
+/*                                                   */
+/*  A small helper class...                          */
+/*                                                   */
+/*****************************************************/
+
+/* Add to the global_enumerated_value_symtable the global enum value constants, i.e. the enum constants used in the enumerated
+ * datatypes that are defined inside a TYPE ... END_TYPE declaration.
+ */
+
+ symbol_c null_globalenumvalue_symbol; /* cannot be static, so it may be used in the template!! */
+ static symtable_c<symbol_c *, &null_globalenumvalue_symbol> global_enumerated_value_symtable;
+ 
+ 
+class populate_globalenumvalue_symtable_c: public iterator_visitor_c {
+  private:
+    symbol_c *current_enumerated_type;
+
+  public:
+     populate_globalenumvalue_symtable_c(void) {current_enumerated_type = NULL;};
+    ~populate_globalenumvalue_symtable_c(void) {}
+
+  public:
+  /*************************/
+  /* B.1 - Common elements */
+  /*************************/
+  /**********************/
+  /* B.1.3 - Data types */
+  /**********************/
+  /********************************/
+  /* B 1.3.3 - Derived data types */
+  /********************************/
+  /*  enumerated_type_name ':' enumerated_spec_init */
+  void *visit(enumerated_type_declaration_c *symbol) {
+  //current_enumerated_type = symbol->enumerated_type_name;
+    current_enumerated_type = symbol;
+    symbol->enumerated_spec_init->accept(*this);
+    current_enumerated_type = NULL;
+    return NULL;
+  }
+
+  /* enumerated_specification ASSIGN enumerated_value */
+  void *visit(enumerated_spec_init_c *symbol) {
+    return symbol->enumerated_specification->accept(*this);
+  }
+
+  /* [enumerated_type_name '#'] identifier */
+  void *visit(enumerated_value_c *symbol) {
+    if (current_enumerated_type == NULL) ERROR;
+    if (symbol->type != NULL) ERROR;
+
+    symbol_c *value_type = global_enumerated_value_symtable.find_value(symbol->value);
+    /* NOTE: The following condition checks whether the same identifier is used more than once
+     *       when defining the enumerated values of the type declaration of the new enumerated type.
+     *       If this occurs, then the program beeing compiled contains a semantic error, which
+     *       must be caught and reported by the semantic analyser. However, since
+     *       this code is run before the semantic analyser, we must not yet raise the ERROR (internal
+     *       compiler error message).
+     *       For this reason, the follosing check is commented out.
+     */
+    /* if (value_type == current_enumerated_type) ERROR; */
+
+    if (value_type == global_enumerated_value_symtable.end_value())
+	/* This identifier has not yet been used in any previous declaration of an enumeration data type.
+	 * so we add it to the symbol table.
+	 */
+      global_enumerated_value_symtable.insert(symbol->value, current_enumerated_type);
+    else if (value_type != NULL)
+	/* This identifier has already been used in a previous declaration of an enumeration data type.
+	 * so we set the symbol in symbol table pointing to NULL.
+	 */
+      global_enumerated_value_symtable.set(symbol->value, NULL);
+    
+    return NULL;
+  }
+
+  /**************************************/
+  /* B.1.5 - Program organization units */
+  /**************************************/
+  /* B 1.5.1 - Functions */
+  void *visit(function_declaration_c *symbol) {return NULL;}
+  /* B 1.5.2 - Function Blocks */
+  void *visit(function_block_declaration_c *symbol) {return NULL;}
+  /* B 1.5.3 - Programs */
+  void *visit(program_declaration_c *symbol) {return NULL;}
+  
+}; /* populate_globalenumvalue_symtable_c */
+
+static populate_globalenumvalue_symtable_c populate_globalenumvalue_symtable;
+
 
 /*****************************************************/
 /*                                                   */
@@ -81,9 +175,6 @@ static int debug = 0;
 /*****************************************************/
 
 /* Add to the local_enumerated_value_symtable the local enum value constants */
-/* WARNING: This visitor expects to visit a POU (function, FB, program, ...)
- *          It should not be called to visit any symbol that may include a TYPE .., END_TYPE declaration!
- */
 /* Notes:
  * Some enumerations are 
  *   (A) declared anonymously inside a VAR ... END_VAR declaration
@@ -119,8 +210,8 @@ static int debug = 0;
  *     END_FUNCTION_BLOCK
  */
  
- symbol_c null_enumvalue_symbol; /* cannot be static, so it may be used in the template!! */
- static symtable_c<symbol_c *, &null_enumvalue_symbol> local_enumerated_value_symtable;
+ symbol_c null_localenumvalue_symbol; /* cannot be static, so it may be used in the template!! */
+ static symtable_c<symbol_c *, &null_localenumvalue_symbol> local_enumerated_value_symtable;
 
 
 class populate_enumvalue_symtable_c: public iterator_visitor_c {
@@ -141,6 +232,9 @@ class populate_enumvalue_symtable_c: public iterator_visitor_c {
   /********************************/
   /* B 1.3.3 - Derived data types */
   /********************************/
+  /*  TYPE type_declaration_list END_TYPE */
+  void *visit(data_type_declaration_c *symbol) {return NULL;} // do not visit the type declarations!!
+  
   /* enumerated_specification ASSIGN enumerated_value */
   void *visit(enumerated_spec_init_c *symbol) {
     current_enumerated_type = symbol;
@@ -157,7 +251,7 @@ class populate_enumvalue_symtable_c: public iterator_visitor_c {
     /* this is really an ERROR! The initial value may use the syntax NUM_TYPE#enum_value, but in that case we should have return'd in the above statement !! */
     if (symbol->type != NULL) ERROR;  
 
-    // symbol_c *global_value_type =       enumerated_value_symtable.find_value(symbol->value);
+    // symbol_c *global_value_type = global_enumerated_value_symtable.find_value(symbol->value);
     symbol_c *local_value_type  = local_enumerated_value_symtable.find_value(symbol->value);
     if (local_value_type == local_enumerated_value_symtable.end_value())
       /* This identifier has not yet been used in any previous local declaration of an enumeration data type, so we add it to the local symbol table. */
@@ -181,7 +275,6 @@ static populate_enumvalue_symtable_c populate_enumvalue_symtable;
 /*****************************************************/
 
 
-
 fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
 	il_operand = NULL;
 	prev_il_instruction = NULL;
@@ -191,6 +284,12 @@ fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
 
 fill_candidate_datatypes_c::~fill_candidate_datatypes_c(void) {
 }
+
+
+
+
+
+
 
 symbol_c *fill_candidate_datatypes_c::widening_conversion(symbol_c *left_type, symbol_c *right_type, const struct widen_entry widen_table[]) {
 	int k;
@@ -551,6 +650,18 @@ symbol_c *fill_candidate_datatypes_c::base_type(symbol_c *symbol) {
 	return search_base_type_c::get_basetype_decl(symbol);
 }
 
+
+/***************************/
+/* B 0 - Programming Model */
+/***************************/
+/* main entry function! */
+void *fill_candidate_datatypes_c::visit(library_c *symbol) {
+  symbol->accept(populate_globalenumvalue_symtable);
+  /* Now let the base class iterator_visitor_c iterate through all the library elements */
+  return iterator_visitor_c::visit(symbol);  
+}
+
+
 /*********************/
 /* B 1.2 - Constants */
 /*********************/
@@ -809,17 +920,17 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 	if (NULL != symbol->type)
 		enumerated_type = symbol->type; /* TODO: check whether the value really belongs to that datatype!! */
 	else {
-		global_enumerated_type =       enumerated_value_symtable.find_value(symbol->value);
-		local_enumerated_type  = local_enumerated_value_symtable.find_value(symbol->value);
-		if      ((local_enumerated_type == local_enumerated_value_symtable.end_value()) && (global_enumerated_type == enumerated_value_symtable.end_value()))
+		global_enumerated_type = global_enumerated_value_symtable.find_value(symbol->value);
+		local_enumerated_type  =  local_enumerated_value_symtable.find_value(symbol->value);
+		if      (( local_enumerated_type ==  local_enumerated_value_symtable.end_value()) && (global_enumerated_type == global_enumerated_value_symtable.end_value()))
 		  enumerated_type = NULL; // not found!
-		else if ((local_enumerated_type != local_enumerated_value_symtable.end_value()) && (local_enumerated_type == NULL))
+		else if (( local_enumerated_type !=  local_enumerated_value_symtable.end_value()) && (local_enumerated_type == NULL))
 			enumerated_type = NULL; // Duplicate, so it is ambiguous!
-		else if ((local_enumerated_type != local_enumerated_value_symtable.end_value()))
+		else if (( local_enumerated_type !=  local_enumerated_value_symtable.end_value()))
 			enumerated_type = local_enumerated_type;
-		else if ((global_enumerated_type !=      enumerated_value_symtable.end_value()) && (global_enumerated_type == NULL))
+		else if ((global_enumerated_type != global_enumerated_value_symtable.end_value()) && (global_enumerated_type == NULL))
 			enumerated_type = NULL; // Duplicate, so it is ambiguous!
-		else if ((global_enumerated_type !=      enumerated_value_symtable.end_value()))
+		else if ((global_enumerated_type != global_enumerated_value_symtable.end_value()))
 			enumerated_type = global_enumerated_type;
 		else ERROR;
 	}

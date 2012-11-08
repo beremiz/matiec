@@ -124,21 +124,6 @@ symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
 symbol_c null_symbol4;
 symtable_c<symbol_c *, &null_symbol4> type_symtable;
 
-/* A symbol table with all values declared for enumerated type... */
-/* Notes:
- * - if the value is defined multiple times the value
- * is the null pointer.
- *
- * - The stored symbol_c * associated to the value points to the enumerated_type_name
- * (i.e. the name of the enumerated data type) in which the the value/identifier
- * is used/declared.
- *
- * - We could re-use the null_symbol4 object, but it is safer to use a distinct object
- *   (i.e. it might make it easier to find strange bugs).
- */
-symbol_c null_symbol5;
-symtable_c<symbol_c *, &null_symbol5> enumerated_value_symtable;
-
 
 /***********************************************************************/
 /***********************************************************************/
@@ -220,35 +205,6 @@ class populate_symtables_c: public iterator_visitor_c {
     return symbol->enumerated_specification->accept(*this);
   }
 
-  /* [enumerated_type_name '#'] identifier */
-  void *visit(enumerated_value_c *symbol) {
-    if (current_enumerated_type != NULL) {
-      if (symbol->type != NULL) ERROR;
-
-      symbol_c *value_type = enumerated_value_symtable.find_value(symbol->value);
-      /* NOTE: The following condition checks whether the same identifier is used more than once
-       *       when defining the enumerated values of the type declaration of the new enumerated type.
-       *       If this occurs, then the program beeing compiled contains a semantic error, which
-       *       must be caught and reported by the semantic analyser. However, since
-       *       this code is run before the semantic analyser, we must not yet raise the ERROR (internal
-       *       compiler error message).
-       *       For this reason, the follosing check is commented out.
-       */
-      /* if (value_type == current_enumerated_type) ERROR; */
-
-      if (value_type == enumerated_value_symtable.end_value())
-	/* This identifier has not yet been used in any previous declaration of an enumeration data type.
-	 * so we add it to the symbol table.
-	 */
-        enumerated_value_symtable.insert(symbol->value, current_enumerated_type);
-      else if (value_type != NULL)
-	/* This identifier has already been used in a previous declaration of an enumeration data type.
-	 * so we set the symbol in symbol table pointing to NULL.
-	 */
-        enumerated_value_symtable.set(symbol->value, NULL);
-    }
-    return NULL;
-  }
 
   /*  identifier ':' array_spec_init */
   void *visit(array_type_declaration_c *symbol) {

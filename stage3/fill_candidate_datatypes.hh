@@ -43,6 +43,10 @@
  *  The candidate datatype list will be filled with a list of all the data types that expression may legally take.
  *  For example, the very simple literal '0' (as in foo := 0), may represent a:
  *    BOOL, BYTE, WORD, DWORD, LWORD, USINT, SINT, UINT, INT, UDINT, DINT, ULINT, LINT (as well as the SAFE versions of these data tyes too!)
+ *
+ * WARNING: This visitor class starts off by building a map of all enumeration constants that are defined in the source code (i.e. a library_c symbol),
+ *          and this map is later used to determine the datatpe of each use of an enumeration constant. By implication, the fill_candidate_datatypes_c 
+ *          visitor class will only work corretly if it is asked to visit a symbol of class library_c!!
  */
 
 
@@ -67,24 +71,6 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
      * a function declaration.
      */
     //     search_var_instance_decl_c *search_var_instance_decl;
-
-    /* This variable was created to pass information from
-     * fill_candidate_datatypes_c::visit(case_statement_c *symbol) function to
-     * fill_candidate_datatypes_c::visit(case_list_c *symbol) function.
-     */
-//     symbol_c *case_expression_type;
-
-    /* In IL code, once we find a type mismatch error, it is best to
-     * ignore any further errors until the end of the logical operation,
-     * i.e. until the next LD.
-     * However, we cannot clear the il_error flag on all LD operations,
-     * as these may also be used within parenthesis. LD operations
-     * within parenthesis may not clear the error flag.
-     * We therefore need a counter to know how deep inside a parenthesis
-     * structure we are.
-     */
-//     int  il_parenthesis_level;
-//     bool error_found;
 
     /* This variable was created to pass information from
      * fill_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) function to
@@ -123,6 +109,11 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     fill_candidate_datatypes_c(symbol_c *ignore);
     virtual ~fill_candidate_datatypes_c(void);
 
+    
+    /***************************/
+    /* B 0 - Programming Model */
+    /***************************/
+    void *visit(library_c *symbol);
 
     /*********************/
     /* B 1.2 - Constants */
