@@ -88,7 +88,7 @@ static int debug = 0;
  */
 
  symbol_c null_globalenumvalue_symbol; /* cannot be static, so it may be used in the template!! */
- static symtable_c<symbol_c *, &null_globalenumvalue_symbol> global_enumerated_value_symtable;
+ static dsymtable_c<symbol_c *, &null_globalenumvalue_symbol> global_enumerated_value_symtable;
  
  
 class populate_globalenumvalue_symtable_c: public iterator_visitor_c {
@@ -139,17 +139,7 @@ class populate_globalenumvalue_symtable_c: public iterator_visitor_c {
      */
     /* if (value_type == current_enumerated_type) ERROR; */
 
-    if (value_type == global_enumerated_value_symtable.end_value())
-	/* This identifier has not yet been used in any previous declaration of an enumeration data type.
-	 * so we add it to the symbol table.
-	 */
-      global_enumerated_value_symtable.insert(symbol->value, current_enumerated_type);
-    else if (value_type != NULL)
-	/* This identifier has already been used in a previous declaration of an enumeration data type.
-	 * so we set the symbol in symbol table pointing to NULL.
-	 */
-      global_enumerated_value_symtable.set(symbol->value, NULL);
-    
+    global_enumerated_value_symtable.insert(symbol->value, current_enumerated_type);
     return NULL;
   }
 
@@ -187,10 +177,10 @@ static populate_globalenumvalue_symtable_c populate_globalenumvalue_symtable;
  *
  * This class will add the enum values in (B) to the local_enumerated_value_symtable.
  *
- * If a locally defined enum value is identical to another locally defined enum_value, the
- *  corresponding entry in local_enumerated_value_symtable is set to NULL.
+ * If a locally defined enum value is identical to another locally defined enum_value, a 
+ *  duplicate entry is created.
  *  However, if a locally defined enum value is identical to another globally defined enum_value, the
- *  corresponding entry in local_enumerated_value_symtable is set to the local datatype (and not NULL).
+ *  corresponding entry in local_enumerated_value_symtable is also set to the local datatype.
  *  This is because anonynous locally feined enum datatypes are anonymous, and its enum values cannot therefore
  *  be disambiguated using EnumType#enum_value (since the enum type does not have a name, it is anonymous!).
  *  For this reason we implement the semantics where locally defined enum values, when in scope, will 'cover'
@@ -211,7 +201,7 @@ static populate_globalenumvalue_symtable_c populate_globalenumvalue_symtable;
  */
  
  symbol_c null_localenumvalue_symbol; /* cannot be static, so it may be used in the template!! */
- static symtable_c<symbol_c *, &null_localenumvalue_symbol> local_enumerated_value_symtable;
+ static dsymtable_c<symbol_c *, &null_localenumvalue_symbol> local_enumerated_value_symtable;
 
 
 class populate_enumvalue_symtable_c: public iterator_visitor_c {
@@ -251,14 +241,10 @@ class populate_enumvalue_symtable_c: public iterator_visitor_c {
     /* this is really an ERROR! The initial value may use the syntax NUM_TYPE#enum_value, but in that case we should have return'd in the above statement !! */
     if (symbol->type != NULL) ERROR;  
 
-    // symbol_c *global_value_type = global_enumerated_value_symtable.find_value(symbol->value);
     symbol_c *local_value_type  = local_enumerated_value_symtable.find_value(symbol->value);
-    if (local_value_type == local_enumerated_value_symtable.end_value())
-      /* This identifier has not yet been used in any previous local declaration of an enumeration data type, so we add it to the local symbol table. */
-      local_enumerated_value_symtable.insert(symbol->value, current_enumerated_type);
-    else 
-      /* This identifier has already been used in a previous declaration of an enumeration data type. so we set the symbol in symbol table pointing to NULL. */
-      local_enumerated_value_symtable.set(symbol->value, NULL);
+    
+    /* add it to the local symbol table. */
+    local_enumerated_value_symtable.insert(symbol->value, current_enumerated_type);
     return NULL;
   }
 }; // class populate_enumvalue_symtable_c
@@ -528,7 +514,7 @@ void fill_candidate_datatypes_c::handle_function_call(symbol_c *fcall, generic_f
 	 * expressions inside the function call will themselves have erros and will  guarantee that 
 	 * compilation is aborted in stage3 (in print_datatypes_error_c).
 	 */
-	if (function_symtable.multiplicity(fcall_data.function_name) == 1) {
+	if (function_symtable.count(fcall_data.function_name) == 1) {
 		f_decl = function_symtable.get_value(lower);
 		returned_parameter_type = base_type(f_decl->type_name);
 		if (add_datatype_to_candidate_list(fcall, returned_parameter_type))
@@ -920,17 +906,20 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 	if (NULL != symbol->type)
 		enumerated_type = symbol->type; /* TODO: check whether the value really belongs to that datatype!! */
 	else {
-		global_enumerated_type = global_enumerated_value_symtable.find_value(symbol->value);
-		local_enumerated_type  =  local_enumerated_value_symtable.find_value(symbol->value);
-		if      (( local_enumerated_type ==  local_enumerated_value_symtable.end_value()) && (global_enumerated_type == global_enumerated_value_symtable.end_value()))
+		symbol_c *global_enumerated_type = global_enumerated_value_symtable.find_value  (symbol->value);
+		symbol_c * local_enumerated_type =  local_enumerated_value_symtable.find_value  (symbol->value);
+		int       global_multiplicity    = global_enumerated_value_symtable.count(symbol->value);
+		int        local_multiplicity    =  local_enumerated_value_symtable.count(symbol->value);
+
+		if      (( local_multiplicity == 0) && (global_multiplicity == 0))
 		  enumerated_type = NULL; // not found!
-		else if (( local_enumerated_type !=  local_enumerated_value_symtable.end_value()) && (local_enumerated_type == NULL))
-			enumerated_type = NULL; // Duplicate, so it is ambiguous!
-		else if (( local_enumerated_type !=  local_enumerated_value_symtable.end_value()))
+		else if (  local_multiplicity  > 1)
+			enumerated_type = NULL; // Local duplicate, so it is ambiguous!
+		else if (  local_multiplicity == 1)
 			enumerated_type = local_enumerated_type;
-		else if ((global_enumerated_type != global_enumerated_value_symtable.end_value()) && (global_enumerated_type == NULL))
-			enumerated_type = NULL; // Duplicate, so it is ambiguous!
-		else if ((global_enumerated_type != global_enumerated_value_symtable.end_value()))
+		else if ( global_multiplicity  > 1)
+			enumerated_type = NULL; // Global duplicate, so it is ambiguous!
+		else if ( global_multiplicity == 1)
 			enumerated_type = global_enumerated_type;
 		else ERROR;
 	}
