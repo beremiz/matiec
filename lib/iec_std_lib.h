@@ -906,21 +906,27 @@ __ANY_REAL(__to_anyint_)
 #undef __iec_
 
 
-/********   _TO_BCD   ************/ 
+/********   _TO_BCD   ************/
 #define __iec_(to_TYPENAME,from_TYPENAME) \
 static inline to_TYPENAME from_TYPENAME##_TO_BCD_##to_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
   TEST_EN(to_TYPENAME)\
   return (to_TYPENAME)__uint_to_bcd(op);\
+}\
+static inline to_TYPENAME from_TYPENAME##_TO_BCD__##to_TYPENAME##__##from_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
+  return from_TYPENAME##_TO_BCD_##to_TYPENAME(EN_ENO, op);\
 }
 __ANY_UINT(__to_anynbit_)
 #undef __iec_
 
 
-/********   BCD_TO_   ************/ 
+/********   BCD_TO_   ************/
 #define __iec_(to_TYPENAME,from_TYPENAME) \
 static inline to_TYPENAME from_TYPENAME##_BCD_TO_##to_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
   TEST_EN(to_TYPENAME)\
   return (to_TYPENAME)__bcd_to_uint(op);\
+}\
+static inline to_TYPENAME BCD_TO_##to_TYPENAME##__##to_TYPENAME##__##from_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
+  return from_TYPENAME##_BCD_TO_##to_TYPENAME(EN_ENO, op);\
 }
 __ANY_NBIT(__to_anyuint_)
 #undef __iec_

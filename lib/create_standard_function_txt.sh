@@ -273,7 +273,9 @@ __ANY_REAL(__to_anyint_)
 /*******************/
 /*   *_TO_BCD_*    */
 /*******************/
-#define __iec_(to_TYPENAME,from_TYPENAME) __function_1p(from_TYPENAME##_TO_BCD_##to_TYPENAME, to_TYPENAME, IN, from_TYPENAME)
+#define __iec_(to_TYPENAME,from_TYPENAME)\
+__function_1p(from_TYPENAME##_TO_BCD_##to_TYPENAME, to_TYPENAME, IN, from_TYPENAME)  /* explicitly typed function */\
+__function_1p(from_TYPENAME##_TO_BCD, to_TYPENAME, IN, from_TYPENAME)                /* overloaded function */ 
 __ANY_UINT(__to_anynbit_)
 #undef __iec_
 
@@ -281,7 +283,10 @@ __ANY_UINT(__to_anynbit_)
 /*******************/
 /*   *_BCD_TO_*    */
 /*******************/
-#define __iec_(to_TYPENAME,from_TYPENAME) __function_1p(from_TYPENAME##_BCD_TO_##to_TYPENAME, to_TYPENAME, IN, from_TYPENAME)
+#define __iec_(to_TYPENAME,from_TYPENAME)\
+__function_1p(from_TYPENAME##_BCD_TO_##to_TYPENAME, to_TYPENAME, IN, from_TYPENAME)  /* explicitly typed function */\
+__function_1p(BCD_TO_##to_TYPENAME, to_TYPENAME, IN, from_TYPENAME)                  /* overloaded function */ 
+
 __ANY_NBIT(__to_anyuint_)
 #undef __iec_
 

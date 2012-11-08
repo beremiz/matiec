@@ -625,9 +625,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}\n");
             if (strcmp(qualifier, "DS") == 0) {
-              s4o.print(s4o.indent_spaces + "if (");
-              s4o.print("desactivated");
-              s4o.print(") {\n");
+              s4o.print(s4o.indent_spaces + "if (desactivated) {\n");
               s4o.indent_right();
               s4o.print(s4o.indent_spaces);
               print_action_argument(current_action, "set_remaining_time");
