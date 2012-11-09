@@ -72,6 +72,32 @@
 #define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
 #define IS_OVERFLOW(dtype, symbol)            (symbol_c::cs_overflow == (symbol)->const_value._##dtype.status)
 
+
+
+
+#define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
+#define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
+
+
+#define STAGE3_ERROR(error_level, symbol1, symbol2, ...) {                                                                  \
+    fprintf(stderr, "%s:%d-%d..%d-%d: error: ",                                                                             \
+            FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,\
+                                                 LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column);\
+    fprintf(stderr, __VA_ARGS__);                                                                                           \
+    fprintf(stderr, "\n");                                                                                                  \
+}  
+
+
+#define STAGE3_WARNING(symbol1, symbol2, ...) {                                                                             \
+    fprintf(stderr, "%s:%d-%d..%d-%d: warning: ",                                                                           \
+            FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,\
+                                                 LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column);\
+    fprintf(stderr, __VA_ARGS__);                                                                                           \
+    fprintf(stderr, "\n");                                                                                                  \
+}  
+
+
+
 /* set to 1 to see debug info during execution */
 static int debug = 0;
 
@@ -86,9 +112,11 @@ static int debug = 0;
 /* Add to the global_enumerated_value_symtable the global enum value constants, i.e. the enum constants used in the enumerated
  * datatypes that are defined inside a TYPE ... END_TYPE declaration.
  */
+/* NOTE: we do not store any NULL values in this symbol table, so we can safely use NULL and the null value. */
 
- symbol_c null_globalenumvalue_symbol; /* cannot be static, so it may be used in the template!! */
- static dsymtable_c<symbol_c *, &null_globalenumvalue_symbol> global_enumerated_value_symtable;
+symbol_c null_enumvalue_symbol; /* cannot be static, so it may be used in the template!! */
+typedef dsymtable_c<symbol_c *, &null_enumvalue_symbol> enumerated_value_symtable_t;
+static enumerated_value_symtable_t global_enumerated_value_symtable;
  
  
 class populate_globalenumvalue_symtable_c: public iterator_visitor_c {
@@ -128,16 +156,14 @@ class populate_globalenumvalue_symtable_c: public iterator_visitor_c {
     if (current_enumerated_type == NULL) ERROR;
     if (symbol->type != NULL) ERROR;
 
-    symbol_c *value_type = global_enumerated_value_symtable.find_value(symbol->value);
-    /* NOTE: The following condition checks whether the same identifier is used more than once
-     *       when defining the enumerated values of the type declaration of the new enumerated type.
-     *       If this occurs, then the program beeing compiled contains a semantic error, which
-     *       must be caught and reported by the semantic analyser. However, since
-     *       this code is run before the semantic analyser, we must not yet raise the ERROR (internal
-     *       compiler error message).
-     *       For this reason, the follosing check is commented out.
-     */
-    /* if (value_type == current_enumerated_type) ERROR; */
+    enumerated_value_symtable_t::iterator lower = global_enumerated_value_symtable.lower_bound(symbol->value);
+    enumerated_value_symtable_t::iterator upper = global_enumerated_value_symtable.upper_bound(symbol->value);
+    for (; lower != upper; lower++)
+      if (lower->second == current_enumerated_type) {
+        /*  The same identifier is used more than once as an enumerated value/constant inside the same enumerated datat type! */
+        STAGE3_ERROR(0, symbol, symbol, "Duplicate identifier in enumerated data type.");
+        return NULL; /* No need to insert it! It is already in the table! */
+      }
 
     global_enumerated_value_symtable.insert(symbol->value, current_enumerated_type);
     return NULL;
@@ -200,8 +226,7 @@ static populate_globalenumvalue_symtable_c populate_globalenumvalue_symtable;
  *     END_FUNCTION_BLOCK
  */
  
- symbol_c null_localenumvalue_symbol; /* cannot be static, so it may be used in the template!! */
- static dsymtable_c<symbol_c *, &null_localenumvalue_symbol> local_enumerated_value_symtable;
+static enumerated_value_symtable_t local_enumerated_value_symtable;
 
 
 class populate_enumvalue_symtable_c: public iterator_visitor_c {
@@ -241,7 +266,14 @@ class populate_enumvalue_symtable_c: public iterator_visitor_c {
     /* this is really an ERROR! The initial value may use the syntax NUM_TYPE#enum_value, but in that case we should have return'd in the above statement !! */
     if (symbol->type != NULL) ERROR;  
 
-    symbol_c *local_value_type  = local_enumerated_value_symtable.find_value(symbol->value);
+    enumerated_value_symtable_t::iterator lower = local_enumerated_value_symtable.lower_bound(symbol->value);
+    enumerated_value_symtable_t::iterator upper = local_enumerated_value_symtable.upper_bound(symbol->value);
+    for (; lower != upper; lower++)
+      if (lower->second == current_enumerated_type) {
+        /*  The same identifier is used more than once as an enumerated value/constant inside the same enumerated datat type! */
+        STAGE3_ERROR(0, symbol, symbol, "Duplicate identifier in enumerated data type.");
+        return NULL; /* No need to insert it! It is already in the table! */
+      }
     
     /* add it to the local symbol table. */
     local_enumerated_value_symtable.insert(symbol->value, current_enumerated_type);
@@ -383,7 +415,6 @@ bool fill_candidate_datatypes_c::match_nonformal_call(symbol_c *f_call, symbol_c
 			if(param_name == NULL) return false;
 		} while ((strcmp(param_name->value, "EN") == 0) || (strcmp(param_name->value, "ENO") == 0));
 
-		/* TODO: verify if it is lvalue when INOUT or OUTPUT parameters! */
 		/* Get the parameter type */
 		param_datatype = base_type(fp_iterator.param_type());
 		
@@ -774,8 +805,6 @@ void *fill_candidate_datatypes_c::visit(single_byte_character_string_c *symbol) 
 /* B 1.2.3.1 - Duration */
 /************************/
 void *fill_candidate_datatypes_c::visit(duration_c *symbol) {
-	/* TODO: check whether the literal follows the rules specified in section '2.2.3.1 Duration' of the standard! */
-	
 	add_datatype_to_candidate_list(symbol, symbol->type_name);
 	if (debug) std::cout << "TIME_LITERAL [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
@@ -903,8 +932,44 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 	symbol_c *local_enumerated_type;
 	symbol_c *enumerated_type;
 
-	if (NULL != symbol->type)
-		enumerated_type = symbol->type; /* TODO: check whether the value really belongs to that datatype!! */
+	if (NULL != symbol->type) {
+#if 1
+		enumerated_type = symbol->type; 
+#else
+		/* NOTE: The following code works but is not complete, that is why it is currently commented out!
+		 *  
+		 *        It is not complete because it does not yet consider the following situation:
+		 *
+		 *        TYPE  
+		 *           base_enum_t: (x1, x2, x3);
+		 *           enum_t1 : base_enum_t := x1;
+		 *           enum_t2 : base_enum_t := x2;
+		 *           enum_t12: enum_t1     := x2;
+		 *        END_TYPE
+		 *
+		 *     considering the above, ALL of the following are correct!
+		 *         base_enum_t#x1
+		 *             enum_t1#x1
+		 *             enum_t2#x1
+		 *            enum_t12#x1
+		 *
+		 *      However, the following code only considers 
+ 		 *         base_enum_t#x1
+		 *      as correct, and all the others as incorrect!
+		 */
+		/* check whether the value really belongs to that datatype!! */
+		/* All local enum values are declared inside anonymous enumeration datatypes (i.e. inside a VAR ... END_VAR declaration, with
+		 * the enum type having no type name), so thay cannot possibly be referenced using a datatype_t#enumvalue syntax.
+		 * Because of this, we only look for the datatype identifier in the global enum value symbol table!
+		 */
+		enumerated_type = NULL;  // assume error...
+		enumerated_value_symtable_t::iterator lower = global_enumerated_value_symtable.lower_bound(symbol->value);
+		enumerated_value_symtable_t::iterator upper = global_enumerated_value_symtable.upper_bound(symbol->value);
+		for (; lower != upper; lower++)
+			if (compare_identifiers(search_base_type_c::get_basetype_id(lower->second), symbol->type) == 0)  // returns 0 if identifiers are equal!!
+				enumerated_type = symbol->type; 
+#endif
+	}
 	else {
 		symbol_c *global_enumerated_type = global_enumerated_value_symtable.find_value  (symbol->value);
 		symbol_c * local_enumerated_type =  local_enumerated_value_symtable.find_value  (symbol->value);
