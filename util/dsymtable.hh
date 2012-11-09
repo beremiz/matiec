@@ -106,7 +106,7 @@ template<typename value_type, value_type null_value> class dsymtable_c {
     iterator lower_bound(const symbol_c *symbol)     {return lower_bound(symbol_to_string(symbol));}
     
     /* Search for the first entry with key greater than identifier_str. Will return end() if not found */
-    iterator upper_bound(const char *identifier_str) {return _base.upper_bound(identifier_str);}
+    iterator upper_bound(const char *identifier_str) {return ((count(identifier_str) == 0)? _base.end() : _base.upper_bound(identifier_str));}
     iterator upper_bound(const symbol_c *symbol)     {return upper_bound(symbol_to_string(symbol));}
 
     /* get the value to which an iterator is pointing to... */
