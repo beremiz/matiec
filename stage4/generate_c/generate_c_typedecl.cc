@@ -317,7 +317,10 @@ void *visit(enumerated_value_c *symbol) {
   if (current_typedefinition == enumerated_td)
     current_type_name->accept(*basedecl);
   else {
-    if (NULL == symbol->datatype) ERROR;
+    if (NULL == symbol->datatype) {
+      debug_c::print(symbol);
+      ERROR;
+    }
     symbol->datatype->accept(*basedecl);
   }
   s4o_incl.print("__");

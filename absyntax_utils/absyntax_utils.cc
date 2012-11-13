@@ -193,7 +193,7 @@ class populate_symtables_c: public iterator_visitor_c {
   /*  enumerated_type_name ':' enumerated_spec_init */
   void *visit(enumerated_type_declaration_c *symbol) {
     TRACE("enumerated_type_declaration_c");
-    type_symtable.insert(symbol->enumerated_type_name, symbol->enumerated_spec_init);
+    type_symtable.insert(symbol->enumerated_type_name, symbol);
     current_enumerated_type = symbol->enumerated_type_name;
     symbol->enumerated_spec_init->accept(*this);
     current_enumerated_type = NULL;

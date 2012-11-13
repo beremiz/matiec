@@ -382,6 +382,40 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       }
     }
 
+
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+    /*  enumerated_type_name ':' enumerated_spec_init */
+    void *visit(enumerated_type_declaration_c *symbol) {
+      this->current_var_type_name->accept(*this);
+      return NULL;
+    }
+
+    /* enumerated_specification ASSIGN enumerated_value */
+    void *visit(enumerated_spec_init_c *symbol) {
+      /* search_base_type_c now returns an enumerated_type_declaration_c as the base type of a non-anonymous enumerated type
+       * (non-anonymous means it is declared inside a TYPE ... END_TYPE declaration, with a given name/identifier
+       *  unlike implicitly defined anonymous datatypes declared inside VAR ... END_VAR declarations!).
+       * This means that this method should not get called.
+       */
+      ERROR;  
+      this->current_var_type_name->accept(*this);
+      return NULL;
+    }
+
+    /* enumerated_value_list ',' enumerated_value */
+    void *visit(enumerated_value_list_c *symbol) {
+      /* search_base_type_c now returns an enumerated_type_declaration_c as the base type of a non-anonymous enumerated type
+       * (non-anonymous means it is declared inside a TYPE ... END_TYPE declaration, with a given name/identifier
+       *  unlike implicitly defined anonymous datatypes declared inside VAR ... END_VAR declarations!).
+       * This means that this method should not get called.
+       */
+      ERROR;
+      this->current_var_type_name->accept(*this);
+      return NULL;
+    }
+
 /********************************************/
 /* B.1.4.3 - Declaration and initialization */
 /********************************************/
@@ -556,12 +590,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       return NULL;
     }
 
-    /* enumerated_value_list ',' enumerated_value */
-    void *visit(enumerated_value_list_c *symbol) {
-      this->current_var_type_name->accept(*this);
-      return NULL;
-    }
-    
+
     /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
     /* structure_initialization -> may be NULL ! */
     void *visit(fb_name_decl_c *symbol) {

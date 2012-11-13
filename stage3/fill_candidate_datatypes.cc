@@ -896,20 +896,14 @@ void *fill_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) {
 /* enumerated_value_list ',' enumerated_value */
 // SYM_LIST(enumerated_value_list_c)
 void *fill_candidate_datatypes_c::visit(enumerated_value_list_c *symbol) {
-  if (NULL == current_enumerated_spec_type) ERROR;
-  
-  /* Actually, all this passing of symbol_c * through the  current_enumerated_spec_type is actually useless, as the base type
-   * is actually this enumerated_value_list_c symbol!!! However, it is safer to do it this way, as we can then later change 
-   * search_base_type_c without having to change this fill_candidate_datatypes_c class too!!
-   */
+  if (NULL == current_enumerated_spec_type) ERROR;  
   current_enumerated_spec_type = base_type(current_enumerated_spec_type);
   if (NULL == current_enumerated_spec_type) ERROR;
   
   /* We already know the datatype of the enumerated_value(s) in the list, so we set them directly instead of recursively calling the enumerated_value_c visit method! */
-  for(int i = 0; i < symbol->n; i++) {
+  for(int i = 0; i < symbol->n; i++)
     add_datatype_to_candidate_list(symbol->elements[i], current_enumerated_spec_type);
-    symbol->elements[i]->datatype = current_enumerated_spec_type; // To be consistent, this should really be done in the narrow_candidate_datatypes_c !!
-  }
+
   return NULL;  
 }
 
