@@ -44,14 +44,32 @@
 #include <unistd.h>
 #include <stdio.h>  /* required for NULL */
 #include "absyntax_utils.hh"
+#include "../absyntax/visitor.hh"
 
 
 
 
 
 
+/*********************************/
+/* Class to print a symbol       */
+/*********************************/
 
 
+class print_symbol_c: public fcall_visitor_c { 
+  public:
+    static void print(symbol_c *symbol);
+    
+  protected:
+    void fcall(symbol_c *symbol);  
+    /* AST symbols with extra data have their own specialised methods for printing that data */
+    void *visit(il_instruction_c *symbol);
+
+  private:
+    static print_symbol_c *singleton;
+    
+    void dump_symbol(symbol_c* symbol);
+};
 
 
 
@@ -65,9 +83,6 @@ void print_symbol_c::print(symbol_c* symbol) {
 
   symbol->accept(*singleton);
 }
-
-
-
 
 
 
@@ -137,10 +152,22 @@ void *print_symbol_c::visit(il_instruction_c *symbol) {
 
 
 
+/*********************************/
+/* Class to print an AST         */
+/*********************************/
 
-
-
-
+class print_ast_c: public fcall_iterator_visitor_c { 
+  public:
+    static void print(symbol_c *symbol);
+    static void print(const char *str);
+    
+  protected:
+    void prefix_fcall(symbol_c *symbol);
+    void suffix_fcall(symbol_c *symbol);  
+  
+  private:
+    static print_ast_c *singleton;    
+};
 
 
 
@@ -155,6 +182,11 @@ void print_ast_c::print(symbol_c* symbol) {
   symbol->accept(*singleton);
 }
 
+
+void print_ast_c::print(const char *str) {
+  fprintf(stderr, str);
+}
+
   
 void print_ast_c::prefix_fcall(symbol_c* symbol) {print_symbol_c::print(symbol);}
 void print_ast_c::suffix_fcall(symbol_c* symbol) {}
@@ -163,12 +195,24 @@ void print_ast_c::suffix_fcall(symbol_c* symbol) {}
 
 
 
+/*********************************/
+/* The DEBUG class               */
+/*********************************/
 
 
 
 
+void debug_c::print(const char *str) {
+  fprintf(stderr, str);
+}
 
+void debug_c::print(symbol_c *symbol) {
+  print_symbol_c::print(symbol);
+}
 
+void debug_c::print_ast(symbol_c *symbol) {
+  print_ast_c::print(symbol);
+}
 
 
 

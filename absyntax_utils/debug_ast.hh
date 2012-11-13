@@ -41,41 +41,19 @@
 
 
 
-#include "../absyntax/visitor.hh"
+#include "../absyntax/absyntax.hh"
 
 
-
-class print_symbol_c: public fcall_visitor_c { 
+class debug_c { 
   public:
     static void print(symbol_c *symbol);
-    
-  protected:
-    void fcall(symbol_c *symbol);  
-    /* AST symbols with extra data have their own specialised methods for printing that data */
-    void *visit(il_instruction_c *symbol);
+    static void print(const char *str);
 
-  private:
-    static print_symbol_c *singleton;
-    
-    void dump_symbol(symbol_c* symbol);
+    /* print the AST from this point downwards */
+    static void print_ast(symbol_c *root_symbol);
 };
 
 
-
-
-
-
-class print_ast_c: public fcall_iterator_visitor_c { 
-  public:
-    static void print(symbol_c *symbol);
-    
-  protected:
-  void prefix_fcall(symbol_c *symbol);
-  void suffix_fcall(symbol_c *symbol);  
-  
-  private:
-    static print_ast_c *singleton;    
-};
 
 
 
