@@ -476,9 +476,11 @@ void *narrow_candidate_datatypes_c::visit(subrange_c *symbol) {
 /*  enumerated_type_name ':' enumerated_spec_init */
 // SYM_REF2(enumerated_type_declaration_c, enumerated_type_name, enumerated_spec_init)
 void *narrow_candidate_datatypes_c::visit(enumerated_type_declaration_c *symbol) {
-  symbol->datatype = search_base_type_c::get_basetype_decl(symbol);
-  symbol->enumerated_type_name->datatype = symbol->datatype;
-  symbol->enumerated_spec_init->datatype = symbol->datatype;
+  if (symbol->candidate_datatypes.size() != 1) ERROR;
+  
+  symbol->datatype = symbol->candidate_datatypes[0];
+  set_datatype(symbol->datatype, symbol->enumerated_type_name);
+  set_datatype(symbol->datatype, symbol->enumerated_spec_init);
   
   symbol->enumerated_spec_init->accept(*this);
   return NULL;
@@ -491,15 +493,12 @@ void *narrow_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) {
   /* If we are handling an anonymous datatype (i.e. a datatype implicitly declared inside a VAR ... END_VAR declaration)
    * then the symbol->datatype has not yet been set by the previous visit(enumerated_spec_init_c) method!
    */
-  if (NULL == symbol->datatype)
-    symbol->datatype = search_base_type_c::get_basetype_decl(symbol);
-  symbol->enumerated_specification->datatype = symbol->datatype;
+  if (NULL == symbol->datatype) {
+    if (symbol->candidate_datatypes.size() != 1) ERROR;
+    symbol->datatype = symbol->candidate_datatypes[0];
+  }
+  set_datatype(symbol->datatype, symbol->enumerated_specification);
   if (NULL != symbol->enumerated_value) 
-    /* the enumerated_value_c object to which this list points to has both the datatype and the candidate_datatype_list filled in, so we 
-     * call set_datatype() instead of setting the datatype directly!
-     * If the desired datatype does not match the datatypes in the candidate list, then the source code has a bug that will be caught by
-     * print_datatypes_error_c
-     */
     set_datatype(symbol->datatype, symbol->enumerated_value);
 
   symbol->enumerated_specification->accept(*this); /* calls enumerated_value_list_c (or identifier_c, which we ignore!) visit method */

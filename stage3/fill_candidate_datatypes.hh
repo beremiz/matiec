@@ -175,7 +175,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
 //  void *visit(subrange_spec_init_c *symbol);
 //  void *visit(subrange_specification_c *symbol);
     void *visit(subrange_c *symbol);
-//  void *visit(enumerated_type_declaration_c *symbol); /* Not required. already handled by iterator_visitor_c base class */
+    void *visit(enumerated_type_declaration_c *symbol);
     void *visit(enumerated_spec_init_c *symbol);
     void *visit(enumerated_value_list_c *symbol);
     void *visit(enumerated_value_c *symbol);
