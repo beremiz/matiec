@@ -881,7 +881,8 @@ void *fill_candidate_datatypes_c::visit(subrange_c *symbol) {
 // SYM_REF2(enumerated_type_declaration_c, enumerated_type_name, enumerated_spec_init)
 void *fill_candidate_datatypes_c::visit(enumerated_type_declaration_c *symbol) {
   current_enumerated_spec_type = base_type(symbol);
-  add_datatype_to_candidate_list(symbol, current_enumerated_spec_type);
+  add_datatype_to_candidate_list(symbol,                       current_enumerated_spec_type);
+  add_datatype_to_candidate_list(symbol->enumerated_type_name, current_enumerated_spec_type);
   symbol->enumerated_spec_init->accept(*this);
   current_enumerated_spec_type = NULL;  
   return NULL;
@@ -894,8 +895,8 @@ void *fill_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) {
   /* If we are handling an anonymous datatype (i.e. a datatype implicitly declared inside a VAR ... END_VAR declaration)
    * then the symbol->datatype has not yet been set by the previous visit(enumerated_spec_init_c) method!
    */
-  if (NULL == current_enumerated_spec_type )
-    current_enumerated_spec_type  = base_type(symbol);  
+  if (NULL == current_enumerated_spec_type)
+    current_enumerated_spec_type = base_type(symbol);  
   add_datatype_to_candidate_list(symbol, current_enumerated_spec_type);
   symbol->enumerated_specification->accept(*this); /* calls enumerated_value_list_c (or identifier_c, which we ignore!) visit method */
   current_enumerated_spec_type = NULL;  
@@ -908,6 +909,7 @@ void *fill_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) {
 // SYM_LIST(enumerated_value_list_c)
 void *fill_candidate_datatypes_c::visit(enumerated_value_list_c *symbol) {
   if (NULL == current_enumerated_spec_type) ERROR;  
+  add_datatype_to_candidate_list(symbol, current_enumerated_spec_type);
   
   /* We already know the datatype of the enumerated_value(s) in the list, so we set them directly instead of recursively calling the enumerated_value_c visit method! */
   for(int i = 0; i < symbol->n; i++)
