@@ -50,13 +50,78 @@
 #include <typeinfo>  // required for typeid
 
 
+/**********************************************************/
+/**********************************************************/
+/**********************************************************/
+/*****                                                *****/
+/*****                                                *****/
+/*****           Some helper classes                  *****/
+/*****                                                *****/
+/*****                                                *****/
+/**********************************************************/
+/**********************************************************/
+/**********************************************************/
+
+/* Return the identifier (name) of a datatype, typically declared in a TYPE .. END_TYPE declaration */
+class get_datatype_id_c: null_visitor_c {
+  private:
+    static get_datatype_id_c *singleton;
+    
+  public:
+    static symbol_c *get_id(symbol_c *symbol) {
+      if (NULL == singleton) singleton = new  get_datatype_id_c();
+      if (NULL == singleton) ERROR;
+      return (symbol_c *)symbol->accept(*singleton);
+    }
+    
+  protected:
+    /********************************/
+    /* B 1.3.3 - Derived data types */
+    /********************************/
+    /*  simple_type_name ':' simple_spec_init */
+    void *visit(simple_type_declaration_c *symbol)      {return symbol->simple_type_name;}
+    /*  subrange_type_name ':' subrange_spec_init */
+    void *visit(subrange_type_declaration_c *symbol)    {return symbol->subrange_type_name;}
+    /*  enumerated_type_name ':' enumerated_spec_init */
+    void *visit(enumerated_type_declaration_c *symbol)  {return symbol->enumerated_type_name;}
+    /*  identifier ':' array_spec_init */
+    void *visit(array_type_declaration_c *symbol)       {return symbol->identifier;}
+    /*  structure_type_name ':' structure_specification */
+    void *visit(structure_type_declaration_c *symbol)   {return symbol->structure_type_name;}
+    /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
+    void *visit(string_type_declaration_c *symbol)      {return symbol->string_type_name;}
+    
+    /*****************************/
+    /* B 1.5.2 - Function Blocks */
+    /*****************************/
+    /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
+    void *visit(function_block_declaration_c *symbol)      {return symbol->fblock_name;}
+}; // get_datatype_id_c 
+
+get_datatype_id_c *get_datatype_id_c::singleton = NULL;
 
 
 
 
 
 
+/**********************************************************/
+/**********************************************************/
+/**********************************************************/
+/*****                                                *****/
+/*****                                                *****/
+/*****        GET_DATATYPE_INFO_C                     *****/
+/*****                                                *****/
+/*****                                                *****/
+/**********************************************************/
+/**********************************************************/
+/**********************************************************/
 
+
+
+symbol_c *get_datatype_info_c::get_datatype_id(symbol_c *datatype) {
+  return get_datatype_id_c::get_id(datatype);
+}
 
 
 bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_type) {
