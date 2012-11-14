@@ -159,7 +159,7 @@ class print_datatypes_error_c: public iterator_visitor_c {
     /* B 1.3.3 - Derived data types */
     /********************************/
     void *visit(simple_spec_init_c *symbol);
-    void *visit(data_type_declaration_c *symbol);
+//  void *visit(data_type_declaration_c *symbol); /* use base iterator_c method! */
     void *visit(enumerated_value_c *symbol);
 
     /*********************/

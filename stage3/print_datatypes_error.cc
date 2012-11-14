@@ -536,11 +536,6 @@ void *print_datatypes_error_c::visit(simple_spec_init_c *symbol) {
 	return NULL;
 }
 
-void *print_datatypes_error_c::visit(data_type_declaration_c *symbol) {
-	// TODO !!!
-	/* for the moment we must return NULL so semantic analysis of remaining code is not interrupted! */
-	return NULL;
-}
 
 void *print_datatypes_error_c::visit(enumerated_value_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0)
@@ -648,8 +643,7 @@ void *print_datatypes_error_c::visit(located_var_decl_c *symbol) {
 /*********************/
 void *print_datatypes_error_c::visit(function_declaration_c *symbol) {
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
-	/* We do not check for data type errors in variable declarations, Skip this for now... */
-// 	symbol->var_declarations_list->accept(*this);
+ 	symbol->var_declarations_list->accept(*this);
 	if (debug) printf("Print error data types list in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
 	il_parenthesis_level = 0;
 	il_error = false;
@@ -664,8 +658,7 @@ void *print_datatypes_error_c::visit(function_declaration_c *symbol) {
 /***************************/
 void *print_datatypes_error_c::visit(function_block_declaration_c *symbol) {
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
-	/* We do not check for data type errors in variable declarations, Skip this for now... */
-// 	symbol->var_declarations->accept(*this);
+ 	symbol->var_declarations->accept(*this);
 	if (debug) printf("Print error data types list in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
 	il_parenthesis_level = 0;
 	il_error = false;
@@ -680,7 +673,6 @@ void *print_datatypes_error_c::visit(function_block_declaration_c *symbol) {
 /**********************/
 void *print_datatypes_error_c::visit(program_declaration_c *symbol) {
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
-	/* We do not check for data type errors in variable declarations, Skip this for now... */
 	symbol->var_declarations->accept(*this);
 	if (debug) printf("Print error data types list in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
 	il_parenthesis_level = 0;

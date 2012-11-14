@@ -323,7 +323,7 @@ void *visit(enumerated_value_c *symbol) {
     }
     symbol_c *type_name = get_datatype_info_c::get_datatype_id(symbol->datatype);
     if (NULL == type_name) {
-      ERROR_MSG("generate_c does not support anonymous enumerated data types.");
+//       ERROR_MSG("generate_c does not support anonymous enumerated data types.");
     } else
     type_name->accept(*basedecl);
   }

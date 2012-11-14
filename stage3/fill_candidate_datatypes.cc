@@ -1137,11 +1137,12 @@ void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 /******************************************/
 
 void *fill_candidate_datatypes_c::visit(var1_list_c *symbol) {
-#if 0   /* We don't really need to set the datatype of each variable. We just check the declaration itself! */
   for(int i = 0; i < symbol->n; i++) {
-    add_datatype_to_candidate_list(symbol->elements[i], search_varfb_instance_type->get_basetype_decl(symbol->elements[i])); /* will only add if non NULL */
+    /* We don't really need to set the datatype of each variable. We just check the declaration itself! 
+    add_datatype_to_candidate_list(symbol->elements[i], search_varfb_instance_type->get_basetype_decl(symbol->elements[i])); // will only add if non NULL 
+    */
+    symbol->elements[i]->accept(*this); // handle the extensible_input_parameter_c, etc...
   }
-#endif
   return NULL;
 }  
 
