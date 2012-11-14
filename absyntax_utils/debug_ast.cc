@@ -114,7 +114,11 @@ void print_symbol_c::dump_symbol(symbol_c* symbol) {
   } else {
     fprintf(stderr, "(%d)\t\t\t\t\t", symbol->candidate_datatypes.size());
   }
-  fprintf(stderr, "}\t");          
+  fprintf(stderr, "}\t");         
+  
+  /* print the const values... */
+  fprintf(stderr, " constv{f=%f, i=%lld, u=%llu, b=%d}\t", symbol->const_value._real64.value, symbol->const_value._int64.value, symbol->const_value._uint64.value, symbol->const_value._bool.value);
+  
 }
 
 
