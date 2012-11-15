@@ -2549,10 +2549,13 @@ single_element_type_declaration:
 
 simple_type_declaration:
 /*  simple_type_name ':' simple_spec_init */
-  identifier ':' simple_spec_init
-	{$$ = new simple_type_declaration_c($1, $3, locloc(@$));
-	 library_element_symtable.insert($1, prev_declared_simple_type_name_token);
-	}
+/* To understand why simple_spec_init was brocken up into its consituent components in the following rules, please see note in the definition of 'enumerated_type_declaration'. */
+  identifier ':' simple_specification           {library_element_symtable.insert($1, prev_declared_simple_type_name_token);}
+	{$$ = new simple_type_declaration_c($1, $3, locloc(@$));}
+| identifier ':' elementary_type_name           {library_element_symtable.insert($1, prev_declared_simple_type_name_token);} ASSIGN constant
+	{$$ = new simple_type_declaration_c($1, new simple_spec_init_c($3, $6, locf(@3), locl(@6)), locloc(@$));}
+| identifier ':' prev_declared_simple_type_name {library_element_symtable.insert($1, prev_declared_simple_type_name_token);} ASSIGN constant
+	{$$ = new simple_type_declaration_c($1, new simple_spec_init_c($3, $6, locf(@3), locl(@6)), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | error ':' simple_spec_init
 	{$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid name defined for data type declaration.");yyerrok;}
@@ -2687,10 +2690,23 @@ subrange:
 
 enumerated_type_declaration:
 /*  enumerated_type_name ':' enumerated_spec_init */
-  identifier ':' enumerated_spec_init
-	{$$ = new enumerated_type_declaration_c($1, $3, locloc(@$));
-	 library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);
-	}
+/* NOTE: The 'identifier' used for the name of the new enumerated type is inserted early into the library_element_symtable so it may be used
+ *       in defining the default initial value of this type, using the fully qualified enumerated constant syntax: type_name#enum_value
+ *       In other words, this allows us to correclty parse the following IEC 61131-3 code:
+ *           TYPE enum_t : (x1, x2, x3) := enum_t#x3; END_TYPE
+ *                                         ^^^^^^^
+ *
+ *       However, we can only introduce it after we are sure we are parsing an enumerated_spec. For this reason, instead of using the
+ *       symbol enumerated_spec_init in this rule, we decompose it here instead!
+ *       
+ *       If it were not for the above, we could use the rule
+ *           identifier ':' enumerated_spec_init
+ *       and include the library_element_symtable.insert(...) code in the rule actions!
+ */
+  identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);}
+	{$$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, NULL, locloc(@3)), locloc(@$));}
+| identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);} ASSIGN enumerated_value
+	{$$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, $6, locf(@3), locl(@6)), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | error ':' enumerated_spec_init
 	{$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid name defined for enumerated type declaration."); yyerrok;}
