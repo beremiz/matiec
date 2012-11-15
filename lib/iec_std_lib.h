@@ -241,8 +241,6 @@ static inline IEC_TIMESPEC __date_to_timespec(int day, int month, int year) {
   if ((time_t)(-1) == epoch_seconds)
     __iec_error();
 
-  printf("Seconds = %d\n", (int)epoch_seconds);
-
   ts.tv_sec = epoch_seconds;
   ts.tv_nsec = 0;
 

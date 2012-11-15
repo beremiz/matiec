@@ -140,7 +140,7 @@ class search_var_instance_decl_c: public search_visitor_c {
      */
     bool type_is_complex(symbol_c *variable_name);
 
-    
+    bool type_is_fb(symbol_c *symbol);
     
   private:
     symbol_c *search_scope;
