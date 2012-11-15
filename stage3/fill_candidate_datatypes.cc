@@ -938,12 +938,7 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 	symbol_c *enumerated_type;
 
 	if (NULL != symbol->type) {
-#if 1
-		enumerated_type = symbol->type; 
-#else
-		/* NOTE: The following code works but is not complete, that is why it is currently commented out!
-		 *  
-		 *        It is not complete because it does not yet consider the following situation:
+		/* NOTE: This code must take into account the following situation:
 		 *
 		 *        TYPE  
 		 *           base_enum_t: (x1, x2, x3);
@@ -957,10 +952,6 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 		 *             enum_t1#x1
 		 *             enum_t2#x1
 		 *            enum_t12#x1
-		 *
-		 *      However, the following code only considers 
- 		 *         base_enum_t#x1
-		 *      as correct, and all the others as incorrect!
 		 */
 		/* check whether the value really belongs to that datatype!! */
 		/* All local enum values are declared inside anonymous enumeration datatypes (i.e. inside a VAR ... END_VAR declaration, with
@@ -971,9 +962,8 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 		enumerated_value_symtable_t::iterator lower = global_enumerated_value_symtable.lower_bound(symbol->value);
 		enumerated_value_symtable_t::iterator upper = global_enumerated_value_symtable.upper_bound(symbol->value);
 		for (; lower != upper; lower++)
-			if (compare_identifiers(search_base_type_c::get_basetype_id(lower->second), symbol->type) == 0)  // returns 0 if identifiers are equal!!
+			if (get_datatype_info_c::is_type_equal(base_type(lower->second), base_type(symbol->type)))
 				enumerated_type = symbol->type; 
-#endif
 	}
 	else {
 		symbol_c *global_enumerated_type = global_enumerated_value_symtable.find_value  (symbol->value);
