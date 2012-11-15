@@ -233,6 +233,9 @@ void print_err_msg(int first_line,
                    const char *last_filename,
                    long int last_order,
                    const char *additional_error_msg);
+                   
+/* Create entry in symbol table for function conversion data type*/
+void make_derived_conversion_functions(const char * dname);
 %}
 
 
@@ -2704,7 +2707,11 @@ enumerated_type_declaration:
  *       and include the library_element_symtable.insert(...) code in the rule actions!
  */
   identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);}
-	{$$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, NULL, locloc(@3)), locloc(@$));}
+	{
+      $$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, NULL, locloc(@3)), locloc(@$));
+      const char *name = ((identifier_c *)$1)->value;
+	  make_derived_conversion_functions(name);
+    }
 | identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);} ASSIGN enumerated_value
 	{$$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, $6, locf(@3), locl(@6)), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
@@ -8339,6 +8346,106 @@ int stage2__(const char *filename,
   fclose(in_file);
   return 0;
 }
+
+FILE *ftmpopen (void *buf, size_t size, const char *opentype)
+{
+  FILE *f;
+  f = tmpfile();
+  fwrite(buf, 1, size, f);
+  rewind(f);
+  return f;
+}
+
+
+int sstage2__(const char *text, 
+              symbol_c **tree_root_ref,
+              bool full_token_loc_        /* error messages specify full token location */
+             ) {
+
+  FILE *in_file = NULL;
+    
+  if((in_file = ftmpopen((void *)text, strlen(text), "r")) == NULL) {
+    perror("Error temp file.");
+    return -1;
+  }
+
+  /* now parse the input file... */
+  #if YYDEBUG
+    yydebug = 1;
+  #endif
+  yyin = in_file;
+  allow_function_overloading = true;
+  allow_extensible_function_parameters = false;
+  full_token_loc = full_token_loc_;
+  current_filename = "built-in";
+  current_tracking = GetNewTracking(yyin);
+  {int res;
+    if ((res = yyparse()) != 0) {
+      fprintf (stderr, "\nParsing failed because of too many consecutive syntax errors. Bailing out!\n");
+        exit(EXIT_FAILURE);
+    }
+  }
+
+  if (yynerrs > 0) {
+    fprintf (stderr, "\n%d error(s) found. Bailing out!\n", yynerrs /* global variable */);
+    exit(EXIT_FAILURE);
+  }
+  
+  if (tree_root_ref != NULL)
+    *tree_root_ref = tree_root;
+
+  fclose(in_file);
+  return 0;
+}
+
+
+
+/* Create entry in symbol table for function conversion data type*/
+void make_derived_conversion_functions(const char * dname) {
+  std::string strname;
+  std::string tmp;
+  
+  strname = dname;
+  tmp = strname + "_TO_STRING";
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = strname + "_TO_SINT";
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = strname + "_TO_INT";
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = strname + "_TO_DINT";
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = strname + "_TO_LINT";
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = strname + "_TO_USINT";
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = strname + "_TO_UINT";
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = strname + "_TO_UDINT";
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = strname + "_TO_ULINT";
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  /* ... */      
+  tmp = "STRING_TO_" + strname;
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = "SINT_TO_" + strname;
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = "INT_TO_" + strname;
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = "DINT_TO_" + strname;
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = "LINT_TO_" + strname;
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = "USINT_TO_" + strname;
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = "UINT_TO_" + strname;
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = "UDINT_TO_" + strname;
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  tmp = "ULINT_TO_" + strname;
+  library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
+  /* ... */
+}
+
 
 
 

@@ -46,7 +46,7 @@
 #include "stage1_2.hh"
 #include "iec_bison.h"
 #include "stage1_2_priv.hh"
-
+#include "derived_conversion_functions.hh"
 
 
 
@@ -285,6 +285,11 @@ int stage2__(const char *filename,
              bool full_token_loc         /* error messages specify full token location */
             );
 
+int sstage2__(const char *text,
+              symbol_c **tree_root_ref,
+              bool full_token_loc         /* error messages specify full token location */
+             );
+
 
 int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t options) {
       /* NOTE: we only call stage2 (bison - syntax analysis) directly, as stage 2 will itself call stage1 (flex - lexical analysis)
@@ -297,8 +302,12 @@ int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t 
        *       These callback functions will get their data from local (to this file) global variables...
        *       We now set those variables...
        */
+
   safe_extensions_ = options.safe_extensions;
-  
-  return stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc);
+  int ret = stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc);
+  derived_conversion_functions_c derived_conversion_functions(*tree_root_ref);
+  std::string source_code = derived_conversion_functions.get_declaration(*tree_root_ref);
+  ret = sstage2__(source_code.c_str(), tree_root_ref, false);
+  return ret;
 }
 

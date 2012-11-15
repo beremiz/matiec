@@ -78,6 +78,7 @@ libstage1_2_a_AR = $(AR) $(ARFLAGS)
 libstage1_2_a_LIBADD =
 am_libstage1_2_a_OBJECTS = libstage1_2_a-iec_flex.$(OBJEXT) \
 	libstage1_2_a-iec_bison.$(OBJEXT) \
+	libstage1_2_a-derived_conversion_functions.$(OBJEXT) \
 	libstage1_2_a-stage1_2.$(OBJEXT)
 libstage1_2_a_OBJECTS = $(am_libstage1_2_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/config
@@ -214,6 +215,7 @@ lib_LIBRARIES = libstage1_2.a
 libstage1_2_a_SOURCES = \
 	iec_flex.ll \
 	iec_bison.yy \
+    derived_conversion_functions.cc \
 	stage1_2.cc 
 
 libstage1_2_a_CPPFLAGS = -DDEFAULT_LIBDIR='"lib"' -I../../absyntax
@@ -297,6 +299,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstage1_2_a-derived_conversion_functions.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstage1_2_a-iec_bison.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstage1_2_a-iec_flex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libstage1_2_a-stage1_2.Po@am__quote@
@@ -342,6 +345,20 @@ libstage1_2_a-iec_bison.obj: iec_bison.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='iec_bison.cc' object='libstage1_2_a-iec_bison.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-iec_bison.obj `if test -f 'iec_bison.cc'; then $(CYGPATH_W) 'iec_bison.cc'; else $(CYGPATH_W) '$(srcdir)/iec_bison.cc'; fi`
+
+libstage1_2_a-derived_conversion_functions.o: derived_conversion_functions.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-derived_conversion_functions.o -MD -MP -MF $(DEPDIR)/libstage1_2_a-derived_conversion_functions.Tpo -c -o libstage1_2_a-derived_conversion_functions.o `test -f 'derived_conversion_functions.cc' || echo '$(srcdir)/'`derived_conversion_functions.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstage1_2_a-derived_conversion_functions.Tpo $(DEPDIR)/libstage1_2_a-derived_conversion_functions.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='derived_conversion_functions.cc' object='libstage1_2_a-derived_conversion_functions.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-derived_conversion_functions.o `test -f 'derived_conversion_functions.cc' || echo '$(srcdir)/'`derived_conversion_functions.cc
+
+libstage1_2_a-derived_conversion_functions.obj: derived_conversion_functions.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-derived_conversion_functions.obj -MD -MP -MF $(DEPDIR)/libstage1_2_a-derived_conversion_functions.Tpo -c -o libstage1_2_a-derived_conversion_functions.obj `if test -f 'derived_conversion_functions.cc'; then $(CYGPATH_W) 'derived_conversion_functions.cc'; else $(CYGPATH_W) '$(srcdir)/derived_conversion_functions.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/libstage1_2_a-derived_conversion_functions.Tpo $(DEPDIR)/libstage1_2_a-derived_conversion_functions.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='derived_conversion_functions.cc' object='libstage1_2_a-derived_conversion_functions.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libstage1_2_a-derived_conversion_functions.obj `if test -f 'derived_conversion_functions.cc'; then $(CYGPATH_W) 'derived_conversion_functions.cc'; else $(CYGPATH_W) '$(srcdir)/derived_conversion_functions.cc'; fi`
 
 libstage1_2_a-stage1_2.o: stage1_2.cc
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libstage1_2_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libstage1_2_a-stage1_2.o -MD -MP -MF $(DEPDIR)/libstage1_2_a-stage1_2.Tpo -c -o libstage1_2_a-stage1_2.o `test -f 'stage1_2.cc' || echo '$(srcdir)/'`stage1_2.cc
