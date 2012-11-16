@@ -60,6 +60,8 @@ typedef struct {
 		/* error messages specify full token location */
 	bool full_token_loc; 
 		/* Include directory, where included files will be searched for... */
+	bool conversion_functions;
+		/* Create a conversion function for derived datatype */
 	const char *includedir;
 } stage1_2_options_t;
 

@@ -203,6 +203,11 @@ extern bool allow_extensible_function_parameters;
  */
 extern bool full_token_loc;
 
+/* A global flag used to tell the parser whether to generate conversion function
+ * for enumerated data types.
+ */
+extern bool conversion_functions_;
+
 /* A pointer to the root of the parsing tree that will be generated 
  * by bison.
  */
@@ -2709,8 +2714,10 @@ enumerated_type_declaration:
   identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);}
 	{
       $$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, NULL, locloc(@3)), locloc(@$));
-      const char *name = ((identifier_c *)$1)->value;
-	  make_derived_conversion_functions(name);
+      if (conversion_functions_) {
+        const char *name = ((identifier_c *)$1)->value;
+	    make_derived_conversion_functions(name);
+	  }
     }
 | identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);} ASSIGN enumerated_value
 	{$$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, $6, locf(@3), locl(@6)), locloc(@$));}

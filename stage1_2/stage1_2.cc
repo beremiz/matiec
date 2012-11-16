@@ -66,14 +66,21 @@ const char *current_filename = NULL;
 
 
 /******************************************************/
-/* whether we are suporting safe extensions           */
+/* whether we are supporting safe extensions          */
 /* as defined in PLCopen - Technical Committee 5      */
 /* Safety Software Technical Specification,           */
 /* Part 1: Concepts and Function Blocks,              */
-/* Version 1.0 – Official Release                     */
+/* Version 1.0 – Official Release                   */
 /******************************************************/
 bool safe_extensions_ = false;
 bool get_opt_safe_extensions() {return safe_extensions_;}
+
+/******************************************************/
+/* whether we are supporting conversion functions     */
+/* for enumerate data types                           */
+/******************************************************/
+bool conversion_functions_ = false;
+
 
 /****************************************************/
 /* Controlling the entry to the body_state in flex. */
@@ -304,10 +311,14 @@ int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t 
        */
 
   safe_extensions_ = options.safe_extensions;
+  conversion_functions_ = options.conversion_functions;
   int ret = stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc);
-  derived_conversion_functions_c derived_conversion_functions(*tree_root_ref);
-  std::string source_code = derived_conversion_functions.get_declaration(*tree_root_ref);
-  ret = sstage2__(source_code.c_str(), tree_root_ref, false);
+
+  if (conversion_functions_) {
+	  derived_conversion_functions_c derived_conversion_functions(*tree_root_ref);
+	  std::string source_code = derived_conversion_functions.get_declaration(*tree_root_ref);
+	  ret = sstage2__(source_code.c_str(), tree_root_ref, false);
+  }
   return ret;
 }
 

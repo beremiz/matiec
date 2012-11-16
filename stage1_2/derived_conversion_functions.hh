@@ -31,12 +31,13 @@
  *
  */
 
-#ifndef _DERIVED_CONVERSION_FUNCTIONS_H
-#define _DERIVED_CONVERSION_FUNCTIONS_H
+#ifndef _DERIVED_CONVERSION_FUNCTIONS_HH
+#define _DERIVED_CONVERSION_FUNCTIONS_HH
 
-#include "../absyntax_utils/absyntax_utils.hh"
 #include <string>
 #include <list>
+
+#include "../absyntax_utils/absyntax_utils.hh"
 
 class derived_conversion_functions_c: public iterator_visitor_c {
   public:
@@ -57,12 +58,12 @@ class derived_conversion_functions_c: public iterator_visitor_c {
   private:
     std::string text;
     std::string currentToken;
-    std::list< std::string> currentTokenList;
+    std::list <std::string> currentTokenList;
     std::string getIntegerName(bool isSigned, size_t size);
-    void printStringToEnum  (std::string &enumerateName, std::list<std::string> &enumerateValues);
-    void printEnumToString  (std::string &enumerateName, std::list<std::string> &enumerateValues);
-    void printIntegerToEnum (std::string &enumerateName, std::list<std::string> &enumerateValues, bool isSigned, size_t size);
-    void printEnumToInteger (std::string &enumerateName, std::list<std::string> &enumerateValues, bool isSigned, size_t size);
+    void printStringToEnum  (std::string &enumerateName, std::list <std::string> &enumerateValues);
+    void printEnumToString  (std::string &enumerateName, std::list <std::string> &enumerateValues);
+    void printIntegerToEnum (std::string &enumerateName, std::list <std::string> &enumerateValues, bool isSigned, size_t size);
+    void printEnumToInteger (std::string &enumerateName, std::list <std::string> &enumerateValues, bool isSigned, size_t size);
 };
 
 #endif /* _DERIVED_CONVERSION_FUNCTIONS_H */
