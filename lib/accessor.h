@@ -23,7 +23,8 @@
 	static type *GLOBAL__##name = &(domain##__##name);\
 	type* __GET_GLOBAL_##name(void) {\
 		return &(*GLOBAL__##name);\
-	}
+	}\
+	extern void type##_init__(type* data__, BOOL retain);
 #define __DECLARE_GLOBAL_LOCATION(type, location)\
 	extern type *location;
 #define __DECLARE_GLOBAL_LOCATED(type, resource, name)\
