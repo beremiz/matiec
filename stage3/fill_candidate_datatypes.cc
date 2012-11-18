@@ -935,7 +935,7 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_list_c *symbol) {
 void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 	symbol_c *global_enumerated_type;
 	symbol_c *local_enumerated_type;
-	symbol_c *enumerated_type;
+	symbol_c *enumerated_type = NULL;
 
 	if (NULL != symbol->type) {
 		/* NOTE: This code must take into account the following situation:

@@ -100,8 +100,9 @@ void print_symbol_c::dump_symbol(symbol_c* symbol) {
   fprintf(stderr, "  datatype=");
   if (NULL == symbol->datatype)
     fprintf(stderr, "NULL\t\t");
-  else 
-    fprintf(stderr, symbol->datatype->absyntax_cname());
+  else {
+	  fprintf(stderr, "%s", symbol->datatype->absyntax_cname());
+  }
   fprintf(stderr, "\t<-{");
   if (symbol->candidate_datatypes.size() == 0) {
     fprintf(stderr, "\t\t\t\t\t");
@@ -112,7 +113,7 @@ void print_symbol_c::dump_symbol(symbol_c* symbol) {
       else
         fprintf(stderr, "\t\t\t");
   } else {
-    fprintf(stderr, "(%d)\t\t\t\t\t", symbol->candidate_datatypes.size());
+    fprintf(stderr, "(%ld)\t\t\t\t\t", symbol->candidate_datatypes.size());
   }
   fprintf(stderr, "}\t");         
   
@@ -126,8 +127,8 @@ void print_symbol_c::dump_symbol(symbol_c* symbol) {
 void *print_symbol_c::visit(il_instruction_c *symbol) {
    dump_symbol(symbol);
 
-  fprintf(stderr, "  next_il_=%d ", symbol->next_il_instruction.size());
-  fprintf(stderr, "  prev_il_=%d ", symbol->prev_il_instruction.size());
+  fprintf(stderr, "  next_il_=%ld ", symbol->next_il_instruction.size());
+  fprintf(stderr, "  prev_il_=%ld ", symbol->prev_il_instruction.size());
   
   if (symbol->prev_il_instruction.size() == 0)
     fprintf(stderr, "(----,");

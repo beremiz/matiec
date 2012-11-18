@@ -253,7 +253,7 @@ int64_t extract_int64_value(symbol_c *sym, bool *overflow) {
   int64_t      ret;
   std::string  str = "";
   char        *endptr;
-  const char  *value;
+  const char  *value = NULL;
   int          base;
   integer_c         *integer;
   hex_integer_c     *hex_integer;
@@ -285,7 +285,7 @@ uint64_t extract_uint64_value(symbol_c *sym, bool *overflow) {
   uint64_t     ret;
   std::string  str = "";
   char        *endptr;
-  const char  *value;
+  const char  *value = NULL;
   int          base;
   integer_c         *integer;
   hex_integer_c     *hex_integer;
