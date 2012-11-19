@@ -31,13 +31,16 @@
  *
  */
 
-
-#include "derived_conversion_functions.hh"
 #include <sstream>
+#include "create_enumtype_conversion_functions.hh"
 
+/* set to 1 to see debug info during execution */
 static const int debug = 0;
 
-const char *derived_conversion_functions_c::functionDataType[] = {
+/*
+ * functionDataType array contains all supported data type conversion.
+ */
+const char *create_enumtype_conversion_functions_c::functionDataType[] = {
 		"STRING",
 		"SINT"  ,
 		"INT"   ,
@@ -50,15 +53,15 @@ const char *derived_conversion_functions_c::functionDataType[] = {
 		NULL
 };
 
-derived_conversion_functions_c::derived_conversion_functions_c(symbol_c *ignore) {
+create_enumtype_conversion_functions_c::create_enumtype_conversion_functions_c(symbol_c *ignore) {
 
 }
 
-derived_conversion_functions_c::~derived_conversion_functions_c(void) {
+create_enumtype_conversion_functions_c::~create_enumtype_conversion_functions_c(void) {
 
 }
 
-std::string &derived_conversion_functions_c::get_declaration(symbol_c *root) {
+std::string &create_enumtype_conversion_functions_c::get_declaration(symbol_c *root) {
     text = "";
     if (NULL != root) {
         root->accept(*this);
@@ -67,13 +70,19 @@ std::string &derived_conversion_functions_c::get_declaration(symbol_c *root) {
     return text;
 }
 
-void *derived_conversion_functions_c::visit(identifier_c *symbol) {
+void *create_enumtype_conversion_functions_c::visit(identifier_c *symbol) {
     currentToken = symbol->value;
 
     return NULL;
 }
 
-void *derived_conversion_functions_c::visit(enumerated_type_declaration_c *symbol) {
+/**********************/
+/* B 1.3 - Data types */
+/**********************/
+/********************************/
+/* B 1.3.3 - Derived data types */
+/********************************/
+void *create_enumtype_conversion_functions_c::visit(enumerated_type_declaration_c *symbol) {
     std::string enumerateName;
     std::string functionName;
     std::list <std::string> enumerateValues;
@@ -97,7 +106,7 @@ void *derived_conversion_functions_c::visit(enumerated_type_declaration_c *symbo
     return NULL;
 }
 
-void *derived_conversion_functions_c::visit(enumerated_value_list_c *symbol) {
+void *create_enumtype_conversion_functions_c::visit(enumerated_value_list_c *symbol) {
     list_c *list;
 
     currentTokenList.clear();
@@ -110,7 +119,10 @@ void *derived_conversion_functions_c::visit(enumerated_value_list_c *symbol) {
     return NULL;
 }
 
-std::string derived_conversion_functions_c::getIntegerName(bool isSigned, size_t size) {
+/*
+ * getIntegerName function generate a integer data name from signed and size.
+ */
+std::string create_enumtype_conversion_functions_c::getIntegerName(bool isSigned, size_t size) {
     std::string integerType = "";
     if (! isSigned) {
         integerType = "U";
@@ -127,7 +139,28 @@ std::string derived_conversion_functions_c::getIntegerName(bool isSigned, size_t
     return integerType;
 }
 
-void derived_conversion_functions_c::printStringToEnum  (std::string &enumerateName, std::list<std::string> &enumerateValues) {
+/*
+ * printStringToEnum function print conversion function from STRING to <ENUM>:
+ * ST Output:
+ *
+
+ FUNCTION STRING_TO_<ENUM> : <ENUM>
+  VAR_INPUT
+  IN: STRING;
+  END_VAR
+  IF IN = '<ENUM.VALUE_1>' THEN
+   STRING_TO_<ENUM> := <ENUM.VALUE_1>;
+   RETURN;
+  END_IF;
+  ...
+  IF IN = '<ENUM.VALU_N>' THEN
+   STRING_TO_<ENUM> := <ENUM.VALUE_N>;
+   RETURN;
+  END_IF;
+  END_FUNCTION
+
+ */
+void create_enumtype_conversion_functions_c::printStringToEnum  (std::string &enumerateName, std::list<std::string> &enumerateValues) {
     std::list <std::string>::const_iterator itr;
     std::string functionName;
 
@@ -144,7 +177,28 @@ void derived_conversion_functions_c::printStringToEnum  (std::string &enumerateN
     text += "END_FUNCTION\n\n";
 }
 
-void derived_conversion_functions_c::printEnumToString  (std::string &enumerateName, std::list<std::string> &enumerateValues) {
+/*
+ * printEnumToString function print conversion function from <ENUM> to STRING:
+ * ST Output:
+ *
+
+ FUNCTION <ENUM>_TO_STRING : STRING
+  VAR_INPUT
+  IN: <ENUM>;
+  END_VAR
+  IF IN = <ENUM.VALUE_1> THEN
+   <ENUM>_TO_STRING := '<ENUM.VALUE_1>';
+   RETURN;
+  END_IF;
+  ...
+  IF IN = <ENUM.VALUE_N> THEN
+   <ENUM>_TO_STRING := '<ENUM.VALUE_N>';
+   RETURN;
+  END_IF;
+  END_FUNCTION
+
+ */
+void create_enumtype_conversion_functions_c::printEnumToString  (std::string &enumerateName, std::list<std::string> &enumerateValues) {
     std::list <std::string>::const_iterator itr;
     std::string functionName;
 
@@ -161,7 +215,28 @@ void derived_conversion_functions_c::printEnumToString  (std::string &enumerateN
     text += "END_FUNCTION\n\n";
 }
 
-void derived_conversion_functions_c::printIntegerToEnum (std::string &enumerateName, std::list<std::string> &enumerateValues, bool isSigned, size_t size) {
+/*
+ * printIntegerToEnum function print conversion function from <INTEGER> to <ENUM>:
+ * ST Output:
+ *
+
+ FUNCTION <INTEGER>_TO_<ENUM> : <ENUM>
+  VAR_INPUT
+  IN: <INTEGER>;
+  END_VAR
+  IF IN = 1 THEN
+   <INTEGER>_TO_<ENUM> := <ENUM.VALUE_1>;
+   RETURN;
+  END_IF;
+  ...
+  IF IN = N THEN
+   <INTEGER>_TO_<ENUM> := <ENUM.VALUE_N>;
+   RETURN;
+  END_IF;
+  END_FUNCTION
+
+ */
+void create_enumtype_conversion_functions_c::printIntegerToEnum (std::string &enumerateName, std::list<std::string> &enumerateValues, bool isSigned, size_t size) {
     std::list <std::string>::const_iterator itr;
     std::string functionName;
     std::string integerType;
@@ -185,7 +260,28 @@ void derived_conversion_functions_c::printIntegerToEnum (std::string &enumerateN
     text += "END_FUNCTION\n\n";
 }
 
-void derived_conversion_functions_c::printEnumToInteger (std::string &enumerateName, std::list<std::string> &enumerateValues, bool isSigned, size_t size) {
+/*
+ * printEnumToInteger function print conversion function from <ENUM> to <INTEGER>:
+ * ST Output:
+ *
+
+ FUNCTION <ENUM>_TO_<INTEGER> : <INTEGER>
+  VAR_INPUT
+  IN: <INTEGER>;
+  END_VAR
+  IF IN = <ENUM.VALUE_1> THEN
+   <ENUM>_TO_<INTEGER> := 1;
+   RETURN;
+  END_IF;
+  ...
+  IF IN = <ENUM.VALUE_N> THEN
+   <ENUM>_TO_<INTEGER> := N;
+   RETURN;
+  END_IF;
+  END_FUNCTION
+
+ */
+void create_enumtype_conversion_functions_c::printEnumToInteger (std::string &enumerateName, std::list<std::string> &enumerateValues, bool isSigned, size_t size) {
     std::list <std::string>::const_iterator itr;
     std::string functionName;
     std::string integerType;

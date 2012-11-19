@@ -31,8 +31,14 @@
  *
  */
 
-#ifndef _DERIVED_CONVERSION_FUNCTIONS_HH
-#define _DERIVED_CONVERSION_FUNCTIONS_HH
+/*
+ * create_enumtype_conversion_functions_c generates ST conversion functions source code for
+ * enumerate user defined data types.
+ *
+ */
+
+#ifndef _CREATE_ENUMTYPE_CONVERSION_FUNCTIONS_HH
+#define _CREATE_ENUMTYPE_CONVERSION_FUNCTIONS_HH
 
 #include <string>
 #include <list>
@@ -40,10 +46,10 @@
 #include "../absyntax_utils/absyntax_utils.hh"
 
 
-class derived_conversion_functions_c: public iterator_visitor_c {
+class create_enumtype_conversion_functions_c: public iterator_visitor_c {
   public:
-    explicit derived_conversion_functions_c(symbol_c *ignore);
-    virtual ~derived_conversion_functions_c(void);
+    explicit create_enumtype_conversion_functions_c(symbol_c *ignore);
+    virtual ~create_enumtype_conversion_functions_c(void);
     std::string &get_declaration(symbol_c *root);
 
     const static char *functionDataType [];
@@ -69,4 +75,4 @@ class derived_conversion_functions_c: public iterator_visitor_c {
     void printEnumToInteger (std::string &enumerateName, std::list <std::string> &enumerateValues, bool isSigned, size_t size);
 };
 
-#endif /* _DERIVED_CONVERSION_FUNCTIONS_H */
+#endif /* _CREATE_ENUMTYPE_CONVERSION_FUNCTIONS_HH */

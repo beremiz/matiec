@@ -100,7 +100,7 @@ void yyerror (const char *error_msg);
 
 /* The interface through which bison and flex interact. */
 #include "stage1_2_priv.hh"
-#include "derived_conversion_functions.hh"
+#include "create_enumtype_conversion_functions.hh"
 
 #include "../absyntax_utils/add_en_eno_param_decl.hh"	/* required for  add_en_eno_param_decl_c */
 
@@ -8412,10 +8412,11 @@ void add_enumtype_conversion_functions(const char * dname) {
   std::string tmp;
   
   strname = dname; 
-  for (int i = 0; derived_conversion_functions_c::functionDataType[i] != NULL; i++) {
-    tmp = strname + std::string("_TO_") + derived_conversion_functions_c::functionDataType[i];
+  for (int i = 0; create_enumtype_conversion_functions_c::functionDataType[i] != NULL; i++) {
+    tmp = strname + std::string("_TO_") + create_enumtype_conversion_functions_c::functionDataType[i];
     library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
-    tmp = derived_conversion_functions_c::functionDataType[i] + std::string("_TO_") + strname;
+    
+    tmp = create_enumtype_conversion_functions_c::functionDataType[i] + std::string("_TO_") + strname;
     library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
   }  
 }

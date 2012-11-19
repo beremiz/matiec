@@ -46,7 +46,7 @@
 #include "stage1_2.hh"
 #include "iec_bison.h"
 #include "stage1_2_priv.hh"
-#include "derived_conversion_functions.hh"
+#include "create_enumtype_conversion_functions.hh"
 
 
 
@@ -315,8 +315,8 @@ int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t 
   int ret = stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc);
 
   if (conversion_functions_) {
-	  derived_conversion_functions_c derived_conversion_functions(*tree_root_ref);
-	  std::string source_code = derived_conversion_functions.get_declaration(*tree_root_ref);
+	  create_enumtype_conversion_functions_c create_enumtype_conversion_functions_c(*tree_root_ref);
+	  std::string source_code = create_enumtype_conversion_functions_c.get_declaration(*tree_root_ref);
 	  ret = sstage2__(source_code.c_str(), tree_root_ref, false);
   }
   return ret;
