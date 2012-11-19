@@ -37,6 +37,19 @@
 
 static const int debug = 0;
 
+const char *derived_conversion_functions_c::functionDataType[] = {
+		"STRING",
+		"SINT"  ,
+		"INT"   ,
+		"DINT"  ,
+		"LINT"  ,
+		"USINT" ,
+		"UNIT"  ,
+		"UDINT" ,
+		"ULINT" ,
+		NULL
+};
+
 derived_conversion_functions_c::derived_conversion_functions_c(symbol_c *ignore) {
 
 }

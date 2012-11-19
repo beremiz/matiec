@@ -39,11 +39,14 @@
 
 #include "../absyntax_utils/absyntax_utils.hh"
 
+
 class derived_conversion_functions_c: public iterator_visitor_c {
   public:
     explicit derived_conversion_functions_c(symbol_c *ignore);
     virtual ~derived_conversion_functions_c(void);
     std::string &get_declaration(symbol_c *root);
+
+    const static char *functionDataType [];
 
     void *visit(identifier_c *symbol);
     /**********************/

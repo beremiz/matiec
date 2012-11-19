@@ -42,6 +42,9 @@
  * and eno_param_declaration_c objects.
  */
 
+#ifndef _ADD_EN_ENO_PARAM_DECL_HH
+#define _ADD_EN_ENO_PARAM_DECL_HH
+
 #include "../absyntax/visitor.hh"
 
 
@@ -95,6 +98,8 @@ class add_en_eno_param_decl_c : public null_visitor_c {
     void *visit(function_block_declaration_c *symbol);
 
 }; // function_param_iterator_c
+
+#endif /* _ADD_EN_ENO_PARAM_DECL_HH */
 
 
 
