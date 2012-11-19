@@ -113,12 +113,12 @@ void print_symbol_c::dump_symbol(symbol_c* symbol) {
       else
         fprintf(stderr, "\t\t\t");
   } else {
-    fprintf(stderr, "(%ld)\t\t\t\t\t", symbol->candidate_datatypes.size());
+    fprintf(stderr, "(%lu)\t\t\t\t\t", (unsigned long int)symbol->candidate_datatypes.size());
   }
   fprintf(stderr, "}\t");         
   
   /* print the const values... */
-  fprintf(stderr, " constv{f=%f, i=%lld, u=%llu, b=%d}\t", symbol->const_value._real64.value, symbol->const_value._int64.value, symbol->const_value._uint64.value, symbol->const_value._bool.value);
+  fprintf(stderr, " constv{f=%f, i=%"PRId64", u=%"PRIu64", b=%d}\t", symbol->const_value._real64.value, symbol->const_value._int64.value, symbol->const_value._uint64.value, symbol->const_value._bool.value?1:0);
   
 }
 
@@ -127,8 +127,9 @@ void print_symbol_c::dump_symbol(symbol_c* symbol) {
 void *print_symbol_c::visit(il_instruction_c *symbol) {
    dump_symbol(symbol);
 
-  fprintf(stderr, "  next_il_=%ld ", symbol->next_il_instruction.size());
-  fprintf(stderr, "  prev_il_=%ld ", symbol->prev_il_instruction.size());
+   /* NOTE: std::map.size() returns a size_type, whose type is dependent on compiler/platform. To be portable, we need to do an explicit type cast. */
+  fprintf(stderr, "  next_il_=%lu ", (unsigned long int)symbol->next_il_instruction.size());
+  fprintf(stderr, "  prev_il_=%lu ", (unsigned long int)symbol->prev_il_instruction.size());
   
   if (symbol->prev_il_instruction.size() == 0)
     fprintf(stderr, "(----,");
