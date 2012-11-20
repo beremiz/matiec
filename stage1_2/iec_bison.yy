@@ -8354,6 +8354,7 @@ int stage2__(const char *filename,
   return 0;
 }
 
+/* Create a tmp file from a char buffer. */
 FILE *ftmpopen (void *buf, size_t size, const char *opentype)
 {
   FILE *f;
@@ -8363,7 +8364,11 @@ FILE *ftmpopen (void *buf, size_t size, const char *opentype)
   return f;
 }
 
-
+/*  sstage2__ function allow to parse a ST code inside a string.
+ *  We use this function to add into AST auto generated code like enum conversion functions.
+ *  This appoach allow us to write future changes code indipendetly and to check generate code
+ *  during developing.
+ */
 int sstage2__(const char *text, 
               symbol_c **tree_root_ref,
               bool full_token_loc_        /* error messages specify full token location */
@@ -8372,7 +8377,7 @@ int sstage2__(const char *text,
   FILE *in_file = NULL;
     
   if((in_file = ftmpopen((void *)text, strlen(text), "r")) == NULL) {
-    perror("Error temp file.");
+    perror("Error creating temp file.");
     return -1;
   }
 
@@ -8381,6 +8386,12 @@ int sstage2__(const char *text,
     yydebug = 1;
   #endif
   yyin = in_file;
+  
+  /* We turn on "allow_function_overloading" flag to disable some checks. 
+   * In detail when we add to symboltable a symbol already processed we
+   * don't want to get any error. 
+   */  
+   
   allow_function_overloading = true;
   allow_extensible_function_parameters = false;
   full_token_loc = full_token_loc_;

@@ -159,6 +159,7 @@ std::string create_enumtype_conversion_functions_c::getIntegerName(bool isSigned
   END_IF;
   END_FUNCTION
 
+  Note: if you change code below remember to update this comment.
  */
 void create_enumtype_conversion_functions_c::printStringToEnum  (std::string &enumerateName, std::list<std::string> &enumerateValues) {
     std::list <std::string>::const_iterator itr;
@@ -197,6 +198,7 @@ void create_enumtype_conversion_functions_c::printStringToEnum  (std::string &en
   END_IF;
   END_FUNCTION
 
+  Note: if you change code below remember to update this comment.
  */
 void create_enumtype_conversion_functions_c::printEnumToString  (std::string &enumerateName, std::list<std::string> &enumerateValues) {
     std::list <std::string>::const_iterator itr;
@@ -235,6 +237,7 @@ void create_enumtype_conversion_functions_c::printEnumToString  (std::string &en
   END_IF;
   END_FUNCTION
 
+  Note: if you change code below remember to update this comment.
  */
 void create_enumtype_conversion_functions_c::printIntegerToEnum (std::string &enumerateName, std::list<std::string> &enumerateValues, bool isSigned, size_t size) {
     std::list <std::string>::const_iterator itr;
@@ -280,6 +283,7 @@ void create_enumtype_conversion_functions_c::printIntegerToEnum (std::string &en
   END_IF;
   END_FUNCTION
 
+  Note: if you change code below remember to update this comment.
  */
 void create_enumtype_conversion_functions_c::printEnumToInteger (std::string &enumerateName, std::list<std::string> &enumerateValues, bool isSigned, size_t size) {
     std::list <std::string>::const_iterator itr;
