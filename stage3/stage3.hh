@@ -30,9 +30,12 @@
  *
  */
 
+#ifndef _STAGE3_HH
+#define _STAGE3_HH
 
 #include "../util/symtable.hh"
 
 
 int stage3(symbol_c *tree_root);
 
+#endif /* _STAGE3_HH */

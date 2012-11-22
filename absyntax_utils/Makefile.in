@@ -93,9 +93,7 @@ am_libabsyntax_utils_a_OBJECTS = absyntax_utils.$(OBJEXT) \
 	search_varfb_instance_type.$(OBJEXT) \
 	search_var_instance_decl.$(OBJEXT) \
 	spec_init_separator.$(OBJEXT) type_initial_value.$(OBJEXT) \
-	debug_ast.$(OBJEXT) \
-	get_datatype_info.$(OBJEXT)
-
+	debug_ast.$(OBJEXT) get_datatype_info.$(OBJEXT)
 libabsyntax_utils_a_OBJECTS = $(am_libabsyntax_utils_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/config
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -235,7 +233,6 @@ libabsyntax_utils_a_SOURCES = \
 	type_initial_value.cc \
 	debug_ast.cc \
 	get_datatype_info.cc
-
 
 all: all-am
 

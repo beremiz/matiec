@@ -46,7 +46,7 @@
 #include "stage1_2.hh"
 #include "iec_bison.h"
 #include "stage1_2_priv.hh"
-
+#include "create_enumtype_conversion_functions.hh"
 
 
 
@@ -66,14 +66,21 @@ const char *current_filename = NULL;
 
 
 /******************************************************/
-/* whether we are suporting safe extensions           */
+/* whether we are supporting safe extensions          */
 /* as defined in PLCopen - Technical Committee 5      */
 /* Safety Software Technical Specification,           */
 /* Part 1: Concepts and Function Blocks,              */
-/* Version 1.0 – Official Release                     */
+/* Version 1.0 – Official Release                   */
 /******************************************************/
 bool safe_extensions_ = false;
 bool get_opt_safe_extensions() {return safe_extensions_;}
+
+/******************************************************/
+/* whether we are supporting conversion functions     */
+/* for enumerate data types                           */
+/******************************************************/
+bool conversion_functions_ = false;
+
 
 /****************************************************/
 /* Controlling the entry to the body_state in flex. */
@@ -285,6 +292,11 @@ int stage2__(const char *filename,
              bool full_token_loc         /* error messages specify full token location */
             );
 
+int sstage2__(const char *text,
+              symbol_c **tree_root_ref,
+              bool full_token_loc         /* error messages specify full token location */
+             );
+
 
 int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t options) {
       /* NOTE: we only call stage2 (bison - syntax analysis) directly, as stage 2 will itself call stage1 (flex - lexical analysis)
@@ -297,8 +309,16 @@ int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t 
        *       These callback functions will get their data from local (to this file) global variables...
        *       We now set those variables...
        */
+
   safe_extensions_ = options.safe_extensions;
-  
-  return stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc);
+  conversion_functions_ = options.conversion_functions;
+  int ret = stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc);
+
+  if (conversion_functions_) {
+	  create_enumtype_conversion_functions_c create_enumtype_conversion_functions_c(*tree_root_ref);
+	  std::string source_code = create_enumtype_conversion_functions_c.get_declaration(*tree_root_ref);
+	  ret = sstage2__(source_code.c_str(), tree_root_ref, false);
+  }
+  return ret;
 }
 

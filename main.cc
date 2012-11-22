@@ -67,21 +67,28 @@
 
 
 
-//#include <stdio.h>   // printf()
+#include <stdio.h>
 #include <getopt.h>
 #include <string.h>
-#include <stdlib.h>  // EXIT_FAILURE
-#include "absyntax/absyntax.hh"  // symbol_c type
+#include <stdlib.h>
+#include <stdarg.h>
+#include <iostream>
 
-/* A macro for printing out internal parser errors... */
-#include <iostream> // required for std::cerr
+
+#include "config/config.h"
+#include "absyntax/absyntax.hh"
+#include "absyntax_utils/absyntax_utils.hh"
+#include "stage1_2/stage1_2.hh"
+#include "stage3/stage3.hh"
+#include "stage4/stage4.hh"
+#include "main.hh"
+
 
 #ifndef HGVERSION
-#define HGVERSION ""
+   #define HGVERSION ""
 #endif
 
-#include "main.hh"  // symbol_c type
-#include <stdarg.h> // required for va_start(), va_list
+
 
 void error_exit(const char *file_name, int line_no, const char *errmsg, ...) {
   va_list argptr;
@@ -101,28 +108,20 @@ void error_exit(const char *file_name, int line_no, const char *errmsg, ...) {
 }
 
 
-
-#include "config/config.h"
-#include "stage1_2/stage1_2.hh"
-#include "absyntax_utils/absyntax_utils.hh"
-
-int stage3(symbol_c *tree_root);
-int stage4(symbol_c *tree_root, const char *builddir);
-
-
 static void printusage(const char *cmd) {
-  printf("syntax: %s [-h] [-v] [-f] [-s] [-I <include_directory>] [-T <target_directory>] <input_file>\n", cmd);
+  printf("\nsyntax: %s [-h] [-v] [-f] [-s] [-c] [-I <include_directory>] [-T <target_directory>] <input_file>\n", cmd);
   printf("  h : show this help message\n");
   printf("  v : print version number\n");  
   printf("  f : display full token location on error messages\n");
       /******************************************************/
-      /* whether we are suporting safe extensions           */
+      /* whether we are supporting safe extensions          */
       /* as defined in PLCopen - Technical Committee 5      */
       /* Safety Software Technical Specification,           */
       /* Part 1: Concepts and Function Blocks,              */
-      /* Version 1.0 – Official Release                     */
+      /* Version 1.0 is Official Release                    */
       /******************************************************/
   printf("  s : allow use of safe extensions\n");
+  printf("  c : create conversion functions\n");
   printf("\n");
   printf("%s - Copyright (C) 2003-2011 \n"
          "This program comes with ABSOLUTELY NO WARRANTY!\n"
@@ -137,29 +136,34 @@ int main(int argc, char **argv) {
   stage1_2_options_t stage1_2_options = {false, false, NULL};
   int optres, errflg = 0;
   int path_len;
-/*
-  extern char *optarg;
-  extern int optind, optopt;
-*/
+
 
   /******************************************/
   /*   Parse command line options...        */
   /******************************************/
-  while ((optres = getopt(argc, argv, ":hvfsI:T:")) != -1) {
+  while ((optres = getopt(argc, argv, ":hvfscI:T:")) != -1) {
     switch(optres) {
     case 'h':
       printusage(argv[0]);
       return 0;
+
     case 'v':
       fprintf(stdout, "%s version %s\n"
 		      "changeset id: %s\n", PACKAGE_NAME, PACKAGE_VERSION, HGVERSION);      
-      return 0;        
+      return 0;
+
     case 'f':
       stage1_2_options.full_token_loc = true;
       break;
+
     case 's':
       stage1_2_options.safe_extensions = true;
       break;
+
+    case 'c':
+      stage1_2_options.conversion_functions = true;
+      break;
+
     case 'I':
       /* NOTE: To improve the usability under windows:
        *       We delete last char's path if it ends with "\".
@@ -170,20 +174,24 @@ int main(int argc, char **argv) {
       if (optarg[path_len] == '\\') optarg[path_len]= '\0';
       stage1_2_options.includedir = optarg;
       break;
+
     case 'T':
       /* NOTE: see note above */
       path_len = strlen(optarg) - 1;
       if (optarg[path_len] == '\\') optarg[path_len]= '\0';
       builddir = optarg;
       break;
+
     case ':':       /* -I or -T without operand */
       fprintf(stderr, "Option -%c requires an operand\n", optopt);
       errflg++;
       break;
+
     case '?':
       fprintf(stderr, "Unrecognized option: -%c\n", optopt);
       errflg++;
       break;
+
     default:
       fprintf(stderr, "Unknown error while parsing command line options.");
       errflg++;
@@ -202,9 +210,8 @@ int main(int argc, char **argv) {
   }
 
   if (errflg) {
-      printf("\n");
-      printusage(argv[0]);
-      return EXIT_FAILURE;
+    printusage(argv[0]);
+    return EXIT_FAILURE;
   }
 
 
@@ -225,7 +232,6 @@ int main(int argc, char **argv) {
   if (stage3(tree_root) < 0)
     return EXIT_FAILURE;
   
-
   /* 3rd Pass */
   if (stage4(tree_root, builddir) < 0)
     return EXIT_FAILURE;

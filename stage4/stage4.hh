@@ -36,6 +36,8 @@
  * by each specific version of the 4th stage.
  */
 
+#ifndef _STAGE4_HH
+#define _STAGE4_HH
 
 #include "../absyntax/absyntax.hh"
 
@@ -100,6 +102,6 @@ class stage4out_c {
 
 
 
+int stage4(symbol_c *tree_root, const char *builddir);
 
-
-int stage4(symbol_c *tree_root);
+#endif /* _STAGE4_HH */

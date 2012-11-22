@@ -16,6 +16,7 @@ lib_LIBRARIES = libstage1_2.a
 libstage1_2_a_SOURCES = \
 	iec_flex.ll \
 	iec_bison.yy \
+    create_enumtype_conversion_functions.cc \
 	stage1_2.cc 
 
 libstage1_2_a_CPPFLAGS =  -DDEFAULT_LIBDIR='"lib"' -I../../absyntax
