@@ -416,7 +416,7 @@ void unput_and_mark(const char c);
 /* we are parsing a function, program or function block declaration */
 %s decl_state
 
-/* we will be parsing a function body. Whether il/st is remains unknown */
+/* we will be parsing a function body. Whether il/st/sfc remains to be determined */
 %x body_state
 
 /* we are parsing il code -> flex must return the EOL tokens!       */
@@ -924,8 +924,7 @@ incompl_location	%[IQM]\*
 			       * calling yyterminate() is equivalent to doing that. 
 			       */ 	
 			    yyterminate();
-			  }      
- else {
+			  } else {
 			    --include_stack_ptr;
 			    yy_delete_buffer(YY_CURRENT_BUFFER);
 			    yy_switch_to_buffer((include_stack[include_stack_ptr]).buffer_state);
@@ -1735,11 +1734,9 @@ int yywrap(void)
    *   return 0;
    */
 
-  /* to we stop processing...
-   *
+  /* to stop processing...
    *   return 1;
    */
-
 
   return 1;  /* Stop scanning at end of input file. */
 }
