@@ -26,6 +26,10 @@
  *       $gcc -E iec_std_lib.h 
  */
 
+#ifndef _IEC_STD_LIB_H
+#define _IEC_STD_LIB_H
+
+
 #include <limits.h>
 #include <float.h>
 #include <math.h>
@@ -2157,3 +2161,5 @@ static inline DT CONCAT_DATE_TOD(EN_ENO_PARAMS, DATE IN1, TOD IN2){
 /********************************************/
 
 /* Do we support this? */
+
+#endif /* _IEC_STD_LIB_H */
