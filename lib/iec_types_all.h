@@ -62,8 +62,10 @@
 /* Include non windows.h clashing typedefs */
 #include "iec_types.h"
 
-#define TRUE 1
-#define FALSE 0
+#ifndef TRUE
+  #define TRUE 1
+  #define FALSE 0
+#endif
 
 #define __IEC_DEBUG_FLAG 0x01
 #define __IEC_FORCE_FLAG 0x02
