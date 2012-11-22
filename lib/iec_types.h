@@ -32,7 +32,7 @@ typedef double   IEC_LREAL;
 typedef struct {
     long int tv_sec;            /* Seconds.  */
     long int tv_nsec;           /* Nanoseconds.  */
-}__attribute__((packed)) IEC_TIMESPEC;
+} /* __attribute__((packed)) */ IEC_TIMESPEC;  /* packed is gcc specific! */
 
 typedef IEC_TIMESPEC IEC_TIME;
 typedef IEC_TIMESPEC IEC_DATE;
@@ -51,6 +51,6 @@ typedef STR_LEN_TYPE __strlen_t;
 typedef struct {
     __strlen_t len;
     uint8_t body[STR_MAX_LEN];
-} __attribute__((packed)) IEC_STRING;
+} /* __attribute__((packed)) */ IEC_STRING;  /* packed is gcc specific! */
 
 #endif /*IEC_TYPES_H*/
