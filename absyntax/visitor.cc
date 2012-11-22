@@ -70,7 +70,7 @@ visitor_c::~visitor_c(void) {return;}
 
 null_visitor_c::~null_visitor_c(void) {return;}
 
-#define SYM_LIST(class_name_c)	\
+#define SYM_LIST(class_name_c, ...)	\
   void *null_visitor_c::visit(class_name_c *symbol) {return NULL;}
 
 #define SYM_TOKEN(class_name_c, ...)	\
@@ -174,7 +174,7 @@ void *iterator_visitor_c::visit_list(list_c *list) {
 }
 
 
-#define SYM_LIST(class_name_c)	\
+#define SYM_LIST(class_name_c, ...)	\
   void *iterator_visitor_c::visit(class_name_c *symbol) {return visit_list(symbol);}
 
 #define SYM_TOKEN(class_name_c, ...)	\
@@ -318,7 +318,7 @@ void *search_visitor_c::visit_list(list_c *list) {
 }
 
 
-#define SYM_LIST(class_name_c)	\
+#define SYM_LIST(class_name_c, ...)	\
   void *search_visitor_c::visit(class_name_c *symbol) {return visit_list(symbol);}
 
 #define SYM_TOKEN(class_name_c, ...)	\

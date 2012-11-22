@@ -48,6 +48,7 @@
 
 #include <stdio.h> // required for NULL
 #include <vector>
+#include <map>
 #include <string>
 #include <stdint.h>  // required for uint64_t, etc...
 #include "../main.hh" // required for uint8_t, real_64_t, ..., and the macros INT8_MAX, REAL32_MAX, ... */
@@ -67,6 +68,28 @@ class visitor_c; // forward declaration
 class symbol_c; // forward declaration
 
 
+
+
+
+
+
+/* Case insensitive string compare */
+  /* Case insensitive string compare copied from
+   * "The C++ Programming Language" - 3rd Edition
+   * by Bjarne Stroustrup, ISBN 0201889544.
+   */
+class nocasecmp_c {
+    public:
+      bool operator() (const std::string& x, const std::string& y) const {
+        std::string::const_iterator ix = x.begin();
+        std::string::const_iterator iy = y.begin();
+
+        for(; (ix != x.end()) && (iy != y.end()) && (toupper(*ix) == toupper(*iy)); ++ix, ++iy);
+        if (ix == x.end()) return (iy != y.end());
+        if (iy == y.end()) return false;
+        return (toupper(*ix) < toupper(*iy));
+      };
+  };
 
 
 
@@ -99,7 +122,7 @@ class symbol_c {
 
     /*
      * Annotations produced during stage 3
-     */
+     */    
     /*** Data type analysis ***/
     std::vector <symbol_c *> candidate_datatypes; /* All possible data types the expression/literal/etc. may take. Filled in stage3 by fill_candidate_datatypes_c class */
     /* Data type of the expression/literal/etc. Filled in stage3 by narrow_candidate_datatypes_c 
@@ -138,6 +161,12 @@ class symbol_c {
     } const_value_t;
     const_value_t const_value;
     
+    /*** Enumeration datatype checking ***/    
+    /* Not all symbols will contain the following anotations, which is why they are not declared here in symbol_c
+     * They will be declared only inside the symbols that require them (have a look at absyntax.def)
+     */
+    typedef std::multimap<std::string, symbol_c *, nocasecmp_c> enumvalue_symtable_t;
+    
 
   public:
     /* default constructor */
@@ -151,6 +180,8 @@ class symbol_c {
 
     virtual void *accept(visitor_c &visitor) {return NULL;};
 };
+
+
 
 
 class token_c: public symbol_c {
@@ -167,6 +198,8 @@ class token_c: public symbol_c {
             int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0  /* order in which it is read by lexcial analyser */
            );
 };
+
+
 
 
  /* a list of symbols... */
@@ -196,6 +229,11 @@ class list_c: public symbol_c {
      /* remove element at position pos. */
     virtual void remove_element(int pos = 0);
 };
+
+
+
+
+
 
 
 

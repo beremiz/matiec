@@ -43,6 +43,15 @@
 #include "array_range_check.hh"
 #include "constant_folding.hh"
 #include "declaration_check.hh"
+#include "enum_declaration_check.hh"
+
+
+static int enum_declaration_check(symbol_c *tree_root){
+    enum_declaration_check_c enum_declaration_check(NULL);
+    tree_root->accept(enum_declaration_check);
+    return enum_declaration_check.get_error_count();
+}
+
 
 static int declaration_safety(symbol_c *tree_root){
     declaration_check_c declaration_check(tree_root);
@@ -107,6 +116,7 @@ static int array_range_check(symbol_c *tree_root){
 
 int stage3(symbol_c *tree_root){
 	int error_count = 0;
+	error_count += enum_declaration_check(tree_root);
 	error_count += declaration_safety(tree_root);
 	error_count += flow_control_analysis(tree_root);
 	error_count += constant_folding(tree_root);

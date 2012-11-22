@@ -75,29 +75,6 @@
 
 
 
-#define FIRST_(symbol1, symbol2) (((symbol1)->first_order < (symbol2)->first_order)   ? (symbol1) : (symbol2))
-#define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
-
-
-#define STAGE3_ERROR(error_level, symbol1, symbol2, ...) {                                                                  \
-    fprintf(stderr, "%s:%d-%d..%d-%d: error: ",                                                                             \
-            FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,\
-                                                 LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column);\
-    fprintf(stderr, __VA_ARGS__);                                                                                           \
-    fprintf(stderr, "\n");                                                                                                  \
-}  
-
-
-#define STAGE3_WARNING(symbol1, symbol2, ...) {                                                                             \
-    fprintf(stderr, "%s:%d-%d..%d-%d: warning: ",                                                                           \
-            FIRST_(symbol1,symbol2)->first_file, FIRST_(symbol1,symbol2)->first_line, FIRST_(symbol1,symbol2)->first_column,\
-                                                 LAST_(symbol1,symbol2) ->last_line,  LAST_(symbol1,symbol2) ->last_column);\
-    fprintf(stderr, __VA_ARGS__);                                                                                           \
-    fprintf(stderr, "\n");                                                                                                  \
-}  
-
-
-
 /* set to 1 to see debug info during execution */
 static int debug = 0;
 
@@ -161,7 +138,6 @@ class populate_globalenumvalue_symtable_c: public iterator_visitor_c {
     for (; lower != upper; lower++)
       if (lower->second == current_enumerated_type) {
         /*  The same identifier is used more than once as an enumerated value/constant inside the same enumerated datat type! */
-        STAGE3_ERROR(0, symbol, symbol, "Duplicate identifier in enumerated data type.");
         return NULL; /* No need to insert it! It is already in the table! */
       }
 
@@ -229,13 +205,13 @@ static populate_globalenumvalue_symtable_c populate_globalenumvalue_symtable;
 static enumerated_value_symtable_t local_enumerated_value_symtable;
 
 
-class populate_enumvalue_symtable_c: public iterator_visitor_c {
+class populate_localenumvalue_symtable_c: public iterator_visitor_c {
   private:
     symbol_c *current_enumerated_type;
 
   public:
-     populate_enumvalue_symtable_c(void) {current_enumerated_type = NULL;};
-    ~populate_enumvalue_symtable_c(void) {}
+     populate_localenumvalue_symtable_c(void) {current_enumerated_type = NULL;};
+    ~populate_localenumvalue_symtable_c(void) {}
 
   public:
   /*************************/
@@ -271,7 +247,6 @@ class populate_enumvalue_symtable_c: public iterator_visitor_c {
     for (; lower != upper; lower++)
       if (lower->second == current_enumerated_type) {
         /*  The same identifier is used more than once as an enumerated value/constant inside the same enumerated datat type! */
-        STAGE3_ERROR(0, symbol, symbol, "Duplicate identifier in enumerated data type.");
         return NULL; /* No need to insert it! It is already in the table! */
       }
     
@@ -281,7 +256,7 @@ class populate_enumvalue_symtable_c: public iterator_visitor_c {
   }
 }; // class populate_enumvalue_symtable_c
 
-static populate_enumvalue_symtable_c populate_enumvalue_symtable;
+static populate_localenumvalue_symtable_c populate_enumvalue_symtable;
 
 
 

@@ -114,7 +114,8 @@ SYM_TOKEN(pragma_c)
 /***************************/
 /* B 0 - Programming Model */
 /***************************/
-SYM_LIST(library_c)
+/* enumvalue_symtable is filled in by enum_declaration_check_c, during stage3 semantic verification, with a list of all enumerated constants declared inside this POU */
+SYM_LIST(library_c, enumvalue_symtable_t enumvalue_symtable;)
 
 
 /*************************/
@@ -701,7 +702,8 @@ SYM_LIST(var_init_decl_list_c)
 /***********************/
 /* B 1.5.1 - Functions */
 /***********************/
-SYM_REF4(function_declaration_c, derived_function_name, type_name, var_declarations_list, function_body)
+/* enumvalue_symtable is filled in by enum_declaration_check_c, during stage3 semantic verification, with a list of all enumerated constants declared inside this POU */
+SYM_REF4(function_declaration_c, derived_function_name, type_name, var_declarations_list, function_body, enumvalue_symtable_t enumvalue_symtable;)
 
 /* intermediate helper symbol for
  * - function_declaration
@@ -721,7 +723,8 @@ SYM_LIST(var2_init_decl_list_c)
 /* B 1.5.2 - Function Blocks */
 /*****************************/
 /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
-SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
+/* enumvalue_symtable is filled in by enum_declaration_check_c, during stage3 semantic verification, with a list of all enumerated constants declared inside this POU */
+SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body, enumvalue_symtable_t enumvalue_symtable;)
 
 /* intermediate helper symbol for function_declaration */
 /*  { io_var_declarations | other_var_declarations }   */
@@ -743,7 +746,8 @@ SYM_REF1(non_retentive_var_decls_c, var_decl_list)
 /* B 1.5.3 - Programs */
 /**********************/
 /*  PROGRAM program_type_name program_var_declarations_list function_block_body END_PROGRAM */
-SYM_REF3(program_declaration_c, program_type_name, var_declarations, function_block_body)
+/* enumvalue_symtable is filled in by enum_declaration_check_c, during stage3 semantic verification, with a list of all enumerated constants declared inside this POU */
+SYM_REF3(program_declaration_c, program_type_name, var_declarations, function_block_body, enumvalue_symtable_t enumvalue_symtable;)
 
 /* intermediate helper symbol for program_declaration_c */
 /*  { io_var_declarations | other_var_declarations }   */
@@ -826,7 +830,8 @@ CONFIGURATION configuration_name
    optional_instance_specific_initializations
 END_CONFIGURATION
 */
-SYM_REF5(configuration_declaration_c, configuration_name, global_var_declarations, resource_declarations, access_declarations, instance_specific_initializations)
+/* enumvalue_symtable is filled in by enum_declaration_check_c, during stage3 semantic verification, with a list of all enumerated constants declared inside this POU */
+SYM_REF5(configuration_declaration_c, configuration_name, global_var_declarations, resource_declarations, access_declarations, instance_specific_initializations, enumvalue_symtable_t enumvalue_symtable;)
 
 /* helper symbol for configuration_declaration */
 SYM_LIST(resource_declaration_list_c)
@@ -837,7 +842,8 @@ RESOURCE resource_name ON resource_type_name
    single_resource_declaration
 END_RESOURCE
 */
-SYM_REF4(resource_declaration_c, resource_name, resource_type_name, global_var_declarations, resource_declaration)
+/* enumvalue_symtable is filled in by enum_declaration_check_c, during stage3 semantic verification, with a list of all enumerated constants declared inside this POU */
+SYM_REF4(resource_declaration_c, resource_name, resource_type_name, global_var_declarations, resource_declaration, enumvalue_symtable_t enumvalue_symtable;)
 
 /* task_configuration_list program_configuration_list */
 SYM_REF2(single_resource_declaration_c, task_configuration_list, program_configuration_list)
