@@ -47,7 +47,7 @@ const char *create_enumtype_conversion_functions_c::functionDataType[] = {
 		"DINT"  ,
 		"LINT"  ,
 		"USINT" ,
-		"UNIT"  ,
+		"UINT"  ,
 		"UDINT" ,
 		"ULINT" ,
 		NULL
