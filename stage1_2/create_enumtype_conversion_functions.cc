@@ -157,6 +157,7 @@ std::string create_enumtype_conversion_functions_c::getIntegerName(bool isSigned
    STRING_TO_<ENUM> := <ENUM.VALUE_N>;
    RETURN;
   END_IF;
+  ENO := FALSE;
   END_FUNCTION
 
   Note: if you change code below remember to update this comment.
@@ -172,9 +173,10 @@ void create_enumtype_conversion_functions_c::printStringToEnum  (std::string &en
        std::string value = *itr;
        text += "IF IN = '" + value + "' THEN\n";
        text += " " + functionName + " := " + value + ";\n";
-       text += " RETURN;\n";
+       text += " RETURN;\n"; 
        text += "END_IF;\n";
     }
+    text += "ENO := FALSE;\n";
     text += "END_FUNCTION\n\n";
 }
 
@@ -196,6 +198,7 @@ void create_enumtype_conversion_functions_c::printStringToEnum  (std::string &en
    <ENUM>_TO_STRING := '<ENUM.VALUE_N>';
    RETURN;
   END_IF;
+  ENO := FALSE;
   END_FUNCTION
 
   Note: if you change code below remember to update this comment.
@@ -214,6 +217,7 @@ void create_enumtype_conversion_functions_c::printEnumToString  (std::string &en
         text += " RETURN;\n";
         text += "END_IF;\n";
     }
+    text += "ENO := FALSE;\n";
     text += "END_FUNCTION\n\n";
 }
 
@@ -235,6 +239,7 @@ void create_enumtype_conversion_functions_c::printEnumToString  (std::string &en
    <INTEGER>_TO_<ENUM> := <ENUM.VALUE_N>;
    RETURN;
   END_IF;
+  ENO := FALSE;
   END_FUNCTION
 
   Note: if you change code below remember to update this comment.
@@ -260,6 +265,7 @@ void create_enumtype_conversion_functions_c::printIntegerToEnum (std::string &en
         text += "END_IF;\n";
         count++;
     }
+    text += "ENO := FALSE;\n";
     text += "END_FUNCTION\n\n";
 }
 
@@ -281,6 +287,7 @@ void create_enumtype_conversion_functions_c::printIntegerToEnum (std::string &en
    <ENUM>_TO_<INTEGER> := N;
    RETURN;
   END_IF;
+  ENO := FALSE;
   END_FUNCTION
 
   Note: if you change code below remember to update this comment.
@@ -306,6 +313,7 @@ void create_enumtype_conversion_functions_c::printEnumToInteger (std::string &en
         text += "END_IF;\n";
         count++;
     }
+    text += "ENO := FALSE;\n";
     text += "END_FUNCTION\n\n";
 }
 
