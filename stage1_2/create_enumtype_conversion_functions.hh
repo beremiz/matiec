@@ -47,12 +47,13 @@
 
 
 class create_enumtype_conversion_functions_c: public iterator_visitor_c {
+  private:
+    static create_enumtype_conversion_functions_c *singleton;
+    
   public:
     explicit create_enumtype_conversion_functions_c(symbol_c *ignore);
     virtual ~create_enumtype_conversion_functions_c(void);
-    std::string &get_declaration(symbol_c *root);
-
-    const static char *functionDataType [];
+    static std::string &get_declaration(symbol_c *symbol);
 
     void *visit(identifier_c *symbol);
     /**********************/

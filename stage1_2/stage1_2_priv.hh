@@ -105,6 +105,18 @@ bool get_opt_safe_extensions();
 /* This is a service that flex provides to bison... */
 void print_include_stack(void);
 
+/*****************************************************/
+/* Ask flex to include the source code in the string */
+/*****************************************************/
+/* This is a service that flex provides to bison... */
+/* The string should contain valid IEC 61131-3 source code. Bison will ask flex to insert source 
+ * code into the input stream of IEC code being parsed. The code to be inserted is typically
+ * generated automatically.
+ * Currently this is used to insert conversion functions ***_TO_*** (as defined by the standard)
+ * between user defined (i.e. derived) enumerated datatypes, and some basic datatypes 
+ * (e.g. INT, STRING, etc...)
+ */
+void include_string(const char *source_code);
 
 /**************************************/
 /* The name of the file being parsed. */

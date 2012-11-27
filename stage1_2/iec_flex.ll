@@ -247,6 +247,8 @@ void unput_text(unsigned int n);
  * but first return to the stream an additional character to mark the end of the token. 
  */
 void unput_and_mark(const char c);
+
+void include_file(const char *include_filename);
 %}
 
 
@@ -867,38 +869,8 @@ incompl_location	%[IQM]\*
 <include_beg>{file_include_pragma_beg}	BEGIN(include_filename);
 
 <include_filename>{file_include_pragma_filename}	{
-			  /* got the include file name */
-			  int i;
-
-			  if (include_stack_ptr >= MAX_INCLUDE_DEPTH) {
-			    fprintf(stderr, "Includes nested too deeply\n");
-			    exit( 1 );
-			  }
-			  include_stack[include_stack_ptr].buffer_state = YY_CURRENT_BUFFER;
-			  include_stack[include_stack_ptr].env = current_tracking;
-			  include_stack[include_stack_ptr].filename = current_filename;
-			  
-			  for (i = 0, yyin = NULL; (INCLUDE_DIRECTORIES[i] != NULL) && (yyin == NULL); i++) {
-			    char *full_name = strdup3(INCLUDE_DIRECTORIES[i], "/", yytext);
-			    if (full_name == NULL) {
-			      fprintf(stderr, "Out of memory!\n");
-			      exit( 1 );
-			    }
-			    yyin = fopen(full_name, "r");
-			    free(full_name);
-			  }
-
-			  if (!yyin) {
-			    fprintf(stderr, "Error opening included file %s\n", yytext);
-			    exit( 1 );
-			  }
-
-			  current_filename = strdup(yytext);
-			  current_tracking = GetNewTracking(yyin);
-			  include_stack_ptr++;
-
-			  /* switch input buffer to new file... */
-			  yy_switch_to_buffer(yy_create_buffer(yyin, YY_BUF_SIZE));
+			  /* set the internal state variables of lexical analyser to process a new include file */
+			  include_file(yytext);
 			  /* switch to whatever state was active before the include file */
 			  yy_pop_state();
 			  /* now process the new file... */
@@ -947,6 +919,8 @@ incompl_location	%[IQM]\*
 			}
 
 <include_end>{file_include_pragma_end}	yy_pop_state();
+	/* handle the artificial file includes created by include_string(), which do not end with a '}' */
+<include_end>.				unput_text(0); yy_pop_state(); 
 
 
 	/*********************************/
@@ -1688,6 +1662,79 @@ void print_include_stack(void) {
   for (i = include_stack_ptr - 1; i >= 0; i--)
     fprintf (stderr, "included from file %s:%d\n", include_stack[i].filename, include_stack[i].env->lineNumber);
 }
+
+
+
+/* set the internal state variables of lexical analyser to process a new include file */
+void handle_include_file_(FILE *filehandle, const char *filename) {
+  if (include_stack_ptr >= MAX_INCLUDE_DEPTH) {
+    fprintf(stderr, "Includes nested too deeply\n");
+    exit( 1 );
+  }
+  
+  yyin = filehandle;
+  
+  include_stack[include_stack_ptr].buffer_state = YY_CURRENT_BUFFER;
+  include_stack[include_stack_ptr].env = current_tracking;
+  include_stack[include_stack_ptr].filename = current_filename;
+  
+  current_filename = strdup(filename);
+  current_tracking = GetNewTracking(yyin);
+  include_stack_ptr++;
+
+  /* switch input buffer to new file... */
+  yy_switch_to_buffer(yy_create_buffer(yyin, YY_BUF_SIZE));
+}
+
+
+
+/* insert the code (in <source_code>) into the source code we are parsing.
+ * This is done by creating an artificial file with that new source code, and then 'including' the file
+ */
+void include_string(const char *source_code) {
+  FILE *tmp_file = tmpfile();
+  
+  if(tmp_file == NULL) {
+    perror("Error creating temp file.");
+    exit(EXIT_FAILURE);
+  }
+
+  fwrite((void *)source_code, 1, strlen(source_code), tmp_file);
+  rewind(tmp_file);
+
+  /* now parse the tmp file, by asking flex to handle it as if it had been included with the (*#include ... *) pragma... */
+  handle_include_file_(tmp_file, "");
+//fclose(tmp_file);  /* do NOT close file. It must only be closed when we finish reading from it! */
+}
+
+
+
+/* Open an include file, and set the internal state variables of lexical analyser to process a new include file */
+void include_file(const char *filename) {
+  FILE *filehandle = NULL;
+  
+  for (int i = 0; (INCLUDE_DIRECTORIES[i] != NULL) && (filehandle == NULL); i++) {
+    char *full_name;
+    full_name = strdup3(INCLUDE_DIRECTORIES[i], "/", filename);
+    if (full_name == NULL) {
+      fprintf(stderr, "Out of memory!\n");
+      exit( 1 );
+    }
+    filehandle = fopen(full_name, "r");
+    free(full_name);
+  }
+
+  if (NULL == filehandle) {
+    fprintf(stderr, "Error opening included file %s\n", filename);
+    exit( 1 );
+  }
+
+  /* now process the new file... */
+  handle_include_file_(filehandle, filename);
+}
+
+
+
 
 
 /* return all the text in the current token back to the input stream, except the first n chars. */

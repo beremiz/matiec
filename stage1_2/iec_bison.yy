@@ -237,10 +237,7 @@ void print_err_msg(int first_line,
                    int last_column,
                    const char *last_filename,
                    long int last_order,
-                   const char *additional_error_msg);
-                   
-/* Create entry in symbol table for function conversion data type*/
-void add_enumtype_conversion_functions(const char * dname);
+                   const char *additional_error_msg);    
 %}
 
 
@@ -2509,7 +2506,7 @@ structure_type_name: identifier;
 
 data_type_declaration:
   TYPE type_declaration_list END_TYPE
-	{$$ = new data_type_declaration_c($2, locloc(@$));}
+	{$$ = new data_type_declaration_c($2, locloc(@$)); include_string((create_enumtype_conversion_functions_c::get_declaration($$)).c_str());}
 /* ERROR_CHECK_BEGIN */
 | TYPE END_TYPE
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "no data type declared in data type(s) declaration."); yynerrs++;}
@@ -2712,13 +2709,7 @@ enumerated_type_declaration:
  *       and include the library_element_symtable.insert(...) code in the rule actions!
  */
   identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);}
-	{
-      $$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, NULL, locloc(@3)), locloc(@$));
-      if (conversion_functions_) {
-        const char *name = ((identifier_c *)$1)->value;
-	    add_enumtype_conversion_functions(name);
-	  }
-    }
+	{$$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, NULL, locloc(@3)), locloc(@$));}
 | identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);} ASSIGN enumerated_value
 	{$$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, $6, locf(@3), locl(@6)), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
@@ -8338,69 +8329,7 @@ int stage2__(const char *filename,
   {int res;
     if ((res = yyparse()) != 0) {
       fprintf (stderr, "\nParsing failed because of too many consecutive syntax errors. Bailing out!\n");
-  		exit(EXIT_FAILURE);
-  	}
-  }
-
-  if (yynerrs > 0) {
-    fprintf (stderr, "\n%d error(s) found. Bailing out!\n", yynerrs /* global variable */);
-    exit(EXIT_FAILURE);
-  }
-  
-  if (tree_root_ref != NULL)
-    *tree_root_ref = tree_root;
-
-  fclose(in_file);
-  return 0;
-}
-
-/* Create a tmp file from a char buffer. */
-FILE *ftmpopen (void *buf, size_t size, const char *opentype)
-{
-  FILE *f;
-  f = tmpfile();
-  fwrite(buf, 1, size, f);
-  rewind(f);
-  return f;
-}
-
-/*  sstage2__ function allow to parse a ST code inside a string.
- *  We use this function to add into AST auto generated code like enum conversion functions.
- *  This appoach allow us to write future changes code indipendetly and to check generate code
- *  during developing.
- */
-int sstage2__(const char *text, 
-              symbol_c **tree_root_ref,
-              bool full_token_loc_        /* error messages specify full token location */
-             ) {
-
-  FILE *in_file = NULL;
-    
-  if((in_file = ftmpopen((void *)text, strlen(text), "r")) == NULL) {
-    perror("Error creating temp file.");
-    return -1;
-  }
-
-  /* now parse the input file... */
-  #if YYDEBUG
-    yydebug = 1;
-  #endif
-  yyin = in_file;
-  
-  /* We turn on "allow_function_overloading" flag to disable some checks. 
-   * In detail when we add to symboltable a symbol already processed we
-   * don't want to get any error. 
-   */  
-   
-  allow_function_overloading = true;
-  allow_extensible_function_parameters = false;
-  full_token_loc = full_token_loc_;
-  current_filename = "built-in";
-  current_tracking = GetNewTracking(yyin);
-  {int res;
-    if ((res = yyparse()) != 0) {
-      fprintf (stderr, "\nParsing failed because of too many consecutive syntax errors. Bailing out!\n");
-        exit(EXIT_FAILURE);
+      exit(EXIT_FAILURE);
     }
   }
 
@@ -8417,20 +8346,14 @@ int sstage2__(const char *text,
 }
 
 
-/* Create entry in symbol table for function conversion data type*/
-void add_enumtype_conversion_functions(const char * dname) {
-  std::string strname;
-  std::string tmp;
-  
-  strname = dname; 
-  for (int i = 0; create_enumtype_conversion_functions_c::functionDataType[i] != NULL; i++) {
-    tmp = strname + std::string("_TO_") + create_enumtype_conversion_functions_c::functionDataType[i];
-    library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
-    
-    tmp = create_enumtype_conversion_functions_c::functionDataType[i] + std::string("_TO_") + strname;
-    library_element_symtable.insert(tmp.c_str(), prev_declared_derived_function_name_token);
-  }  
-}
+
+
+
+
+
+
+
+
 
 
 

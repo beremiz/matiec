@@ -37,42 +37,48 @@
 /* set to 1 to see debug info during execution */
 static const int debug = 0;
 
-/*
- * functionDataType array contains all supported data type conversion.
+
+/* 
+ * The create_enumtype_conversion_functions_c class generates ST source code!
+ * This code is in actual fact datatype conversion functions between user defined
+ * enumerated datatypes, and some basic datatypes.
+ *
+ * These conversion functions cannot be implemented the normal way (i.e. in the standard library)
+ * since they convert from/to a datatype that is defined by the user. So, we generate these conversions
+ * functions on the fly! 
+ * (to get an idea of what the generated code looks like, see the comments in create_enumtype_conversion_functions.cc)
+ *
+ * Currently, we support conversion between the user defined enumerated datatype and STRING,
+ * SINT, INT, DINT, LINT, USINT, UINT, UDINT, ULINT (basically the ANY_INT)
+ *
+ * ST source code is generated when the method get_declaration() is called. since the
+ * create_enumtype_conversion_functions_c inherits from the iterator visitor, this method may be 
+ * passed either the root of an abstract syntax tree, or sub-tree of the AST.
+ *
+ * This class will iterate through that AST, and for each enumerated type declaration, will 
+ * create the apropriate conversion functions.
  */
-const char *create_enumtype_conversion_functions_c::functionDataType[] = {
-		"STRING",
-		"SINT"  ,
-		"INT"   ,
-		"DINT"  ,
-		"LINT"  ,
-		"USINT" ,
-		"UINT"  ,
-		"UDINT" ,
-		"ULINT" ,
-		NULL
-};
 
-create_enumtype_conversion_functions_c::create_enumtype_conversion_functions_c(symbol_c *ignore) {
+create_enumtype_conversion_functions_c *create_enumtype_conversion_functions_c::singleton = NULL;
 
+create_enumtype_conversion_functions_c:: create_enumtype_conversion_functions_c(symbol_c *ignore) {}
+create_enumtype_conversion_functions_c::~create_enumtype_conversion_functions_c(void)             {}
+
+
+std::string &create_enumtype_conversion_functions_c::get_declaration(symbol_c *symbol) {
+    if (NULL == singleton)  singleton = new create_enumtype_conversion_functions_c(NULL);
+    if (NULL == singleton)  ERROR_MSG("Out of memory. Bailing out!\n");
+    
+    singleton->text = "";
+    if (NULL != symbol) 
+      symbol->accept(*singleton);
+
+    return singleton->text;
 }
 
-create_enumtype_conversion_functions_c::~create_enumtype_conversion_functions_c(void) {
-
-}
-
-std::string &create_enumtype_conversion_functions_c::get_declaration(symbol_c *root) {
-    text = "";
-    if (NULL != root) {
-        root->accept(*this);
-    }
-
-    return text;
-}
 
 void *create_enumtype_conversion_functions_c::visit(identifier_c *symbol) {
     currentToken = symbol->value;
-
     return NULL;
 }
 
