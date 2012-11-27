@@ -118,34 +118,20 @@ void print_include_stack(void);
  */
 void include_string(const char *source_code);
 
-/**************************************/
-/* The name of the file being parsed. */
-/**************************************/
-/* The name of the file currently being parsed...
- * Note that flex accesses and updates this global variable
- * apropriately whenever it comes across an (*#include <filename> *)
- * directive...
- * ... and bison will use it when producing error messages.
- * Note that bison also sets this variable correctly to the first
- * file being parsed.
+
+/**********************************/
+/* Tell flex which file to parse. */
+/**********************************/
+/* This is a service that flex provides to bison... */
+/* Tell flex which file to parse. This function will not imediately start parsing the file.
+ * To parse the file, you then need to call yyparse()
+ *
+ * Returns -1 on error opening the file (and a valid errno), or 0 on success.
  */
-extern const char *current_filename;
+int parse_file(const char *filename);
 
 
-#define MAX_BUFFER_LENGTH 1000
 
-typedef struct {
-    int eof;
-    int lineNumber;
-    int currentChar;
-    int lineLength;
-    int currentTokenStart;
-    char* buffer;
-    FILE *in_file;
-  } tracking_t;
-
-int GetNextChar(char *b, int maxBuffer);
-tracking_t* GetNewTracking(FILE* in_file);
 
 /****************************************************/
 /* Controlling the entry to the body_state in flex. */
