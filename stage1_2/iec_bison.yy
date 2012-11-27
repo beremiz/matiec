@@ -2506,7 +2506,7 @@ structure_type_name: identifier;
 
 data_type_declaration:
   TYPE type_declaration_list END_TYPE
-	{$$ = new data_type_declaration_c($2, locloc(@$)); include_string((create_enumtype_conversion_functions_c::get_declaration($$)).c_str());}
+	{$$ = new data_type_declaration_c($2, locloc(@$)); if (conversion_functions_) include_string((create_enumtype_conversion_functions_c::get_declaration($$)).c_str());}
 /* ERROR_CHECK_BEGIN */
 | TYPE END_TYPE
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "no data type declared in data type(s) declaration."); yynerrs++;}
