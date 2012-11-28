@@ -224,6 +224,12 @@ static inline IEC_TIMESPEC __tod_to_timespec(double seconds, double minutes, dou
   return ts;
 }
 
+#ifdef __MINGW32__
+#define TIMEGM mktime
+#else
+#define TIMEGM timegm
+#endif
+
 static inline IEC_TIMESPEC __date_to_timespec(int day, int month, int year) {
   IEC_TIMESPEC ts;
   struct tm broken_down_time;
@@ -237,7 +243,7 @@ static inline IEC_TIMESPEC __date_to_timespec(int day, int month, int year) {
   broken_down_time.tm_year = year - 1900;  /* number of years since 1900 */
   broken_down_time.tm_isdst = -1; /* disable daylight savings time */
   
-  epoch_seconds = timegm(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
+  epoch_seconds = TIMEGM(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
 
   if ((time_t)(-1) == epoch_seconds)
     __iec_error();
