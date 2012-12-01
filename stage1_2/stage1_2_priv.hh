@@ -126,10 +126,10 @@ void include_string(const char *source_code);
 /* Tell flex which file to parse. This function will not imediately start parsing the file.
  * To parse the file, you then need to call yyparse()
  *
- * Returns -1 on error opening the file (and a valid errno), or 0 on success.
+ * Returns NULL on error opening the file (and a valid errno), or 0 on success.
+ * Caller must close the file!
  */
-int parse_file(const char *filename);
-
+FILE *parse_file(const char *filename);
 
 
 

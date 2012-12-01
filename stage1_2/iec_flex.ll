@@ -884,17 +884,28 @@ incompl_location	%[IQM]\*
 			}
 
 
-<<EOF>>			{     /* NOTE: We must not change the value of include_stack_ptr
-			       *       just yet. We must only decrement it if we are NOT
-			       *       at the end of the main file.
-			       *       If we have finished parsing the main file, then we
-			       *       must leave include_stack_ptr at 0, in case the 
-			       *       parser is called once again with a new file.
-			       *       (In fact, we currently do just that!)
+<<EOF>>			{     /* NOTE: Currently bison is incorrectly using END_OF_INPUT in many rules
+			       *       when checking for syntax errors in the input source code.
+			       *       This means that in reality flex will be asked to carry on reading the input
+			       *       even after it has reached the end of all (including the main) input files.
+			       *       In other owrds, we will be called to return more tokens, even after we have
+			       *       already returned an END_OF_INPUT token. In this case, we must carry on returning
+			       *       more END_OF_INPUT tokens.
+			       * 
+			       *       However, in the above case we will be asked to carry on reading more tokens 
+			       *       from the main input file, after we have reached the end. For this to work
+			       *       correctly, we cannot close the main input file!
+			       * 
+			       *       This is why we WILL be called with include_stack_ptr == 0 multiple times,
+			       *       and why we must handle it as a special case
+			       *       that leaves the include_stack_ptr unchanged, and returns END_OF_INPUT once again.
+			       * 
+			       *       As a corollory, flex can never safely close the main input file, and we must ask
+			       *       bison to close it!
 			       */
-			  fclose(yyin);
-			  free(current_tracking);
 			  if (include_stack_ptr == 0) {
+			      // fclose(yyin);           // Must not do this!!
+			      // free(current_tracking); // Must not do this!!
 			      /* yyterminate() terminates the scanner and returns a 0 to the 
 			       * scanner's  caller, indicating "all done".
 			       *	
@@ -905,6 +916,8 @@ incompl_location	%[IQM]\*
 			       */ 	
 			    yyterminate();
 			  } else {
+			    fclose(yyin);
+			    free(current_tracking);
 			    --include_stack_ptr;
 			    yy_delete_buffer(YY_CURRENT_BUFFER);
 			    yy_switch_to_buffer((include_stack[include_stack_ptr]).buffer_state);
@@ -1864,18 +1877,18 @@ void include_string(const char *source_code) {include_string_(source_code);}
 /* Tell flex which file to parse. This function will not imediately start parsing the file.
  * To parse the file, you then need to call yyparse()
  *
- * Returns -1 on error opening the file (and a valid errno), or 0 on success.
+ * Returns NULL on error opening the file (and a valid errno), or 0 on success.
+ * Caller must close the file!
  */
-int parse_file(const char *filename) {
+FILE *parse_file(const char *filename) {
   FILE *filehandle = NULL;
 
-  if((filehandle = fopen(filename, "r")) == NULL) 
-    return -1;
-
-  yyin = filehandle;
-  current_filename = strdup(filename);
-  current_tracking = GetNewTracking(yyin);
-  return 0;
+  if((filehandle = fopen(filename, "r")) != NULL) {
+    yyin = filehandle;
+    current_filename = strdup(filename);
+    current_tracking = GetNewTracking(yyin);
+  }
+  return filehandle;
 }
 
 

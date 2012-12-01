@@ -8265,8 +8265,9 @@ int stage2__(const char *filename,
     fprintf (stderr, "Out of memory. Bailing out!\n");
     return -1;
   }
-
-  if(parse_file(libfilename) < 0) {
+  
+  FILE *libfile = NULL;
+  if((libfile = parse_file(libfilename)) == NULL) {
     char *errmsg = strdup2("Error opening library file ", libfilename);
     perror(errmsg);
     free(errmsg);
@@ -8279,7 +8280,8 @@ int stage2__(const char *filename,
   full_token_loc = full_token_loc_;
   if (yyparse() != 0)
       ERROR;
-
+  fclose(libfile);
+      
   if (yynerrs > 0) {
     fprintf (stderr, "\n%d error(s) found in %s. Bailing out!\n", yynerrs /* global variable */, libfilename);
     ERROR;
@@ -8299,8 +8301,8 @@ int stage2__(const char *filename,
   #if YYDEBUG
     yydebug = 1;
   #endif
-
-  if(parse_file(filename) < 0) {
+  FILE *mainfile = NULL;
+  if ((mainfile = parse_file(filename)) == NULL) {
     char *errmsg = strdup2("Error opening main file ", filename);
     perror(errmsg);
     free(errmsg);
@@ -8315,7 +8317,8 @@ int stage2__(const char *filename,
     fprintf (stderr, "\nParsing failed because of too many consecutive syntax errors. Bailing out!\n");
     exit(EXIT_FAILURE);
   }
-
+  fclose(mainfile);
+  
   if (yynerrs > 0) {
     fprintf (stderr, "\n%d error(s) found. Bailing out!\n", yynerrs /* global variable */);
     exit(EXIT_FAILURE);
