@@ -155,12 +155,12 @@ std::string create_enumtype_conversion_functions_c::getIntegerName(bool isSigned
   IN: STRING;
   END_VAR
   IF IN = '<ENUM.VALUE_1>' THEN
-   STRING_TO_<ENUM> := <ENUM.VALUE_1>;
+   STRING_TO_<ENUM> := <ENUM>#<ENUM.VALUE_1>;
    RETURN;
   END_IF;
   ...
   IF IN = '<ENUM.VALU_N>' THEN
-   STRING_TO_<ENUM> := <ENUM.VALUE_N>;
+   STRING_TO_<ENUM> := <ENUM>#<ENUM.VALUE_N>;
    RETURN;
   END_IF;
   ENO := FALSE;
@@ -178,7 +178,7 @@ void create_enumtype_conversion_functions_c::printStringToEnum  (std::string &en
     for (itr = enumerateValues.begin(); itr != enumerateValues.end(); ++itr) {
        std::string value = *itr;
        text += "IF IN = '" + value + "' THEN\n";
-       text += " " + functionName + " := " + value + ";\n";
+       text += " " + functionName + " := " + enumerateName + "#" + value + ";\n";
        text += " RETURN;\n"; 
        text += "END_IF;\n";
     }
@@ -195,12 +195,12 @@ void create_enumtype_conversion_functions_c::printStringToEnum  (std::string &en
   VAR_INPUT
   IN: <ENUM>;
   END_VAR
-  IF IN = <ENUM.VALUE_1> THEN
+  IF IN = <ENUM>#<ENUM.VALUE_1> THEN
    <ENUM>_TO_STRING := '<ENUM>#<ENUM.VALUE_1>';
    RETURN;
   END_IF;
   ...
-  IF IN = <ENUM.VALUE_N> THEN
+  IF IN = <ENUM>#<ENUM.VALUE_N> THEN
    <ENUM>_TO_STRING := '<ENUM>#<ENUM.VALUE_N>';
    RETURN;
   END_IF;
@@ -218,7 +218,7 @@ void create_enumtype_conversion_functions_c::printEnumToString  (std::string &en
     text += "\nVAR_INPUT\nIN : " + enumerateName + ";\nEND_VAR\n";
     for (itr = enumerateValues.begin(); itr != enumerateValues.end(); ++itr) {
         std::string value = *itr;
-        text += "IF IN = " + value + " THEN\n";
+        text += "IF IN = " + enumerateName + "#" + value + " THEN\n";
         text += " " + functionName + " := '" + enumerateName + "#" + value + "';\n";
         text += " RETURN;\n";
         text += "END_IF;\n";
@@ -237,12 +237,12 @@ void create_enumtype_conversion_functions_c::printEnumToString  (std::string &en
   IN: <INTEGER>;
   END_VAR
   IF IN = 1 THEN
-   <INTEGER>_TO_<ENUM> := <ENUM.VALUE_1>;
+   <INTEGER>_TO_<ENUM> := <ENUM>#<ENUM.VALUE_1>;
    RETURN;
   END_IF;
   ...
   IF IN = N THEN
-   <INTEGER>_TO_<ENUM> := <ENUM.VALUE_N>;
+   <INTEGER>_TO_<ENUM> := <ENUM>#<ENUM.VALUE_N>;
    RETURN;
   END_IF;
   ENO := FALSE;
@@ -266,7 +266,7 @@ void create_enumtype_conversion_functions_c::printIntegerToEnum (std::string &en
         std::stringstream out;
         out << count;
         text += "IF IN = " + out.str() + " THEN\n";
-        text += " " + functionName + " := " + value + ";\n";
+        text += " " + functionName + " := " + enumerateName + "#" + value + ";\n";
         text += " RETURN;\n";
         text += "END_IF;\n";
         count++;
@@ -284,12 +284,12 @@ void create_enumtype_conversion_functions_c::printIntegerToEnum (std::string &en
   VAR_INPUT
   IN: <INTEGER>;
   END_VAR
-  IF IN = <ENUM.VALUE_1> THEN
+  IF IN = <ENUM>#<ENUM.VALUE_1> THEN
    <ENUM>_TO_<INTEGER> := 1;
    RETURN;
   END_IF;
   ...
-  IF IN = <ENUM.VALUE_N> THEN
+  IF IN = <ENUM>#<ENUM.VALUE_N> THEN
    <ENUM>_TO_<INTEGER> := N;
    RETURN;
   END_IF;
@@ -313,7 +313,7 @@ void create_enumtype_conversion_functions_c::printEnumToInteger (std::string &en
         std::string value = *itr;
         std::stringstream out;
         out << count;
-        text += "IF IN = " + value + " THEN\n";
+        text += "IF IN = " + enumerateName + "#" + value + " THEN\n";
         text += " " + functionName + " := " + out.str() + ";\n";
         text += " RETURN;\n";
         text += "END_IF;\n";
