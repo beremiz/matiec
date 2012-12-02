@@ -196,12 +196,12 @@ void create_enumtype_conversion_functions_c::printStringToEnum  (std::string &en
   IN: <ENUM>;
   END_VAR
   IF IN = <ENUM.VALUE_1> THEN
-   <ENUM>_TO_STRING := '<ENUM.VALUE_1>';
+   <ENUM>_TO_STRING := '<ENUM>#<ENUM.VALUE_1>';
    RETURN;
   END_IF;
   ...
   IF IN = <ENUM.VALUE_N> THEN
-   <ENUM>_TO_STRING := '<ENUM.VALUE_N>';
+   <ENUM>_TO_STRING := '<ENUM>#<ENUM.VALUE_N>';
    RETURN;
   END_IF;
   ENO := FALSE;
@@ -219,7 +219,7 @@ void create_enumtype_conversion_functions_c::printEnumToString  (std::string &en
     for (itr = enumerateValues.begin(); itr != enumerateValues.end(); ++itr) {
         std::string value = *itr;
         text += "IF IN = " + value + " THEN\n";
-        text += " " + functionName + " := '" + value + "';\n";
+        text += " " + functionName + " := '" + enumerateName + "#" + value + "';\n";
         text += " RETURN;\n";
         text += "END_IF;\n";
     }
