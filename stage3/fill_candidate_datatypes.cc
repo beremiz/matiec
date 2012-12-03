@@ -1817,14 +1817,15 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	else ERROR;
 
 	generic_function_call_t fcall_param = {
-		/* fcall_param.function_name               = */ symbol->function_name,
-		/* fcall_param.nonformal_operand_list      = */ symbol->nonformal_param_list,
-		/* fcall_param.formal_operand_list         = */ symbol->formal_param_list,
-		/* enum {POU_FB, POU_function} POU_type    = */ generic_function_call_t::POU_function,
-		/* fcall_param.candidate_functions         = */ symbol->candidate_functions,
-		/* fcall_param.called_function_declaration = */ symbol->called_function_declaration,
-		/* fcall_param.extensible_param_count      = */ symbol->extensible_param_count
+			  function_name:                symbol->function_name,
+			  nonformal_operand_list:       symbol->nonformal_param_list,
+			  formal_operand_list:          symbol->formal_param_list,
+			  POU_type:                     generic_function_call_t::POU_function,
+			  candidate_functions:          symbol->candidate_functions,
+			  called_function_declaration:  symbol->called_function_declaration,
+			  extensible_param_count:       symbol->extensible_param_count
 	};
+
 	handle_function_call(symbol, fcall_param);
 
 	if (debug) std::cout << "function_invocation_c [" << symbol->candidate_datatypes.size() << "] result.\n";
