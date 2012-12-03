@@ -752,7 +752,7 @@ void *visit(function_invocation_c *symbol) {
           s4o.print(",\n"+s4o.indent_spaces);
         if (param_value == NULL) {
           /* If not, get the default value of this variable's type */
-          param_value = (symbol_c *)current_param_type->accept(*type_initial_value_c::instance());
+          param_value = type_initial_value_c::get(current_param_type);
         }
         if (param_value == NULL) ERROR;
         s4o.print("(");

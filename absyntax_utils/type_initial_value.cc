@@ -81,7 +81,7 @@ type_initial_value_c *type_initial_value_c::instance(void) {
    * for the DATE data type. Untill we fix our implementation, we use 1970-01-01
    * as our default value!!
    */
-    date_literal_0 =  new date_literal_c(integer_1, integer_1, integer_1);
+//date_literal_0 =  new date_literal_c(integer_1, integer_1, integer_1);
   date_literal_0 =  new date_literal_c(new integer_c("1970"), integer_1, integer_1);
   daytime_literal_0 = new daytime_c(integer_0, integer_0, real_0);
   time_0 = new duration_c(new time_type_name_c(), NULL, new interval_c(NULL, NULL, NULL, integer_0, NULL));  // T#0s
@@ -98,9 +98,9 @@ type_initial_value_c::type_initial_value_c(void) {}
 
 
 
-symbol_c *type_initial_value_c::get(identifier_c *type_name) {
+symbol_c *type_initial_value_c::get(symbol_c *type) {
   TRACE("type_initial_value_c::get(): called ");
-  return (symbol_c *)type_name->accept(*this);
+  return (symbol_c *)type->accept(*type_initial_value_c::instance());
 }
 
 
