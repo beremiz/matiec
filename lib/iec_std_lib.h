@@ -610,7 +610,6 @@ static inline STRING __tod_to_string(TOD IN){
 static inline STRING __dt_to_string(DT IN){
     STRING res;
     tm broken_down_time;
-    time_t seconds;
     /* DT#1984-06-25-15:36:55.36 */
     broken_down_time = convert_seconds_to_date_and_time(IN.tv_sec);
     if(IN.tv_nsec == 0){
