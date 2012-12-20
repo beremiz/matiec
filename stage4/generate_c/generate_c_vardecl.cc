@@ -195,7 +195,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
         case arraysize_am:
           symbol->array_subrange_list->accept(*this);
           array_base_type = symbol->non_generic_type_name;
-          array_default_value = (symbol_c *)symbol->non_generic_type_name->accept(*type_initial_value_c::instance());;
+          array_default_value = type_initial_value_c::get(symbol->non_generic_type_name);
           if (array_default_value == NULL) ERROR;
           break;
         case typedecl_am:
@@ -618,7 +618,7 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
           if (current_element_type == NULL) ERROR;
           
           /* If not, get the default value of this variable's type */
-          element_value = (symbol_c *)current_element_type->accept(*type_initial_value_c::instance());
+          element_value = type_initial_value_c::get(current_element_type);
         }
         
         if (element_value == NULL) ERROR;
@@ -878,7 +878,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
         ERROR;
       if (NULL == this->current_var_init_symbol) {
         /* We try to find the data type's default value... */
-        this->current_var_init_symbol = (symbol_c *)this->current_var_type_symbol->accept(*type_initial_value_c::instance());
+        this->current_var_init_symbol = type_initial_value_c::get(this->current_var_type_symbol);
       /* Note that Function Block 'data types' do not have a default value, so we cannot abort if no default value is found! */
       /*
       if (NULL == this->current_var_init_symbol)

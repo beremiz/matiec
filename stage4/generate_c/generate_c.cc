@@ -1124,7 +1124,7 @@ void *visit(function_declaration_c *symbol) {
   s4o.print(" = ");
   {
     /* get the default value of this variable's type */
-    symbol_c *default_value = (symbol_c *)symbol->type_name->accept(*type_initial_value_c::instance());
+    symbol_c *default_value = type_initial_value_c::get(symbol->type_name);
     if (default_value == NULL) ERROR;
     initialization_analyzer_c initialization_analyzer(default_value);
     switch (initialization_analyzer.get_initialization_type()) {

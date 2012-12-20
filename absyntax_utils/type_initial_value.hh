@@ -59,8 +59,10 @@
 
 class type_initial_value_c : public null_visitor_c {
 
+  public:
+    static symbol_c *get(symbol_c *type);
+
   private:
-    static type_initial_value_c *_instance;
     /* constants for the default values of elementary data types... */
     static real_c		*real_0;
     static integer_c		*integer_0, *integer_1;
@@ -74,17 +76,12 @@ class type_initial_value_c : public null_visitor_c {
     static single_byte_character_string_c *string_0;
     static double_byte_character_string_c *wstring_0;
 
-  public:
-    static type_initial_value_c *instance(void);
-
   protected:
     type_initial_value_c(void);
 
-  public:
-    symbol_c *get(identifier_c *type_name);
-
-
   private:
+    static type_initial_value_c *_instance;
+    static type_initial_value_c *instance(void);
     void *handle_type_spec(symbol_c *base_type_name, symbol_c *type_spec_init);
 
   private:
