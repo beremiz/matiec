@@ -190,7 +190,7 @@ void print_ast_c::print(symbol_c* symbol) {
 
 
 void print_ast_c::print(const char *str) {
-  fprintf(stderr, str);
+  fprintf(stderr, "%s", str);
 }
 
   
@@ -209,7 +209,7 @@ void print_ast_c::suffix_fcall(symbol_c* symbol) {}
 
 
 void debug_c::print(const char *str) {
-  fprintf(stderr, str);
+  fprintf(stderr, "%s", str);
 }
 
 void debug_c::print(symbol_c *symbol) {
