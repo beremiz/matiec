@@ -43,9 +43,31 @@
 #include "../absyntax_utils/absyntax_utils.hh"
 
 
+class convert_c : public iterator_visitor_c {
+	std::string text;
+
+public:
+	convert_c(symbol_c *symbol = NULL) {
+		text = "";
+	}
+
+	std::string toString(symbol_c *symbol) {
+		symbol->accept(*this);
+		return text;
+	}
+
+	void *visit(identifier_c *symbol) {
+		text = symbol->value;
+		return NULL;
+	}
+
+	void *visit(symbolic_variable_c *symbol) {
+		symbol->var_name->accept(*this);
+		return NULL;
+	}
+};
 
 class constant_folding_c : public iterator_visitor_c {
-  private:
     search_varfb_instance_type_c *search_varfb_instance_type;
     int error_count;
     bool warning_found;
@@ -54,6 +76,7 @@ class constant_folding_c : public iterator_visitor_c {
     symbol_c *prev_il_instruction;
     /* the current IL operand being analyzed */
     symbol_c *il_operand;
+    convert_c convert;
 
   public:
 	constant_folding_c(symbol_c *symbol = NULL);
@@ -85,6 +108,16 @@ class constant_folding_c : public iterator_visitor_c {
     /* B 1.2.3.1 - Duration */
     /********* **************/
     void *visit(fixed_point_c *symbol);
+
+    /*********************/
+    /* B 1.4 - Variables */
+    /*********************/
+    void *visit(symbolic_variable_c *symbol);
+
+    /**********************/
+    /* B 1.5.3 - Programs */
+    /**********************/
+    void *visit(program_declaration_c *symbol);
 
     /****************************************/
     /* B.2 - Language IL (Instruction List) */
@@ -178,6 +211,16 @@ class constant_folding_c : public iterator_visitor_c {
     void *visit(   neg_expression_c *symbol);
     void *visit(   not_expression_c *symbol);
     //void *visit(function_invocation_c *symbol); /* TODO */
+
     
+    /*********************************/
+    /* B 3.2.1 Assignment Statements */
+    /*********************************/
+    void *visit(assignment_statement_c *symbol);
+
+    /********************************/
+    /* B 3.2.3 Selection Statements */
+    /********************************/
+    void *visit(if_statement_c *symbol);
 };
 

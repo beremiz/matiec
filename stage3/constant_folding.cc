@@ -206,8 +206,25 @@
 		{SET_NONCONST(dtype, symbol);}                                                                            \
 }
 
+/* Meet rules
+ * - any * T = any
+ * - any * B = B
+ * - constant * constant = constant (if equal)
+ * - constant * constant = B        (if not equal)
+ */
+#define COMPUTE_MEET_SEMILATTICE(dtype, c1, c2, resValue) {\
+		if ((c1._##dtype.value != c2._##dtype.value && c2._##dtype.status == symbol_c::cs_const_value && c1._##dtype.status == symbol_c::cs_const_value) ||\
+		    ( c1._##dtype.status == symbol_c::cs_non_const && c2._##dtype.status == symbol_c::cs_const_value ) ||\
+		    ( c2._##dtype.status == symbol_c::cs_non_const && c1._##dtype.status == symbol_c::cs_const_value  )) {\
+			resValue._##dtype.status = symbol_c::cs_non_const;\
+		} else {\
+			resValue._##dtype.status = symbol_c::cs_const_value;\
+			resValue._##dtype.value  = c1._##dtype.value;\
+		}\
+}
 
 
+static std::map <std::string, symbol_c::const_value_t> values;
 
 
 /***********************************************************************/
@@ -916,6 +933,37 @@ void *constant_folding_c::visit(fixed_point_c *symbol) {
 	return NULL;
 }
 
+/*********************/
+/* B 1.4 - Variables */
+/*********************/
+void *constant_folding_c::visit(symbolic_variable_c *symbol) {
+	std::string varName;
+
+	varName = convert.toString(symbol->var_name);
+	if (values.count(varName) > 0) {
+		symbol->const_value = values[varName];
+	}
+	return NULL;
+}
+
+/**********************/
+/* B 1.5.3 - Programs */
+/**********************/
+void *constant_folding_c::visit(program_declaration_c *symbol) {
+	symbol_c *var_name;
+
+	values.clear(); /* Clear global map */
+	search_var_instance_decl_c search_var_instance_decl(symbol);
+	function_param_iterator_c fpi(symbol);
+	while((var_name = fpi.next()) != NULL) {
+		std::string varName = convert.toString(var_name);
+		symbol_c   *varDecl = search_var_instance_decl.get_decl(var_name);
+		values[varName] = varDecl->const_value;
+	}
+	/* Add all variables declared into Values map and put them to initial value */
+	symbol->function_block_body->accept(*this);
+	return NULL;
+}
 
 
 /****************************************/
@@ -1185,3 +1233,60 @@ void *constant_folding_c::visit(   not_expression_c *symbol) {symbol->  exp->acc
 
 /* TODO: handle function invocations... */
 // void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {}
+
+
+
+
+/*********************************/
+/* B 3.2.1 Assignment Statements */
+/*********************************/
+void *constant_folding_c::visit(assignment_statement_c *symbol) {
+	std::string varName;
+
+	symbol->r_exp->accept(*this);
+	symbol->l_exp->const_value = symbol->r_exp->const_value;
+	varName = convert.toString(symbol->l_exp);
+	values[varName] = symbol->l_exp->const_value;
+	return NULL;
+}
+
+/********************************/
+/* B 3.2.3 Selection Statements */
+/********************************/
+void *constant_folding_c::visit(if_statement_c *symbol) {
+	std::map <std::string, symbol_c::const_value_t> values_incoming;
+	std::map <std::string, symbol_c::const_value_t> values_statement_result;
+	std::map <std::string, symbol_c::const_value_t> values_elsestatement_result;
+	std::map <std::string, symbol_c::const_value_t>::iterator itr;
+	values_incoming = values; /* save incoming status */
+
+	symbol->statement_list->accept(*this);
+	values_statement_result = values;
+	if (NULL != symbol->else_statement_list) {
+		values = values_incoming;
+		symbol->else_statement_list->accept(*this);
+		values_elsestatement_result = values;
+	} else
+		values_elsestatement_result = values_incoming;
+	values.clear();
+	itr = values_statement_result.begin();
+	for ( ; itr != values_statement_result.end(); ++itr) {
+		std::string name = itr->first;
+		symbol_c::const_value_t value;
+
+		if (values_elsestatement_result.count(name) > 0) {
+			symbol_c::const_value_t c1 = itr->second;
+			symbol_c::const_value_t c2 = values_elsestatement_result[name];
+			COMPUTE_MEET_SEMILATTICE (real64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (uint64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE ( int64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (  bool, c1, c2, value);
+		} else
+			value = values_statement_result[name];
+		values[name] = value;
+	}
+	return NULL;
+}
+
+
+
