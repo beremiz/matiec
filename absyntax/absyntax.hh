@@ -143,7 +143,7 @@ class symbol_c {
      * having more than one entry filled in!
      */
     typedef enum { cs_undefined,   /* not defined/not yet evaluated --> const_value is not valid! */
-                   cs_non_const,   /* we have deternmined that expression is not a const value --> const_value is not valid! */
+                   cs_non_const,   /* we have determined that expression is not a const value --> const_value is not valid! */
                    cs_const_value, /* const value is valid */
                    cs_overflow     /* result produced overflow or underflow --> const_value is not valid! */
                  } const_status_t;
