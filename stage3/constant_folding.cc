@@ -206,14 +206,16 @@
 		{SET_NONCONST(dtype, symbol);}                                                                            \
 }
 
-/* Meet rules
- * - any * T = any
- * - any * B = B
- * - constant * constant = constant (if equal)
- * - constant * constant = B        (if not equal)
+/* Constant Propagation: Rules for Meet from "Cooper K., Torczon L. - Engineering a Compiler, Second Edition - 2011"
+ * at 9.3 Static Single-Assignment Form  page 517
+ * - any * undefined = any
+ * - any * non_const = non_const
+ * - constant * constant = constant  (if equal)
+ * - constant * constant = non_const (if not equal)
  */
 #define COMPUTE_MEET_SEMILATTICE(dtype, c1, c2, resValue) {\
-		if ((c1._##dtype.value != c2._##dtype.value && c2._##dtype.status == symbol_c::cs_const_value && c1._##dtype.status == symbol_c::cs_const_value) ||\
+		if (( c1._##dtype.value  != c2._##dtype.value && c2._##dtype.status == symbol_c::cs_const_value &&\
+              c1._##dtype.status == symbol_c::cs_const_value) ||\
 		    ( c1._##dtype.status == symbol_c::cs_non_const && c2._##dtype.status == symbol_c::cs_const_value ) ||\
 		    ( c2._##dtype.status == symbol_c::cs_non_const && c1._##dtype.status == symbol_c::cs_const_value  )) {\
 			resValue._##dtype.status = symbol_c::cs_non_const;\
