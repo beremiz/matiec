@@ -1249,6 +1249,7 @@ void *constant_folding_c::visit(assignment_statement_c *symbol) {
 	symbol->l_exp->const_value = symbol->r_exp->const_value;
 	varName = convert.toString(symbol->l_exp);
 	values[varName] = symbol->l_exp->const_value;
+
 	return NULL;
 }
 
@@ -1260,8 +1261,13 @@ void *constant_folding_c::visit(if_statement_c *symbol) {
 	std::map <std::string, symbol_c::const_value_t> values_statement_result;
 	std::map <std::string, symbol_c::const_value_t> values_elsestatement_result;
 	std::map <std::string, symbol_c::const_value_t>::iterator itr;
-	values_incoming = values; /* save incoming status */
 
+	/* Optimize dead code */
+	symbol->expression->accept(*this);
+	if (VALID_CVALUE(bool, symbol->expression) && GET_CVALUE(bool, symbol->expression) == false)
+		return NULL;
+
+	values_incoming = values; /* save incoming status */
 	symbol->statement_list->accept(*this);
 	values_statement_result = values;
 	if (NULL != symbol->else_statement_list) {
@@ -1287,6 +1293,109 @@ void *constant_folding_c::visit(if_statement_c *symbol) {
 			value = values_statement_result[name];
 		values[name] = value;
 	}
+
+	return NULL;
+}
+
+/********************************/
+/* B 3.2.4 Iteration Statements */
+/********************************/
+void *constant_folding_c::visit(for_statement_c *symbol) {
+	std::map <std::string, symbol_c::const_value_t> values_incoming;
+	std::map <std::string, symbol_c::const_value_t> values_statement_result;
+	std::map <std::string, symbol_c::const_value_t>::iterator itr;
+
+	values_incoming = values; /* save incoming status */
+	symbol->statement_list->accept(*this);
+	values_statement_result = values;
+	values.clear();
+	itr = values_statement_result.begin();
+	for ( ; itr != values_statement_result.end(); ++itr) {
+		std::string name = itr->first;
+		symbol_c::const_value_t value;
+
+		if (values_incoming.count(name) > 0) {
+			symbol_c::const_value_t c1 = itr->second;
+			symbol_c::const_value_t c2 = values_incoming[name];
+			COMPUTE_MEET_SEMILATTICE (real64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (uint64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE ( int64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (  bool, c1, c2, value);
+		} else
+			value = values_statement_result[name];
+		values[name] = value;
+	}
+
+	return NULL;
+}
+
+void *constant_folding_c::visit(while_statement_c *symbol) {
+	std::map <std::string, symbol_c::const_value_t> values_incoming;
+	std::map <std::string, symbol_c::const_value_t> values_statement_result;
+	std::map <std::string, symbol_c::const_value_t>::iterator itr;
+
+	/* Optimize dead code */
+	symbol->expression->accept(*this);
+	if (VALID_CVALUE(bool, symbol->expression) && GET_CVALUE(bool, symbol->expression) == false)
+		return NULL;
+
+	values_incoming = values; /* save incoming status */
+	symbol->statement_list->accept(*this);
+	values_statement_result = values;
+	values.clear();
+	itr = values_statement_result.begin();
+	for ( ; itr != values_statement_result.end(); ++itr) {
+		std::string name = itr->first;
+		symbol_c::const_value_t value;
+
+		if (values_incoming.count(name) > 0) {
+			symbol_c::const_value_t c1 = itr->second;
+			symbol_c::const_value_t c2 = values_incoming[name];
+			COMPUTE_MEET_SEMILATTICE (real64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (uint64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE ( int64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (  bool, c1, c2, value);
+		} else
+			value = values_statement_result[name];
+		values[name] = value;
+	}
+
+
+	return NULL;
+}
+
+void *constant_folding_c::visit(repeat_statement_c *symbol) {
+	std::map <std::string, symbol_c::const_value_t> values_incoming;
+	std::map <std::string, symbol_c::const_value_t> values_statement_result;
+	std::map <std::string, symbol_c::const_value_t>::iterator itr;
+
+	/* Optimize dead code */
+	symbol->expression->accept(*this);
+	if (VALID_CVALUE(bool, symbol->expression) && GET_CVALUE(bool, symbol->expression) == false)
+		return NULL;
+
+	values_incoming = values; /* save incoming status */
+	symbol->statement_list->accept(*this);
+	values_statement_result = values;
+	values.clear();
+	itr = values_statement_result.begin();
+	for ( ; itr != values_statement_result.end(); ++itr) {
+		std::string name = itr->first;
+		symbol_c::const_value_t value;
+
+		if (values_incoming.count(name) > 0) {
+			symbol_c::const_value_t c1 = itr->second;
+			symbol_c::const_value_t c2 = values_incoming[name];
+			COMPUTE_MEET_SEMILATTICE (real64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (uint64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE ( int64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (  bool, c1, c2, value);
+		} else
+			value = values_statement_result[name];
+		values[name] = value;
+	}
+
+
 	return NULL;
 }
 

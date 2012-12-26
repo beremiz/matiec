@@ -222,5 +222,12 @@ class constant_folding_c : public iterator_visitor_c {
     /* B 3.2.3 Selection Statements */
     /********************************/
     void *visit(if_statement_c *symbol);
+
+    /********************************/
+    /* B 3.2.4 Iteration Statements */
+    /********************************/
+    void *visit(for_statement_c *symbol);
+    void *visit(while_statement_c *symbol);
+    void *visit(repeat_statement_c *symbol);
 };
 
