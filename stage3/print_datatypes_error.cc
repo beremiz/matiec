@@ -398,7 +398,7 @@ void *print_datatypes_error_c::visit(hex_integer_c *symbol) {
 
 void *print_datatypes_error_c::visit(integer_literal_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for %s data type.", elementary_type_c::to_string(symbol->type));
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for %s data type.", get_datatype_info_c::get_id_str(symbol->type));
 	} else if (NULL == symbol->datatype) {
 		STAGE3_ERROR(4, symbol, symbol, "ANY_INT data type not valid in this location.");
 	}
@@ -407,7 +407,7 @@ void *print_datatypes_error_c::visit(integer_literal_c *symbol) {
 
 void *print_datatypes_error_c::visit(real_literal_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for %s data type.", elementary_type_c::to_string(symbol->type));
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for %s data type.", get_datatype_info_c::get_id_str(symbol->type));
 	} else if (NULL == symbol->datatype) {
 		STAGE3_ERROR(4, symbol, symbol, "ANY_REAL data type not valid in this location.");
 	}
@@ -416,7 +416,7 @@ void *print_datatypes_error_c::visit(real_literal_c *symbol) {
 
 void *print_datatypes_error_c::visit(bit_string_literal_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for %s data type.", elementary_type_c::to_string(symbol->type));
+		STAGE3_ERROR(0, symbol, symbol, "Numerical value exceeds range for %s data type.", get_datatype_info_c::get_id_str(symbol->type));
 	} else if (NULL == symbol->datatype) {
 		STAGE3_ERROR(4, symbol, symbol, "ANY_BIT data type not valid in this location.");
 	}
@@ -425,7 +425,7 @@ void *print_datatypes_error_c::visit(bit_string_literal_c *symbol) {
 
 void *print_datatypes_error_c::visit(boolean_literal_c *symbol) {
 	if (symbol->candidate_datatypes.size() == 0) {
-		STAGE3_ERROR(0, symbol, symbol, "Value is not valid for %s data type.", elementary_type_c::to_string(symbol->type));
+		STAGE3_ERROR(0, symbol, symbol, "Value is not valid for %s data type.", get_datatype_info_c::get_id_str(symbol->type));
 	} else if (NULL == symbol->datatype) {
 		STAGE3_ERROR(4, symbol, symbol, "ANY_BOOL data type not valid in this location.");
 	}

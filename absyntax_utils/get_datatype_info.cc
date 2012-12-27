@@ -103,6 +103,113 @@ get_datatype_id_c *get_datatype_id_c::singleton = NULL;
 
 
 
+/***********************************************************************/
+/***********************************************************************/
+
+
+/* A small helper class, to transform elementary data type to string.
+ * this allows us to generate more relevant error messages...
+ */
+
+class get_datatype_id_str_c: public null_visitor_c {
+  protected:
+     get_datatype_id_str_c(void)  {};
+    ~get_datatype_id_str_c(void) {};
+
+  private:
+    /* singleton class! */
+    static get_datatype_id_str_c *singleton;
+
+  public:
+    static const char *get_id_str(symbol_c *symbol) {
+      if (NULL == singleton)    singleton = new get_datatype_id_str_c;
+      if (NULL == singleton)    ERROR;
+      const char *res           = (const char *)symbol->accept(*singleton);
+      if (NULL == res)          ERROR;
+      return res;
+    }
+
+
+    /*************************/
+    /* B.1 - Common elements */
+    /*************************/
+    /*******************************************/
+    /* B 1.1 - Letters, digits and identifiers */
+    /*******************************************/
+    void *visit(identifier_c *symbol) {return (void *)symbol->value;};
+
+    /***********************************/
+    /* B 1.3.1 - Elementary Data Types */
+    /***********************************/
+    void *visit(time_type_name_c        *symbol) {return (void *)"TIME";        };
+    void *visit(bool_type_name_c        *symbol) {return (void *)"BOOL";        };
+    void *visit(sint_type_name_c        *symbol) {return (void *)"SINT";        };
+    void *visit(int_type_name_c         *symbol) {return (void *)"INT";         };
+    void *visit(dint_type_name_c        *symbol) {return (void *)"DINT";        };
+    void *visit(lint_type_name_c        *symbol) {return (void *)"LINT";        };
+    void *visit(usint_type_name_c       *symbol) {return (void *)"USINT";       };
+    void *visit(uint_type_name_c        *symbol) {return (void *)"UINT";        };
+    void *visit(udint_type_name_c       *symbol) {return (void *)"UDINT";       };
+    void *visit(ulint_type_name_c       *symbol) {return (void *)"ULINT";       };
+    void *visit(real_type_name_c        *symbol) {return (void *)"REAL";        };
+    void *visit(lreal_type_name_c       *symbol) {return (void *)"LREAL";       };
+    void *visit(date_type_name_c        *symbol) {return (void *)"DATE";        };
+    void *visit(tod_type_name_c         *symbol) {return (void *)"TOD";         };
+    void *visit(dt_type_name_c          *symbol) {return (void *)"DT";          };
+    void *visit(byte_type_name_c        *symbol) {return (void *)"BYTE";        };
+    void *visit(word_type_name_c        *symbol) {return (void *)"WORD";        };
+    void *visit(lword_type_name_c       *symbol) {return (void *)"LWORD";       };
+    void *visit(dword_type_name_c       *symbol) {return (void *)"DWORD";       };
+    void *visit(string_type_name_c      *symbol) {return (void *)"STRING";      };
+    void *visit(wstring_type_name_c     *symbol) {return (void *)"WSTRING";     };
+
+    void *visit(safetime_type_name_c    *symbol) {return (void *)"SAFETIME";    };
+    void *visit(safebool_type_name_c    *symbol) {return (void *)"SAFEBOOL";    };
+    void *visit(safesint_type_name_c    *symbol) {return (void *)"SAFESINT";    };
+    void *visit(safeint_type_name_c     *symbol) {return (void *)"SAFEINT";     };
+    void *visit(safedint_type_name_c    *symbol) {return (void *)"SAFEDINT";    };
+    void *visit(safelint_type_name_c    *symbol) {return (void *)"SAFELINT";    };
+    void *visit(safeusint_type_name_c   *symbol) {return (void *)"SAFEUSINT";   };
+    void *visit(safeuint_type_name_c    *symbol) {return (void *)"SAFEUINT";    };
+    void *visit(safeudint_type_name_c   *symbol) {return (void *)"SAFEUDINT";   };
+    void *visit(safeulint_type_name_c   *symbol) {return (void *)"SAFEULINT";   };
+    void *visit(safereal_type_name_c    *symbol) {return (void *)"SAFEREAL";    };
+    void *visit(safelreal_type_name_c   *symbol) {return (void *)"SAFELREAL";   };
+    void *visit(safedate_type_name_c    *symbol) {return (void *)"SAFEDATE";    };
+    void *visit(safetod_type_name_c     *symbol) {return (void *)"SAFETOD";     };
+    void *visit(safedt_type_name_c      *symbol) {return (void *)"SAFEDT";      };
+    void *visit(safebyte_type_name_c    *symbol) {return (void *)"SAFEBYTE";    };
+    void *visit(safeword_type_name_c    *symbol) {return (void *)"SAFEWORD";    };
+    void *visit(safelword_type_name_c   *symbol) {return (void *)"SAFELWORD";   };
+    void *visit(safedword_type_name_c   *symbol) {return (void *)"SAFEDWORD";   };
+    void *visit(safestring_type_name_c  *symbol) {return (void *)"SAFESTRING";  };
+    void *visit(safewstring_type_name_c *symbol) {return (void *)"SAFEWSTRING"; };
+
+    /********************************/
+    /* B 1.3.3 - Derived data types */
+    /********************************/
+    /*  simple_type_name ':' simple_spec_init */
+    void *visit(simple_type_declaration_c *symbol)      {return symbol->simple_type_name->accept(*this);}
+    /*  subrange_type_name ':' subrange_spec_init */
+    void *visit(subrange_type_declaration_c *symbol)    {return symbol->subrange_type_name->accept(*this);}
+    /*  enumerated_type_name ':' enumerated_spec_init */
+    void *visit(enumerated_type_declaration_c *symbol)  {return symbol->enumerated_type_name->accept(*this);}
+    /*  identifier ':' array_spec_init */
+    void *visit(array_type_declaration_c *symbol)       {return symbol->identifier->accept(*this);}
+    /*  structure_type_name ':' structure_specification */
+    void *visit(structure_type_declaration_c *symbol)   {return symbol->structure_type_name->accept(*this);}
+    /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
+    void *visit(string_type_declaration_c *symbol)      {return symbol->string_type_name->accept(*this);}
+    
+    /*****************************/
+    /* B 1.5.2 - Function Blocks */
+    /*****************************/
+    /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
+    void *visit(function_block_declaration_c *symbol)      {return symbol->fblock_name->accept(*this);}    
+};
+
+get_datatype_id_str_c *get_datatype_id_str_c::singleton = NULL;
+
 
 
 /**********************************************************/
@@ -117,9 +224,12 @@ get_datatype_id_c *get_datatype_id_c::singleton = NULL;
 /**********************************************************/
 /**********************************************************/
 
+const char *get_datatype_info_c::get_id_str(symbol_c *datatype) {
+  return get_datatype_id_str_c::get_id_str(datatype);
+}
 
 
-symbol_c *get_datatype_info_c::get_datatype_id(symbol_c *datatype) {
+symbol_c *get_datatype_info_c::get_id(symbol_c *datatype) {
   return get_datatype_id_c::get_id(datatype);
 }
 

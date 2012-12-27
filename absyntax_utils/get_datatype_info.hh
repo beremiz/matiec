@@ -57,7 +57,8 @@ class get_datatype_info_c {
 
   
   public:
-    static symbol_c *get_datatype_id(symbol_c *datatype); /* get the identifier (name) of the datatype); returns NULL if anonymous datatype! */
+    static symbol_c   *get_id    (symbol_c *datatype); /* get the identifier (name) of the datatype); returns NULL if anonymous datatype! Does not work for elementary datatypes!*/
+    static const char *get_id_str(symbol_c *datatype); /* get the identifier (name) of the datatype); returns NULL if anonymous datatype! */
       
     static bool is_type_equal(symbol_c *first_type, symbol_c *second_type);
     static bool is_type_valid(symbol_c *type);
