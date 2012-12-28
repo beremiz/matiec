@@ -30,7 +30,7 @@
  *
  */
 
-/* Determine the data type of an constant expression.
+/* Determine the value of an constant expression.
  * A reference to the relevant type definition is returned.
  *
  * For example:

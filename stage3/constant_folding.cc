@@ -117,13 +117,24 @@
  * NOTE 2 
  *    This file does not print out any error messages!
  *    We cannot really print out error messages when we find an overflow. Since each operation
- *    (symbol in the absract syntax tree for that operation) will have up to 4 constant results,
+ *    (symbol in the abstract syntax tree for that operation) will have up to 4 constant results,
  *    it may happen that some of them overflow, while other do not.
  *    We must wait for data type checking to determine the exact data type of each expression
  *    before we can decide whether or not we should print out an overflow error message.
  *
  *    For this reason, this visitor merely annotates the abstract syntax tree, and leaves the
- *    actuall printing of errors for the print_datatype_errors_c class!
+ *    actually printing of errors for the print_datatype_errors_c class!
+ *
+ * NOTE 3
+ *    Constant Folding class is extended with a implementation constant propagation algorithm
+ *    by Mario de Sousa.
+ *    Main idea is not to implement a general constant propagation algorithm but to reinterpret it
+ *    for visitor classes.
+ *    We declared a hash map, it contains a variables list linked with current constant values.
+ *    During expression evaluation we can retrieve a constant value to symbolic variables getting it from the map.
+ *    Also at join source points we use a meet semilattice rules to merge current values between a block
+ *    and adjacent block.
+ *
  */
 
 #include "constant_folding.hh"
