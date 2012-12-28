@@ -1315,8 +1315,19 @@ void *constant_folding_c::visit(for_statement_c *symbol) {
 	std::map <std::string, symbol_c::const_value_t> values_incoming;
 	std::map <std::string, symbol_c::const_value_t> values_statement_result;
 	std::map <std::string, symbol_c::const_value_t>::iterator itr;
+	std::string varName;
 
 	values_incoming = values; /* save incoming status */
+	symbol->beg_expression->accept(*this);
+	symbol->end_expression->accept(*this);
+	varName = convert.toString(symbol->control_variable);
+	values[varName] = symbol->beg_expression->const_value;
+
+	/* Optimize dead code */
+	if (VALID_CVALUE(int64, symbol->beg_expression) && VALID_CVALUE(int64, symbol->end_expression) &&
+		  GET_CVALUE(int64, symbol->beg_expression) >    GET_CVALUE(int64, symbol->end_expression))
+		return NULL;
+
 	symbol->statement_list->accept(*this);
 	values_statement_result = values;
 	values.clear();
