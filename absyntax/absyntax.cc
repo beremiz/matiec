@@ -111,13 +111,22 @@ void list_c::add_element(symbol_c *elem) {
   if (NULL == elem) return;
 
   /* adjust the location parameters, taking into account the new element. */
-  if ((first_line == elem->first_line) &&
-      (first_column > elem->first_column)) {
+  if (NULL == first_file) {
+    first_file = elem->first_file;
+    first_line = elem->first_line;
+    first_column = elem->first_column;
+  }
+  if ((first_line == elem->first_line) && (first_column > elem->first_column)) {
     first_column = elem->first_column;
   }
   if (first_line > elem->first_line) {
     first_line = elem->first_line;
     first_column = elem->first_column;
+  }
+  if (NULL == last_file) {
+    last_file = elem->last_file;
+    last_line = elem->last_line;
+    last_column = elem->last_column;
   }
   if ((last_line == elem->last_line) &&
       (last_column < elem->last_column)) {
