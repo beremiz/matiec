@@ -952,7 +952,7 @@ void *constant_folding_c::visit(fixed_point_c *symbol) {
 void *constant_folding_c::visit(symbolic_variable_c *symbol) {
 	std::string varName;
 
-	varName = convert.toString(symbol->var_name);
+	varName = get_var_name_c::get_name(symbol->var_name)->value;
 	if (values.count(varName) > 0) {
 		symbol->const_value = values[varName];
 	}
@@ -969,7 +969,7 @@ void *constant_folding_c::visit(program_declaration_c *symbol) {
 	search_var_instance_decl_c search_var_instance_decl(symbol);
 	function_param_iterator_c fpi(symbol);
 	while((var_name = fpi.next()) != NULL) {
-		std::string varName = convert.toString(var_name);
+		std::string varName = get_var_name_c::get_name(var_name)->value;
 		symbol_c   *varDecl = search_var_instance_decl.get_decl(var_name);
 		values[varName] = varDecl->const_value;
 	}
@@ -1258,7 +1258,7 @@ void *constant_folding_c::visit(assignment_statement_c *symbol) {
 
 	symbol->r_exp->accept(*this);
 	symbol->l_exp->const_value = symbol->r_exp->const_value;
-	varName = convert.toString(symbol->l_exp);
+	varName = get_var_name_c::get_name(symbol->l_exp)->value;
 	values[varName] = symbol->l_exp->const_value;
 
 	return NULL;
@@ -1320,7 +1320,7 @@ void *constant_folding_c::visit(for_statement_c *symbol) {
 	values_incoming = values; /* save incoming status */
 	symbol->beg_expression->accept(*this);
 	symbol->end_expression->accept(*this);
-	varName = convert.toString(symbol->control_variable);
+	varName =  get_var_name_c::get_name(symbol->control_variable)->value;
 	values[varName] = symbol->beg_expression->const_value;
 
 	/* Optimize dead code */
