@@ -6,5 +6,5 @@ libstage4_c_a_SOURCES = generate_c.cc
 
 libstage4_c_a_LIBADD = ../stage4.o
 
-libstage4_c_a_cppflags = -I../../../absyntax
+libstage4_c_a_CPPFLAGS = -I../../../absyntax
 
