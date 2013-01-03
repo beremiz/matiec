@@ -965,6 +965,7 @@ void *constant_folding_c::visit(symbolic_variable_c *symbol) {
 void *constant_folding_c::visit(program_declaration_c *symbol) {
 	symbol_c *var_name;
 
+	symbol->var_declarations->accept(*this);
 	values.clear(); /* Clear global map */
 	search_var_instance_decl_c search_var_instance_decl(symbol);
 	function_param_iterator_c fpi(symbol);
