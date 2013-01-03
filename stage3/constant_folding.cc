@@ -448,6 +448,8 @@ static void CHECK_OVERFLOW_uint64_MUL(symbol_c *res, symbol_c *a, symbol_c *b) {
 	if (!VALID_CVALUE(uint64, res))
 		return;
 	/* Test by pre-condition: If (UINT64_MAX / a) < b => overflow! */
+	if (0 == GET_CVALUE(uint64, a))
+		return; // multiplying by 0 will always result in 0, a valid result!	  
 	if ((UINT64_MAX / GET_CVALUE(uint64, a)) < GET_CVALUE(uint64, b))
 		SET_OVFLOW(uint64, res);
 }
