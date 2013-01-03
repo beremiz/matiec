@@ -117,13 +117,24 @@
  * NOTE 2 
  *    This file does not print out any error messages!
  *    We cannot really print out error messages when we find an overflow. Since each operation
- *    (symbol in the absract syntax tree for that operation) will have up to 4 constant results,
+ *    (symbol in the abstract syntax tree for that operation) will have up to 4 constant results,
  *    it may happen that some of them overflow, while other do not.
  *    We must wait for data type checking to determine the exact data type of each expression
  *    before we can decide whether or not we should print out an overflow error message.
  *
  *    For this reason, this visitor merely annotates the abstract syntax tree, and leaves the
- *    actuall printing of errors for the print_datatype_errors_c class!
+ *    actually printing of errors for the print_datatype_errors_c class!
+ *
+ * NOTE 3
+ *    Constant Folding class is extended with a implementation constant propagation algorithm
+ *    by Mario de Sousa.
+ *    Main idea is not to implement a general constant propagation algorithm but to reinterpret it
+ *    for visitor classes.
+ *    We declared a hash map, it contains a variables list linked with current constant values.
+ *    During expression evaluation we can retrieve a constant value to symbolic variables getting it from the map.
+ *    Also at join source points we use a meet semilattice rules to merge current values between a block
+ *    and adjacent block.
+ *
  */
 
 #include "constant_folding.hh"
@@ -941,7 +952,7 @@ void *constant_folding_c::visit(fixed_point_c *symbol) {
 void *constant_folding_c::visit(symbolic_variable_c *symbol) {
 	std::string varName;
 
-	varName = convert.toString(symbol->var_name);
+	varName = get_var_name_c::get_name(symbol->var_name)->value;
 	if (values.count(varName) > 0) {
 		symbol->const_value = values[varName];
 	}
@@ -958,7 +969,7 @@ void *constant_folding_c::visit(program_declaration_c *symbol) {
 	search_var_instance_decl_c search_var_instance_decl(symbol);
 	function_param_iterator_c fpi(symbol);
 	while((var_name = fpi.next()) != NULL) {
-		std::string varName = convert.toString(var_name);
+		std::string varName = get_var_name_c::get_name(var_name)->value;
 		symbol_c   *varDecl = search_var_instance_decl.get_decl(var_name);
 		values[varName] = varDecl->const_value;
 	}
@@ -1247,8 +1258,9 @@ void *constant_folding_c::visit(assignment_statement_c *symbol) {
 
 	symbol->r_exp->accept(*this);
 	symbol->l_exp->const_value = symbol->r_exp->const_value;
-	varName = convert.toString(symbol->l_exp);
+	varName = get_var_name_c::get_name(symbol->l_exp)->value;
 	values[varName] = symbol->l_exp->const_value;
+
 	return NULL;
 }
 
@@ -1260,8 +1272,13 @@ void *constant_folding_c::visit(if_statement_c *symbol) {
 	std::map <std::string, symbol_c::const_value_t> values_statement_result;
 	std::map <std::string, symbol_c::const_value_t> values_elsestatement_result;
 	std::map <std::string, symbol_c::const_value_t>::iterator itr;
-	values_incoming = values; /* save incoming status */
 
+	/* Optimize dead code */
+	symbol->expression->accept(*this);
+	if (VALID_CVALUE(bool, symbol->expression) && GET_CVALUE(bool, symbol->expression) == false)
+		return NULL;
+
+	values_incoming = values; /* save incoming status */
 	symbol->statement_list->accept(*this);
 	values_statement_result = values;
 	if (NULL != symbol->else_statement_list) {
@@ -1287,6 +1304,120 @@ void *constant_folding_c::visit(if_statement_c *symbol) {
 			value = values_statement_result[name];
 		values[name] = value;
 	}
+
+	return NULL;
+}
+
+/********************************/
+/* B 3.2.4 Iteration Statements */
+/********************************/
+void *constant_folding_c::visit(for_statement_c *symbol) {
+	std::map <std::string, symbol_c::const_value_t> values_incoming;
+	std::map <std::string, symbol_c::const_value_t> values_statement_result;
+	std::map <std::string, symbol_c::const_value_t>::iterator itr;
+	std::string varName;
+
+	values_incoming = values; /* save incoming status */
+	symbol->beg_expression->accept(*this);
+	symbol->end_expression->accept(*this);
+	varName =  get_var_name_c::get_name(symbol->control_variable)->value;
+	values[varName] = symbol->beg_expression->const_value;
+
+	/* Optimize dead code */
+	if (VALID_CVALUE(int64, symbol->beg_expression) && VALID_CVALUE(int64, symbol->end_expression) &&
+		  GET_CVALUE(int64, symbol->beg_expression) >    GET_CVALUE(int64, symbol->end_expression))
+		return NULL;
+
+	symbol->statement_list->accept(*this);
+	values_statement_result = values;
+	values.clear();
+	itr = values_statement_result.begin();
+	for ( ; itr != values_statement_result.end(); ++itr) {
+		std::string name = itr->first;
+		symbol_c::const_value_t value;
+
+		if (values_incoming.count(name) > 0) {
+			symbol_c::const_value_t c1 = itr->second;
+			symbol_c::const_value_t c2 = values_incoming[name];
+			COMPUTE_MEET_SEMILATTICE (real64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (uint64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE ( int64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (  bool, c1, c2, value);
+		} else
+			value = values_statement_result[name];
+		values[name] = value;
+	}
+
+	return NULL;
+}
+
+void *constant_folding_c::visit(while_statement_c *symbol) {
+	std::map <std::string, symbol_c::const_value_t> values_incoming;
+	std::map <std::string, symbol_c::const_value_t> values_statement_result;
+	std::map <std::string, symbol_c::const_value_t>::iterator itr;
+
+	/* Optimize dead code */
+	symbol->expression->accept(*this);
+	if (VALID_CVALUE(bool, symbol->expression) && GET_CVALUE(bool, symbol->expression) == false)
+		return NULL;
+
+	values_incoming = values; /* save incoming status */
+	symbol->statement_list->accept(*this);
+	values_statement_result = values;
+	values.clear();
+	itr = values_statement_result.begin();
+	for ( ; itr != values_statement_result.end(); ++itr) {
+		std::string name = itr->first;
+		symbol_c::const_value_t value;
+
+		if (values_incoming.count(name) > 0) {
+			symbol_c::const_value_t c1 = itr->second;
+			symbol_c::const_value_t c2 = values_incoming[name];
+			COMPUTE_MEET_SEMILATTICE (real64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (uint64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE ( int64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (  bool, c1, c2, value);
+		} else
+			value = values_statement_result[name];
+		values[name] = value;
+	}
+
+
+	return NULL;
+}
+
+void *constant_folding_c::visit(repeat_statement_c *symbol) {
+	std::map <std::string, symbol_c::const_value_t> values_incoming;
+	std::map <std::string, symbol_c::const_value_t> values_statement_result;
+	std::map <std::string, symbol_c::const_value_t>::iterator itr;
+
+	/* Optimize dead code */
+	symbol->expression->accept(*this);
+	if (VALID_CVALUE(bool, symbol->expression) && GET_CVALUE(bool, symbol->expression) == false)
+		return NULL;
+
+	values_incoming = values; /* save incoming status */
+	symbol->statement_list->accept(*this);
+	values_statement_result = values;
+	values.clear();
+	itr = values_statement_result.begin();
+	for ( ; itr != values_statement_result.end(); ++itr) {
+		std::string name = itr->first;
+		symbol_c::const_value_t value;
+
+		if (values_incoming.count(name) > 0) {
+			symbol_c::const_value_t c1 = itr->second;
+			symbol_c::const_value_t c2 = values_incoming[name];
+			COMPUTE_MEET_SEMILATTICE (real64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (uint64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE ( int64, c1, c2, value);
+			COMPUTE_MEET_SEMILATTICE (  bool, c1, c2, value);
+		} else
+			value = values_statement_result[name];
+		values[name] = value;
+	}
+
+
 	return NULL;
 }
 

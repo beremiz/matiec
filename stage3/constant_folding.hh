@@ -30,7 +30,7 @@
  *
  */
 
-/* Determine the data type of an constant expression.
+/* Determine the value of an constant expression.
  * A reference to the relevant type definition is returned.
  *
  * For example:
@@ -43,30 +43,6 @@
 #include "../absyntax_utils/absyntax_utils.hh"
 
 
-class convert_c : public iterator_visitor_c {
-	std::string text;
-
-public:
-	convert_c(symbol_c *symbol = NULL) {
-		text = "";
-	}
-
-	std::string toString(symbol_c *symbol) {
-		symbol->accept(*this);
-		return text;
-	}
-
-	void *visit(identifier_c *symbol) {
-		text = symbol->value;
-		return NULL;
-	}
-
-	void *visit(symbolic_variable_c *symbol) {
-		symbol->var_name->accept(*this);
-		return NULL;
-	}
-};
-
 class constant_folding_c : public iterator_visitor_c {
     search_varfb_instance_type_c *search_varfb_instance_type;
     int error_count;
@@ -76,7 +52,6 @@ class constant_folding_c : public iterator_visitor_c {
     symbol_c *prev_il_instruction;
     /* the current IL operand being analyzed */
     symbol_c *il_operand;
-    convert_c convert;
 
   public:
 	constant_folding_c(symbol_c *symbol = NULL);
@@ -222,5 +197,12 @@ class constant_folding_c : public iterator_visitor_c {
     /* B 3.2.3 Selection Statements */
     /********************************/
     void *visit(if_statement_c *symbol);
+
+    /********************************/
+    /* B 3.2.4 Iteration Statements */
+    /********************************/
+    void *visit(for_statement_c *symbol);
+    void *visit(while_statement_c *symbol);
+    void *visit(repeat_statement_c *symbol);
 };
 
