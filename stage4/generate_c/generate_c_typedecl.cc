@@ -98,6 +98,9 @@ class generate_c_typedecl_c: public generate_c_base_c {
       return NULL;
     }
 
+    bool type_is_fb(symbol_c* type_decl) {
+      return search_base_type_c::type_is_fb(type_decl);
+    }
 
 /***************************/
 /* B 0 - Programming Model */
@@ -345,19 +348,19 @@ void *visit(array_type_declaration_c *symbol) {
   current_basetypedeclaration = none_bd;
 
   if (array_is_derived)
-	s4o_incl.print("__DECLARE_DERIVED_TYPE(");
+    s4o_incl.print("__DECLARE_DERIVED_TYPE(");
   else
-	s4o_incl.print("__DECLARE_ARRAY_TYPE(");
+    s4o_incl.print("__DECLARE_ARRAY_TYPE(");
   current_type_name->accept(*basedecl);
   s4o_incl.print(",");
   current_basetypedeclaration = arraybasetypeincl_bd;
   symbol->array_spec_init->accept(*this);
   current_basetypedeclaration = none_bd;
   if (!array_is_derived) {
-	s4o_incl.print(",");
-	current_basetypedeclaration = arraysubrange_bd;
-	symbol->array_spec_init->accept(*this);
-	current_basetypedeclaration = none_bd;
+    s4o_incl.print(",");
+    current_basetypedeclaration = arraysubrange_bd;
+    symbol->array_spec_init->accept(*this);
+    current_basetypedeclaration = none_bd;
   }
   s4o_incl.print(")\n");
 
@@ -374,19 +377,19 @@ void *visit(array_spec_init_c *symbol) {
   
   if (current_typedefinition == array_td) {
     switch (current_basetypedeclaration) {
-	  case arrayderiveddeclaration_bd:
-	    array_is_derived = dynamic_cast<identifier_c *>(symbol->array_specification) != NULL;
-	    break;
-	  default:
-	    if (array_is_derived)
-		  symbol->array_specification->accept(*basedecl);
-	    else
-		  symbol->array_specification->accept(*this);
-	    break;
+      case arrayderiveddeclaration_bd:
+        array_is_derived = dynamic_cast<identifier_c *>(symbol->array_specification) != NULL;
+        break;
+      default:
+        if (array_is_derived)
+          symbol->array_specification->accept(*basedecl);
+        else
+          symbol->array_specification->accept(*this);
+        break;
     }
   }
   else {
-	symbol->array_specification->accept(*basedecl);
+    symbol->array_specification->accept(*basedecl);
   }
   return NULL;
 }
@@ -441,11 +444,11 @@ void *visit(simple_type_declaration_c *symbol) {
   s4o_incl.print(")\n");
 
   if (search_base_type_c::type_is_subrange(symbol->simple_type_name)) {
-	s4o.print("#define __CHECK_");
-	current_type_name->accept(*this);
-	s4o.print(" __CHECK_");
-	symbol->simple_spec_init->accept(*this);
-	s4o.print("\n");
+    s4o.print("#define __CHECK_");
+    current_type_name->accept(*this);
+    s4o.print(" __CHECK_");
+    symbol->simple_spec_init->accept(*this);
+    s4o.print("\n");
   }
 
   return NULL;

@@ -88,6 +88,9 @@ class search_fb_instance_decl_c: public search_visitor_c {
     void *visit(fb_name_decl_c *symbol);
   /* name_list ',' fb_name */
     void *visit(fb_name_list_c *symbol);
+  /*  global_var_name ':' (simple_specification|subrange_specification|enumerated_specification|array_specification|prev_declared_structure_type_name|function_block_type_name */
+    void *visit(external_declaration_c *symbol);
+
 
   /**************************************/
   /* B.1.5 - Program organization units */

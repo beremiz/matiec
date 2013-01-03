@@ -206,8 +206,10 @@ __ANY_DATE(__to_anybit_)
 /* Not supported: DT_TO_TIME */
 /*__iec_(to_TYPENAME,from_TYPENAME)*/
 __iec_(DATE,DT)
+__function_1p(DATE_AND_TIME_TO_DATE, DATE, IN, DT)
 __iec_(DT,DT)
 __iec_(TOD,DT)
+__function_1p(DATE_AND_TIME_TO_TIME_OF_DAY, TOD, IN, DT)
 /* Not supported: DATE_TO_TIME */
 __iec_(DATE,DATE)
 /* Not supported: DATE_TO_DT */
@@ -216,7 +218,6 @@ __iec_(DATE,DATE)
 /* Not supported: TOD_TO_DATE */
 /* Not supported: TOD_TO_DT */
 __iec_(TOD,TOD)
-
 
 /******** TIME_TO_[ANY_DATE]   ************/ 
 /* Not supported: TIME_TO_DATE */
@@ -273,7 +274,9 @@ __ANY_REAL(__to_anyint_)
 /*******************/
 /*   *_TO_BCD_*    */
 /*******************/
-#define __iec_(to_TYPENAME,from_TYPENAME) __function_1p(from_TYPENAME##_TO_BCD_##to_TYPENAME, to_TYPENAME, IN, from_TYPENAME)
+#define __iec_(to_TYPENAME,from_TYPENAME)\
+__function_1p(from_TYPENAME##_TO_BCD_##to_TYPENAME, to_TYPENAME, IN, from_TYPENAME)  /* explicitly typed function */\
+__function_1p(from_TYPENAME##_TO_BCD, to_TYPENAME, IN, from_TYPENAME)                /* overloaded function */ 
 __ANY_UINT(__to_anynbit_)
 #undef __iec_
 
@@ -281,7 +284,10 @@ __ANY_UINT(__to_anynbit_)
 /*******************/
 /*   *_BCD_TO_*    */
 /*******************/
-#define __iec_(to_TYPENAME,from_TYPENAME) __function_1p(from_TYPENAME##_BCD_TO_##to_TYPENAME, to_TYPENAME, IN, from_TYPENAME)
+#define __iec_(to_TYPENAME,from_TYPENAME)\
+__function_1p(from_TYPENAME##_BCD_TO_##to_TYPENAME, to_TYPENAME, IN, from_TYPENAME)  /* explicitly typed function */\
+__function_1p(BCD_TO_##to_TYPENAME, to_TYPENAME, IN, from_TYPENAME)                  /* overloaded function */ 
+
 __ANY_NBIT(__to_anyuint_)
 #undef __iec_
 

@@ -102,6 +102,13 @@ void *search_fb_instance_decl_c::visit(fb_name_list_c *symbol) {
   return NULL;
 }
 
+/* name_list ',' fb_name */
+void *search_fb_instance_decl_c::visit(external_declaration_c *symbol) {
+  if (compare_identifiers(symbol->global_var_name, search_name) == 0)
+	return symbol->specification;
+  return NULL;
+}
+
 /**************************************/
 /* B.1.5 - Program organization units */
 /**************************************/

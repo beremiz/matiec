@@ -143,12 +143,19 @@ bool search_var_instance_decl_c::type_is_complex(symbol_c *symbol) {
           (typeid( *(decl) ) == typeid( structure_type_declaration_c         )) ||  
           (typeid( *(decl) ) == typeid( structure_element_declaration_list_c )) ||
 //        (typeid( *(decl) ) == typeid( structure_type_declaration_c         )) ||  /* does not seem to be necessary */
-          (typeid( *(decl) ) == typeid( initialized_structure_c              ))
-          
+          (typeid( *(decl) ) == typeid( initialized_structure_c              )) ||
+          (search_base_type_c::type_is_fb(decl) && current_vartype == external_vt)
          );
 }
 
+bool search_var_instance_decl_c::type_is_fb(symbol_c *symbol) {
+    symbol_c *decl;
+    search_base_type_c search_base_type;
 
+    decl = this->get_decl(symbol);
+    if (NULL == decl) ERROR;
+    return search_base_type.type_is_fb(decl);
+}
 
 /***************************/
 /* B 0 - Programming Model */

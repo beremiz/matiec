@@ -131,14 +131,14 @@ class search_type_symbol_c: public iterator_visitor_c {
       var_type_symbol->accept(*this);
 
       if (this->current_var_type_symbol == NULL)
-    	this->current_var_type_symbol = var_type_symbol;
+        this->current_var_type_symbol = var_type_symbol;
 
       return (this->current_var_type_symbol);
     }
 
     symbol_c *get_current_type_name(void) {
       if (this->current_var_type_name == NULL)
-    	return (this->current_var_type_symbol);
+        return (this->current_var_type_symbol);
 
       return (this->current_var_type_name);
     }
@@ -187,8 +187,7 @@ class search_type_symbol_c: public iterator_visitor_c {
 class generate_var_list_c: protected generate_c_typedecl_c {
   
   public:
-    typedef struct
-    {
+    typedef struct {
       symbol_c *symbol;
     } SYMBOL;
 
@@ -328,15 +327,17 @@ class generate_var_list_c: protected generate_c_typedecl_c {
         case search_type_symbol_c::function_block_vtc:
           this->current_var_type_name->accept(*this);
           s4o.print(";\n");
-          SYMBOL *current_name;
-          symbol_c *tmp_var_type;
-          current_name = new SYMBOL;
-          current_name->symbol = symbol;
-          tmp_var_type = this->current_var_type_symbol;
-          current_symbol_list.push_back(*current_name);
-          this->current_var_type_symbol->accept(*this);
-          current_symbol_list.pop_back();
-          this->current_var_type_symbol = tmp_var_type;
+          if (this->current_var_class_category != external_vcc) {
+              SYMBOL *current_name;
+              symbol_c *tmp_var_type;
+              current_name = new SYMBOL;
+              current_name->symbol = symbol;
+              tmp_var_type = this->current_var_type_symbol;
+              current_symbol_list.push_back(*current_name);
+              this->current_var_type_symbol->accept(*this);
+              current_symbol_list.pop_back();
+              this->current_var_type_symbol = tmp_var_type;
+          }
           break;
         case search_type_symbol_c::array_vtc:
           this->current_var_type_name->accept(*this);
@@ -374,7 +375,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       s4o.print(str);
     }
     
-    void print_symbol_list(void) {
+    void print_symbol_list() {
       std::list<SYMBOL>::iterator pt;
       for(pt = current_symbol_list.begin(); pt != current_symbol_list.end(); pt++) {
         pt->symbol->accept(*this);
@@ -679,20 +680,20 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     // SYM_REF2(global_var_spec_c, global_var_name, location)
     void *visit(global_var_spec_c *symbol) {
       search_location_type_c search_location_type;
-	  switch (search_location_type.get_location_type(symbol->location)) {
-		case search_location_type_c::input_lt:
-		  this->current_var_class_category = located_input_vcc;
-		  break;
-		case search_location_type_c::memory_lt:
-		  this->current_var_class_category = located_memory_vcc;
-		  break;
-		case search_location_type_c::output_lt:
-		  this->current_var_class_category = located_output_vcc;
-		  break;
-		default:
-		  ERROR;
-	      break;
-	  }
+      switch (search_location_type.get_location_type(symbol->location)) {
+        case search_location_type_c::input_lt:
+          this->current_var_class_category = located_input_vcc;
+          break;
+        case search_location_type_c::memory_lt:
+          this->current_var_class_category = located_memory_vcc;
+          break;
+        case search_location_type_c::output_lt:
+          this->current_var_class_category = located_output_vcc;
+          break;
+        default:
+          ERROR;
+          break;
+      }
 
       if (symbol->global_var_name != NULL)
         declare_variable(symbol->global_var_name);

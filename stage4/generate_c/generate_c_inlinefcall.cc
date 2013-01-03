@@ -37,29 +37,29 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     } variablegeneration_t;
 
   private:
-	 /* The result of the comparison IL operations (GT, EQ, LT, ...)
-	 * is a boolean variable.
-	 * This class keeps track of the current data type stored in the
-	 * il default variable. This is usually done by keeping a reference
-	 * to the data type of the last operand. Nevertheless, in the case of
-	 * the comparison IL operators, the data type of the result (a boolean)
-	 * is not the data type of the operand. We therefore need an object
-	 * of the boolean data type to keep as a reference of the current
-	 * data type.
-	 * The following object is it...
-	 */
-	bool_type_name_c bool_type;
-	lint_type_name_c lint_type;
-	lword_type_name_c lword_type;
-	lreal_type_name_c lreal_type;
+     /* The result of the comparison IL operations (GT, EQ, LT, ...)
+     * is a boolean variable.
+     * This class keeps track of the current data type stored in the
+     * il default variable. This is usually done by keeping a reference
+     * to the data type of the last operand. Nevertheless, in the case of
+     * the comparison IL operators, the data type of the result (a boolean)
+     * is not the data type of the operand. We therefore need an object
+     * of the boolean data type to keep as a reference of the current
+     * data type.
+     * The following object is it...
+     */
+    bool_type_name_c bool_type;
+    lint_type_name_c lint_type;
+    lword_type_name_c lword_type;
+    lreal_type_name_c lreal_type;
 
     /* The name of the IL default variable... */
-	#define IL_DEFVAR   VAR_LEADER "IL_DEFVAR"
+    #define IL_DEFVAR   VAR_LEADER "IL_DEFVAR"
 
-	/* The name of the variable used to pass the result of a
-	 * parenthesised instruction list to the immediately preceding
-	 * scope ...
-	 */
+    /* The name of the variable used to pass the result of a
+     * parenthesised instruction list to the immediately preceding
+     * scope ...
+     */
     #define IL_DEFVAR_BACK   VAR_LEADER "IL_DEFVAR_BACK"
     il_default_variable_c implicit_variable_current;
 
@@ -98,7 +98,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       function_call_iterator_c fc_iterator(symbol);
       symbol_c* function_call;
       while ((function_call = fc_iterator.next()) != NULL) {
-    	function_call->accept(*this);
+        function_call->accept(*this);
       }
     }
 
@@ -131,7 +131,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
         s4o.print("__");
         print_function_parameter_data_types_c overloaded_func_suf(&s4o);
         f_decl->accept(overloaded_func_suf);
-      }	
+      }
       if (function_type_suffix) {
         function_type_suffix->accept(*this);
       }
@@ -180,8 +180,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       s4o.print(" = ");
       function_name->accept(*this);
       if (f_decl != NULL) {
-    	/* function being called is overloaded! */
-    	s4o.print("__");
+        /* function being called is overloaded! */
+        s4o.print("__");
         print_function_parameter_data_types_c overloaded_func_suf(&s4o);
         f_decl->accept(overloaded_func_suf);
       }
@@ -242,8 +242,12 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
     void *print_getter(symbol_c *symbol) {
       unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
-      if (vartype == search_var_instance_decl_c::external_vt)
-        s4o.print(GET_EXTERNAL);
+      if (vartype == search_var_instance_decl_c::external_vt) {
+        if (search_var_instance_decl->type_is_fb(symbol))
+          s4o.print(GET_EXTERNAL_FB);
+        else
+          s4o.print(GET_EXTERNAL);
+      }
       else if (vartype == search_var_instance_decl_c::located_vt)
         s4o.print(GET_LOCATED);
       else
@@ -265,8 +269,12 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
                        symbol_c* type,
                        symbol_c* value) {
       unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
-      if (vartype == search_var_instance_decl_c::external_vt)
-        s4o.print(SET_EXTERNAL);
+      if (vartype == search_var_instance_decl_c::external_vt) {
+        if (search_var_instance_decl->type_is_fb(symbol))
+          s4o.print(SET_EXTERNAL_FB);
+         else
+          s4o.print(SET_EXTERNAL);
+      }
       else if (vartype == search_var_instance_decl_c::located_vt)
         s4o.print(SET_LOCATED);
       else
@@ -335,8 +343,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
           case complextype_base_vg:
             symbol->record_variable->accept(*this);
             if (!type_is_complex) {
-          	  s4o.print(".");
-          	  symbol->field_selector->accept(*this);
+                s4o.print(".");
+                symbol->field_selector->accept(*this);
             }
             break;
           case complextype_suffix_vg:
@@ -706,7 +714,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
 
     // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
-    void *visit(il_simple_instruction_c *symbol)	{
+    void *visit(il_simple_instruction_c *symbol) {
       /* all previous IL instructions should have the same datatype (checked in stage3), so we get the datatype from the first previous IL instruction we find */
       implicit_variable_current.datatype = (symbol->prev_il_instruction.empty())? NULL : symbol->prev_il_instruction[0]->datatype;
       symbol->il_simple_instruction->accept(*this);
@@ -724,13 +732,13 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     /***********************/
 
     void *visit(statement_list_c *symbol) {
-	  function_call_iterator_c fc_iterator(symbol);
-	  symbol_c* function_call;
-	  while ((function_call = fc_iterator.next()) != NULL) {
-		function_call->accept(*this);
-	  }
-	  return NULL;
-	}
+      function_call_iterator_c fc_iterator(symbol);
+      symbol_c* function_call;
+      while ((function_call = fc_iterator.next()) != NULL) {
+        function_call->accept(*this);
+      }
+      return NULL;
+    }
 
     void *visit(function_invocation_c *symbol) {
       symbol_c* function_type_prefix = NULL;
@@ -861,43 +869,43 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       return NULL;
     }
 
-	/*********************************************/
-	/* B.1.6  Sequential function chart elements */
-	/*********************************************/
+    /*********************************************/
+    /* B.1.6  Sequential function chart elements */
+    /*********************************************/
 
-	void *visit(initial_step_c *symbol) {
-		return NULL;
-	}
+    void *visit(initial_step_c *symbol) {
+        return NULL;
+    }
 
-	void *visit(step_c *symbol) {
-		return NULL;
-	}
+    void *visit(step_c *symbol) {
+        return NULL;
+    }
 
-	void *visit(transition_c *symbol) {
-		return symbol->transition_condition->accept(*this);
-	}
+    void *visit(transition_c *symbol) {
+        return symbol->transition_condition->accept(*this);
+    }
 
-	void *visit(transition_condition_c *symbol) {
-		// Transition condition is in IL
-		if (symbol->transition_condition_il != NULL) {
-			symbol->transition_condition_il->accept(*this);
-		}
+    void *visit(transition_condition_c *symbol) {
+        // Transition condition is in IL
+        if (symbol->transition_condition_il != NULL) {
+            symbol->transition_condition_il->accept(*this);
+        }
 
-		// Transition condition is in ST
-		if (symbol->transition_condition_st != NULL) {
-			function_call_iterator_c fc_iterator(symbol->transition_condition_st);
-			symbol_c* function_call;
-			while ((function_call = fc_iterator.next()) != NULL) {
-				function_call->accept(*this);
-			}
-		}
+        // Transition condition is in ST
+        if (symbol->transition_condition_st != NULL) {
+            function_call_iterator_c fc_iterator(symbol->transition_condition_st);
+            symbol_c* function_call;
+            while ((function_call = fc_iterator.next()) != NULL) {
+                function_call->accept(*this);
+            }
+        }
 
-		return NULL;
-	}
+        return NULL;
+    }
 
-	void *visit(action_c *symbol) {
-		return symbol->function_block_body->accept(*this);
-	}
+    void *visit(action_c *symbol) {
+        return symbol->function_block_body->accept(*this);
+    }
 
 };  /* generate_c_inlinefcall_c */
 

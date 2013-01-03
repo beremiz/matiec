@@ -26,31 +26,31 @@
 
 class initialization_analyzer_c: public null_visitor_c {
   public:
-	typedef enum {
-	  simple_it,
-	  array_it,
-	  struct_it
-	} initialization_type_t;
+    typedef enum {
+      simple_it,
+      array_it,
+      struct_it
+    } initialization_type_t;
 
   private:
 
-	initialization_type_t current_type;
+    initialization_type_t current_type;
 
   public:
-	initialization_analyzer_c(symbol_c* symbol) {
-	  current_type = simple_it;
+    initialization_analyzer_c(symbol_c* symbol) {
+      current_type = simple_it;
       symbol->accept(*this);
-	}
-	~initialization_analyzer_c(void) {}
+    }
+    ~initialization_analyzer_c(void) {}
 
-	initialization_type_t get_initialization_type(void) {
-	  return current_type;
-	}
+    initialization_type_t get_initialization_type(void) {
+      return current_type;
+    }
 
-	void *visit(array_initial_elements_list_c *symbol) {
+    void *visit(array_initial_elements_list_c *symbol) {
       current_type = array_it;
       return NULL;
-	}
+    }
 
     void *visit(structure_element_initialization_list_c *symbol) {
       current_type = struct_it;
@@ -92,6 +92,10 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
       
       current_mode = arraysize_am;
       array_specification->accept(*this);
+    }
+
+    void set_array_default_initialisation(symbol_c *array_initialization) {
+      array_default_initialization = array_initialization;
     }
 
     void init_array(symbol_c *var1_list, symbol_c *array_specification, symbol_c *array_initialization) {
@@ -250,7 +254,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
               array_initial_elements_c *array_initial_element = dynamic_cast<array_initial_elements_c *>(symbol->elements[i]);
             
               if (array_initial_element != NULL) {
-            	  symbol->elements[i]->accept(*this);
+                symbol->elements[i]->accept(*this);
               }
             }
             current_initialization_count++;
@@ -269,7 +273,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
  
       /* This code assumes that unsigned long long int is >= uint64_t */
       if (std::numeric_limits< uint64_t >::max() > std::numeric_limits< unsigned long long int >::max()) 
-	ERROR_MSG("Assertion (sizeof(uint64_t) > sizeof(unsigned long long int)) failed! Compiler cannot execute correctly on the current platform!");
+        ERROR_MSG("Assertion (sizeof(uint64_t) > sizeof(unsigned long long int)) failed! Compiler cannot execute correctly on the current platform!");
       
       switch (current_mode) {
         case initializationvalue_am:
@@ -421,6 +425,7 @@ class structure_element_iterator_c : public null_visitor_c {
       if (next_element == element_count) {
         current_element_default_value = spec_init_sperator_c::get_init(symbol->spec_init);
         current_element_type = spec_init_sperator_c::get_spec(symbol->spec_init);
+        if (current_element_type == NULL) ERROR;
         return symbol->structure_element_name;
       }
       /* not yet the desired element... */
@@ -500,6 +505,7 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
   private:
     symbol_c* structure_type_decl;
     symbol_c* current_element_type;
+    symbol_c* current_element_default_value;
 
   public:
     generate_c_structure_initialization_c(stage4out_c *s4o_ptr): generate_c_typedecl_c(s4o_ptr) {}
@@ -508,6 +514,7 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
     void init_structure_default(symbol_c *structure_type_name) {
       structure_type_decl = NULL;
       current_element_type = NULL;
+      current_element_default_value = NULL;
       
       current_mode = initdefault_sm;
       structure_type_name->accept(*this);
@@ -604,19 +611,21 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
         if (i > 1)
           s4o.print(",");
         
+        current_element_type = structure_iterator.element_type();
+        if (current_element_type == NULL) ERROR;
+
+        /* Check whether default value specified in structure declaration...*/
+        current_element_default_value = structure_iterator.default_value();
+
         /* Get the value from an initialization */
         symbol_c *element_value = structure_init_element_iterator.search(element_name);
         
         if (element_value == NULL) {
           /* No value given for parameter, so we must use the default... */
-          /* First check whether default value specified in function declaration...*/
-          element_value = structure_iterator.default_value();
-          current_element_type = structure_iterator.element_type();
+          element_value = current_element_default_value;
         }
         
         if (element_value == NULL) {
-          if (current_element_type == NULL) ERROR;
-          
           /* If not, get the default value of this variable's type */
           element_value = type_initial_value_c::get(current_element_type);
         }
@@ -644,6 +653,8 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
     void *visit(array_initial_elements_list_c *symbol) {
       generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
       array_initialization->init_array_size(current_element_type);
+      if (current_element_default_value != NULL)
+        array_initialization->set_array_default_initialisation(current_element_default_value);
       array_initialization->init_array_values(symbol);
       delete array_initialization;
       return NULL;
@@ -900,17 +911,17 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
     symbol_c *globalnamespace;
 
     void *print_retain(void) {
-	  s4o.print(",");
+      s4o.print(",");
       switch (current_varqualifier) {
-		case retain_vq:
+        case retain_vq:
           s4o.print("1");
           break;
         case non_retain_vq:
           s4o.print("0");
           break;
-		default:
-		  s4o.print("retain");
-		  break;
+        default:
+          s4o.print("retain");
+          break;
       }
       return NULL;
     }
@@ -932,32 +943,32 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
         for(int i = 0; i < list->n; i++) {
           s4o.print(s4o.indent_spaces);
           if (wanted_varformat == local_vf) {
-        	if (!is_fb) {
-        	  s4o.print(DECLARE_VAR);
-        	  s4o.print("(");
-        	}
-        	this->current_var_type_symbol->accept(*this);
-        	if (is_fb)
-        	  s4o.print(" ");
-        	else
-        	  s4o.print(",");
-        	print_variable_prefix();
+            if (!is_fb) {
+              s4o.print(DECLARE_VAR);
+              s4o.print("(");
+            }
+            this->current_var_type_symbol->accept(*this);
+            if (is_fb)
+              s4o.print(" ");
+            else
+              s4o.print(",");
+            print_variable_prefix();
           }
           else if (wanted_varformat == localinit_vf) {
-        	this->current_var_type_symbol->accept(*this);
+            this->current_var_type_symbol->accept(*this);
             s4o.print(" ");
             print_variable_prefix();
           }
           else if (wanted_varformat == init_vf) {
-        	s4o.print(SET_VAR);
-        	s4o.print("(");
-        	print_variable_prefix();
-        	s4o.print(",");
+            s4o.print(SET_VAR);
+            s4o.print("(");
+            print_variable_prefix();
+            s4o.print(",");
           }
           list->elements[i]->accept(*this);
           if (wanted_varformat != local_vf) {
-        	if (wanted_varformat == localinit_vf &&
-        		(current_vartype & inoutput_vt) != 0) {
+            if (wanted_varformat == localinit_vf &&
+                (current_vartype & inoutput_vt) != 0) {
               s4o.print(";\n");
               s4o.print(s4o.indent_spaces);
               s4o.print("if (__");
@@ -988,13 +999,13 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
               s4o.print(s4o.indent_spaces);
               s4o.print("}\n");
             }
-        	else if (wanted_varformat == init_vf) {
-        	  s4o.print(",");
-        	  this->current_var_init_symbol->accept(*this);
-        	  s4o.print(");\n");
-        	}
-        	else {
-        	  if (this->current_var_init_symbol != NULL) {
+            else if (wanted_varformat == init_vf) {
+              s4o.print(",");
+              this->current_var_init_symbol->accept(*this);
+              s4o.print(");\n");
+            }
+            else {
+              if (this->current_var_init_symbol != NULL) {
                 s4o.print(" = ");
                 this->current_var_init_symbol->accept(*this);
               }
@@ -1002,7 +1013,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
             }
           }
           else if (is_fb)
-        	s4o.print(";\n");
+            s4o.print(";\n");
           else
             s4o.print(")\n");
         }
@@ -1266,9 +1277,9 @@ void *visit(en_param_declaration_c *symbol) {
         (wanted_varformat == localinit_vf)) {
       s4o.print(s4o.indent_spaces);
       if (wanted_varformat == local_vf) {
-    	s4o.print(DECLARE_VAR);
-    	s4o.print("(");
-    	symbol->type->accept(*this);
+        s4o.print(DECLARE_VAR);
+        s4o.print("(");
+        symbol->type->accept(*this);
         s4o.print(",");
       }
       else if (wanted_varformat == localinit_vf) {
@@ -1278,7 +1289,7 @@ void *visit(en_param_declaration_c *symbol) {
       print_variable_prefix();
       symbol->name->accept(*this);
       if (wanted_varformat == local_vf)
-    	s4o.print(")\n");
+        s4o.print(")\n");
       else {
         s4o.print(" = ");
         symbol->value->accept(*this);
@@ -1324,8 +1335,8 @@ void *visit(eno_param_declaration_c *symbol) {
         (wanted_varformat == localinit_vf)) {
       s4o.print(s4o.indent_spaces);
       if (wanted_varformat == local_vf) {
-    	s4o.print(DECLARE_VAR);
-    	s4o.print("(");
+        s4o.print(DECLARE_VAR);
+        s4o.print("(");
         symbol->type->accept(*this);
         s4o.print(",");
       }
@@ -1336,9 +1347,9 @@ void *visit(eno_param_declaration_c *symbol) {
       print_variable_prefix();
       symbol->name->accept(*this);
       if (wanted_varformat == local_vf)
-    	s4o.print(")\n");
+        s4o.print(")\n");
       else
-    	s4o.print(" = __BOOL_LITERAL(TRUE);\n");
+        s4o.print(" = __BOOL_LITERAL(TRUE);\n");
     }
 
     if (wanted_varformat == foutputassign_vf) {
@@ -1569,10 +1580,10 @@ void *visit(array_var_declaration_c *symbol) {
 
 void *visit(array_initial_elements_list_c *symbol) {
   if (wanted_varformat == localinit_vf || wanted_varformat == constructorinit_vf) {
-	generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
-	array_initialization->init_array_size(this->current_var_type_symbol);
-	array_initialization->init_array_values(this->current_var_init_symbol);
-	delete array_initialization;
+    generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
+    array_initialization->init_array_size(this->current_var_type_symbol);
+    array_initialization->init_array_values(this->current_var_init_symbol);
+    delete array_initialization;
   }
   return NULL;
 }
@@ -1614,7 +1625,7 @@ void *visit(structure_element_initialization_list_c *symbol) {
     generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
     structure_initialization->init_structure_default(this->current_var_type_symbol);
     structure_initialization->init_structure_values(this->current_var_init_symbol);
-	delete structure_initialization;
+    delete structure_initialization;
   }
   return NULL;
 }
@@ -1729,15 +1740,15 @@ void *visit(located_var_decl_c *symbol) {
       print_retain();
       s4o.print(")\n");
       if (this->current_var_init_symbol != NULL) {
-    	s4o.print(s4o.indent_spaces);
-    	s4o.print(INIT_LOCATED_VALUE);
-    	s4o.print("(");
-    	print_variable_prefix();
-    	if (symbol->variable_name != NULL)
+        s4o.print(s4o.indent_spaces);
+        s4o.print(INIT_LOCATED_VALUE);
+        s4o.print("(");
+        print_variable_prefix();
+        if (symbol->variable_name != NULL)
           symbol->variable_name->accept(*this);
         else
           symbol->location->accept(*this);
-    	s4o.print(",");
+        s4o.print(",");
         this->current_var_init_symbol->accept(*this);
         s4o.print(")");
       }
@@ -1837,13 +1848,17 @@ void *visit(external_declaration_c *symbol) {
    */
   this->current_var_type_symbol = symbol->specification;
   this->current_var_init_symbol = NULL;
+  bool is_fb = type_is_fb(this->current_var_type_symbol);
 
   /* now to produce the c equivalent... */
   switch (wanted_varformat) {
     case local_vf:
     case localinit_vf:
       s4o.print(s4o.indent_spaces);
-      s4o.print(DECLARE_EXTERNAL);
+      if (is_fb)
+        s4o.print(DECLARE_EXTERNAL_FB);
+      else
+        s4o.print(DECLARE_EXTERNAL);
       s4o.print("(");
       this->current_var_type_symbol->accept(*this);
       s4o.print(",");
@@ -1853,7 +1868,10 @@ void *visit(external_declaration_c *symbol) {
 
     case constructorinit_vf:
       s4o.print(nv->get());
-      s4o.print(INIT_EXTERNAL);
+      if (is_fb)
+        s4o.print(INIT_EXTERNAL_FB);
+      else
+        s4o.print(INIT_EXTERNAL);
       s4o.print("(");
       this->current_var_type_symbol->accept(*this);
       s4o.print(",");
@@ -1982,50 +2000,50 @@ void *visit(global_var_spec_c *symbol) {
 
     case constructorinit_vf:
       if (symbol->global_var_name != NULL) {
-    	s4o.print(nv->get());
-    	s4o.print(INIT_GLOBAL_LOCATED);
-    	s4o.print("(");
-    	if (this->resource_name != NULL) {
-    	  this->resource_name->accept(*this);
-    	}
+        s4o.print(nv->get());
+        s4o.print(INIT_GLOBAL_LOCATED);
+        s4o.print("(");
+        if (this->resource_name != NULL) {
+          this->resource_name->accept(*this);
+        }
         s4o.print(",");
         symbol->global_var_name->accept(*this);
-      	s4o.print(",");
-      	symbol->location->accept(*this);
+        s4o.print(",");
+        symbol->location->accept(*this);
         print_retain();
-      	s4o.print(")");
+        s4o.print(")");
       }
       if (this->current_var_init_symbol != NULL) {
-	    s4o.print(nv->get());
-	    s4o.print(INIT_GLOBAL);
-	    s4o.print("(");
-	    this->current_var_type_symbol->accept(*this);
-	    s4o.print(",");
-	    if (symbol->global_var_name != NULL)
-		  symbol->global_var_name->accept(*this);
-	    else
-		  symbol->location->accept(*this);
-	    s4o.print(",");
-	    s4o.print(INITIAL_VALUE);
-	    s4o.print("(");
-	    this->current_var_init_symbol->accept(*this);
-	    s4o.print(")");
-	    print_retain();
-	    s4o.print(")");
+        s4o.print(nv->get());
+        s4o.print(INIT_GLOBAL);
+        s4o.print("(");
+        this->current_var_type_symbol->accept(*this);
+        s4o.print(",");
+        if (symbol->global_var_name != NULL)
+          symbol->global_var_name->accept(*this);
+        else
+	      symbol->location->accept(*this);
+        s4o.print(",");
+        s4o.print(INITIAL_VALUE);
+        s4o.print("(");
+        this->current_var_init_symbol->accept(*this);
+        s4o.print(")");
+        print_retain();
+        s4o.print(")");
       }
       break;
     
     case globalprototype_vf:
       s4o.print(s4o.indent_spaces);
       s4o.print(DECLARE_GLOBAL_PROTOTYPE);
-	  s4o.print("(");
-	  this->current_var_type_symbol->accept(*this);
-	  s4o.print(",");
-	  if (symbol->global_var_name != NULL)
-		symbol->global_var_name->accept(*this);
-	  else
-		symbol->location->accept(*this);
-	  s4o.print(")\n");
+      s4o.print("(");
+      this->current_var_type_symbol->accept(*this);
+      s4o.print(",");
+      if (symbol->global_var_name != NULL)
+        symbol->global_var_name->accept(*this);
+      else
+        symbol->location->accept(*this);
+      s4o.print(")\n");
       break;
     
     default:
@@ -2050,6 +2068,7 @@ void *visit(location_c *symbol) {
 void *visit(global_var_list_c *symbol) {
   TRACE("global_var_list_c");
   list_c *list = dynamic_cast<list_c *>(symbol);
+  bool is_fb = type_is_fb(this->current_var_type_symbol);
   /* should NEVER EVER occur!! */
   if (list == NULL) ERROR;
 
@@ -2058,9 +2077,12 @@ void *visit(global_var_list_c *symbol) {
     case local_vf:
     case localinit_vf:
       for(int i = 0; i < list->n; i++) {
-    	s4o.print(s4o.indent_spaces);
-    	s4o.print(DECLARE_GLOBAL);
-    	s4o.print("(");
+        s4o.print(s4o.indent_spaces);
+        if (is_fb)
+          s4o.print(DECLARE_GLOBAL_FB);
+        else
+          s4o.print(DECLARE_GLOBAL);
+        s4o.print("(");
         this->current_var_type_symbol->accept(*this);
         s4o.print(",");
         if(this->resource_name != NULL)
@@ -2072,27 +2094,32 @@ void *visit(global_var_list_c *symbol) {
       break;
 
     case constructorinit_vf:
-      if (this->current_var_init_symbol != NULL) {
+      if (this->current_var_init_symbol != NULL || is_fb) {
         for(int i = 0; i < list->n; i++) {
           s4o.print(nv->get());
 
-          s4o.print(INIT_GLOBAL);
+          if (is_fb)
+            s4o.print(INIT_GLOBAL_FB);
+          else
+            s4o.print(INIT_GLOBAL);
           s4o.print("(");
           this->current_var_type_symbol->accept(*this);
           s4o.print(",");
           list->elements[i]->accept(*this);
-          s4o.print(",");
-          s4o.print(INITIAL_VALUE);
-          s4o.print("(");
-          this->current_var_init_symbol->accept(*this);
-          s4o.print(")");
+          if (this->current_var_init_symbol != NULL) {
+            s4o.print(",");
+            s4o.print(INITIAL_VALUE);
+            s4o.print("(");
+            this->current_var_init_symbol->accept(*this);
+            s4o.print(")");
+          }
           print_retain();
           s4o.print(")");
 #if 0
- 	  /* The following code would be for globalinit_vf !!
-	   * But it is not currently required...
-	   */
-	  s4o.print(s4o.indent_spaces + "__ext_element_c<");
+      /* The following code would be for globalinit_vf !!
+       * But it is not currently required...
+       */
+      s4o.print(s4o.indent_spaces + "__ext_element_c<");
           this->current_var_type_symbol->accept(*this);
           s4o.print("> ");
           if (this->globalnamespace != NULL) {
@@ -2108,7 +2135,7 @@ void *visit(global_var_list_c *symbol) {
             s4o.print(">(");
             this->current_var_init_symbol->accept(*this);
             s4o.print(")");
-	  }
+      }
           s4o.print(";\n");
 #endif
         }
@@ -2515,19 +2542,19 @@ private:
       case function_param_iterator_c::direction_extref:
 #if 0
         if (param_value == NULL)
-	  /* This is illegal in ST and IL languages.
-	   * All variables declared in a VAR_EXTERNAL __must__
-	   * be initialised to reference a specific VAR_GLOBAL variable!!
-	   *
-	   * The semantic checker should have caught this, we check again just the
-	   * same (especially since the semantic checker has not yet been written!).
-	   */
-	  ERROR;
+      /* This is illegal in ST and IL languages.
+       * All variables declared in a VAR_EXTERNAL __must__
+       * be initialised to reference a specific VAR_GLOBAL variable!!
+       *
+       * The semantic checker should have caught this, we check again just the
+       * same (especially since the semantic checker has not yet been written!).
+       */
+      ERROR;
         s4o.print(nv->get());
         s4o.print("&");
         param_value->accept(*this);
 #endif
-	break;
+    break;
     } /* switch */
   } /* for(...) */
 

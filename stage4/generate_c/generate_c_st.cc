@@ -130,16 +130,24 @@ class generate_c_st_c: public generate_c_typedecl_c {
 void *print_getter(symbol_c *symbol) {
   unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
   if (wanted_variablegeneration == fparam_output_vg) {
-    if (vartype == search_var_instance_decl_c::external_vt)
-      s4o.print(GET_EXTERNAL_BY_REF);
+    if (vartype == search_var_instance_decl_c::external_vt) {
+      if (search_var_instance_decl->type_is_fb(symbol))
+        s4o.print(GET_EXTERNAL_FB_BY_REF);
+      else
+        s4o.print(GET_EXTERNAL_BY_REF);
+    }
     else if (vartype == search_var_instance_decl_c::located_vt)
       s4o.print(GET_LOCATED_BY_REF);
     else
       s4o.print(GET_VAR_BY_REF);
   }
   else {
-    if (vartype == search_var_instance_decl_c::external_vt)
-      s4o.print(GET_EXTERNAL);
+    if (vartype == search_var_instance_decl_c::external_vt) {
+      if (search_var_instance_decl->type_is_fb(symbol))
+        s4o.print(GET_EXTERNAL_FB);
+      else
+        s4o.print(GET_EXTERNAL);
+    }
     else if (vartype == search_var_instance_decl_c::located_vt)
       s4o.print(GET_LOCATED);
     else
@@ -160,24 +168,33 @@ void *print_getter(symbol_c *symbol) {
 }
 
 void *print_setter(symbol_c* symbol,
-		symbol_c* type,
-		symbol_c* value,
-		symbol_c* fb_symbol = NULL,
-		symbol_c* fb_value = NULL) {
+        symbol_c* type,
+        symbol_c* value,
+        symbol_c* fb_symbol = NULL,
+        symbol_c* fb_value = NULL) {
   
   bool type_is_complex = false;
   if (fb_symbol == NULL) {
     unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
     type_is_complex = search_var_instance_decl->type_is_complex(symbol);
-    if (vartype == search_var_instance_decl_c::external_vt)
-      s4o.print(SET_EXTERNAL);
+    if (vartype == search_var_instance_decl_c::external_vt) {
+      if (search_var_instance_decl->type_is_fb(symbol))
+        s4o.print(SET_EXTERNAL_FB);
+      else
+        s4o.print(SET_EXTERNAL);
+    }
     else if (vartype == search_var_instance_decl_c::located_vt)
       s4o.print(SET_LOCATED);
     else
       s4o.print(SET_VAR);
   }
-  else
-	s4o.print(SET_VAR);
+  else {
+    unsigned int vartype = search_var_instance_decl->get_vartype(fb_symbol);
+    if (vartype == search_var_instance_decl_c::external_vt)
+      s4o.print(SET_EXTERNAL_FB);
+    else
+      s4o.print(SET_VAR);
+  }
   s4o.print("(");
 
   if (fb_symbol != NULL) {
@@ -274,14 +291,14 @@ void *visit(direct_variable_c *symbol) {
   if (strlen(symbol->value) == 0) ERROR;
   if (this->is_variable_prefix_null()) {
     if (wanted_variablegeneration != fparam_output_vg)
-	  s4o.print("*(");
+      s4o.print("*(");
   }
   else {
     switch (wanted_variablegeneration) {
       case expression_vg:
-  	    s4o.print(GET_LOCATED);
-  	    s4o.print("(");
-  	    break;
+        s4o.print(GET_LOCATED);
+        s4o.print("(");
+        break;
       case fparam_output_vg:
         s4o.print(GET_LOCATED_BY_REF);
         s4o.print("(");
@@ -293,7 +310,7 @@ void *visit(direct_variable_c *symbol) {
   this->print_variable_prefix();
   s4o.printlocation(symbol->value + 1);
   if ((this->is_variable_prefix_null() && wanted_variablegeneration != fparam_output_vg) ||
-	  wanted_variablegeneration != assignment_vg)
+      wanted_variablegeneration != assignment_vg)
     s4o.print(")");
   return NULL;
 }
@@ -311,8 +328,8 @@ void *visit(structured_variable_c *symbol) {
     case complextype_base_assignment_vg:
       symbol->record_variable->accept(*this);
       if (!type_is_complex) {
-    	s4o.print(".");
-    	symbol->field_selector->accept(*this);
+        s4o.print(".");
+        symbol->field_selector->accept(*this);
       }
       break;
     case complextype_suffix_vg:
@@ -329,12 +346,12 @@ void *visit(structured_variable_c *symbol) {
       break;
     default:
       if (this->is_variable_prefix_null()) {
-    	symbol->record_variable->accept(*this);
-    	s4o.print(".");
-    	symbol->field_selector->accept(*this);
+        symbol->record_variable->accept(*this);
+        s4o.print(".");
+        symbol->field_selector->accept(*this);
       }
       else
-    	print_getter(symbol);
+        print_getter(symbol);
       break;
   }
   return NULL;
@@ -363,18 +380,18 @@ void *visit(array_variable_c *symbol) {
       break;
     default:
       if (this->is_variable_prefix_null()) {
-    	symbol->subscripted_variable->accept(*this);
+        symbol->subscripted_variable->accept(*this);
 
-    	current_array_type = search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable);
-    	if (current_array_type == NULL) ERROR;
+        current_array_type = search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable);
+        if (current_array_type == NULL) ERROR;
 
-    	s4o.print(".table");
+        s4o.print(".table");
         symbol->subscript_list->accept(*this);
 
         current_array_type = NULL;
       }
       else
-    	print_getter(symbol);
+        print_getter(symbol);
       break;
   }
   return NULL;
@@ -385,9 +402,9 @@ void *visit(subscript_list_c *symbol) {
   array_dimension_iterator_c* array_dimension_iterator = new array_dimension_iterator_c(current_array_type);
   for (int i =  0; i < symbol->n; i++) {
     symbol_c* dimension = array_dimension_iterator->next();
-	if (dimension == NULL) ERROR;
+    if (dimension == NULL) ERROR;
 
-	s4o.print("[(");
+    s4o.print("[(");
     symbol->elements[i]->accept(*this);
     s4o.print(") - (");
     dimension->accept(*this);
@@ -819,7 +836,7 @@ void *visit(assignment_statement_c *symbol) {
     print_check_function(left_type, symbol->r_exp);
   }
   else {
-	print_setter(symbol->l_exp, left_type, symbol->r_exp);
+    print_setter(symbol->l_exp, left_type, symbol->r_exp);
   }
   return NULL;
 }
@@ -894,7 +911,9 @@ void *visit(fb_invocation_c *symbol) {
   /* now call the function... */
   function_block_type_name->accept(*this);
   s4o.print(FB_FUNCTION_SUFFIX);
-  s4o.print("(&");
+  s4o.print("(");
+  if (search_var_instance_decl->get_vartype(symbol->fb_name) != search_var_instance_decl_c::external_vt)
+    s4o.print("&");
   print_variable_prefix();
   symbol->fb_name->accept(*this);
   s4o.print(")");
@@ -1085,7 +1104,7 @@ void *visit(case_element_c *symbol) {
       case_element_iterator = new case_element_iterator_c(symbol->case_list, case_element_iterator_c::element_single);
       for (element = case_element_iterator->next(); element != NULL; element = case_element_iterator->next()) {
         if (first_element) first_element = false;
-    	s4o.print(s4o.indent_spaces + "case ");
+        s4o.print(s4o.indent_spaces + "case ");
         element->accept(*this);
         s4o.print(":\n");
       }
@@ -1101,7 +1120,7 @@ void *visit(case_element_c *symbol) {
             first_subrange_case_list = false;
           }
           else {
-        	  s4o.print(s4o.indent_spaces + "else if (");
+            s4o.print(s4o.indent_spaces + "else if (");
           }
           first_element = false;
         }
@@ -1129,9 +1148,9 @@ void *visit(case_element_c *symbol) {
         s4o.indent_left();
         break;
       case subrange_cg:
-    	s4o.indent_left();
-  	    s4o.print(s4o.indent_spaces + "}\n");
-  	    break;
+        s4o.indent_left();
+        s4o.print(s4o.indent_spaces + "}\n");
+        break;
       default:
         break;
     }

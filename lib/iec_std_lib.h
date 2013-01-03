@@ -33,8 +33,8 @@
 #include <limits.h>
 #include <float.h>
 #include <math.h>
-#include <time.h>
 #include <stdint.h>
+#include <ctype.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -87,7 +87,7 @@ typedef struct {
 
 #define __lit(type,value,...) (type)value##__VA_ARGS__
 // Keep this macro expention step to let sfx(__VA_ARGS__) change into L or LL
-#define __literal(type,value,...) __lit(type,value,##__VA_ARGS__)
+#define __literal(type,value,...) __lit(type,value,__VA_ARGS__)
 
 #define __BOOL_LITERAL(value) __literal(BOOL,value)
 #define __SINT_LITERAL(value) __literal(SINT,value)
@@ -227,54 +227,96 @@ static inline IEC_TIMESPEC __tod_to_timespec(double seconds, double minutes, dou
   return ts;
 }
 
+#define EPOCH_YEAR 1970
+#define SECONDS_PER_HOUR (60 * 60)
+#define SECONDS_PER_DAY (24 * SECONDS_PER_HOUR)
+#define __isleap(year) \
+  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
+static const unsigned short int __mon_yday[2][13] =
+{
+  /* Normal years.  */
+  { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365},
+  /* Leap years.  */
+  { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366}
+};
+
+typedef struct {
+	int tm_sec;			/* Seconds.	[0-60] (1 leap second) */
+	int tm_min;			/* Minutes.	[0-59] */
+	int tm_hour;		/* Hours.	[0-23] */
+	int tm_day;			/* Day.		[1-31] */
+	int tm_mon;			/* Month.	[0-11] */
+	int tm_year;		/* Year	*/
+} tm;
+
+static inline tm convert_seconds_to_date_and_time(long int seconds) {
+  tm dt;
+  long int days, rem;
+  days = seconds / SECONDS_PER_DAY;
+  rem = seconds % SECONDS_PER_DAY;
+  if (rem < 0) {
+	  rem += SECONDS_PER_DAY;
+	  days--;
+  }
+
+  // time of day
+  dt.tm_hour = rem / SECONDS_PER_HOUR;
+  rem %= SECONDS_PER_HOUR;
+  dt.tm_min = rem / 60;
+  dt.tm_sec = rem % 60;
+
+  // date
+  dt.tm_year = EPOCH_YEAR;
+  while (days >= (rem = __isleap(dt.tm_year) ? 366 : 365)) {
+	  dt.tm_year++;
+	  days -= rem;
+  }
+  while (days < 0) {
+	  dt.tm_year--;
+	  days += __isleap(dt.tm_year) ? 366 : 365;
+  }
+  dt.tm_mon = 1;
+  while (days > __mon_yday[__isleap(dt.tm_year)][dt.tm_mon]) {
+	  dt.tm_mon += 1;
+  }
+  dt.tm_day = days - __mon_yday[__isleap(dt.tm_year)][dt.tm_mon - 1] + 1;
+
+  return dt;
+}
+
 static inline IEC_TIMESPEC __date_to_timespec(int day, int month, int year) {
   IEC_TIMESPEC ts;
-  struct tm broken_down_time;
-  time_t epoch_seconds;
+  int a4, b4, a100, b100, a400, b400;
+  int yday;
+  int intervening_leap_days;
 
-  broken_down_time.tm_sec = 0;
-  broken_down_time.tm_min = 0;
-  broken_down_time.tm_hour = 0;
-  broken_down_time.tm_mday = day;  /* day of month, from 1 to 31 */
-  broken_down_time.tm_mon = month - 1;   /* month since January, in the range 0 to 11 */
-  broken_down_time.tm_year = year - 1900;  /* number of years since 1900 */
+  if (month < 1 || month > 12)
+	 __iec_error();
 
-  epoch_seconds = mktime(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
+  yday = __mon_yday[__isleap(year)][month - 1] + day;
 
-  if ((time_t)(-1) == epoch_seconds)
-    __iec_error();
+  if (yday > __mon_yday[__isleap(year)][month])
+	  __iec_error();
 
-  ts.tv_sec = epoch_seconds;
+  a4 = (year >> 2) - ! (year & 3);
+  b4 = (EPOCH_YEAR >> 2) - ! (EPOCH_YEAR & 3);
+  a100 = a4 / 25 - (a4 % 25 < 0);
+  b100 = b4 / 25 - (b4 % 25 < 0);
+  a400 = a100 >> 2;
+  b400 = b100 >> 2;
+  intervening_leap_days = (a4 - b4) - (a100 - b100) + (a400 - b400);
+  
+  ts.tv_sec = ((year - EPOCH_YEAR) * 365 + intervening_leap_days + yday - 1) * 24 * 60 * 60;
   ts.tv_nsec = 0;
 
   return ts;
 }
 
-static inline IEC_TIMESPEC __dt_to_timespec(double seconds,  double minutes, double hours, int day, int month, int year) {
-  IEC_TIMESPEC ts;
-  struct tm broken_down_time;
-  time_t epoch_seconds;
+static inline IEC_TIMESPEC __dt_to_timespec(double seconds, double minutes, double hours, int day, int month, int year) {
+  IEC_TIMESPEC ts_date = __date_to_timespec(day, month, year);
+  IEC_TIMESPEC ts = __tod_to_timespec(seconds, minutes, hours);
 
-  long double total_sec = (hours*60 + minutes)*60 + seconds;
-  ts.tv_sec = (long int)total_sec;
-  ts.tv_nsec = (long int)((total_sec - ts.tv_sec)*1e9);
-
-  broken_down_time.tm_sec = 0;
-  broken_down_time.tm_min = 0;
-  broken_down_time.tm_hour = 0;
-  broken_down_time.tm_mday = day;  /* day of month, from 1 to 31 */
-  broken_down_time.tm_mon = month - 1;   /* month since January, in the range 0 to 11 */
-  broken_down_time.tm_year = year - 1900;  /* number of years since 1900 */
-  broken_down_time.tm_isdst = 0; /* disable daylight savings time */
-
-  epoch_seconds = mktime(&broken_down_time); /* determine number of seconds since the epoch, i.e. Jan 1st 1970 */
-  if ((time_t)(-1) == epoch_seconds)
-    __iec_error();
-
-  ts.tv_sec += epoch_seconds;
-  if (ts.tv_sec < epoch_seconds)
-    /* since the TOD is always positive, if the above happens then we had an overflow */
-    __iec_error();
+  ts.tv_sec += ts_date.tv_sec;
 
   return ts;
 }
@@ -374,7 +416,10 @@ static inline STRING __uint_to_string(ULINT IN) {
     /* FROM_STRING */
     /***************/
 static inline BOOL __string_to_bool(STRING IN) {
-    return IN.len == 5 ? !memcmp(&IN.body,"TRUE", IN.len) : 0;
+    int i;
+    if (IN.len == 1) return !memcmp(&IN.body,"1", IN.len);
+    for (i = 0; i < IN.len; i++) IN.body[i] = toupper(IN.body[i]);
+    return IN.len == 4 ? !memcmp(&IN.body,"TRUE", IN.len) : 0;
 }
 
 static inline LINT __pstring_to_sint(STRING* IN) {
@@ -529,64 +574,64 @@ static inline STRING __time_to_string(TIME IN){
 }
 static inline STRING __date_to_string(DATE IN){
     STRING res;
-    struct tm* broken_down_time;
-    time_t seconds;
+    tm broken_down_time;
     /* D#1984-06-25 */
+    broken_down_time = convert_seconds_to_date_and_time(IN.tv_sec);
     res = __INIT_STRING;
-    seconds = IN.tv_sec;
-    if (NULL == (broken_down_time = localtime(&seconds))){ /* get the UTC (GMT) broken down time */
-        __iec_error();
-        return (STRING){7,"D#ERROR"};
-    }
-    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "D#%d-%2.2d-%2.2d", broken_down_time->tm_year + 1900, broken_down_time->tm_mon + 1, broken_down_time->tm_mday);
+    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "D#%d-%2.2d-%2.2d",
+             broken_down_time.tm_year,
+             broken_down_time.tm_mon,
+             broken_down_time.tm_day);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
 static inline STRING __tod_to_string(TOD IN){
     STRING res;
-    struct tm* broken_down_time;
+    tm broken_down_time;
     time_t seconds;
     /* TOD#15:36:55.36 */
-    res = __INIT_STRING;
     seconds = IN.tv_sec;
-    if (NULL == (broken_down_time = localtime(&seconds))){ /* get the UTC (GMT) broken down time */
-        __iec_error();
-        return (STRING){9,"TOD#ERROR"};
-    }
+    if (seconds >= SECONDS_PER_DAY){
+		__iec_error();
+		return (STRING){9,"TOD#ERROR"};
+	}
+    broken_down_time = convert_seconds_to_date_and_time(seconds);
+    res = __INIT_STRING;
     if(IN.tv_nsec == 0){
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%d", broken_down_time->tm_hour, broken_down_time->tm_min, broken_down_time->tm_sec);
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%2.2d",
+                 broken_down_time.tm_hour,
+                 broken_down_time.tm_min,
+                 broken_down_time.tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%g", broken_down_time->tm_hour, broken_down_time->tm_min, (LREAL)broken_down_time->tm_sec + (LREAL)IN.tv_nsec / 1e9);
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%09.6g",
+                 broken_down_time.tm_hour,
+                 broken_down_time.tm_min,
+                 (LREAL)broken_down_time.tm_sec + (LREAL)IN.tv_nsec / 1e9);
     }
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
 static inline STRING __dt_to_string(DT IN){
     STRING res;
-    struct tm* broken_down_time;
-    time_t seconds;
+    tm broken_down_time;
     /* DT#1984-06-25-15:36:55.36 */
-    seconds = IN.tv_sec;
-    if (NULL == (broken_down_time = localtime(&seconds))){ /* get the UTC (GMT) broken down time */
-        __iec_error();
-        return (STRING){8,"DT#ERROR"};
-    }
+    broken_down_time = convert_seconds_to_date_and_time(IN.tv_sec);
     if(IN.tv_nsec == 0){
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%d",
-                 broken_down_time->tm_year + 1900,
-                 broken_down_time->tm_mon  + 1,
-                 broken_down_time->tm_mday,
-                 broken_down_time->tm_hour,
-                 broken_down_time->tm_min,
-                 broken_down_time->tm_sec);
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%2.2d",
+                 broken_down_time.tm_year,
+                 broken_down_time.tm_mon,
+                 broken_down_time.tm_day,
+                 broken_down_time.tm_hour,
+                 broken_down_time.tm_min,
+                 broken_down_time.tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%g",
-                 broken_down_time->tm_year + 1900,
-                 broken_down_time->tm_mon  + 1,
-                 broken_down_time->tm_mday,
-                 broken_down_time->tm_hour,
-                 broken_down_time->tm_min,
-                 (LREAL)broken_down_time->tm_sec + ((LREAL)IN.tv_nsec / 1e9));
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%09.6g",
+                 broken_down_time.tm_year,
+                 broken_down_time.tm_mon,
+                 broken_down_time.tm_day,
+                 broken_down_time.tm_hour,
+                 broken_down_time.tm_min,
+                 (LREAL)broken_down_time.tm_sec + ((LREAL)IN.tv_nsec / 1e9));
     }
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
@@ -596,7 +641,7 @@ static inline STRING __dt_to_string(DT IN){
     /*  [ANY_DATE | TIME] _TO_ [ANY_DATE | TIME]  */
     /**********************************************/
 
-static inline TOD __date_and_time_to_time_of_day(DT IN) {return (TOD){IN.tv_sec % 86400, IN.tv_nsec};}
+static inline TOD __date_and_time_to_time_of_day(DT IN) {return (TOD){IN.tv_sec % (24*60*60), IN.tv_nsec};}
 static inline DATE __date_and_time_to_date(DT IN){return (DATE){IN.tv_sec - (IN.tv_sec % (24*60*60)), 0};}
 
     /*****************/
@@ -823,8 +868,14 @@ __ANY_DATE(__to_anyreal_)
 /******** [ANY_DATE]_TO_[ANY_DATE | TIME]   ************/ 
 /* Not supported: DT_TO_TIME */
 __convert_type(DT, DATE,  __date_and_time_to_date)
+static inline DATE DATE_AND_TIME_TO_DATE(EN_ENO_PARAMS, DT op){
+	return DT_TO_DATE(EN_ENO, op);
+}
 __convert_type(DT, DT,    __move_DT)
 __convert_type(DT, TOD,   __date_and_time_to_time_of_day)
+static inline DATE DATE_AND_TIME_TO_TIME_OF_DAY(EN_ENO_PARAMS, DT op){
+	return DT_TO_TOD(EN_ENO, op);
+}
 /* Not supported: DATE_TO_TIME */
 __convert_type(DATE, DATE, __move_DATE)
 /* Not supported: DATE_TO_DT */
@@ -910,21 +961,27 @@ __ANY_REAL(__to_anyint_)
 #undef __iec_
 
 
-/********   _TO_BCD   ************/ 
+/********   _TO_BCD   ************/
 #define __iec_(to_TYPENAME,from_TYPENAME) \
 static inline to_TYPENAME from_TYPENAME##_TO_BCD_##to_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
   TEST_EN(to_TYPENAME)\
   return (to_TYPENAME)__uint_to_bcd(op);\
+}\
+static inline to_TYPENAME from_TYPENAME##_TO_BCD__##to_TYPENAME##__##from_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
+  return from_TYPENAME##_TO_BCD_##to_TYPENAME(EN_ENO, op);\
 }
 __ANY_UINT(__to_anynbit_)
 #undef __iec_
 
 
-/********   BCD_TO_   ************/ 
+/********   BCD_TO_   ************/
 #define __iec_(to_TYPENAME,from_TYPENAME) \
 static inline to_TYPENAME from_TYPENAME##_BCD_TO_##to_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
   TEST_EN(to_TYPENAME)\
   return (to_TYPENAME)__bcd_to_uint(op);\
+}\
+static inline to_TYPENAME BCD_TO_##to_TYPENAME##__##to_TYPENAME##__##from_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
+  return from_TYPENAME##_BCD_TO_##to_TYPENAME(EN_ENO, op);\
 }
 __ANY_NBIT(__to_anyuint_)
 #undef __iec_
@@ -1769,6 +1826,11 @@ static inline BOOL fname(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
   return __time_cmp(op1, op2) != 0 ? 1 : 0;\
 }
 
+#define __ne_string(fname, TYPENAME) \
+static inline BOOL fname(EN_ENO_PARAMS, TYPENAME op1, TYPENAME op2){\
+  TEST_EN(BOOL)\
+  return __STR_CMP(op1, op2) != 0 ? 1 : 0;\
+}
 
 /* Comparison for numerical data types */
 #define __iec_(TYPENAME) \
@@ -1787,8 +1849,8 @@ __iec_(TIME)
 #undef __iec_
 
 /* Comparison for string data types */	
-__compare_string(NE_STRING, != ) /* The explicitly typed standard functions */
-__compare_string(NE__BOOL__STRING__STRING, != ) /* Overloaded function */
+__ne_string(NE_STRING, STRING) /* The explicitly typed standard functions */
+__ne_string(NE__BOOL__STRING__STRING, STRING) /* Overloaded function */
 
 
 

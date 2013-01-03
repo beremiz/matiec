@@ -18,6 +18,13 @@
 	type* __GET_GLOBAL_##name(void) {\
 		return &((*GLOBAL__##name).value);\
 	}
+#define __DECLARE_GLOBAL_FB(type, domain, name)\
+	type domain##__##name;\
+	static type *GLOBAL__##name = &(domain##__##name);\
+	type* __GET_GLOBAL_##name(void) {\
+		return &(*GLOBAL__##name);\
+	}\
+	extern void type##_init__(type* data__, BOOL retain);
 #define __DECLARE_GLOBAL_LOCATION(type, location)\
 	extern type *location;
 #define __DECLARE_GLOBAL_LOCATED(type, resource, name)\
@@ -33,9 +40,11 @@
 		return (*GLOBAL__##name).value;\
 	}
 #define __DECLARE_GLOBAL_PROTOTYPE(type, name)\
-    extern type* __GET_GLOBAL_##name();
+    extern type* __GET_GLOBAL_##name(void);
 #define __DECLARE_EXTERNAL(type, name)\
 	__IEC_##type##_p name;
+#define __DECLARE_EXTERNAL_FB(type, name)\
+	type* name;
 #define __DECLARE_LOCATED(type, name)\
 	__IEC_##type##_p name;
 
@@ -52,6 +61,8 @@
 	    __INIT_GLOBAL_##name(temp);\
 	    __INIT_RETAIN((*GLOBAL__##name), retained)\
     }
+#define __INIT_GLOBAL_FB(type, name, retained)\
+	type##_init__(&(*GLOBAL__##name), retained);
 #define __INIT_GLOBAL_LOCATED(domain, name, location, retained)\
 	domain##__##name.value = location;\
 	__INIT_RETAIN(domain##__##name, retained)
@@ -60,6 +71,8 @@
 		name.value = __GET_GLOBAL_##global();\
 		__INIT_RETAIN(name, retained)\
     }
+#define __INIT_EXTERNAL_FB(type, global, name, retained)\
+	name = __GET_GLOBAL_##global();
 #define __INIT_LOCATED(type, location, name, retained)\
 	{\
 		extern type *location;\
@@ -75,12 +88,16 @@
 	name.value __VA_ARGS__
 #define __GET_EXTERNAL(name, ...)\
 	((name.flags & __IEC_FORCE_FLAG) ? name.fvalue __VA_ARGS__ : (*(name.value)) __VA_ARGS__)
+#define __GET_EXTERNAL_FB(name, ...)\
+	__GET_VAR(((*name) __VA_ARGS__))
 #define __GET_LOCATED(name, ...)\
 	((name.flags & __IEC_FORCE_FLAG) ? name.fvalue __VA_ARGS__ : (*(name.value)) __VA_ARGS__)
 #define __GET_VAR_BY_REF(name, ...)\
 	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &(name.value __VA_ARGS__))
 #define __GET_EXTERNAL_BY_REF(name, ...)\
 	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &((*(name.value)) __VA_ARGS__))
+#define __GET_EXTERNAL_FB_BY_REF(name, ...)\
+	__GET_EXTERNAL_BY_REF(((*name) __VA_ARGS__))
 #define __GET_LOCATED_BY_REF(name, ...)\
 	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &((*(name.value)) __VA_ARGS__))
 
@@ -90,6 +107,8 @@
 #define __SET_EXTERNAL(prefix, name, new_value, ...)\
 	if (!(prefix name.flags & __IEC_FORCE_FLAG || __IS_GLOBAL_##name##_FORCED()))\
 		(*(prefix name.value)) __VA_ARGS__ = new_value
+#define __SET_EXTERNAL_FB(prefix, name, new_value, ...)\
+	__SET_VAR((*(prefix name)), __VA_ARGS__, new_value)
 #define __SET_LOCATED(prefix, name, new_value, ...)\
 	if (!(prefix name.flags & __IEC_FORCE_FLAG)) *(prefix name.value) __VA_ARGS__ = new_value
 

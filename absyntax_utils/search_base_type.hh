@@ -56,6 +56,7 @@ class search_base_type_c: public null_visitor_c {
     bool is_array;
     bool is_subrange;
     bool is_enumerated;
+    bool is_fb;
     static search_base_type_c *search_base_type_singleton; // Make this a singleton class!
     
   private:  
@@ -67,6 +68,7 @@ class search_base_type_c: public null_visitor_c {
     static symbol_c *get_basetype_id   (symbol_c *symbol);
     static bool      type_is_subrange  (symbol_c *type_decl);
     static bool      type_is_enumerated(symbol_c *type_decl);
+    static bool      type_is_fb        (symbol_c *type_decl);
 
   public:
   /*************************/
@@ -119,7 +121,7 @@ class search_base_type_c: public null_visitor_c {
     void *visit(lreal_type_name_c *symbol);
     void *visit(date_type_name_c *symbol);
     void *visit(tod_type_name_c *symbol);
-    void *visit(dt_type_name_c *symbol)	;
+    void *visit(dt_type_name_c *symbol);
     void *visit(byte_type_name_c *symbol);
     void *visit(word_type_name_c *symbol);
     void *visit(dword_type_name_c *symbol);
@@ -148,7 +150,7 @@ class search_base_type_c: public null_visitor_c {
     void *visit(safelreal_type_name_c *symbol);
     void *visit(safedate_type_name_c *symbol);
     void *visit(safetod_type_name_c *symbol);
-    void *visit(safedt_type_name_c *symbol)	;
+    void *visit(safedt_type_name_c *symbol);
     void *visit(safebyte_type_name_c *symbol);
     void *visit(safeword_type_name_c *symbol);
     void *visit(safedword_type_name_c *symbol);
@@ -225,7 +227,7 @@ class search_base_type_c: public null_visitor_c {
     void *visit(structure_element_initialization_c *symbol);
   /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
   /*
-  SYM_REF4(string_type_declaration_c,	string_type_name,
+  SYM_REF4(string_type_declaration_c, string_type_name,
   					elementary_string_type_name,
   					string_type_declaration_size,
   					string_type_declaration_init) // may be == NULL!

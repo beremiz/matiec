@@ -366,20 +366,28 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     void *print_getter(symbol_c *symbol) {
       unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
       if (wanted_variablegeneration == fparam_output_vg) {
-      	if (vartype == search_var_instance_decl_c::external_vt)
-          s4o.print(GET_EXTERNAL_BY_REF);
+        if (vartype == search_var_instance_decl_c::external_vt) {
+          if (search_var_instance_decl->type_is_fb(symbol))
+            s4o.print(GET_EXTERNAL_FB_BY_REF);
+          else
+            s4o.print(GET_EXTERNAL_BY_REF);
+        }
         else if (vartype == search_var_instance_decl_c::located_vt)
           s4o.print(GET_LOCATED_BY_REF);
         else
           s4o.print(GET_VAR_BY_REF);
       }
       else {
-    	if (vartype == search_var_instance_decl_c::external_vt)
-    	  s4o.print(GET_EXTERNAL);
-    	else if (vartype == search_var_instance_decl_c::located_vt)
-    	  s4o.print(GET_LOCATED);
-    	else
-    	  s4o.print(GET_VAR);
+        if (vartype == search_var_instance_decl_c::external_vt) {
+          if (search_var_instance_decl->type_is_fb(symbol))
+            s4o.print(GET_EXTERNAL_FB);
+          else
+            s4o.print(GET_EXTERNAL);
+        }
+        else if (vartype == search_var_instance_decl_c::located_vt)
+          s4o.print(GET_LOCATED);
+        else
+          s4o.print(GET_VAR);
       }
       s4o.print("(");
 
@@ -396,25 +404,33 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
     }
 
     void *print_setter(symbol_c* symbol,
-    		symbol_c* type,
-    		symbol_c* value,
-    		symbol_c* fb_symbol = NULL,
-    		symbol_c* fb_value = NULL,
-    		bool negative = false) {
+            symbol_c* type,
+            symbol_c* value,
+            symbol_c* fb_symbol = NULL,
+            symbol_c* fb_value = NULL,
+            bool negative = false) {
 
-      bool type_is_complex = false;
+      bool type_is_complex = search_var_instance_decl->type_is_complex(symbol);
       if (fb_symbol == NULL) {
         unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
-        type_is_complex = search_var_instance_decl->type_is_complex(symbol);
-        if (vartype == search_var_instance_decl_c::external_vt)
-          s4o.print(SET_EXTERNAL);
+        if (vartype == search_var_instance_decl_c::external_vt) {
+          if (search_var_instance_decl->type_is_fb(symbol))
+            s4o.print(SET_EXTERNAL_FB);
+          else
+            s4o.print(SET_EXTERNAL);
+        }
         else if (vartype == search_var_instance_decl_c::located_vt)
           s4o.print(SET_LOCATED);
         else
           s4o.print(SET_VAR);
       }
-      else
-        s4o.print(SET_VAR);
+      else {
+        unsigned int vartype = search_var_instance_decl->get_vartype(fb_symbol);
+        if (vartype == search_var_instance_decl_c::external_vt)
+          s4o.print(SET_EXTERNAL_FB);
+        else
+          s4o.print(SET_VAR);
+      }
       s4o.print("(");
 
       if (fb_symbol != NULL) {
@@ -431,9 +447,9 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       s4o.print(",");
       if (negative) {
 	    if (get_datatype_info_c::is_BOOL_compatible(this->current_operand->datatype))
-		  s4o.print("!");
-	    else
-		  s4o.print("~");
+          s4o.print("!");
+        else
+          s4o.print("~");
       }
       wanted_variablegeneration = expression_vg;
       print_check_function(type, value, fb_value);
@@ -495,10 +511,10 @@ void *visit(symbolic_variable_c *symbol) {
       generate_c_base_c::visit(symbol);
       break;
     case complextype_suffix_vg:
-	  break;
+      break;
     default:
       if (this->is_variable_prefix_null()) {
-	    vartype = search_var_instance_decl->get_vartype(symbol);
+        vartype = search_var_instance_decl->get_vartype(symbol);
         if (wanted_variablegeneration == fparam_output_vg) {
           s4o.print("&(");
           generate_c_base_c::visit(symbol);
@@ -525,14 +541,14 @@ void *visit(direct_variable_c *symbol) {
   if (strlen(symbol->value) == 0) ERROR;
   if (this->is_variable_prefix_null()) {
     if (wanted_variablegeneration != fparam_output_vg)
-	  s4o.print("*(");
+      s4o.print("*(");
   }
   else {
     switch (wanted_variablegeneration) {
       case expression_vg:
-  	    s4o.print(GET_LOCATED);
-  	    s4o.print("(");
-  	    break;
+        s4o.print(GET_LOCATED);
+        s4o.print("(");
+        break;
       case fparam_output_vg:
         s4o.print(GET_LOCATED_BY_REF);
         s4o.print("(");
@@ -544,7 +560,7 @@ void *visit(direct_variable_c *symbol) {
   this->print_variable_prefix();
   s4o.printlocation(symbol->value + 1);
   if ((this->is_variable_prefix_null() && wanted_variablegeneration != fparam_output_vg) ||
-	  wanted_variablegeneration != assignment_vg)
+      wanted_variablegeneration != assignment_vg)
     s4o.print(")");
   return NULL;
 }
@@ -567,25 +583,25 @@ void *visit(structured_variable_c *symbol) {
       }
       break;
     case complextype_suffix_vg:
-	  symbol->record_variable->accept(*this);
-	  if (type_is_complex) {
-		s4o.print(".");
-		symbol->field_selector->accept(*this);
-	  }
-	  break;
-	case assignment_vg:
-	  symbol->record_variable->accept(*this);
-	  s4o.print(".");
-	  symbol->field_selector->accept(*this);
-	  break;
+      symbol->record_variable->accept(*this);
+      if (type_is_complex) {
+        s4o.print(".");
+        symbol->field_selector->accept(*this);
+      }
+      break;
+    case assignment_vg:
+      symbol->record_variable->accept(*this);
+      s4o.print(".");
+      symbol->field_selector->accept(*this);
+      break;
     default:
       if (this->is_variable_prefix_null()) {
-    	symbol->record_variable->accept(*this);
-    	s4o.print(".");
-    	symbol->field_selector->accept(*this);
+        symbol->record_variable->accept(*this);
+        s4o.print(".");
+        symbol->field_selector->accept(*this);
       }
       else
-    	print_getter(symbol);
+        print_getter(symbol);
       break;
   }
   return NULL;
@@ -623,7 +639,7 @@ void *visit(array_variable_c *symbol) {
         current_array_type = NULL;
       }
       else
-    	print_getter(symbol);
+        print_getter(symbol);
       break;
   }
   return NULL;
@@ -634,9 +650,9 @@ void *visit(subscript_list_c *symbol) {
   array_dimension_iterator_c* array_dimension_iterator = new array_dimension_iterator_c(current_array_type);
   for (int i =  0; i < symbol->n; i++) {
     symbol_c* dimension = array_dimension_iterator->next();
-	if (dimension == NULL) ERROR;
+    if (dimension == NULL) ERROR;
 
-	s4o.print("[(");
+    s4o.print("[(");
     symbol->elements[i]->accept(*this);
     s4o.print(") - (");
     dimension->accept(*this);
@@ -860,7 +876,7 @@ void *visit(il_function_call_c *symbol) {
     s4o.print(")");
   }
   if (function_type_suffix != NULL) {
-  	function_type_suffix = default_literal_type(function_type_suffix);
+    function_type_suffix = default_literal_type(function_type_suffix);
   }
   if (has_output_params) {
     fcall_number++;
@@ -885,7 +901,7 @@ void *visit(il_function_call_c *symbol) {
             print_function_parameter_data_types_c overloaded_func_suf(&s4o);
             f_decl->accept(overloaded_func_suf);
           }
-    }	  
+    }
     if (function_type_suffix != NULL)
       function_type_suffix->accept(*this);
   }
@@ -1051,13 +1067,13 @@ void *visit(il_fb_call_c *symbol) {
     if (param_value != NULL)
       if ((param_direction == function_param_iterator_c::direction_in) ||
           (param_direction == function_param_iterator_c::direction_inout)) {
-    	if (this->is_variable_prefix_null()) {
-    	  symbol->fb_name->accept(*this);
+        if (this->is_variable_prefix_null()) {
+          symbol->fb_name->accept(*this);
           s4o.print(".");
           param_name->accept(*this);
           s4o.print(" = ");
           print_check_function(param_type, param_value);
-    	}
+        }
         else {
           print_setter(param_name, param_type, param_value, symbol->fb_name);
         }
@@ -1068,7 +1084,9 @@ void *visit(il_fb_call_c *symbol) {
   /* now call the function... */
   function_block_type_name->accept(*this);
   s4o.print(FB_FUNCTION_SUFFIX);
-  s4o.print("(&");
+  s4o.print("(");
+  if (search_var_instance_decl->get_vartype(symbol->fb_name) != search_var_instance_decl_c::external_vt)
+    s4o.print("&");
   print_variable_prefix();
   symbol->fb_name->accept(*this);
   s4o.print(")");
@@ -1099,12 +1117,12 @@ void *visit(il_fb_call_c *symbol) {
         s4o.print(";\n" + s4o.indent_spaces);
         if (this->is_variable_prefix_null()) {
           param_value->accept(*this);
-		  s4o.print(" = ");
-		  print_check_function(param_type, param_name, symbol->fb_name);
-		}
-		else {
-		  print_setter(param_value, param_type, param_name, NULL, symbol->fb_name);
-		}
+          s4o.print(" = ");
+          print_check_function(param_type, param_name, symbol->fb_name);
+        }
+        else {
+          print_setter(param_value, param_type, param_name, NULL, symbol->fb_name);
+        }
       }
   } /* for(...) */
 
@@ -1250,7 +1268,7 @@ void *visit(il_formal_funct_call_c *symbol) {
     s4o.print(")");
   }
   if (function_type_suffix != NULL) {
-  	function_type_suffix = default_literal_type(function_type_suffix);
+    function_type_suffix = default_literal_type(function_type_suffix);
   }
   if (has_output_params) {
     fcall_number++;
@@ -1420,7 +1438,7 @@ void *visit(simple_instr_list_c *symbol) {
 
 
 // SYM_REF1(il_simple_instruction_c, il_simple_instruction, symbol_c *prev_il_instruction;)
-void *visit(il_simple_instruction_c *symbol)    {
+void *visit(il_simple_instruction_c *symbol) {
   /* all previous IL instructions should have the same datatype (checked in stage3), so we get the datatype from the first previous IL instruction we find */
   implicit_variable_current.datatype = (symbol->prev_il_instruction.empty())? NULL : symbol->prev_il_instruction[0]->datatype;
   implicit_variable_result .datatype = symbol->datatype;
@@ -1511,7 +1529,7 @@ void *visit(NOT_operator_c *symbol) {
 }
 
 
-void *visit(S_operator_c *symbol)	{
+void *visit(S_operator_c *symbol) {
   if (wanted_variablegeneration != expression_vg) {
     s4o.print("LD");
     return NULL;
@@ -1533,7 +1551,7 @@ void *visit(S_operator_c *symbol)	{
 }
 
 
-void *visit(R_operator_c *symbol)	{
+void *visit(R_operator_c *symbol) {
   if (wanted_variablegeneration != expression_vg) {
     s4o.print("LD");
     return NULL;
@@ -1565,66 +1583,66 @@ void *visit( PV_operator_c *symbol)	{return XXX_CAL_operator( "PV", this->curren
 void *visit( IN_operator_c *symbol)	{return XXX_CAL_operator( "IN", this->current_operand);}
 void *visit( PT_operator_c *symbol)	{return XXX_CAL_operator( "PT", this->current_operand);}
 
-void *visit(AND_operator_c *symbol)	{
+void *visit(AND_operator_c *symbol) {
   if (!get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype)) ERROR;
   XXX_operator(&(this->implicit_variable_result), " &= ", this->current_operand);
   return NULL;
 }
 
-void *visit(OR_operator_c *symbol)	{
+void *visit(OR_operator_c *symbol) {
   if (!get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype)) ERROR;
   XXX_operator(&(this->implicit_variable_result), " |= ", this->current_operand);
   return NULL;
 }
 
-void *visit(XOR_operator_c *symbol)	{
+void *visit(XOR_operator_c *symbol) {
   if (!get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype)) ERROR;
   // '^' is a bit by bit exclusive OR !! Also seems to work with boolean types!
   XXX_operator(&(this->implicit_variable_result), " ^= ", this->current_operand);
   return NULL;
 }
 
-void *visit(ANDN_operator_c *symbol)	{
+void *visit(ANDN_operator_c *symbol) {
   if (!get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype)) ERROR;
   XXX_operator(&(this->implicit_variable_result), get_datatype_info_c::is_BOOL_compatible(this->current_operand->datatype)?" &= !":" &= ~", this->current_operand);
   return NULL;
 }
 
-void *visit(ORN_operator_c *symbol)	{
+void *visit(ORN_operator_c *symbol) {
   if (!get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype)) ERROR;
   XXX_operator(&(this->implicit_variable_result), get_datatype_info_c::is_BOOL_compatible(this->current_operand->datatype)?" |= !":" |= ~", this->current_operand);
   return NULL;
 }
 
-void *visit(XORN_operator_c *symbol)	{
+void *visit(XORN_operator_c *symbol) {
   if (!get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype)) ERROR;
   // bit by bit exclusive OR !! Also seems to work with boolean types!
   XXX_operator(&(this->implicit_variable_result), get_datatype_info_c::is_BOOL_compatible(this->current_operand->datatype)?" ^= !":" ^= ~", this->current_operand);
   return NULL;
 }
 
-void *visit(ADD_operator_c *symbol)	{
+void *visit(ADD_operator_c *symbol) {
   if (get_datatype_info_c::is_TIME_compatible(symbol->datatype) || get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype)) 
         XXX_function(&(this->implicit_variable_result), "__time_add", &(this->implicit_variable_current), this->current_operand);
   else  XXX_operator(&(this->implicit_variable_result), " += ", this->current_operand);
   return NULL;
 }
 
-void *visit(SUB_operator_c *symbol)	{
+void *visit(SUB_operator_c *symbol) {
   if (get_datatype_info_c::is_TIME_compatible(symbol->datatype) || get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype))
         XXX_function(&(this->implicit_variable_result), "__time_sub", &(this->implicit_variable_current), this->current_operand);
   else  XXX_operator(&(this->implicit_variable_result), " -= ", this->current_operand);
   return NULL;
 }
 
-void *visit(MUL_operator_c *symbol)	{
+void *visit(MUL_operator_c *symbol) {
   if (get_datatype_info_c::is_TIME_compatible(symbol->datatype))
         XXX_function(&(this->implicit_variable_result), "__time_mul", &(this->implicit_variable_current), this->current_operand);
   else  XXX_operator(&(this->implicit_variable_result), " *= ", this->current_operand);
   return NULL;
 }
 
-void *visit(DIV_operator_c *symbol)	{
+void *visit(DIV_operator_c *symbol) {
   if (get_datatype_info_c::is_TIME_compatible(symbol->datatype))
         XXX_function(&(this->implicit_variable_result), "__time_div", &(this->implicit_variable_current), this->current_operand);
   else  XXX_operator(&(this->implicit_variable_result), " /= ", this->current_operand);
@@ -1685,7 +1703,7 @@ void *visit(RETCN_operator_c *symbol) {
 }
 
 //SYM_REF0(JMP_operator_c)
-void *visit(JMP_operator_c *symbol)	{
+void *visit(JMP_operator_c *symbol) {
   if (NULL == this->jump_label) ERROR;
   s4o.print("goto ");
   this->jump_label->accept(*this);
@@ -1693,7 +1711,7 @@ void *visit(JMP_operator_c *symbol)	{
 }
 
 // SYM_REF0(JMPC_operator_c)
-void *visit(JMPC_operator_c *symbol)	{
+void *visit(JMPC_operator_c *symbol) {
   if (NULL == this->jump_label) ERROR;
   C_modifier();
   s4o.print("goto ");
@@ -1702,7 +1720,7 @@ void *visit(JMPC_operator_c *symbol)	{
 }
 
 // SYM_REF0(JMPCN_operator_c)
-void *visit(JMPCN_operator_c *symbol)	{
+void *visit(JMPCN_operator_c *symbol) {
   if (NULL == this->jump_label) ERROR;
   CN_modifier();
   s4o.print("goto ");

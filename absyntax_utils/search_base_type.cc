@@ -102,6 +102,12 @@ bool search_base_type_c::type_is_enumerated(symbol_c* type_decl) {
   return search_base_type_singleton->is_enumerated;
 }
 
+bool search_base_type_c::type_is_fb(symbol_c* type_decl) {
+  create_singleton();
+  search_base_type_singleton->is_fb = false;
+  type_decl->accept(*search_base_type_singleton);
+  return search_base_type_singleton->is_fb;
+}
 
 /*************************/
 /* B.1 - Common elements */
@@ -373,7 +379,10 @@ void *search_base_type_c::visit(string_type_declaration_c *symbol)	             
 /*****************************/
 /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
 // SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
-void *search_base_type_c::visit(function_block_declaration_c *symbol)                   {return (void *)symbol;}
+void *search_base_type_c::visit(function_block_declaration_c *symbol)                   {
+	this->is_fb = true;
+	return (void *)symbol;
+}
 
 
 
