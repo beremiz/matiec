@@ -1326,9 +1326,7 @@ void *constant_folding_c::visit(if_statement_c *symbol) {
 void *constant_folding_c::visit(for_statement_c *symbol) {
 	map_values_t values_incoming;
 	map_values_t values_statement_result;
-	map_values_t::iterator itr;
 	std::string varName;
-
 
 	values_incoming = values; /* save incoming status */
 	symbol->beg_expression->accept(*this);
