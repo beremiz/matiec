@@ -1383,13 +1383,14 @@ void *constant_folding_c::visit(repeat_statement_c *symbol) {
 	map_values_t values_incoming;
 	map_values_t values_statement_result;
 
-	/* Optimize dead code */
-	symbol->expression->accept(*this);
-	if (VALID_CVALUE(bool, symbol->expression) && GET_CVALUE(bool, symbol->expression) == false)
-		return NULL;
-
 	values_incoming = values; /* save incoming status */
 	symbol->statement_list->accept(*this);
+
+	/* Optimize dead code */
+	symbol->expression->accept(*this);
+	if (VALID_CVALUE(bool, symbol->expression) && GET_CVALUE(bool, symbol->expression) == true)
+		return NULL;
+
 	values_statement_result = values;
 	values = inner_left_join_values(values_statement_result, values_incoming);
 
