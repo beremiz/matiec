@@ -977,6 +977,7 @@ void *constant_folding_c::visit(fixed_point_c *symbol) {
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
+#if DO_CONSTANT_PROPAGATION__
 void *constant_folding_c::visit(symbolic_variable_c *symbol) {
 	std::string varName;
 
@@ -986,11 +987,13 @@ void *constant_folding_c::visit(symbolic_variable_c *symbol) {
 	}
 	return NULL;
 }
+#endif  // DO_CONSTANT_PROPAGATION__
 
 
 /**********************/
 /* B 1.5.3 - Programs */
 /**********************/
+#if DO_CONSTANT_PROPAGATION__
 void *constant_folding_c::visit(program_declaration_c *symbol) {
 	symbol_c *var_name;
 
@@ -1007,6 +1010,7 @@ void *constant_folding_c::visit(program_declaration_c *symbol) {
 	symbol->function_block_body->accept(*this);
 	return NULL;
 }
+#endif  // DO_CONSTANT_PROPAGATION__
 
 
 /****************************************/
@@ -1279,7 +1283,7 @@ void *constant_folding_c::visit(   not_expression_c *symbol) {symbol->  exp->acc
 
 
 
-
+#if DO_CONSTANT_PROPAGATION__
 /*********************************/
 /* B 3.2.1 Assignment Statements */
 /*********************************/
@@ -1399,6 +1403,6 @@ void *constant_folding_c::visit(repeat_statement_c *symbol) {
 	return NULL;
 }
 
-
+#endif  // DO_CONSTANT_PROPAGATION__
 
 
