@@ -43,6 +43,14 @@
 #include "../absyntax_utils/absyntax_utils.hh"
 
 
+
+/* For the moment we disable constant propagation algorithm as it is not yet complete, 
+ * and due to this is currently brocken and producing incorrect results!
+ */
+#define DO_CONSTANT_PROPAGATION__ 0
+
+
+
 class constant_folding_c : public iterator_visitor_c {
     search_varfb_instance_type_c *search_varfb_instance_type;
     int error_count;
@@ -87,12 +95,16 @@ class constant_folding_c : public iterator_visitor_c {
     /*********************/
     /* B 1.4 - Variables */
     /*********************/
+    #if DO_CONSTANT_PROPAGATION__
     void *visit(symbolic_variable_c *symbol);
+    #endif
 
     /**********************/
     /* B 1.5.3 - Programs */
     /**********************/
+    #if DO_CONSTANT_PROPAGATION__
     void *visit(program_declaration_c *symbol);
+    #endif
 
     /****************************************/
     /* B.2 - Language IL (Instruction List) */
@@ -188,6 +200,7 @@ class constant_folding_c : public iterator_visitor_c {
     //void *visit(function_invocation_c *symbol); /* TODO */
 
     
+    #if DO_CONSTANT_PROPAGATION__
     /*********************************/
     /* B 3.2.1 Assignment Statements */
     /*********************************/
@@ -204,5 +217,6 @@ class constant_folding_c : public iterator_visitor_c {
     void *visit(for_statement_c *symbol);
     void *visit(while_statement_c *symbol);
     void *visit(repeat_statement_c *symbol);
+    #endif // DO_CONSTANT_PROPAGATION__
 };
 
