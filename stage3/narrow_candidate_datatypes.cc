@@ -716,6 +716,10 @@ void *narrow_candidate_datatypes_c::visit(located_var_decl_c *symbol) {
 /* B 1.5.1 Functions */
 /*********************/
 void *narrow_candidate_datatypes_c::visit(function_declaration_c *symbol) {
+	/* set the function_declaration_c->datatype to the datatype returned by the function! */
+	symbol->type_name->datatype = search_base_type_c::get_basetype_decl(symbol->type_name);
+	symbol->datatype = symbol->type_name->datatype;
+	
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	symbol->var_declarations_list->accept(*this);
 	if (debug) printf("Narrowing candidate data types list in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
