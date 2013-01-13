@@ -420,6 +420,60 @@ symbol_c *narrow_candidate_datatypes_c::base_type(symbol_c *symbol) {
 /**********************/
 /* B 1.3 - Data types */
 /**********************/
+/***********************************/
+/* B 1.3.1 - Elementary Data Types */
+/***********************************/
+/* NOTE: elementary datatypes are their own basetype ! */
+void *narrow_candidate_datatypes_c::visit(    time_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    bool_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    sint_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    int_type_name_c     *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    dint_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    lint_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    usint_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    uint_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    udint_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    ulint_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    real_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    lreal_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    date_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    tod_type_name_c     *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    dt_type_name_c      *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    byte_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    word_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    dword_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    lword_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    string_type_name_c  *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(    wstring_type_name_c *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+
+void *narrow_candidate_datatypes_c::visit(safetime_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safebool_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safesint_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safeint_type_name_c     *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safedint_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safelint_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safeusint_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safeuint_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safeudint_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safeulint_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safereal_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safelreal_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safedate_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safetod_type_name_c     *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safedt_type_name_c      *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safebyte_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safeword_type_name_c    *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safedword_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safelword_type_name_c   *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safestring_type_name_c  *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+void *narrow_candidate_datatypes_c::visit(safewstring_type_name_c *symbol) {symbol->datatype = search_base_type_c::get_basetype_decl(symbol); return NULL;} 
+
+
+/********************************/
+/* B.1.3.2 - Generic data types */
+/********************************/
+/* empty!! */
+
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/
