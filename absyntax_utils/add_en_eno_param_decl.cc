@@ -91,12 +91,11 @@ void* add_en_eno_param_decl_c::iterate_list(list_c *list) {
 
 
 input_declarations_c *add_en_eno_param_decl_c::build_en_param(void) {
-  boolean_literal_c *boolean_literal = 
-    new boolean_literal_c(new bool_type_name_c(), new boolean_true_c());
-  identifier_c *identifier =
-    new identifier_c("EN");
+  boolean_literal_c  *boolean_literal = new boolean_literal_c(new bool_type_name_c(), new boolean_true_c());
+  identifier_c       *identifier      = new identifier_c("EN");
+  simple_spec_init_c *type_spec_init  = new simple_spec_init_c(new bool_type_name_c(), boolean_literal);
   en_param_declaration_c *en_param_declaration = 
-    new en_param_declaration_c(identifier, new bool_type_name_c(), boolean_literal, new implicit_definition_c());
+    new en_param_declaration_c(identifier, type_spec_init, new implicit_definition_c());
     /* the last paramater is to flag that this
      * declaration was inserted automatically, i.e. an implicit declaration 
      */
@@ -109,8 +108,7 @@ input_declarations_c *add_en_eno_param_decl_c::build_en_param(void) {
 
 
 output_declarations_c *add_en_eno_param_decl_c::build_eno_param(void) {
-  identifier_c *identifier =
-    new identifier_c("ENO");
+  identifier_c *identifier = new identifier_c("ENO");
   eno_param_declaration_c *eno_param_declaration =
     new eno_param_declaration_c(identifier, new bool_type_name_c(), new implicit_definition_c()); 
     /* the last paramater is to flag that this

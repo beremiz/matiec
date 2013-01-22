@@ -3458,9 +3458,9 @@ edge_declaration:
  */
 en_param_declaration:
   en_identifier ':' BOOL ASSIGN boolean_literal
-  {$$ = new en_param_declaration_c($1, new bool_type_name_c(locloc(@$)), $5, new explicit_definition_c(), locloc(@$));}
+  {$$ = new en_param_declaration_c($1, new simple_spec_init_c(new bool_type_name_c(locloc(@3)), $5, locf(@3), locl(@5)), new explicit_definition_c(), locloc(@$));}
 | en_identifier ':' BOOL ASSIGN integer
-  {$$ = new en_param_declaration_c($1, new bool_type_name_c(locloc(@$)), $5, new explicit_definition_c(), locloc(@$));}
+  {$$ = new en_param_declaration_c($1, new simple_spec_init_c(new bool_type_name_c(locloc(@3)), $5, locf(@3), locl(@5)), new explicit_definition_c(), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | en_identifier BOOL ASSIGN boolean_literal
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in EN declaration."); yynerrs++;}

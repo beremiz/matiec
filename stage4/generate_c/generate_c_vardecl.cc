@@ -1258,8 +1258,10 @@ void *visit(edge_declaration_c *symbol) {
   return NULL;
 }
 
+
 void *visit(en_param_declaration_c *symbol) {
   TRACE("en_declaration_c");
+  update_type_init(symbol->type_decl);
   if (wanted_varformat == finterface_vf) {
     finterface_var_count++;
   }  
@@ -1267,7 +1269,7 @@ void *visit(en_param_declaration_c *symbol) {
     if (wanted_varformat == finterface_vf) {
       s4o.print(nv->get());
       s4o.print("\n" + s4o.indent_spaces);
-      symbol->type->accept(*this);
+      this->current_var_type_symbol->accept(*this);
       s4o.print(" ");
       symbol->name->accept(*this);
     }
@@ -1279,11 +1281,11 @@ void *visit(en_param_declaration_c *symbol) {
       if (wanted_varformat == local_vf) {
         s4o.print(DECLARE_VAR);
         s4o.print("(");
-        symbol->type->accept(*this);
+        this->current_var_type_symbol->accept(*this);
         s4o.print(",");
       }
       else if (wanted_varformat == localinit_vf) {
-        symbol->type->accept(*this);
+        this->current_var_type_symbol->accept(*this);
         s4o.print(" ");
       }
       print_variable_prefix();
@@ -1292,7 +1294,7 @@ void *visit(en_param_declaration_c *symbol) {
         s4o.print(")\n");
       else {
         s4o.print(" = ");
-        symbol->value->accept(*this);
+        this->current_var_init_symbol->accept(*this);
         s4o.print(";\n");
       }
     }
@@ -1306,11 +1308,12 @@ void *visit(en_param_declaration_c *symbol) {
       // s4o.print("EN = __BOOL_LITERAL(TRUE);");
       symbol->name->accept(*this);
       s4o.print(",");
-      symbol->value->accept(*this);
+      this->current_var_init_symbol->accept(*this);
       print_retain();
       s4o.print(")");
     }
   }
+  void_type_init();
   return NULL;
 }
 

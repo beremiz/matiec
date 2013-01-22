@@ -515,7 +515,8 @@ SYM_LIST(input_declaration_list_c)
  */
 SYM_REF0(implicit_definition_c)
 SYM_REF0(explicit_definition_c)
-SYM_REF4(en_param_declaration_c, name, type, value, method)
+/* type_decl is a simple_spec_init_c */
+SYM_REF3(en_param_declaration_c, name, type_decl, method)
 SYM_REF3(eno_param_declaration_c, name, type, method)
 
 /* edge -> The F_EDGE or R_EDGE directive */

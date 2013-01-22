@@ -722,9 +722,7 @@ void *visit(en_param_declaration_c *symbol) {
   if (typeid(*(symbol->method)) == typeid(explicit_definition_c)) {
     symbol->name->accept(*this);
     s4o.print(" : ");
-    symbol->type->accept(*this);
-    s4o.print(" := ");
-    symbol->value->accept(*this);
+    symbol->type_decl->accept(*this);
   }
   return NULL;
 }
