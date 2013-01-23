@@ -477,6 +477,36 @@ void *narrow_candidate_datatypes_c::visit(safewstring_type_name_c *symbol) {symb
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/
+void *narrow_candidate_datatypes_c::narrow_spec_init(symbol_c *symbol, symbol_c *type_decl, symbol_c *init_value) {
+	// If we are handling an anonymous datatype (i.e. a datatype implicitly declared inside a VAR ... END_VAR declaration)
+	// then the symbol->datatype has not yet been set by the previous visit(type_decl) method, because it does not exist!
+	// So we set the datatype ourselves!
+	if ((NULL == symbol->datatype) && (symbol->candidate_datatypes.size() == 1))
+		symbol->datatype = symbol->candidate_datatypes[0];
+  
+	set_datatype(symbol->datatype, type_decl);
+	type_decl->accept(*this);
+
+	if (NULL != init_value) {
+		set_datatype(symbol->datatype, init_value);
+		init_value->accept(*this);
+	}
+	return NULL;
+}
+
+
+void *narrow_candidate_datatypes_c::narrow_type_decl(symbol_c *symbol, symbol_c *type_name, symbol_c *spec_init) {
+	if (symbol->candidate_datatypes.size() == 1) {
+		symbol->datatype = symbol->candidate_datatypes[0];
+  
+		set_datatype(symbol->datatype, type_name);
+		set_datatype(symbol->datatype, spec_init);
+		spec_init->accept(*this);
+	}
+	return NULL;
+}
+
+
 /*  TYPE type_declaration_list END_TYPE */
 // SYM_REF1(data_type_declaration_c, type_declaration_list)
 /* NOTE: Not required. already handled by iterator_visitor_c base class */
@@ -487,41 +517,37 @@ void *narrow_candidate_datatypes_c::visit(safewstring_type_name_c *symbol) {symb
 
 /*  simple_type_name ':' simple_spec_init */
 // SYM_REF2(simple_type_declaration_c, simple_type_name, simple_spec_init)
-/* NOTE: Not required. already handled by iterator_visitor_c base class */
+void *narrow_candidate_datatypes_c::visit(simple_type_declaration_c *symbol) {return narrow_type_decl(symbol, symbol->simple_type_name, symbol->simple_spec_init);}
 
 /* simple_specification ASSIGN constant */
 // SYM_REF2(simple_spec_init_c, simple_specification, constant)
-void *narrow_candidate_datatypes_c::visit(simple_spec_init_c *symbol) {
-	if (symbol->candidate_datatypes.size() == 1)
-	  symbol->datatype = symbol->candidate_datatypes[0];
-	  
-	if (symbol->simple_specification->candidate_datatypes.size() == 1)
-	  symbol->simple_specification->datatype = symbol->simple_specification->candidate_datatypes[0];
-
-	if (NULL != symbol->constant) {
-		set_datatype(symbol->datatype, symbol->constant);
-		symbol->constant->accept(*this);
-	}
-	return NULL;
-}
-
+void *narrow_candidate_datatypes_c::visit(simple_spec_init_c *symbol) {return narrow_spec_init(symbol, symbol->simple_specification, symbol->constant);}
 
 /*  subrange_type_name ':' subrange_spec_init */
 // SYM_REF2(subrange_type_declaration_c, subrange_type_name, subrange_spec_init)
+void *narrow_candidate_datatypes_c::visit(subrange_type_declaration_c *symbol) {return narrow_type_decl(symbol, symbol->subrange_type_name, symbol->subrange_spec_init);}
 
 /* subrange_specification ASSIGN signed_integer */
 // SYM_REF2(subrange_spec_init_c, subrange_specification, signed_integer)
+void *narrow_candidate_datatypes_c::visit(subrange_spec_init_c *symbol) {return narrow_spec_init(symbol, symbol->subrange_specification, symbol->signed_integer);}
 
 /*  integer_type_name '(' subrange')' */
 // SYM_REF2(subrange_specification_c, integer_type_name, subrange)
+void *narrow_candidate_datatypes_c::visit(subrange_specification_c *symbol) {
+	set_datatype(symbol->datatype, symbol->integer_type_name);
+	symbol->integer_type_name->accept(*this);
+	set_datatype(symbol->datatype, symbol->integer_type_name);
+	symbol->integer_type_name->accept(*this);
+	return NULL;
+}
 
 /*  signed_integer DOTDOT signed_integer */
 /* dimension will be filled in during stage 3 (array_range_check_c) with the number of elements in this subrange */
 // SYM_REF2(subrange_c, lower_limit, upper_limit, unsigned long long int dimension;)
 void *narrow_candidate_datatypes_c::visit(subrange_c *symbol) {
-	symbol->lower_limit->datatype = symbol->datatype;
+	set_datatype(symbol->datatype, symbol->lower_limit);
 	symbol->lower_limit->accept(*this);
-	symbol->upper_limit->datatype = symbol->datatype;
+	set_datatype(symbol->datatype, symbol->upper_limit);
 	symbol->upper_limit->accept(*this);
 	return NULL;
 }
@@ -529,49 +555,20 @@ void *narrow_candidate_datatypes_c::visit(subrange_c *symbol) {
 
 /*  enumerated_type_name ':' enumerated_spec_init */
 // SYM_REF2(enumerated_type_declaration_c, enumerated_type_name, enumerated_spec_init)
-void *narrow_candidate_datatypes_c::visit(enumerated_type_declaration_c *symbol) {
-  if (symbol->candidate_datatypes.size() != 1) ERROR;
-  
-  symbol->datatype = symbol->candidate_datatypes[0];
-  set_datatype(symbol->datatype, symbol->enumerated_type_name);
-  set_datatype(symbol->datatype, symbol->enumerated_spec_init);
-  
-  symbol->enumerated_spec_init->accept(*this);
-  return NULL;
-}
+void *narrow_candidate_datatypes_c::visit(enumerated_type_declaration_c *symbol) {return narrow_type_decl(symbol, symbol->enumerated_type_name, symbol->enumerated_spec_init);}
 
 
 /* enumerated_specification ASSIGN enumerated_value */
 // SYM_REF2(enumerated_spec_init_c, enumerated_specification, enumerated_value)
-void *narrow_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) {
-  /* If we are handling an anonymous datatype (i.e. a datatype implicitly declared inside a VAR ... END_VAR declaration)
-   * then the symbol->datatype has not yet been set by the previous visit(enumerated_spec_init_c) method!
-   */
-  if (NULL == symbol->datatype) {
-    if (symbol->candidate_datatypes.size() != 1) ERROR;
-    symbol->datatype = symbol->candidate_datatypes[0];
-  }
-  set_datatype(symbol->datatype, symbol->enumerated_specification);
-  if (NULL != symbol->enumerated_value) 
-    set_datatype(symbol->datatype, symbol->enumerated_value);
-
-  symbol->enumerated_specification->accept(*this); /* calls enumerated_value_list_c (or identifier_c, which we ignore!) visit method */
-  return NULL;
-}
+void *narrow_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) {return narrow_spec_init(symbol, symbol->enumerated_specification, symbol->enumerated_value);}
 
 /* helper symbol for enumerated_specification->enumerated_spec_init */
 /* enumerated_value_list ',' enumerated_value */
 // SYM_LIST(enumerated_value_list_c)
 void *narrow_candidate_datatypes_c::visit(enumerated_value_list_c *symbol) {
-  if (NULL == symbol->datatype) ERROR;
-  
-  for(int i = 0; i < symbol->n; i++) {
-    /* the enumerated_value_c objects to which this list points to has both the datatype and the candidate_datatype_list filled in, so we 
-     * call set_datatype() instead of setting the datatype directly!
-     */
-    set_datatype(symbol->datatype, symbol->elements[i]);
-    if (NULL == symbol->elements[i]->datatype) ERROR;
-  }
+//if (NULL == symbol->datatype) ERROR;  // Comented out-> Reserve this check for the print_datatypes_error_c ???  
+  for(int i = 0; i < symbol->n; i++) set_datatype(symbol->datatype, symbol->elements[i]);
+//for(int i = 0; i < symbol->n; i++) if (NULL == symbol->elements[i]->datatype) ERROR; // Comented out-> Reserve this check for the print_datatypes_error_c ???  
   return NULL;  
 }
 
@@ -583,49 +580,61 @@ void *narrow_candidate_datatypes_c::visit(enumerated_value_list_c *symbol) {
 
 /*  identifier ':' array_spec_init */
 // SYM_REF2(array_type_declaration_c, identifier, array_spec_init)
+void *narrow_candidate_datatypes_c::visit(array_type_declaration_c *symbol) {return narrow_type_decl(symbol, symbol->identifier, symbol->array_spec_init);}
 
 /* array_specification [ASSIGN array_initialization} */
 /* array_initialization may be NULL ! */
 // SYM_REF2(array_spec_init_c, array_specification, array_initialization)
+void *narrow_candidate_datatypes_c::visit(array_spec_init_c *symbol) {return narrow_spec_init(symbol, symbol->array_specification, symbol->array_initialization);}
 
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 // SYM_REF2(array_specification_c, array_subrange_list, non_generic_type_name)
+// Not needed!!
 
 /* helper symbol for array_specification */
 /* array_subrange_list ',' subrange */
 // SYM_LIST(array_subrange_list_c)
+// Not needed ??
 
 /* array_initialization:  '[' array_initial_elements_list ']' */
 /* helper symbol for array_initialization */
 /* array_initial_elements_list ',' array_initial_elements */
 // SYM_LIST(array_initial_elements_list_c)
+// Not needed ???
 
 /* integer '(' [array_initial_element] ')' */
 /* array_initial_element may be NULL ! */
 // SYM_REF2(array_initial_elements_c, integer, array_initial_element)
+// Not needed ???
 
 /*  structure_type_name ':' structure_specification */
 // SYM_REF2(structure_type_declaration_c, structure_type_name, structure_specification)
+void *narrow_candidate_datatypes_c::visit(structure_type_declaration_c *symbol) {return narrow_type_decl(symbol, symbol->structure_type_name, symbol->structure_specification);}
 
 /* structure_type_name ASSIGN structure_initialization */
 /* structure_initialization may be NULL ! */
 // SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
+void *narrow_candidate_datatypes_c::visit(initialized_structure_c *symbol) {return narrow_spec_init(symbol, symbol->structure_type_name, symbol->structure_initialization);}
 
 /* helper symbol for structure_declaration */
 /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
 /* structure_element_declaration_list structure_element_declaration ';' */
 // SYM_LIST(structure_element_declaration_list_c)
+// Not needed ???
 
 /*  structure_element_name ':' *_spec_init */
 // SYM_REF2(structure_element_declaration_c, structure_element_name, spec_init)
+// Not needed ???
 
 /* helper symbol for structure_initialization */
 /* structure_initialization: '(' structure_element_initialization_list ')' */
 /* structure_element_initialization_list ',' structure_element_initialization */
 // SYM_LIST(structure_element_initialization_list_c)
+// Not needed ???
 
 /*  structure_element_name ASSIGN value */
 // SYM_REF2(structure_element_initialization_c, structure_element_name, value)
+// Not needed ???
 
 /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
 // SYM_REF4(string_type_declaration_c, string_type_name, elementary_string_type_name, string_type_declaration_size, string_type_declaration_init/* may be == NULL! */) 
