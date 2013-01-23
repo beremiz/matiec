@@ -218,7 +218,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     void *visit(var1_list_c *symbol);
     void *visit(location_c *symbol);
     void *visit(located_var_decl_c *symbol);
-
+    void *visit(fb_name_decl_c *symbol);
 
     /**************************************/
     /* B 1.5 - Program organization units */

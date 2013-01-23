@@ -1255,6 +1255,13 @@ void *fill_candidate_datatypes_c::visit(located_var_decl_c *symbol) {
 
 
 
+/* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
+/* structure_initialization -> may be NULL ! */
+// SYM_REF3(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization)
+// NOTE: Although the fb_name_decl_c is in section ( B 1.4.3 - Declaration & Initialisation), it is also acting
+//       as a datatype declaration, so we need to handle it here!
+void *fill_candidate_datatypes_c::visit(fb_name_decl_c *symbol) {return fill_spec_init(symbol, symbol->function_block_type_name, symbol->structure_initialization);}
+
 
 
 /************************************/
