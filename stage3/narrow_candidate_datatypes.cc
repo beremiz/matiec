@@ -748,6 +748,10 @@ void *narrow_candidate_datatypes_c::visit(function_block_declaration_c *symbol) 
 	symbol->fblock_body->accept(*this);
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
+	
+	// A FB declaration can also be used as a Datatype! We now do the narrow algorithm considering it as such!
+	if (symbol->candidate_datatypes.size() == 1)
+		symbol->datatype = symbol->candidate_datatypes[0];
 	return NULL;
 }
 

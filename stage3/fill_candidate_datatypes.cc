@@ -1293,6 +1293,12 @@ void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 	search_varfb_instance_type = NULL;
 
 	local_enumerated_value_symtable.reset();
+	
+	/* The FB declaration itself may be used as a dataype! We now do the fill algorithm considering 
+	 * function_block_declaration_c a data type declaration...
+	 */
+	// The next line is essentially equivalent to doing-->  symbol->candidate_datatypes.push_back(symbol);
+	add_datatype_to_candidate_list(symbol, base_type(symbol));
 	return NULL;
 }
 
