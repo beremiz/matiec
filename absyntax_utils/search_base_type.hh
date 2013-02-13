@@ -234,12 +234,9 @@ class search_base_type_c: public null_visitor_c {
   */
     void *visit(string_type_declaration_c *symbol);
 
-  /******************************************/
-  /* B 1.4.3 - Declaration & Initialisation */
-  /******************************************/
-  /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
+  /* function_block_type_name ASSIGN structure_initialization */
   /* structure_initialization -> may be NULL ! */
-    void *visit(fb_name_decl_c *symbol);
+    void *visit(fb_spec_init_c *symbol);
     
   /*****************************/
   /* B 1.5.2 - Function Blocks */

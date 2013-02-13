@@ -340,7 +340,11 @@ void *search_var_instance_decl_c::visit(var1_list_c *symbol) {
 /* name_list ':' function_block_type_name ASSIGN structure_initialization */
 /* structure_initialization -> may be NULL ! */
 void *search_var_instance_decl_c::visit(fb_name_decl_c *symbol) {
-  current_type_decl = symbol->function_block_type_name;
+  // TODO: The following line is wrong! It should be
+  // current_type_decl = symbol->fb_spec_init;
+  //  However, this change will require a check of all callers, to see if they would handle this correctly.
+  //  For now, just keep what we have had historically, and seems to be working.
+  current_type_decl = spec_init_sperator_c::get_spec(symbol->fb_spec_init);
   return symbol->fb_name_list->accept(*this);
 }
 

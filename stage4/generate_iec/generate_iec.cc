@@ -633,7 +633,16 @@ void *visit(string_type_declaration_c *symbol) {
   return NULL;
 }
 
-
+/*  function_block_type_name ASSIGN structure_initialization */
+/* structure_initialization -> may be NULL ! */
+void *visit(fb_spec_init_c *symbol) {
+  symbol->function_block_type_name->accept(*this);
+  if (symbol->structure_initialization != NULL) {
+    s4o.print(" := ");
+    symbol->structure_initialization->accept(*this);
+  }
+  return NULL;
+}
 
 
 
@@ -812,11 +821,7 @@ void *visit(structured_var_init_decl_c *symbol) {
 void *visit(fb_name_decl_c *symbol) {
   symbol->fb_name_list->accept(*this);
   s4o.print(" : ");
-  symbol->function_block_type_name->accept(*this);
-  if (symbol->structure_initialization != NULL) {
-    s4o.print(" := ");
-    symbol->structure_initialization->accept(*this);
-  }
+  symbol->fb_spec_init->accept(*this);
   return NULL;
 }
 

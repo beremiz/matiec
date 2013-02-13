@@ -373,17 +373,13 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 void *search_base_type_c::visit(string_type_declaration_c *symbol)	                {return (void *)symbol;}
 
 
-/******************************************/
-/* B 1.4.3 - Declaration & Initialisation */
-/******************************************/
-/* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
+/*  function_block_type_name ASSIGN structure_initialization */
 /* structure_initialization -> may be NULL ! */
-// SYM_REF3(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization)
-// NOTE: Although the fb_name_decl_c is in section ( B 1.4.3 - Declaration & Initialisation), it is also acting
-//       as a datatype declaration, so we need to handle it here!
-void *search_base_type_c::visit(fb_name_decl_c *symbol)	{
+// SYM_REF2(fb_spec_init_c, function_block_type_name, structure_initialization)
+void *search_base_type_c::visit(fb_spec_init_c *symbol)	{
   return symbol->function_block_type_name->accept(*this);
 }
+
 
 
 /*****************************/

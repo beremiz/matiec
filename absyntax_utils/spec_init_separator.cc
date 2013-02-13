@@ -158,15 +158,11 @@ void *spec_init_sperator_c::visit(initialized_structure_c *symbol) {
   return NULL;
 }
 
-
-/******************************************/
-/* B 1.4.3 - Declaration & Initialisation */
-/******************************************/
-
-/* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
+/*  function_block_type_name ASSIGN structure_initialization */
 /* structure_initialization -> may be NULL ! */
-void *spec_init_sperator_c::visit(fb_name_decl_c *symbol) {
-  TRACE("spec_init_sperator_c::fb_name_decl_c");
+//SYM_REF2(fb_spec_init_c, function_block_type_name, structure_initialization)
+void *spec_init_sperator_c::visit(fb_spec_init_c *symbol) {
+  TRACE("spec_init_sperator_c::fb_spec_init_c");
   switch (search_what) {
     case search_spec: return symbol->function_block_type_name;
     case search_init: return symbol->structure_initialization;
@@ -175,6 +171,9 @@ void *spec_init_sperator_c::visit(fb_name_decl_c *symbol) {
   return NULL;
 }
 
+/******************************************/
+/* B 1.4.3 - Declaration & Initialisation */
+/******************************************/
 
 /* STRING '[' integer ']' 
  * STRING ASSIGN single_byte_character_string

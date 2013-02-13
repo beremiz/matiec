@@ -467,8 +467,8 @@ void *function_param_iterator_c::visit(structured_var_init_decl_c *symbol) {
 // SYM_REF3(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization)
 void *function_param_iterator_c::visit(fb_name_decl_c *symbol) {
   TRACE("structured_var_init_decl_c");
-  current_param_default_value = symbol->structure_initialization ; 
-  current_param_type          = symbol->function_block_type_name ;
+  current_param_default_value = spec_init_sperator_c::get_init(symbol->fb_spec_init); 
+  current_param_type          = spec_init_sperator_c::get_spec(symbol->fb_spec_init);
 
   return symbol->fb_name_list->accept(*this);
 }

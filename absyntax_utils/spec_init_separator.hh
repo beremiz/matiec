@@ -93,14 +93,15 @@ class spec_init_sperator_c: public null_visitor_c {
   //SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
   void *visit(initialized_structure_c *symbol);
   
-  
+  /*  function_block_type_name ASSIGN structure_initialization */
+  /* structure_initialization -> may be NULL ! */
+  //SYM_REF2(fb_spec_init_c, function_block_type_name, structure_initialization)
+  void *visit(fb_spec_init_c *symbol);
+
+
   /******************************************/
   /* B 1.4.3 - Declaration & Initialisation */
   /******************************************/
-  
-  /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
-  /* structure_initialization -> may be NULL ! */
-  void *visit(fb_name_decl_c *symbol);
   
   /* STRING '[' integer ']' 
    * STRING ASSIGN single_byte_character_string

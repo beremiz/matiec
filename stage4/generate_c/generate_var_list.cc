@@ -603,7 +603,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       /* Start off by setting the current_var_type_symbol and
        * current_var_init_symbol private variables...
        */
-      update_var_type_symbol(symbol);
+      update_var_type_symbol(symbol->fb_spec_init);
     
       /* now to produce the c equivalent... */
       declare_variables(symbol->fb_name_list);

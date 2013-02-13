@@ -640,6 +640,10 @@ void *narrow_candidate_datatypes_c::visit(initialized_structure_c *symbol) {retu
 // SYM_REF4(string_type_declaration_c, string_type_name, elementary_string_type_name, string_type_declaration_size, string_type_declaration_init/* may be == NULL! */) 
 
 
+/* structure_type_name ASSIGN structure_initialization */
+/* structure_initialization may be NULL ! */
+// SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
+void *narrow_candidate_datatypes_c::visit(fb_spec_init_c *symbol) {return narrow_spec_init(symbol, symbol->function_block_type_name, symbol->structure_initialization);}
 
 
 /*********************/
@@ -717,13 +721,6 @@ void *narrow_candidate_datatypes_c::visit(located_var_decl_c *symbol) {
   return NULL;
 }
 
-
-/* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
-/* structure_initialization -> may be NULL ! */
-// SYM_REF3(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization)
-// NOTE: Although the fb_name_decl_c is in section ( B 1.4.3 - Declaration & Initialisation), it is also acting
-//       as a datatype declaration, so we need to handle it here!
-void *narrow_candidate_datatypes_c::visit(fb_name_decl_c *symbol) {return narrow_spec_init(symbol, symbol->function_block_type_name, symbol->structure_initialization);}
 
 
 /************************************/

@@ -299,7 +299,7 @@ class print_function_parameter_data_types_c: public generate_c_base_c {
     //void *visit(var_declaration_list_c *symbol) {iterate through list}
 
     void *visit(fb_name_decl_c *symbol) {
-      print_list(symbol->fb_name_list, symbol->function_block_type_name); 
+      print_list(symbol->fb_name_list, spec_init_sperator_c::get_spec(symbol->fb_spec_init)); 
       return NULL;
     }
 

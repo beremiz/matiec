@@ -1483,7 +1483,7 @@ void *visit(fb_name_decl_c *symbol) {
   /* Start off by setting the current_var_type_symbol and
    * current_var_init_symbol private variables...
    */
-  update_type_init(symbol);
+  update_type_init(symbol->fb_spec_init);
 
   /* now to produce the c equivalent... */
   symbol->fb_name_list->accept(*this);

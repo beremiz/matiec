@@ -3598,10 +3598,10 @@ structured_var_init_decl:
 fb_name_decl:
 /*  fb_name_list ':' function_block_type_name */
   fb_name_list_with_colon function_block_type_name
-	{$$ = new fb_name_decl_c($1, $2, NULL, locloc(@$));}
+	{$$ = new fb_name_decl_c($1, new fb_spec_init_c($2, NULL,locloc(@2)), locloc(@$));}
 /*| fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
 | fb_name_list_with_colon function_block_type_name ASSIGN structure_initialization
-	{$$ = new fb_name_decl_c($1, $2, $4, locloc(@$));}
+	{$$ = new fb_name_decl_c($1, new fb_spec_init_c($2, $4, locf(@2), locl(@4)), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | fb_name_list_with_colon ASSIGN structure_initialization
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "no function block type name defined in function block declaration with initialization."); yynerrs++;}
@@ -4042,7 +4042,7 @@ external_declaration:
 	 variable_name_symtable.insert($1, prev_declared_variable_name_token);
 	}
 | global_var_name ':' function_block_type_name
-	{$$ = new external_declaration_c($1, $3, locloc(@$));
+	{$$ = new external_declaration_c($1, new fb_spec_init_c($3, NULL, locloc(@3)), locloc(@$));
 	 variable_name_symtable.insert($1, prev_declared_fb_name_token);
 	}
 /* ERROR_CHECK_BEGIN */
@@ -4136,7 +4136,7 @@ global_var_decl:
   global_var_spec ':' located_var_spec_init
 	{$$ = new global_var_decl_c($1, $3, locloc(@$));}
 | global_var_spec ':' function_block_type_name
-	{$$ = new global_var_decl_c($1, $3, locloc(@$));}
+	{$$ = new global_var_decl_c($1, new fb_spec_init_c($3, NULL, locloc(@3)), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | global_var_list located_var_spec_init
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between global variable list and type specification."); yynerrs++;}
