@@ -5692,11 +5692,11 @@ resource_declaration_list:
 
 
 resource_declaration:
-  RESOURCE {variable_name_symtable.push();direct_variable_symtable.push();} resource_name ON resource_type_name
+  RESOURCE {variable_name_symtable.push();direct_variable_symtable.push();} resource_name {variable_name_symtable.insert($3, prev_declared_resource_name_token);} ON resource_type_name
    optional_global_var_declarations
    single_resource_declaration
   END_RESOURCE
-	{$$ = new resource_declaration_c($3, $5, $6, $7, locloc(@$));
+	{$$ = new resource_declaration_c($3, $6, $7, $8, locloc(@$));
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
 	 variable_name_symtable.insert($3, prev_declared_resource_name_token);
@@ -8246,7 +8246,6 @@ int stage2__(const char *filename,
              symbol_c **tree_root_ref,
              bool full_token_loc_        /* error messages specify full token location */
             ) {
-
   char *libfilename = NULL;
 
   if (includedir != NULL) {
@@ -8295,7 +8294,6 @@ int stage2__(const char *filename,
     if (library_element_symtable.find_value(standard_function_block_names[i]) ==
         library_element_symtable.end_value())
       library_element_symtable.insert(standard_function_block_names[i], standard_function_block_name_token);
-
 
   /* now parse the input file... */
   #if YYDEBUG
