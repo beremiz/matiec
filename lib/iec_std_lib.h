@@ -224,7 +224,8 @@ static inline IEC_TIMESPEC __tod_to_timespec(double seconds, double minutes, dou
 }
 
 #define EPOCH_YEAR 1970
-#define SECONDS_PER_HOUR (60 * 60)
+#define SECONDS_PER_MINUTE 60
+#define SECONDS_PER_HOUR (60 * SECONDS_PER_MINUTE)
 #define SECONDS_PER_DAY (24 * SECONDS_PER_HOUR)
 #define __isleap(year) \
   ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
@@ -545,15 +546,15 @@ static inline STRING __time_to_string(TIME IN){
     div_t days;
     /*t#5d14h12m18s3.5ms*/
     res = __INIT_STRING;
-    days = div(IN.tv_sec ,86400);
+    days = div(IN.tv_sec, SECONDS_PER_DAY);
     if(!days.rem && IN.tv_nsec == 0){
         res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd", days.quot);
     }else{
-        div_t hours = div(days.rem, 3600);
+        div_t hours = div(days.rem, SECONDS_PER_HOUR);
         if(!hours.rem && IN.tv_nsec == 0){
             res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh", days.quot, hours.quot);
         }else{
-            div_t minuts = div(hours.rem, 60);
+            div_t minuts = div(hours.rem, SECONDS_PER_MINUTE);
             if(!minuts.rem && IN.tv_nsec == 0){
                 res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm", days.quot, hours.quot, minuts.quot);
             }else{
@@ -637,8 +638,16 @@ static inline STRING __dt_to_string(DT IN){
     /*  [ANY_DATE | TIME] _TO_ [ANY_DATE | TIME]  */
     /**********************************************/
 
-static inline TOD __date_and_time_to_time_of_day(DT IN) {return (TOD){IN.tv_sec % (24*60*60), IN.tv_nsec};}
-static inline DATE __date_and_time_to_date(DT IN){return (DATE){IN.tv_sec - (IN.tv_sec % (24*60*60)), 0};}
+static inline TOD __date_and_time_to_time_of_day(DT IN) {
+	return (TOD){
+		IN.tv_sec % SECONDS_PER_DAY + (IN.tv_sec < 0 ? SECONDS_PER_DAY : 0),
+		IN.tv_nsec};
+}
+static inline DATE __date_and_time_to_date(DT IN){
+	return (DATE){
+		IN.tv_sec - IN.tv_sec % SECONDS_PER_DAY - (IN.tv_sec < 0 ? SECONDS_PER_DAY : 0),
+		0};
+}
 
     /*****************/
     /*  FROM/TO BCD  */
