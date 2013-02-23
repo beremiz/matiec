@@ -652,29 +652,33 @@ static inline DATE __date_and_time_to_date(DT IN){
     /*****************/
     /*  FROM/TO BCD  */
     /*****************/
-#define __bcd_digit(fac)
-static inline ULINT __bcd_to_uint(LWORD IN){
-    ULINT res;
-    ULINT i;
 
-    res = IN & 0xf;
-    for(i = 10ULL; i <= 1000000000000000ULL; i *= 10){
-        if(!(IN >>= 4))
-            break;
-        res += (IN & 0xf) * i;
+static inline BOOL __test_bcd(LWORD IN) {
+	while (IN) {
+		if ((IN & 0xf) > 9) return 1;
+		IN >>= 4;
+	}
+	return 0;
+}
+
+static inline ULINT __bcd_to_uint(LWORD IN){
+    ULINT res = IN & 0xf;
+    ULINT factor = 10ULL;
+
+    while (IN >>= 4) {
+        res += (IN & 0xf) * factor;
+        factor *= 10;
     }
     return res;
 }
 
 static inline LWORD __uint_to_bcd(ULINT IN){
-    LWORD res;
-    USINT i;
+    LWORD res = IN % 10;
+    USINT shift = 4;
 
-    res = IN % 10;
-    for(i = 4; i<=60; i += 4){
-        if(!(IN /= 10))
-            break;
-        res |= (IN % 10) << i;
+    while (IN /= 10) {
+        res |= (IN % 10) << shift;
+        shift += 4;
     }
     return res;
 }
@@ -982,7 +986,7 @@ __ANY_UINT(__to_anynbit_)
 /********   BCD_TO_   ************/
 #define __iec_(to_TYPENAME,from_TYPENAME) \
 static inline to_TYPENAME from_TYPENAME##_BCD_TO_##to_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
-  TEST_EN(to_TYPENAME)\
+  TEST_EN_COND(to_TYPENAME, __test_bcd(op))\
   return (to_TYPENAME)__bcd_to_uint(op);\
 }\
 static inline to_TYPENAME BCD_TO_##to_TYPENAME##__##to_TYPENAME##__##from_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
