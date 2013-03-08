@@ -228,7 +228,8 @@ static inline IEC_TIMESPEC __tod_to_timespec(double seconds, double minutes, dou
 }
 
 #define EPOCH_YEAR 1970
-#define SECONDS_PER_HOUR (60 * 60)
+#define SECONDS_PER_MINUTE 60
+#define SECONDS_PER_HOUR (60 * SECONDS_PER_MINUTE)
 #define SECONDS_PER_DAY (24 * SECONDS_PER_HOUR)
 #define __isleap(year) \
   ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
@@ -549,15 +550,15 @@ static inline STRING __time_to_string(TIME IN){
     div_t days;
     /*t#5d14h12m18s3.5ms*/
     res = __INIT_STRING;
-    days = div(IN.tv_sec ,86400);
+    days = div(IN.tv_sec, SECONDS_PER_DAY);
     if(!days.rem && IN.tv_nsec == 0){
         res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd", days.quot);
     }else{
-        div_t hours = div(days.rem, 3600);
+        div_t hours = div(days.rem, SECONDS_PER_HOUR);
         if(!hours.rem && IN.tv_nsec == 0){
             res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh", days.quot, hours.quot);
         }else{
-            div_t minuts = div(hours.rem, 60);
+            div_t minuts = div(hours.rem, SECONDS_PER_MINUTE);
             if(!minuts.rem && IN.tv_nsec == 0){
                 res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm", days.quot, hours.quot, minuts.quot);
             }else{
@@ -641,35 +642,47 @@ static inline STRING __dt_to_string(DT IN){
     /*  [ANY_DATE | TIME] _TO_ [ANY_DATE | TIME]  */
     /**********************************************/
 
-static inline TOD __date_and_time_to_time_of_day(DT IN) {return (TOD){IN.tv_sec % (24*60*60), IN.tv_nsec};}
-static inline DATE __date_and_time_to_date(DT IN){return (DATE){IN.tv_sec - (IN.tv_sec % (24*60*60)), 0};}
+static inline TOD __date_and_time_to_time_of_day(DT IN) {
+	return (TOD){
+		IN.tv_sec % SECONDS_PER_DAY + (IN.tv_sec < 0 ? SECONDS_PER_DAY : 0),
+		IN.tv_nsec};
+}
+static inline DATE __date_and_time_to_date(DT IN){
+	return (DATE){
+		IN.tv_sec - IN.tv_sec % SECONDS_PER_DAY - (IN.tv_sec < 0 ? SECONDS_PER_DAY : 0),
+		0};
+}
 
     /*****************/
     /*  FROM/TO BCD  */
     /*****************/
-#define __bcd_digit(fac)
-static inline ULINT __bcd_to_uint(LWORD IN){
-    ULINT res;
-    ULINT i;
 
-    res = IN & 0xf;
-    for(i = 10ULL; i <= 1000000000000000ULL; i *= 10){
-        if(!(IN >>= 4))
-            break;
-        res += (IN & 0xf) * i;
+static inline BOOL __test_bcd(LWORD IN) {
+	while (IN) {
+		if ((IN & 0xf) > 9) return 1;
+		IN >>= 4;
+	}
+	return 0;
+}
+
+static inline ULINT __bcd_to_uint(LWORD IN){
+    ULINT res = IN & 0xf;
+    ULINT factor = 10ULL;
+
+    while (IN >>= 4) {
+        res += (IN & 0xf) * factor;
+        factor *= 10;
     }
     return res;
 }
 
 static inline LWORD __uint_to_bcd(ULINT IN){
-    LWORD res;
-    USINT i;
+    LWORD res = IN % 10;
+    USINT shift = 4;
 
-    res = IN % 10;
-    for(i = 4; i<=60; i += 4){
-        if(!(IN /= 10))
-            break;
-        res |= (IN % 10) << i;
+    while (IN /= 10) {
+        res |= (IN % 10) << shift;
+        shift += 4;
     }
     return res;
 }
@@ -977,7 +990,7 @@ __ANY_UINT(__to_anynbit_)
 /********   BCD_TO_   ************/
 #define __iec_(to_TYPENAME,from_TYPENAME) \
 static inline to_TYPENAME from_TYPENAME##_BCD_TO_##to_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
-  TEST_EN(to_TYPENAME)\
+  TEST_EN_COND(to_TYPENAME, __test_bcd(op))\
   return (to_TYPENAME)__bcd_to_uint(op);\
 }\
 static inline to_TYPENAME BCD_TO_##to_TYPENAME##__##to_TYPENAME##__##from_TYPENAME(EN_ENO_PARAMS, from_TYPENAME op){\
