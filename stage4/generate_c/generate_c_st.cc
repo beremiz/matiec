@@ -247,6 +247,12 @@ void *visit(array_specification_c *symbol) {
   return NULL;
 }
 
+/*  enumerated_type_name ':' enumerated_spec_init */
+void *visit(enumerated_type_declaration_c *symbol) {
+  symbol->enumerated_type_name->accept(*this);
+  return NULL;
+}
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
