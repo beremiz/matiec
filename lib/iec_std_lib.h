@@ -604,7 +604,7 @@ static inline STRING __tod_to_string(TOD IN){
                  broken_down_time.tm_min,
                  broken_down_time.tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%09.6g",
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%09.6f",
                  broken_down_time.tm_hour,
                  broken_down_time.tm_min,
                  (LREAL)broken_down_time.tm_sec + (LREAL)IN.tv_nsec / 1e9);
@@ -626,7 +626,7 @@ static inline STRING __dt_to_string(DT IN){
                  broken_down_time.tm_min,
                  broken_down_time.tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%09.6g",
+        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%09.6f",
                  broken_down_time.tm_year,
                  broken_down_time.tm_mon,
                  broken_down_time.tm_day,
