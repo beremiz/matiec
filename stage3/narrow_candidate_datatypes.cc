@@ -755,6 +755,24 @@ void *narrow_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 	return NULL;
 }
 
+/********************************************/
+/* B 1.6 Sequential function chart elements */
+/********************************************/
+
+void *narrow_candidate_datatypes_c::visit(transition_condition_c *symbol) {
+	if (symbol->candidate_datatypes.size() != 1)
+		return NULL;
+	symbol->datatype = symbol->candidate_datatypes[0];
+	if (symbol->transition_condition_il != NULL) {
+		symbol->transition_condition_il->datatype = symbol->datatype;
+		symbol->transition_condition_il->accept(*this);
+	}
+	if (symbol->transition_condition_st != NULL) {
+		symbol->transition_condition_st->datatype = symbol->datatype;
+		symbol->transition_condition_st->accept(*this);
+	}
+	return NULL;
+}
 
 /********************************/
 /* B 1.7 Configuration elements */
