@@ -1270,7 +1270,31 @@ void *fill_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 	return NULL;
 }
 
+/********************************************/
+/* B 1.6 Sequential function chart elements */
+/********************************************/
 
+void *fill_candidate_datatypes_c::visit(transition_condition_c *symbol) {
+	symbol_c *condition_type;
+
+	if (symbol->transition_condition_il != NULL) {
+		symbol->transition_condition_il->accept(*this);
+		for (unsigned int i = 0; i < symbol->transition_condition_il->candidate_datatypes.size(); i++) {
+			condition_type = symbol->transition_condition_il->candidate_datatypes[i];
+			if (get_datatype_info_c::is_BOOL_compatible(condition_type))
+				add_datatype_to_candidate_list(symbol, condition_type);
+		}
+	}
+	if (symbol->transition_condition_st != NULL) {
+		symbol->transition_condition_st->accept(*this);
+		for (unsigned int i = 0; i < symbol->transition_condition_st->candidate_datatypes.size(); i++) {
+			condition_type = symbol->transition_condition_st->candidate_datatypes[i];
+			if (get_datatype_info_c::is_BOOL_compatible(condition_type))
+				add_datatype_to_candidate_list(symbol, condition_type);
+		}
+	}
+	return NULL;
+}
 
 /********************************/
 /* B 1.7 Configuration elements */
