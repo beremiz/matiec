@@ -39,6 +39,7 @@ class declaration_check_c : public iterator_visitor_c {
     int error_count;
     int current_display_error_level;
     symbol_c *current_pou_decl;
+    symbol_c *current_resource_decl;
 
 public:
     declaration_check_c(symbol_c *ignore);
@@ -61,5 +62,6 @@ public:
     /* B 1.7 Configuration elements */
     /********************************/
     void *visit(configuration_declaration_c *symbol);
-    void *visit(program_configuration_c *symbol);
+    void *visit(resource_declaration_c      *symbol);
+    void *visit(program_configuration_c     *symbol);
 };

@@ -105,6 +105,7 @@ symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable) {
   this->current_vartype = none_vt;
   this->current_option  = none_opt;
   this->search_name = get_var_name_c::get_name(variable);
+  if (NULL == search_scope) return NULL; // NOTE: This is not an ERROR! declaration_check_c, for e.g., relies on this returning NULL!
   return (symbol_c *)search_scope->accept(*this);
 }
 
@@ -112,6 +113,7 @@ search_var_instance_decl_c::vt_t search_var_instance_decl_c::get_vartype(symbol_
   this->current_vartype = none_vt;
   this->current_option  = none_opt;
   this->search_name = get_var_name_c::get_name(variable);
+  if (NULL == search_scope) ERROR;
   search_scope->accept(*this);
   return this->current_vartype;
 }
@@ -120,6 +122,7 @@ search_var_instance_decl_c::opt_t search_var_instance_decl_c::get_option(symbol_
   this->current_vartype = none_vt;
   this->current_option  = none_opt;
   this->search_name = get_var_name_c::get_name(variable);
+  if (NULL == search_scope) ERROR;
   search_scope->accept(*this);
   return this->current_option;
 }
