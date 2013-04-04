@@ -95,7 +95,7 @@ void print_symbol_c::fcall(symbol_c* symbol) {
 
 
 void print_symbol_c::dump_symbol(symbol_c* symbol) {
-  fprintf(stderr, "(%03d:%03d..%03d:%03d) \t%s\t", symbol->first_line, symbol->first_column, symbol->last_line, symbol->last_column, symbol->absyntax_cname());
+  fprintf(stderr, "(%s->%03d:%03d..%03d:%03d) \t%s\t", symbol->first_file, symbol->first_line, symbol->first_column, symbol->last_line, symbol->last_column, symbol->absyntax_cname());
 
   fprintf(stderr, "  datatype=");
   if (NULL == symbol->datatype)

@@ -427,9 +427,9 @@ void *function_param_iterator_c::visit(en_param_declaration_c *symbol) {
    * variables will get overwritten when we visit the next
    * var1_init_decl_c list!
    */
-  current_param_default_value = symbol->value;
-  current_param_type = symbol->type;
-
+  current_param_default_value = spec_init_sperator_c::get_init(symbol->type_decl);
+  current_param_type = spec_init_sperator_c::get_spec(symbol->type_decl);
+  
   void *res = handle_single_param(symbol->name);
   
     /* If we have found the parameter we will be returning, we set the en_eno_param_implicit to TRUE if implicitly defined */
@@ -467,8 +467,8 @@ void *function_param_iterator_c::visit(structured_var_init_decl_c *symbol) {
 // SYM_REF3(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization)
 void *function_param_iterator_c::visit(fb_name_decl_c *symbol) {
   TRACE("structured_var_init_decl_c");
-  current_param_default_value = symbol->structure_initialization ; 
-  current_param_type          = symbol->function_block_type_name ;
+  current_param_default_value = spec_init_sperator_c::get_init(symbol->fb_spec_init); 
+  current_param_type          = spec_init_sperator_c::get_spec(symbol->fb_spec_init);
 
   return symbol->fb_name_list->accept(*this);
 }

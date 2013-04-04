@@ -94,6 +94,8 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     void *handle_binary_expression  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
     void *handle_binary_operator    (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
     void *handle_conditional_il_flow_control_operator(symbol_c *symbol);
+    void *fill_type_decl(symbol_c *symbol, symbol_c *type_name, symbol_c *spec_init);
+    void *fill_spec_init(symbol_c *symbol, symbol_c *type_spec, symbol_c *init_value);
     
     /* a helper function... */
     symbol_c *base_type(symbol_c *symbol);    
@@ -169,29 +171,30 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /********************************/
 //  void *visit(data_type_declaration_c *symbol);   /* Not required. already handled by iterator_visitor_c base class */
 //  void *visit(type_declaration_list_c *symbol);   /* Not required. already handled by iterator_visitor_c base class */
-//  void *visit(simple_type_declaration_c *symbol); /* Not required. already handled by iterator_visitor_c base class */
+    void *visit(simple_type_declaration_c *symbol); /* Not required. already handled by iterator_visitor_c base class */
     void *visit(simple_spec_init_c *symbol);
-//  void *visit(subrange_type_declaration_c *symbol);
-//  void *visit(subrange_spec_init_c *symbol);
+    void *visit(subrange_type_declaration_c *symbol);
+    void *visit(subrange_spec_init_c *symbol);
 //  void *visit(subrange_specification_c *symbol);
     void *visit(subrange_c *symbol);
     void *visit(enumerated_type_declaration_c *symbol);
     void *visit(enumerated_spec_init_c *symbol);
     void *visit(enumerated_value_list_c *symbol);
     void *visit(enumerated_value_c *symbol);
-//  void *visit(array_type_declaration_c *symbol);
-//  void *visit(array_spec_init_c *symbol);
+    void *visit(array_type_declaration_c *symbol);
+    void *visit(array_spec_init_c *symbol);
 //  void *visit(array_specification_c *symbol);
 //  void *visit(array_subrange_list_c *symbol);
 //  void *visit(array_initial_elements_list_c *symbol);
 //  void *visit(array_initial_elements_c *symbol);
-//  void *visit(structure_type_declaration_c *symbol);
-//  void *visit(initialized_structure_c *symbol);
+    void *visit(structure_type_declaration_c *symbol);
+    void *visit(initialized_structure_c *symbol);
 //  void *visit(structure_element_declaration_list_c *symbol);
 //  void *visit(structure_element_declaration_c *symbol);
 //  void *visit(structure_element_initialization_list_c *symbol);
 //  void *visit(structure_element_initialization_c *symbol);
 //  void *visit(string_type_declaration_c *symbol);
+    void *visit(fb_spec_init_c *symbol);
 
     
     /*********************/
@@ -216,7 +219,6 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     void *visit(var1_list_c *symbol);
     void *visit(location_c *symbol);
     void *visit(located_var_decl_c *symbol);
-
 
     /**************************************/
     /* B 1.5 - Program organization units */

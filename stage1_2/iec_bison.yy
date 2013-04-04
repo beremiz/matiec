@@ -3458,9 +3458,9 @@ edge_declaration:
  */
 en_param_declaration:
   en_identifier ':' BOOL ASSIGN boolean_literal
-  {$$ = new en_param_declaration_c($1, new bool_type_name_c(locloc(@$)), $5, new explicit_definition_c(), locloc(@$));}
+  {$$ = new en_param_declaration_c($1, new simple_spec_init_c(new bool_type_name_c(locloc(@3)), $5, locf(@3), locl(@5)), new explicit_definition_c(), locloc(@$));}
 | en_identifier ':' BOOL ASSIGN integer
-  {$$ = new en_param_declaration_c($1, new bool_type_name_c(locloc(@$)), $5, new explicit_definition_c(), locloc(@$));}
+  {$$ = new en_param_declaration_c($1, new simple_spec_init_c(new bool_type_name_c(locloc(@3)), $5, locf(@3), locl(@5)), new explicit_definition_c(), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | en_identifier BOOL ASSIGN boolean_literal
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and specification in EN declaration."); yynerrs++;}
@@ -3598,10 +3598,10 @@ structured_var_init_decl:
 fb_name_decl:
 /*  fb_name_list ':' function_block_type_name */
   fb_name_list_with_colon function_block_type_name
-	{$$ = new fb_name_decl_c($1, $2, NULL, locloc(@$));}
+	{$$ = new fb_name_decl_c($1, new fb_spec_init_c($2, NULL,locloc(@2)), locloc(@$));}
 /*| fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
 | fb_name_list_with_colon function_block_type_name ASSIGN structure_initialization
-	{$$ = new fb_name_decl_c($1, $2, $4, locloc(@$));}
+	{$$ = new fb_name_decl_c($1, new fb_spec_init_c($2, $4, locf(@2), locl(@4)), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | fb_name_list_with_colon ASSIGN structure_initialization
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "no function block type name defined in function block declaration with initialization."); yynerrs++;}
@@ -4042,7 +4042,7 @@ external_declaration:
 	 variable_name_symtable.insert($1, prev_declared_variable_name_token);
 	}
 | global_var_name ':' function_block_type_name
-	{$$ = new external_declaration_c($1, $3, locloc(@$));
+	{$$ = new external_declaration_c($1, new fb_spec_init_c($3, NULL, locloc(@3)), locloc(@$));
 	 variable_name_symtable.insert($1, prev_declared_fb_name_token);
 	}
 /* ERROR_CHECK_BEGIN */
@@ -4136,7 +4136,7 @@ global_var_decl:
   global_var_spec ':' located_var_spec_init
 	{$$ = new global_var_decl_c($1, $3, locloc(@$));}
 | global_var_spec ':' function_block_type_name
-	{$$ = new global_var_decl_c($1, $3, locloc(@$));}
+	{$$ = new global_var_decl_c($1, new fb_spec_init_c($3, NULL, locloc(@3)), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | global_var_list located_var_spec_init
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between global variable list and type specification."); yynerrs++;}
@@ -5692,11 +5692,11 @@ resource_declaration_list:
 
 
 resource_declaration:
-  RESOURCE {variable_name_symtable.push();direct_variable_symtable.push();} resource_name ON resource_type_name
+  RESOURCE {variable_name_symtable.push();direct_variable_symtable.push();} resource_name {variable_name_symtable.insert($3, prev_declared_resource_name_token);} ON resource_type_name
    optional_global_var_declarations
    single_resource_declaration
   END_RESOURCE
-	{$$ = new resource_declaration_c($3, $5, $6, $7, locloc(@$));
+	{$$ = new resource_declaration_c($3, $6, $7, $8, locloc(@$));
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
 	 variable_name_symtable.insert($3, prev_declared_resource_name_token);
@@ -8246,7 +8246,6 @@ int stage2__(const char *filename,
              symbol_c **tree_root_ref,
              bool full_token_loc_        /* error messages specify full token location */
             ) {
-
   char *libfilename = NULL;
 
   if (includedir != NULL) {
@@ -8295,7 +8294,6 @@ int stage2__(const char *filename,
     if (library_element_symtable.find_value(standard_function_block_names[i]) ==
         library_element_symtable.end_value())
       library_element_symtable.insert(standard_function_block_names[i], standard_function_block_name_token);
-
 
   /* now parse the input file... */
   #if YYDEBUG

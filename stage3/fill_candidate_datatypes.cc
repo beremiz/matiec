@@ -798,6 +798,69 @@ void *fill_candidate_datatypes_c::visit(date_and_time_c *symbol) {add_datatype_t
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/
+
+void *fill_candidate_datatypes_c::fill_type_decl(symbol_c *symbol, symbol_c *type_name, symbol_c *spec_init) {
+  /* NOTE: Unlike the rest of the 'fill' algorithm that works using a bottom->up approach, when handling 
+   *       data type declarations (section B.1.3.3 - Derived data types) we use a top->bottom approach. 
+   *       This is intentional, and not a bug! Explanation follows...
+   *       Here we are essentially determining the base type of each defined data type. In many cases (especially structs,
+   *       enumerations, arrays, etc...), the datatype is its own base type. However, the derived datatype is stored in
+   *       multiple symbol_c classes (e.g. an enumeration uses enumerated_type_declaration_c, enumerated_spec_init_c,
+   *       enumerated_value_list_c, enumerated_value_c, ...). Several of these could be chosen to work as the canonical base datatype
+   *       symbol. Which symbol is used is really up to the search_base_type_c, and not this fill_candidate_datatypes_c.
+   *       Here we must right the code to handle whatever the search_base_type_c chooses to use as the canonical symbol to represent
+   *       the base datatype.
+   *       Since the base datatype may be (and sometimes/often/always(?) actually is) the top level symbol_c (an enumerated_type_declaration_c
+   *       in the case of the enumerations), it only makes sense to ask search_base_type_c for a basetype when we pass it the 
+   *       symbol in the highest level of the type declaration (the enumerated_type_declaration_c in the case of the enumerations).
+   *       For this reason, we determine the basetype at the top level, and send that info down to the bottom level of the data type 
+   *       declaration. In summary, a top->down algorithm!
+   */ 
+  add_datatype_to_candidate_list(symbol, base_type(symbol));
+  type_name->candidate_datatypes = symbol->candidate_datatypes;  // use top->down algorithm!!
+  spec_init->candidate_datatypes = symbol->candidate_datatypes;  // use top->down algorithm!!
+  spec_init->accept(*this);
+  return NULL;
+}
+
+
+void *fill_candidate_datatypes_c::fill_spec_init(symbol_c *symbol, symbol_c *type_spec, symbol_c *init_value) {
+	/* NOTE: The note in the fill_type_decl() function is also partially valid here, 
+	 *       i.e. here too we work using a top->down algorithm for the type_spec part, but a bottom->up algorithm
+	 *       for the init_value part!!
+	 */
+	/* NOTE: When a variable is declared inside a POU as, for example
+	 *         VAR
+	 *            a : ARRAY[9] OF REAL;
+	 *            e : ENUM (black, white, gray);
+	 *            s : STRUCT x, y: REAL; END_STRUCT
+	 *         END_VAR
+	 *      the anonymous datatype will be defined directly by the ***_spec_init_c, and will not have an
+	 *      ****_type_declaration_c. In these cases, the anonymous data type is its own basetype, and the
+	 *      ***_spec_init_c class will act as the canonical symbol that represents the (anonymous) basetype.
+	 *      
+	 *      This method must handle the above case, as well as the case in which the ***_spec_init_c is called
+	 *      from an ****_type_declaration_c.
+	 */
+	if (symbol->candidate_datatypes.size() == 0) // i.e., if this is an anonymous datatype!
+		add_datatype_to_candidate_list(symbol, base_type(symbol)); 
+	
+	// use top->down algorithm!!
+	type_spec->candidate_datatypes = symbol->candidate_datatypes;   
+	type_spec->accept(*this);
+	
+	// use bottom->up algorithm!!
+	if (NULL != init_value) init_value->accept(*this);  
+	/* NOTE: Even if the constant and the type are of incompatible data types, we let the
+	 *       ***_spec_init_c object inherit the data type of the type declaration (simple_specification)
+	 *       This will let us produce more informative error messages when checking data type compatibility
+	 *       with located variables (AT %QW3.4 : WORD).
+	 */
+	// if (NULL != init_value) intersect_candidate_datatype_list(symbol /*origin, dest.*/, init_value /*with*/);
+	return NULL;
+}
+
+
 /*  TYPE type_declaration_list END_TYPE */
 // SYM_REF1(data_type_declaration_c, type_declaration_list)
 /* NOTE: Not required. already handled by iterator_visitor_c base class */
@@ -808,32 +871,25 @@ void *fill_candidate_datatypes_c::visit(date_and_time_c *symbol) {add_datatype_t
 
 /*  simple_type_name ':' simple_spec_init */
 // SYM_REF2(simple_type_declaration_c, simple_type_name, simple_spec_init)
-/* NOTE: Not required. already handled by iterator_visitor_c base class */
+void *fill_candidate_datatypes_c::visit(simple_type_declaration_c *symbol) {return fill_type_decl(symbol, symbol->simple_type_name, symbol->simple_spec_init);}
+  
 
 /* simple_specification ASSIGN constant */
 // SYM_REF2(simple_spec_init_c, simple_specification, constant)
-void *fill_candidate_datatypes_c::visit(simple_spec_init_c *symbol) {
-	if (NULL != symbol->constant) symbol->constant->accept(*this);
-	add_datatype_to_candidate_list(symbol->simple_specification, base_type(symbol->simple_specification));
-	symbol->candidate_datatypes = symbol->simple_specification->candidate_datatypes;
-	/* NOTE: Even if the constant and the type are of incompatible data types, we let the
-	 *       simple_spec_init_c object inherit the data type of the type declaration (simple_specification)
-	 *       This will let us produce more informative error messages when checking data type compatibility
-	 *       with located variables (AT %QW3.4 : WORD).
-	 */
-	// if (NULL != symbol->constant) intersect_candidate_datatype_list(symbol /*origin, dest.*/, symbol->constant /*with*/);
-	return NULL;
-}
+void *fill_candidate_datatypes_c::visit(simple_spec_init_c *symbol) {return fill_spec_init(symbol, symbol->simple_specification, symbol->constant);}
 
 
 /*  subrange_type_name ':' subrange_spec_init */
 // SYM_REF2(subrange_type_declaration_c, subrange_type_name, subrange_spec_init)
+void *fill_candidate_datatypes_c::visit(subrange_type_declaration_c *symbol) {return fill_type_decl(symbol, symbol->subrange_type_name, symbol->subrange_spec_init);}
 
 /* subrange_specification ASSIGN signed_integer */
 // SYM_REF2(subrange_spec_init_c, subrange_specification, signed_integer)
+void *fill_candidate_datatypes_c::visit(subrange_spec_init_c *symbol) {return fill_spec_init(symbol, symbol->subrange_specification, symbol->signed_integer);}
 
 /*  integer_type_name '(' subrange')' */
 // SYM_REF2(subrange_specification_c, integer_type_name, subrange)
+// NOTE: not needed! Iterator visitor already handles this!
 
 /*  signed_integer DOTDOT signed_integer */
 /* dimension will be filled in during stage 3 (array_range_check_c) with the number of elements in this subrange */
@@ -854,41 +910,25 @@ void *fill_candidate_datatypes_c::visit(subrange_c *symbol) {
 
 /*  enumerated_type_name ':' enumerated_spec_init */
 // SYM_REF2(enumerated_type_declaration_c, enumerated_type_name, enumerated_spec_init)
-void *fill_candidate_datatypes_c::visit(enumerated_type_declaration_c *symbol) {
-  current_enumerated_spec_type = base_type(symbol);
-  add_datatype_to_candidate_list(symbol,                       current_enumerated_spec_type);
-  add_datatype_to_candidate_list(symbol->enumerated_type_name, current_enumerated_spec_type);
-  symbol->enumerated_spec_init->accept(*this);
-  current_enumerated_spec_type = NULL;  
-  return NULL;
-}
+void *fill_candidate_datatypes_c::visit(enumerated_type_declaration_c *symbol) {return fill_type_decl(symbol, symbol->enumerated_type_name, symbol->enumerated_spec_init);}
 
 
 /* enumerated_specification ASSIGN enumerated_value */
 // SYM_REF2(enumerated_spec_init_c, enumerated_specification, enumerated_value)
-void *fill_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) {
-  /* If we are handling an anonymous datatype (i.e. a datatype implicitly declared inside a VAR ... END_VAR declaration)
-   * then the symbol->datatype has not yet been set by the previous visit(enumerated_spec_init_c) method!
-   */
-  if (NULL == current_enumerated_spec_type)
-    current_enumerated_spec_type = base_type(symbol);  
-  add_datatype_to_candidate_list(symbol, current_enumerated_spec_type);
-  symbol->enumerated_specification->accept(*this); /* calls enumerated_value_list_c (or identifier_c, which we ignore!) visit method */
-  current_enumerated_spec_type = NULL;  
-  if (NULL != symbol->enumerated_value) symbol->enumerated_value->accept(*this);
-  return NULL;
-}
+// NOTE: enumerated_specification is either an enumerated_value_list_c or identifier_c.
+void *fill_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) {return fill_spec_init(symbol, symbol->enumerated_specification, symbol->enumerated_value);}
+
 
 /* helper symbol for enumerated_specification->enumerated_spec_init */
 /* enumerated_value_list ',' enumerated_value */
 // SYM_LIST(enumerated_value_list_c)
 void *fill_candidate_datatypes_c::visit(enumerated_value_list_c *symbol) {
-  if (NULL == current_enumerated_spec_type) ERROR;  
-  add_datatype_to_candidate_list(symbol, current_enumerated_spec_type);
+  if (symbol->candidate_datatypes.size() != 1) ERROR;
+  symbol_c *current_enumerated_spec_type = symbol->candidate_datatypes[0];
   
   /* We already know the datatype of the enumerated_value(s) in the list, so we set them directly instead of recursively calling the enumerated_value_c visit method! */
   for(int i = 0; i < symbol->n; i++)
-    add_datatype_to_candidate_list(symbol->elements[i], current_enumerated_spec_type);
+    add_datatype_to_candidate_list(symbol->elements[i], current_enumerated_spec_type); // top->down algorithm!!
 
   return NULL;  
 }
@@ -969,10 +1009,12 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 
 /*  identifier ':' array_spec_init */
 // SYM_REF2(array_type_declaration_c, identifier, array_spec_init)
+void *fill_candidate_datatypes_c::visit(array_type_declaration_c *symbol) {return fill_type_decl(symbol, symbol->identifier, symbol->array_spec_init);}
 
 /* array_specification [ASSIGN array_initialization} */
 /* array_initialization may be NULL ! */
 // SYM_REF2(array_spec_init_c, array_specification, array_initialization)
+void *fill_candidate_datatypes_c::visit(array_spec_init_c *symbol) {return fill_spec_init(symbol, symbol->array_specification, symbol->array_initialization);}
 
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 // SYM_REF2(array_specification_c, array_subrange_list, non_generic_type_name)
@@ -992,10 +1034,12 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 
 /*  structure_type_name ':' structure_specification */
 // SYM_REF2(structure_type_declaration_c, structure_type_name, structure_specification)
+void *fill_candidate_datatypes_c::visit(structure_type_declaration_c *symbol) {return fill_type_decl(symbol, symbol->structure_type_name, symbol->structure_specification);}
 
 /* structure_type_name ASSIGN structure_initialization */
 /* structure_initialization may be NULL ! */
 // SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
+void *fill_candidate_datatypes_c::visit(initialized_structure_c *symbol) {return fill_spec_init(symbol, symbol->structure_type_name, symbol->structure_initialization);}
 
 /* helper symbol for structure_declaration */
 /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
@@ -1016,6 +1060,11 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
 // SYM_REF4(string_type_declaration_c, string_type_name, elementary_string_type_name, string_type_declaration_size, string_type_declaration_init/* may be == NULL! */) 
 
+
+/*  function_block_type_name ASSIGN structure_initialization */
+/* structure_initialization -> may be NULL ! */
+// SYM_REF2(fb_spec_init_c, function_block_type_name, structure_initialization)
+void *fill_candidate_datatypes_c::visit(fb_spec_init_c *symbol) {return fill_spec_init(symbol, symbol->function_block_type_name, symbol->structure_initialization);}
 
 
 
@@ -1211,8 +1260,6 @@ void *fill_candidate_datatypes_c::visit(located_var_decl_c *symbol) {
 
 
 
-
-
 /************************************/
 /* B 1.5 Program organization units */
 /************************************/
@@ -1249,6 +1296,12 @@ void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 	search_varfb_instance_type = NULL;
 
 	local_enumerated_value_symtable.reset();
+	
+	/* The FB declaration itself may be used as a dataype! We now do the fill algorithm considering 
+	 * function_block_declaration_c a data type declaration...
+	 */
+	// The next line is essentially equivalent to doing-->  symbol->candidate_datatypes.push_back(symbol);
+	add_datatype_to_candidate_list(symbol, base_type(symbol));
 	return NULL;
 }
 

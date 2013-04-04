@@ -87,7 +87,7 @@ void *search_fb_instance_decl_c::visit(library_c *symbol) {
 /* name_list ':' function_block_type_name ASSIGN structure_initialization */
 /* structure_initialization -> may be NULL ! */
 void *search_fb_instance_decl_c::visit(fb_name_decl_c *symbol) {
-  current_fb_type_name = symbol->function_block_type_name;
+  current_fb_type_name = spec_init_sperator_c::get_spec(symbol->fb_spec_init);
   return symbol->fb_name_list->accept(*this);
 }
 

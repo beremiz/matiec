@@ -81,6 +81,9 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     void *narrow_binary_expression  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL, bool allow_enums = false);
     void *narrow_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL);
 
+    void *narrow_spec_init(symbol_c *symbol, symbol_c *type_decl, symbol_c *init_value);
+    void *narrow_type_decl(symbol_c *symbol, symbol_c *type_name, symbol_c *spec_init);
+
     void *narrow_conditional_flow_control_IL_instruction(symbol_c *symbol);
 
 
@@ -150,29 +153,30 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /********************************/
 //  void *visit(data_type_declaration_c *symbol);   /* Not required. already handled by iterator_visitor_c base class */
 //  void *visit(type_declaration_list_c *symbol);   /* Not required. already handled by iterator_visitor_c base class */
-//  void *visit(simple_type_declaration_c *symbol); /* Not required. already handled by iterator_visitor_c base class */
+    void *visit(simple_type_declaration_c *symbol); /* Not required. already handled by iterator_visitor_c base class */
     void *visit(simple_spec_init_c *symbol);
-//  void *visit(subrange_type_declaration_c *symbol);
-//  void *visit(subrange_spec_init_c *symbol);
-//  void *visit(subrange_specification_c *symbol);
+    void *visit(subrange_type_declaration_c *symbol);
+    void *visit(subrange_spec_init_c *symbol);
+    void *visit(subrange_specification_c *symbol);
     void *visit(subrange_c *symbol);
     void *visit(enumerated_type_declaration_c *symbol);
     void *visit(enumerated_spec_init_c *symbol);
     void *visit(enumerated_value_list_c *symbol);
 //  void *visit(enumerated_value_c *symbol);        /* Not required */
-//  void *visit(array_type_declaration_c *symbol);
-//  void *visit(array_spec_init_c *symbol);
+    void *visit(array_type_declaration_c *symbol);
+    void *visit(array_spec_init_c *symbol);
 //  void *visit(array_specification_c *symbol);
 //  void *visit(array_subrange_list_c *symbol);
 //  void *visit(array_initial_elements_list_c *symbol);
 //  void *visit(array_initial_elements_c *symbol);
-//  void *visit(structure_type_declaration_c *symbol);
-//  void *visit(initialized_structure_c *symbol);
+    void *visit(structure_type_declaration_c *symbol);
+    void *visit(initialized_structure_c *symbol);
 //  void *visit(structure_element_declaration_list_c *symbol);
 //  void *visit(structure_element_declaration_c *symbol);
 //  void *visit(structure_element_initialization_list_c *symbol);
 //  void *visit(structure_element_initialization_c *symbol);
 //  void *visit(string_type_declaration_c *symbol);
+    void *visit(fb_spec_init_c *symbol);
 
     /*********************/
     /* B 1.4 - Variables */

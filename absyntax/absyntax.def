@@ -445,6 +445,29 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 					string_type_declaration_init) /* may be == NULL! */
 
 
+/* helper symbol for fb_name_decl_c */
+/* This symbol/leaf does not exist in the IEC standard syntax as an isolated symbol,
+ * as, for some reason, the standard syntax defines FB variable declarations in a slightly 
+ * different style as all other spec_init declarations. I.e., fr FBs variable declarations, 
+ * the standard defines a single leaf/node (fb_name_decl) that references:
+ *   a) the variable name list
+ *   b) the FB datatype
+ *   c) the FB intial value
+ *
+ * All other variable declarations break this out into two nodes:
+ *   1) references b) and c) above (usually named ***_spec_init)
+ *   2) references a), and node 1)
+ *
+ * In order to allow the datatype analyses to proceed without special cases, we will handle
+ * FB variable declarations in the same style. For this reason, we have added the
+ * following node to the Abstract Syntax Tree, even though it does not have a direct equivalent in 
+ * the standard syntax.
+ */
+/*  function_block_type_name ASSIGN structure_initialization */
+/* structure_initialization -> may be NULL ! */
+SYM_REF2(fb_spec_init_c, function_block_type_name, structure_initialization)
+
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
@@ -515,7 +538,8 @@ SYM_LIST(input_declaration_list_c)
  */
 SYM_REF0(implicit_definition_c)
 SYM_REF0(explicit_definition_c)
-SYM_REF4(en_param_declaration_c, name, type, value, method)
+/* type_decl is a simple_spec_init_c */
+SYM_REF3(en_param_declaration_c, name, type_decl, method)
 SYM_REF3(eno_param_declaration_c, name, type, method)
 
 /* edge -> The F_EDGE or R_EDGE directive */
@@ -568,8 +592,13 @@ SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
 SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
 
 /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
+/* NOTE: in order to allow datatype handling to proceed using the normal algorithm with no special cases,
+ * we will be storing the 
+ *    function_block_type_name ASSIGN structure_initialization
+ * componentes inside a new node, namely fb_spec_init_c
+ */
 /* structure_initialization -> may be NULL ! */
-SYM_REF3(fb_name_decl_c, fb_name_list, function_block_type_name, structure_initialization)
+SYM_REF2(fb_name_decl_c, fb_name_list, fb_spec_init)
 
 /* fb_name_list ',' fb_name */
 SYM_LIST(fb_name_list_c)

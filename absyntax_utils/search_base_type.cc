@@ -372,7 +372,15 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 */
 void *search_base_type_c::visit(string_type_declaration_c *symbol)	                {return (void *)symbol;}
 
-  
+
+/*  function_block_type_name ASSIGN structure_initialization */
+/* structure_initialization -> may be NULL ! */
+// SYM_REF2(fb_spec_init_c, function_block_type_name, structure_initialization)
+void *search_base_type_c::visit(fb_spec_init_c *symbol)	{
+  return symbol->function_block_type_name->accept(*this);
+}
+
+
 
 /*****************************/
 /* B 1.5.2 - Function Blocks */
