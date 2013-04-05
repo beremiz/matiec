@@ -105,7 +105,7 @@ void *search_fb_instance_decl_c::visit(fb_name_list_c *symbol) {
 /* name_list ',' fb_name */
 void *search_fb_instance_decl_c::visit(external_declaration_c *symbol) {
   if (compare_identifiers(symbol->global_var_name, search_name) == 0)
-	return symbol->specification;
+    return spec_init_sperator_c::get_spec(symbol->specification);
   return NULL;
 }
 
