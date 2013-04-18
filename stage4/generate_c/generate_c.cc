@@ -476,9 +476,11 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
 /*  TASK task_name task_initialization */
 //SYM_REF2(task_configuration_c, task_name, task_initialization)  
     void *visit(task_initialization_c *symbol) {
-      unsigned long long time = calculate_time(symbol->interval_data_source);
-      if (time < 0)  ERROR;
-      else           update_ticktime(time);
+      if (symbol->interval_data_source != NULL) {
+    	  unsigned long long time = calculate_time(symbol->interval_data_source);
+    	  if (time < 0)  ERROR;
+    	  else           update_ticktime(time);
+      }
       return NULL;
     }
 };    
