@@ -111,29 +111,6 @@ typedef struct {
 #define __LWORD_LITERAL(value) __literal(LWORD,value,__64b_sufix)
 
 
-
-#define __INIT_REAL 0
-#define __INIT_LREAL 0
-#define __INIT_SINT 0
-#define __INIT_INT 0
-#define __INIT_DINT 0
-#define __INIT_LINT 0
-#define __INIT_USINT 0
-#define __INIT_UINT 0
-#define __INIT_UDINT 0
-#define __INIT_ULINT 0
-#define __INIT_TIME (TIME){0,0}
-#define __INIT_BOOL 0
-#define __INIT_BYTE 0
-#define __INIT_WORD 0
-#define __INIT_DWORD 0
-#define __INIT_LWORD 0
-#define __INIT_STRING (STRING){0,""}
-//#define __INIT_WSTRING
-#define __INIT_DATE (DATE){0,0}
-#define __INIT_TOD (TOD){0,0}
-#define __INIT_DT (DT){0,0}
-
 typedef union __IL_DEFVAR_T {
     BOOL    BOOLvar;
 
