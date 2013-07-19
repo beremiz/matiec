@@ -276,7 +276,7 @@ typedef struct YYLTYPE {
     long int    last_order;
 } YYLTYPE;
 #define YYLTYPE_IS_DECLARED 1
-#define YYLTYPE_IS_TRIVIAL 1
+#define YYLTYPE_IS_TRIVIAL 0
 #endif
 
 }
