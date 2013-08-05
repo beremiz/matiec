@@ -74,11 +74,14 @@ class decompose_var_instance_name_c: null_visitor_c {
     symbol_c *next_variable_name;
     symbol_c *current_recursive_variable_name;
     symbol_c *previously_returned_variable_name;
+    list_c   *current_array_subscript_list;
 
   public:
     decompose_var_instance_name_c(symbol_c *variable_instance_name);
-
-    symbol_c *next_part(void);
+    /* Get the next element in the strcutured variable */
+    symbol_c *get_next(void);
+    /* If the current element in the structured variable is an array, return its subscript_list, otherwise return NULL */
+    list_c *get_current_arraysubs_list(void);
 
   private:
   /*************************/

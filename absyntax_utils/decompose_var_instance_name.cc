@@ -52,13 +52,16 @@ decompose_var_instance_name_c::decompose_var_instance_name_c(symbol_c *variable_
   next_variable_name = NULL;
   current_recursive_variable_name = NULL;
   previously_returned_variable_name = NULL;
+  current_array_subscript_list = NULL;
 }
 
-symbol_c *decompose_var_instance_name_c::next_part() {
+/* Get the next element in the strcutured variable */
+symbol_c *decompose_var_instance_name_c::get_next() {
   /* We must always start from the top!
    * See note in the structured_variable_c visitor
    * to understand why...
    */
+  current_array_subscript_list = NULL;
   symbol_c *res = (symbol_c *)variable_name->accept(*this);
   next_variable_name = current_recursive_variable_name;
 
@@ -68,6 +71,11 @@ symbol_c *decompose_var_instance_name_c::next_part() {
   previously_returned_variable_name = res;
   return res;
 }
+
+/* If the current element in the structured variable is an array, return its subscript_list, 
+ * otherwise return NULL
+ */
+list_c *decompose_var_instance_name_c::get_current_arraysubs_list(void) {return current_array_subscript_list;}
 
 /*************************/
 /* B.1 - Common elements */
@@ -94,8 +102,14 @@ void *decompose_var_instance_name_c::visit(direct_variable_c *symbol) {return (v
 /*  subscripted_variable '[' subscript_list ']' */
 // SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
 void *decompose_var_instance_name_c::visit(array_variable_c *symbol) {
-  /* NOTE: the subscripted_variable may itself be a structure!,
-   * so we must recursevily visit!
+  if (NULL == symbol->subscript_list) ERROR; // array may not have an empty subscript list!
+  current_array_subscript_list = dynamic_cast<list_c *>(symbol->subscript_list);
+  if (NULL == current_array_subscript_list) ERROR; // if it does not point to a subscript_list_c, then the abstract syntax tree has been changed, and this code needs to be fixed accordingly!
+  
+  /* NOTE: the subscripted_variable may itself be a structure or an array!, so we must recursevily visit! */
+  /* the next line will call either:
+   *   - visit(structured_variable_c *) or visit(array_variable_c *), if the array variable is itself an element of another array os structure
+   *   - visit(symbolic_variable_c *) if it is a simple array variable
    */
   return symbol->subscripted_variable->accept(*this);
 }
@@ -130,8 +144,13 @@ void *decompose_var_instance_name_c::visit(structured_variable_c *symbol) {
     return (void *)symbol->field_selector->accept(*this);
   }
 
+  current_array_subscript_list = NULL;
   current_recursive_variable_name = symbol;
-  return symbol->record_variable->accept(*this);
+  /* the next line will call either:
+   *   - visit(structured_variable_c *) or visit(array_variable_c *), if the record variable has more elements to visit
+   *   - visit(symbolic_variable_c *) if it is the last element in the record variable
+   */
+  return symbol->record_variable->accept(*this); 
 }
 
 /********************************/

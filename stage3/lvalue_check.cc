@@ -114,7 +114,7 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 	 * when an expression is found, we may replace this check with an assertion...
 	 * if (NULL == struct_elem) ERROR;
 	 */
-	symbol_c *struct_elem = decompose_lvalue.next_part();
+	symbol_c *struct_elem = decompose_lvalue.get_next();
 	if (NULL == struct_elem) return;
 	
 	symbol_c *type_decl   = search_var_instance_decl->get_decl(struct_elem);
@@ -135,7 +135,7 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(basetype_id);
 	if (function_block_type_symtable.end_value() == fb_decl) return;
 
-	while (NULL != (struct_elem = decompose_lvalue.next_part())) {
+	while (NULL != (struct_elem = decompose_lvalue.get_next())) {
 		search_var_instance_decl_c   fb_search_var_instance_decl(fb_decl);
 		if (search_var_instance_decl_c::output_vt == fb_search_var_instance_decl.get_vartype(struct_elem)) {
 			STAGE3_ERROR(0, struct_elem, struct_elem, "Assignment to FB output variable is not allowed.");
