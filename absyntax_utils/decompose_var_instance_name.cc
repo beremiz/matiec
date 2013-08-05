@@ -54,19 +54,18 @@ decompose_var_instance_name_c::decompose_var_instance_name_c(symbol_c *variable_
   previously_returned_variable_name = NULL;
 }
 
-symbol_c *decompose_var_instance_name_c::next_part(bool increment) {
+symbol_c *decompose_var_instance_name_c::next_part() {
   /* We must always start from the top!
    * See note in the structured_variable_c visitor
    * to understand why...
    */
   symbol_c *res = (symbol_c *)variable_name->accept(*this);
-  if (increment)
-    next_variable_name = current_recursive_variable_name;
+  next_variable_name = current_recursive_variable_name;
 
   if (previously_returned_variable_name == res)
-	  return NULL;
-  if (increment)
-    previously_returned_variable_name = res;
+    return NULL;
+  
+  previously_returned_variable_name = res;
   return res;
 }
 
