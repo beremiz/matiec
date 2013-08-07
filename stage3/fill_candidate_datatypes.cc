@@ -1112,11 +1112,28 @@ void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
 	/* if we were to want the data type of the array itself, then we should call_param_name
 	 * search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable)
 	 */
-	symbol_c *result = search_varfb_instance_type->get_basetype_decl(symbol);
-	if (NULL != result) add_datatype_to_candidate_list(symbol, result);
+	add_datatype_to_candidate_list(symbol, search_varfb_instance_type->get_basetype_decl(symbol));   /* will only add if non NULL */
 	
 	/* recursively call the subscript list, so we can check the data types of the expressions used for the subscripts */
 	symbol->subscript_list->accept(*this);
+
+	/* recursively call the subscripted_variable. We need to do this since the array variable may be stored inside a structured
+	 * variable (i.e. if it is an element inside a struct), in which case we want to recursively visit every element of the struct,
+	 * as it may contain more arrays whose subscripts must also be visited!
+	 * e.g.   structvar.a1[v1+2].b1.c1[v2+3].d1
+	 *        TYPE
+	 *           d_s: STRUCT d1: int; d2: int;
+	 *           d_a: ARRAY [1..3] OF d_s;  
+	 *           c_s: STRUCT c1: d_a; c2: d_a;
+	 *           b_s: STRUCT b1: c_s; b2: c_s;
+	 *           b_a: ARRAY [1..3] OF b_s;  
+	 *           a_s: STRUCT a1: b_a; a2: b_a;
+	 *        END_TYPE 
+	 *        VAR
+	 *          structvar: a_s;
+	 *        END_VAR
+	 */
+	symbol->subscripted_variable->accept(*this);
 
 	if (debug) std::cout << "ARRAY_VAR [" << symbol->candidate_datatypes.size() << "]\n";	
 	return NULL;
@@ -1136,11 +1153,18 @@ void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
  *           this into account!
  */
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
-/* NOTE: We do not need to recursively determine the data types of each field_selector, as the search_varfb_instance_type
- * will do that for us. So we determine the candidate datatypes only for the full structured_variable.
- */
 void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
+	/* NOTE: We do not need to recursively determine the data types of each field_selector, as the search_varfb_instance_type
+	 * will do that for us. So we determine the candidate datatypes only for the full structured_variable.
+	 */
 	add_datatype_to_candidate_list(symbol, search_varfb_instance_type->get_basetype_decl(symbol));  /* will only add if non NULL */
+	/* However, we do need to visit each record type recursively!
+	 * Remember that a structured variable may be stored inside an array (e.g. arrayvar[33].elem1)
+	 * The array subscripts may contain a complex expression (e.g. arrayvar[ varx + 33].elem1) whose datatype must be correctly determined!
+	 * The expression, may even contain a function call to an overloaded function!
+	 *      (e.g.  arrayvar[ varx + TRUNC(realvar)].elem1)
+	 */
+	symbol->record_variable->accept(*this);
 	return NULL;
 }
 

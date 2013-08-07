@@ -662,6 +662,14 @@ void *narrow_candidate_datatypes_c::visit(fb_spec_init_c *symbol) {return narrow
 void *narrow_candidate_datatypes_c::visit(array_variable_c *symbol) {
 	/* we need to check the data types of the expressions used for the subscripts... */
 	symbol->subscript_list->accept(*this);
+
+	/* Set the datatype of the subscripted variable and visit it recursively. For the reason why we do this,                                                 */
+	/* Please read the comments in the array_variable_c and structured_variable_c visitors in the fill_candidate_datatypes.cc file! */
+	symbol->subscripted_variable->accept(*this); // visit recursively
+
+	if (symbol->subscripted_variable->candidate_datatypes.size() == 1)
+	  symbol->subscripted_variable->datatype = symbol->subscripted_variable->candidate_datatypes[0]; // set the datatype
+
 	return NULL;
 }
 
@@ -680,6 +688,24 @@ void *narrow_candidate_datatypes_c::visit(subscript_list_c *symbol) {
 }
 
 
+
+/*  record_variable '.' field_selector */
+/*  WARNING: input and/or output variables of function blocks
+ *           may be accessed as fields of a structured variable!
+ *           Code handling a structured_variable_c must take
+ *           this into account!
+ */
+// SYM_REF2(structured_variable_c, record_variable, field_selector)
+void *narrow_candidate_datatypes_c::visit(structured_variable_c *symbol) {
+	/* Set the datatype of the record_variable and visit it recursively. For the reason why we do this,                                                      */
+	/* Please read the comments in the array_variable_c and structured_variable_c visitors in the fill_candidate_datatypes.cc file! */
+	symbol->record_variable->accept(*this); // visit recursively
+
+	if (symbol->record_variable->candidate_datatypes.size() == 1)
+	  symbol->record_variable->datatype = symbol->record_variable->candidate_datatypes[0]; // set the datatype
+
+	return NULL;
+}
 
 
 /******************************************/

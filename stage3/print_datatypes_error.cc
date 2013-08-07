@@ -134,6 +134,10 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 	bool function_invocation_error = false;
 	const char *POU_str = NULL;
 
+debug_c::print("print_datatypes_error_c::handle_function_invocation() CALLED!\n");
+debug_c::print(fcall);
+
+
 	if (generic_function_call_t::POU_FB       == fcall_data.POU_type)  POU_str = "FB";
 	if (generic_function_call_t::POU_function == fcall_data.POU_type)  POU_str = "function";
 	if (NULL == POU_str) ERROR;
@@ -204,7 +208,11 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 		}
 	}
 	if (NULL != fcall_data.nonformal_operand_list) {
+debug_c::print("print_datatypes_error_c::handle_function_invocation() CALLING  ---> fcall_data.nonformal_operand_list->accept(*this)!\n");
+debug_c::print_ast(fcall_data.nonformal_operand_list);
+debug_c::print("print_datatypes_error_c::handle_function_invocation() LIST_END\n");
 		fcall_data.nonformal_operand_list->accept(*this);
+debug_c::print("print_datatypes_error_c::handle_function_invocation() RETURNED <--- fcall_data.nonformal_operand_list->accept(*this)!\n");
 		if (f_decl)
 			for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
 		  		/* TODO: verify if it is lvalue when INOUT or OUTPUT parameters! */
@@ -569,6 +577,10 @@ void *print_datatypes_error_c::visit(direct_variable_c *symbol) {
 /*  subscripted_variable '[' subscript_list ']' */
 // SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
 void *print_datatypes_error_c::visit(array_variable_c *symbol) {
+	/* the subscripted variable may be a structure or another array variable, that must also be visisted! */
+	/* Please read the comments in the array_variable_c and structured_variable_c visitors in the fill_candidate_datatypes.cc file! */
+	symbol->subscripted_variable->accept(*this); 
+	
 	if (symbol->candidate_datatypes.size() == 0)
 		STAGE3_ERROR(0, symbol, symbol, "Array variable not declared in this scope.");
 	
@@ -598,13 +610,13 @@ void *print_datatypes_error_c::visit(subscript_list_c *symbol) {
  *           this into account!
  */
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
-/* NOTE: We do not recursively determine the data types of each field_selector in fill_candidate_datatypes_c,
- * so it does not make sense to recursively visit all the field_selectors to print out error messages. 
- * Maybe in the future, if we find the need to print out more detailed error messages, we might do it that way. For now, we don't!
- */
 void *print_datatypes_error_c::visit(structured_variable_c *symbol) {
+	/* the record variable may be another structure or even an array variable, that must also be visisted! */
+	/* Please read the comments in the array_variable_c and structured_variable_c visitors in the fill_candidate_datatypes.cc file! */
+	symbol->record_variable->accept(*this);
+	
 	if (symbol->candidate_datatypes.size() == 0)
-		STAGE3_ERROR(0, symbol, symbol, "Undeclared structured/FB variable.");
+		STAGE3_ERROR(0, symbol, symbol, "Undeclared structured (or FB) variable, or non-existant field (variable) in structure (FB).");
 	return NULL;
 }
 
