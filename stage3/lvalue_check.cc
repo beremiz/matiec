@@ -261,6 +261,12 @@ void lvalue_check_c::verify_is_lvalue(symbol_c *lvalue) {
  */
 #include <string.h> /* required for strcmp() */
 void lvalue_check_c::check_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
+	/* if data type semantic verification was unable to determine which function is being called,
+	 * then it does not make sense to go ahead and check for lvalues to unknown parameters.
+	 * We simply bug out!
+	 */
+	if (NULL == f_decl) return;
+	
 	symbol_c *call_param_value;
 	identifier_c *param_name;
 	function_param_iterator_c       fp_iterator(f_decl);
