@@ -134,10 +134,6 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 	bool function_invocation_error = false;
 	const char *POU_str = NULL;
 
-debug_c::print("print_datatypes_error_c::handle_function_invocation() CALLED!\n");
-debug_c::print(fcall);
-
-
 	if (generic_function_call_t::POU_FB       == fcall_data.POU_type)  POU_str = "FB";
 	if (generic_function_call_t::POU_function == fcall_data.POU_type)  POU_str = "function";
 	if (NULL == POU_str) ERROR;
@@ -208,11 +204,6 @@ debug_c::print(fcall);
 		}
 	}
 	if (NULL != fcall_data.nonformal_operand_list) {
-debug_c::print("print_datatypes_error_c::handle_function_invocation() CALLING  ---> fcall_data.nonformal_operand_list->accept(*this)!\n");
-debug_c::print_ast(fcall_data.nonformal_operand_list);
-debug_c::print("print_datatypes_error_c::handle_function_invocation() LIST_END\n");
-		fcall_data.nonformal_operand_list->accept(*this);
-debug_c::print("print_datatypes_error_c::handle_function_invocation() RETURNED <--- fcall_data.nonformal_operand_list->accept(*this)!\n");
 		if (f_decl)
 			for (int i = 1; (param_value = fcp_iterator.next_nf()) != NULL; i++) {
 		  		/* TODO: verify if it is lvalue when INOUT or OUTPUT parameters! */
