@@ -82,12 +82,17 @@ void array_dimension_iterator_c::reset(void) {
  */
 array_dimension_iterator_c::array_dimension_iterator_c(symbol_c *symbol) {
   /* do some consistency check... */
+  /* NOTE: We comment out the consistency check so the compiler does not bork when it encounters buggy source code.
+   *        e.g. Code that handles a non array variable as an array!
+   *               VAR  v1, v2: int; END_VAR
+   *               v1 := v2[33, 45];
+   *       The above error will be caught by the datatype checking algorithms!
+   */
   array_specification_c* array_spec = dynamic_cast<array_specification_c*>(symbol);
-
-  if (NULL == array_spec) ERROR;
+  // if (NULL == array_spec) ERROR;
 
   /* OK. Now initialize this object... */
-  this->array_specification = symbol;
+  this->array_specification = array_spec; // Set to array_spec and not symbol => will be NULL if not an array_specification_c* !!
   reset();
 }
 
@@ -101,9 +106,9 @@ array_dimension_iterator_c::array_dimension_iterator_c(symbol_c *symbol) {
  * Returns the subrange symbol!
  */
 subrange_c *array_dimension_iterator_c::next(void) {
+  if (NULL == array_specification) return NULL; /* The source code probably has a bug which will be caught somewhere else! */
   void *res = array_specification->accept(*this);
-  if (res == NULL) 
-    return NULL;
+  if (NULL == res)                 return NULL;
 
   return current_array_dimension;
 }
