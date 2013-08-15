@@ -292,9 +292,9 @@ void lvalue_check_c::check_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
 			/* If the parameter is either OUT or IN_OUT, we check if 'call_param_value' is a valid lvalue */
 			if ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction)) 
 				verify_is_lvalue(call_param_value);
-			/* parameter values to IN parameters may be expressions with function invocations that must also be checked! */
-			if (function_param_iterator_c::direction_in == param_direction) 
-				call_param_value->accept(*this);  
+			/* parameter values to IN  parameters may be expressions with function invocations that must also be checked! */
+			/* parameter values to OUT or IN_OUT parameters may contain arrays, whose subscripts contain expressions that must be checked! */
+			call_param_value->accept(*this);  
 		}
 	}
 }
@@ -332,10 +332,9 @@ void lvalue_check_c::check_formal_call(symbol_c *f_call, symbol_c *f_decl) {
 			/* If the parameter is either OUT or IN_OUT, we check if 'call_param_value' is a valid lvalue */
 			if ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction)) 
 				verify_is_lvalue(call_param_value);
-			/* parameter values to IN parameters may be expressions with function invocations that must also be checked! */
-			if (function_param_iterator_c::direction_in == param_direction) 
-				call_param_value->accept(*this);  
-		
+			/* parameter values to IN  parameters may be expressions with function invocations that must also be checked! */
+			/* parameter values to OUT or IN_OUT parameters may contain arrays, whose subscripts contain expressions that must be checked! */
+			call_param_value->accept(*this);  
  		}
 	}
 }
