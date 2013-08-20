@@ -322,11 +322,9 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 
 	/* set the datatype of the il_operand, this is, the FB being called! */
 	if (NULL != il_operand) {
-		/* only set it if it is in the candidate datatypes list! */  
-		set_datatype(called_fb_declaration, il_operand);
+		set_datatype(called_fb_declaration, il_operand); /* only set it if it is in the candidate datatypes list! */  
 		il_operand->accept(*this);
 	}
-	symbol_c *fb_decl = il_operand->datatype;
 
 	if (0 == fake_prev_il_instruction->prev_il_instruction.size()) {
 		/* This IL implicit FB call (e.g. CLK ton_var) is not preceded by another IL instruction
@@ -336,8 +334,10 @@ void *narrow_candidate_datatypes_c::narrow_implicit_il_fb_call(symbol_c *il_inst
 		return NULL;
 	}
 
+	symbol_c *fb_decl = (NULL == il_operand)? NULL : il_operand->datatype;
+	
 	if (NULL == fb_decl) {
-		/* the il_operand is a not FB instance */
+		/* the il_operand is a not FB instance, or it simply does not even exist, */
 		/* so we simply pass on the required datatype to the prev_il_instructions */
 		/* The invalid FB invocation will be caught in the print_datatypes_error_c by analysing NULL value in il_operand->datatype! */
 		set_datatype_in_prev_il_instructions(il_instruction->datatype, fake_prev_il_instruction);
@@ -999,7 +999,7 @@ void *narrow_candidate_datatypes_c::visit(il_jump_operation_c *symbol) {
  * | il_call_operator prev_declared_fb_name '(' il_operand_list ')'
  * | il_call_operator prev_declared_fb_name '(' eol_list il_param_list ')'
  */
-/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
+/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 */
 // SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 void *narrow_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
 	symbol_c *fb_decl = symbol->called_fb_declaration;
@@ -1093,7 +1093,9 @@ void *narrow_candidate_datatypes_c::narrow_binary_operator(const struct widen_en
         if (NULL != deprecated_operation)
 		*deprecated_operation = false;
 
-	/* NOTE 1: the il_operand __may__ be pointing to a parenthesized list of IL instructions. 
+	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
+
+	 /* NOTE 1: the il_operand __may__ be pointing to a parenthesized list of IL instructions. 
 	 * e.g.  LD 33
 	 *       AND ( 45
 	 *            OR 56
@@ -1136,9 +1138,8 @@ void *narrow_candidate_datatypes_c::narrow_binary_operator(const struct widen_en
 
 
 void *narrow_candidate_datatypes_c::handle_il_instruction(symbol_c *symbol) {
-	if (NULL == symbol->datatype)
-		/* next IL instructions were unable to determine the datatype this instruction should produce */
-		return NULL;
+	if (NULL == symbol->datatype) return NULL; /* next IL instructions were unable to determine the datatype this instruction should produce */
+  
 	/* NOTE 1: the il_operand __may__ be pointing to a parenthesized list of IL instructions. 
 	 * e.g.  LD 33
 	 *       AND ( 45
@@ -1158,6 +1159,7 @@ void *narrow_candidate_datatypes_c::handle_il_instruction(symbol_c *symbol) {
 	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
 	  
 	/* set the datatype for the operand */
+	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
 	il_operand->datatype = symbol->datatype;
 	il_operand->accept(*this);
 	return NULL;
@@ -1167,10 +1169,10 @@ void *narrow_candidate_datatypes_c::handle_il_instruction(symbol_c *symbol) {
 
 
 void *narrow_candidate_datatypes_c::visit(LD_operator_c *symbol)   {
-	if (NULL == symbol->datatype)
-		/* next IL instructions were unable to determine the datatype this instruction should produce */
-		return NULL;
+	if (NULL == symbol->datatype) return NULL; /* next IL instructions were unable to determine the datatype this instruction should produce */
+
 	/* set the datatype for the operand */
+	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
 	il_operand->datatype = symbol->datatype;
 	il_operand->accept(*this);
 	return NULL;
@@ -1178,10 +1180,10 @@ void *narrow_candidate_datatypes_c::visit(LD_operator_c *symbol)   {
 
 
 void *narrow_candidate_datatypes_c::visit(LDN_operator_c *symbol)  {
-	if (NULL == symbol->datatype)
-		/* next IL instructions were unable to determine the datatype this instruction should produce */
-		return NULL;
+	if (NULL == symbol->datatype) return NULL; /* next IL instructions were unable to determine the datatype this instruction should produce */
+
 	/* set the datatype for the operand */
+	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
 	il_operand->datatype = symbol->datatype;
 	il_operand->accept(*this);
 	return NULL;
@@ -1190,28 +1192,39 @@ void *narrow_candidate_datatypes_c::visit(LDN_operator_c *symbol)  {
 void *narrow_candidate_datatypes_c::visit(ST_operator_c *symbol) {
 	if (symbol->candidate_datatypes.size() != 1)
 		return NULL;
+
 	symbol->datatype = symbol->candidate_datatypes[0];
-	/* set the datatype for the operand */
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
 	/* set the desired datatype of the previous il instruction */
 	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
 	/* In the case of the ST operator, we must set the datatype of the il_instruction_c object that points to this ST_operator_c ourselves,
 	 * since the following il_instruction_c objects have not done it, as is normal/standard for other instructions!
 	 */
 	current_il_instruction->datatype = symbol->datatype;
+	
+	/* set the datatype for the operand */
+	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
+	il_operand->datatype = symbol->datatype;
+	il_operand->accept(*this);
+
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 	if (symbol->candidate_datatypes.size() != 1)
 		return NULL;
+	
 	symbol->datatype = symbol->candidate_datatypes[0];
-	/* set the datatype for the operand */
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
 	/* set the desired datatype of the previous il instruction */
 	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
+	/* In the case of the ST operator, we must set the datatype of the il_instruction_c object that points to this ST_operator_c ourselves,
+	 * since the following il_instruction_c objects have not done it, as is normal/standard for other instructions!
+	 */
+	current_il_instruction->datatype = symbol->datatype;
+
+	/* set the datatype for the operand */
+	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
+	il_operand->datatype = symbol->datatype;
+	il_operand->accept(*this);
 	return NULL;
 }
 
@@ -1220,22 +1233,23 @@ void *narrow_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
 	 *              NOT [<il_operand>]
 	 *       However, it does not define the semantic of the NOT operation when the <il_operand> is specified.
 	 *       We therefore consider it an error if an il_operand is specified!
+	 *       This error will be detected in print_datatypes_error_c!!
 	 */
-	/* We do not change the data type, we simply invert the bits in bit types! */
+	/* This operator does not change the data type, it simply inverts the bits in the ANT_BIT data types! */
 	/* So, we set the desired datatype of the previous il instruction */
 	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(S_operator_c *symbol)  {
-  /* TODO: what if this is a FB call? */
-	return handle_il_instruction(symbol);
-}
-void *narrow_candidate_datatypes_c::visit(R_operator_c *symbol)  {
-  /* TODO: what if this is a FB call? */
-	return handle_il_instruction(symbol);
+	if (NULL != symbol->called_fb_declaration) /* FB call semantics */  return narrow_implicit_il_fb_call(symbol, "S",  symbol->called_fb_declaration); 
+	else                                       /* Reset   semantics */  return handle_il_instruction(symbol);
 }
 
+void *narrow_candidate_datatypes_c::visit(R_operator_c *symbol)  {
+	if (NULL != symbol->called_fb_declaration) /* FB call semantics */  return narrow_implicit_il_fb_call(symbol, "R",  symbol->called_fb_declaration); 
+	else                                       /* Reset   semantics */  return handle_il_instruction(symbol);
+}
 
 void *narrow_candidate_datatypes_c::visit(  S1_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "S1",  symbol->called_fb_declaration);}
 void *narrow_candidate_datatypes_c::visit(  R1_operator_c *symbol)  {return narrow_implicit_il_fb_call(symbol, "R1",  symbol->called_fb_declaration);}

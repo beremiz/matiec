@@ -278,7 +278,7 @@ void *print_datatypes_error_c::handle_implicit_il_fb_invocation(const char *para
 		STAGE3_ERROR(0, il_operator, il_operator, "Missing operand for FB call operator '%s'.", param_name);
 		return NULL;
 	}
-	il_operand->accept(*this);
+	// il_operand->accept(*this);  // NOT required. The il_simple_operation_c already visits it!!
 	
 	if (NULL == called_fb_declaration) {
 		STAGE3_ERROR(0, il_operator, il_operand, "Invalid FB call: operand is not a FB instance.");
@@ -760,10 +760,8 @@ void *print_datatypes_error_c::visit(il_instruction_c *symbol) {
 
 void *print_datatypes_error_c::visit(il_simple_operation_c *symbol) {
 	il_operand = symbol->il_operand;
-	if (NULL != symbol->il_operand) {
-		symbol->il_operand->accept(*this);
-	}
-	/* recursive call to see whether data types are compatible */
+	if (NULL != il_operand)     symbol->il_operand->accept(*this); /* recursive call to see whether data types are compatible */
+
 	symbol->il_simple_operator->accept(*this);
 	il_operand = NULL;
 	return NULL;
@@ -932,50 +930,22 @@ void *print_datatypes_error_c::visit(il_simple_instruction_c *symbol)	{
 /* B 2.2 Operators */
 /*******************/
 void *print_datatypes_error_c::print_binary_operator_errors(const char *il_operator, symbol_c *symbol, bool deprecated_operation) {
-	if ((symbol->candidate_datatypes.size() == 0) && (il_operand->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '%s' operator.", il_operator);
+	if (NULL == il_operand) {
+		STAGE3_ERROR(0, symbol, symbol, "Missing operand for %s operator.", il_operator);		// message (a)
+	} else if ((symbol->candidate_datatypes.size() == 0) && (il_operand->candidate_datatypes.size() > 0)) {
+		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for '%s' operator.", il_operator);		// message (b)
 	} else if (NULL == symbol->datatype) {
-		STAGE3_WARNING(symbol, symbol, "Result of '%s' operation is never used.", il_operator);
+		STAGE3_WARNING(symbol, symbol, "Result of '%s' operation is never used.", il_operator);		// message (c)
 	} else if (deprecated_operation)
-		STAGE3_WARNING(symbol, symbol, "Deprecated operation for '%s' operator.", il_operator);
+		STAGE3_WARNING(symbol, symbol, "Deprecated operation for '%s' operator.", il_operator);		// message (d)
 	return NULL;
 }
 
 
-void *print_datatypes_error_c::visit(LD_operator_c *symbol) {
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(LDN_operator_c *symbol) {
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'LDN' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(ST_operator_c *symbol) {
-	/* MANU:
-	 * if prev_instruction is NULL we can print a message error or warning error like:
-	 * we can't use a ST like first instruction.
-	 * What do you think?
-	 */
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'ST' operator.");
-	return NULL;
-}
-
-void *print_datatypes_error_c::visit(STN_operator_c *symbol) {
-	/* MANU:
-	 * if prev_instruction is NULL we can print a message error or warning error like:
-	 * we can't use a ST like first instruction.
-	 * What do you think?
-	 */
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'STN' operator.");
-	return NULL;
-}
+void *print_datatypes_error_c::visit(  LD_operator_c *symbol) {return print_binary_operator_errors("LD"  , symbol);}  // I believe it will never emit messages (b) and (c)!!
+void *print_datatypes_error_c::visit( LDN_operator_c *symbol) {return print_binary_operator_errors("LDN" , symbol);}  // I believe it will never emit message (c)
+void *print_datatypes_error_c::visit(  ST_operator_c *symbol) {return print_binary_operator_errors("ST"  , symbol);}  // I believe it will never emit message (c)
+void *print_datatypes_error_c::visit( STN_operator_c *symbol) {return print_binary_operator_errors("STN" , symbol);}  // I believe it will never emit message (c)
 
 void *print_datatypes_error_c::visit(NOT_operator_c *symbol) {
 	/* NOTE: the standard allows syntax in which the NOT operator is followed by an optional <il_operand>
@@ -983,27 +953,21 @@ void *print_datatypes_error_c::visit(NOT_operator_c *symbol) {
 	 *       However, it does not define the semantic of the NOT operation when the <il_operand> is specified.
 	 *       We therefore consider it an error if an il_operand is specified!
 	 */
-	if (il_operand != NULL)
+	if (il_operand != NULL) {
 		STAGE3_ERROR(0, symbol, symbol, "'NOT' operator may not have an operand.");
-	if (symbol->candidate_datatypes.size() == 0)
+	} else if (symbol->candidate_datatypes.size() == 0)
 		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'NOT' operator.");
 	return NULL;
 }
 
 void *print_datatypes_error_c::visit(S_operator_c *symbol) {
-  /* TODO: what if this is a FB call ?? */
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'S' operator.");
-	return NULL;
+	if (NULL != symbol->called_fb_declaration) /* FB call semantics */  return handle_implicit_il_fb_invocation("S", symbol, symbol->called_fb_declaration);
+	else                                       /* Reset   semantics */  return print_binary_operator_errors    ("S", symbol);
 }
 
 void *print_datatypes_error_c::visit(R_operator_c *symbol) {
-  /* TODO: what if this is a FB call ?? */
-	if ((symbol->candidate_datatypes.size() == 0) 		&&
-		(il_operand->candidate_datatypes.size() > 0))
-		STAGE3_ERROR(0, symbol, symbol, "Data type mismatch for 'R' operator.");
-	return NULL;
+	if (NULL != symbol->called_fb_declaration) /* FB call semantics */  return handle_implicit_il_fb_invocation("R", symbol, symbol->called_fb_declaration);
+	else                                       /* Reset   semantics */  return print_binary_operator_errors    ("R", symbol);
 }
 
 void *print_datatypes_error_c::visit( S1_operator_c *symbol) {return handle_implicit_il_fb_invocation( "S1", symbol, symbol->called_fb_declaration);}

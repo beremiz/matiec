@@ -1530,6 +1530,16 @@ void *visit(NOT_operator_c *symbol) {
 
 
 void *visit(S_operator_c *symbol) {
+  /* This operator must implement one of two possible semantics: 
+   *     - FB call
+   *     - Set all the bits of an ANY_BIT type variable to 1
+   */
+  
+  /* Check whether we must implement the FB call semantics... */
+  if (NULL != symbol->called_fb_declaration)
+    return XXX_CAL_operator( "S", this->current_operand);
+  
+  /* Implement the bit setting semantics... */
   if (wanted_variablegeneration != expression_vg) {
     s4o.print("LD");
     return NULL;
@@ -1552,6 +1562,16 @@ void *visit(S_operator_c *symbol) {
 
 
 void *visit(R_operator_c *symbol) {
+  /* This operator must implement one of two possible semantics: 
+   *     - FB call
+   *     - Set all the bits of an ANY_BIT type variable to 0
+   */
+  
+  /* Check whether we must implement the FB call semantics... */
+  if (NULL != symbol->called_fb_declaration)
+    return XXX_CAL_operator( "R", this->current_operand);
+  
+  /* Implement the bit setting semantics... */
   if (wanted_variablegeneration != expression_vg) {
     s4o.print("LD");
     return NULL;
