@@ -243,6 +243,7 @@ void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
 
 
 void lvalue_check_c::verify_is_lvalue(symbol_c *lvalue) {
+	if (NULL == lvalue) return; // missing operand in source code being compiled. Error will be caught and reported by datatype checking!
 	int init_error_count = error_count;  /* stop the checks once an error has been found... */
 	if (error_count == init_error_count)  check_assignment_to_expression(lvalue);
 	if (error_count == init_error_count)  check_assignment_to_controlvar(lvalue);
