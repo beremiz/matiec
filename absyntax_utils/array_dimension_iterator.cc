@@ -88,7 +88,9 @@ array_dimension_iterator_c::array_dimension_iterator_c(symbol_c *symbol) {
    *               v1 := v2[33, 45];
    *       The above error will be caught by the datatype checking algorithms!
    */
-  array_specification_c* array_spec = dynamic_cast<array_specification_c*>(symbol);
+  array_spec_init_c    * array_spec_init = dynamic_cast<array_spec_init_c    *>(symbol); 
+  if (NULL != array_spec_init)    symbol = array_spec_init->array_specification;
+  array_specification_c* array_spec      = dynamic_cast<array_specification_c*>(symbol);
   // if (NULL == array_spec) ERROR;
 
   /* OK. Now initialize this object... */
