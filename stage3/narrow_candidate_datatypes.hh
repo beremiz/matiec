@@ -78,6 +78,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     void  narrow_formal_call         (symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
     void *narrow_implicit_il_fb_call (symbol_c *symbol, const char *param_name, symbol_c *&called_fb_declaration);
     void *narrow_S_and_R_operator    (symbol_c *symbol, const char *param_name, symbol_c * called_fb_declaration);
+    void *narrow_store_operator      (symbol_c *symbol);
     void *narrow_conditional_operator(symbol_c *symbol);
     void *narrow_binary_operator    (const struct widen_entry widen_table[], symbol_c *symbol,                                     bool *deprecated_operation = NULL);
     void *narrow_binary_expression  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL, bool allow_enums = false);
