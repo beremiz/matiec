@@ -604,6 +604,7 @@ void *fill_candidate_datatypes_c::handle_S_and_R_operator(symbol_c *symbol, cons
 	if (NULL == prev_il_instruction) return NULL;
 	if (NULL == il_operand)          return NULL;
 
+	/* Try the Set/Reset semantics */
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
@@ -618,15 +619,15 @@ void *fill_candidate_datatypes_c::handle_S_and_R_operator(symbol_c *symbol, cons
 	}
 
 	/* if the appropriate semantics is not a Set/Reset of a boolean variable, the we try for the FB invocation! */
-	if (symbol->candidate_datatypes.size() == 0) 
+	if (symbol->candidate_datatypes.size() == 0) {
 		handle_implicit_il_fb_call(symbol,  operator_str, called_fb_declaration);
-
-	/* If it is also not a valid FB call, make sure the candidate_datatypes is empty (handle_implicit_il_fb_call may leave it non-empty!!) */
-	/* From here on out, all later code will consider the symbol->called_fb_declaration being NULL as an indication that this operator must use the
-	 * Set/Reset semantics, so we must also guarantee that the remainder of the state of this symbol is compatible with that assumption!
-	 */
-	if (NULL == called_fb_declaration)
-		symbol->candidate_datatypes.clear();
+		/* If it is also not a valid FB call, make sure the candidate_datatypes is empty (handle_implicit_il_fb_call may leave it non-empty!!) */
+		/* From here on out, all later code will consider the symbol->called_fb_declaration being NULL as an indication that this operator must use the
+		 * Set/Reset semantics, so we must also guarantee that the remainder of the state of this symbol is compatible with that assumption!
+		 */
+		if (NULL == called_fb_declaration)
+			symbol->candidate_datatypes.clear();
+	}
 
 	if (debug) std::cout << operator_str << " [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
 	return NULL;
