@@ -72,11 +72,12 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     bool is_widening_compatible(const struct widen_entry widen_table[], symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, bool *deprecated_status = NULL);
 
     void  narrow_function_invocation(symbol_c *f_call, generic_function_call_t fcall_data);
-    void  narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
-    void  narrow_formal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
+    void  narrow_nonformal_call     (symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
+    void  narrow_formal_call        (symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
     void *narrow_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration);
 
-    void *handle_il_instruction(symbol_c *symbol);
+    void *set_il_operand_datatype   (symbol_c *il_operand, symbol_c *datatype);
+    void *handle_il_instruction     (symbol_c *symbol);
     void *narrow_binary_operator    (const struct widen_entry widen_table[], symbol_c *symbol,                                     bool *deprecated_operation = NULL);
     void *narrow_binary_expression  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL, bool allow_enums = false);
     void *narrow_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL);

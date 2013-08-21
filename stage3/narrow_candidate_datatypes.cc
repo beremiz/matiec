@@ -1082,13 +1082,58 @@ void *narrow_candidate_datatypes_c::visit(il_simple_instruction_c *symbol)	{
 /*******************/
 /* B 2.2 Operators */
 /*******************/
+/* Sets the datatype of the il_operand, and calls it recursively!
+ * 
+ * NOTE 1: the il_operand __may__ be pointing to a parenthesized list of IL instructions. 
+ * e.g.  LD 33
+ *       AND ( 45
+ *            OR 56
+ *            )
+ *       When we handle the first 'AND' IL_operator, the il_operand will point to an simple_instr_list_c.
+ *       In this case, when we call il_operand->accept(*this);, the prev_il_instruction pointer will be overwritten!
+ *
+ *       So, if yoy wish to set the prev_il_instruction->datatype = symbol->datatype;
+ *       do it __before__ calling set_il_operand_datatype() (which in turn calls il_operand->accept(*this)) !!
+ */
+void *narrow_candidate_datatypes_c::set_il_operand_datatype(symbol_c *il_operand, symbol_c *datatype) {
+	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
+
+	/* If il_operand already has a non-NULL datatype (remember, narrow algorithm runs twice over IL lists!),
+	 * but narrow algorithm has not yet been able to determine what datatype it should take? This is strange,
+	 * and most probably an error!
+	 */
+	if ((NULL != il_operand->datatype) && (NULL == datatype))
+		ERROR;
+
+	/* If the il_operand's datatype has already been set previously, and
+	 * the narrow algorithm has already determined the datatype the il_operand should take!
+	 *   ...we just make sure that the new datatype is the same as the current il_operand's datatype
+	 */
+	if ((NULL != il_operand->datatype)  && (NULL != datatype)) {
+		/* Only one of the two datatypes is an invalid_type_name_c? This implies they are diferent!! */
+		if ((!get_datatype_info_c::is_type_valid(datatype)) ^ ((!get_datatype_info_c::is_type_valid(il_operand->datatype)))) ERROR;
+		/* OK, so both the datatypes are valid, but are they equal? */
+		if ( !get_datatype_info_c::is_type_equal(il_operand->datatype, datatype)) ERROR; 
+		/* The datatypes are the same. We have nothing to do, so we simply return! */
+		return NULL;
+	}
+
+	/* Set the il_operand's datatype. Note that the new 'datatype' may even be NULL!!! */
+	il_operand->datatype = datatype;
+	/* Even if we are not able to determine the il_operand's datatype ('datatype' is NULL), we still visit it recursively,
+	 * to give a chance of any complex expressions embedded in the il_operand (e.g. expressions inside array subscripts!) 
+	 * to be narrowed too.
+	 */
+	il_operand->accept(*this);
+	return NULL;
+}
+
+
+
+
 void *narrow_candidate_datatypes_c::narrow_binary_operator(const struct widen_entry widen_table[], symbol_c *symbol, bool *deprecated_operation) {
 	symbol_c *prev_instruction_type, *operand_type;
 	int count = 0;
-
-	if (NULL == symbol->datatype)
-		/* next IL instructions were unable to determine the datatype this instruction should produce */
-		return NULL;
 
         if (NULL != deprecated_operation)
 		*deprecated_operation = false;
@@ -1110,26 +1155,29 @@ void *narrow_candidate_datatypes_c::narrow_binary_operator(const struct widen_en
 	 *         is pointing to will be later narrowed by the call from the for() loop of the instruction_list_c
 	 *         (or simple_instr_list_c), which iterates backwards.
 	 */
-	for(unsigned int i = 0; i < fake_prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = fake_prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			if (is_widening_compatible(widen_table, prev_instruction_type, operand_type, symbol->datatype, deprecated_operation)) {
-				/* set the desired datatype of the previous il instruction */
-				set_datatype_in_prev_il_instructions(prev_instruction_type, fake_prev_il_instruction);
-				/* set the datatype for the operand */
-				il_operand->datatype = operand_type;
-				il_operand->accept(*this);
-				
-				/* NOTE: DO NOT search any further! Return immediately!
-				 * Since we support SAFE*** datatypes, multiple entries in the widen_table may be compatible.
-				 * If we try to set more than one distinct datatype on the same symbol, then the datatype will be set to
-				 * an invalid_datatype, which is NOT what we want!
-				 */
-				return NULL;
+	if (NULL != symbol->datatype) { // next IL instructions were able to determine the datatype this instruction should produce
+		for(unsigned int i = 0; i < fake_prev_il_instruction->candidate_datatypes.size(); i++) {
+			for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
+				prev_instruction_type = fake_prev_il_instruction->candidate_datatypes[i];
+				operand_type = il_operand->candidate_datatypes[j];
+				if (is_widening_compatible(widen_table, prev_instruction_type, operand_type, symbol->datatype, deprecated_operation)) {
+					/* set the desired datatype of the previous il instruction */
+					set_datatype_in_prev_il_instructions(prev_instruction_type, fake_prev_il_instruction);
+					/* set the datatype for the operand */
+					set_il_operand_datatype(il_operand, operand_type);
+					
+					/* NOTE: DO NOT search any further! Return immediately!
+					 * Since we support SAFE*** datatypes, multiple entries in the widen_table may be compatible.
+					 * If we try to set more than one distinct datatype on the same symbol, then the datatype will be set to
+					 * an invalid_datatype, which is NOT what we want!
+					 */
+					return NULL;
+				}
 			}
 		}
 	}
+	/* We were not able to determine the required datatype, but we still give the il_operand a chance to be narrowed! */
+	set_il_operand_datatype(il_operand, NULL);
 	return NULL;
 }
 
@@ -1138,93 +1186,55 @@ void *narrow_candidate_datatypes_c::narrow_binary_operator(const struct widen_en
 
 
 void *narrow_candidate_datatypes_c::handle_il_instruction(symbol_c *symbol) {
-	if (NULL == symbol->datatype) return NULL; /* next IL instructions were unable to determine the datatype this instruction should produce */
-  
-	/* NOTE 1: the il_operand __may__ be pointing to a parenthesized list of IL instructions. 
-	 * e.g.  LD 33
-	 *       AND ( 45
-	 *            OR 56
-	 *            )
-	 *       When we handle the first 'AND' IL_operator, the il_operand will point to an simple_instr_list_c.
-	 *       In this case, when we call il_operand->accept(*this);, the prev_il_instruction pointer will be overwritten!
-	 *
-	 *       We must therefore set the prev_il_instruction->datatype = symbol->datatype;
-	 *       __before__ calling il_operand->accept(*this) !!
-	 *
+	/*
 	 * NOTE 2: We do not need to call prev_il_instruction->accept(*this), as the object to which prev_il_instruction
 	 *         is pointing to will be later narrowed by the call from the for() loop of the instruction_list_c
 	 *         (or simple_instr_list_c), which iterates backwards.
 	 */
-	/* set the desired datatype of the previous il instruction */
-	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
-	  
+	if (NULL != symbol->datatype) // next IL instructions were able to determine the datatype this instruction should produce
+		/* set the desired datatype of the previous il instruction */
+		set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
+  
 	/* set the datatype for the operand */
-	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
+	set_il_operand_datatype(il_operand, symbol->datatype);
 	return NULL;
 }
 
 
 
 
-void *narrow_candidate_datatypes_c::visit(LD_operator_c *symbol)   {
-	if (NULL == symbol->datatype) return NULL; /* next IL instructions were unable to determine the datatype this instruction should produce */
-
-	/* set the datatype for the operand */
-	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	return NULL;
-}
-
-
-void *narrow_candidate_datatypes_c::visit(LDN_operator_c *symbol)  {
-	if (NULL == symbol->datatype) return NULL; /* next IL instructions were unable to determine the datatype this instruction should produce */
-
-	/* set the datatype for the operand */
-	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-	return NULL;
-}
+void *narrow_candidate_datatypes_c::visit( LD_operator_c *symbol)  {return set_il_operand_datatype(il_operand, symbol->datatype);}
+void *narrow_candidate_datatypes_c::visit(LDN_operator_c *symbol)  {return set_il_operand_datatype(il_operand, symbol->datatype);}
 
 void *narrow_candidate_datatypes_c::visit(ST_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-
-	symbol->datatype = symbol->candidate_datatypes[0];
-	/* set the desired datatype of the previous il instruction */
-	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
-	/* In the case of the ST operator, we must set the datatype of the il_instruction_c object that points to this ST_operator_c ourselves,
-	 * since the following il_instruction_c objects have not done it, as is normal/standard for other instructions!
-	 */
-	current_il_instruction->datatype = symbol->datatype;
+	if (symbol->candidate_datatypes.size() == 1) {
+		symbol->datatype = symbol->candidate_datatypes[0];
+		/* set the desired datatype of the previous il instruction */
+		set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
+		/* In the case of the ST operator, we must set the datatype of the il_instruction_c object that points to this ST_operator_c ourselves,
+		 * since the following il_instruction_c objects have not done it, as is normal/standard for other instructions!
+		 */
+		current_il_instruction->datatype = symbol->datatype;
+	}
 	
 	/* set the datatype for the operand */
-	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
-
+	set_il_operand_datatype(il_operand, symbol->datatype);
 	return NULL;
 }
 
 void *narrow_candidate_datatypes_c::visit(STN_operator_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
+	if (symbol->candidate_datatypes.size() == 1) {
+		symbol->datatype = symbol->candidate_datatypes[0];
+		/* set the desired datatype of the previous il instruction */
+		set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
+		/* In the case of the ST operator, we must set the datatype of the il_instruction_c object that points to this ST_operator_c ourselves,
+		 * since the following il_instruction_c objects have not done it, as is normal/standard for other instructions!
+		 */
+		current_il_instruction->datatype = symbol->datatype;
+	}
 	
-	symbol->datatype = symbol->candidate_datatypes[0];
-	/* set the desired datatype of the previous il instruction */
-	set_datatype_in_prev_il_instructions(symbol->datatype, fake_prev_il_instruction);
-	/* In the case of the ST operator, we must set the datatype of the il_instruction_c object that points to this ST_operator_c ourselves,
-	 * since the following il_instruction_c objects have not done it, as is normal/standard for other instructions!
-	 */
-	current_il_instruction->datatype = symbol->datatype;
-
 	/* set the datatype for the operand */
-	if (NULL == il_operand) return NULL; /* if no IL operand => error in the source code!! */
-	il_operand->datatype = symbol->datatype;
-	il_operand->accept(*this);
+	set_il_operand_datatype(il_operand, symbol->datatype);
 	return NULL;
 }
 
