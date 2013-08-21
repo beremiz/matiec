@@ -446,7 +446,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       symbol->accept(*this);
       s4o.print(",");
       if (negative) {
-	    if (get_datatype_info_c::is_BOOL_compatible(this->current_operand->datatype))
+        if (get_datatype_info_c::is_BOOL_compatible(this->current_operand->datatype))
           s4o.print("!");
         else
           s4o.print("~");
