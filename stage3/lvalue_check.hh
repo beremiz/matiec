@@ -60,6 +60,8 @@ class lvalue_check_c: public iterator_visitor_c {
     void check_assignment_to_output    (symbol_c *lvalue);
     void check_assignment_to_constant  (symbol_c *lvalue);
     void check_assignment_to_expression(symbol_c *lvalue);
+    void check_assignment_to_il_list   (symbol_c *lvalue);
+    
     void check_formal_call   (symbol_c *f_call, symbol_c *f_decl);
     void check_nonformal_call(symbol_c *f_call, symbol_c *f_decl);
 

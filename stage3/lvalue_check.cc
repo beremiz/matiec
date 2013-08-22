@@ -163,9 +163,6 @@ void lvalue_check_c::check_assignment_to_constant(symbol_c *lvalue) {
 
 /*  No assigning values to expressions. */
 void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
-	/* This may occur in function invocations, when passing values (possibly an expression) to one 
-	 * of the function's OUTPUT or IN_OUT parameters.
-	 */
 	/* This may occur in function invocations, when passing values (possibly an expression) to one
 	 * of the function's OUTPUT or IN_OUT parameters.
 	 */
@@ -238,6 +235,22 @@ void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
 
 
 
+/*  No assigning values to IL lists. */
+void lvalue_check_c::check_assignment_to_il_list(symbol_c *lvalue) {
+	/* This may occur in formal invocations in IL, where an embedded IL list may be used instead of a symbolic_variable
+	 * when passing an IN_OUT parameter! Note that it will never occur to OUT parameters, as the syntax does not allow it,
+	 * although this does not affect out algorithm here!
+	 */
+	if ( 
+	     /****************************************/
+	     /* B.2 - Language IL (Instruction List) */
+	     /****************************************/
+	     /***********************************/
+	     /* B 2.1 Instructions and Operands */
+	     /***********************************/
+	     (typeid( *lvalue ) == typeid( simple_instr_list_c)))
+		STAGE3_ERROR(0, lvalue, lvalue, "Assigning an IL list IN_OUT parameter is not allowed.");
+}                                                                  
 
 
 
@@ -246,9 +259,10 @@ void lvalue_check_c::verify_is_lvalue(symbol_c *lvalue) {
 	if (NULL == lvalue) return; // missing operand in source code being compiled. Error will be caught and reported by datatype checking!
 	int init_error_count = error_count;  /* stop the checks once an error has been found... */
 	if (error_count == init_error_count)  check_assignment_to_expression(lvalue);
+	if (error_count == init_error_count)  check_assignment_to_il_list   (lvalue);
 	if (error_count == init_error_count)  check_assignment_to_controlvar(lvalue);
-	if (error_count == init_error_count)  check_assignment_to_output(lvalue);
-	if (error_count == init_error_count)  check_assignment_to_constant(lvalue);
+	if (error_count == init_error_count)  check_assignment_to_output    (lvalue);
+	if (error_count == init_error_count)  check_assignment_to_constant  (lvalue);
 }
 
 
