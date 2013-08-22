@@ -840,6 +840,14 @@ void *visit(il_function_call_c *symbol) {
       break;
     }
     
+    /* We do not yet support embedded IL lists, so we abort the compiler if we find one */
+    /* Note that in IL function calls the syntax does not allow embeded IL lists, so this check is not necessary here! */
+    /*
+    {simple_instr_list_c *instruction_list = dynamic_cast<simple_instr_list_c *>(param_value);
+     if (NULL != instruction_list) STAGE4_ERROR(param_value, param_value, "The compiler does not yet support formal invocations in IL that contain embedded IL lists. Aborting!");
+    }
+    */
+    
     if ((param_value == NULL) && (param_direction == function_param_iterator_c::direction_in)) {
       /* No value given for parameter, so we must use the default... */
       /* First check whether default value specified in function declaration...*/
@@ -1061,6 +1069,11 @@ void *visit(il_fb_call_c *symbol) {
     if ((param_value == NULL) && !fp_iterator.is_en_eno_param_implicit())
       param_value = function_call_param_iterator.next_nf();
 
+    /* We do not yet support embedded IL lists, so we abort the compiler if we find one */
+    {simple_instr_list_c *instruction_list = dynamic_cast<simple_instr_list_c *>(param_value);
+     if (NULL != instruction_list) STAGE4_ERROR(param_value, param_value, "The compiler does not yet support formal invocations in IL that contain embedded IL lists. Aborting!");
+    }
+    
     symbol_c *param_type = fp_iterator.param_type();
     if (param_type == NULL) ERROR;
     
@@ -1227,6 +1240,11 @@ void *visit(il_formal_funct_call_c *symbol) {
      */
     if ((param_value == NULL) && (fp_iterator.is_extensible_param())) {
       break;
+    }
+    
+    /* We do not yet support embedded IL lists, so we abort the compiler if we find one */
+    {simple_instr_list_c *instruction_list = dynamic_cast<simple_instr_list_c *>(param_value);
+     if (NULL != instruction_list) STAGE4_ERROR(param_value, param_value, "The compiler does not yet support formal invocations in IL that contain embedded IL lists. Aborting!");
     }
     
     if ((param_value == NULL) && (param_direction == function_param_iterator_c::direction_in)) {
