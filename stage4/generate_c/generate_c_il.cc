@@ -410,9 +410,10 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
             symbol_c* fb_value = NULL,
             bool negative = false) {
 
-      bool type_is_complex = search_var_instance_decl->type_is_complex(symbol);
+      bool type_is_complex = false;
       if (fb_symbol == NULL) {
         unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
+        type_is_complex = search_var_instance_decl->type_is_complex(symbol);
         if (vartype == search_var_instance_decl_c::external_vt) {
           if (search_var_instance_decl->type_is_fb(symbol))
             s4o.print(SET_EXTERNAL_FB);
