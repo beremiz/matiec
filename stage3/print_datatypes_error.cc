@@ -1002,7 +1002,7 @@ void *print_datatypes_error_c::visit(  NE_operator_c *symbol) {return print_bina
 
 
 void *print_datatypes_error_c::handle_conditional_flow_control_IL_instruction(symbol_c *symbol, const char *oper) {
-	if (NULL == symbol->datatype)
+	if (!get_datatype_info_c::is_type_valid(symbol->datatype))
 		STAGE3_ERROR(0, symbol, symbol, "%s operator must be preceded by an IL instruction producing a BOOL value.", oper);
 	return NULL;
 }
