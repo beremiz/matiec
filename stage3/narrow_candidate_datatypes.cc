@@ -649,7 +649,11 @@ void *narrow_candidate_datatypes_c::visit(fb_spec_init_c *symbol) {return narrow
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
-
+// SYM_REF1(symbolic_variable_c, var_name)
+void *narrow_candidate_datatypes_c::visit(symbolic_variable_c *symbol) {
+	symbol->var_name->datatype = symbol->datatype;
+	return NULL;
+}
 /********************************************/
 /* B 1.4.1 - Directly Represented Variables */
 /********************************************/

@@ -182,6 +182,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /*********************/
     /* B 1.4 - Variables */
     /*********************/
+    void *visit(symbolic_variable_c *symbol);
     /********************************************/
     /* B 1.4.1 - Directly Represented Variables */
     /********************************************/
