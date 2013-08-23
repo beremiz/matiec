@@ -250,10 +250,12 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 					if (function_invocation_error)
 						/* when handling a IL function call, and an error is found in the first parameter, then we bug out and do not print out any more error messages. */
 						return;
-				}
-				else if (!get_datatype_info_c::is_type_valid(param_value->datatype)) {
-					function_invocation_error = true;
-					STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+				} else {
+					if (!get_datatype_info_c::is_type_valid(param_value->datatype)) {
+						function_invocation_error = true;
+						STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+					}
+					param_value->accept(*this);
 				}
 			}
 	}
