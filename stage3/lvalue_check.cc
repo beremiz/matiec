@@ -114,7 +114,7 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 	 * when an expression is found, we may replace this check with an assertion...
 	 * if (NULL == struct_elem) ERROR;
 	 */
-	symbol_c *struct_elem = decompose_lvalue.next_part();
+	symbol_c *struct_elem = decompose_lvalue.get_next();
 	if (NULL == struct_elem) return;
 	
 	symbol_c *type_decl   = search_var_instance_decl->get_decl(struct_elem);
@@ -135,7 +135,7 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(basetype_id);
 	if (function_block_type_symtable.end_value() == fb_decl) return;
 
-	while (NULL != (struct_elem = decompose_lvalue.next_part())) {
+	while (NULL != (struct_elem = decompose_lvalue.get_next())) {
 		search_var_instance_decl_c   fb_search_var_instance_decl(fb_decl);
 		if (search_var_instance_decl_c::output_vt == fb_search_var_instance_decl.get_vartype(struct_elem)) {
 			STAGE3_ERROR(0, struct_elem, struct_elem, "Assignment to FB output variable is not allowed.");
@@ -156,16 +156,13 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 void lvalue_check_c::check_assignment_to_constant(symbol_c *lvalue) {
 	unsigned int option = search_var_instance_decl->get_option(lvalue);
 	if (option == search_var_instance_decl_c::constant_opt) {
-		STAGE3_ERROR(0, lvalue, lvalue, "Assignment to CONSTANT variables is not be allowed.");
+		STAGE3_ERROR(0, lvalue, lvalue, "Assignment to CONSTANT variables is not allowed.");
 	}
 }
 
 
 /*  No assigning values to expressions. */
 void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
-	/* This may occur in function invocations, when passing values (possibly an expression) to one 
-	 * of the function's OUTPUT or IN_OUT parameters.
-	 */
 	/* This may occur in function invocations, when passing values (possibly an expression) to one
 	 * of the function's OUTPUT or IN_OUT parameters.
 	 */
@@ -233,21 +230,39 @@ void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
 	     (typeid( *lvalue ) == typeid( neg_expression_c               )) ||
 	     (typeid( *lvalue ) == typeid( not_expression_c               )) ||
 	     (typeid( *lvalue ) == typeid( function_invocation_c          )))
-		STAGE3_ERROR(0, lvalue, lvalue, "Assigning an expression to an OUT or IN_OUT parameter is not allowed.");
+		STAGE3_ERROR(0, lvalue, lvalue, "Assignment to an expression or a literal value is not allowed.");
+}                                                                  
+
+
+
+/*  No assigning values to IL lists. */
+void lvalue_check_c::check_assignment_to_il_list(symbol_c *lvalue) {
+	/* This may occur in formal invocations in IL, where an embedded IL list may be used instead of a symbolic_variable
+	 * when passing an IN_OUT parameter! Note that it will never occur to OUT parameters, as the syntax does not allow it,
+	 * although this does not affect out algorithm here!
+	 */
+	if ( 
+	     /****************************************/
+	     /* B.2 - Language IL (Instruction List) */
+	     /****************************************/
+	     /***********************************/
+	     /* B 2.1 Instructions and Operands */
+	     /***********************************/
+	     (typeid( *lvalue ) == typeid( simple_instr_list_c)))
+		STAGE3_ERROR(0, lvalue, lvalue, "Assigning an IL list to an IN_OUT parameter is not allowed.");
 }                                                                  
 
 
 
 
-
-
-
 void lvalue_check_c::verify_is_lvalue(symbol_c *lvalue) {
+	if (NULL == lvalue) return; // missing operand in source code being compiled. Error will be caught and reported by datatype checking!
 	int init_error_count = error_count;  /* stop the checks once an error has been found... */
 	if (error_count == init_error_count)  check_assignment_to_expression(lvalue);
+	if (error_count == init_error_count)  check_assignment_to_il_list   (lvalue);
 	if (error_count == init_error_count)  check_assignment_to_controlvar(lvalue);
-	if (error_count == init_error_count)  check_assignment_to_output(lvalue);
-	if (error_count == init_error_count)  check_assignment_to_constant(lvalue);
+	if (error_count == init_error_count)  check_assignment_to_output    (lvalue);
+	if (error_count == init_error_count)  check_assignment_to_constant  (lvalue);
 }
 
 
@@ -261,6 +276,12 @@ void lvalue_check_c::verify_is_lvalue(symbol_c *lvalue) {
  */
 #include <string.h> /* required for strcmp() */
 void lvalue_check_c::check_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
+	/* if data type semantic verification was unable to determine which function is being called,
+	 * then it does not make sense to go ahead and check for lvalues to unknown parameters.
+	 * We simply bug out!
+	 */
+	if (NULL == f_decl) return;
+	
 	symbol_c *call_param_value;
 	identifier_c *param_name;
 	function_param_iterator_c       fp_iterator(f_decl);
@@ -286,9 +307,9 @@ void lvalue_check_c::check_nonformal_call(symbol_c *f_call, symbol_c *f_decl) {
 			/* If the parameter is either OUT or IN_OUT, we check if 'call_param_value' is a valid lvalue */
 			if ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction)) 
 				verify_is_lvalue(call_param_value);
-			/* parameter values to IN parameters may be expressions with function invocations that must also be checked! */
-			if (function_param_iterator_c::direction_in == param_direction) 
-				call_param_value->accept(*this);  
+			/* parameter values to IN  parameters may be expressions with function invocations that must also be checked! */
+			/* parameter values to OUT or IN_OUT parameters may contain arrays, whose subscripts contain expressions that must be checked! */
+			call_param_value->accept(*this);  
 		}
 	}
 }
@@ -326,10 +347,9 @@ void lvalue_check_c::check_formal_call(symbol_c *f_call, symbol_c *f_decl) {
 			/* If the parameter is either OUT or IN_OUT, we check if 'call_param_value' is a valid lvalue */
 			if ((function_param_iterator_c::direction_out == param_direction) || (function_param_iterator_c::direction_inout == param_direction)) 
 				verify_is_lvalue(call_param_value);
-			/* parameter values to IN parameters may be expressions with function invocations that must also be checked! */
-			if (function_param_iterator_c::direction_in == param_direction) 
-				call_param_value->accept(*this);  
-		
+			/* parameter values to IN  parameters may be expressions with function invocations that must also be checked! */
+			/* parameter values to OUT or IN_OUT parameters may contain arrays, whose subscripts contain expressions that must be checked! */
+			call_param_value->accept(*this);  
  		}
 	}
 }

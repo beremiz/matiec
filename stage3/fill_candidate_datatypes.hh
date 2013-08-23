@@ -89,7 +89,8 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     bool  match_nonformal_call(symbol_c *f_call, symbol_c *f_decl);
     bool  match_formal_call   (symbol_c *f_call, symbol_c *f_decl, symbol_c **first_param_datatype = NULL);
     void  handle_function_call(symbol_c *fcall, generic_function_call_t fcall_data);
-    void *handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration);
+    void *handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name,   symbol_c *&called_fb_declaration);
+    void *handle_S_and_R_operator   (symbol_c *symbol,         const char *operator_str, symbol_c *&called_fb_declaration);
     void *handle_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
     void *handle_binary_expression  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
     void *handle_binary_operator    (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
@@ -237,6 +238,12 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /* B 1.5.3 - Programs */
     /**********************/
     void *visit(program_declaration_c *symbol);
+
+    /********************************************/
+    /* B 1.6 Sequential function chart elements */
+    /********************************************/
+
+    void *visit(transition_condition_c *symbol);
 
     /********************************/
     /* B 1.7 Configuration elements */

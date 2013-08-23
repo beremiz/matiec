@@ -19,5 +19,5 @@ libstage1_2_a_SOURCES = \
     create_enumtype_conversion_functions.cc \
 	stage1_2.cc 
 
-libstage1_2_a_CPPFLAGS =  -DDEFAULT_LIBDIR='"lib"' -I../../absyntax
+libstage1_2_a_CPPFLAGS =  -DDEFAULT_LIBDIR='"lib"' -I../../absyntax -DYY_BUF_SIZE=65536
 

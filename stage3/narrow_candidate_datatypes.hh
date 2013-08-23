@@ -71,20 +71,21 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
 
     bool is_widening_compatible(const struct widen_entry widen_table[], symbol_c *left_type, symbol_c *right_type, symbol_c *result_type, bool *deprecated_status = NULL);
 
-    void  narrow_function_invocation(symbol_c *f_call, generic_function_call_t fcall_data);
-    void  narrow_nonformal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
-    void  narrow_formal_call(symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
-    void *narrow_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration);
-
-    void *handle_il_instruction(symbol_c *symbol);
+    void *narrow_spec_init           (symbol_c *symbol, symbol_c *type_decl, symbol_c *init_value);
+    void *narrow_type_decl           (symbol_c *symbol, symbol_c *type_name, symbol_c *spec_init);
+    void  narrow_function_invocation (symbol_c *f_call, generic_function_call_t fcall_data);
+    void  narrow_nonformal_call      (symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
+    void  narrow_formal_call         (symbol_c *f_call, symbol_c *f_decl, int *ext_parm_count = NULL);
+    void *narrow_implicit_il_fb_call (symbol_c *symbol, const char *param_name, symbol_c *&called_fb_declaration);
+    void *narrow_S_and_R_operator    (symbol_c *symbol, const char *param_name, symbol_c * called_fb_declaration);
+    void *narrow_store_operator      (symbol_c *symbol);
+    void *narrow_conditional_operator(symbol_c *symbol);
     void *narrow_binary_operator    (const struct widen_entry widen_table[], symbol_c *symbol,                                     bool *deprecated_operation = NULL);
     void *narrow_binary_expression  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL, bool allow_enums = false);
     void *narrow_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL);
 
-    void *narrow_spec_init(symbol_c *symbol, symbol_c *type_decl, symbol_c *init_value);
-    void *narrow_type_decl(symbol_c *symbol, symbol_c *type_name, symbol_c *spec_init);
+    void *set_il_operand_datatype    (symbol_c *il_operand, symbol_c *datatype);
 
-    void *narrow_conditional_flow_control_IL_instruction(symbol_c *symbol);
 
 
   public:
@@ -181,6 +182,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /*********************/
     /* B 1.4 - Variables */
     /*********************/
+    void *visit(symbolic_variable_c *symbol);
     /********************************************/
     /* B 1.4.1 - Directly Represented Variables */
     /********************************************/
@@ -189,6 +191,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /*************************************/
     void *visit(array_variable_c *symbol);
     void *visit(subscript_list_c *symbol);
+    void *visit(structured_variable_c *symbol);
 
     /******************************************/
     /* B 1.4.3 - Declaration & Initialisation */
@@ -214,6 +217,12 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /* B 1.5.3 - Programs */
     /**********************/
     void *visit(program_declaration_c *symbol);
+
+    /********************************************/
+    /* B 1.6 Sequential function chart elements */
+    /********************************************/
+
+    void *visit(transition_condition_c *symbol);
 
     /********************************/
     /* B 1.7 Configuration elements */

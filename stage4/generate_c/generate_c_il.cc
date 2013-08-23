@@ -410,9 +410,10 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
             symbol_c* fb_value = NULL,
             bool negative = false) {
 
-      bool type_is_complex = search_var_instance_decl->type_is_complex(symbol);
+      bool type_is_complex = false;
       if (fb_symbol == NULL) {
         unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
+        type_is_complex = search_var_instance_decl->type_is_complex(symbol);
         if (vartype == search_var_instance_decl_c::external_vt) {
           if (search_var_instance_decl->type_is_fb(symbol))
             s4o.print(SET_EXTERNAL_FB);
@@ -446,7 +447,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
       symbol->accept(*this);
       s4o.print(",");
       if (negative) {
-	    if (get_datatype_info_c::is_BOOL_compatible(this->current_operand->datatype))
+        if (get_datatype_info_c::is_BOOL_compatible(this->current_operand->datatype))
           s4o.print("!");
         else
           s4o.print("~");
@@ -839,6 +840,14 @@ void *visit(il_function_call_c *symbol) {
       break;
     }
     
+    /* We do not yet support embedded IL lists, so we abort the compiler if we find one */
+    /* Note that in IL function calls the syntax does not allow embeded IL lists, so this check is not necessary here! */
+    /*
+    {simple_instr_list_c *instruction_list = dynamic_cast<simple_instr_list_c *>(param_value);
+     if (NULL != instruction_list) STAGE4_ERROR(param_value, param_value, "The compiler does not yet support formal invocations in IL that contain embedded IL lists. Aborting!");
+    }
+    */
+    
     if ((param_value == NULL) && (param_direction == function_param_iterator_c::direction_in)) {
       /* No value given for parameter, so we must use the default... */
       /* First check whether default value specified in function declaration...*/
@@ -1060,6 +1069,11 @@ void *visit(il_fb_call_c *symbol) {
     if ((param_value == NULL) && !fp_iterator.is_en_eno_param_implicit())
       param_value = function_call_param_iterator.next_nf();
 
+    /* We do not yet support embedded IL lists, so we abort the compiler if we find one */
+    {simple_instr_list_c *instruction_list = dynamic_cast<simple_instr_list_c *>(param_value);
+     if (NULL != instruction_list) STAGE4_ERROR(param_value, param_value, "The compiler does not yet support formal invocations in IL that contain embedded IL lists. Aborting!");
+    }
+    
     symbol_c *param_type = fp_iterator.param_type();
     if (param_type == NULL) ERROR;
     
@@ -1226,6 +1240,11 @@ void *visit(il_formal_funct_call_c *symbol) {
      */
     if ((param_value == NULL) && (fp_iterator.is_extensible_param())) {
       break;
+    }
+    
+    /* We do not yet support embedded IL lists, so we abort the compiler if we find one */
+    {simple_instr_list_c *instruction_list = dynamic_cast<simple_instr_list_c *>(param_value);
+     if (NULL != instruction_list) STAGE4_ERROR(param_value, param_value, "The compiler does not yet support formal invocations in IL that contain embedded IL lists. Aborting!");
     }
     
     if ((param_value == NULL) && (param_direction == function_param_iterator_c::direction_in)) {
@@ -1530,6 +1549,16 @@ void *visit(NOT_operator_c *symbol) {
 
 
 void *visit(S_operator_c *symbol) {
+  /* This operator must implement one of two possible semantics: 
+   *     - FB call
+   *     - Set all the bits of an ANY_BIT type variable to 1
+   */
+  
+  /* Check whether we must implement the FB call semantics... */
+  if (NULL != symbol->called_fb_declaration)
+    return XXX_CAL_operator( "S", this->current_operand);
+  
+  /* Implement the bit setting semantics... */
   if (wanted_variablegeneration != expression_vg) {
     s4o.print("LD");
     return NULL;
@@ -1552,6 +1581,16 @@ void *visit(S_operator_c *symbol) {
 
 
 void *visit(R_operator_c *symbol) {
+  /* This operator must implement one of two possible semantics: 
+   *     - FB call
+   *     - Set all the bits of an ANY_BIT type variable to 0
+   */
+  
+  /* Check whether we must implement the FB call semantics... */
+  if (NULL != symbol->called_fb_declaration)
+    return XXX_CAL_operator( "R", this->current_operand);
+  
+  /* Implement the bit setting semantics... */
   if (wanted_variablegeneration != expression_vg) {
     s4o.print("LD");
     return NULL;
