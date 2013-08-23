@@ -156,7 +156,7 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 void lvalue_check_c::check_assignment_to_constant(symbol_c *lvalue) {
 	unsigned int option = search_var_instance_decl->get_option(lvalue);
 	if (option == search_var_instance_decl_c::constant_opt) {
-		STAGE3_ERROR(0, lvalue, lvalue, "Assignment to CONSTANT variables is not be allowed.");
+		STAGE3_ERROR(0, lvalue, lvalue, "Assignment to CONSTANT variables is not allowed.");
 	}
 }
 
@@ -230,7 +230,7 @@ void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
 	     (typeid( *lvalue ) == typeid( neg_expression_c               )) ||
 	     (typeid( *lvalue ) == typeid( not_expression_c               )) ||
 	     (typeid( *lvalue ) == typeid( function_invocation_c          )))
-		STAGE3_ERROR(0, lvalue, lvalue, "Assigning an expression to an OUT or IN_OUT parameter is not allowed.");
+		STAGE3_ERROR(0, lvalue, lvalue, "Assignment to an expression or a literal value is not allowed.");
 }                                                                  
 
 
@@ -249,7 +249,7 @@ void lvalue_check_c::check_assignment_to_il_list(symbol_c *lvalue) {
 	     /* B 2.1 Instructions and Operands */
 	     /***********************************/
 	     (typeid( *lvalue ) == typeid( simple_instr_list_c)))
-		STAGE3_ERROR(0, lvalue, lvalue, "Assigning an IL list IN_OUT parameter is not allowed.");
+		STAGE3_ERROR(0, lvalue, lvalue, "Assigning an IL list to an IN_OUT parameter is not allowed.");
 }                                                                  
 
 
