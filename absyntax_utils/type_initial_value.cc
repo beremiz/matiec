@@ -220,6 +220,8 @@ void *type_initial_value_c::visit(enumerated_spec_init_c *symbol) {
 /* helper symbol for enumerated_specification->enumerated_spec_init */
 /* enumerated_value_list ',' enumerated_value */
 void *type_initial_value_c::visit(enumerated_value_list_c *symbol) {
+  /* stage1_2 never creates an enumerated_value_list_c with no entries. If this occurs, then something must have changed! */
+  if (symbol->n <= 0) ERROR;
  /* if no initial value explicitly given, then use the lowest value of the subrange */
   return (void *)symbol->elements[0];
 }
