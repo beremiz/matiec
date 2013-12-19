@@ -285,7 +285,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       s4o.print(",");
       wanted_variablegeneration = expression_vg;
       print_check_function(type, value, NULL, true);
-      if (search_var_instance_decl->type_is_complex(symbol)) {
+      if (analyse_variable_c::contains_complex_type(symbol)) {
         s4o.print(",");
         wanted_variablegeneration = complextype_suffix_vg;
         symbol->accept(*this);

@@ -340,6 +340,70 @@ class print_function_parameter_data_types_c: public generate_c_base_c {
 /***********************************************************************/
 /***********************************************************************/
 
+/* A helper class that analyses if the datatype of a variable is 'complex'. */
+/* 'complex' means that it is either a strcuture or an array!               */
+class analyse_variable_c: public null_visitor_c {
+  private:
+    static analyse_variable_c *singleton_;
+    bool   contains_complex_type_res;
+
+  public:
+    analyse_variable_c(void) {};
+    
+    static bool is_complex_type(symbol_c *symbol) {
+      if (NULL == symbol)           ERROR;
+      if (NULL == symbol->datatype) ERROR;
+      return (   get_datatype_info_c::is_structure(symbol->datatype) 
+              || get_datatype_info_c::is_array    (symbol->datatype) 
+             );
+    }
+
+    /* returns true if a strcutured variable (e.g. fb1.fb2.strcut1.real) contains a structure or array */
+    /* eg:
+     *      fb1.fb2.fb3.real       returns FALSE
+     *      fb1.fb2.struct1.real   returns TRUE
+     *      struct1.real           returns TRUE
+     */
+    static bool contains_complex_type(symbol_c *symbol) {
+      if (NULL == singleton_)       singleton_ = new analyse_variable_c();
+      if (NULL == singleton_)       ERROR;
+      if (NULL == symbol)           ERROR;
+      if (NULL == symbol->datatype) ERROR;
+      
+      singleton_->contains_complex_type_res = false;
+      symbol->accept(*singleton_);
+      return singleton_->contains_complex_type_res;
+    }
+    
+    
+    /*************************************/
+    /* B.1.4.2   Multi-element Variables */
+    /*************************************/
+    
+    // SYM_REF2(structured_variable_c, record_variable, field_selector)
+    void *visit(structured_variable_c *symbol) {
+      symbol->record_variable->accept(*this);
+      /* do not set the contains_complex_type_res to TRUE if this structured_variable_c is accessing a FB instance! */
+      contains_complex_type_res |= get_datatype_info_c::is_structure(symbol->datatype);
+      return NULL;
+    }
+    
+    /*  subscripted_variable '[' subscript_list ']' */
+    //SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
+    void *visit(array_variable_c *symbol) {
+      contains_complex_type_res |= true;
+      return NULL;
+    }
+
+};
+
+analyse_variable_c *analyse_variable_c::singleton_ = NULL;
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
 
 #include "generate_c_st.cc"
 #include "generate_c_il.cc"
