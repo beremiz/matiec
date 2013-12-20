@@ -376,6 +376,14 @@ class analyse_variable_c: public null_visitor_c {
     }
     
     
+    /*********************/
+    /* B 1.4 - Variables */
+    /*********************/
+    void *visit(symbolic_variable_c *symbol) {
+      contains_complex_type_res |= is_complex_type(symbol);
+      return NULL;
+    }
+    
     /*************************************/
     /* B.1.4.2   Multi-element Variables */
     /*************************************/
