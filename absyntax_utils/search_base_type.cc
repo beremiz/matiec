@@ -82,32 +82,6 @@ symbol_c *search_base_type_c::get_basetype_id  (symbol_c *symbol) {
 }
 
 
-/* Note by MJS: The following two functions definately do not belong in this class!! Maybe create a new utility class?
- * I will need to clean this up when the opportunity arises!
- */
-/* static method! */
-bool search_base_type_c::type_is_subrange(symbol_c* type_decl) {
-  create_singleton();
-  search_base_type_singleton->is_subrange = false;
-  type_decl->accept(*search_base_type_singleton);
-  return search_base_type_singleton->is_subrange;
-}
-
-
-/* static method! */
-bool search_base_type_c::type_is_enumerated(symbol_c* type_decl) {
-  create_singleton();
-  search_base_type_singleton->is_enumerated = false;
-  type_decl->accept(*search_base_type_singleton);
-  return search_base_type_singleton->is_enumerated;
-}
-
-bool search_base_type_c::type_is_fb(symbol_c* type_decl) {
-  create_singleton();
-  search_base_type_singleton->is_fb = false;
-  type_decl->accept(*search_base_type_singleton);
-  return search_base_type_singleton->is_fb;
-}
 
 /*************************/
 /* B.1 - Common elements */
@@ -241,7 +215,6 @@ void *search_base_type_c::visit(subrange_type_declaration_c *symbol) {
 
 /* subrange_specification ASSIGN signed_integer */
 void *search_base_type_c::visit(subrange_spec_init_c *symbol) {
-  this->is_subrange = true;
   return symbol->subrange_specification->accept(*this);
 }
 
@@ -268,7 +241,6 @@ void *search_base_type_c::visit(enumerated_type_declaration_c *symbol) {
 
 /* enumerated_specification ASSIGN enumerated_value */
 void *search_base_type_c::visit(enumerated_spec_init_c *symbol) {
-  this->is_enumerated = true;
   // current_basetype may have been set in the previous enumerated_type_declaration_c visitor, in which case we do not want to overwrite the value!
   if (NULL == this->current_basetype)
     this->current_basetype  = symbol; 
@@ -282,7 +254,6 @@ void *search_base_type_c::visit(enumerated_spec_init_c *symbol) {
 /* helper symbol for enumerated_specification->enumerated_spec_init */
 /* enumerated_value_list ',' enumerated_value */
 void *search_base_type_c::visit(enumerated_value_list_c *symbol) {
-  this->is_enumerated = true;
   // current_basetype may have been set in the previous enumerated_type_declaration_c or enumerated_spec_init_c visitors, in which case we do not want to overwrite the value!
   if (NULL == this->current_basetype) 
     this->current_basetype  = symbol; 
@@ -388,7 +359,6 @@ void *search_base_type_c::visit(fb_spec_init_c *symbol)	{
 /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
 // SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
 void *search_base_type_c::visit(function_block_declaration_c *symbol)                   {
-	this->is_fb = true;
 	return (void *)symbol;
 }
 

@@ -352,7 +352,7 @@ class analyse_variable_c: public null_visitor_c {
     
     static bool is_complex_type(symbol_c *symbol) {
       if (NULL == symbol)           ERROR;
-      if (NULL == symbol->datatype) ERROR;
+      if (!get_datatype_info_c::is_type_valid     (symbol->datatype)) ERROR;
       return (   get_datatype_info_c::is_structure(symbol->datatype) 
               || get_datatype_info_c::is_array    (symbol->datatype) 
              );
@@ -392,6 +392,7 @@ class analyse_variable_c: public null_visitor_c {
     void *visit(structured_variable_c *symbol) {
       symbol->record_variable->accept(*this);
       /* do not set the contains_complex_type_res to TRUE if this structured_variable_c is accessing a FB instance! */
+      if (!get_datatype_info_c::is_type_valid(symbol->datatype)) ERROR;
       contains_complex_type_res |= get_datatype_info_c::is_structure(symbol->datatype);
       return NULL;
     }

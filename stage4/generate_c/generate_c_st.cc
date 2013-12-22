@@ -131,7 +131,8 @@ void *print_getter(symbol_c *symbol) {
   unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
   if (wanted_variablegeneration == fparam_output_vg) {
     if (vartype == search_var_instance_decl_c::external_vt) {
-      if (search_var_instance_decl->type_is_fb(symbol))
+      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+      if ( get_datatype_info_c::is_function_block(symbol->datatype))
         s4o.print(GET_EXTERNAL_FB_BY_REF);
       else
         s4o.print(GET_EXTERNAL_BY_REF);
@@ -143,7 +144,8 @@ void *print_getter(symbol_c *symbol) {
   }
   else {
     if (vartype == search_var_instance_decl_c::external_vt) {
-      if (search_var_instance_decl->type_is_fb(symbol))
+      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+      if ( get_datatype_info_c::is_function_block(symbol->datatype))
         s4o.print(GET_EXTERNAL_FB);
       else
         s4o.print(GET_EXTERNAL);
@@ -179,7 +181,8 @@ void *print_setter(symbol_c* symbol,
     unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
     type_is_complex = analyse_variable_c::contains_complex_type(symbol);
     if (vartype == search_var_instance_decl_c::external_vt) {
-      if (search_var_instance_decl->type_is_fb(symbol))
+      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+      if ( get_datatype_info_c::is_function_block(symbol->datatype))
         s4o.print(SET_EXTERNAL_FB);
       else
         s4o.print(SET_EXTERNAL);
@@ -329,7 +332,7 @@ void *visit(direct_variable_c *symbol) {
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
 void *visit(structured_variable_c *symbol) {
   TRACE("structured_variable_c");
-  bool type_is_complex = search_var_instance_decl->type_is_complex(symbol->record_variable);
+  bool type_is_complex = analyse_variable_c::is_complex_type(symbol->record_variable);
   switch (wanted_variablegeneration) {
     case complextype_base_vg:
     case complextype_base_assignment_vg:

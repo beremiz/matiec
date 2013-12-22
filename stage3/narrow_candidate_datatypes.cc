@@ -1360,7 +1360,7 @@ void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_
 				l_expr->datatype = l_type;
 				r_expr->datatype = r_type;
 				count ++;
-			} else if ((l_type == r_type) && search_base_type_c::type_is_enumerated(l_type) && get_datatype_info_c::is_BOOL_compatible(symbol->datatype)) {
+			} else if ((l_type == r_type) && get_datatype_info_c::is_enumerated(l_type) && get_datatype_info_c::is_BOOL_compatible(symbol->datatype)) {
 				if (NULL != deprecated_operation)  *deprecated_operation = false;
 				l_expr->datatype = l_type;
 				r_expr->datatype = r_type;
@@ -1516,7 +1516,7 @@ void *narrow_candidate_datatypes_c::visit(elseif_statement_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(case_statement_c *symbol) {
 	for (unsigned int i = 0; i < symbol->expression->candidate_datatypes.size(); i++) {
 		if ((get_datatype_info_c::is_ANY_INT(symbol->expression->candidate_datatypes[i]))
-				 || (search_base_type_c::type_is_enumerated(symbol->expression->candidate_datatypes[i])))
+				 || (get_datatype_info_c::is_enumerated(symbol->expression->candidate_datatypes[i])))
 			symbol->expression->datatype = symbol->expression->candidate_datatypes[i];
 	}
 	symbol->expression->accept(*this);

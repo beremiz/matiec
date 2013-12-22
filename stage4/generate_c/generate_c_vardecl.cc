@@ -1851,7 +1851,8 @@ void *visit(external_declaration_c *symbol) {
    */
   this->current_var_type_symbol = symbol->specification;
   this->current_var_init_symbol = NULL;
-  bool is_fb = type_is_fb(this->current_var_type_symbol);
+  if(!get_datatype_info_c::is_type_valid(this->current_var_type_symbol)) ERROR;
+  bool is_fb = get_datatype_info_c::is_function_block(this->current_var_type_symbol);
 
   /* now to produce the c equivalent... */
   switch (wanted_varformat) {
@@ -2071,7 +2072,8 @@ void *visit(location_c *symbol) {
 void *visit(global_var_list_c *symbol) {
   TRACE("global_var_list_c");
   list_c *list = dynamic_cast<list_c *>(symbol);
-  bool is_fb = type_is_fb(this->current_var_type_symbol);
+  if(!get_datatype_info_c::is_type_valid(this->current_var_type_symbol)) ERROR;
+  bool is_fb = get_datatype_info_c::is_function_block(this->current_var_type_symbol);
   /* should NEVER EVER occur!! */
   if (list == NULL) ERROR;
 

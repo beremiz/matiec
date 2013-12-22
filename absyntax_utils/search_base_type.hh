@@ -53,10 +53,6 @@ class search_base_type_c: public null_visitor_c {
   private:
     symbol_c *current_type_name;
     symbol_c *current_basetype;
-    bool is_array;
-    bool is_subrange;
-    bool is_enumerated;
-    bool is_fb;
     static search_base_type_c *search_base_type_singleton; // Make this a singleton class!
     
   private:  
@@ -66,9 +62,6 @@ class search_base_type_c: public null_visitor_c {
     search_base_type_c(void);
     static symbol_c *get_basetype_decl (symbol_c *symbol);
     static symbol_c *get_basetype_id   (symbol_c *symbol);
-    static bool      type_is_subrange  (symbol_c *type_decl);
-    static bool      type_is_enumerated(symbol_c *type_decl);
-    static bool      type_is_fb        (symbol_c *type_decl);
 
   public:
   /*************************/

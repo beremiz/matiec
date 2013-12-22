@@ -243,7 +243,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     void *print_getter(symbol_c *symbol) {
       unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
       if (vartype == search_var_instance_decl_c::external_vt) {
-        if (search_var_instance_decl->type_is_fb(symbol))
+        if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+        if ( get_datatype_info_c::is_function_block(symbol->datatype))
           s4o.print(GET_EXTERNAL_FB);
         else
           s4o.print(GET_EXTERNAL);
@@ -269,7 +270,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
                        symbol_c* value) {
       unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
       if (vartype == search_var_instance_decl_c::external_vt) {
-        if (search_var_instance_decl->type_is_fb(symbol))
+        if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+        if ( get_datatype_info_c::is_function_block(symbol->datatype))
           s4o.print(SET_EXTERNAL_FB);
          else
           s4o.print(SET_EXTERNAL);
@@ -336,7 +338,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     // SYM_REF2(structured_variable_c, record_variable, field_selector)
     void *visit(structured_variable_c *symbol) {
       TRACE("structured_variable_c");
-      bool type_is_complex = search_var_instance_decl->type_is_complex(symbol->record_variable);
+      bool type_is_complex = analyse_variable_c::is_complex_type(symbol->record_variable);
       if (generating_inlinefunction) {
         switch (wanted_variablegeneration) {
           case complextype_base_vg:

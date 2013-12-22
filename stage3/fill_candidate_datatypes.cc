@@ -668,7 +668,7 @@ void *fill_candidate_datatypes_c::handle_equality_comparison(const struct widen_
 	handle_binary_expression(widen_table, symbol, l_expr, r_expr);
 	for(unsigned int i = 0; i < l_expr->candidate_datatypes.size(); i++)
 		for(unsigned int j = 0; j < r_expr->candidate_datatypes.size(); j++) {
-			if ((l_expr->candidate_datatypes[i] == r_expr->candidate_datatypes[j]) && search_base_type_c::type_is_enumerated(l_expr->candidate_datatypes[i]))
+			if ((l_expr->candidate_datatypes[i] == r_expr->candidate_datatypes[j]) && get_datatype_info_c::is_enumerated(l_expr->candidate_datatypes[i]))
 				add_datatype_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name);
 		}
 	return NULL;
