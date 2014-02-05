@@ -862,20 +862,20 @@ void *visit(return_statement_c *symbol) {
 
 
 /* fb_name '(' [param_assignment_list] ')' */
-/* param_assignment_list -> may be NULL ! */
-//SYM_REF2(fb_invocation_c, fb_name, param_assignment_list)
+/*    formal_param_list -> may be NULL ! */
+/* nonformal_param_list -> may be NULL ! */
+/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
+// SYM_REF3(fb_invocation_c, fb_name, formal_param_list, nonformal_param_list, symbol_c *called_fb_declaration;)
 void *visit(fb_invocation_c *symbol) {
   TRACE("fb_invocation_c");
-  /* first figure out what is the name of the function block type of the function block being called... */
-  symbol_c *function_block_type_name = this->search_fb_instance_decl->get_type_name(symbol->fb_name);
-    /* should never occur. The function block instance MUST have been declared... */
-  if (function_block_type_name == NULL) ERROR;
-
-  /* Now find the declaration of the function block type being called... */
-  function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(function_block_type_name);
-    /* should never occur. The function block type being called MUST be in the symtable... */
-  if (fb_decl == function_block_type_symtable.end_value()) ERROR;
-
+  
+  /* find the declaration of the function block type being called... */
+  symbol_c *fb_decl = symbol->called_fb_declaration;
+  if (fb_decl == NULL) ERROR;
+  /* figure out the name of the function block type of the function block being called... */
+  symbol_c *function_block_type_name = get_datatype_info_c::get_id(fb_decl);
+  if (NULL == function_block_type_name) ERROR;
+  
   /* loop through each function block parameter, find the value we should pass
    * to it, and then output the c equivalent...
    */
