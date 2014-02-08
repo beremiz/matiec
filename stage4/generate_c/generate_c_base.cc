@@ -583,6 +583,60 @@ void *visit(date_and_time_c *symbol) {
 /********************************/
   /* leave for derived classes... */
 
+  
+/* enumerated_type_name '#' identifier */
+void *visit(enumerated_value_c *symbol) {
+  if (NULL == symbol->datatype) {
+    debug_c::print(symbol);
+    ERROR;
+  }
+  
+  symbol_c *type_name = get_datatype_info_c::get_id(symbol->datatype);
+  if (NULL == type_name) {
+    ERROR_MSG("C code generator does not currently support anonymous enumerated data types.");
+  }
+  
+  type_name->accept(*this);
+  s4o.print("__");
+  symbol->value->accept(*this);
+  return NULL;
+}
+
+
+  
+/* NOTE:     visit(subrange_spec_init_c *)
+ *      and  visit(subrange_specification_c *)
+ *      together simply print out the integer datatype
+ *      on which the subrange is based.
+ *
+ *      Future code clean-ups should delete these two
+ *      visit mehotds, and make sure whoever calls them 
+ *      uses symbol->datatype instead!
+ */ 
+/* subrange_specification ASSIGN signed_integer */
+void *visit(subrange_spec_init_c *symbol) {
+  TRACE("subrange_spec_init_c");
+  symbol->subrange_specification->accept(*this);
+  return NULL;
+}
+
+/*  integer_type_name '(' subrange')' */
+void *visit(subrange_specification_c *symbol) {
+  TRACE("subrange_specification_c");
+  symbol->integer_type_name->accept(*this);
+  return NULL;
+}
+  
+  
+/* helper symbol for array_specification */
+/* array_subrange_list ',' subrange */
+void *visit(array_subrange_list_c *symbol) {
+  TRACE("array_subrange_list_c");
+  print_list(symbol);
+  return NULL;
+}  
+  
+  
 /*********************/
 /* B 1.4 - Variables */
 /*********************/

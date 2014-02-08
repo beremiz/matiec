@@ -661,15 +661,13 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     } inlinearray_mode_t;
 
   private:
-    stage4out_c *s4o_ptr;
     std::map<std::string, int> inline_array_defined;
     std::string current_array_name;
     inlinearray_mode_t current_mode;
 
   public:
     generate_c_datatypes_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
-      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {
-      generate_c_datatypes_c::s4o_ptr = s4o_ptr;
+      : generate_c_typedecl_c(s4o_incl_ptr) {
       current_mode = none_im;
     };
     virtual ~generate_c_datatypes_c(void) {
@@ -1095,14 +1093,13 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
 /***********************************************************************/
 
 
-class generate_c_pous_c: public generate_c_typedecl_c {
+class generate_c_pous_c: public generate_c_base_c {
   private:
-    stage4out_c *s4o_ptr;
+    stage4out_c &s4o_incl;
     
   public:
     generate_c_pous_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
-      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {
-      generate_c_pous_c::s4o_ptr = s4o_ptr;
+      : generate_c_base_c(s4o_ptr), s4o_incl(*s4o_incl_ptr) {
     };
     virtual ~generate_c_pous_c(void) {}
 
@@ -1136,8 +1133,8 @@ class generate_c_pous_c: public generate_c_typedecl_c {
 /********************/
 /* 2.1.6 - Pragmas  */
 /********************/
-void *visit(enable_code_generation_pragma_c * symbol)   {s4o_ptr->enable_output();  return NULL;}
-void *visit(disable_code_generation_pragma_c * symbol)  {s4o_ptr->disable_output(); return NULL;} 
+void *visit(enable_code_generation_pragma_c * symbol)   {s4o.enable_output();  return NULL;}
+void *visit(disable_code_generation_pragma_c * symbol)  {s4o.disable_output(); return NULL;} 
 
 /*************************/
 /* B.1 - Common elements */
@@ -1699,16 +1696,13 @@ void *visit(program_declaration_c *symbol) {
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_c_config_c: public generate_c_typedecl_c {
+class generate_c_config_c: public generate_c_base_c {
     private:
-    stage4out_c *s4o_ptr;
-    stage4out_c *s4o_incl_ptr;
+    stage4out_c &s4o_incl;
     
     public:
     generate_c_config_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
-      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {
-      generate_c_config_c::s4o_ptr = s4o_ptr;
-      generate_c_config_c::s4o_incl_ptr = s4o_incl_ptr;
+      : generate_c_base_c(s4o_ptr), s4o_incl(*s4o_incl_ptr) {
     };
 
     virtual ~generate_c_config_c(void) {}
@@ -1728,14 +1722,14 @@ public:
 /* 2.1.6 - Pragmas  */
 /********************/
 void *visit(enable_code_generation_pragma_c * symbol)   {
-    s4o_ptr->enable_output();
-    s4o_incl_ptr->enable_output();
+    s4o.enable_output();
+    s4o_incl.enable_output();
     return NULL;
 }
 
 void *visit(disable_code_generation_pragma_c * symbol)  {
-    s4o_ptr->disable_output();
-    s4o_incl_ptr->disable_output();    
+    s4o.disable_output();
+    s4o_incl.disable_output();    
     return NULL;
 }
     

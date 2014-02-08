@@ -31,16 +31,9 @@ class generate_c_typedecl_c: public generate_c_base_c {
   private:
     symbol_c* current_type_name;
     bool array_is_derived;
-
     generate_c_base_c *basedecl;
 
   public:
-    generate_c_typedecl_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr): generate_c_base_c(s4o_ptr), s4o_incl(*s4o_incl_ptr) {
-      current_typedefinition = none_td;
-      current_basetypedeclaration = none_bd;
-      current_type_name = NULL;
-      basedecl = new generate_c_base_c(&s4o_incl);
-    }
     generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_c(s4o_ptr), s4o_incl(*s4o_ptr) {
       current_typedefinition = none_td;
       current_basetypedeclaration = none_bd;
@@ -237,11 +230,9 @@ void *visit(subrange_specification_c *symbol) {
         break;
     }
   }
-  else {
-    symbol->integer_type_name->accept(*basedecl);
-  }
   return NULL;
 }
+
 
 /*  signed_integer DOTDOT signed_integer */
 void *visit(subrange_c *symbol) {
@@ -324,25 +315,9 @@ void *visit(enumerated_value_list_c *symbol) {
 }
 
 /* enumerated_type_name '#' identifier */
-void *visit(enumerated_value_c *symbol) {
-  TRACE("enumerated_value_c");
-  if (current_typedefinition == enumerated_td)
-    current_type_name->accept(*basedecl);
-  else {
-    if (NULL == symbol->datatype) {
-      debug_c::print(symbol);
-      ERROR;
-    }
-    symbol_c *type_name = get_datatype_info_c::get_id(symbol->datatype);
-    if (NULL == type_name) {
-//       ERROR_MSG("generate_c does not support anonymous enumerated data types.");
-    } else
-    type_name->accept(*basedecl);
-  }
-  s4o_incl.print("__");
-  symbol->value->accept(*basedecl);
-  return NULL;
-}
+/* Handled by generate_c_base_c class!!
+void *visit(enumerated_value_c *symbol) {}
+*/
 
 /*  identifier ':' array_spec_init */
 void *visit(array_type_declaration_c *symbol) {
@@ -422,13 +397,6 @@ void *visit(array_specification_c *symbol) {
   return NULL;
 }
 
-/* helper symbol for array_specification */
-/* array_subrange_list ',' subrange */
-void *visit(array_subrange_list_c *symbol) {
-  TRACE("array_subrange_list_c");
-  print_list(symbol);
-  return NULL;
-}
 
 /*  TYPE type_declaration_list END_TYPE */
 void *visit(data_type_declaration_c *symbol) {
