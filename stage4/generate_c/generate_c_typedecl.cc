@@ -190,6 +190,7 @@ void *visit(subrange_spec_init_c *symbol) {
 
 /*  integer_type_name '(' subrange')' */
 void *visit(subrange_specification_c *symbol) {
+  TRACE("subrange_specification_c");
   if (current_typedefinition == subrange_td) {
     switch (current_basetypedeclaration) {
       case subrangebasetype_bd:
@@ -197,31 +198,39 @@ void *visit(subrange_specification_c *symbol) {
         break;
       case subrangetest_bd:
         if (symbol->subrange != NULL) {
-          current_type_name->accept(*this);
-          s4o.print(" __CHECK_");
-          current_type_name->accept(*this);
-          s4o.print("(");
-          current_type_name->accept(*this);
-          s4o.print(" value) {\n");
-          s4o.indent_right();
+          s4o_incl.print("static inline ");
+          current_type_name->accept(*basedecl);
+          s4o_incl.print(" __CHECK_");
+          current_type_name->accept(*basedecl);
+          s4o_incl.print("(");
+          current_type_name->accept(*basedecl);
+          s4o_incl.print(" value) {\n");
+          s4o_incl.indent_right();
 
+          /* NOTE: IEC 61131-3 v2 syntax mandates that the integer type name be one of SINT, ..., LINT, USINT, ... ULIT */
+          /*       For this reason, the following condition will always be false, and therefore this is a block
+           *       of dead code. However, let's not delete it for now. It might come in useful for IEC 61131-3 v3.
+           *       For the moment, we just comment it out!
+           */
+          /*
           if (get_datatype_info_c::is_subrange(symbol->integer_type_name)) {
-            s4o.print(s4o.indent_spaces + "value = __CHECK_");
+            s4o_incl.print(s4o_incl.indent_spaces + "value = __CHECK_");
             symbol->integer_type_name->accept(*this);
-            s4o.print("(value);\n");
+            s4o_incl.print("(value);\n");
           }
+          */
 
           symbol->subrange->accept(*this);
 
-          s4o.indent_left();
-          s4o.print("}\n");
+          s4o_incl.indent_left();
+          s4o_incl.print("}\n");
         }
         else {
-          s4o.print("#define __CHECK_");
-          current_type_name->accept(*this);
-          s4o.print(" __CHECK_");
-          symbol->integer_type_name->accept(*this);
-          s4o.print("\n");
+          s4o_incl.print("#define __CHECK_");
+          current_type_name->accept(*basedecl);
+          s4o_incl.print(" __CHECK_");
+          symbol->integer_type_name->accept(*basedecl);
+          s4o_incl.print("\n");
         }
         break;
       default:
@@ -236,6 +245,7 @@ void *visit(subrange_specification_c *symbol) {
 
 /*  signed_integer DOTDOT signed_integer */
 void *visit(subrange_c *symbol) {
+  TRACE("subrange_c");
   int dimension;
   switch (current_typedefinition) {
     case array_td:
@@ -248,26 +258,26 @@ void *visit(subrange_c *symbol) {
         symbol->lower_limit->accept(*this);
       break;
     case subrange_td:
-      s4o.print(s4o.indent_spaces + "if (value < ");
-      symbol->lower_limit->accept(*this);
-      s4o.print(")\n");
-      s4o.indent_right();
-      s4o.print(s4o.indent_spaces + "return ");
-      symbol->lower_limit->accept(*this);
-      s4o.print(";\n");
-      s4o.indent_left();
-      s4o.print(s4o.indent_spaces + "else if (value > ");
-      symbol->upper_limit->accept(*this);
-      s4o.print(")\n");
-      s4o.indent_right();
-      s4o.print(s4o.indent_spaces + "return ");
-      symbol->upper_limit->accept(*this);
-      s4o.print(";\n");
-      s4o.indent_left();
-      s4o.print(s4o.indent_spaces + "else\n");
-      s4o.indent_right();
-      s4o.print(s4o.indent_spaces + "return value;\n");
-      s4o.indent_left();
+      s4o_incl.print(s4o_incl.indent_spaces + "if (value < ");
+      symbol->lower_limit->accept(*basedecl);
+      s4o_incl.print(")\n");
+      s4o_incl.indent_right();
+      s4o_incl.print(s4o_incl.indent_spaces + "return ");
+      symbol->lower_limit->accept(*basedecl);
+      s4o_incl.print(";\n");
+      s4o_incl.indent_left();
+      s4o_incl.print(s4o_incl.indent_spaces + "else if (value > ");
+      symbol->upper_limit->accept(*basedecl);
+      s4o_incl.print(")\n");
+      s4o_incl.indent_right();
+      s4o_incl.print(s4o_incl.indent_spaces + "return ");
+      symbol->upper_limit->accept(*basedecl);
+      s4o_incl.print(";\n");
+      s4o_incl.indent_left();
+      s4o_incl.print(s4o_incl.indent_spaces + "else\n");
+      s4o_incl.indent_right();
+      s4o_incl.print(s4o_incl.indent_spaces + "return value;\n");
+      s4o_incl.indent_left();
     default:
       break;
   }
@@ -308,12 +318,14 @@ void *visit(enumerated_spec_init_c *symbol) {
 /* helper symbol for enumerated_specification->enumerated_spec_init */
 /* enumerated_value_list ',' enumerated_value */
 void *visit(enumerated_value_list_c *symbol) {
+  TRACE("enumerated_value_list_c");
   print_list_incl(symbol, s4o_incl.indent_spaces, ",\n"+s4o_incl.indent_spaces, "\n");
   return NULL;
 }
 
 /* enumerated_type_name '#' identifier */
 void *visit(enumerated_value_c *symbol) {
+  TRACE("enumerated_value_c");
   if (current_typedefinition == enumerated_td)
     current_type_name->accept(*basedecl);
   else {
@@ -393,6 +405,7 @@ void *visit(array_spec_init_c *symbol) {
 
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *visit(array_specification_c *symbol) {
+  TRACE("array_specification_c");
   switch (current_basetypedeclaration) {
     case arraybasetype_bd:
       symbol->non_generic_type_name->accept(*this);
@@ -412,6 +425,7 @@ void *visit(array_specification_c *symbol) {
 /* helper symbol for array_specification */
 /* array_subrange_list ',' subrange */
 void *visit(array_subrange_list_c *symbol) {
+  TRACE("array_subrange_list_c");
   print_list(symbol);
   return NULL;
 }
@@ -441,11 +455,11 @@ void *visit(simple_type_declaration_c *symbol) {
   s4o_incl.print(")\n");
 
   if (get_datatype_info_c::is_subrange(symbol->simple_type_name)) {
-    s4o.print("#define __CHECK_");
-    current_type_name->accept(*this);
-    s4o.print(" __CHECK_");
+    s4o_incl.print("#define __CHECK_");
+    current_type_name->accept(*basedecl);
+    s4o_incl.print(" __CHECK_");
     symbol->simple_spec_init->accept(*this);
-    s4o.print("\n");
+    s4o_incl.print("\n");
   }
 
   return NULL;
