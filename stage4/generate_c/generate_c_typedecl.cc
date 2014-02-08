@@ -420,7 +420,7 @@ void *visit(array_subrange_list_c *symbol) {
 void *visit(data_type_declaration_c *symbol) {
   TRACE("data_type_declaration_c");
   symbol->type_declaration_list->accept(*this);
-  s4o.print("\n\n");
+  s4o_incl.print("\n\n");
   return NULL;
 }
 
@@ -565,7 +565,7 @@ void *visit(structure_element_declaration_c *symbol) {
   s4o_incl.print(" ");
   symbol->structure_element_name->accept(*basedecl);
   s4o_incl.print(";\n");
-  s4o_incl.print(s4o.indent_spaces);
+  s4o_incl.print(s4o_incl.indent_spaces);
 
   return NULL;
 }
