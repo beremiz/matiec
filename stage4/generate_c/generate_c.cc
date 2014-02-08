@@ -855,11 +855,20 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     void *visit(array_spec_init_c *symbol) {
       switch (current_mode) {
         case arraydeclaration_im:
+          {
+            array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
+            if (specification != NULL)
+              symbol->array_specification->accept(*this);
+          }
+          break;
         case arrayname_im:
           {
             array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
             if (specification != NULL)
               symbol->array_specification->accept(*this);
+            identifier_c *name = dynamic_cast<identifier_c*>(symbol->array_specification);
+            if (name != NULL)
+              s4o_incl.print(name->value);
           }
           break;
         default:
