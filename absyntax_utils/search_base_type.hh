@@ -31,19 +31,35 @@
  */
 
 
-/* Determine the data type on which another data type is based on.
- * If a new default initial value is given, we DO NOT consider it a
- * new base class, and continue looking further!
+/* Determine the data type on which another data type is based on. */
+
+/*
+ * What is a Base Type?
+ *    A base type is the fundamental data type from which the type is derived.
+ *    The main idea is that if two datatyes (A and B) share a common base type, 
+ *    then these two datatypes may be used interchangeably in an expression.
+ * 
+ * What is an Equivalent Type? 
+ *    An equivalent type is the data type from which the type is derived.
+ *    The Base type and the Equivalent type will always be the same, with the
+ *    exception of subranges!
  *
- * E.g. TYPE new_int_t : INT; END_TYPE;
- *      TYPE new_int2_t : INT = 2; END_TYPE;
- *      TYPE new_subr_t : INT (4..5); END_TYPE;
+ * E.g. TYPE new_int_t  : INT; END_TYPE;
+ *      TYPE new_int2_t : INT := 2; END_TYPE;
+ *      TYPE new_int3_t : new_int2_t := 3; END_TYPE;
+ *      TYPE new_sub_t  : INT (4..10); END_TYPE;
+ *      TYPE new_sub2_t : new_sub_t  := 5 ; END_TYPE;
+ *      TYPE new_sub3_t : new_sub2_t := 6 ; END_TYPE;
+ *      TYPE new_sub4_t : new_int3_t (4..10); END_TYPE;    <-----  This is NOT legal syntax!
  *
- *    new_int_t is really an INT!!
- *    new_int2_t is also really an INT!!
- *    new_subr_t is also really an INT!!
+ *    new_int_t   : base type->INT          equivalent type->INT
+ *    new_int2_t  : base type->INT          equivalent type->INT
+ *    new_int3_t  : base type->INT          equivalent type->INT
+ *    new_sub_t   : base type->INT          equivalent type->new_sub_t
+ *    new_sub2_t  : base type->INT          equivalent type->new_sub_t
+ *    new_sub3_t  : base type->INT          equivalent type->new_sub_t
  *
- * Note that a FB declaration is also considered a base type, as
+ * Note too that a FB declaration is also considered a base type, as
  * we may have FB instances declared of a specific FB type.
  */
 
@@ -51,8 +67,9 @@
 class search_base_type_c: public null_visitor_c {
 
   private:
-    symbol_c *current_type_name;
+    symbol_c *current_basetype_name;
     symbol_c *current_basetype;
+    symbol_c *current_equivtype;
     static search_base_type_c *search_base_type_singleton; // Make this a singleton class!
     
   private:  
@@ -60,8 +77,9 @@ class search_base_type_c: public null_visitor_c {
 
   public:
     search_base_type_c(void);
-    static symbol_c *get_basetype_decl (symbol_c *symbol);
-    static symbol_c *get_basetype_id   (symbol_c *symbol);
+    static symbol_c *get_equivtype_decl(symbol_c *symbol);  /* get the Equivalent Type declaration */
+    static symbol_c *get_basetype_decl (symbol_c *symbol);  /* get the Base       Type declaration */
+    static symbol_c *get_basetype_id   (symbol_c *symbol);  /* get the Base       Type identifier  */
 
   public:
   /*************************/

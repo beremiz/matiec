@@ -292,7 +292,7 @@ bool get_datatype_info_c::is_function_block(symbol_c *type_symbol) {
 
 
 bool get_datatype_info_c::is_subrange(symbol_c *type_symbol) {
-  symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol); /* NOTE: will work correctly once we update the way search_base_type_c works, by adding a new search_effective_type:c */
+  symbol_c *type_decl = search_base_type_c::get_equivtype_decl(type_symbol); /* NOTE: do NOT call search_base_type_c !! */
   if (NULL == type_decl)                                             {return false;}
   
   if (typeid(*type_decl) == typeid(subrange_type_declaration_c))     {return true;}   /*  subrange_type_name ':' subrange_spec_init */
