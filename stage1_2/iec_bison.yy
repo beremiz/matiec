@@ -1046,7 +1046,7 @@ typedef struct YYLTYPE {
 //  - configuration_declaration
 //  - resource_declaration
 //
-%type  <leaf>	optional_global_var_declarations
+%type  <list>	global_var_declarations_list
 // helper symbol for configuration_declaration
 %type  <leaf>	optional_access_declarations
 // helper symbol for configuration_declaration
@@ -5563,7 +5563,7 @@ resource_type_name: any_identifier;
 
 configuration_declaration:
   CONFIGURATION configuration_name
-   optional_global_var_declarations
+   global_var_declarations_list
    single_resource_declaration
    {variable_name_symtable.pop();
     direct_variable_symtable.pop();}
@@ -5576,7 +5576,7 @@ configuration_declaration:
 	 direct_variable_symtable.pop();
 	}
 | CONFIGURATION configuration_name
-   optional_global_var_declarations
+   global_var_declarations_list
    resource_declaration_list
    optional_access_declarations
    optional_instance_specific_initializations
@@ -5588,7 +5588,7 @@ configuration_declaration:
 }
 /* ERROR_CHECK_BEGIN */
 | CONFIGURATION 
-   optional_global_var_declarations
+   global_var_declarations_list
    single_resource_declaration
    {variable_name_symtable.pop();
     direct_variable_symtable.pop();}
@@ -5597,14 +5597,14 @@ configuration_declaration:
   END_CONFIGURATION
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "no configuration name defined in configuration declaration."); yynerrs++;}
 | CONFIGURATION
-   optional_global_var_declarations
+   global_var_declarations_list
    resource_declaration_list
    optional_access_declarations
    optional_instance_specific_initializations
   END_CONFIGURATION
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "no configuration name defined in configuration declaration."); yynerrs++;}
 | CONFIGURATION error
-   optional_global_var_declarations
+   global_var_declarations_list
    single_resource_declaration
    {variable_name_symtable.pop();
     direct_variable_symtable.pop();}
@@ -5613,27 +5613,27 @@ configuration_declaration:
   END_CONFIGURATION
   {$$ = NULL; print_err_msg(locf(@2), locl(@2), "invalid configuration name defined in configuration declaration."); yyerrok;}
 | CONFIGURATION error
-   optional_global_var_declarations
+   global_var_declarations_list
    resource_declaration_list
    optional_access_declarations
    optional_instance_specific_initializations
   END_CONFIGURATION
   {$$ = NULL; print_err_msg(locf(@2), locl(@2), "invalid configuration name defined in configuration declaration."); yyerrok;}
 | CONFIGURATION configuration_name
-   optional_global_var_declarations
+   global_var_declarations_list
    optional_access_declarations
    optional_instance_specific_initializations
   END_CONFIGURATION
   {$$ = NULL; print_err_msg(locl(@3), locf(@4), "no resource(s) defined in configuration declaration."); yynerrs++;}
 | CONFIGURATION configuration_name
-   optional_global_var_declarations
+   global_var_declarations_list
    error
    optional_access_declarations
    optional_instance_specific_initializations
   END_CONFIGURATION
   {$$ = NULL; print_err_msg(locf(@4), locl(@4), "invalid resource(s) defined in configuration declaration."); yyerrok;}
 /*| CONFIGURATION configuration_name
-   optional_global_var_declarations
+   global_var_declarations_list
    single_resource_declaration
    {variable_name_symtable.pop();
     direct_variable_symtable.pop();}
@@ -5642,7 +5642,7 @@ configuration_declaration:
   END_OF_INPUT
   {$$ = NULL; print_err_msg(locf(@1), locl(@2), "unclosed configuration declaration."); yyerrok;}*/
 | CONFIGURATION configuration_name
-   optional_global_var_declarations
+   global_var_declarations_list
    resource_declaration_list
    optional_access_declarations
    optional_instance_specific_initializations
@@ -5657,12 +5657,30 @@ configuration_declaration:
 //  - configuration_declaration
 //  - resource_declaration
 //
-optional_global_var_declarations:
+/* NOTE: The IEC 61131-3 v2 standard defines this list as being: [global_var_declarations]
+ *        e.g.:
+ *          'CONFIGURATION' configuration_name  [global_var_declarations] ...
+ *
+ *       However, this means that a single VAR_GLOBAL ... END_VAR construct is allowed
+ *       in each CONFIGURATION or RESOURCE declaration. If the user wishes to have global
+ *       variables with distinct properties (e.g. some with RETAIN, others with CONSTANT,
+ *       and yet other variables with none of these qualifiers), the syntax defined in the 
+ *       standard does not allow this.
+ *       Amazingly, IEC 61131-3 v3 also does not seem to allow it either!!
+ *       Since this is most likely a bug in the standard, we are changing the syntax slightly
+ *       to become:
+ *          'CONFIGURATION' configuration_name  {global_var_declarations} ...
+ *
+ *       Remember that:
+ *          {S}, closure, meaning zero or more concatenations of S.
+ *          [S], option, meaning zero or one occurrence of S.
+ */
+global_var_declarations_list:
   // empty
-	{$$ = NULL;}
-| global_var_declarations
+	{$$ = new global_var_declarations_list_c(locloc(@$));}
+| global_var_declarations_list global_var_declarations
+	{$$ = $1; $$->add_element($2);}
 ;
-
 
 // helper symbol for configuration_declaration //
 optional_access_declarations:
@@ -5693,7 +5711,7 @@ resource_declaration_list:
 
 resource_declaration:
   RESOURCE {variable_name_symtable.push();direct_variable_symtable.push();} resource_name {variable_name_symtable.insert($3, prev_declared_resource_name_token);} ON resource_type_name
-   optional_global_var_declarations
+   global_var_declarations_list
    single_resource_declaration
   END_RESOURCE
 	{$$ = new resource_declaration_c($3, $6, $7, $8, locloc(@$));
@@ -5703,12 +5721,12 @@ resource_declaration:
 	}
 /* ERROR_CHECK_BEGIN */
 | RESOURCE {variable_name_symtable.push();direct_variable_symtable.push();} ON resource_type_name
-   optional_global_var_declarations
+   global_var_declarations_list
    single_resource_declaration
   END_RESOURCE
   {$$ = NULL; print_err_msg(locl(@1), locf(@3), "no resource name defined in resource declaration."); yynerrs++;}
 /*|	RESOURCE {variable_name_symtable.push();direct_variable_symtable.push();} resource_name ON resource_type_name
-   optional_global_var_declarations
+   global_var_declarations_list
    single_resource_declaration
   END_OF_INPUT
 	{$$ = NULL; print_err_msg(locf(@1), locl(@5), "unclosed resource declaration."); yyerrok;}*/
