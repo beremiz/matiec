@@ -657,7 +657,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_c_sfc_c: public generate_c_typedecl_c {
+class generate_c_sfc_c: public generate_c_base_c {
   
   private:
     std::list<VARIABLE> variable_list;
@@ -667,7 +667,7 @@ class generate_c_sfc_c: public generate_c_typedecl_c {
     
   public:
     generate_c_sfc_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_c_typedecl_c(s4o_ptr) {
+    : generate_c_base_c(s4o_ptr) {
       generate_c_sfc_elements = new generate_c_sfc_elements_c(s4o_ptr, name, scope, variable_prefix);
       search_var_instance_decl = new search_var_instance_decl_c(scope);
       this->set_variable_prefix(variable_prefix);

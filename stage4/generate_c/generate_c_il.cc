@@ -126,7 +126,7 @@ class il_default_variable_c: public symbol_c {
 
 
 
-class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor_c {
+class generate_c_il_c: public generate_c_base_c, il_default_variable_visitor_c {
 
   public:
     typedef enum {
@@ -197,7 +197,7 @@ class generate_c_il_c: public generate_c_typedecl_c, il_default_variable_visitor
 
   public:
     generate_c_il_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_c_typedecl_c(s4o_ptr),
+    : generate_c_base_c(s4o_ptr),
       implicit_variable_current    (IL_DEFVAR,      NULL),
       implicit_variable_result     (IL_DEFVAR,      NULL),
       implicit_variable_result_back(IL_DEFVAR_BACK, NULL)

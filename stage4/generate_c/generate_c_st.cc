@@ -44,7 +44,7 @@
 /***********************************************************************/
 
 
-class generate_c_st_c: public generate_c_typedecl_c {
+class generate_c_st_c: public generate_c_base_c {
 
   public:
     typedef enum {
@@ -94,7 +94,7 @@ class generate_c_st_c: public generate_c_typedecl_c {
 
   public:
     generate_c_st_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_c_typedecl_c(s4o_ptr) {
+    : generate_c_base_c(s4o_ptr) {
       search_fb_instance_decl    = new search_fb_instance_decl_c   (scope);
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
       search_var_instance_decl   = new search_var_instance_decl_c  (scope);
