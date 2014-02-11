@@ -76,10 +76,11 @@ class generate_c_st_c: public generate_c_base_c {
      * so we do not create an object instance when handling
      * a function declaration.
      */
-    search_fb_instance_decl_c *search_fb_instance_decl;
-
+    search_fb_instance_decl_c    *search_fb_instance_decl;
     search_varfb_instance_type_c *search_varfb_instance_type;
     search_var_instance_decl_c   *search_var_instance_decl;
+    
+    symbol_c *scope_;
 
     symbol_c* current_array_type;
     symbol_c* current_param_type;
@@ -98,6 +99,7 @@ class generate_c_st_c: public generate_c_base_c {
       search_fb_instance_decl    = new search_fb_instance_decl_c   (scope);
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
       search_var_instance_decl   = new search_var_instance_decl_c  (scope);
+      scope_ = scope;
       
       this->set_variable_prefix(variable_prefix);
       current_array_type = NULL;
@@ -128,7 +130,7 @@ class generate_c_st_c: public generate_c_base_c {
 
 
 void *print_getter(symbol_c *symbol) {
-  unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
+  unsigned int vartype = analyse_variable_c::first_nonfb_vardecltype(symbol, scope_);
   if (wanted_variablegeneration == fparam_output_vg) {
     if (vartype == search_var_instance_decl_c::external_vt) {
       if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
@@ -178,7 +180,7 @@ void *print_setter(symbol_c* symbol,
   
   bool type_is_complex = false;
   if (fb_symbol == NULL) {
-    unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
+    unsigned int vartype = analyse_variable_c::first_nonfb_vardecltype(symbol, scope_);
     type_is_complex = analyse_variable_c::contains_complex_type(symbol);
     if (vartype == search_var_instance_decl_c::external_vt) {
       if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;

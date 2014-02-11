@@ -342,22 +342,42 @@ class print_function_parameter_data_types_c: public generate_c_base_c {
 
 /* A helper class that analyses if the datatype of a variable is 'complex'. */
 /* 'complex' means that it is either a strcuture or an array!               */
-class analyse_variable_c: public null_visitor_c {
+class analyse_variable_c: public search_visitor_c {
   private:
     static analyse_variable_c *singleton_;
-    bool   contains_complex_type_res;
 
   public:
     analyse_variable_c(void) {};
     
     static bool is_complex_type(symbol_c *symbol) {
-      if (NULL == symbol)           ERROR;
+      if (NULL == symbol) ERROR;
       if (!get_datatype_info_c::is_type_valid     (symbol->datatype)) ERROR;
       return (   get_datatype_info_c::is_structure(symbol->datatype) 
               || get_datatype_info_c::is_array    (symbol->datatype) 
              );
     }
 
+    
+  private:
+    symbol_c *last_fb, *first_non_fb_identifier;
+
+  public:  
+    /* returns the first element (from left to right) in a structured variable that is not a FB, i.e. is either a structure or an array! */
+    /* eg:
+     *      fb1.fb2.fb3.real       returns ??????
+     *      fb1.fb2.struct1.real   returns struct1
+     *      struct1.real           returns struct1
+     */
+    static symbol_c *find_first_nonfb(symbol_c *symbol) {
+      if (NULL == singleton_)       singleton_ = new analyse_variable_c();
+      if (NULL == singleton_)       ERROR;
+      if (NULL == symbol)           ERROR;
+      
+      singleton_->last_fb                 = NULL;
+      singleton_->first_non_fb_identifier = NULL;
+      return (symbol_c *)symbol->accept(*singleton_);
+    }
+    
     /* returns true if a strcutured variable (e.g. fb1.fb2.strcut1.real) contains a structure or array */
     /* eg:
      *      fb1.fb2.fb3.real       returns FALSE
@@ -365,14 +385,33 @@ class analyse_variable_c: public null_visitor_c {
      *      struct1.real           returns TRUE
      */
     static bool contains_complex_type(symbol_c *symbol) {
-      if (NULL == singleton_)       singleton_ = new analyse_variable_c();
-      if (NULL == singleton_)       ERROR;
-      if (NULL == symbol)           ERROR;
-      if (NULL == symbol->datatype) ERROR;
+      if (NULL == symbol) ERROR;
+      if (!get_datatype_info_c::is_type_valid(symbol->datatype)) ERROR;
       
-      singleton_->contains_complex_type_res = false;
-      symbol->accept(*singleton_);
-      return singleton_->contains_complex_type_res;
+      symbol_c *first_non_fb = (symbol_c *)find_first_nonfb(symbol);
+      return is_complex_type(first_non_fb->datatype);
+    }
+    
+    
+    /* returns the datatype of the variable returned by find_first_nonfb() */
+    /* eg:
+     *      fb1.fb2.fb3.real       returns ??????
+     *      fb1.fb2.struct1.real   returns datatype of struct1
+     *      struct1.real           returns datatype of struct1
+     */
+    static search_var_instance_decl_c::vt_t first_nonfb_vardecltype(symbol_c *symbol, symbol_c *scope) {
+      if (NULL == symbol) ERROR;
+      if (!get_datatype_info_c::is_type_valid(symbol->datatype)) ERROR;
+      
+      symbol_c *first_non_fb = (symbol_c *)find_first_nonfb(symbol);
+      if (NULL != singleton_->last_fb) {
+        scope = singleton_->last_fb->datatype;
+        symbol = singleton_->first_non_fb_identifier;
+      }
+      
+      search_var_instance_decl_c search_var_instance_decl(scope);
+      
+      return search_var_instance_decl.get_vartype(symbol);
     }
     
     
@@ -380,7 +419,12 @@ class analyse_variable_c: public null_visitor_c {
     /* B 1.4 - Variables */
     /*********************/
     void *visit(symbolic_variable_c *symbol) {
-      contains_complex_type_res |= is_complex_type(symbol);
+      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+      if (!get_datatype_info_c::is_function_block(symbol->datatype)) {
+         first_non_fb_identifier = symbol; 
+         return (void *)symbol;
+      }
+      last_fb = symbol;
       return NULL;
     }
     
@@ -390,20 +434,28 @@ class analyse_variable_c: public null_visitor_c {
     
     // SYM_REF2(structured_variable_c, record_variable, field_selector)
     void *visit(structured_variable_c *symbol) {
-      symbol->record_variable->accept(*this);
-      /* do not set the contains_complex_type_res to TRUE if this structured_variable_c is accessing a FB instance! */
-      if (!get_datatype_info_c::is_type_valid(symbol->datatype)) ERROR;
-      contains_complex_type_res |= get_datatype_info_c::is_structure(symbol->datatype);
-      return NULL;
+      symbol_c *res = (symbol_c *)symbol->record_variable->accept(*this);
+      if (NULL != res) return res;
+      
+      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+      if (!get_datatype_info_c::is_function_block(symbol->datatype)) {
+         first_non_fb_identifier = symbol->field_selector; 
+         return (void *)symbol;
+      }
+
+      last_fb = symbol;      
+      return NULL;      
     }
     
     /*  subscripted_variable '[' subscript_list ']' */
     //SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
     void *visit(array_variable_c *symbol) {
-      contains_complex_type_res |= true;
-      return NULL;
+      void *res = symbol->subscripted_variable->accept(*this);
+      if (NULL != res) return res;
+      return (void *)symbol;      
     }
 
+    
 };
 
 analyse_variable_c *analyse_variable_c::singleton_ = NULL;
