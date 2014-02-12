@@ -112,8 +112,14 @@ void declaration_check_c::check_global_decl(symbol_c *p_decl) {
         continue;
       }
       
-      if (search_var_instance_glo_decl->get_option(var_name) != search_var_instance_ext_decl.get_option(var_name))
-        STAGE3_ERROR(0, glo_decl, glo_decl, "Declaration error.  The external variable options do not match with thos of the global variable.");
+      /* Check whether variable's constness (CONSTANT) is compatible.
+       *        VAR_GLOBAL is contant     => VAR_EXTERNAL must also be CONSTANT
+       *        VAR_GLOBAL is not contant => VAR_EXTERNAL may be CONSTANT, or not!
+       */
+      search_var_instance_decl_c::opt_t ext_opt = search_var_instance_ext_decl. get_option(var_name);
+      search_var_instance_decl_c::opt_t glo_opt = search_var_instance_glo_decl->get_option(var_name);
+      if ((glo_opt == search_var_instance_decl_c::constant_opt) && (ext_opt != search_var_instance_decl_c::constant_opt))
+        STAGE3_ERROR(0, glo_decl, glo_decl, "Declaration error. The external variable must be declared as constant, as it maps to a constant global variable.");
 
       /* TODO: Check redefinition data type.
        *       We need a new class (like search_base_type class) to get type id by variable declaration.
