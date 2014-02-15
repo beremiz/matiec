@@ -5,7 +5,7 @@
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
+ *  the Free Software Foundation, either version 3 of thest_whitespaceLicense, or
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
@@ -356,50 +356,77 @@ int GetNextChar(char *b, int maxBuffer);
  *       Unfortunately, flex will join '_' and '4h' to create a legal {identifier} '_4h',
  *       and return that identifier instead! So, we added this state!
  *
- * The state machine has 7 possible states (INITIAL, config, decl, body, st, il, sfc)
+ * There is a main state machine (
+ *    +------> INITIAL <-------> config
+ *    |           \
+ *    |           V
+ *    |     header_state
+ *    |           |
+ *    |           V
+ *    |  vardecl_list_state <------> var_decl
+ *    |           | 
+ *    |           V
+ *    +----------body, 
+ *                ^
+ *                | 
+ *    -----------------------
+ *    |           |         |
+ *    v           v         v
+ *   st          il       sfc
+ * 
  * Possible state changes are:
- *   INITIAL -> goto(decl_state)
- *               (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found,
- *                and followed by a VAR declaration)
- *   INITIAL -> goto(body_state) 
- *                (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found,
- *                 and _not_ followed by a VAR declaration)
- *                (This transition is actually commented out, since the syntax
- *                 does not allow the declaration of functions, FBs, or programs
- *                 without any VAR declaration!)
  *   INITIAL -> goto(config_state)
  *                (when a CONFIGURATION is found)
- *   decl_state    -> push(decl_state); goto(body_state)
- *                     (when the last END_VAR is found, i.e. the function body starts)
- *   decl_state    -> push(decl_state); goto(sfc_state)
+ * 
+ *   INITIAL -> goto(header_state)
+ *               (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found)
+ *   header_state -> goto(vardecl_list_state)
+ *               (When the first VAR token is found, i.e. at begining of first VAR .. END_VAR declaration)
+ * 
+ *  vardecl_list_state -> push current state (vardecl_list_state), and goto(vardecl_state) 
+ *                (when a VAR token is found)
+ *   vardecl_state -> pop() to (vardecl_list_state) 
+ *                (when a END_VAR token is found)
+ * 
+ *   vardecl_list_state -> goto(body_state) 
+ *                (when the last END_VAR is found!)
+ *
+ *   body_state    -> push current state(body_state); goto(sfc_state)
  *                     (when it figures out it is parsing sfc language)
- *   body_state    -> goto(st_state)
+ *   body_state    -> push current state(body_state); goto(st_state)
  *                     (when it figures out it is parsing st language)
- *   body_state    -> goto(il_state)
+ *   body_state    -> push current state(body_state); goto(il_state)
  *                     (when it figures out it is parsing il language)
- *   st_state      -> pop()
+ *   st_state      -> pop() to body_sate
  *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, END_PROGRAM,
  *                      END_ACTION or END_TRANSITION is found)
- *   il_state      -> pop()
+ *   il_state      -> pop() to body_sate
  *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, END_PROGRAM,
  *                      END_ACTION or END_TRANSITION is found)
- *   decl_state    -> goto(INITIAL)
+ *   sfc_state     -> pop() to body_sate
  *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
- *   sfc_state     -> goto(INITIAL)
+ * 
+ *   body_sate -> goto(INITIAL)
  *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
  *   config_state  -> goto(INITIAL)
  *                     (when a END_CONFIGURATION is found)
- *   sfc_state     -> push(sfc_state); goto(body_state)
+ * 
+ *  
+ *   sfc_state     -> push current state(sfc_state); goto(body_state)
  *                     (when parsing an action. This transition is requested by bison)
- *   sfc_state     -> push(sfc_state); goto(sfc_qualifier_state)
+ *   sfc_state     -> push current state(sfc_state); goto(sfc_qualifier_state)
  *                     (when expecting an action qualifier. This transition is requested by bison)
- *   sfc_qualifier_state -> pop()
+ *   sfc_qualifier_state -> pop() to sfc_state
  *                     (when no longer expecting an action qualifier. This transition is requested by bison)
+ *
  *   config_state  -> push(config_state); goto(task_init_state)
  *                     (when parsing a task initialisation. This transition is requested by bison)
  *   task_init_state -> pop()
  *                     (when no longer parsing task initialisation parameters. This transition is requested by bison)
  *
+ * 
+ * There is another secondary state machine for parsing comments, another for file_includes, 
+ * and yet another for time literals.
  */
 
 
@@ -413,8 +440,13 @@ int GetNextChar(char *b, int maxBuffer);
  */
 %s task_init_state
 
-/* we are parsing a function, program or function block declaration */
-%s decl_state
+/* we are looking for the first VAR inside a function's, program's or function block's declaration */
+%s header_state
+
+/* we are parsing a function, program or function block sequence of VAR..END_VAR delcarations */
+%x vardecl_list_state 
+/* a substate of the vardecl_list_state: we are inside a specific VAR .. END_VAR */
+%s vardecl_state
 
 /* we will be parsing a function body. Whether il/st/sfc remains to be determined */
 %x body_state
@@ -437,6 +469,9 @@ int GetNextChar(char *b, int maxBuffer);
 /* we are parsing a TIME# literal. We must not return any {identifier} tokens. */
 %x time_literal_state
 
+/* we are parsing a comment. */
+%x comment_state
+
 
 /*******************/
 /* File #include's */
@@ -455,8 +490,8 @@ int GetNextChar(char *b, int maxBuffer);
 
 
 file_include_pragma_filename	[^\"]*
-file_include_pragma_beg		"{#include"{st_whitespace_only}\"
-file_include_pragma_end		\"{st_whitespace_only}"}"
+file_include_pragma_beg		"{#include"{st_whitespace}\"
+file_include_pragma_end		\"{st_whitespace}"}"
 file_include_pragma			{file_include_pragma_beg}{file_include_pragma_filename}{file_include_pragma_end}
 
 
@@ -499,6 +534,8 @@ const char *INCLUDE_DIRECTORIES[] = {
 /* Prelimenary constructs... */
 /*****************************/
 
+/* PRAGMAS */
+/* ======= */
 /* In order to allow the declaration of POU prototypes (Function, FB, Program, ...),
  * especially the prototypes of Functions and FBs defined in the standard
  * (i.e. standard functions and FBs), we extend the IEC 61131-3 standard syntax 
@@ -521,9 +558,42 @@ enable_code_generation_pragma	"{enable code generation}"
 
 
 /* Any other pragma... */
-
 pragma "{"[^}]*"}"|"{{"([^}]|"}"[^}])*"}}"
+/*
+pragma "{"[^}]*"}"
+*/
 
+/* COMMENTS */
+/* ======== */
+
+/* In order to allow nested comments, comments are handled by a specific comment_state state */
+/* Whenever a "(*" is found, we push the current state onto the stack, and enter a new instance of the comment_state state.
+ * Whenever a "*)" is found, we pop a state off the stack
+ */
+
+/* comments... */
+comment_beg  "(*"
+comment_end  "*)"
+
+/* However, bison has a shift/reduce conflict in bison, when parsing formal function/FB
+ * invocations with the 'NOT <variable_name> =>' syntax (which needs two look ahead 
+ * tokens to be parsed correctly - and bison being LALR(1) only supports one).
+ * The current work around requires flex to completely parse the '<variable_name> =>'
+ * sequence. This sequence includes whitespace and/or comments between the 
+ * <variable_name> and the "=>" token.
+ * 
+ * This flex rule (sendto_identifier_token) uses the whitespace/comment as trailing context,
+ * which means we can not use the comment_state method of specifying/finding and ignoring 
+ * comments.
+ * 
+ * For this reason only, we must also define what a complete comment looks like, so
+ * it may be used in this rule. Since the rule uses the whitespace_or_comment
+ * construct as trailing context, this definition of comment must not use any
+ * trailing context either.
+ * 
+ * Aditionally, it is not possible to define nested comments in flex without the use of
+ * states, so for this particular location, we do NOT support nested comments.
+ */
 /* NOTE: this seemingly unnecessary complex definition is required
  *       to be able to eat up comments such as:
  *          '(* Testing... ! ***** ******)'
@@ -534,30 +604,29 @@ pragma "{"[^}]*"}"|"{{"([^}]|"}"[^}])*"}}"
 not_asterisk				[^*]
 not_close_parenthesis_nor_asterisk	[^*)]
 asterisk				"*"
-comment_text		{not_asterisk}|(({asterisk}+){not_close_parenthesis_nor_asterisk})
-
+comment_text	({not_asterisk})|(({asterisk}+){not_close_parenthesis_nor_asterisk})
 comment		"(*"({comment_text}*)({asterisk}+)")"
 
 
+
+/* 3.1 Whitespace */
+/* ============== */
 /*
-3.1 Whitespace
- (NOTE: Whitespace IS clearly defined, to include newline!!! See section 2.1.4!!!)
- No definition of whitespace is given, in other words, the characters that may be used to seperate language tokens are not pecisely defined. One may nevertheless make an inteligent guess of using the space (' '), and other characters also commonly considered whitespace in other programming languages (horizontal tab, vertical tab, form feed, etc.).
- The main question is whether the newline character should be considered whitespace. IL language statements use an EOL token (End Of Line) to distinguish between some language constructs. The EOL token itself is openly defined as "normally consist[ing] of the 'paragraph separator' ", leaving the final choice open to each implemention. If we choose the newline character to represent the EOL token, it may then not be considered whitespace.
- On the other hand, some examples that come in a non-normative annex of the specification allow function declarations to span multiple3.1 Whitespace
- (NOTE: Whitespace IS clearly defined, to include newline!!! See section 2.1.4!!!)
- No definition of whitespace is given, in other words, the characters that may be used to seperate language tokens are not pecisely defined. One may nevertheless make an inteligent guess of using the space (' '), and other characters also commonly considered whitespace in other programming languages (horizontal tab, vertical tab, form feed, etc.).
- The main question is whether the newline character should be considered whitespace. IL language statements use an EOL token (End Of Line) to distinguish between some language constructs. The EOL token itself is openly defined as "normally consist[ing] of the 'paragraph separator' ", leaving the final choice open to each implemention. If we choose the newline character to represent the EOL token, it may then not be considered whitespace.
- On the other hand, some examples that come in a non-normative annex of the specification allow function declarations to span multiple lines, which means that the newline character is being considered as whitespace.
- Our implementation works around this issue by including the new line character in the whitespace while parsing function declarations and the ST language, and parsing it as the EOL token only while parsing IL language statements. This requires the use of a state machine in the lexical parser that needs at least some knowledge of the syntax itself.
-*/
-/* NOTE: Our definition of whitespace will only work in ASCII!
+ * Whitespace is clearly defined (see IEC 61131-3 v2, section 2.1.4)
+ * 
+ * Whitespace definition includes the newline character.
+ * 
+ * However, the standard is inconsistent in that in IL the newline character 
+ * is considered a token (EOL - end of line). 
+ * In our implementation we therefore have two definitions of whitespace
+ *   - one for ST, that includes the newline character
+ *   - one for IL without the newline character.
+ * Additionally, when parsing IL, the newline character is treated as the EOL token.
+ * This requires the use of a state machine in the lexical parser that needs at least 
+ * some knowledge of the syntax itself.
  *
- *       Since the IL language needs to know the location of newline
- *       (token EOL -> '\n' ), we need one definition of whitespace
- *       for each language...
- */
-/*
+ * NOTE: Our definition of whitespace will only work in ASCII!
+ *
  * NOTE: we cannot use
  *         st_whitespace	[:space:]*
  *       since we use {st_whitespace} as trailing context. In our case
@@ -569,22 +638,18 @@ comment		"(*"({comment_text}*)({asterisk}+)")"
  *       generating the invalid (in this case) warning...
  */
 
-st_whitespace_only	[ \f\n\r\t\v]*
-il_whitespace_only	[ \f\r\t\v]*
+st_whitespace			[ \f\n\r\t\v]*
+il_whitespace			[ \f\r\t\v]*
 
-st_whitespace_text	{st_whitespace_only}|{comment}|{pragma}
-il_whitespace_text	{il_whitespace_only}|{comment}|{pragma}
+st_whitespace_or_pragma_or_commentX	({st_whitespace})|({pragma})|({comment})
+il_whitespace_or_pragma_or_commentX	({il_whitespace})|({pragma})|({comment})
 
-st_whitespace	{st_whitespace_text}*
-il_whitespace	{il_whitespace_text}*
+st_whitespace_or_pragma_or_comment	{st_whitespace_or_pragma_or_commentX}*
+il_whitespace_or_pragma_or_comment	{il_whitespace_or_pragma_or_commentX}*
 
-st_whitespace_text_no_pragma	{st_whitespace_only}|{comment}
-il_whitespace_text_no_pragma	{il_whitespace_only}|{comment}
 
-st_whitespace_no_pragma	{st_whitespace_text_no_pragma}*
-il_whitespace_no_pragma	{il_whitespace_text_no_pragma}*
 
-qualified_identifier	{identifier}(\.{identifier})*
+qualified_identifier	{identifier}(\.{identifier})+
 
 
 
@@ -853,8 +918,8 @@ incompl_location	%[IQM]\*
 	/* Pragmas sent to syntax analyser (bison) */
 {disable_code_generation_pragma}               return disable_code_generation_pragma_token;
 {enable_code_generation_pragma}                return enable_code_generation_pragma_token;
-<body_state>{disable_code_generation_pragma}   return disable_code_generation_pragma_token;
-<body_state>{enable_code_generation_pragma}    return enable_code_generation_pragma_token;
+<body_state,vardecl_list_state>{disable_code_generation_pragma}   return disable_code_generation_pragma_token;
+<body_state,vardecl_list_state>{enable_code_generation_pragma}    return enable_code_generation_pragma_token;
 
 	/* Any other pragma we find, we just pass it up to the syntax parser...   */
 	/* Note that the <body_state> state is exclusive, so we have to include it here too. */
@@ -864,9 +929,9 @@ incompl_location	%[IQM]\*
 		 yylval.ID=strdup(yytext+cut);
 		 return pragma_token;
 		}
-<body_state>{pragma} {/* return the pragmma without the enclosing '{' and '}' */
+<body_state,vardecl_list_state>{pragma} {/* return the pragmma without the enclosing '{' and '}' */
 		 int cut = yytext[1]=='{'?2:1;
-         yytext[strlen(yytext)-cut] = '\0';
+		 yytext[strlen(yytext)-cut] = '\0';
 		 yylval.ID=strdup(yytext+cut);
 		 return pragma_token;
 		}
@@ -950,7 +1015,7 @@ incompl_location	%[IQM]\*
 	/* Handle all the state changes! */
 	/*********************************/
 
-	/* INITIAL -> decl_state */
+	/* INITIAL -> header_state */
 <INITIAL>{
 	/* NOTE: how about functions that do not declare variables, and go directly to the body_state???
 	 *      - According to Section 2.5.1.3 (Function Declaration), item 2 in the list, a FUNCTION
@@ -966,12 +1031,12 @@ incompl_location	%[IQM]\*
 	 *       All the above means that we needn't worry about PROGRAMs, FUNCTIONs or
 	 *       FUNCTION_BLOCKs that do not have at least one VAR_END before the body_state.
 	 *       If the code has an error, and no VAR_END before the body, we will simply
-	 *       continue in the <decl_state> state, untill the end of the FUNCTION, FUNCTION_BLOCK
+	 *       continue in the <vardecl_state> state, untill the end of the FUNCTION, FUNCTION_BLOCK
 	 *       or PROGAM.
 	 */
-FUNCTION				BEGIN(decl_state); return FUNCTION;
-FUNCTION_BLOCK				BEGIN(decl_state); return FUNCTION_BLOCK;
-PROGRAM					BEGIN(decl_state); return PROGRAM;
+FUNCTION				BEGIN(header_state); return FUNCTION;
+FUNCTION_BLOCK				BEGIN(header_state); return FUNCTION_BLOCK;
+PROGRAM					BEGIN(header_state); return PROGRAM;
 CONFIGURATION				BEGIN(config_state); return CONFIGURATION;
 }
 
@@ -989,69 +1054,65 @@ PROGRAM		BEGIN(body_state); return PROGRAM;
 }
 	*/
 
-	/* decl_state -> (body_state | sfc_state) */
-<decl_state>{
-END_VAR{st_whitespace}VAR		{unput_text(strlen("END_VAR")); 
-					 return END_VAR;
-					}
-END_VAR{st_whitespace}INITIAL_STEP	{unput_text(strlen("END_VAR")); 
-					 yy_push_state(sfc_state); 
-					 return END_VAR;
-					}
-END_VAR{st_whitespace}			{unput_text(strlen("END_VAR")); 
-					 cmd_goto_body_state(); 
-					 return END_VAR;
-					}
+	/* header_state -> (vardecl_state | body_state) */
+<header_state>{
+VAR				unput_text(0); BEGIN(vardecl_list_state);
 }
+
+
+<vardecl_list_state>{
+VAR				unput_text(0); yy_push_state(vardecl_state);
+.				unput_text(0); BEGIN(body_state); /* anything else, just change to body_state! */
+}
+
+
+<vardecl_state>{
+END_VAR				yy_pop_state(); return END_VAR; /* pop back to header_state */
+}
+
 
 	/* body_state -> (il_state | st_state) */
 <body_state>{
-{st_whitespace_no_pragma}			/* Eat any whitespace */
-{qualified_identifier}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
-{direct_variable_standard}{st_whitespace}":="	unput_text(0); BEGIN(st_state);
-{qualified_identifier}"["			unput_text(0); BEGIN(st_state);
+END_FUNCTION			BEGIN(INITIAL); return END_FUNCTION;
+END_FUNCTION_BLOCK		BEGIN(INITIAL); return END_FUNCTION_BLOCK;
+END_PROGRAM			BEGIN(INITIAL); return END_PROGRAM;
 
-RETURN						unput_text(0); BEGIN(st_state);
-IF						unput_text(0); BEGIN(st_state);
-CASE						unput_text(0); BEGIN(st_state);
-FOR						unput_text(0); BEGIN(st_state);
-WHILE						unput_text(0); BEGIN(st_state);
-REPEAT						unput_text(0); BEGIN(st_state);
-EXIT						unput_text(0); BEGIN(st_state);
+INITIAL_STEP			unput_text(0); yy_push_state(sfc_state); 
+
+{qualified_identifier}		unput_text(0); yy_push_state(st_state); /* will always be followed by '[' for an array access, or ':=' as the left hand of an assignment statement */
+{direct_variable_standard}	unput_text(0); yy_push_state(st_state); /* will always be followed by ':=' as the left hand of an assignment statement */
+
+RETURN				unput_text(0); yy_push_state(st_state);
+IF				unput_text(0); yy_push_state(st_state);
+CASE				unput_text(0); yy_push_state(st_state);
+FOR				unput_text(0); yy_push_state(st_state);
+WHILE				unput_text(0); yy_push_state(st_state);
+EXIT				unput_text(0); yy_push_state(st_state);
+REPEAT				unput_text(0); yy_push_state(st_state);
 
 	/* ':=' occurs only in transitions, and not Function or FB bodies! */
-:=						unput_text(0); BEGIN(st_state);
-
-	/* Hopefully, the above rules (along with the last one),
-         * used to distinguish ST from IL, are 
-	 * enough to handle all ocurrences. However, if
-	 * there is some situation where the compiler is getting confused,
-	 * we add the following rule to detect 'label:' in IL code. This will
-	 * allow the user to insert a label right at the beginning (which
-	 * will probably not be used further by his code) simply as a way
-	 * to force the compiler to interpret his code as IL code.
-	 */
-{identifier}{st_whitespace}":"{st_whitespace}	unput_text(0); BEGIN(il_state);
+:=				unput_text(0); yy_push_state(st_state);
 
 {identifier}	{int token = get_identifier_token(yytext);
-		 if (token == prev_declared_fb_name_token) {
-		   /* the code has a call to a function block */
-		   /* NOTE: if we ever decide to allow the user to use IL operator tokens
-		    * (LD, ST, ...) as identifiers for variable names (including
-		    * function block instances), then the above inference/conclusion 
-		    * may be incorrect, and this condition may have to be changed!
-		    */	
-		   BEGIN(st_state);
+		 if ((token == prev_declared_fb_name_token) || (token == prev_declared_variable_name_token)) {
+		   /* the code has a call to a function block OR has an assingment with a variable as the lvalue */
+		   unput_text(0); yy_push_state(st_state);
+		 } else
+ 		 if (token == prev_declared_derived_function_name_token) {
+		   /* the code has a call to a function - must be IL */
+		   unput_text(0); yy_push_state(il_state);
 		 } else {
-		   BEGIN(il_state);
+		   /* Might be a lable in IL, or a bug in ST/IL code. We jump to IL */
+		   unput_text(0); yy_push_state(il_state);
 		 }
-		 unput_text(0);
 		}
 
-.		unput_text(0); BEGIN(il_state);
+.		unput_text(0); yy_push_state(il_state); /* Don't know what it could be. This is most likely a bug. Let's just to a random state... */
 }	/* end of body_state lexical parser */
 
-	/* (il_state | st_state) -> $previous_state (decl_state or sfc_state) */
+
+
+	/* (il_state | st_state) -> $previous_state (vardecl_state or sfc_state) */
 <il_state,st_state>{
 END_FUNCTION		yy_pop_state(); unput_text(0);
 END_FUNCTION_BLOCK	yy_pop_state(); unput_text(0);
@@ -1067,12 +1128,6 @@ END_FUNCTION_BLOCK	yy_pop_state(); unput_text(0);
 END_PROGRAM		yy_pop_state(); unput_text(0);
 }
 
-	/* decl_state -> INITIAL */
-<decl_state>{
-END_FUNCTION		BEGIN(INITIAL); return END_FUNCTION;
-END_FUNCTION_BLOCK	BEGIN(INITIAL); return END_FUNCTION_BLOCK;
-END_PROGRAM		BEGIN(INITIAL); return END_PROGRAM;
-}
 	/* config -> INITIAL */
 END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 
@@ -1083,10 +1138,19 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	/***************************************/
 	/* NOTE: pragmas are handled right at the beginning... */
 
-<INITIAL,config_state,decl_state,st_state,sfc_state,task_init_state,sfc_qualifier_state>{st_whitespace_no_pragma}	/* Eat any whitespace */
-<il_state>{il_whitespace_no_pragma}		/* Eat any whitespace */
+	/* The whitespace */
+<INITIAL,header_state,config_state,body_state,vardecl_list_state,vardecl_state,st_state,sfc_state,task_init_state,sfc_qualifier_state>{st_whitespace}	/* Eat any whitespace */
+<il_state>{il_whitespace}		/* Eat any whitespace */
 
-
+	/* The comments */
+<body_state,vardecl_list_state>{comment_beg}	yy_push_state(comment_state);
+{comment_beg}							yy_push_state(comment_state);
+<comment_state>{
+{comment_beg}							yy_push_state(comment_state);
+{comment_end}							yy_pop_state();
+.								/* Ignore text inside comment! */
+\n								/* Ignore text inside comment! */
+}
 
 	/*****************************************/
 	/* B.1.1 Letters, digits and identifiers */
@@ -1639,8 +1703,8 @@ _			/* do nothing - eat it up!*/
 	/*****************************************/
 	/* B.1.1 Letters, digits and identifiers */
 	/*****************************************/
-<st_state>{identifier}/({st_whitespace})"=>"	{yylval.ID=strdup(yytext); return sendto_identifier_token;}
-<il_state>{identifier}/({il_whitespace})"=>"	{yylval.ID=strdup(yytext); return sendto_identifier_token;}
+<st_state>{identifier}/({st_whitespace_or_pragma_or_comment})"=>"	{yylval.ID=strdup(yytext); return sendto_identifier_token;}
+<il_state>{identifier}/({il_whitespace_or_pragma_or_comment})"=>"	{yylval.ID=strdup(yytext); return sendto_identifier_token;}
 {identifier} 				{yylval.ID=strdup(yytext);
 					 // printf("returning identifier...: %s, %d\n", yytext, get_identifier_token(yytext));
 					 return get_identifier_token(yytext);}
