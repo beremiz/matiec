@@ -57,12 +57,10 @@ typedef struct {
 		/* Version 1.0 – Official Release                     */
 		/******************************************************/
 	bool safe_extensions;
-		/* error messages specify full token location */
-	bool full_token_loc; 
-		/* Include directory, where included files will be searched for... */
-	bool conversion_functions;
-		/* Create a conversion function for derived datatype */
-	const char *includedir;
+	bool full_token_loc;       /* error messages specify full token location */
+	bool conversion_functions; /* Create a conversion function for derived datatype */
+	bool nested_comments;      /* Allow the use of nested comments. */
+	const char *includedir;    /* Include directory, where included files will be searched for... */
 } stage1_2_options_t;
 
 

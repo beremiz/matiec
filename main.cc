@@ -120,8 +120,9 @@ static void printusage(const char *cmd) {
       /* Part 1: Concepts and Function Blocks,              */
       /* Version 1.0 is Official Release                    */
       /******************************************************/
-  printf("  s : allow use of safe extensions\n");
-  printf("  c : create conversion functions\n");
+  printf("  s : allow use of safe extensions (e.g. SAFExxx data types))\n");
+  printf("  n : allow use of nested comments\n");
+  printf("  c : create conversion functions for enumerated data types\n");
   printf("\n");
   printf("%s - Copyright (C) 2003-2011 \n"
          "This program comes with ABSOLUTELY NO WARRANTY!\n"
@@ -133,15 +134,21 @@ static void printusage(const char *cmd) {
 int main(int argc, char **argv) {
   symbol_c *tree_root;
   char * builddir = NULL;
-  stage1_2_options_t stage1_2_options = {false, false, NULL};
+  stage1_2_options_t stage1_2_options;
   int optres, errflg = 0;
   int path_len;
 
+  /* Default values for the command line options... */
+  stage1_2_options.safe_extensions      = false; /* allow use of SAFExxx datatypes */
+  stage1_2_options.full_token_loc       = false; /* error messages specify full token location */
+  stage1_2_options.conversion_functions = false; /* Create a conversion function for derived datatype */
+  stage1_2_options.nested_comments      = false; /* Allow the use of nested comments. */
+  stage1_2_options.includedir           = NULL;  /* Include directory, where included files will be searched for... */
 
   /******************************************/
   /*   Parse command line options...        */
   /******************************************/
-  while ((optres = getopt(argc, argv, ":hvfscI:T:")) != -1) {
+  while ((optres = getopt(argc, argv, ":nhvfscI:T:")) != -1) {
     switch(optres) {
     case 'h':
       printusage(argv[0]);
@@ -162,6 +169,10 @@ int main(int argc, char **argv) {
 
     case 'c':
       stage1_2_options.conversion_functions = true;
+      break;
+
+    case 'n':
+      stage1_2_options.nested_comments = true;
       break;
 
     case 'I':

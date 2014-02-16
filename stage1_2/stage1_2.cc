@@ -63,6 +63,12 @@
 bool safe_extensions_ = false;
 bool get_opt_safe_extensions() {return safe_extensions_;}
 
+/************************************/
+/* whether to allow nested comments */
+/************************************/
+bool nested_comments_ = false;
+bool get_opt_nested_comments() {return nested_comments_;}
+
 /******************************************************/
 /* whether we are supporting conversion functions     */
 /* for enumerate data types                           */
@@ -241,6 +247,7 @@ int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t 
        *       We now set those variables...
        */
 
+  nested_comments_ = options.nested_comments;    
   safe_extensions_ = options.safe_extensions;
   conversion_functions_ = options.conversion_functions;
   return stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc);

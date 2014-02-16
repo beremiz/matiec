@@ -1143,13 +1143,13 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 <il_state>{il_whitespace}		/* Eat any whitespace */
 
 	/* The comments */
-<body_state,vardecl_list_state>{comment_beg}	yy_push_state(comment_state);
-{comment_beg}							yy_push_state(comment_state);
+<body_state,vardecl_list_state>{comment_beg}		yy_push_state(comment_state);
+{comment_beg}						yy_push_state(comment_state);
 <comment_state>{
-{comment_beg}							yy_push_state(comment_state);
-{comment_end}							yy_pop_state();
-.								/* Ignore text inside comment! */
-\n								/* Ignore text inside comment! */
+{comment_beg}						{if (get_opt_nested_comments()) yy_push_state(comment_state);}
+{comment_end}						yy_pop_state();
+.							/* Ignore text inside comment! */
+\n							/* Ignore text inside comment! */
 }
 
 	/*****************************************/
