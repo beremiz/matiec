@@ -356,23 +356,36 @@ int GetNextChar(char *b, int maxBuffer);
  *       Unfortunately, flex will join '_' and '4h' to create a legal {identifier} '_4h',
  *       and return that identifier instead! So, we added this state!
  *
- * There is a main state machine (
- *    +------> INITIAL <-------> config
- *    |           \
- *    |           V
- *    |     header_state
- *    |           |
- *    |           V
- *    |  vardecl_list_state <------> var_decl
- *    |           | 
- *    |           V
- *    +----------body, 
- *                ^
- *                | 
- *    -----------------------
- *    |           |         |
- *    v           v         v
- *   st          il       sfc
+ * There is a main state machine...
+ * 
+ *       +---> INITIAL <-------> config
+ *       |        \
+ *       |        V
+ *       |   header_state
+ *       |        |
+ *       |        V
+ *     vardecl_list_state <------> var_decl
+ *       ^        | 
+ *       |        | [using push()]
+ *       |        |
+ *       |        V
+ *       |       body, 
+ *       |        |
+ *       |        | 
+ *       |   -------------------
+ *       |   |       |         |
+ *       |   v       v         v
+ *       |  st      il        sfc
+ *       |   |       |         |  [using pop() when leaving st/il/sfc => goes to vardecl_list_state]
+ *       |   |       |         |
+ *       -----------------------
+ *
+ * NOTE:- When inside sfc, and an action or transition in ST/IL is found, then 
+ *        we also push() to the body state. This means that sometimes, when pop()ing
+ *        from st and il, the state machine may return to the sfc state!
+ *      - The transitions form sfc to body will be decided by bison, which will
+ *        tell flex to do the transition by calling cmd_goto_body_state().
+ *   
  * 
  * Possible state changes are:
  *   INITIAL -> goto(config_state)
@@ -388,25 +401,25 @@ int GetNextChar(char *b, int maxBuffer);
  *   vardecl_state -> pop() to (vardecl_list_state) 
  *                (when a END_VAR token is found)
  * 
- *   vardecl_list_state -> goto(body_state) 
+ *   vardecl_list_state -> push current state (vardecl_list_state), and goto(body_state) 
  *                (when the last END_VAR is found!)
  *
- *   body_state    -> push current state(body_state); goto(sfc_state)
+ *   body_state    -> goto(sfc_state)
  *                     (when it figures out it is parsing sfc language)
- *   body_state    -> push current state(body_state); goto(st_state)
+ *   body_state    -> goto(st_state)
  *                     (when it figures out it is parsing st language)
- *   body_state    -> push current state(body_state); goto(il_state)
+ *   body_state    -> goto(il_state)
  *                     (when it figures out it is parsing il language)
- *   st_state      -> pop() to body_sate
+ *   st_state      -> pop() to vardecl_list_state
  *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, END_PROGRAM,
  *                      END_ACTION or END_TRANSITION is found)
- *   il_state      -> pop() to body_sate
+ *   il_state      -> pop() to vardecl_list_state
  *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, END_PROGRAM,
  *                      END_ACTION or END_TRANSITION is found)
- *   sfc_state     -> pop() to body_sate
+ *   sfc_state     -> pop() to vardecl_list_state
  *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
  * 
- *   body_sate -> goto(INITIAL)
+ *   vardecl_list_state -> goto(INITIAL)
  *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
  *   config_state  -> goto(INITIAL)
  *                     (when a END_CONFIGURATION is found)
@@ -441,6 +454,7 @@ int GetNextChar(char *b, int maxBuffer);
 %s task_init_state
 
 /* we are looking for the first VAR inside a function's, program's or function block's declaration */
+/* This is not exclusive (%x) as we must be able to parse the identifier and data types of a function/FB */
 %s header_state
 
 /* we are parsing a function, program or function block sequence of VAR..END_VAR delcarations */
@@ -448,7 +462,7 @@ int GetNextChar(char *b, int maxBuffer);
 /* a substate of the vardecl_list_state: we are inside a specific VAR .. END_VAR */
 %s vardecl_state
 
-/* we will be parsing a function body. Whether il/st/sfc remains to be determined */
+/* we will be parsing a function body/action/transition. Whether il/st/sfc remains to be determined */
 %x body_state
 
 /* we are parsing il code -> flex must return the EOL tokens!       */
@@ -559,9 +573,8 @@ enable_code_generation_pragma	"{enable code generation}"
 
 /* Any other pragma... */
 pragma "{"[^}]*"}"|"{{"([^}]|"}"[^}])*"}}"
-/*
-pragma "{"[^}]*"}"
-*/
+
+
 
 /* COMMENTS */
 /* ======== */
@@ -798,7 +811,6 @@ fixed_point		{integer}\.{integer}
  *       minutes      ::= fixed_point 'm' | integer 'm' ['_'] seconds
  *       seconds      ::= fixed_point 's' | integer 's' ['_'] milliseconds
  *       milliseconds ::= fixed_point 'ms'
-
  */
 
 interval_ms_X		({integer_0_999}(\.{integer})?)ms
@@ -924,7 +936,7 @@ incompl_location	%[IQM]\*
 	/* Any other pragma we find, we just pass it up to the syntax parser...   */
 	/* Note that the <body_state> state is exclusive, so we have to include it here too. */
 {pragma}	{/* return the pragmma without the enclosing '{' and '}' */
-         int cut = yytext[1]=='{'?2:1;
+		 int cut = yytext[1]=='{'?2:1;
 		 yytext[strlen(yytext)-cut] = '\0';
 		 yylval.ID=strdup(yytext+cut);
 		 return pragma_token;
@@ -1034,9 +1046,9 @@ incompl_location	%[IQM]\*
 	 *       continue in the <vardecl_state> state, untill the end of the FUNCTION, FUNCTION_BLOCK
 	 *       or PROGAM.
 	 */
-FUNCTION				BEGIN(header_state); return FUNCTION;
-FUNCTION_BLOCK				BEGIN(header_state); return FUNCTION_BLOCK;
-PROGRAM					BEGIN(header_state); return PROGRAM;
+FUNCTION				yy_push_state(header_state); return FUNCTION;
+FUNCTION_BLOCK				yy_push_state(header_state); return FUNCTION_BLOCK;
+PROGRAM					yy_push_state(header_state); return PROGRAM;
 CONFIGURATION				BEGIN(config_state); return CONFIGURATION;
 }
 
@@ -1054,65 +1066,84 @@ PROGRAM		BEGIN(body_state); return PROGRAM;
 }
 	*/
 
-	/* header_state -> (vardecl_state | body_state) */
+	/* header_state -> (vardecl_list_state) */
 <header_state>{
-VAR				unput_text(0); BEGIN(vardecl_list_state);
+VAR				| /* execute the next rule's action, i.e. fall-through! */
+VAR_INPUT			|
+VAR_OUTPUT			|
+VAR_IN_OUT			|
+VAR_EXTERNAL			|
+VAR_GLOBAL			|
+VAR_TEMP			|
+VAR_CONFIG			|
+VAR_ACCESS			unput_text(0); BEGIN(vardecl_list_state);
 }
 
 
+	/* vardecl_list_state -> (vardecl_state | body_state | INITIAL) */
 <vardecl_list_state>{
+VAR_INPUT			| /* execute the next rule's action, i.e. fall-through! */
+VAR_OUTPUT			|
+VAR_IN_OUT			|
+VAR_EXTERNAL			|
+VAR_GLOBAL			|
+VAR_TEMP			|
+VAR_CONFIG			|
+VAR_ACCESS			|
 VAR				unput_text(0); yy_push_state(vardecl_state);
-.				unput_text(0); BEGIN(body_state); /* anything else, just change to body_state! */
+
+END_FUNCTION			unput_text(0); BEGIN(INITIAL); 
+END_FUNCTION_BLOCK		unput_text(0); BEGIN(INITIAL); 
+END_PROGRAM			unput_text(0); BEGIN(INITIAL); 
+
+.				unput_text(0); yy_push_state(body_state); /* anything else, just change to body_state! */
 }
 
 
+	/* vardecl_list_state -> pop to $previous_state (vardecl_list_state) */
 <vardecl_state>{
 END_VAR				yy_pop_state(); return END_VAR; /* pop back to header_state */
 }
 
 
-	/* body_state -> (il_state | st_state) */
+	/* body_state -> (il_state | st_state | sfc_state) */
 <body_state>{
-END_FUNCTION			BEGIN(INITIAL); return END_FUNCTION;
-END_FUNCTION_BLOCK		BEGIN(INITIAL); return END_FUNCTION_BLOCK;
-END_PROGRAM			BEGIN(INITIAL); return END_PROGRAM;
+INITIAL_STEP			unput_text(0); BEGIN(sfc_state); 
 
-INITIAL_STEP			unput_text(0); yy_push_state(sfc_state); 
+{qualified_identifier}		unput_text(0); BEGIN(st_state); /* will always be followed by '[' for an array access, or ':=' as the left hand of an assignment statement */
+{direct_variable_standard}	unput_text(0); BEGIN(st_state); /* will always be followed by ':=' as the left hand of an assignment statement */
 
-{qualified_identifier}		unput_text(0); yy_push_state(st_state); /* will always be followed by '[' for an array access, or ':=' as the left hand of an assignment statement */
-{direct_variable_standard}	unput_text(0); yy_push_state(st_state); /* will always be followed by ':=' as the left hand of an assignment statement */
-
-RETURN				unput_text(0); yy_push_state(st_state);
-IF				unput_text(0); yy_push_state(st_state);
-CASE				unput_text(0); yy_push_state(st_state);
-FOR				unput_text(0); yy_push_state(st_state);
-WHILE				unput_text(0); yy_push_state(st_state);
-EXIT				unput_text(0); yy_push_state(st_state);
-REPEAT				unput_text(0); yy_push_state(st_state);
+RETURN				unput_text(0); BEGIN(st_state);
+IF				unput_text(0); BEGIN(st_state);
+CASE				unput_text(0); BEGIN(st_state);
+FOR				unput_text(0); BEGIN(st_state);
+WHILE				unput_text(0); BEGIN(st_state);
+EXIT				unput_text(0); BEGIN(st_state);
+REPEAT				unput_text(0); BEGIN(st_state);
 
 	/* ':=' occurs only in transitions, and not Function or FB bodies! */
-:=				unput_text(0); yy_push_state(st_state);
+:=				unput_text(0); BEGIN(st_state);
 
 {identifier}	{int token = get_identifier_token(yytext);
 		 if ((token == prev_declared_fb_name_token) || (token == prev_declared_variable_name_token)) {
 		   /* the code has a call to a function block OR has an assingment with a variable as the lvalue */
-		   unput_text(0); yy_push_state(st_state);
+		   unput_text(0); BEGIN(st_state);
 		 } else
  		 if (token == prev_declared_derived_function_name_token) {
 		   /* the code has a call to a function - must be IL */
-		   unput_text(0); yy_push_state(il_state);
+		   unput_text(0); BEGIN(il_state);
 		 } else {
 		   /* Might be a lable in IL, or a bug in ST/IL code. We jump to IL */
-		   unput_text(0); yy_push_state(il_state);
+		   unput_text(0); BEGIN(il_state);
 		 }
 		}
 
-.		unput_text(0); yy_push_state(il_state); /* Don't know what it could be. This is most likely a bug. Let's just to a random state... */
+.		unput_text(0); BEGIN(il_state); /* Don't know what it could be. This is most likely a bug. Let's just to a random state... */
 }	/* end of body_state lexical parser */
 
 
 
-	/* (il_state | st_state) -> $previous_state (vardecl_state or sfc_state) */
+	/* (il_state | st_state) -> pop to $previous_state (vardecl_list_state or sfc_state) */
 <il_state,st_state>{
 END_FUNCTION		yy_pop_state(); unput_text(0);
 END_FUNCTION_BLOCK	yy_pop_state(); unput_text(0);
@@ -1121,7 +1152,7 @@ END_TRANSITION		yy_pop_state(); unput_text(0);
 END_ACTION		yy_pop_state(); unput_text(0);
 }
 
-	/* sfc_state -> INITIAL */
+	/* sfc_state -> pop to $previous_state (vardecl_list_state or sfc_state) */
 <sfc_state>{
 END_FUNCTION		yy_pop_state(); unput_text(0);
 END_FUNCTION_BLOCK	yy_pop_state(); unput_text(0);
