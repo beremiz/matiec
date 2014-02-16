@@ -572,7 +572,7 @@ enable_code_generation_pragma	"{enable code generation}"
 
 
 /* Any other pragma... */
-pragma "{"[^}]*"}"|"{{"([^}]|"}"[^}])*"}}"
+pragma ("{"[^}]*"}")|("{{"([^}]|"}"[^}])*"}}")
 
 
 
