@@ -129,36 +129,6 @@ search_var_instance_decl_c::opt_t search_var_instance_decl_c::get_option(symbol_
 
 
 
-/* This is a temporary fix. Hopefully, once I clean up stage4 code, and I change the way
- * we generate C code, this function will no longer be needed!
- */
-#include <typeinfo>  /* required for typeid() */
-bool search_var_instance_decl_c::type_is_complex(symbol_c *symbol) {
-  symbol_c *decl;
-  
-  decl = this->get_decl(symbol);
-  if (NULL == decl) ERROR;
-  decl = search_base_type_c::get_basetype_decl(decl);
-  if (NULL == decl) ERROR;
-  
-  return ((typeid( *(decl) ) == typeid( array_specification_c                )) ||
-//        (typeid( *(decl) ) == typeid( array_spec_init_c                    )) ||  /* does not seem to be necessary */
-          (typeid( *(decl) ) == typeid( structure_type_declaration_c         )) ||  
-          (typeid( *(decl) ) == typeid( structure_element_declaration_list_c )) ||
-//        (typeid( *(decl) ) == typeid( structure_type_declaration_c         )) ||  /* does not seem to be necessary */
-          (typeid( *(decl) ) == typeid( initialized_structure_c              )) ||
-          (search_base_type_c::type_is_fb(decl) && current_vartype == external_vt)
-         );
-}
-
-bool search_var_instance_decl_c::type_is_fb(symbol_c *symbol) {
-    symbol_c *decl;
-    search_base_type_c search_base_type;
-
-    decl = this->get_decl(symbol);
-    if (NULL == decl) ERROR;
-    return search_base_type.type_is_fb(decl);
-}
 
 /***************************/
 /* B 0 - Programming Model */

@@ -32,7 +32,7 @@ typedef struct
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
+class generate_c_sfcdecl_c: protected generate_c_base_c {
   
   public:
       typedef enum {
@@ -59,7 +59,7 @@ class generate_c_sfcdecl_c: protected generate_c_typedecl_c {
     
   public:
     generate_c_sfcdecl_c(stage4out_c *s4o_ptr, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_c_typedecl_c(s4o_ptr) {
+    : generate_c_base_c(s4o_ptr) {
       this->set_variable_prefix(variable_prefix);
       search_var_instance_decl = new search_var_instance_decl_c(scope);
     }

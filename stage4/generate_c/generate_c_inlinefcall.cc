@@ -26,7 +26,7 @@
 #define INLINE_RESULT_TEMP_VAR "__res"
 #define INLINE_PARAM_COUNT "__PARAM_COUNT"
 
-class generate_c_inlinefcall_c: public generate_c_typedecl_c {
+class generate_c_inlinefcall_c: public generate_c_base_c {
 
   public:
     typedef enum {
@@ -76,7 +76,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
   public:
     generate_c_inlinefcall_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_c_typedecl_c(s4o_ptr),
+    : generate_c_base_c(s4o_ptr),
       implicit_variable_current(IL_DEFVAR, NULL)
     {
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
@@ -243,7 +243,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     void *print_getter(symbol_c *symbol) {
       unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
       if (vartype == search_var_instance_decl_c::external_vt) {
-        if (search_var_instance_decl->type_is_fb(symbol))
+        if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+        if ( get_datatype_info_c::is_function_block(symbol->datatype))
           s4o.print(GET_EXTERNAL_FB);
         else
           s4o.print(GET_EXTERNAL);
@@ -256,8 +257,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
 
       wanted_variablegeneration = complextype_base_vg;
       symbol->accept(*this);
-      if (search_var_instance_decl->type_is_complex(symbol))
-        s4o.print(",");
+      s4o.print(",");
       wanted_variablegeneration = complextype_suffix_vg;
       symbol->accept(*this);
       s4o.print(")");
@@ -270,7 +270,8 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
                        symbol_c* value) {
       unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
       if (vartype == search_var_instance_decl_c::external_vt) {
-        if (search_var_instance_decl->type_is_fb(symbol))
+        if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+        if ( get_datatype_info_c::is_function_block(symbol->datatype))
           s4o.print(SET_EXTERNAL_FB);
          else
           s4o.print(SET_EXTERNAL);
@@ -286,7 +287,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
       s4o.print(",");
       wanted_variablegeneration = expression_vg;
       print_check_function(type, value, NULL, true);
-      if (search_var_instance_decl->type_is_complex(symbol)) {
+      if (analyse_variable_c::contains_complex_type(symbol)) {
         s4o.print(",");
         wanted_variablegeneration = complextype_suffix_vg;
         symbol->accept(*this);
@@ -337,7 +338,7 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
     // SYM_REF2(structured_variable_c, record_variable, field_selector)
     void *visit(structured_variable_c *symbol) {
       TRACE("structured_variable_c");
-      bool type_is_complex = search_var_instance_decl->type_is_complex(symbol->record_variable);
+      bool type_is_complex = analyse_variable_c::is_complex_type(symbol->record_variable);
       if (generating_inlinefunction) {
         switch (wanted_variablegeneration) {
           case complextype_base_vg:
@@ -512,6 +513,14 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
           break;
         }
       
+        /* We do not yet support embedded IL lists, so we abort the compiler if we find one */
+        /* Note that in IL function calls the syntax does not allow embeded IL lists, so this check is not necessary here! */
+        /*
+        {simple_instr_list_c *instruction_list = dynamic_cast<simple_instr_list_c *>(param_value);
+         if (NULL != instruction_list) STAGE4_ERROR(param_value, param_value, "The compiler does not yet support formal invocations in IL that contain embedded IL lists. Aborting!");
+        }
+        */
+
         if ((param_value == NULL) && (param_direction == function_param_iterator_c::direction_in)) {
           /* No value given for parameter, so we must use the default... */
           /* First check whether default value specified in function declaration...*/
@@ -669,7 +678,12 @@ class generate_c_inlinefcall_c: public generate_c_typedecl_c {
         if ((param_value == NULL) && (fp_iterator.is_extensible_param())) {
           break;
         }
-    
+        
+        /* We do not yet support embedded IL lists, so we abort the compiler if we find one */
+        {simple_instr_list_c *instruction_list = dynamic_cast<simple_instr_list_c *>(param_value);
+         if (NULL != instruction_list) STAGE4_ERROR(param_value, param_value, "The compiler does not yet support formal invocations in IL that contain embedded IL lists. Aborting!");
+        }
+
         if ((param_value == NULL) && (param_direction == function_param_iterator_c::direction_in)) {
           /* No value given for parameter, so we must use the default... */
           /* First check whether default value specified in function declaration...*/

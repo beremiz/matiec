@@ -260,6 +260,7 @@ bool get_datatype_info_c::is_type_valid(symbol_c *type) {
 
 bool get_datatype_info_c::is_sfc_initstep(symbol_c *type_symbol) {
   symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol); 
+  if (NULL == type_decl)                                             {return false;}
   if (typeid(*type_decl) == typeid(initial_step_c))                  {return true;}   /* INITIAL_STEP step_name ':' action_association_list END_STEP */  /* A pseudo data type! */
   return false;
 }
@@ -270,6 +271,7 @@ bool get_datatype_info_c::is_sfc_initstep(symbol_c *type_symbol) {
 
 bool get_datatype_info_c::is_sfc_step(symbol_c *type_symbol) {
   symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol); 
+  if (NULL == type_decl)                                             {return false;}
   if (typeid(*type_decl) == typeid(initial_step_c))                  {return true;}   /* INITIAL_STEP step_name ':' action_association_list END_STEP */  /* A pseudo data type! */
   if (typeid(*type_decl) == typeid(        step_c))                  {return true;}   /*         STEP step_name ':' action_association_list END_STEP */  /* A pseudo data type! */
   return false;
@@ -280,6 +282,7 @@ bool get_datatype_info_c::is_sfc_step(symbol_c *type_symbol) {
 
 bool get_datatype_info_c::is_function_block(symbol_c *type_symbol) {
   symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol); 
+  if (NULL == type_decl)                                             {return false;}
   if (typeid(*type_decl) == typeid(function_block_declaration_c))    {return true;}   /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
   return false;
 }
@@ -289,7 +292,8 @@ bool get_datatype_info_c::is_function_block(symbol_c *type_symbol) {
 
 
 bool get_datatype_info_c::is_subrange(symbol_c *type_symbol) {
-  symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol); /* NOTE: will work correctly once we update the way search_base_type_c works, by adding a new search_effective_type:c */
+  symbol_c *type_decl = search_base_type_c::get_equivtype_decl(type_symbol); /* NOTE: do NOT call search_base_type_c !! */
+  if (NULL == type_decl)                                             {return false;}
   
   if (typeid(*type_decl) == typeid(subrange_type_declaration_c))     {return true;}   /*  subrange_type_name ':' subrange_spec_init */
   if (typeid(*type_decl) == typeid(subrange_spec_init_c))            {return true;}   /* subrange_specification ASSIGN signed_integer */
@@ -305,6 +309,7 @@ bool get_datatype_info_c::is_subrange(symbol_c *type_symbol) {
 
 bool get_datatype_info_c::is_enumerated(symbol_c *type_symbol) {
   symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol);
+  if (NULL == type_decl)                                             {return false;}
   
   if (typeid(*type_decl) == typeid(enumerated_type_declaration_c))   {return true;}   /*  enumerated_type_name ':' enumerated_spec_init */
   if (typeid(*type_decl) == typeid(enumerated_spec_init_c))          {return true;}   /* enumerated_specification ASSIGN enumerated_value */
@@ -320,6 +325,7 @@ bool get_datatype_info_c::is_enumerated(symbol_c *type_symbol) {
 
 bool get_datatype_info_c::is_array(symbol_c *type_symbol) {
   symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol);
+  if (NULL == type_decl)                                             {return false;}
   
   if (typeid(*type_decl) == typeid(array_type_declaration_c))        {return true;}   /*  identifier ':' array_spec_init */
   if (typeid(*type_decl) == typeid(array_spec_init_c))               {return true;}   /* array_specification [ASSIGN array_initialization} */
@@ -337,6 +343,7 @@ bool get_datatype_info_c::is_array(symbol_c *type_symbol) {
 
 bool get_datatype_info_c::is_structure(symbol_c *type_symbol) {
   symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol);
+  if (NULL == type_decl)                                                       {return false;}
   
   if (typeid(*type_decl) == typeid(structure_type_declaration_c))              {return true;}   /*  structure_type_name ':' structure_specification */
   if (typeid(*type_decl) == typeid(initialized_structure_c))                   {return true;}   /* structure_type_name ASSIGN structure_initialization */

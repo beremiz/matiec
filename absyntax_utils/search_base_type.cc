@@ -54,7 +54,7 @@ search_base_type_c *search_base_type_c::search_base_type_singleton = NULL;
 
 
 
-search_base_type_c::search_base_type_c(void) {current_type_name = NULL; current_basetype = NULL;}
+search_base_type_c::search_base_type_c(void) {current_basetype_name = NULL; current_basetype = NULL; current_equivtype = NULL;}
 
 /* static method! */
 void search_base_type_c::create_singleton(void) {
@@ -63,11 +63,25 @@ void search_base_type_c::create_singleton(void) {
 }
 
 /* static method! */
+symbol_c *search_base_type_c::get_equivtype_decl(symbol_c *symbol) {
+  create_singleton();
+  if (NULL == symbol)    return NULL; 
+  search_base_type_singleton->current_basetype_name = NULL;
+  search_base_type_singleton->current_basetype  = NULL; 
+  search_base_type_singleton->current_equivtype = NULL; 
+  symbol_c *basetype = (symbol_c *)symbol->accept(*search_base_type_singleton);
+  if (NULL != search_base_type_singleton->current_equivtype)
+    return search_base_type_singleton->current_equivtype;
+  return basetype;
+}
+
+/* static method! */
 symbol_c *search_base_type_c::get_basetype_decl(symbol_c *symbol) {
   create_singleton();
   if (NULL == symbol)    return NULL; 
-  search_base_type_singleton->current_type_name = NULL;
+  search_base_type_singleton->current_basetype_name = NULL;
   search_base_type_singleton->current_basetype  = NULL; 
+  search_base_type_singleton->current_equivtype = NULL; 
   return (symbol_c *)symbol->accept(*search_base_type_singleton);
 }
 
@@ -75,39 +89,14 @@ symbol_c *search_base_type_c::get_basetype_decl(symbol_c *symbol) {
 symbol_c *search_base_type_c::get_basetype_id  (symbol_c *symbol) {
   create_singleton();
   if (NULL == symbol)    return NULL; 
-  search_base_type_singleton->current_type_name = NULL;
+  search_base_type_singleton->current_basetype_name = NULL;
   search_base_type_singleton->current_basetype  = NULL; 
+  search_base_type_singleton->current_equivtype = NULL; 
   symbol->accept(*search_base_type_singleton);
-  return (symbol_c *)search_base_type_singleton->current_type_name;
+  return (symbol_c *)search_base_type_singleton->current_basetype_name;
 }
 
 
-/* Note by MJS: The following two functions definately do not belong in this class!! Maybe create a new utility class?
- * I will need to clean this up when the opportunity arises!
- */
-/* static method! */
-bool search_base_type_c::type_is_subrange(symbol_c* type_decl) {
-  create_singleton();
-  search_base_type_singleton->is_subrange = false;
-  type_decl->accept(*search_base_type_singleton);
-  return search_base_type_singleton->is_subrange;
-}
-
-
-/* static method! */
-bool search_base_type_c::type_is_enumerated(symbol_c* type_decl) {
-  create_singleton();
-  search_base_type_singleton->is_enumerated = false;
-  type_decl->accept(*search_base_type_singleton);
-  return search_base_type_singleton->is_enumerated;
-}
-
-bool search_base_type_c::type_is_fb(symbol_c* type_decl) {
-  create_singleton();
-  search_base_type_singleton->is_fb = false;
-  type_decl->accept(*search_base_type_singleton);
-  return search_base_type_singleton->is_fb;
-}
 
 /*************************/
 /* B.1 - Common elements */
@@ -119,7 +108,7 @@ bool search_base_type_c::type_is_fb(symbol_c* type_decl) {
 void *search_base_type_c::visit(identifier_c *type_name) {
   symbol_c *type_decl;
 
-  this->current_type_name = type_name;
+  this->current_basetype_name = type_name;
   /* if we have reached this point, it is because the current_basetype is not yet pointing to the base datatype we are looking for,
    * so we will be searching for the delcaration of the type named in type_name, which might be the base datatype (we search recursively!)
    */
@@ -236,17 +225,21 @@ void *search_base_type_c::visit(simple_spec_init_c *symbol) {
 
 /*  subrange_type_name ':' subrange_spec_init */
 void *search_base_type_c::visit(subrange_type_declaration_c *symbol) {
+  this->current_equivtype = symbol;
   return symbol->subrange_spec_init->accept(*this);
 }
 
 /* subrange_specification ASSIGN signed_integer */
 void *search_base_type_c::visit(subrange_spec_init_c *symbol) {
-  this->is_subrange = true;
+  if (NULL == this->current_equivtype)
+    this->current_equivtype = symbol;
   return symbol->subrange_specification->accept(*this);
 }
 
 /*  integer_type_name '(' subrange')' */
 void *search_base_type_c::visit(subrange_specification_c *symbol) {
+  if (NULL == this->current_equivtype)
+    this->current_equivtype = symbol;
   return symbol->integer_type_name->accept(*this);
 }
 
@@ -255,7 +248,7 @@ void *search_base_type_c::visit(subrange_c *symbol)                             
 
 /*  enumerated_type_name ':' enumerated_spec_init */
 void *search_base_type_c::visit(enumerated_type_declaration_c *symbol) {
-  this->current_type_name = symbol->enumerated_type_name;
+  this->current_basetype_name = symbol->enumerated_type_name;
   /* NOTE: We want search_base_type_c to return a enumerated_type_declaration_c as the base datatpe if possible
    *       (i.e. if it is a named datatype declared inside a TYPE ... END_TYPE declarations, as opposed to an
    *        anonymous datatype declared in a VAR ... AND_VAR declaration).
@@ -268,7 +261,6 @@ void *search_base_type_c::visit(enumerated_type_declaration_c *symbol) {
 
 /* enumerated_specification ASSIGN enumerated_value */
 void *search_base_type_c::visit(enumerated_spec_init_c *symbol) {
-  this->is_enumerated = true;
   // current_basetype may have been set in the previous enumerated_type_declaration_c visitor, in which case we do not want to overwrite the value!
   if (NULL == this->current_basetype)
     this->current_basetype  = symbol; 
@@ -282,7 +274,6 @@ void *search_base_type_c::visit(enumerated_spec_init_c *symbol) {
 /* helper symbol for enumerated_specification->enumerated_spec_init */
 /* enumerated_value_list ',' enumerated_value */
 void *search_base_type_c::visit(enumerated_value_list_c *symbol) {
-  this->is_enumerated = true;
   // current_basetype may have been set in the previous enumerated_type_declaration_c or enumerated_spec_init_c visitors, in which case we do not want to overwrite the value!
   if (NULL == this->current_basetype) 
     this->current_basetype  = symbol; 
@@ -295,7 +286,7 @@ void *search_base_type_c::visit(enumerated_value_c *symbol)                     
 
 /*  identifier ':' array_spec_init */
 void *search_base_type_c::visit(array_type_declaration_c *symbol) {
-  this->current_type_name = symbol->identifier;
+  this->current_basetype_name = symbol->identifier;
   return symbol->array_spec_init->accept(*this);
 }
 
@@ -332,7 +323,7 @@ void *search_base_type_c::visit(array_initial_elements_c *symbol)               
  *       structure_element_declaration_list_c
  */
 void *search_base_type_c::visit(structure_type_declaration_c *symbol)  {
-  this->current_type_name = symbol->structure_type_name;
+  this->current_basetype_name = symbol->structure_type_name;
   return symbol->structure_specification->accept(*this);
 }
 
@@ -388,7 +379,6 @@ void *search_base_type_c::visit(fb_spec_init_c *symbol)	{
 /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
 // SYM_REF3(function_block_declaration_c, fblock_name, var_declarations, fblock_body)
 void *search_base_type_c::visit(function_block_declaration_c *symbol)                   {
-	this->is_fb = true;
 	return (void *)symbol;
 }
 
@@ -400,14 +390,14 @@ void *search_base_type_c::visit(function_block_declaration_c *symbol)           
 /* INITIAL_STEP step_name ':' action_association_list END_STEP */
 // SYM_REF2(initial_step_c, step_name, action_association_list)
 void *search_base_type_c::visit(initial_step_c *symbol) {
-  this->current_type_name = NULL; /* this pseudo data type does not have a type name! */
+  this->current_basetype_name = NULL; /* this pseudo data type does not have a type name! */
   return (void *)symbol;
 }
 
 /* STEP step_name ':' action_association_list END_STEP */
 // SYM_REF2(step_c, step_name, action_association_list)
 void *search_base_type_c::visit(step_c *symbol) {
-  this->current_type_name = NULL; /* this pseudo data type does not have a type name! */
+  this->current_basetype_name = NULL; /* this pseudo data type does not have a type name! */
   return (void *)symbol;
 }
 

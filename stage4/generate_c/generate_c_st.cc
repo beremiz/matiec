@@ -44,7 +44,7 @@
 /***********************************************************************/
 
 
-class generate_c_st_c: public generate_c_typedecl_c {
+class generate_c_st_c: public generate_c_base_c {
 
   public:
     typedef enum {
@@ -76,10 +76,11 @@ class generate_c_st_c: public generate_c_typedecl_c {
      * so we do not create an object instance when handling
      * a function declaration.
      */
-    search_fb_instance_decl_c *search_fb_instance_decl;
-
+    search_fb_instance_decl_c    *search_fb_instance_decl;
     search_varfb_instance_type_c *search_varfb_instance_type;
     search_var_instance_decl_c   *search_var_instance_decl;
+    
+    symbol_c *scope_;
 
     symbol_c* current_array_type;
     symbol_c* current_param_type;
@@ -94,10 +95,11 @@ class generate_c_st_c: public generate_c_typedecl_c {
 
   public:
     generate_c_st_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_c_typedecl_c(s4o_ptr) {
+    : generate_c_base_c(s4o_ptr) {
       search_fb_instance_decl    = new search_fb_instance_decl_c   (scope);
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);
       search_var_instance_decl   = new search_var_instance_decl_c  (scope);
+      scope_ = scope;
       
       this->set_variable_prefix(variable_prefix);
       current_array_type = NULL;
@@ -128,10 +130,11 @@ class generate_c_st_c: public generate_c_typedecl_c {
 
 
 void *print_getter(symbol_c *symbol) {
-  unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
+  unsigned int vartype = analyse_variable_c::first_nonfb_vardecltype(symbol, scope_);
   if (wanted_variablegeneration == fparam_output_vg) {
     if (vartype == search_var_instance_decl_c::external_vt) {
-      if (search_var_instance_decl->type_is_fb(symbol))
+      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+      if ( get_datatype_info_c::is_function_block(symbol->datatype))
         s4o.print(GET_EXTERNAL_FB_BY_REF);
       else
         s4o.print(GET_EXTERNAL_BY_REF);
@@ -143,7 +146,8 @@ void *print_getter(symbol_c *symbol) {
   }
   else {
     if (vartype == search_var_instance_decl_c::external_vt) {
-      if (search_var_instance_decl->type_is_fb(symbol))
+      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+      if ( get_datatype_info_c::is_function_block(symbol->datatype))
         s4o.print(GET_EXTERNAL_FB);
       else
         s4o.print(GET_EXTERNAL);
@@ -158,14 +162,15 @@ void *print_getter(symbol_c *symbol) {
   variablegeneration_t old_wanted_variablegeneration = wanted_variablegeneration;
   wanted_variablegeneration = complextype_base_vg;
   symbol->accept(*this);
-  if (search_var_instance_decl->type_is_complex(symbol))
-    s4o.print(",");
+  s4o.print(",");
   wanted_variablegeneration = complextype_suffix_vg;
   symbol->accept(*this);
   s4o.print(")");
   wanted_variablegeneration = old_wanted_variablegeneration;
   return NULL;
 }
+
+
 
 void *print_setter(symbol_c* symbol,
         symbol_c* type,
@@ -175,10 +180,11 @@ void *print_setter(symbol_c* symbol,
   
   bool type_is_complex = false;
   if (fb_symbol == NULL) {
-    unsigned int vartype = search_var_instance_decl->get_vartype(symbol);
-    type_is_complex = search_var_instance_decl->type_is_complex(symbol);
+    unsigned int vartype = analyse_variable_c::first_nonfb_vardecltype(symbol, scope_);
+    type_is_complex = analyse_variable_c::contains_complex_type(symbol);
     if (vartype == search_var_instance_decl_c::external_vt) {
-      if (search_var_instance_decl->type_is_fb(symbol))
+      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+      if ( get_datatype_info_c::is_function_block(symbol->datatype))
         s4o.print(SET_EXTERNAL_FB);
       else
         s4o.print(SET_EXTERNAL);
@@ -328,7 +334,7 @@ void *visit(direct_variable_c *symbol) {
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
 void *visit(structured_variable_c *symbol) {
   TRACE("structured_variable_c");
-  bool type_is_complex = search_var_instance_decl->type_is_complex(symbol->record_variable);
+  bool type_is_complex = analyse_variable_c::is_complex_type(symbol->record_variable);
   switch (wanted_variablegeneration) {
     case complextype_base_vg:
     case complextype_base_assignment_vg:
@@ -858,20 +864,20 @@ void *visit(return_statement_c *symbol) {
 
 
 /* fb_name '(' [param_assignment_list] ')' */
-/* param_assignment_list -> may be NULL ! */
-//SYM_REF2(fb_invocation_c, fb_name, param_assignment_list)
+/*    formal_param_list -> may be NULL ! */
+/* nonformal_param_list -> may be NULL ! */
+/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
+// SYM_REF3(fb_invocation_c, fb_name, formal_param_list, nonformal_param_list, symbol_c *called_fb_declaration;)
 void *visit(fb_invocation_c *symbol) {
   TRACE("fb_invocation_c");
-  /* first figure out what is the name of the function block type of the function block being called... */
-  symbol_c *function_block_type_name = this->search_fb_instance_decl->get_type_name(symbol->fb_name);
-    /* should never occur. The function block instance MUST have been declared... */
-  if (function_block_type_name == NULL) ERROR;
-
-  /* Now find the declaration of the function block type being called... */
-  function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(function_block_type_name);
-    /* should never occur. The function block type being called MUST be in the symtable... */
-  if (fb_decl == function_block_type_symtable.end_value()) ERROR;
-
+  
+  /* find the declaration of the function block type being called... */
+  symbol_c *fb_decl = symbol->called_fb_declaration;
+  if (fb_decl == NULL) ERROR;
+  /* figure out the name of the function block type of the function block being called... */
+  symbol_c *function_block_type_name = get_datatype_info_c::get_id(fb_decl);
+  if (NULL == function_block_type_name) ERROR;
+  
   /* loop through each function block parameter, find the value we should pass
    * to it, and then output the c equivalent...
    */

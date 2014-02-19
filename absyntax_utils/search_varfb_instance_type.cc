@@ -209,7 +209,8 @@ void *search_varfb_instance_type_c::visit(array_specification_c *symbol) {
  * structure_type_declaration_c, but for now, let's leave it in...
  */
 void *search_varfb_instance_type_c::visit(structure_type_declaration_c *symbol) {
-  if (NULL == current_field_selector) ERROR;
+  if (NULL == current_field_selector) return NULL; // the source code has a datatype consistency bug that will be caught later!!
+  
   symbol->structure_specification->accept(*this);
   return NULL;
   /* NOTE: structure_specification will point to either a
@@ -228,7 +229,7 @@ void *search_varfb_instance_type_c::visit(structure_type_declaration_c *symbol) 
  * initialized_structure_c, but for now, let's leave it in...
  */
 void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
-  if (NULL != current_field_selector) ERROR;
+  if (NULL == current_field_selector) return NULL; // the source code has a datatype consistency bug that will be caught later!!
   
   /* recursively find out the data type of current_field_selector... */
   symbol->structure_type_name->accept(*this);
@@ -239,7 +240,7 @@ void *search_varfb_instance_type_c::visit(initialized_structure_c *symbol)	{
 /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
 /* structure_element_declaration_list structure_element_declaration ';' */
 void *search_varfb_instance_type_c::visit(structure_element_declaration_list_c *symbol)	{
-  if (NULL == current_field_selector) ERROR;
+  if (NULL == current_field_selector) return NULL; // the source code has a datatype consistency bug that will be caught later!!
 
   /* now search the structure declaration */
   for(int i = 0; i < symbol->n; i++) {
@@ -251,7 +252,7 @@ void *search_varfb_instance_type_c::visit(structure_element_declaration_list_c *
 
 /*  structure_element_name ':' spec_init */
 void *search_varfb_instance_type_c::visit(structure_element_declaration_c *symbol) {
-  if (NULL == current_field_selector) ERROR;
+  if (NULL == current_field_selector) return NULL; // the source code has a datatype consistency bug that will be caught later!!
 
   if (compare_identifiers(symbol->structure_element_name, current_field_selector) == 0) {
     /* found the type of the element we were looking for! */
@@ -357,7 +358,7 @@ void *search_varfb_instance_type_c::visit(structured_variable_c *symbol) {
 /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
 // SYM_REF4(function_block_declaration_c, fblock_name, var_declarations, fblock_body, unused)
 void *search_varfb_instance_type_c::visit(function_block_declaration_c *symbol) {
-  if (NULL == current_field_selector) ERROR;
+  if (NULL == current_field_selector) return NULL; // the source code has a datatype consistency bug that will be caught later!!
 
   /* now search the function block declaration for the variable... */
   /* If not found, these pointers will all be set to NULL!! */
@@ -378,7 +379,7 @@ void *search_varfb_instance_type_c::visit(function_block_declaration_c *symbol) 
 // SYM_REF2(initial_step_c, step_name, action_association_list)
 /* NOTE: this method may be called from visit(structured_variable_c *symbol) method| */
 void *search_varfb_instance_type_c::visit(initial_step_c *symbol) {
-  if (NULL == current_field_selector) ERROR;
+  if (NULL == current_field_selector) return NULL; // the source code has a datatype consistency bug that will be caught later!!
 
   identifier_c T("T");
   identifier_c X("X");

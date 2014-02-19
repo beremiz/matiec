@@ -862,6 +862,10 @@ END_CONFIGURATION
 /* enumvalue_symtable is filled in by enum_declaration_check_c, during stage3 semantic verification, with a list of all enumerated constants declared inside this POU */
 SYM_REF5(configuration_declaration_c, configuration_name, global_var_declarations, resource_declarations, access_declarations, instance_specific_initializations, enumvalue_symtable_t enumvalue_symtable;)
 
+/* intermediate helper symbol for configuration_declaration  */
+/*  { global_var_declarations_list }   */
+SYM_LIST(global_var_declarations_list_c)
+
 /* helper symbol for configuration_declaration */
 SYM_LIST(resource_declaration_list_c)
 

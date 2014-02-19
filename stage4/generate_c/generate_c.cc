@@ -340,6 +340,131 @@ class print_function_parameter_data_types_c: public generate_c_base_c {
 /***********************************************************************/
 /***********************************************************************/
 
+/* A helper class that analyses if the datatype of a variable is 'complex'. */
+/* 'complex' means that it is either a strcuture or an array!               */
+class analyse_variable_c: public search_visitor_c {
+  private:
+    static analyse_variable_c *singleton_;
+
+  public:
+    analyse_variable_c(void) {};
+    
+    static bool is_complex_type(symbol_c *symbol) {
+      if (NULL == symbol) ERROR;
+      if (!get_datatype_info_c::is_type_valid     (symbol->datatype)) ERROR;
+      return (   get_datatype_info_c::is_structure(symbol->datatype) 
+              || get_datatype_info_c::is_array    (symbol->datatype) 
+             );
+    }
+
+    
+  private:
+    symbol_c *last_fb, *first_non_fb_identifier;
+
+  public:  
+    /* returns the first element (from left to right) in a structured variable that is not a FB, i.e. is either a structure or an array! */
+    /* eg:
+     *      fb1.fb2.fb3.real       returns ??????
+     *      fb1.fb2.struct1.real   returns struct1
+     *      struct1.real           returns struct1
+     */
+    static symbol_c *find_first_nonfb(symbol_c *symbol) {
+      if (NULL == singleton_)       singleton_ = new analyse_variable_c();
+      if (NULL == singleton_)       ERROR;
+      if (NULL == symbol)           ERROR;
+      
+      singleton_->last_fb                 = NULL;
+      singleton_->first_non_fb_identifier = NULL;
+      return (symbol_c *)symbol->accept(*singleton_);
+    }
+    
+    /* returns true if a strcutured variable (e.g. fb1.fb2.strcut1.real) contains a structure or array */
+    /* eg:
+     *      fb1.fb2.fb3.real       returns FALSE
+     *      fb1.fb2.struct1.real   returns TRUE
+     *      struct1.real           returns TRUE
+     */
+    static bool contains_complex_type(symbol_c *symbol) {
+      if (NULL == symbol) ERROR;
+      if (!get_datatype_info_c::is_type_valid(symbol->datatype)) ERROR;
+      
+      symbol_c *first_non_fb = (symbol_c *)find_first_nonfb(symbol);
+      return is_complex_type(first_non_fb->datatype);
+    }
+    
+    
+    /* returns the datatype of the variable returned by find_first_nonfb() */
+    /* eg:
+     *      fb1.fb2.fb3.real       returns ??????
+     *      fb1.fb2.struct1.real   returns datatype of struct1
+     *      struct1.real           returns datatype of struct1
+     */
+    static search_var_instance_decl_c::vt_t first_nonfb_vardecltype(symbol_c *symbol, symbol_c *scope) {
+      if (NULL == symbol) ERROR;
+      if (!get_datatype_info_c::is_type_valid(symbol->datatype)) ERROR;
+      
+      symbol_c *first_non_fb = (symbol_c *)find_first_nonfb(symbol);
+      if (NULL != singleton_->last_fb) {
+        scope = singleton_->last_fb->datatype;
+        symbol = singleton_->first_non_fb_identifier;
+      }
+      
+      search_var_instance_decl_c search_var_instance_decl(scope);
+      
+      return search_var_instance_decl.get_vartype(symbol);
+    }
+    
+    
+    /*********************/
+    /* B 1.4 - Variables */
+    /*********************/
+    void *visit(symbolic_variable_c *symbol) {
+      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+      if (!get_datatype_info_c::is_function_block(symbol->datatype)) {
+         first_non_fb_identifier = symbol; 
+         return (void *)symbol;
+      }
+      last_fb = symbol;
+      return NULL;
+    }
+    
+    /*************************************/
+    /* B.1.4.2   Multi-element Variables */
+    /*************************************/
+    
+    // SYM_REF2(structured_variable_c, record_variable, field_selector)
+    void *visit(structured_variable_c *symbol) {
+      symbol_c *res = (symbol_c *)symbol->record_variable->accept(*this);
+      if (NULL != res) return res;
+      
+      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
+      if (!get_datatype_info_c::is_function_block(symbol->datatype)) {
+         first_non_fb_identifier = symbol->field_selector; 
+         return (void *)symbol;
+      }
+
+      last_fb = symbol;      
+      return NULL;      
+    }
+    
+    /*  subscripted_variable '[' subscript_list ']' */
+    //SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
+    void *visit(array_variable_c *symbol) {
+      void *res = symbol->subscripted_variable->accept(*this);
+      if (NULL != res) return res;
+      return (void *)symbol;      
+    }
+
+    
+};
+
+analyse_variable_c *analyse_variable_c::singleton_ = NULL;
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
 
 #include "generate_c_st.cc"
 #include "generate_c_il.cc"
@@ -588,15 +713,13 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     } inlinearray_mode_t;
 
   private:
-    stage4out_c *s4o_ptr;
     std::map<std::string, int> inline_array_defined;
     std::string current_array_name;
     inlinearray_mode_t current_mode;
 
   public:
     generate_c_datatypes_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
-      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {
-      generate_c_datatypes_c::s4o_ptr = s4o_ptr;
+      : generate_c_typedecl_c(s4o_incl_ptr) {
       current_mode = none_im;
     };
     virtual ~generate_c_datatypes_c(void) {
@@ -782,11 +905,20 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     void *visit(array_spec_init_c *symbol) {
       switch (current_mode) {
         case arraydeclaration_im:
+          {
+            array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
+            if (specification != NULL)
+              symbol->array_specification->accept(*this);
+          }
+          break;
         case arrayname_im:
           {
             array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
             if (specification != NULL)
               symbol->array_specification->accept(*this);
+            identifier_c *name = dynamic_cast<identifier_c*>(symbol->array_specification);
+            if (name != NULL)
+              s4o_incl.print(name->value);
           }
           break;
         default:
@@ -1013,14 +1145,13 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
 /***********************************************************************/
 
 
-class generate_c_pous_c: public generate_c_typedecl_c {
+class generate_c_pous_c: public generate_c_base_c {
   private:
-    stage4out_c *s4o_ptr;
+    stage4out_c &s4o_incl;
     
   public:
     generate_c_pous_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
-      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {
-      generate_c_pous_c::s4o_ptr = s4o_ptr;
+      : generate_c_base_c(s4o_ptr), s4o_incl(*s4o_incl_ptr) {
     };
     virtual ~generate_c_pous_c(void) {}
 
@@ -1054,8 +1185,8 @@ class generate_c_pous_c: public generate_c_typedecl_c {
 /********************/
 /* 2.1.6 - Pragmas  */
 /********************/
-void *visit(enable_code_generation_pragma_c * symbol)   {s4o_ptr->enable_output();  return NULL;}
-void *visit(disable_code_generation_pragma_c * symbol)  {s4o_ptr->disable_output(); return NULL;} 
+void *visit(enable_code_generation_pragma_c * symbol)   {s4o.enable_output();  return NULL;}
+void *visit(disable_code_generation_pragma_c * symbol)  {s4o.disable_output(); return NULL;} 
 
 /*************************/
 /* B.1 - Common elements */
@@ -1617,16 +1748,13 @@ void *visit(program_declaration_c *symbol) {
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_c_config_c: public generate_c_typedecl_c {
+class generate_c_config_c: public generate_c_base_c {
     private:
-    stage4out_c *s4o_ptr;
-    stage4out_c *s4o_incl_ptr;
+    stage4out_c &s4o_incl;
     
     public:
     generate_c_config_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
-      : generate_c_typedecl_c(s4o_ptr, s4o_incl_ptr) {
-      generate_c_config_c::s4o_ptr = s4o_ptr;
-      generate_c_config_c::s4o_incl_ptr = s4o_incl_ptr;
+      : generate_c_base_c(s4o_ptr), s4o_incl(*s4o_incl_ptr) {
     };
 
     virtual ~generate_c_config_c(void) {}
@@ -1646,14 +1774,14 @@ public:
 /* 2.1.6 - Pragmas  */
 /********************/
 void *visit(enable_code_generation_pragma_c * symbol)   {
-    s4o_ptr->enable_output();
-    s4o_incl_ptr->enable_output();
+    s4o.enable_output();
+    s4o_incl.enable_output();
     return NULL;
 }
 
 void *visit(disable_code_generation_pragma_c * symbol)  {
-    s4o_ptr->disable_output();
-    s4o_incl_ptr->disable_output();    
+    s4o.disable_output();
+    s4o_incl.disable_output();    
     return NULL;
 }
     

@@ -134,14 +134,6 @@ class search_var_instance_decl_c: public search_visitor_c {
     vt_t         get_vartype(symbol_c *variable_instance_name);
     opt_t        get_option (symbol_c *variable_instance_name);
 
-    /* NOTE: The following function will be completely deleted in the (hopefully near) future. */
-    /* Returns true if the variable is an ARRAY or a STRUCT, otherwise returns false.
-     * Note that for FB, also returns false!
-     */
-    bool type_is_complex(symbol_c *variable_name);
-
-    bool type_is_fb(symbol_c *symbol);
-    
   private:
     symbol_c *search_scope;
     symbol_c *search_name;

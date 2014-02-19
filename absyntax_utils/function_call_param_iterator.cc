@@ -464,12 +464,13 @@ void *function_call_param_iterator_c::visit(il_param_list_c *symbol) {
 void *function_call_param_iterator_c::visit(il_param_assignment_c *symbol) {
   TRACE("il_param_assignment_c");
 
-  // TODO : We do not yet handle a instruction list passed as parameter !!!
-  // since we do not yet support it, it is best to simply stop than to fail silently...
-  if (NULL != symbol->simple_instr_list) ERROR;
+  symbol_c *expression = NULL;
+  if (!((NULL != symbol->simple_instr_list) ^ (NULL != symbol->il_operand))) ERROR;
+  if    (NULL != symbol->simple_instr_list) expression = symbol->simple_instr_list;
+  if    (NULL != symbol->il_operand       ) expression = symbol->il_operand;
 
   current_assign_direction = assign_in;
-  return handle_parameter_assignment((symbol_c *)symbol->il_assign_operator->accept(*this), symbol->il_operand);
+  return handle_parameter_assignment((symbol_c *)symbol->il_assign_operator->accept(*this), expression);
 }
 
 /*  il_assign_out_operator variable */

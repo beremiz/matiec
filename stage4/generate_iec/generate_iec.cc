@@ -1422,6 +1422,10 @@ void *visit(configuration_declaration_c *symbol) {
 }
 
 
+/* intermediate helper symbol for configuration_declaration  */
+/*  { global_var_declarations_list }   */
+void *visit(global_var_declarations_list_c *symbol) {return print_list(symbol);}
+
 /* helper symbol for configuration_declaration */
 /*| resource_declaration_list resource_declaration */
 void *visit(resource_declaration_list_c *symbol) {return print_list(symbol);}

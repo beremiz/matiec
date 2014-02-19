@@ -555,17 +555,13 @@ void fill_candidate_datatypes_c::handle_function_call(symbol_c *fcall, generic_f
  *        CU counter_var
  */
 void *fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
-	symbol_c *fb_type_id = search_varfb_instance_type->get_basetype_id(il_operand);
-  	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
-	if (NULL == fb_type_id) ERROR;
+	symbol_c *fb_decl = (NULL == il_operand)? NULL : search_varfb_instance_type->get_basetype_decl(il_operand);
+	if (! get_datatype_info_c::is_function_block(fb_decl)) fb_decl = NULL;
 
-	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(fb_type_id);
-	if (function_block_type_symtable.end_value() == fb_decl)
-		/* The il_operand is not the name of a FB instance. Most probably it is the name of a variable of some other type.
-		 * this is a semantic error.
-		 */
-		fb_decl = NULL;
-	
+	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
+	/* However, when calling using the 'S' and 'R' operators, this error is not caught by stage 2, as these operators have two possible semantics */
+	// if (NULL == fb_type_id) ERROR;
+
 	/* The narrow_candidate_datatypes_c does not rely on this called_fb_declaration pointer being == NULL to conclude that
 	 * we have a datatype incompatibility error, so we set it to fb_decl to allow the print_datatype_error_c to print out
 	 * more informative error messages!
@@ -594,10 +590,55 @@ void *fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instru
 
 
 
+
+/* handle the S and R IL operators... */
+/* operator_str should be set to either "S" or "R" */
+void *fill_candidate_datatypes_c::handle_S_and_R_operator(symbol_c *symbol, const char *operator_str, symbol_c *&called_fb_declaration) {
+	/* NOTE: this operator has two possible semantic meanings:
+	 *          - Set/Reset the BOOL operand variable to true
+	 *          - call the FB specified by the operand.
+	 *       Which of the two semantics will have to be determined by the datatype of the operand!
+	 */
+	symbol_c *prev_instruction_type, *operand_type;
+
+	if (NULL == prev_il_instruction) return NULL;
+	if (NULL == il_operand)          return NULL;
+
+	/* Try the Set/Reset semantics */
+	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
+		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
+			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
+			operand_type = il_operand->candidate_datatypes[j];
+			/* IEC61131-3, Table 52, Note (e) states that the datatype of the operand must be BOOL!
+			 * IEC61131-3, Table 52, line 3 states that this operator should "Set operand to 1 if current result is Boolean 1"
+			 *     which implies that the prev_instruction_type MUST also be BOOL compatible.
+			 */
+			if (get_datatype_info_c::is_BOOL_compatible(prev_instruction_type) && get_datatype_info_c::is_BOOL_compatible(operand_type))
+				add_datatype_to_candidate_list(symbol, prev_instruction_type);
+		}
+	}
+
+	/* if the appropriate semantics is not a Set/Reset of a boolean variable, the we try for the FB invocation! */
+	if (symbol->candidate_datatypes.size() == 0) {
+		handle_implicit_il_fb_call(symbol,  operator_str, called_fb_declaration);
+		/* If it is also not a valid FB call, make sure the candidate_datatypes is empty (handle_implicit_il_fb_call may leave it non-empty!!) */
+		/* From here on out, all later code will consider the symbol->called_fb_declaration being NULL as an indication that this operator must use the
+		 * Set/Reset semantics, so we must also guarantee that the remainder of the state of this symbol is compatible with that assumption!
+		 */
+		if (NULL == called_fb_declaration)
+			symbol->candidate_datatypes.clear();
+	}
+
+	if (debug) std::cout << operator_str << " [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
+	return NULL;
+}
+
+
+
 /* handle a binary IL operator, like ADD, SUB, etc... */
 void *fill_candidate_datatypes_c::handle_binary_operator(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr) {
-	if (NULL == l_expr) /* if no prev_il_instruction */
-		return NULL; 
+	if (NULL == l_expr) return NULL; /* if no prev_il_instruction */
+	if (NULL == r_expr) return NULL; /* if no IL operand!! */
 
 	for(unsigned int i = 0; i < l_expr->candidate_datatypes.size(); i++)
 		for(unsigned int j = 0; j < r_expr->candidate_datatypes.size(); j++)
@@ -627,7 +668,7 @@ void *fill_candidate_datatypes_c::handle_equality_comparison(const struct widen_
 	handle_binary_expression(widen_table, symbol, l_expr, r_expr);
 	for(unsigned int i = 0; i < l_expr->candidate_datatypes.size(); i++)
 		for(unsigned int j = 0; j < r_expr->candidate_datatypes.size(); j++) {
-			if ((l_expr->candidate_datatypes[i] == r_expr->candidate_datatypes[j]) && search_base_type_c::type_is_enumerated(l_expr->candidate_datatypes[i]))
+			if ((l_expr->candidate_datatypes[i] == r_expr->candidate_datatypes[j]) && get_datatype_info_c::is_enumerated(l_expr->candidate_datatypes[i]))
 				add_datatype_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name);
 		}
 	return NULL;
@@ -1112,11 +1153,28 @@ void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
 	/* if we were to want the data type of the array itself, then we should call_param_name
 	 * search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable)
 	 */
-	symbol_c *result = search_varfb_instance_type->get_basetype_decl(symbol);
-	if (NULL != result) add_datatype_to_candidate_list(symbol, result);
+	add_datatype_to_candidate_list(symbol, search_varfb_instance_type->get_basetype_decl(symbol));   /* will only add if non NULL */
 	
 	/* recursively call the subscript list, so we can check the data types of the expressions used for the subscripts */
 	symbol->subscript_list->accept(*this);
+
+	/* recursively call the subscripted_variable. We need to do this since the array variable may be stored inside a structured
+	 * variable (i.e. if it is an element inside a struct), in which case we want to recursively visit every element of the struct,
+	 * as it may contain more arrays whose subscripts must also be visited!
+	 * e.g.   structvar.a1[v1+2].b1.c1[v2+3].d1
+	 *        TYPE
+	 *           d_s: STRUCT d1: int; d2: int;
+	 *           d_a: ARRAY [1..3] OF d_s;  
+	 *           c_s: STRUCT c1: d_a; c2: d_a;
+	 *           b_s: STRUCT b1: c_s; b2: c_s;
+	 *           b_a: ARRAY [1..3] OF b_s;  
+	 *           a_s: STRUCT a1: b_a; a2: b_a;
+	 *        END_TYPE 
+	 *        VAR
+	 *          structvar: a_s;
+	 *        END_VAR
+	 */
+	symbol->subscripted_variable->accept(*this);
 
 	if (debug) std::cout << "ARRAY_VAR [" << symbol->candidate_datatypes.size() << "]\n";	
 	return NULL;
@@ -1136,11 +1194,18 @@ void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
  *           this into account!
  */
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
-/* NOTE: We do not need to recursively determine the data types of each field_selector, as the search_varfb_instance_type
- * will do that for us. So we determine the candidate datatypes only for the full structured_variable.
- */
 void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
+	/* NOTE: We do not need to recursively determine the data types of each field_selector, as the search_varfb_instance_type
+	 * will do that for us. So we determine the candidate datatypes only for the full structured_variable.
+	 */
 	add_datatype_to_candidate_list(symbol, search_varfb_instance_type->get_basetype_decl(symbol));  /* will only add if non NULL */
+	/* However, we do need to visit each record type recursively!
+	 * Remember that a structured variable may be stored inside an array (e.g. arrayvar[33].elem1)
+	 * The array subscripts may contain a complex expression (e.g. arrayvar[ varx + 33].elem1) whose datatype must be correctly determined!
+	 * The expression, may even contain a function call to an overloaded function!
+	 *      (e.g.  arrayvar[ varx + TRUNC(realvar)].elem1)
+	 */
+	symbol->record_variable->accept(*this);
 	return NULL;
 }
 
@@ -1529,21 +1594,11 @@ void *fill_candidate_datatypes_c::visit(il_jump_operation_c *symbol) {
  * | il_call_operator prev_declared_fb_name '(' il_operand_list ')'
  * | il_call_operator prev_declared_fb_name '(' eol_list il_param_list ')'
  */
-/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 (although currently it is not used in stage 4 */
+/* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 */
 // SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 void *fill_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
-	/* We do not call
-	 * fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
-	 * because we want to make sure it is a FB instance, and not some other data type...
-	 */
-	symbol_c *fb_type_id = search_varfb_instance_type->get_basetype_id(symbol->fb_name);
-	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
-	if (NULL == fb_type_id) ERROR;
-
- 	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(fb_type_id);
-	if (function_block_type_symtable.end_value() == fb_decl) 
-		/* The fb_name not the name of a FB instance. Most probably it is the name of a variable of some other type. */
-		fb_decl = NULL;
+	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+	if (! get_datatype_info_c::is_function_block(fb_decl)) fb_decl = NULL;
 
 	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
 	if (NULL == fb_decl) ERROR;
@@ -1640,6 +1695,7 @@ void *fill_candidate_datatypes_c::visit(il_simple_instruction_c *symbol) {
 /* B 2.2 Operators */
 /*******************/
 void *fill_candidate_datatypes_c::visit(LD_operator_c *symbol) {
+	if (NULL == il_operand)          return NULL;
 	for(unsigned int i = 0; i < il_operand->candidate_datatypes.size(); i++) {
 		add_datatype_to_candidate_list(symbol, il_operand->candidate_datatypes[i]);
 	}
@@ -1648,6 +1704,7 @@ void *fill_candidate_datatypes_c::visit(LD_operator_c *symbol) {
 }
 
 void *fill_candidate_datatypes_c::visit(LDN_operator_c *symbol) {
+	if (NULL == il_operand)          return NULL;
 	for(unsigned int i = 0; i < il_operand->candidate_datatypes.size(); i++) {
 		if      (get_datatype_info_c::is_ANY_BIT_compatible(il_operand->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, il_operand->candidate_datatypes[i]);
@@ -1660,6 +1717,7 @@ void *fill_candidate_datatypes_c::visit(ST_operator_c *symbol) {
 	symbol_c *prev_instruction_type, *operand_type;
 
 	if (NULL == prev_il_instruction) return NULL;
+	if (NULL == il_operand)          return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
@@ -1676,6 +1734,7 @@ void *fill_candidate_datatypes_c::visit(STN_operator_c *symbol) {
 	symbol_c *prev_instruction_type, *operand_type;
 
 	if (NULL == prev_il_instruction) return NULL;
+	if (NULL == il_operand)          return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
 		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
 			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
@@ -1696,6 +1755,7 @@ void *fill_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
 	 *       We do not need to generate an error message. This error will be caught somewhere else!
 	 */
 	if (NULL == prev_il_instruction) return NULL;
+	if (NULL == il_operand)          return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
 		if (get_datatype_info_c::is_ANY_BIT_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
@@ -1705,58 +1765,17 @@ void *fill_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
 }
 
 
-void *fill_candidate_datatypes_c::visit(S_operator_c *symbol) {
-  /* TODO: what if this is a FB call ?? */
-	symbol_c *prev_instruction_type, *operand_type;
+void *fill_candidate_datatypes_c::visit(   S_operator_c *symbol) {return handle_S_and_R_operator   (symbol,   "S", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit(   R_operator_c *symbol) {return handle_S_and_R_operator   (symbol,   "R", symbol->called_fb_declaration);}
 
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			/* TODO: I believe the following is wrong! The data types of prev_instruction_type and operand_type DO NOT have to be equal.
-			 * the prev_instruction_type MUST be BOOL compatible.
-			 * I am not too sure about operand_type, does it have to be BOOL compatible, or can it be ANY_BIT compatible? Must check!
-			 */
-			if (get_datatype_info_c::is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_BOOL_compatible(operand_type))
-				add_datatype_to_candidate_list(symbol, prev_instruction_type);
-		}
-	}
-	if (debug) std::cout << "S [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-
-void *fill_candidate_datatypes_c::visit(R_operator_c *symbol) {
-  /* TODO: what if this is a FB call ?? */
-	symbol_c *prev_instruction_type, *operand_type;
-
-	if (NULL == prev_il_instruction) return NULL;
-	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
-		for(unsigned int j = 0; j < il_operand->candidate_datatypes.size(); j++) {
-			prev_instruction_type = prev_il_instruction->candidate_datatypes[i];
-			operand_type = il_operand->candidate_datatypes[j];
-			/* TODO: I believe the following is wrong! The data types of prev_instruction_type and operand_type DO NOT have to be equal.
-			 * the prev_instruction_type MUST be BOOL compatible.
-			 * I am not too sure about operand_type, does it have to be BOOL compatible, or can it be ANY_BIT compatible? Must check!
-			 */
-			if (get_datatype_info_c::is_type_equal(prev_instruction_type,operand_type) && get_datatype_info_c::is_BOOL_compatible(operand_type))
-				add_datatype_to_candidate_list(symbol, prev_instruction_type);
-		}
-	}
-	if (debug) std::cout << "R [" << prev_il_instruction->candidate_datatypes.size() << "," << il_operand->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";
-	return NULL;
-}
-
-
-void *fill_candidate_datatypes_c::visit( S1_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "S1", symbol->called_fb_declaration);}
-void *fill_candidate_datatypes_c::visit( R1_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "R1", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit(  S1_operator_c *symbol) {return handle_implicit_il_fb_call(symbol,  "S1", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit(  R1_operator_c *symbol) {return handle_implicit_il_fb_call(symbol,  "R1", symbol->called_fb_declaration);}
 void *fill_candidate_datatypes_c::visit( CLK_operator_c *symbol) {return handle_implicit_il_fb_call(symbol, "CLK", symbol->called_fb_declaration);}
-void *fill_candidate_datatypes_c::visit( CU_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "CU", symbol->called_fb_declaration);}
-void *fill_candidate_datatypes_c::visit( CD_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "CD", symbol->called_fb_declaration);}
-void *fill_candidate_datatypes_c::visit( PV_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "PV", symbol->called_fb_declaration);}
-void *fill_candidate_datatypes_c::visit( IN_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "IN", symbol->called_fb_declaration);}
-void *fill_candidate_datatypes_c::visit( PT_operator_c  *symbol) {return handle_implicit_il_fb_call(symbol,  "PT", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit(  CU_operator_c *symbol) {return handle_implicit_il_fb_call(symbol,  "CU", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit(  CD_operator_c *symbol) {return handle_implicit_il_fb_call(symbol,  "CD", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit(  PV_operator_c *symbol) {return handle_implicit_il_fb_call(symbol,  "PV", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit(  IN_operator_c *symbol) {return handle_implicit_il_fb_call(symbol,  "IN", symbol->called_fb_declaration);}
+void *fill_candidate_datatypes_c::visit(  PT_operator_c *symbol) {return handle_implicit_il_fb_call(symbol,  "PT", symbol->called_fb_declaration);}
 
 void *fill_candidate_datatypes_c::visit( AND_operator_c *symbol) {return handle_binary_operator(widen_AND_table, symbol, prev_il_instruction, il_operand);}
 void *fill_candidate_datatypes_c::visit(  OR_operator_c *symbol) {return handle_binary_operator( widen_OR_table, symbol, prev_il_instruction, il_operand);}
@@ -1945,17 +1964,9 @@ void *fill_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 /* B 3.2.2 Subprogram Control Statements */
 /*****************************************/
 void *fill_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
-	symbol_c *fb_type_id = search_varfb_instance_type->get_basetype_id(symbol->fb_name);
-	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
-	if (NULL == fb_type_id) ERROR;
-
-	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(fb_type_id);
-	if (function_block_type_symtable.end_value() == fb_decl) 
-		/* The fb_name not the name of a FB instance. Most probably it is the name of a variable of some other type. */
-		fb_decl = NULL;
-
-	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
-	if (NULL == fb_decl) ERROR;
+	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+	if (! get_datatype_info_c::is_function_block(fb_decl )) fb_decl = NULL;
+	if (NULL == fb_decl) ERROR; /* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
 	
 	if (symbol->   formal_param_list != NULL) symbol->formal_param_list->accept(*this);
 	if (symbol->nonformal_param_list != NULL) symbol->nonformal_param_list->accept(*this);
