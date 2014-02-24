@@ -351,7 +351,7 @@ class analyse_variable_c: public search_visitor_c {
     
     static bool is_complex_type(symbol_c *symbol) {
       if (NULL == symbol) ERROR;
-      if (!get_datatype_info_c::is_type_valid     (symbol->datatype)) ERROR;
+      if (!get_datatype_info_c::is_type_valid     (symbol->datatype)) return false;
       return (   get_datatype_info_c::is_structure(symbol->datatype) 
               || get_datatype_info_c::is_array    (symbol->datatype) 
              );
