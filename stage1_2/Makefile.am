@@ -7,6 +7,9 @@ AM_LFLAGS = -o$(LEX_OUTPUT_ROOT).c
 # by other C++ code that will also be compiled.
 BUILT_SOURCES = iec_bison.hh
 
+%.hh: %.h
+	cp $< $@
+
 CLEANFILES = \
 	iec_flex.cc \
 	iec_bison.cc \
