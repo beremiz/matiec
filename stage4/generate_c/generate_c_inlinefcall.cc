@@ -416,6 +416,11 @@ class generate_c_inlinefcall_c: public generate_c_base_c {
       return NULL;
     }
 
+    /*  il_jump_operator label */
+    // SYM_REF2(il_jump_operation_c, il_jump_operator, label)    
+    void *visit(il_jump_operation_c *symbol) {
+      return NULL;
+    }
 
     void *visit(il_function_call_c *symbol) {
       symbol_c* function_type_prefix = NULL;
