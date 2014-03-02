@@ -1856,6 +1856,7 @@ void *visit(il_assign_out_operator_c *symbol) {
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
+void *visit(ref_expression_c *symbol) {return  s4o.print("REF("); symbol->exp->accept(*this); s4o.print(")");} /* an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
 void *visit(or_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " OR ");}
 void *visit(xor_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " XOR ");}
 void *visit(and_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " AND ");}

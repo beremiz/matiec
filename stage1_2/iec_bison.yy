@@ -412,6 +412,8 @@ typedef struct YYLTYPE {
 %type <leaf>	en_identifier
 %type <leaf>	eno_identifier
 
+/* Keyword in IEC 61131-3 v3 */
+%token	REF
 
 
 
@@ -1290,6 +1292,7 @@ typedef struct YYLTYPE {
  *      are not required. Their values are integrated
  *      directly into other rules...
  */
+%type  <leaf>	ref_expression  /* an extension to the IEC 61131-3 v2 standard, based on the IEC 61131-3 v3 standard */ 
 %type  <leaf>	expression
 %type  <leaf>	xor_expression
 %type  <leaf>	and_expression
@@ -7057,6 +7060,7 @@ il_jump_operator:
 /***********************/
 expression:
   xor_expression
+| ref_expression  /* an extension to the IEC 61131-3 v2 standard, based on the IEC 61131-3 v3 standard */ 
 | expression OR xor_expression
 	{$$ = new or_expression_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
@@ -7067,6 +7071,14 @@ expression:
 	 yyerrok;
 	}
 /* ERROR_CHECK_END */
+;
+
+/*  REF(var_name) */
+/*  This is an extension to the IEC 61131-3 standard. It is actually defined in the IEC 61131-3 v3 standard */
+/*  The REF() operator returns the adrress of the variable. Basically, it returns a pointer to the variable */
+ref_expression:
+  REF '(' symbolic_variable ')'
+	{$$ = new ref_expression_c($3, locloc(@$));}
 ;
 
 xor_expression:

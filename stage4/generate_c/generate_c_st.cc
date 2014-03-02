@@ -456,6 +456,47 @@ void *visit(array_initial_elements_list_c *symbol) {
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
+void *visit(ref_expression_c *symbol) {
+  s4o.print("((IEC_UDINT)");  
+  if (this->is_variable_prefix_null()) {  
+    /* For code in FUNCTIONs */
+    s4o.print("&(");  
+    symbol->exp->accept(*this);    
+    s4o.print(")");  
+  } else {
+    /* For code in FBs, and PROGRAMS... */
+    s4o.print("(");  
+    unsigned int vartype = analyse_variable_c::first_nonfb_vardecltype(symbol->exp, scope_);
+    if (vartype == search_var_instance_decl_c::external_vt) {
+      if (!get_datatype_info_c::is_type_valid    (symbol->exp->datatype)) ERROR;
+      if ( get_datatype_info_c::is_function_block(symbol->exp->datatype))
+        s4o.print(GET_EXTERNAL_FB_REF);
+      else
+        s4o.print(GET_EXTERNAL_REF);
+    }
+    else if (vartype == search_var_instance_decl_c::located_vt)
+      s4o.print(GET_LOCATED_REF);
+    else
+      s4o.print(GET_VAR_REF);
+    
+    variablegeneration_t old_wanted_variablegeneration = wanted_variablegeneration; 
+    s4o.print("(");
+    wanted_variablegeneration = complextype_base_vg;
+    symbol->exp->accept(*this);
+    s4o.print(",");
+    wanted_variablegeneration = complextype_suffix_vg;
+    symbol->exp->accept(*this);
+    s4o.print(")");
+    wanted_variablegeneration = old_wanted_variablegeneration;
+    
+    s4o.print(")");  
+  }
+  s4o.print(")");  
+
+  return NULL;
+}
+
+
 void *visit(or_expression_c *symbol) {
   if (get_datatype_info_c::is_BOOL_compatible(symbol->datatype))
     return print_binary_expression(symbol->l_exp, symbol->r_exp, " || ");

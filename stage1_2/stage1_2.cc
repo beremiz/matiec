@@ -69,6 +69,13 @@ bool get_opt_safe_extensions() {return safe_extensions_;}
 bool nested_comments_ = false;
 bool get_opt_nested_comments() {return nested_comments_;}
 
+/************************************/
+/* whether to allow REF() operator  */
+/************************************/
+bool ref_operator_ = false;
+bool get_opt_ref_operator() {return ref_operator_;}
+
+
 /******************************************************/
 /* whether we are supporting conversion functions     */
 /* for enumerate data types                           */
@@ -248,6 +255,7 @@ int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t 
        */
 
   nested_comments_ = options.nested_comments;    
+  ref_operator_    = options.ref_operator;    
   safe_extensions_ = options.safe_extensions;
   conversion_functions_ = options.conversion_functions;
   return stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc);

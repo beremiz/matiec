@@ -303,6 +303,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /***********************/
     /* B 3.1 - Expressions */
     /***********************/
+    void *visit(ref_expression_c *symbol);
     void *visit(or_expression_c *symbol);
     void *visit(xor_expression_c *symbol);
     void *visit(and_expression_c *symbol);

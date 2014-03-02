@@ -1032,6 +1032,15 @@ void *print_datatypes_error_c::visit(JMPCN_operator_c *symbol) {return handle_co
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
+/* SYM_REF1(ref_expression_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+void *print_datatypes_error_c::visit(  ref_expression_c  *symbol) {
+	symbol->exp->accept(*this);
+	/* we should really check whether the expression is merely a variable. For now, leave it for the future! */
+	if ((symbol->candidate_datatypes.size() == 0) && (symbol->exp->candidate_datatypes.size() > 0))
+		STAGE3_ERROR(0, symbol, symbol, "REF operator must be used with a variable.");
+	return NULL;
+}
+    
 
 void *print_datatypes_error_c::print_binary_expression_errors(const char *operation, symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool deprecated_operation) {
 	l_expr->accept(*this);

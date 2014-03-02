@@ -60,6 +60,7 @@ typedef struct {
 	bool full_token_loc;       /* error messages specify full token location */
 	bool conversion_functions; /* Create a conversion function for derived datatype */
 	bool nested_comments;      /* Allow the use of nested comments. */
+	bool ref_operator;         /* Allow the use of REF() operator. */
 	const char *includedir;    /* Include directory, where included files will be searched for... */
 } stage1_2_options_t;
 

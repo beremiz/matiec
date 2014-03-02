@@ -1245,6 +1245,8 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	/******************************************************/
 
 
+REF	{if (get_opt_ref_operator()) return REF; else unput(0);}		/* Keyword in IEC 61131-3 v3 */
+
 EN	return EN;			/* Keyword */
 ENO	return ENO;			/* Keyword */
 

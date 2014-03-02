@@ -1337,6 +1337,17 @@ void *narrow_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return narr
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
+/* SYM_REF1(ref_expression_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+void *narrow_candidate_datatypes_c::visit(  ref_expression_c  *symbol) {
+  if (symbol->exp->candidate_datatypes.size() > 0) {
+    symbol->exp->datatype = symbol->exp->candidate_datatypes[0]; /* just use the first possible datatype */
+    symbol->exp->accept(*this);
+  }
+  return NULL;
+}
+
+
+
 /* allow_enums is FALSE by default!!
  * deprecated_operation is NULL by default!!
  * if (allow_enums) then consider that we are ectually processing an equ_expression or notequ_expression, where two enums of the same data type may also be legally compared 

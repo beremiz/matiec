@@ -1832,6 +1832,15 @@ void *fill_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return handle
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
+/* SYM_REF1(ref_expression_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+void *fill_candidate_datatypes_c::visit(  ref_expression_c  *symbol) {
+  symbol->exp->accept(*this);
+  /* we should really check whether the expression is merely a variable. For now, leave it for the future! */
+  /* For now, we handle references (i.e. pointers) as ULINT datatypes! */
+  add_datatype_to_candidate_list(symbol, &get_datatype_info_c::ulint_type_name);
+  return NULL;
+}
+    
 void *fill_candidate_datatypes_c::visit(   or_expression_c  *symbol) {return handle_binary_expression  (widen_OR_table,  symbol, symbol->l_exp, symbol->r_exp);}
 void *fill_candidate_datatypes_c::visit(   xor_expression_c *symbol) {return handle_binary_expression  (widen_XOR_table, symbol, symbol->l_exp, symbol->r_exp);}
 void *fill_candidate_datatypes_c::visit(   and_expression_c *symbol) {return handle_binary_expression  (widen_AND_table, symbol, symbol->l_exp, symbol->r_exp);}
