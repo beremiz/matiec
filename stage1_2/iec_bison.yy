@@ -356,6 +356,7 @@ typedef struct YYLTYPE {
 %token  <ID>	prev_declared_array_type_name_token
 %token  <ID>	prev_declared_structure_type_name_token
 %token  <ID>	prev_declared_string_type_name_token
+%token  <ID>	prev_declared_ref_type_name_token  /* defined in IEC 61131-3 v3 */
 
 %type  <leaf>	prev_declared_simple_type_name
 %type  <leaf>	prev_declared_subrange_type_name
@@ -363,6 +364,7 @@ typedef struct YYLTYPE {
 %type  <leaf>	prev_declared_array_type_name
 %type  <leaf>	prev_declared_structure_type_name
 %type  <leaf>	prev_declared_string_type_name
+%type  <leaf>	prev_declared_ref_type_name  /* defined in IEC 61131-3 v3 */
 
 %token <ID>	prev_declared_derived_function_name_token
 %token <ID>	prev_declared_derived_function_block_name_token
@@ -414,6 +416,7 @@ typedef struct YYLTYPE {
 
 /* Keyword in IEC 61131-3 v3 */
 %token	REF
+%token	REF_TO
 
 
 
@@ -759,6 +762,11 @@ typedef struct YYLTYPE {
 %token OF
 %token STRUCT
 %token END_STRUCT
+
+
+%type  <leaf>	ref_spec      /* defined in IEC 61131-3 v3 */
+%type  <leaf>	ref_spec_init /* defined in IEC 61131-3 v3 */
+%type  <leaf>	ref_type_decl /* defined in IEC 61131-3 v3 */
 
 
 
@@ -1562,6 +1570,7 @@ any_identifier:
 | prev_declared_array_type_name
 | prev_declared_structure_type_name
 | prev_declared_string_type_name
+| prev_declared_ref_type_name  /* defined in IEC 61131-3 v3 */
 | prev_declared_derived_function_name
 | prev_declared_derived_function_block_name
 | prev_declared_program_type_name
@@ -1572,19 +1581,20 @@ any_identifier:
 ;
 
 
-prev_declared_variable_name: prev_declared_variable_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_fb_name: prev_declared_fb_name_token {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_variable_name       : prev_declared_variable_name_token        {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_fb_name             : prev_declared_fb_name_token              {$$ = new identifier_c($1, locloc(@$));};
 
-prev_declared_simple_type_name: prev_declared_simple_type_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_subrange_type_name: prev_declared_subrange_type_name_token {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_simple_type_name    : prev_declared_simple_type_name_token     {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_subrange_type_name  : prev_declared_subrange_type_name_token   {$$ = new identifier_c($1, locloc(@$));};
 prev_declared_enumerated_type_name: prev_declared_enumerated_type_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_array_type_name: prev_declared_array_type_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_structure_type_name: prev_declared_structure_type_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_string_type_name: prev_declared_string_type_name_token {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_array_type_name     : prev_declared_array_type_name_token      {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_structure_type_name : prev_declared_structure_type_name_token  {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_string_type_name    : prev_declared_string_type_name_token     {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_ref_type_name       : prev_declared_ref_type_name_token        {$$ = new identifier_c($1, locloc(@$));};  /* defined in IEC 61131-3 v3 */
 
-prev_declared_derived_function_name: prev_declared_derived_function_name_token {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_derived_function_name      : prev_declared_derived_function_name_token       {$$ = new identifier_c($1, locloc(@$));};
 prev_declared_derived_function_block_name: prev_declared_derived_function_block_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_program_type_name: prev_declared_program_type_name_token {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_program_type_name          : prev_declared_program_type_name_token           {$$ = new identifier_c($1, locloc(@$));};
 
 
 
@@ -2482,6 +2492,7 @@ derived_type_name:
 | prev_declared_array_type_name
 | prev_declared_structure_type_name
 | prev_declared_string_type_name
+| prev_declared_ref_type_name  /* as defined in IEC 61131-3 v3 */
 ;
 
 single_element_type_name:
@@ -2553,6 +2564,7 @@ single_element_type_declaration:
   simple_type_declaration
 | subrange_type_declaration
 | enumerated_type_declaration
+| ref_type_decl  /* defined in IEC 61131-3 v3 */
 ;
 
 simple_type_declaration:
@@ -3158,6 +3170,57 @@ string_type_declaration_init:
 ;
 
 
+/* Taken fron IEC 61131-3 v3
+ * // Table 14 - Reference operations
+ * Ref_Type_Decl  : Ref_Type_Name ':' Ref_Spec_Init ;
+ * Ref_Spec_Init  : Ref_Spec ( ':=' Ref_Value )? ;
+ * Ref_Spec       : 'REF_TO' Non_Gen_Type_Name ;
+ * Ref_Type_Name  : Identifier ;
+ * Ref_Name       : Identifier ;
+ * Ref_Value      : Ref_Addr | 'NULL' ;
+ * Ref_Addr       : 'REF' '(' (Symbolic_Variable | FB_Name | Class_Instance_Name ) ')' ;
+ * Ref_Assign     : Ref_Name ':=' (Ref_Name | Ref_Deref | Ref_Value ) ;
+ * Ref_Deref      : 'DREF' '(' Ref_Name ')' ;
+ */
+
+/* NOTE: in IEC 61131-3 v3, the formal syntax definition does not define non_generic_type_name to include FB type names.
+ *       However, in section "6.3.4.10 References", example 4 includes a  REF_TO a FB type!
+ *       We have therefore explicitly added the "REF_TO function_block_type_name" to this rule!
+ */
+ref_spec: /* defined in IEC 61131-3 v3 */
+  REF_TO non_generic_type_name
+	{$$ = new ref_spec_c($2, locloc(@$));}
+| REF_TO function_block_type_name
+	{$$ = new ref_spec_c($2, locloc(@$));}
+/* The following line is actually not included in IEC 61131-3, but we add it anyway otherwise it will not be possible to
+ * define a REF_TO datatype as an alias to an already previously declared REF_TO datatype.
+ * For example:
+ *       TYPE
+ *          ref1: REF_TO INT;
+ *          ref2: ref1;    <-- without the following rule, this would not be allowed!!
+ *       END_TYPE
+ *
+ * This extra rule also makes it possible to declare variables using a previously declared REF_TO datatype
+ *  For example:
+ *     VAR  refvar: ref1; END_VAR
+ */
+| prev_declared_ref_type_name 
+;
+
+
+ref_spec_init: /* defined in IEC 61131-3 v3 */
+  ref_spec  /* For the moment, we do not support initialising reference data types */
+;
+
+ref_type_decl:  /* defined in IEC 61131-3 v3 */
+  identifier ':' ref_spec_init
+	{$$ = new ref_type_decl_c($1, $3, locloc(@$));
+	 library_element_symtable.insert($1, prev_declared_ref_type_name_token);
+	}
+;
+
+
+
 
 /*********************/
 /* B 1.4 - Variables */
@@ -3500,6 +3563,8 @@ var1_init_decl:
 	{$$ = new var1_init_decl_c($1, $3, locloc(@$));}
 | var1_list ':' enumerated_spec_init
 	{$$ = new var1_init_decl_c($1, $3, locloc(@$));}
+| var1_list ':' ref_spec_init   /* defined in IEC 61131-3 v3   (REF_TO ...)*/
+	{$$ = new var1_init_decl_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | var1_list simple_spec_init
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and simple specification."); yynerrs++;}
@@ -3819,6 +3884,8 @@ var1_declaration:
 	{$$ = new var1_init_decl_c($1, $3, locloc(@$));}
 | var1_list ':' enumerated_specification
 	{$$ = new var1_init_decl_c($1, $3, locloc(@$));}
+| var1_list ':' ref_spec   /* defined in IEC 61131-3 v3   (REF_TO ...)*/
+	{$$ = new var1_init_decl_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | var1_list simple_specification
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between variable list and simple specification."); yynerrs++;}
@@ -4048,6 +4115,10 @@ external_declaration:
 	{$$ = new external_declaration_c($1, new fb_spec_init_c($3, NULL, locloc(@3)), locloc(@$));
 	 variable_name_symtable.insert($1, prev_declared_fb_name_token);
 	}
+| global_var_name ':' ref_spec /* defined in IEC 61131-3 v3   (REF_TO ...)*/
+	{$$ = new external_declaration_c($1, new fb_spec_init_c($3, NULL, locloc(@3)), locloc(@$));
+	 variable_name_symtable.insert($1, prev_declared_fb_name_token);
+	}
 /* ERROR_CHECK_BEGIN */
 | global_var_name simple_specification
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between external variable name and simple specification."); yynerrs++;}
@@ -4176,6 +4247,7 @@ located_var_spec_init:
 | initialized_structure
 | single_byte_string_spec
 | double_byte_string_spec
+| ref_spec_init /* defined in IEC 61131-3 v3 (REF_TO ...) */
 ;
 
 

@@ -646,6 +646,35 @@ void *visit(fb_spec_init_c *symbol) {
 
 
 
+/* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
+// SYM_REF1(ref_spec_c, type_name)
+void *visit(ref_spec_c *symbol) {
+  s4o.print("REF_TO ");
+  symbol->type_name->accept(*this);
+  return NULL;
+}
+
+
+/* For the moment, we do not support initialising reference data types */
+/* ref_spec_init: ref_spec; */ 
+/* SYM_REF0(ref_spec_init_c) */
+
+/* ref_type_decl: identifier ':' ref_spec_init */
+// SYM_REF2(ref_type_decl_c, ref_type_name, ref_spec_init)
+void *visit(ref_type_decl_c *symbol) {
+  symbol->ref_type_name->accept(*this);
+  s4o.print(" : ");
+  symbol->ref_spec_init->accept(*this);
+  return NULL;
+}
+
+
+
+
+
+
+
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/

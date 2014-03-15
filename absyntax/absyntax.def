@@ -468,6 +468,30 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 SYM_REF2(fb_spec_init_c, function_block_type_name, structure_initialization)
 
 
+/* Taken fron IEC 61131-3 v3
+ * // Table 14 - Reference operations
+ * Ref_Type_Decl  : Ref_Type_Name ':' Ref_Spec_Init ;
+ * Ref_Spec_Init  : Ref_Spec ( ':=' Ref_Value )? ;
+ * Ref_Spec       : 'REF_TO' Non_Gen_Type_Name ;
+ * Ref_Type_Name  : Identifier ;
+ * Ref_Name       : Identifier ;
+ * Ref_Value      : Ref_Addr | 'NULL' ;
+ * Ref_Addr       : 'REF' '(' (Symbolic_Variable | FB_Name | Class_Instance_Name ) ')' ;
+ * Ref_Assign     : Ref_Name ':=' (Ref_Name | Ref_Deref | Ref_Value ) ;
+ * Ref_Deref      : 'DREF' '(' Ref_Name ')' ;
+ */
+
+/* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
+SYM_REF1(ref_spec_c, type_name)
+
+/* For the moment, we do not support initialising reference data types */
+/* ref_spec_init: ref_spec; */ 
+/* SYM_REF0(ref_spec_init_c) */
+
+/* ref_type_decl: identifier ':' ref_spec_init */
+SYM_REF2(ref_type_decl_c, ref_type_name, ref_spec_init)
+
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
