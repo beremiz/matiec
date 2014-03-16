@@ -170,6 +170,41 @@
 /***********************************************************************/
 /***********************************************************************/
 
+/* Parse command line options passed from main.c !! */
+#include <stdlib.h> // for getsybopt()
+
+static int generate_line_directives__ = 0;
+
+int  stage4_parse_options(char *options) {
+  enum {                    LINE_OPT = 0             /*, SOME_OTHER_OPT, YET_ANOTHER_OPT */};
+  char *const token[] = { /*[LINE_OPT]=*/(char *)"l" /*, SOME_OTHER_OPT, ...             */, NULL };
+  /* unfortunately, the above commented out syntax for array initialization is valid in C, but not in C++ */
+  
+  char *subopts = options;
+  char *value;
+  int opt;
+
+  while (*subopts != '\0') {
+    switch (getsubopt(&subopts, token, &value)) {
+      case LINE_OPT: generate_line_directives__  = 1; break;
+      default      : fprintf(stderr, "Unrecognized option: -O %s\n", value); return -1; break;
+     }
+  }     
+  return 0;
+}
+
+
+void stage4_print_options(void) {
+  printf("          (options must be separated by commas. Example: 'l,w,x')\n"); 
+  printf("      l : insert '#line' directives in generated C code.\n"); 
+}
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
 #include "generate_c_base.cc"
 #include "generate_c_typedecl.cc"
 #include "generate_c_sfcdecl.cc"

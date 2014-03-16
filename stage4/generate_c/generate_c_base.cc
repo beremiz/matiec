@@ -91,6 +91,7 @@ class generate_c_base_c: public iterator_visitor_c {
     }
 
     void print_line_directive(symbol_c *symbol) {
+      if (!generate_line_directives__) return; /* global variable generate_line_directives__ is defined in generate_c.cc */
       s4o.print("#line ");
       s4o.print(symbol->first_line);
       s4o.print(" \"");

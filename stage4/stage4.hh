@@ -104,4 +104,8 @@ class stage4out_c {
 
 int stage4(symbol_c *tree_root, const char *builddir);
 
+/* Functions to be implemented by each generate_XX version of stage 4 */
+int  stage4_parse_options(char *options);
+void stage4_print_options(void);
+
 #endif /* _STAGE4_HH */
