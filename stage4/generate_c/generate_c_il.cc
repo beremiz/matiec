@@ -704,12 +704,13 @@ void *visit(instruction_list_c *symbol) {
 
   /* Declare the backup to the IL implicit variable, that will store the result of the IL operations executed inside a parenthesis... */
   declare_implicit_variable_back();
-  /*
-  s4o.print(s4o.indent_spaces);
-  this->implicit_variable_result_back.accept(*this);
-  s4o.print(".INTvar = 0;\n\n");
-  */
-  print_list(symbol, s4o.indent_spaces, ";\n" + s4o.indent_spaces, ";\n");
+  
+  for(int i = 0; i < symbol->n; i++) {
+    print_line_directive(symbol->elements[i]);
+    s4o.print(s4o.indent_spaces);
+    symbol->elements[i]->accept(*this);
+    s4o.print(";\n");
+  }
   return NULL;
 }
 

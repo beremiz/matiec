@@ -874,7 +874,13 @@ void *visit(function_invocation_c *symbol) {
 /* B 3.2 Statements */
 /********************/
 void *visit(statement_list_c *symbol) {
-  return print_list(symbol, s4o.indent_spaces, ";\n" + s4o.indent_spaces, ";\n");
+  for(int i = 0; i < symbol->n; i++) {
+    print_line_directive(symbol->elements[i]);
+    s4o.print(s4o.indent_spaces);
+    symbol->elements[i]->accept(*this);
+    s4o.print(";\n");
+  }
+  return NULL;
 }
 
 /*********************************/

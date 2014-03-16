@@ -90,6 +90,14 @@ class generate_c_base_c: public iterator_visitor_c {
         s4o.print(variable_prefix_);
     }
 
+    void print_line_directive(symbol_c *symbol) {
+      s4o.print("#line ");
+      s4o.print(symbol->first_line);
+      s4o.print(" \"");
+      s4o.print(symbol->first_file);
+      s4o.print("\"\n");    
+    }
+    
     void *print_token(token_c *token, int offset = 0) {
       return s4o.printupper((token->value)+offset);
     }
