@@ -1780,7 +1780,7 @@ _			/* do nothing - eat it up!*/
 /* Tracking Functions... */
 /*************************/
 
-#define MAX_LINE_LENGTH 1000
+#define MAX_LINE_LENGTH 1024
 
 tracking_t *GetNewTracking(FILE* in_file) {
   tracking_t* new_env = new tracking_t;
@@ -1821,8 +1821,12 @@ int GetNextChar(char *b, int maxBuffer) {
       return 0;
     }
     
-    current_tracking->lineNumber++;
     current_tracking->lineLength = strlen(current_tracking->buffer);
+    
+    /* only increment line number if the buffer was big enough to read the whole line! */
+    char last_char = current_tracking->buffer[current_tracking->lineLength - 1];
+    if (('\n' == last_char) || ('\r' == last_char))  // '\r' ---> CR, '\n'  ---> LF
+      current_tracking->lineNumber++;
   }
   
   b[0] = current_tracking->buffer[current_tracking->currentChar];
