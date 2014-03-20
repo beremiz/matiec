@@ -170,11 +170,12 @@
 /***********************************************************************/
 /***********************************************************************/
 
-/* Parse command line options passed from main.c !! */
-#include <stdlib.h> // for getsybopt()
 
 static int generate_line_directives__ = 0;
 
+#ifdef __unix__
+/* Parse command line options passed from main.c !! */
+#include <stdlib.h> // for getsybopt()
 int  stage4_parse_options(char *options) {
   enum {                    LINE_OPT = 0             /*, SOME_OTHER_OPT, YET_ANOTHER_OPT */};
   char *const token[] = { /*[LINE_OPT]=*/(char *)"l" /*, SOME_OTHER_OPT, ...             */, NULL };
@@ -198,7 +199,12 @@ void stage4_print_options(void) {
   printf("          (options must be separated by commas. Example: 'l,w,x')\n"); 
   printf("      l : insert '#line' directives in generated C code.\n"); 
 }
-
+#else /* not __unix__ */
+/* getsubopt isn't supported with mingw, 
+ *  then stage4 options aren't available on windows*/
+void stage4_print_options(void) {}
+int  stage4_parse_options(char *options) {}
+#endif 
 
 /***********************************************************************/
 /***********************************************************************/
