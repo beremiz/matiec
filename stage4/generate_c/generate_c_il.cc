@@ -445,8 +445,8 @@ class generate_c_il_c: public generate_c_base_c, il_default_variable_visitor_c {
         wanted_variablegeneration = complextype_base_assignment_vg;
       else
         wanted_variablegeneration = assignment_vg;
-
       symbol->accept(*this);
+/*
       s4o.print(",");
       if (negative) {
         if (get_datatype_info_c::is_BOOL_compatible(this->current_operand->datatype))
@@ -461,6 +461,24 @@ class generate_c_il_c: public generate_c_base_c, il_default_variable_visitor_c {
         wanted_variablegeneration = complextype_suffix_vg;
         symbol->accept(*this);
       }
+      s4o.print(")");
+      wanted_variablegeneration = expression_vg;
+      return NULL;
+*/
+      s4o.print(",");
+      if (type_is_complex) {
+        wanted_variablegeneration = complextype_suffix_vg;
+        symbol->accept(*this);
+      }
+      s4o.print(",");
+      if (negative) {
+        if (get_datatype_info_c::is_BOOL_compatible(this->current_operand->datatype))
+          s4o.print("!");
+        else
+          s4o.print("~");
+      }
+      wanted_variablegeneration = expression_vg;
+      print_check_function(type, value, fb_value);
       s4o.print(")");
       wanted_variablegeneration = expression_vg;
       return NULL;

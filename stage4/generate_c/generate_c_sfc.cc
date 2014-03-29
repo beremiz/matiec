@@ -136,7 +136,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       s4o.print(SET_VAR);
       s4o.print("(");
       print_step_argument(step_name, "state", true);
-      s4o.print(",0);\n");
+      s4o.print(",,0);\n");
     }
     
     void print_set_step(symbol_c *step_name) {
@@ -144,7 +144,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       s4o.print(SET_VAR);
       s4o.print("(");
       print_step_argument(step_name, "state", true);
-      s4o.print(",1);\n" + s4o.indent_spaces);
+      s4o.print(",,1);\n" + s4o.indent_spaces);
       print_step_argument(step_name, "elapsed_time");
       s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
     }
@@ -299,7 +299,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
           print_variable_prefix();
           s4o.print(",__transition_list[");
           print_transition_number();
-          s4o.print("],0);\n");
+          s4o.print("],,0);\n");
           s4o.indent_left();
           s4o.print(s4o.indent_spaces + "}\n");
           break;
@@ -358,7 +358,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
               s4o.print("__");
             s4o.print("transition_list[");
             print_transition_number();
-            s4o.print("],");
+            s4o.print("],,");
             generate_c_il->print_implicit_variable_back();
             // generate_c_il->reset_default_variable_name(); // generate_c_il does not require his anymore
             s4o.print(");\n");
@@ -376,7 +376,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
               s4o.print("__");
             s4o.print("transition_list[");
             print_transition_number();
-            s4o.print("],");
+            s4o.print("],,");
             symbol->transition_condition_st->accept(*generate_c_st);
             s4o.print(");\n");
           }
@@ -389,7 +389,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             print_variable_prefix();
             s4o.print(",__debug_transition_list[");
             print_transition_number();
-            s4o.print("],");
+            s4o.print("],,");
             s4o.print(GET_VAR);
             s4o.print("(");
             print_variable_prefix();
@@ -514,7 +514,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print(SET_VAR);
             s4o.print("(");
             print_action_argument(symbol->action_name, "state", true);
-            s4o.print(",1);\n");
+            s4o.print(",,1);\n");
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}");
           }
@@ -575,7 +575,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
                 print_variable_prefix();
                 s4o.print(",");
                 current_action->accept(*this);
-                s4o.print(",1);\n");
+                s4o.print(",,1);\n");
                 s4o.indent_left();
                 s4o.print(s4o.indent_spaces + "}\n");
                 s4o.print(s4o.indent_spaces + "else if (active) {\n");
@@ -591,14 +591,14 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
                 print_variable_prefix();
                 s4o.print(",");
                 current_action->accept(*this);
-                s4o.print(",0);\n");
+                s4o.print(",,0);\n");
               }
 
               else {
                 s4o.print(SET_VAR);
                 s4o.print("(");
                 print_action_argument(current_action, "state", true);
-                s4o.print(",1);\n");
+                s4o.print(",,1);\n");
               }
             }
             if (strcmp(qualifier, "S") == 0 || strcmp(qualifier, "SL") == 0) {
@@ -773,7 +773,7 @@ class generate_c_sfc_c: public generate_c_base_c {
       s4o.print(SET_VAR);
       s4o.print("(");
       print_variable_prefix();
-      s4o.print(",__action_list[i].state,0);\n");
+      s4o.print(",__action_list[i].state,,0);\n");
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
       s4o.print("__action_list[i].set = 0;\n");
@@ -895,7 +895,7 @@ class generate_c_sfc_c: public generate_c_base_c {
       s4o.print(SET_VAR);
       s4o.print("(");
       print_variable_prefix();
-      s4o.print(",__action_list[i].state,");
+      s4o.print(",__action_list[i].state,,");
       s4o.print(GET_VAR);
       s4o.print("(");
       print_variable_prefix();
@@ -932,7 +932,7 @@ class generate_c_sfc_c: public generate_c_base_c {
             print_variable_prefix();
             s4o.print(",");
             pt->symbol->accept(*this);
-            s4o.print(",0);\n");
+            s4o.print(",,0);\n");
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}\n");
             s4o.print(s4o.indent_spaces + "else if (");
@@ -953,7 +953,7 @@ class generate_c_sfc_c: public generate_c_base_c {
             print_variable_prefix();
             s4o.print(",");
             pt->symbol->accept(*this);
-            s4o.print(",1);\n");
+            s4o.print(",,1);\n");
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}\n");
           }

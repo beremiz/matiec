@@ -113,15 +113,15 @@
 
 
 // variable setting macros
-#define __SET_VAR(prefix, name, new_value, ...)\
-	if (!(prefix name.flags & __IEC_FORCE_FLAG)) prefix name.value __VA_ARGS__ = new_value
-#define __SET_EXTERNAL(prefix, name, new_value, ...)\
+#define __SET_VAR(prefix, name, suffix, new_value)\
+	if (!(prefix name.flags & __IEC_FORCE_FLAG)) prefix name.value suffix = new_value
+#define __SET_EXTERNAL(prefix, name, suffix, new_value)\
 	{extern IEC_BYTE __IS_GLOBAL_##name##_FORCED();\
     if (!(prefix name.flags & __IEC_FORCE_FLAG || __IS_GLOBAL_##name##_FORCED()))\
-		(*(prefix name.value)) __VA_ARGS__ = new_value;}
-#define __SET_EXTERNAL_FB(prefix, name, new_value, ...)\
-	__SET_VAR((*(prefix name)), __VA_ARGS__, new_value)
-#define __SET_LOCATED(prefix, name, new_value, ...)\
-	if (!(prefix name.flags & __IEC_FORCE_FLAG)) *(prefix name.value) __VA_ARGS__ = new_value
+		(*(prefix name.value)) suffix = new_value;}
+#define __SET_EXTERNAL_FB(prefix, name, suffix, new_value)\
+	__SET_VAR((*(prefix name)), suffix, new_value)
+#define __SET_LOCATED(prefix, name, suffix, new_value)\
+	if (!(prefix name.flags & __IEC_FORCE_FLAG)) *(prefix name.value) suffix = new_value
 
 #endif //__ACCESSOR_H

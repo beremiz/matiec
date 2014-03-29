@@ -252,7 +252,7 @@ class generate_c_sfcdecl_c: protected generate_c_base_c {
           print_variable_prefix();
           s4o.print(",__step_list[");
           s4o.print(step_number);
-          s4o.print("].state,1);\n");
+          s4o.print("].state,,1);\n");
           step_number++;
           break;
         case stepdef_sd:

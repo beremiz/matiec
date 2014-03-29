@@ -213,6 +213,7 @@ void *print_setter(symbol_c* symbol,
   else
     wanted_variablegeneration = assignment_vg;
   
+/*
   symbol->accept(*this);
   s4o.print(",");
   wanted_variablegeneration = expression_vg;
@@ -222,6 +223,19 @@ void *print_setter(symbol_c* symbol,
     wanted_variablegeneration = complextype_suffix_vg;
     symbol->accept(*this);
   }
+  s4o.print(")");
+  wanted_variablegeneration = expression_vg;
+  return NULL;
+*/
+  symbol->accept(*this);
+  s4o.print(",");
+  if (type_is_complex) {
+    wanted_variablegeneration = complextype_suffix_vg;
+    symbol->accept(*this);
+  }
+  s4o.print(",");
+  wanted_variablegeneration = expression_vg;
+  print_check_function(type, value, fb_value);
   s4o.print(")");
   wanted_variablegeneration = expression_vg;
   return NULL;

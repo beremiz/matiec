@@ -281,7 +281,7 @@ class generate_c_inlinefcall_c: public generate_c_base_c {
       else
         s4o.print(SET_VAR);
       s4o.print("(,");
-
+/*
       wanted_variablegeneration = complextype_base_vg;
       symbol->accept(*this);
       s4o.print(",");
@@ -292,6 +292,20 @@ class generate_c_inlinefcall_c: public generate_c_base_c {
         wanted_variablegeneration = complextype_suffix_vg;
         symbol->accept(*this);
       }
+      s4o.print(")");
+      wanted_variablegeneration = expression_vg;
+      return NULL;
+*/
+      wanted_variablegeneration = complextype_base_vg;
+      symbol->accept(*this);
+      s4o.print(",");
+      if (analyse_variable_c::contains_complex_type(symbol)) {
+        wanted_variablegeneration = complextype_suffix_vg;
+        symbol->accept(*this);
+      }
+      s4o.print(",");
+      wanted_variablegeneration = expression_vg;
+      print_check_function(type, value, NULL, true);
       s4o.print(")");
       wanted_variablegeneration = expression_vg;
       return NULL;
