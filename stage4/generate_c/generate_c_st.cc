@@ -176,11 +176,9 @@ void *print_setter(symbol_c* symbol,
         symbol_c* value,
         symbol_c* fb_symbol = NULL,
         symbol_c* fb_value = NULL) {
-  
-  bool type_is_complex = false;
+ 
   if (fb_symbol == NULL) {
     unsigned int vartype = analyse_variable_c::first_nonfb_vardecltype(symbol, scope_);
-    type_is_complex = analyse_variable_c::contains_complex_type(symbol);
     if (vartype == search_var_instance_decl_c::external_vt) {
       if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
       if ( get_datatype_info_c::is_function_block(symbol->datatype))
@@ -201,26 +199,27 @@ void *print_setter(symbol_c* symbol,
       s4o.print(SET_VAR);
   }
   s4o.print("(");
-
   
   if (fb_symbol != NULL) {
     print_variable_prefix();
+    // It is my (MJS) conviction that by this time the following will always be true...
+    //   wanted_variablegeneration == expression_vg;
     fb_symbol->accept(*this);
     s4o.print(".,");
+    symbol->accept(*this);
+    s4o.print(",");
+    s4o.print(",");    
   }
   else {
-    wanted_variablegeneration = complextype_base_vg;
     print_variable_prefix();
     s4o.print(",");    
-  }  
-
-  symbol->accept(*this);
-  s4o.print(",");
-  if (type_is_complex) {
+    wanted_variablegeneration = complextype_base_vg;
+    symbol->accept(*this);
+    s4o.print(",");
     wanted_variablegeneration = complextype_suffix_vg;
     symbol->accept(*this);
+    s4o.print(",");
   }
-  s4o.print(",");
   wanted_variablegeneration = expression_vg;
   print_check_function(type, value, fb_value);
   s4o.print(")");
