@@ -35,26 +35,6 @@
  *  appear in the variable declaration.
  */
 
-/*  For ex.:
- *       VAR
- *          A : int;
- *          B : ARRAY [1..9] of int;
- *          C : some_struct_t;
- *       END_VAR
- *
- *          A    := 56;
- *          B[8] := 99;
- *          C.e  := 77;
- *
- *       Calling this visitor class with symbolic_variable_c instance referencing 'A' in
- *       the line 'A := 56', will return the string "A".
- *
- *       Calling this visitor class with array_variable_c instance referencing 'B[8]' in
- *       the line 'B[8] := 99', will return the string "B".
- *
- *       Calling this visitor class with array_variable_c instance referencing 'C.e' in
- *       the line 'C.e := 77', will return the string "C".
- */
 
 
 #include "absyntax_utils.hh"
@@ -68,6 +48,26 @@ get_var_name_c *get_var_name_c::singleton_instance_ = NULL;
 
 
 
+/*  For ex.:
+ *       VAR
+ *          A : int;
+ *          B : ARRAY [1..9] of int;
+ *          C : some_struct_t;
+ *       END_VAR
+ *
+ *          A    := 56;
+ *          B[8] := 99;
+ *          C.e  := 77;
+ *
+ *       Calling this method with symbolic_variable_c instance referencing 'A' in
+ *       the line 'A := 56', will return the string "A".
+ *
+ *       Calling this method with array_variable_c instance referencing 'B[8]' in
+ *       the line 'B[8] := 99', will return the string "B".
+ *
+ *       Calling this method with array_variable_c instance referencing 'C.e' in
+ *       the line 'C.e := 77', will return the string "C".
+ */
 
 token_c *get_var_name_c::get_name(symbol_c *symbol) {
   if (NULL == singleton_instance_) singleton_instance_ = new get_var_name_c(); 
@@ -75,6 +75,24 @@ token_c *get_var_name_c::get_name(symbol_c *symbol) {
   
   return (token_c *)(symbol->accept(*singleton_instance_));
 }
+
+
+/*  Return the last field of a structured variable...
+ * 
+ *          A    := 56;   --> returns A
+ *          B[8] := 99;   --> returns B
+ *          C.e  := 77;   --> returns e   !!!
+ */
+symbol_c *get_var_name_c::get_last_field(symbol_c *symbol) {
+  if (NULL == singleton_instance_) singleton_instance_ = new get_var_name_c(); 
+  if (NULL == singleton_instance_) ERROR; 
+  
+  singleton_instance_->last_field = NULL;
+  symbol_c *res = (symbol_c*)(symbol->accept(*singleton_instance_));
+  return (NULL != singleton_instance_->last_field)? singleton_instance_->last_field : res;
+}
+
+
 
 
 /*************************/
@@ -114,7 +132,11 @@ void *get_var_name_c::visit(array_variable_c *symbol) {return symbol->subscripte
  *           this into account!
  */
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
-void *get_var_name_c::visit(structured_variable_c *symbol) {return symbol->record_variable->accept(*this);}
+void *get_var_name_c::visit(structured_variable_c *symbol) {
+  void *res = symbol->record_variable->accept(*this);
+  last_field = symbol->field_selector;
+  return res;
+}
 
 
 

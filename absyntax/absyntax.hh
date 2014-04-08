@@ -131,6 +131,10 @@ class symbol_c {
      * Otherwise, it points to an object of the apropriate data type (e.g. int_type_name_c, bool_type_name_c, ...)
      */
     symbol_c *datatype;
+    /* The POU in which the symbolic variable (or structured variable, or array variable, or located variable, - any more?)
+     * was declared. This will point to a Configuration, Resource, Program, FB, or Function.
+     */
+    symbol_c *scope;    
 
     /*** constant folding ***/
     /* During stage 3 (semantic analysis/checking) we will be doing constant folding.

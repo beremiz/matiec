@@ -179,9 +179,11 @@ void *print_setter(symbol_c* symbol,
  
   if (fb_symbol == NULL) {
     unsigned int vartype = analyse_variable_c::first_nonfb_vardecltype(symbol, scope_);
+    symbol_c *first_nonfb = analyse_variable_c::find_first_nonfb(symbol);
+    if (first_nonfb == NULL) ERROR;
     if (vartype == search_var_instance_decl_c::external_vt) {
-      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
-      if ( get_datatype_info_c::is_function_block(symbol->datatype))
+      if (!get_datatype_info_c::is_type_valid    (first_nonfb->datatype)) ERROR;
+      if ( get_datatype_info_c::is_function_block(first_nonfb->datatype)) // handle situation where we are copying a complete fb -> fb1.fb2.fb3 := fb4 (and fb3 is external!)
         s4o.print(SET_EXTERNAL_FB);
       else
         s4o.print(SET_EXTERNAL);
@@ -329,18 +331,22 @@ void *visit(direct_variable_c *symbol) {
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
 void *visit(structured_variable_c *symbol) {
   TRACE("structured_variable_c");
-  bool type_is_complex = analyse_variable_c::is_complex_type(symbol->record_variable);
   switch (wanted_variablegeneration) {
     case complextype_base_vg:
       symbol->record_variable->accept(*this);
-      if (!type_is_complex) {
-        s4o.print(".");
+      if ( get_datatype_info_c::is_function_block(symbol->record_variable->datatype)) {
+        if (NULL == symbol->record_variable->scope) ERROR;
+        search_var_instance_decl_c search_var_instance_decl(symbol->record_variable->scope);
+        if (search_var_instance_decl_c::external_vt == search_var_instance_decl.get_vartype(get_var_name_c::get_last_field(symbol->record_variable)))
+          s4o.print("->");
+        else  
+          s4o.print(".");
         symbol->field_selector->accept(*this);
       }
       break;
     case complextype_suffix_vg:
       symbol->record_variable->accept(*this);
-      if (type_is_complex) {
+      if (!get_datatype_info_c::is_function_block(symbol->record_variable->datatype)) { // if the record variable is not a FB, then it will certainly be a structure!
         s4o.print(".");
         symbol->field_selector->accept(*this);
       }
