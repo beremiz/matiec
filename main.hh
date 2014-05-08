@@ -78,14 +78,16 @@ extern void error_exit(const char *file_name, int line_no, const char *errmsg = 
 
 #include <float.h>
 #if    (LDBL_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
-  #define long_double long double
-  #define real64_t long_double /* so we can later use #if (real64_t == long_double) directives in the code! */
+  #define real64_tX long_double /* so we can later use #if (real64_t == long_double) directives in the code! */
+  #define real64_t  long double /* NOTE: no underscore '_' between 'long' and 'double' */
   #define REAL64_MAX  LDBL_MAX
 #elif  ( DBL_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
-  #define real64_t double
+  #define real64_tX double
+  #define real64_t  double
   #define REAL64_MAX  DBL_MAX
 #elif  ( FLT_MANT_DIG == 53) /* NOTE: 64 bit IEC559 real has 53 bits for mantissa! */
-  #define real64_t float
+  #define real64_tX float
+  #define real64_t  float
   #define REAL64_MAX  FLT_MAX
 #else 
   #error Could not find a 64 bit floating point data type on this platform. Aborting...
@@ -93,16 +95,16 @@ extern void error_exit(const char *file_name, int line_no, const char *errmsg = 
 
 
 #if    (LDBL_MANT_DIG == 24) /* NOTE: 32 bit IEC559 real has 24 bits for mantissa! */
-  #ifndef long_double 
-    #define long_double long double
-  #endif  
-  #define real32_t long_double /* so we can later use #if (real32_t == long_double) directives in the code! */
+  #define real32_tX long_double /* so we can later use #if (real32_t == long_double) directives in the code! */
+  #define real32_t  long double /* NOTE: no underscore '_' between 'long' and 'double' */
   #define REAL32_MAX  LDBL_MAX
 #elif  ( DBL_MANT_DIG == 24) /* NOTE: 32 bit IEC559 real has 24 bits for mantissa! */
-  #define real32_t double
+  #define real32_tX double
+  #define real32_t  double
   #define REAL32_MAX  DBL_MAX
 #elif  ( FLT_MANT_DIG == 24) /* NOTE: 32 bit IEC559 real has 24 bits for mantissa! */
-  #define real32_t float
+  #define real32_tX float
+  #define real32_t  float
   #define REAL32_MAX  FLT_MAX
 #else 
   #error Could not find a 32 bit floating point data type on this platform. Aborting...
