@@ -4116,7 +4116,7 @@ external_declaration:
 	 variable_name_symtable.insert($1, prev_declared_fb_name_token);
 	}
 | global_var_name ':' ref_spec /* defined in IEC 61131-3 v3   (REF_TO ...)*/
-	{$$ = new external_declaration_c($1, new fb_spec_init_c($3, NULL, locloc(@3)), locloc(@$));
+	{$$ = new external_declaration_c($1, $3, locloc(@$));
 	 variable_name_symtable.insert($1, prev_declared_fb_name_token);
 	}
 /* ERROR_CHECK_BEGIN */
