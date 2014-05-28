@@ -29,7 +29,7 @@ PDT *)
      CURRENT_TIME : DT;
    END_VAR
 
-   {__SET_VAR(data__->,CURRENT_TIME,__CURRENT_TIME)}
+   {__SET_VAR(data__->,CURRENT_TIME,,__CURRENT_TIME)}
 
    IF IN
    THEN

@@ -270,10 +270,9 @@ class generate_c_base_c: public iterator_visitor_c {
 
     /* Do not use print_token() as it will change everything into uppercase */
     void *visit(pragma_c *symbol) {
-        s4o.print(s4o.indent_spaces);
         s4o.print("#define GetFbVar(var,...) __GET_VAR(data__->var,__VA_ARGS__)\n");
         s4o.print(s4o.indent_spaces);
-        s4o.print("#define SetFbVar(var,val,...) __SET_VAR(data__->,var,val,__VA_ARGS__)\n");
+        s4o.print("#define SetFbVar(var,val,...) __SET_VAR(data__->,var,__VA_ARGS__,val)\n");
         s4o.print(symbol->value);
         s4o.print("\n");
         s4o.print(s4o.indent_spaces);

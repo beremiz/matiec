@@ -379,14 +379,14 @@ real64_t extract_real_value(symbol_c *sym, bool *overflow) {
   else ERROR;
     
   errno = 0; // since strtoXX() may legally return 0, we must set errno to 0 to detect errors correctly!
-  #if    (real64_t  == float)
+  #if    (real64_tX  == float)
     ret = strtof(str.c_str(),  &endptr);
-  #elif  (real64_t  == double)
+  #elif  (real64_tX  == double)
     ret = strtod(str.c_str(),  &endptr);
-  #elif  (real64_t  == long_double)
+  #elif  (real64_tX  == long_double)
     ret = strtold(str.c_str(), &endptr);
   #else 
-    #error Could not determine which data type is being used for real64_t (defined in absyntax.hh). Aborting!
+    #error Could not determine which data type is being used for real64_t (defined in main.hh). Aborting!
   #endif
   if (overflow != NULL)
     *overflow = (errno == ERANGE);

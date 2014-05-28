@@ -49,9 +49,7 @@ class generate_c_st_c: public generate_c_base_c {
   public:
     typedef enum {
       expression_vg,
-      assignment_vg,
       complextype_base_vg,
-      complextype_base_assignment_vg,
       complextype_suffix_vg,
       fparam_output_vg
     } variablegeneration_t;
@@ -157,9 +155,10 @@ void *print_getter(symbol_c *symbol) {
     else
       s4o.print(GET_VAR);
   }
-  s4o.print("(");
-
+  
   variablegeneration_t old_wanted_variablegeneration = wanted_variablegeneration;
+  s4o.print("(");
+  print_variable_prefix();  
   wanted_variablegeneration = complextype_base_vg;
   symbol->accept(*this);
   s4o.print(",");
@@ -177,14 +176,14 @@ void *print_setter(symbol_c* symbol,
         symbol_c* value,
         symbol_c* fb_symbol = NULL,
         symbol_c* fb_value = NULL) {
-  
-  bool type_is_complex = false;
+ 
   if (fb_symbol == NULL) {
     unsigned int vartype = analyse_variable_c::first_nonfb_vardecltype(symbol, scope_);
-    type_is_complex = analyse_variable_c::contains_complex_type(symbol);
+    symbol_c *first_nonfb = analyse_variable_c::find_first_nonfb(symbol);
+    if (first_nonfb == NULL) ERROR;
     if (vartype == search_var_instance_decl_c::external_vt) {
-      if (!get_datatype_info_c::is_type_valid    (symbol->datatype)) ERROR;
-      if ( get_datatype_info_c::is_function_block(symbol->datatype))
+      if (!get_datatype_info_c::is_type_valid    (first_nonfb->datatype)) ERROR;
+      if ( get_datatype_info_c::is_function_block(first_nonfb->datatype)) // handle situation where we are copying a complete fb -> fb1.fb2.fb3 := fb4 (and fb3 is external!)
         s4o.print(SET_EXTERNAL_FB);
       else
         s4o.print(SET_EXTERNAL);
@@ -202,26 +201,29 @@ void *print_setter(symbol_c* symbol,
       s4o.print(SET_VAR);
   }
   s4o.print("(");
-
+  
   if (fb_symbol != NULL) {
     print_variable_prefix();
+    // It is my (MJS) conviction that by this time the following will always be true...
+    //   wanted_variablegeneration == expression_vg;
     fb_symbol->accept(*this);
     s4o.print(".,");
+    symbol->accept(*this);
+    s4o.print(",");
+    s4o.print(",");    
   }
-  else if (type_is_complex)
-    wanted_variablegeneration = complextype_base_assignment_vg;
-  else
-    wanted_variablegeneration = assignment_vg;
-  
-  symbol->accept(*this);
-  s4o.print(",");
-  wanted_variablegeneration = expression_vg;
-  print_check_function(type, value, fb_value);
-  if (type_is_complex) {
+  else {
+    print_variable_prefix();
+    s4o.print(",");    
+    wanted_variablegeneration = complextype_base_vg;
+    symbol->accept(*this);
     s4o.print(",");
     wanted_variablegeneration = complextype_suffix_vg;
     symbol->accept(*this);
+    s4o.print(",");
   }
+  wanted_variablegeneration = expression_vg;
+  print_check_function(type, value, fb_value);
   s4o.print(")");
   wanted_variablegeneration = expression_vg;
   return NULL;
@@ -264,14 +266,8 @@ void *visit(enumerated_type_declaration_c *symbol) {
 /*********************/
 void *visit(symbolic_variable_c *symbol) {
   switch (wanted_variablegeneration) {
-    case complextype_base_assignment_vg:
-    case assignment_vg:
-      this->print_variable_prefix();
-      s4o.print(",");
-      symbol->var_name->accept(*this);
-      break;
     case complextype_base_vg:
-      generate_c_base_c::visit(symbol);
+      symbol->var_name->accept(*this); //generate_c_base_c::visit(symbol);
       break;
     case complextype_suffix_vg:
       break;
@@ -321,8 +317,9 @@ void *visit(direct_variable_c *symbol) {
   }
   this->print_variable_prefix();
   s4o.printlocation(symbol->value + 1);
-  if ((this->is_variable_prefix_null() && wanted_variablegeneration != fparam_output_vg) ||
-      wanted_variablegeneration != assignment_vg)
+  if (( this->is_variable_prefix_null() && (wanted_variablegeneration != fparam_output_vg)) ||
+      (!this->is_variable_prefix_null() && (wanted_variablegeneration == expression_vg   )) ||
+      (!this->is_variable_prefix_null() && (wanted_variablegeneration == fparam_output_vg)))
     s4o.print(")");
   return NULL;
 }
@@ -334,27 +331,25 @@ void *visit(direct_variable_c *symbol) {
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
 void *visit(structured_variable_c *symbol) {
   TRACE("structured_variable_c");
-  bool type_is_complex = analyse_variable_c::is_complex_type(symbol->record_variable);
   switch (wanted_variablegeneration) {
     case complextype_base_vg:
-    case complextype_base_assignment_vg:
       symbol->record_variable->accept(*this);
-      if (!type_is_complex) {
-        s4o.print(".");
+      if ( get_datatype_info_c::is_function_block(symbol->record_variable->datatype)) {
+        if (NULL == symbol->record_variable->scope) ERROR;
+        search_var_instance_decl_c search_var_instance_decl(symbol->record_variable->scope);
+        if (search_var_instance_decl_c::external_vt == search_var_instance_decl.get_vartype(get_var_name_c::get_last_field(symbol->record_variable)))
+          s4o.print("->");
+        else  
+          s4o.print(".");
         symbol->field_selector->accept(*this);
       }
       break;
     case complextype_suffix_vg:
       symbol->record_variable->accept(*this);
-      if (type_is_complex) {
+      if (!get_datatype_info_c::is_function_block(symbol->record_variable->datatype)) { // if the record variable is not a FB, then it will certainly be a structure!
         s4o.print(".");
         symbol->field_selector->accept(*this);
       }
-      break;
-    case assignment_vg:
-      symbol->record_variable->accept(*this);
-      s4o.print(".");
-      symbol->field_selector->accept(*this);
       break;
     default:
       if (this->is_variable_prefix_null()) {
@@ -374,7 +369,6 @@ void *visit(structured_variable_c *symbol) {
 void *visit(array_variable_c *symbol) {
   switch (wanted_variablegeneration) {
     case complextype_base_vg:
-    case complextype_base_assignment_vg:
       symbol->subscripted_variable->accept(*this);
       break;
     case complextype_suffix_vg:
@@ -482,6 +476,7 @@ void *visit(ref_expression_c *symbol) {
     variablegeneration_t old_wanted_variablegeneration = wanted_variablegeneration; 
     s4o.print("(");
     wanted_variablegeneration = complextype_base_vg;
+    print_variable_prefix();
     symbol->exp->accept(*this);
     s4o.print(",");
     wanted_variablegeneration = complextype_suffix_vg;
