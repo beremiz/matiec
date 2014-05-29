@@ -689,6 +689,18 @@ void *print_datatypes_error_c::visit(program_declaration_c *symbol) {
 }
 
 
+/********************************************/
+/* B 1.6 Sequential function chart elements */
+/********************************************/
+void *print_datatypes_error_c::visit(transition_condition_c *symbol) {
+	if (symbol->transition_condition_il != NULL)   symbol->transition_condition_il->accept(*this);
+	if (symbol->transition_condition_st != NULL)   symbol->transition_condition_st->accept(*this);
+
+	if (!get_datatype_info_c::is_type_valid(symbol->datatype))
+		STAGE3_ERROR(0, symbol, symbol, "Transition condition has invalid data type (should be BOOL).");
+	return NULL;
+}
+
 
 /********************************/
 /* B 1.7 Configuration elements */
@@ -1163,7 +1175,7 @@ void *print_datatypes_error_c::visit(if_statement_c *symbol) {
 	symbol->expression->accept(*this);
 	if ((!get_datatype_info_c::is_type_valid(symbol->expression->datatype)) &&
 	    (symbol->expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'IF' condition.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'IF' condition (should be BOOL).");
 	}
 	if (NULL != symbol->statement_list)
 		symbol->statement_list->accept(*this);
@@ -1178,7 +1190,7 @@ void *print_datatypes_error_c::visit(elseif_statement_c *symbol) {
 	symbol->expression->accept(*this);
 	if ((!get_datatype_info_c::is_type_valid(symbol->expression->datatype)) &&
 	    (symbol->expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'ELSIF' condition.");
+		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'ELSIF' condition (should be BOOL).");
 	}
 	if (NULL != symbol->statement_list)
 		symbol->statement_list->accept(*this);

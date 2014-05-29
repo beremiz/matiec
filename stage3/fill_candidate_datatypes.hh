@@ -242,7 +242,6 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /********************************************/
     /* B 1.6 Sequential function chart elements */
     /********************************************/
-
     void *visit(transition_condition_c *symbol);
 
     /********************************/

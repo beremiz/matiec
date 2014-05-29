@@ -817,17 +817,16 @@ void *narrow_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 /********************************************/
 /* B 1.6 Sequential function chart elements */
 /********************************************/
-
 void *narrow_candidate_datatypes_c::visit(transition_condition_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
+	// We can safely ask for a BOOL type, as even if the result is a SAFEBOOL, in that case it will aslo include BOOL as a possible datatype.
+	set_datatype(&get_datatype_info_c::bool_type_name /* datatype*/, symbol /* symbol */);
+
 	if (symbol->transition_condition_il != NULL) {
-		symbol->transition_condition_il->datatype = symbol->datatype;
+		set_datatype(symbol->datatype, symbol->transition_condition_il);
 		symbol->transition_condition_il->accept(*this);
 	}
 	if (symbol->transition_condition_st != NULL) {
-		symbol->transition_condition_st->datatype = symbol->datatype;
+		set_datatype(symbol->datatype, symbol->transition_condition_st);
 		symbol->transition_condition_st->accept(*this);
 	}
 	return NULL;

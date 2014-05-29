@@ -203,6 +203,11 @@ class print_datatypes_error_c: public iterator_visitor_c {
     /**********************/
     void *visit(program_declaration_c *symbol);
 
+    /********************************************/
+    /* B 1.6 Sequential function chart elements */
+    /********************************************/
+    void *visit(transition_condition_c *symbol);
+
     /********************************/
     /* B 1.7 Configuration elements */
     /********************************/
