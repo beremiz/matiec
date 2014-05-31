@@ -110,10 +110,8 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
     void print_step_argument(symbol_c *step_name, const char* argument, bool setter=false) {
       print_variable_prefix();
       if (setter) s4o.print(",");
-      s4o.print("__step_list[");
-      s4o.print(SFC_STEP_ACTION_PREFIX);
-      step_name->accept(*this);
-      s4o.print("].");
+      step_name->accept(*this);  // in the generated C code, the 'step_name' will have been previously #define'd as equiv to '__step_list[<step_number>]", so now we simply print out the name!
+      s4o.print(".");
       s4o.print(argument);
     }
 
@@ -135,7 +133,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       s4o.print(s4o.indent_spaces);
       s4o.print(SET_VAR);
       s4o.print("(");
-      print_step_argument(step_name, "state", true);
+      print_step_argument(step_name, "X", true);
       s4o.print(",,0);\n");
     }
     
@@ -143,7 +141,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       s4o.print(s4o.indent_spaces);
       s4o.print(SET_VAR);
       s4o.print("(");
-      print_step_argument(step_name, "state", true);
+      print_step_argument(step_name, "X", true);
       s4o.print(",,1);\n" + s4o.indent_spaces);
       print_step_argument(step_name, "elapsed_time");
       s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
@@ -166,21 +164,21 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print(s4o.indent_spaces + "char activated = ");
             s4o.print(GET_VAR);
             s4o.print("(");
-            print_step_argument(current_step, "state");
+            print_step_argument(current_step, "X");
             s4o.print(") && !");
             print_step_argument(current_step, "prev_state");
             s4o.print(";\n");
             s4o.print(s4o.indent_spaces + "char desactivated = !");
             s4o.print(GET_VAR);
             s4o.print("(");
-            print_step_argument(current_step, "state");
+            print_step_argument(current_step, "X");
             s4o.print(") && ");
             print_step_argument(current_step, "prev_state");
             s4o.print(";\n");
             s4o.print(s4o.indent_spaces + "char active = ");
             s4o.print(GET_VAR);
             s4o.print("(");
-            print_step_argument(current_step, "state");
+            print_step_argument(current_step, "X");
             s4o.print(");\n");
             symbol->action_association_list->accept(*this);
             s4o.indent_left();
@@ -207,21 +205,21 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print(s4o.indent_spaces + "activated = ");
             s4o.print(GET_VAR);
             s4o.print("(");
-            print_step_argument(current_step, "state");
+            print_step_argument(current_step, "X");
             s4o.print(") && !");
             print_step_argument(current_step, "prev_state");
             s4o.print(";\n");
             s4o.print(s4o.indent_spaces + "desactivated = !");
             s4o.print(GET_VAR);
             s4o.print("(");
-            print_step_argument(current_step, "state");
+            print_step_argument(current_step, "X");
             s4o.print(") && ");
             print_step_argument(current_step, "prev_state");
             s4o.print(";\n");
             s4o.print(s4o.indent_spaces + "active = ");
             s4o.print(GET_VAR);
             s4o.print("(");
-            print_step_argument(current_step, "state");
+            print_step_argument(current_step, "X");
             s4o.print(");\n");
             symbol->action_association_list->accept(*this);
             s4o.indent_left();
@@ -437,7 +435,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
           case transitiontest_sg:
             s4o.print(GET_VAR);
             s4o.print("(");
-            print_step_argument(symbol->step_name, "state");
+            print_step_argument(symbol->step_name, "X");
             s4o.print(")");
             break;
           case stepset_sg:
@@ -462,7 +460,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
           for(int i = 0; i < symbol->n; i++) {
             s4o.print(GET_VAR);
             s4o.print("(");
-            print_step_argument(symbol->elements[i], "state");
+            print_step_argument(symbol->elements[i], "X");
             s4o.print(")");
             if (i < symbol->n - 1) {
               s4o.print(" && ");
@@ -507,7 +505,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             s4o.print(s4o.indent_spaces + "if (");
             s4o.print(GET_VAR);
             s4o.print("(");
-            print_step_argument(current_step, "state");
+            print_step_argument(current_step, "X");
             s4o.print(")) {\n");
             s4o.indent_right();
             s4o.print(s4o.indent_spaces);
@@ -744,12 +742,12 @@ class generate_c_sfc_c: public generate_c_base_c {
       s4o.print(GET_VAR);
       s4o.print("(");
       print_variable_prefix();
-      s4o.print("__step_list[i].state);\n");
+      s4o.print("__step_list[i].X);\n");
       s4o.print(s4o.indent_spaces + "if (");
       s4o.print(GET_VAR);
       s4o.print("(");
       print_variable_prefix();
-      s4o.print("__step_list[i].state)) {\n");
+      s4o.print("__step_list[i].X)) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();

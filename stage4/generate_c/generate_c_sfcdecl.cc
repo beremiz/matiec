@@ -252,10 +252,16 @@ class generate_c_sfcdecl_c: protected generate_c_base_c {
           print_variable_prefix();
           s4o.print(",__step_list[");
           s4o.print(step_number);
-          s4o.print("].state,,1);\n");
+          s4o.print("].X,,1);\n");
           step_number++;
           break;
         case stepdef_sd:
+          s4o.print("#define ");
+          symbol->step_name->accept(*this);
+          s4o.print(" __step_list[");
+          s4o.print(step_number);
+          s4o.print("]\n");
+
           s4o.print("#define ");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->step_name->accept(*this);
@@ -265,6 +271,10 @@ class generate_c_sfcdecl_c: protected generate_c_base_c {
           step_number++;
           break;
         case stepundef_sd:
+          s4o.print("#undef ");
+          symbol->step_name->accept(*this);
+          s4o.print("\n");
+
           s4o.print("#undef ");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->step_name->accept(*this);
@@ -289,6 +299,12 @@ class generate_c_sfcdecl_c: protected generate_c_base_c {
           break;
         case stepdef_sd:
           s4o.print("#define ");
+          symbol->step_name->accept(*this);
+          s4o.print(" __step_list[");
+          s4o.print(step_number);
+          s4o.print("]\n");
+
+          s4o.print("#define ");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->step_name->accept(*this);
           s4o.print(" ");
@@ -297,6 +313,10 @@ class generate_c_sfcdecl_c: protected generate_c_base_c {
           step_number++;
           break;
         case stepundef_sd:
+          s4o.print("#undef ");
+          symbol->step_name->accept(*this);
+          s4o.print("\n");
+
           s4o.print("#undef ");
           s4o.print(SFC_STEP_ACTION_PREFIX);
           symbol->step_name->accept(*this);
