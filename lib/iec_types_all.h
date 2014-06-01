@@ -127,8 +127,8 @@ __ANY(__DECLARE_IEC_TYPE)
 
 typedef struct {
   __IEC_BOOL_t X;  // state;  --> current step state. 0 : inative, 1: active.   We name it 'X' as it may be accessed from IEC 61131.3 code using stepname.X syntax!!
-  BOOL prev_state;  // previous step state. 0 : inative, 1: active
-  TIME elapsed_time; // T; // elapsed_time;  --> time since step is active.   We name it 'T' as it may be accessed from IEC 61131.3 code using stepname.T syntax!!
+  BOOL prev_state; // previous step state. 0 : inative, 1: active
+  __IEC_TIME_t T;  // elapsed_time;  --> time since step is active.   We name it 'T' as it may be accessed from IEC 61131.3 code using stepname.T syntax!!
 } STEP;
 
 

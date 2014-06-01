@@ -143,7 +143,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
       s4o.print("(");
       print_step_argument(step_name, "X", true);
       s4o.print(",,1);\n" + s4o.indent_spaces);
-      print_step_argument(step_name, "elapsed_time");
+      print_step_argument(step_name, "T.value");
       s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
     }
     
@@ -543,7 +543,7 @@ class generate_c_sfc_elements_c: public generate_c_base_c {
             }
             else if (strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
               s4o.print("active && __time_cmp(");
-              print_step_argument(current_step, "elapsed_time");
+              print_step_argument(current_step, "T.value");
               s4o.print(", ");
               symbol->action_time->accept(*this);
               if (strcmp(qualifier, "D") == 0) {
@@ -753,9 +753,9 @@ class generate_c_sfc_c: public generate_c_base_c {
       print_variable_prefix();
 //      s4o.print("__step_list[i].elapsed_time = __time_add(__BOOL_LITERAL(TRUE), NULL, ");
 //      s4o.print("__step_list[i].elapsed_time = ADD_TIME(__BOOL_LITERAL(TRUE), NULL, ");
-      s4o.print("__step_list[i].elapsed_time = __time_add(");
+      s4o.print("__step_list[i].T.value = __time_add(");
       print_variable_prefix();
-      s4o.print("__step_list[i].elapsed_time, elapsed_time);\n");
+      s4o.print("__step_list[i].T.value, elapsed_time);\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
       s4o.indent_left();
