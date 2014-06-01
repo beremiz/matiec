@@ -857,7 +857,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       print_symbol_list();
       s4o.print("__step_list[");
       print_step_number();
-      s4o.print("].state;BOOL;\n");
+      s4o.print("].X;BOOL;\n");
       step_number++;
       return NULL;
     }
@@ -873,7 +873,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
       print_symbol_list();
       s4o.print("__step_list[");
       print_step_number();
-      s4o.print("].state;BOOL;\n");
+      s4o.print("].X;BOOL;\n");
       step_number++;
       return NULL;
     }
