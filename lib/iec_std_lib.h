@@ -180,11 +180,36 @@ static inline void __normalize_timespec (IEC_TIMESPEC *ts) {
 /**********************************************/
 /* Time conversion to/from timespec functions */
 /**********************************************/
-
+/* NOTE: The following function was turned into a macro, so it could be used to initialize the initial value of TIME variables.
+ *       Since each macro parameter is evaluated several times, the macro may result in multiple function invocations if an expression
+ *       containing a function invocation is passed as a parameter. However, currently matiec only uses this conversion macro with 
+ *       constant literals, so it is safe to change it into a macro.
+ */
+/* NOTE: I (Mario - msousa@fe.up.pt) believe that the following function contains a bug when handling negative times.
+ *       The equivalent macro has this bug fixed.
+ *       e.g.;
+ *          T#3.8s
+ *       using the function, will result in a timespec of 3.8s !!!: 
+ *          tv_sec  =  4               <-----  1 *  3.8           is rounded up when converting a double to an int!
+ *          tv_nsec = -200 000 000     <-----  1 * (3.8 - 4)*1e9
+ * 
+ *         -T#3.8s
+ *       using the function, will result in a timespec of -11.8s !!!: 
+ *          tv_sec  = -4                 <-----  -1 *  3.8 is rounded down when converting a double to an int!
+ *          tv_nsec = -7 800 000 000     <-----  -1 * (3.8 - -4)*1e9
+ */
+/* NOTE: Due to the fact that the C compiler may round a tv_sec number away from zero, 
+ *       the following macro may result in a timespec that is not normalized, i.e. with a tv_sec > 0, and a tv_nsec < 0 !!!!
+ *       This is due to the rounding that C compiler applies when converting a (long double) to a (long int).
+ *       To produce normalized timespec's we need to use floor(), but we cannot call any library functions since we want this macro to be 
+ *       useable as a variable initializer.
+ *       VAR x : TIME = T#3.5h; END_VAR --->  IEC_TIME x = __time_to_timespec(1, 0, 0, 0, 3.5, 0);
+ */
+/*
 static inline IEC_TIMESPEC __time_to_timespec(int sign, double mseconds, double seconds, double minutes, double hours, double days) {
   IEC_TIMESPEC ts;
 
-  /* sign is 1 for positive values, -1 for negative time... */
+  // sign is 1 for positive values, -1 for negative time...
   long double total_sec = ((days*24 + hours)*60 + minutes)*60 + seconds + mseconds/1e3;
   if (sign >= 0) sign = 1; else sign = -1;
   ts.tv_sec = sign * (long int)total_sec;
@@ -192,8 +217,29 @@ static inline IEC_TIMESPEC __time_to_timespec(int sign, double mseconds, double 
 
   return ts;
 }
+*/
+/* NOTE: Unfortunately older versions of ANSI C (e.g. C99) do not allow explicit identification of elements in initializers
+ *         e.g.  {tv_sec = 1, tv_nsec = 300}
+ *       They are therefore commented out. This however means that any change to the definition of IEC_TIMESPEC may require this
+ *       macro to be updated too!
+ */
+#define ld long double
+#define __time_to_timespec(sign,mseconds,seconds,minutes,hours,days) \
+          ((IEC_TIMESPEC){\
+              /*tv_sec  =*/ ((long int)   (((sign>=0)?1:-1)*((((ld)days*24 + (ld)hours)*60 + (ld)minutes)*60 + (ld)seconds + (ld)mseconds/1e3))), \
+              /*tv_nsec =*/ ((long int)(( \
+                            ((long double)(((sign>=0)?1:-1)*((((ld)days*24 + (ld)hours)*60 + (ld)minutes)*60 + (ld)seconds + (ld)mseconds/1e3))) - \
+                            ((long int)   (((sign>=0)?1:-1)*((((ld)days*24 + (ld)hours)*60 + (ld)minutes)*60 + (ld)seconds + (ld)mseconds/1e3)))   \
+                            )*1e9))\
+        })
+#undef ld
 
 
+
+
+/* NOTE: The following function was turned into a macro, so it could be used to initialize the initial value of TOD (TIME_OF_DAY) variables */
+/* NOTE: many (but not all) of the same comments made regarding __time_to_timespec() are also valid here, so go and read those comments too!
+/*
 static inline IEC_TIMESPEC __tod_to_timespec(double seconds, double minutes, double hours) {
   IEC_TIMESPEC ts;
 
@@ -203,6 +249,18 @@ static inline IEC_TIMESPEC __tod_to_timespec(double seconds, double minutes, dou
 
   return ts;
 }
+*/
+#define ld long double
+#define __tod_to_timespec(seconds,minutes,hours) \
+          ((IEC_TIMESPEC){\
+              /*tv_sec  =*/ ((long int)   ((((ld)hours)*60 + (ld)minutes)*60 + (ld)seconds)), \
+              /*tv_nsec =*/ ((long int)(( \
+                            ((long double)((((ld)hours)*60 + (ld)minutes)*60 + (ld)seconds)) - \
+                            ((long int)   ((((ld)hours)*60 + (ld)minutes)*60 + (ld)seconds))   \
+                            )*1e9))\
+        })
+#undef ld
+
 
 #define EPOCH_YEAR 1970
 #define SECONDS_PER_MINUTE 60
@@ -221,10 +279,10 @@ static const unsigned short int __mon_yday[2][13] =
 typedef struct {
 	int tm_sec;			/* Seconds.	[0-60] (1 leap second) */
 	int tm_min;			/* Minutes.	[0-59] */
-	int tm_hour;		/* Hours.	[0-23] */
+	int tm_hour;			/* Hours.	[0-23] */
 	int tm_day;			/* Day.		[1-31] */
 	int tm_mon;			/* Month.	[0-11] */
-	int tm_year;		/* Year	*/
+	int tm_year;			/* Year	*/
 } tm;
 
 static inline tm convert_seconds_to_date_and_time(long int seconds) {

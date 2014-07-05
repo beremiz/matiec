@@ -29,6 +29,11 @@ typedef uint64_t   IEC_LWORD;
 typedef float    IEC_REAL;
 typedef double   IEC_LREAL;
 
+/* WARNING: When editing the definition of IEC_TIMESPEC, take note that 
+ *          if the order of the two elements 'tv_sec' and 'tv_nsec' is changed, then the macros 
+ *          __time_to_timespec() and __tod_to_timespec() will need to be changed accordingly.
+ *          (these macros may be found in iec_std_lib.h)
+ */
 typedef struct {
     long int tv_sec;            /* Seconds.  */
     long int tv_nsec;           /* Nanoseconds.  */
