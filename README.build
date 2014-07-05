@@ -4,6 +4,7 @@ Compile/Build
 
 1) Compiling under Linux
 ------------------------
+$ autoreconf -i
 $ ./configure
 $ make
 
