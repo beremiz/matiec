@@ -223,16 +223,14 @@ static inline IEC_TIMESPEC __time_to_timespec(int sign, double mseconds, double 
  *       They are therefore commented out. This however means that any change to the definition of IEC_TIMESPEC may require this
  *       macro to be updated too!
  */
-#define ld long double
 #define __time_to_timespec(sign,mseconds,seconds,minutes,hours,days) \
           ((IEC_TIMESPEC){\
-              /*tv_sec  =*/ ((long int)   (((sign>=0)?1:-1)*((((ld)days*24 + (ld)hours)*60 + (ld)minutes)*60 + (ld)seconds + (ld)mseconds/1e3))), \
+              /*tv_sec  =*/ ((long int)   (((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3))), \
               /*tv_nsec =*/ ((long int)(( \
-                            ((long double)(((sign>=0)?1:-1)*((((ld)days*24 + (ld)hours)*60 + (ld)minutes)*60 + (ld)seconds + (ld)mseconds/1e3))) - \
-                            ((long int)   (((sign>=0)?1:-1)*((((ld)days*24 + (ld)hours)*60 + (ld)minutes)*60 + (ld)seconds + (ld)mseconds/1e3)))   \
+                            ((long double)(((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3))) - \
+                            ((long int)   (((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3)))   \
                             )*1e9))\
         })
-#undef ld
 
 
 
@@ -250,16 +248,14 @@ static inline IEC_TIMESPEC __tod_to_timespec(double seconds, double minutes, dou
   return ts;
 }
 */
-#define ld long double
 #define __tod_to_timespec(seconds,minutes,hours) \
           ((IEC_TIMESPEC){\
-              /*tv_sec  =*/ ((long int)   ((((ld)hours)*60 + (ld)minutes)*60 + (ld)seconds)), \
+              /*tv_sec  =*/ ((long int)   ((((long double)hours)*60 + (long double)minutes)*60 + (long double)seconds)), \
               /*tv_nsec =*/ ((long int)(( \
-                            ((long double)((((ld)hours)*60 + (ld)minutes)*60 + (ld)seconds)) - \
-                            ((long int)   ((((ld)hours)*60 + (ld)minutes)*60 + (ld)seconds))   \
+                            ((long double)((((long double)hours)*60 + (long double)minutes)*60 + (long double)seconds)) - \
+                            ((long int)   ((((long double)hours)*60 + (long double)minutes)*60 + (long double)seconds))   \
                             )*1e9))\
         })
-#undef ld
 
 
 #define EPOCH_YEAR 1970
