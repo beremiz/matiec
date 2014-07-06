@@ -765,7 +765,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     inlinearray_mode_t current_mode;
 
   public:
-    generate_c_datatypes_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
+    generate_c_datatypes_c(stage4out_c *s4o_incl_ptr)
       : generate_c_typedecl_c(s4o_incl_ptr) {
       current_mode = none_im;
     };
@@ -2558,7 +2558,7 @@ class generate_c_c: public iterator_visitor_c {
             pous_incl_s4o(builddir, "POUS", "h"),
             located_variables_s4o(builddir, "LOCATED_VARIABLES","h"),
             variables_s4o(builddir, "VARIABLES","csv"),
-            generate_c_datatypes(&pous_s4o, &pous_incl_s4o),
+            generate_c_datatypes(&pous_incl_s4o),
             generate_c_pous(&pous_s4o, &pous_incl_s4o) {
       current_builddir = builddir;
       current_configuration = NULL;
