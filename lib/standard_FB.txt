@@ -25,8 +25,24 @@
 
 (* FINAL DRAFT - IEC 61131-3, 2nd Ed. (2001-12-10) *)
 
-(* The standard functions *)
-{#include "standard_functions.txt" }
 
-(* The standard functions *)
-{#include "standard_FB.txt" }
+{disable code generation}
+
+
+(* The standard function blocks *)
+{#include "edge_detection.txt" }
+{#include "bistable.txt" }
+{#include "counter.txt" }
+{#include "timer.txt" }
+{#include "derivative_st.txt" }
+{#include "hysteresis_st.txt" }
+{#include "integral_st.txt" }
+{#include "pid_st.txt" }
+{#include "ramp_st.txt" }
+{#include "rtc.txt" }
+
+(* Not in the standard, but useful nonetheless. *)
+{#include "sema.txt" }
+
+
+{enable code generation}
