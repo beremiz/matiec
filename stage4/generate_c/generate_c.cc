@@ -172,13 +172,14 @@
 
 
 static int generate_line_directives__ = 0;
+static int generate_pou_filepairs__   = 0;
 
 #ifdef __unix__
 /* Parse command line options passed from main.c !! */
 #include <stdlib.h> // for getsybopt()
 int  stage4_parse_options(char *options) {
-  enum {                    LINE_OPT = 0             /*, SOME_OTHER_OPT, YET_ANOTHER_OPT */};
-  char *const token[] = { /*[LINE_OPT]=*/(char *)"l" /*, SOME_OTHER_OPT, ...             */, NULL };
+  enum {                    LINE_OPT = 0            ,  SEPTFILE_OPT              /*, SOME_OTHER_OPT, YET_ANOTHER_OPT */};
+  char *const token[] = { /*[LINE_OPT]=*/(char *)"l",/*SEPTFILE_OPT*/(char *)"p" /*, SOME_OTHER_OPT, ...             */, NULL };
   /* unfortunately, the above commented out syntax for array initialization is valid in C, but not in C++ */
   
   char *subopts = options;
@@ -187,8 +188,9 @@ int  stage4_parse_options(char *options) {
 
   while (*subopts != '\0') {
     switch (getsubopt(&subopts, token, &value)) {
-      case LINE_OPT: generate_line_directives__  = 1; break;
-      default      : fprintf(stderr, "Unrecognized option: -O %s\n", value); return -1; break;
+      case     LINE_OPT: generate_line_directives__  = 1; break;
+      case SEPTFILE_OPT: generate_pou_filepairs__    = 1; break;
+      default          : fprintf(stderr, "Unrecognized option: -O %s\n", value); return -1; break;
      }
   }     
   return 0;
@@ -198,6 +200,7 @@ int  stage4_parse_options(char *options) {
 void stage4_print_options(void) {
   printf("          (options must be separated by commas. Example: 'l,w,x')\n"); 
   printf("      l : insert '#line' directives in generated C code.\n"); 
+  printf("      p : place each POU in a separate pair of files (<pou_name>.c, <pou_name>.h).\n"); 
 }
 #else /* not __unix__ */
 /* getsubopt isn't supported with mingw, 
@@ -770,9 +773,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
       current_mode = none_im;
     };
     virtual ~generate_c_datatypes_c(void) {
-      while (!inline_array_defined.empty()) {
-        inline_array_defined.erase(inline_array_defined.begin());
-      }
+      inline_array_defined.clear(); // Not really necessary...
     }
 
     /*************************/
@@ -997,7 +998,7 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
               symbol->array_subrange_list->accept(*this);
               s4o_incl.print(")\n\n");
 
-              inline_array_defined[current_array_name] = 0;
+              inline_array_defined[current_array_name] = 0; // insert an element, indicating this array type has been defined!
             }
           }
           break;
@@ -2497,6 +2498,8 @@ class generate_c_c: public iterator_visitor_c {
     const char *current_name;
     const char *current_builddir;
 
+    bool        allow_output;
+    
     unsigned long long common_ticktime;
 
   public:
@@ -2510,6 +2513,7 @@ class generate_c_c: public iterator_visitor_c {
     {
       current_builddir = builddir;
       current_configuration = NULL;
+      allow_output = true;
     }
             
     ~generate_c_c(void) {}
@@ -2525,6 +2529,7 @@ class generate_c_c: public iterator_visitor_c {
       pous_incl_s4o        .enable_output();  
       located_variables_s4o.enable_output();  
       variables_s4o        .enable_output();  
+      allow_output = true;      
       return NULL;
     }
     
@@ -2534,6 +2539,7 @@ class generate_c_c: public iterator_visitor_c {
       pous_incl_s4o        .disable_output();  
       located_variables_s4o.disable_output();  
       variables_s4o        .disable_output();  
+      allow_output = false;      
       return NULL;
     } 
 
@@ -2585,13 +2591,33 @@ class generate_c_c: public iterator_visitor_c {
 /**************************************/
 /* B.1.5 - Program organization units */
 /**************************************/
+#define handle_pou(fname,pname,var_decl_list) \
+      if (!allow_output) return NULL;\
+      var_decl_list->accept(generate_c_datatypes);\
+      if (generate_pou_filepairs__) {\
+        stage4out_c s4o_c(current_builddir, get_datatype_info_c::get_id_str(pname), "c");\
+        stage4out_c s4o_h(current_builddir, get_datatype_info_c::get_id_str(pname), "h");\
+        /* generate_c_datatypes_c generate_c_datatypes_(&s4o_h);*/\
+        /* var_decl_list->accept(generate_c_datatypes_);*/\
+        generate_c_pous_c::fname(symbol, s4o_h, true); /* generate the <pou_name>.h file */\
+        generate_c_pous_c::fname(symbol, s4o_c, false);/* generate the <pou_name>.c file */\
+        /* add #include directives to the POUS.h and POUS.c files... */\
+        pous_incl_s4o.print("#include \"");\
+        pous_s4o.     print("#include \"");\
+        pous_incl_s4o.print(get_datatype_info_c::get_id_str(pname));\
+        pous_s4o.     print(get_datatype_info_c::get_id_str(pname));\
+        pous_incl_s4o.print(".h\"\n");\
+        pous_s4o.     print(".c\"\n");\
+      } else {\
+        generate_c_pous_c::fname(symbol, pous_incl_s4o, true);\
+        generate_c_pous_c::fname(symbol, pous_s4o,      false);\
+      }
+
 /***********************/
 /* B 1.5.1 - Functions */
-/***********************/
+/***********************/      
     void *visit(function_declaration_c *symbol) {
-      symbol->var_declarations_list->accept(generate_c_datatypes);
-      generate_c_pous_c::handle_function(symbol, pous_incl_s4o, true);
-      generate_c_pous_c::handle_function(symbol, pous_s4o,      false);
+      handle_pou(handle_function,symbol->derived_function_name, symbol->var_declarations_list)
       return NULL;
     }
     
@@ -2599,9 +2625,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.5.2 - Function Blocks */
 /*****************************/
     void *visit(function_block_declaration_c *symbol) {
-      symbol->var_declarations->accept(generate_c_datatypes);
-      generate_c_pous_c::handle_function_block(symbol, pous_incl_s4o, true);
-      generate_c_pous_c::handle_function_block(symbol, pous_s4o,      false);
+      handle_pou(handle_function_block,symbol->fblock_name, symbol->var_declarations)
       return NULL;
     }
     
@@ -2609,9 +2633,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.5.3 - Programs */
 /**********************/    
     void *visit(program_declaration_c *symbol) {
-      symbol->var_declarations->accept(generate_c_datatypes);
-      generate_c_pous_c::handle_program(symbol, pous_incl_s4o, true);
-      generate_c_pous_c::handle_program(symbol, pous_s4o,      false);
+      handle_pou(handle_program,symbol->program_type_name, symbol->var_declarations)
       return NULL;
     }
     
