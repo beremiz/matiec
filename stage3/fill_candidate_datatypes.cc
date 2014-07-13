@@ -1861,10 +1861,30 @@ void *fill_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return handle
 /***********************/
 /* SYM_REF1(ref_expression_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
 void *fill_candidate_datatypes_c::visit(  ref_expression_c  *symbol) {
+  /* We must first determine the datatype of the expression passe to the REF() operator, with no ambiguities! 
+   * To do this, we could use the complete standard fill/narrow algorithm for determining the datatype
+   * of the expression. This is actually possible, as nothing stops us from directly calling the narrow_candidate_datatypes_c
+   * from this method inside fill_candidate_datatypes_c, to complete the fill/narrow algorithm on this
+   * expression only.
+   * However, for the moment we take a shortcut, and set the expression's "datatype" directly, even though this 
+   * should really only be done in narrow_candidate_datatypes_c. This is possible because the expression should be
+   * an lvalue (assuming source code has no bugs), with only one candidate datatype.
+   * 
+   * (We should really check whether the expression is an lvalue. For now, leave it for the future!)
+   * 
+   * Note, however, that array variables are also lvalues, and they may containg complex
+   * expressions that include function calls in their indexes. These complex expressions must therefore still be
+   * analysed using the standard fill/narrow algorithm...
+   */
   symbol->exp->accept(*this);
-  /* we should really check whether the expression is an lvalue. For now, leave it for the future! */
-  /* For now, we handle references (i.e. pointers) as ULINT datatypes! */
-  add_datatype_to_candidate_list(symbol, &get_datatype_info_c::ulint_type_name);
+  if (symbol->exp->candidate_datatypes.size() == 1)
+    symbol->exp->datatype = symbol->exp->candidate_datatypes[0];
+
+  /* Create a new object of ref_spec_c, as this is the class used as the canonical/base datatype of REF_TO types 
+   * (see search_base_type_c ...)
+   */ 
+  ref_spec_c *ref_spec = new ref_spec_c(symbol->exp->datatype);
+  add_datatype_to_candidate_list(symbol, ref_spec);
   return NULL;
 }
     

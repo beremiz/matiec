@@ -465,7 +465,6 @@ void *visit(array_initial_elements_list_c *symbol) {
 /***********************/
 void *visit(ref_expression_c *symbol) {
   s4o.print("(");  
-  s4o.print("(IEC_UDINT)");  
   if (this->is_variable_prefix_null()) {  
     /* For code in FUNCTIONs */
     s4o.print("&(");  
