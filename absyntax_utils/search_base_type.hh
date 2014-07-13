@@ -249,6 +249,13 @@ class search_base_type_c: public null_visitor_c {
   /* structure_initialization -> may be NULL ! */
     void *visit(fb_spec_init_c *symbol);
     
+  /* REF_TO (non_generic_type_name | function_block_type_name) */
+    void *visit(ref_spec_c *symbol);       // Defined in IEC 61131-3 v3
+  /* ref_spec [ ASSIGN ref_initialization ]; *//* NOTE: ref_initialization may be NULL!! */
+    void *visit(ref_spec_init_c *symbol);  // Defined in IEC 61131-3 v3
+  /* identifier ':' ref_spec_init */
+    void *visit(ref_type_decl_c *symbol);  // Defined in IEC 61131-3 v3
+
   /*****************************/
   /* B 1.5.2 - Function Blocks */
   /*****************************/

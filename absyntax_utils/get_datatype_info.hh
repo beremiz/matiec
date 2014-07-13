@@ -59,13 +59,13 @@ class get_datatype_info_c {
   public:
     static symbol_c   *get_id    (symbol_c *datatype); /* get the identifier (name) of the datatype); returns NULL if anonymous datatype! Does not work for elementary datatypes!*/
     static const char *get_id_str(symbol_c *datatype); /* get the identifier (name) of the datatype); returns NULL if anonymous datatype! */
-      
+
+    static symbol_c *get_ref_to                    (symbol_c *type_symbol);    // Defined in IEC 61131-3 v3 (returns the type that is being referenced/pointed to)        
+    
     static bool is_type_equal(symbol_c *first_type, symbol_c *second_type);
     static bool is_type_valid(symbol_c *type);
-      
-    static bool is_ANY_REAL_literal(symbol_c *type_symbol); /* Can't we do away with this?? */
-    static bool is_ANY_INT_literal (symbol_c *type_symbol); /* Can't we do away with this?? */
 
+    static bool is_ref_to                          (symbol_c *type_symbol);    // Defined in IEC 61131-3 v3
     static bool is_sfc_initstep                    (symbol_c *type_symbol);
     static bool is_sfc_step                        (symbol_c *type_symbol);
     static bool is_function_block                  (symbol_c *type_symbol);
@@ -73,8 +73,10 @@ class get_datatype_info_c {
     static bool is_enumerated                      (symbol_c *type_symbol);
     static bool is_array                           (symbol_c *type_symbol);
     static bool is_structure                       (symbol_c *type_symbol);
-
   
+    static bool is_ANY_REAL_literal(symbol_c *type_symbol); /* Can't we do away with this?? */
+    static bool is_ANY_INT_literal (symbol_c *type_symbol); /* Can't we do away with this?? */
+
     static bool is_ANY_ELEMENTARY                  (symbol_c *type_symbol);
     static bool is_ANY_SAFEELEMENTARY              (symbol_c *type_symbol);
     static bool is_ANY_ELEMENTARY_compatible       (symbol_c *type_symbol);

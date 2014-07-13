@@ -183,16 +183,10 @@ class populate_symtables_c: public iterator_visitor_c {
   /********************************/
 
   /*  subrange_type_name ':' subrange_spec_init */
-  void *visit(subrange_type_declaration_c *symbol) {
-    TRACE("subrange_type_declaration_c");  
-    type_symtable.insert(symbol->subrange_type_name, symbol->subrange_spec_init);
-    return NULL;
-  }
-  
+  void *visit(subrange_type_declaration_c *symbol) {type_symtable.insert(symbol->subrange_type_name, symbol->subrange_spec_init); return NULL;}
 
   /*  enumerated_type_name ':' enumerated_spec_init */
   void *visit(enumerated_type_declaration_c *symbol) {
-    TRACE("enumerated_type_declaration_c");
     type_symtable.insert(symbol->enumerated_type_name, symbol);
     current_enumerated_type = symbol->enumerated_type_name;
     symbol->enumerated_spec_init->accept(*this);
@@ -201,45 +195,17 @@ class populate_symtables_c: public iterator_visitor_c {
   }
 
   /* enumerated_specification ASSIGN enumerated_value */
-  void *visit(enumerated_spec_init_c *symbol) {
-    return symbol->enumerated_specification->accept(*this);
-  }
-
-
+  void *visit(enumerated_spec_init_c *symbol) {return symbol->enumerated_specification->accept(*this);}
   /*  identifier ':' array_spec_init */
-  void *visit(array_type_declaration_c *symbol) {
-    TRACE("array_type_declaration_c");
-    type_symtable.insert(symbol->identifier, symbol->array_spec_init);
-    return NULL;
-  }
-
-
+  void *visit(array_type_declaration_c *symbol) {type_symtable.insert(symbol->identifier, symbol->array_spec_init); return NULL;}
   /*  simple_type_name ':' simple_spec_init */
-  void *visit(simple_type_declaration_c *symbol) {
-    TRACE("simple_type_declaration_c");
-    type_symtable.insert(symbol->simple_type_name, symbol->simple_spec_init);
-    return NULL;
-  }
-
-
+  void *visit(simple_type_declaration_c *symbol) {type_symtable.insert(symbol->simple_type_name, symbol->simple_spec_init); return NULL;}
   /*  structure_type_name ':' structure_specification */
-  void *visit(structure_type_declaration_c *symbol) {
-    TRACE("structure_type_declaration_c");
-    type_symtable.insert(symbol->structure_type_name, symbol->structure_specification);
-    return NULL;
-  }
-  
-  
+  void *visit(structure_type_declaration_c *symbol) {type_symtable.insert(symbol->structure_type_name, symbol->structure_specification); return NULL;}
   /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
-  // SYM_REF4(string_type_declaration_c,	string_type_name,
-  //    					elementary_string_type_name,
-  //    					string_type_declaration_size,
-  //    					string_type_declaration_init) /* may be == NULL! */
-  void *visit(string_type_declaration_c *symbol)	{
-    TRACE("string_type_declaration_c");
-    type_symtable.insert(symbol->string_type_name, symbol);
-    return NULL;
-}
+  void *visit(string_type_declaration_c *symbol) {type_symtable.insert(symbol->string_type_name, symbol); return NULL;}
+  /* identifier ':' ref_spec_init */
+  void *visit(ref_type_decl_c *symbol) {type_symtable.insert(symbol->ref_type_name, symbol); return NULL;}
 
   /*********************/
   /* B 1.4 - Variables */

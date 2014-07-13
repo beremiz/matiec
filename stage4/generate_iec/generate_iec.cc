@@ -669,10 +669,18 @@ void *visit(ref_spec_c *symbol) {
   return NULL;
 }
 
-
 /* For the moment, we do not support initialising reference data types */
-/* ref_spec_init: ref_spec; */ 
-/* SYM_REF0(ref_spec_init_c) */
+/* ref_spec_init: ref_spec [ ASSIGN ref_initialization ]; */ 
+/* NOTE: ref_initialization may be NULL!! */
+// SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
+void *visit(ref_spec_init_c *symbol) {
+  symbol->ref_spec->accept(*this);
+  if (symbol->ref_initialization != NULL) {
+    s4o.print(" := ");
+    symbol->ref_initialization->accept(*this);
+  }
+  return NULL;
+}
 
 /* ref_type_decl: identifier ':' ref_spec_init */
 // SYM_REF2(ref_type_decl_c, ref_type_name, ref_spec_init)

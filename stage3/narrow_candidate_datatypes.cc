@@ -647,6 +647,37 @@ void *narrow_candidate_datatypes_c::visit(initialized_structure_c *symbol) {retu
 void *narrow_candidate_datatypes_c::visit(fb_spec_init_c *symbol) {return narrow_spec_init(symbol, symbol->function_block_type_name, symbol->structure_initialization);}
 
 
+/* REF_TO (non_generic_type_name | function_block_type_name) */
+// SYM_REF1(ref_spec_c, type_name)
+void *narrow_candidate_datatypes_c::visit(ref_spec_c *symbol) {
+	/* First handle the datatype being referenced (pointed to) */
+	if (symbol->type_name->candidate_datatypes.size() == 1) {
+		symbol->type_name->datatype = symbol->type_name->candidate_datatypes[0];
+		symbol->type_name->accept(*this);
+	}
+
+	/* Now handle the reference datatype itself (i.e. the pointer) */
+	// If we are handling an anonymous datatype (i.e. a datatype implicitly declared inside a VAR ... END_VAR declaration)
+	// then the symbol->datatype has not yet been set by the previous visit(type_decl) method, because it does not exist!
+	// So we set the datatype ourselves!
+	if ((NULL == symbol->datatype) && (symbol->candidate_datatypes.size() == 1))
+		symbol->datatype = symbol->candidate_datatypes[0];
+
+	return NULL;
+}
+
+/* For the moment, we do not support initialising reference data types */
+/* ref_spec [ ASSIGN ref_initialization ] */ 
+/* NOTE: ref_initialization may be NULL!! */
+// SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
+void *narrow_candidate_datatypes_c::visit(ref_spec_init_c *symbol) {return narrow_spec_init(symbol, symbol->ref_spec, symbol->ref_initialization);}
+
+/* identifier ':' ref_spec_init */
+// SYM_REF2(ref_type_decl_c, ref_type_name, ref_spec_init)
+void *narrow_candidate_datatypes_c::visit(ref_type_decl_c *symbol) {return narrow_type_decl(symbol, symbol->ref_type_name, symbol->ref_spec_init);}
+
+
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/

@@ -361,7 +361,7 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 					string_type_declaration_size,
 					string_type_declaration_init) // may be == NULL!
 */
-void *search_base_type_c::visit(string_type_declaration_c *symbol)	                {return (void *)symbol;}
+void *search_base_type_c::visit(string_type_declaration_c *symbol)                      {return (void *)symbol;}
 
 
 /*  function_block_type_name ASSIGN structure_initialization */
@@ -369,6 +369,27 @@ void *search_base_type_c::visit(string_type_declaration_c *symbol)	             
 // SYM_REF2(fb_spec_init_c, function_block_type_name, structure_initialization)
 void *search_base_type_c::visit(fb_spec_init_c *symbol)	{
   return symbol->function_block_type_name->accept(*this);
+}
+
+
+
+/* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
+// SYM_REF1(ref_spec_c, type_name)
+void *search_base_type_c::visit(ref_spec_c *symbol)                                     {return (void *)symbol;}
+
+/* For the moment, we do not support initialising reference data types */
+/* ref_spec_init: ref_spec [ ASSIGN ref_initialization ]; */ 
+/* NOTE: ref_initialization may be NULL!! */
+// SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
+void *search_base_type_c::visit(ref_spec_init_c *symbol) {
+  return symbol->ref_spec->accept(*this);
+}
+
+/* ref_type_decl: identifier ':' ref_spec_init */
+// SYM_REF2(ref_type_decl_c, ref_type_name, ref_spec_init)
+void *search_base_type_c::visit(ref_type_decl_c *symbol)  {
+  this->current_basetype_name = symbol->ref_type_name;
+  return symbol->ref_spec_init->accept(*this);
 }
 
 

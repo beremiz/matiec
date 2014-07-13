@@ -3209,7 +3209,12 @@ ref_spec: /* defined in IEC 61131-3 v3 */
 
 
 ref_spec_init: /* defined in IEC 61131-3 v3 */
-  ref_spec  /* For the moment, we do not support initialising reference data types */
+  ref_spec
+	{$$ = new ref_spec_init_c($1, NULL, locloc(@$));}
+/*  For the moment, we do not support initialising reference data types...
+| ref_spec ASSIGN ... 
+	{$$ = new ref_spec_init_c($1, $3, locloc(@$));}
+*/
 ;
 
 ref_type_decl:  /* defined in IEC 61131-3 v3 */

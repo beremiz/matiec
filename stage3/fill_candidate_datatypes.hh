@@ -172,7 +172,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /********************************/
 //  void *visit(data_type_declaration_c *symbol);   /* Not required. already handled by iterator_visitor_c base class */
 //  void *visit(type_declaration_list_c *symbol);   /* Not required. already handled by iterator_visitor_c base class */
-    void *visit(simple_type_declaration_c *symbol); /* Not required. already handled by iterator_visitor_c base class */
+    void *visit(simple_type_declaration_c *symbol);
     void *visit(simple_spec_init_c *symbol);
     void *visit(subrange_type_declaration_c *symbol);
     void *visit(subrange_spec_init_c *symbol);
@@ -196,6 +196,11 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
 //  void *visit(structure_element_initialization_c *symbol);
 //  void *visit(string_type_declaration_c *symbol);
     void *visit(fb_spec_init_c *symbol);
+      
+    void *visit(ref_spec_c *symbol);      // Defined in IEC 61131-3 v3
+    void *visit(ref_spec_init_c *symbol); // Defined in IEC 61131-3 v3
+    void *visit(ref_type_decl_c *symbol); // Defined in IEC 61131-3 v3
+
 
     
     /*********************/

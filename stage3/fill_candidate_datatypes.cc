@@ -1108,6 +1108,33 @@ void *fill_candidate_datatypes_c::visit(initialized_structure_c *symbol) {return
 void *fill_candidate_datatypes_c::visit(fb_spec_init_c *symbol) {return fill_spec_init(symbol, symbol->function_block_type_name, symbol->structure_initialization);}
 
 
+/* REF_TO (non_generic_type_name | function_block_type_name) */
+// SYM_REF1(ref_spec_c, type_name)
+void *fill_candidate_datatypes_c::visit(ref_spec_c *symbol) {
+  
+	// when parsing datatype declarations, fill_candidate_datatypes_c follows a top->down algorithm (see the comment in fill_type_decl() for an explanation)
+	add_datatype_to_candidate_list(symbol->type_name, base_type(symbol->type_name)); 
+	symbol->type_name->accept(*this);  /* The referenced/pointed to datatype! */
+
+	if (symbol->candidate_datatypes.size() == 0) // i.e., if this is an anonymous datatype!
+		add_datatype_to_candidate_list(symbol, base_type(symbol)); 
+
+	return NULL;
+}
+
+/* For the moment, we do not support initialising reference data types */
+/* ref_spec [ ASSIGN ref_initialization ] */ 
+/* NOTE: ref_initialization may be NULL!! */
+// SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
+void *fill_candidate_datatypes_c::visit(ref_spec_init_c *symbol) {return fill_spec_init(symbol, symbol->ref_spec, symbol->ref_initialization);}
+
+/* identifier ':' ref_spec_init */
+// SYM_REF2(ref_type_decl_c, ref_type_name, ref_spec_init)
+void *fill_candidate_datatypes_c::visit(ref_type_decl_c *symbol) {return fill_type_decl(symbol, symbol->ref_type_name, symbol->ref_spec_init);}
+
+
+
+
 
 /*********************/
 /* B 1.4 - Variables */
@@ -1835,7 +1862,7 @@ void *fill_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return handle
 /* SYM_REF1(ref_expression_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
 void *fill_candidate_datatypes_c::visit(  ref_expression_c  *symbol) {
   symbol->exp->accept(*this);
-  /* we should really check whether the expression is merely a variable. For now, leave it for the future! */
+  /* we should really check whether the expression is an lvalue. For now, leave it for the future! */
   /* For now, we handle references (i.e. pointers) as ULINT datatypes! */
   add_datatype_to_candidate_list(symbol, &get_datatype_info_c::ulint_type_name);
   return NULL;

@@ -179,6 +179,11 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
 //  void *visit(structure_element_initialization_c *symbol);
 //  void *visit(string_type_declaration_c *symbol);
     void *visit(fb_spec_init_c *symbol);
+      
+    void *visit(ref_spec_c *symbol);      // Defined in IEC 61131-3 v3
+    void *visit(ref_spec_init_c *symbol); // Defined in IEC 61131-3 v3
+    void *visit(ref_type_decl_c *symbol); // Defined in IEC 61131-3 v3
+
 
     /*********************/
     /* B 1.4 - Variables */

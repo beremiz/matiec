@@ -79,23 +79,25 @@ class get_datatype_id_c: null_visitor_c {
     /* B 1.3.3 - Derived data types */
     /********************************/
     /*  simple_type_name ':' simple_spec_init */
-    void *visit(simple_type_declaration_c *symbol)      {return symbol->simple_type_name;}
+    void *visit(simple_type_declaration_c     *symbol)  {return symbol->simple_type_name;}
     /*  subrange_type_name ':' subrange_spec_init */
-    void *visit(subrange_type_declaration_c *symbol)    {return symbol->subrange_type_name;}
+    void *visit(subrange_type_declaration_c   *symbol)  {return symbol->subrange_type_name;}
     /*  enumerated_type_name ':' enumerated_spec_init */
     void *visit(enumerated_type_declaration_c *symbol)  {return symbol->enumerated_type_name;}
     /*  identifier ':' array_spec_init */
-    void *visit(array_type_declaration_c *symbol)       {return symbol->identifier;}
+    void *visit(array_type_declaration_c      *symbol)  {return symbol->identifier;}
     /*  structure_type_name ':' structure_specification */
-    void *visit(structure_type_declaration_c *symbol)   {return symbol->structure_type_name;}
+    void *visit(structure_type_declaration_c  *symbol)  {return symbol->structure_type_name;}
     /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
-    void *visit(string_type_declaration_c *symbol)      {return symbol->string_type_name;}
+    void *visit(string_type_declaration_c     *symbol)  {return symbol->string_type_name;}
+    /* ref_type_decl: identifier ':' ref_spec_init */
+    void *visit(ref_type_decl_c               *symbol)  {return symbol->ref_type_name;}
     
     /*****************************/
     /* B 1.5.2 - Function Blocks */
     /*****************************/
     /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
-    void *visit(function_block_declaration_c *symbol)      {return symbol->fblock_name;}
+    void *visit(function_block_declaration_c  *symbol)  {return symbol->fblock_name;}
 }; // get_datatype_id_c 
 
 get_datatype_id_c *get_datatype_id_c::singleton = NULL;
@@ -189,23 +191,25 @@ class get_datatype_id_str_c: public null_visitor_c {
     /* B 1.3.3 - Derived data types */
     /********************************/
     /*  simple_type_name ':' simple_spec_init */
-    void *visit(simple_type_declaration_c *symbol)      {return symbol->simple_type_name->accept(*this);}
+    void *visit(simple_type_declaration_c     *symbol)  {return symbol->simple_type_name->accept(*this);}
     /*  subrange_type_name ':' subrange_spec_init */
-    void *visit(subrange_type_declaration_c *symbol)    {return symbol->subrange_type_name->accept(*this);}
+    void *visit(subrange_type_declaration_c   *symbol)  {return symbol->subrange_type_name->accept(*this);}
     /*  enumerated_type_name ':' enumerated_spec_init */
     void *visit(enumerated_type_declaration_c *symbol)  {return symbol->enumerated_type_name->accept(*this);}
     /*  identifier ':' array_spec_init */
-    void *visit(array_type_declaration_c *symbol)       {return symbol->identifier->accept(*this);}
+    void *visit(array_type_declaration_c      *symbol)  {return symbol->identifier->accept(*this);}
     /*  structure_type_name ':' structure_specification */
-    void *visit(structure_type_declaration_c *symbol)   {return symbol->structure_type_name->accept(*this);}
+    void *visit(structure_type_declaration_c  *symbol)  {return symbol->structure_type_name->accept(*this);}
     /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
-    void *visit(string_type_declaration_c *symbol)      {return symbol->string_type_name->accept(*this);}
+    void *visit(string_type_declaration_c     *symbol)  {return symbol->string_type_name->accept(*this);}
+    /* ref_type_decl: identifier ':' ref_spec_init */
+    void *visit(ref_type_decl_c               *symbol)  {return symbol->ref_type_name->accept(*this);}
     
     /*****************************/
     /* B 1.5.2 - Function Blocks */
     /*****************************/
     /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
-    void *visit(function_block_declaration_c *symbol)      {return symbol->fblock_name->accept(*this);}    
+    void *visit(function_block_declaration_c  *symbol)  {return symbol->fblock_name->accept(*this);}    
 };
 
 get_datatype_id_str_c *get_datatype_id_str_c::singleton = NULL;
@@ -239,9 +243,15 @@ bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_t
   if (typeid(* first_type) == typeid(invalid_type_name_c))           {return false;}
   if (typeid(*second_type) == typeid(invalid_type_name_c))           {return false;}
     
-  if ((get_datatype_info_c::is_ANY_ELEMENTARY(first_type)) &&
+  /* ANY_ELEMENTARY */
+  if ((is_ANY_ELEMENTARY(first_type)) &&
       (typeid(*first_type) == typeid(*second_type)))                 {return true;}
+
   /* ANY_DERIVED */
+  if (is_ref_to(first_type) && is_ref_to(second_type))
+      return is_type_equal(search_base_type_c::get_basetype_decl(get_ref_to(first_type )),
+                           search_base_type_c::get_basetype_decl(get_ref_to(second_type)));
+
   return (first_type == second_type);
 }
 
@@ -258,14 +268,45 @@ bool get_datatype_info_c::is_type_valid(symbol_c *type) {
 
 
 
+
+/* returns the datatype the REF_TO datatype references/points to... */ 
+symbol_c *get_datatype_info_c::get_ref_to(symbol_c *type_symbol) {
+  ref_type_decl_c *type1 = dynamic_cast<ref_type_decl_c *>(type_symbol);
+  if (NULL != type1) type_symbol = type1->ref_spec_init;
+
+  ref_spec_init_c *type2 = dynamic_cast<ref_spec_init_c *>(type_symbol);
+  if (NULL != type2) type_symbol = type2->ref_spec;
+
+  ref_spec_c      *type3 = dynamic_cast<ref_spec_c      *>(type_symbol);
+  if (NULL != type3) return type3->type_name;
+  
+  return NULL; /* this is not a ref datatype!! */
+}
+
+
+
+
+
+
+bool get_datatype_info_c::is_ref_to(symbol_c *type_symbol) {
+  symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol);
+  if (NULL == type_decl)                                                       {return false;}
+  
+  if (typeid(*type_decl) == typeid(ref_type_decl_c))                           {return true;}   /* identifier ':' ref_spec_init */
+  if (typeid(*type_decl) == typeid(ref_spec_init_c))                           {return true;}   /* ref_spec [ ASSIGN ref_initialization ]; */
+  if (typeid(*type_decl) == typeid(ref_spec_c))                                {return true;}   /* REF_TO (non_generic_type_name | function_block_type_name) */
+  return false;
+}
+
+
+
+
 bool get_datatype_info_c::is_sfc_initstep(symbol_c *type_symbol) {
   symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol); 
   if (NULL == type_decl)                                             {return false;}
   if (typeid(*type_decl) == typeid(initial_step_c))                  {return true;}   /* INITIAL_STEP step_name ':' action_association_list END_STEP */  /* A pseudo data type! */
   return false;
 }
-
-
 
 
 
@@ -354,10 +395,6 @@ bool get_datatype_info_c::is_structure(symbol_c *type_symbol) {
   if (typeid(*type_decl) == typeid(structure_element_initialization_c))        {ERROR;}         /*  structure_element_name ASSIGN value */
   return false;
 }
-
-
-
-
 
 
 

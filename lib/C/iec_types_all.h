@@ -86,6 +86,8 @@ typedef struct {\
   IEC_##type fvalue;\
 } __IEC_##type##_p;
 
+
+
 #define __DECLARE_DERIVED_TYPE(type, base)\
 typedef base type;\
 typedef __IEC_##base##_t __IEC_##type##_t;\
@@ -120,6 +122,11 @@ typedef struct {\
   elements\
 } type;\
 __DECLARE_COMPLEX_STRUCT(type)
+
+#define __DECLARE_REFTO_TYPE(type, name)\
+typedef name * type;\
+__DECLARE_COMPLEX_STRUCT(type)
+
 
 /* Those typdefs clash with windows.h */
 /* i.e. this file cannot be included aside windows.h */

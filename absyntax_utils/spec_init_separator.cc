@@ -171,6 +171,37 @@ void *spec_init_sperator_c::visit(fb_spec_init_c *symbol) {
   return NULL;
 }
 
+
+/* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
+// SYM_REF1(ref_spec_c, type_name)
+void *spec_init_sperator_c::visit(ref_spec_c *symbol) {
+  TRACE("spec_init_sperator_c::ref_spec_c");
+  /* This visitor should never really be called, but there is no harm in including it... */
+  switch (search_what) {
+    case search_spec: return symbol;
+    case search_init: return NULL; /* should never occur */
+  }
+  ERROR; /* should never occur */
+  return NULL;
+}
+
+
+/* For the moment, we do not support initialising reference data types */
+/* ref_spec_init: ref_spec [ ASSIGN ref_initialization ] */ 
+/* NOTE: ref_initialization may be NULL!! */
+// SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
+void *spec_init_sperator_c::visit(ref_spec_init_c *symbol) {
+  TRACE("spec_init_sperator_c::ref_spec_init_c");
+  switch (search_what) {
+    case search_spec: return symbol->ref_spec;
+    case search_init: return symbol->ref_initialization;
+  }
+  ERROR; /* should never occur */
+  return NULL;
+}
+
+
+
 /******************************************/
 /* B 1.4.3 - Declaration & Initialisation */
 /******************************************/

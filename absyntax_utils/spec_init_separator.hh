@@ -98,7 +98,15 @@ class spec_init_sperator_c: public null_visitor_c {
   //SYM_REF2(fb_spec_init_c, function_block_type_name, structure_initialization)
   void *visit(fb_spec_init_c *symbol);
 
+  /* REF_TO (non_generic_type_name | function_block_type_name) */
+  // SYM_REF1(ref_spec_c, type_name)
+  void *visit(ref_spec_c *symbol);
 
+  /* ref_spec [ ASSIGN ref_initialization ] */ 
+  /* NOTE: ref_initialization may be NULL!! */
+  // SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
+  void *visit(ref_spec_init_c *symbol);
+  
   /******************************************/
   /* B 1.4.3 - Declaration & Initialisation */
   /******************************************/

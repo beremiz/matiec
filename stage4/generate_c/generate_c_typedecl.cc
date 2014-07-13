@@ -642,6 +642,48 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 					string_type_declaration_init) /* may be == NULL! */
 #endif
 
+
+
+/* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
+// SYM_REF1(ref_spec_c, type_name)
+void *visit(ref_spec_c *symbol) {
+  return symbol->type_name->accept(*this);
+}
+
+/* For the moment, we do not support initialising reference data types */
+/* ref_spec_init: ref_spec [ ASSIGN ref_initialization ] */ 
+/* NOTE: ref_initialization may be NULL!! */
+// SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
+void *visit(ref_spec_init_c *symbol) {
+  return symbol->ref_spec->accept(*this);
+}
+
+/* ref_type_decl: identifier ':' ref_spec_init */
+// SYM_REF2(ref_type_decl_c, ref_type_name, ref_spec_init)
+void *visit(ref_type_decl_c *symbol) {
+  TRACE("ref_type_decl_c");
+  
+  current_type_name = NULL;
+  current_typedefinition = none_td;
+
+  s4o_incl.print("__DECLARE_REFTO_TYPE(");
+  symbol->ref_type_name->accept(*basedecl);
+  s4o_incl.print(", ");
+  symbol->ref_spec_init->accept(*this);
+  s4o_incl.print(") ");
+
+  current_type_name = NULL;
+  current_typedefinition = none_td;
+
+  return NULL;
+}
+
+
+
+
+
+
+
 /*********************/
 /* B 1.4 - Variables */
 /*********************/

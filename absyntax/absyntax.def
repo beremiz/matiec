@@ -335,7 +335,7 @@ SYM_REF2(enumerated_value_c, type, value)
 /*  identifier ':' array_spec_init */
 SYM_REF2(array_type_declaration_c, identifier, array_spec_init)
 
-/* array_specification [ASSIGN array_initialization} */
+/* array_specification [ASSIGN array_initialization] */
 /* array_initialization may be NULL ! */
 SYM_REF2(array_spec_init_c, array_specification, array_initialization)
 
@@ -481,14 +481,14 @@ SYM_REF2(fb_spec_init_c, function_block_type_name, structure_initialization)
  * Ref_Deref      : 'DREF' '(' Ref_Name ')' ;
  */
 
-/* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
+/* REF_TO (non_generic_type_name | function_block_type_name) */
 SYM_REF1(ref_spec_c, type_name)
 
-/* For the moment, we do not support initialising reference data types */
-/* ref_spec_init: ref_spec; */ 
-/* SYM_REF0(ref_spec_init_c) */
+/* ref_spec [ ASSIGN ref_initialization ]; */
+/* NOTE: ref_initialization may be NULL!!  */
+SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
 
-/* ref_type_decl: identifier ':' ref_spec_init */
+/* identifier ':' ref_spec_init */
 SYM_REF2(ref_type_decl_c, ref_type_name, ref_spec_init)
 
 
