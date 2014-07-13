@@ -1382,8 +1382,8 @@ void *narrow_candidate_datatypes_c::visit(JMPCN_operator_c *symbol) {return narr
 void *narrow_candidate_datatypes_c::visit(  ref_expression_c  *symbol) {
   if (symbol->exp->candidate_datatypes.size() > 0) {
     symbol->exp->datatype = symbol->exp->candidate_datatypes[0]; /* just use the first possible datatype */
-    symbol->exp->accept(*this);
   }
+  symbol->exp->accept(*this);
   return NULL;
 }
 
@@ -1498,12 +1498,13 @@ void *narrow_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 /*********************************/
 
 void *narrow_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
-	if (symbol->candidate_datatypes.size() != 1)
-		return NULL;
-	symbol->datatype = symbol->candidate_datatypes[0];
-	symbol->l_exp->datatype = symbol->datatype;
+	if (symbol->candidate_datatypes.size() == 1) {
+		symbol->datatype = symbol->candidate_datatypes[0];
+		symbol->l_exp->datatype = symbol->datatype;
+		symbol->r_exp->datatype = symbol->datatype;
+	}
+	/* give the chance of any expressions inside array subscripts to be narrowed correctly */
 	symbol->l_exp->accept(*this);
-	symbol->r_exp->datatype = symbol->datatype;
 	symbol->r_exp->accept(*this);
 	return NULL;
 }
