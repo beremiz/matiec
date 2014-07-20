@@ -2315,12 +2315,11 @@ class generate_c_c: public iterator_visitor_c {
 /**************************************/
 #define handle_pou(fname,pname,var_decl_list) \
       if (!allow_output) return NULL;\
-      var_decl_list->accept(generate_c_datatypes);\
       if (generate_pou_filepairs__) {\
         stage4out_c s4o_c(current_builddir, get_datatype_info_c::get_id_str(pname), "c");\
         stage4out_c s4o_h(current_builddir, get_datatype_info_c::get_id_str(pname), "h");\
-        /* generate_c_datatypes_c generate_c_datatypes_(&s4o_h);*/\
-        /* var_decl_list->accept(generate_c_datatypes_);*/\
+        generate_c_datatypes_c generate_c_datatypes__(&s4o_h);\
+        var_decl_list->accept(generate_c_datatypes__);\
         generate_c_pous_c::fname(symbol, s4o_h, true); /* generate the <pou_name>.h file */\
         generate_c_pous_c::fname(symbol, s4o_c, false);/* generate the <pou_name>.c file */\
         /* add #include directives to the POUS.h and POUS.c files... */\
@@ -2331,6 +2330,7 @@ class generate_c_c: public iterator_visitor_c {
         pous_incl_s4o.print(".h\"\n");\
         pous_s4o.     print(".c\"\n");\
       } else {\
+        var_decl_list->accept(generate_c_datatypes);\
         generate_c_pous_c::fname(symbol, pous_incl_s4o, true);\
         generate_c_pous_c::fname(symbol, pous_s4o,      false);\
       }
