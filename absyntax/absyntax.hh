@@ -107,9 +107,9 @@ class symbol_c {
     virtual const char *absyntax_cname(void) {return "symbol_c";};
 
     /*
-     * Line number for the purposes of error checking.
-     * Annotated (inserted) by stage1_2
-     */
+     * Annotations produced during stage 1_2
+     */    
+    /* Line number for the purposes of error checking.  */
     int first_line;
     int first_column;
     const char *first_file;  /* filename referenced by first line/column */
@@ -170,6 +170,16 @@ class symbol_c {
      * They will be declared only inside the symbols that require them (have a look at absyntax.def)
      */
     typedef std::multimap<std::string, symbol_c *, nocasecmp_c> enumvalue_symtable_t;
+    
+    /*
+     * Annotations produced during stage 4
+     */
+    /* Since we support several distinct stage_4 implementations, having explicit entries for each
+     * possible use would quickly get out of hand.
+     * We therefore simply add a map, that each stage 4 may use for all its needs.
+     */
+    typedef std::map<std::string, symbol_c *> anotations_map_t;
+    anotations_map_t anotations_map;
     
 
   public:

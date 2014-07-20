@@ -58,9 +58,6 @@ class generate_c_typedecl_c: public generate_c_base_c {
       none_bd,
       subrangebasetype_bd,
       subrangetest_bd,
-      arrayderiveddeclaration_bd,
-      arraybasetype_bd,
-      arraybasetypeincl_bd,
       arraysubrange_bd
     } basetypedeclaration_t;
 
@@ -322,78 +319,63 @@ void *visit(enumerated_value_c *symbol) {}
 /*  identifier ':' array_spec_init */
 void *visit(array_type_declaration_c *symbol) {
   TRACE("array_type_declaration_c");
-  
   current_typedefinition = array_td;
   current_type_name = symbol->identifier;
 
-  array_is_derived = false;
-  current_basetypedeclaration = arrayderiveddeclaration_bd;
-  symbol->array_spec_init->accept(*this);
-  current_basetypedeclaration = none_bd;
-
-  if (array_is_derived)
+  int implicit_id_count = symbol->array_spec_init->anotations_map.count("generate_c_annotaton__implicit_type_id");
+  if (implicit_id_count  > 1) ERROR;
+  if (implicit_id_count == 1)
     s4o_incl.print("__DECLARE_DERIVED_TYPE(");
   else
     s4o_incl.print("__DECLARE_ARRAY_TYPE(");
   current_type_name->accept(*basedecl);
   s4o_incl.print(",");
-  current_basetypedeclaration = arraybasetypeincl_bd;
   symbol->array_spec_init->accept(*this);
-  current_basetypedeclaration = none_bd;
-  if (!array_is_derived) {
-    s4o_incl.print(",");
-    current_basetypedeclaration = arraysubrange_bd;
-    symbol->array_spec_init->accept(*this);
-    current_basetypedeclaration = none_bd;
-  }
   s4o_incl.print(")\n");
 
   current_type_name = NULL;
   current_typedefinition = none_td;
-
   return NULL;
 }
+
+
 
 /* array_specification [ASSIGN array_initialization] */
 /* array_initialization may be NULL ! */
 void *visit(array_spec_init_c *symbol) {
-  TRACE("array_spec_init_c");
-  
-  if (current_typedefinition == array_td) {
-    switch (current_basetypedeclaration) {
-      case arrayderiveddeclaration_bd:
-        array_is_derived = dynamic_cast<identifier_c *>(symbol->array_specification) != NULL;
-        break;
-      default:
-        if (array_is_derived)
-          symbol->array_specification->accept(*basedecl);
-        else
-          symbol->array_specification->accept(*this);
-        break;
-    }
+  TRACE("array_spec_init_c");  
+  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
+  if (implicit_id_count  > 1) ERROR;
+  if (implicit_id_count == 1) {
+      /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
+       * has already been defined. So, we simly print out the id of that C datatpe...
+       */
+    symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*basedecl);
+    return NULL;
   }
-  else {
-    symbol->array_specification->accept(*basedecl);
-  }
+//   if (current_typedefinition != array_td) {debug_c::print(symbol); ERROR;}
+  symbol->array_specification->accept(*this);
   return NULL;
 }
 
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *visit(array_specification_c *symbol) {
   TRACE("array_specification_c");
-  switch (current_basetypedeclaration) {
-    case arraybasetype_bd:
-      symbol->non_generic_type_name->accept(*this);
-      break;
-    case arraybasetypeincl_bd:
-      symbol->non_generic_type_name->accept(*basedecl);
-      break;
-    case arraysubrange_bd:
-      symbol->array_subrange_list->accept(*this);
-      break;
-    default:
-      break;
+  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
+  if (implicit_id_count  > 1) ERROR;
+  if (implicit_id_count == 1) {
+      /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
+       * has already been defined. So, we simly print out the id of that C datatpe...
+       */
+    symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*basedecl);
+    return NULL;
   }
+  // The 2nd and 3rd argument of a call to the __DECLARE_ARRAY_TYPE macro!
+  symbol->non_generic_type_name->accept(*this);
+  s4o_incl.print(",");
+  current_basetypedeclaration = arraysubrange_bd;
+  symbol->array_subrange_list->accept(*this);
+  current_basetypedeclaration = none_bd;
   return NULL;
 }
 
@@ -670,7 +652,7 @@ void *visit(ref_type_decl_c *symbol) {
   symbol->ref_type_name->accept(*basedecl);
   s4o_incl.print(", ");
   symbol->ref_spec_init->accept(*this);
-  s4o_incl.print(") ");
+  s4o_incl.print(")\n");
 
   current_type_name = NULL;
   current_typedefinition = none_td;

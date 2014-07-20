@@ -58,6 +58,8 @@ class initialization_analyzer_c: public null_visitor_c {
     }
 };
 
+
+// Does this class really need to derive from generate_c_typedecl_c ???
 class generate_c_array_initialization_c: public generate_c_typedecl_c {
 
   public:
@@ -202,11 +204,18 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
           array_default_value = type_initial_value_c::get(symbol->non_generic_type_name);
           if (array_default_value == NULL) ERROR;
           break;
-        case typedecl_am:
-          s4o.print("__");
-          symbol->non_generic_type_name->accept(*this);
-          symbol->array_subrange_list->accept(*this);
-          break;
+        case typedecl_am: {
+            int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
+            if (implicit_id_count  > 1) ERROR;
+            if (implicit_id_count == 1)
+                /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
+                 * has already been defined. So, we simly print out the id of that C datatpe...
+                 */
+              symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*this);
+            else
+              symbol->non_generic_type_name->accept(*this);
+            break;
+          }
         default:
           symbol->array_subrange_list->accept(*this);
           break;
@@ -224,10 +233,6 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
             STAGE4_ERROR(symbol, symbol, "The array containing this subrange has a total number of elements larger than the maximum currently supported (%llu).", 
                          std::numeric_limits< unsigned long long int >::max());
           array_size *= symbol->dimension;
-          break;
-        case typedecl_am:
-          s4o.print("_");
-          s4o.print(symbol->dimension);
           break;
         default:
           break;
@@ -1424,21 +1429,6 @@ void *visit(array_var_init_decl_c *symbol) {
   return NULL;
 }
 
-/* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
-void *visit(array_specification_c *symbol) {
-  s4o.print("__");
-  symbol->non_generic_type_name->accept(*this);
-  symbol->array_subrange_list->accept(*this);
-  return NULL;
-}
-
-/*  signed_integer DOTDOT signed_integer */
-//SYM_REF2(subrange_c, lower_limit, upper_limit)
-void *visit(subrange_c *symbol) {
-  s4o.print("_");
-  s4o.print(symbol->dimension);
-  return NULL;
-}
 
 /*  var1_list ':' initialized_structure */
 // SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)

@@ -754,26 +754,31 @@ void *generate_c_SFC_IL_ST_c::visit(statement_list_c *symbol) {
 /***********************************************************************/
 
 
-class generate_c_datatypes_c: public generate_c_typedecl_c {
-  public:
-    typedef enum {
-      none_im,
-      arrayname_im,
-      arraydeclaration_im
-    } inlinearray_mode_t;
+identifier_c *generate_unique_id(symbol_c *clone = NULL) {
+  static int counter = 0;
+  
+  counter++;
+  int   len = snprintf(NULL, 0, "__UNIQUE_ID_%d", counter);
+  char *str = (char *)malloc(len+1);
+  if (snprintf(str, len+1, "__UNIQUE_ID_%d", counter) < 0) ERROR;
+  
+  identifier_c *id = new identifier_c(str);
+  if (NULL == id) ERROR;
+  if (NULL != clone)
+    *(dynamic_cast<symbol_c *>(id)) = *(dynamic_cast<symbol_c *>(clone));
+  return id;
+}
 
+
+
+class generate_c_datatypes_c: public iterator_visitor_c {
   private:
-    std::map<std::string, int> inline_array_defined;
-    std::string current_array_name;
-    inlinearray_mode_t current_mode;
-
+    generate_c_typedecl_c generate_c_typedecl;
   public:
     generate_c_datatypes_c(stage4out_c *s4o_incl_ptr)
-      : generate_c_typedecl_c(s4o_incl_ptr) {
-      current_mode = none_im;
+      : generate_c_typedecl(s4o_incl_ptr) {
     };
     virtual ~generate_c_datatypes_c(void) {
-      inline_array_defined.clear(); // Not really necessary...
     }
 
     /*************************/
@@ -782,20 +787,6 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     /*******************************************/
     /* B 1.1 - Letters, digits and identifiers */
     /*******************************************/
-    void *visit(identifier_c *symbol) {
-      switch (current_mode) {
-        case arrayname_im:
-          current_array_name += symbol->value;
-          break;
-        case arraydeclaration_im:
-          s4o_incl.print(symbol->value);
-          break;
-        default:
-          return generate_c_base_c::visit(symbol);
-          break;
-      }
-      return NULL;
-    }
 
     /**********************/
     /* B.1.3 - Data types */
@@ -803,385 +794,64 @@ class generate_c_datatypes_c: public generate_c_typedecl_c {
     /***********************************/
     /* B 1.3.1 - Elementary Data Types */
     /***********************************/
-
-    #define HANDLE_ELEMENTARY_DATA_TYPE(datatype_symbol, datatype_name)\
-    void *visit(datatype_symbol *symbol) {\
-      switch (current_mode) {\
-        case arrayname_im:\
-          current_array_name += datatype_name;\
-          break;\
-        case arraydeclaration_im:\
-          s4o_incl.print(datatype_name);\
-          break;\
-        default:\
-          return generate_c_base_c::visit(symbol);\
-          break;\
-      }\
-      return NULL;\
-    }
-
-    HANDLE_ELEMENTARY_DATA_TYPE(time_type_name_c, "TIME")
-    HANDLE_ELEMENTARY_DATA_TYPE(bool_type_name_c, "BOOL")
-    HANDLE_ELEMENTARY_DATA_TYPE(sint_type_name_c, "SINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(int_type_name_c, "INT")
-    HANDLE_ELEMENTARY_DATA_TYPE(dint_type_name_c, "DINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(lint_type_name_c, "LINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(usint_type_name_c, "USINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(uint_type_name_c, "UINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(udint_type_name_c, "UDINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(ulint_type_name_c, "ULINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(real_type_name_c, "REAL")
-    HANDLE_ELEMENTARY_DATA_TYPE(lreal_type_name_c, "LREAL")
-    HANDLE_ELEMENTARY_DATA_TYPE(date_type_name_c, "DATE")
-    HANDLE_ELEMENTARY_DATA_TYPE(tod_type_name_c, "TOD")
-    HANDLE_ELEMENTARY_DATA_TYPE(dt_type_name_c, "DT")
-    HANDLE_ELEMENTARY_DATA_TYPE(byte_type_name_c, "BYTE")
-    HANDLE_ELEMENTARY_DATA_TYPE(word_type_name_c, "WORD")
-    HANDLE_ELEMENTARY_DATA_TYPE(dword_type_name_c, "DWORD")
-    HANDLE_ELEMENTARY_DATA_TYPE(lword_type_name_c, "LWORD")
-    HANDLE_ELEMENTARY_DATA_TYPE(string_type_name_c, "STRING")
-    HANDLE_ELEMENTARY_DATA_TYPE(wstring_type_name_c, "WSTRING")
-
-    HANDLE_ELEMENTARY_DATA_TYPE(safetime_type_name_c, "TIME")
-    HANDLE_ELEMENTARY_DATA_TYPE(safebool_type_name_c, "BOOL")
-    HANDLE_ELEMENTARY_DATA_TYPE(safesint_type_name_c, "SINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(safeint_type_name_c, "INT")
-    HANDLE_ELEMENTARY_DATA_TYPE(safedint_type_name_c, "DINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(safelint_type_name_c, "LINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(safeusint_type_name_c, "USINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(safeuint_type_name_c, "UINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(safeudint_type_name_c, "UDINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(safeulint_type_name_c, "ULINT")
-    HANDLE_ELEMENTARY_DATA_TYPE(safereal_type_name_c, "REAL")
-    HANDLE_ELEMENTARY_DATA_TYPE(safelreal_type_name_c, "LREAL")
-    HANDLE_ELEMENTARY_DATA_TYPE(safedate_type_name_c, "DATE")
-    HANDLE_ELEMENTARY_DATA_TYPE(safetod_type_name_c, "TOD")
-    HANDLE_ELEMENTARY_DATA_TYPE(safedt_type_name_c, "DT")
-    HANDLE_ELEMENTARY_DATA_TYPE(safebyte_type_name_c, "BYTE")
-    HANDLE_ELEMENTARY_DATA_TYPE(safeword_type_name_c, "WORD")
-    HANDLE_ELEMENTARY_DATA_TYPE(safedword_type_name_c, "DWORD")
-    HANDLE_ELEMENTARY_DATA_TYPE(safelword_type_name_c, "LWORD")
-    HANDLE_ELEMENTARY_DATA_TYPE(safestring_type_name_c, "STRING")
-    HANDLE_ELEMENTARY_DATA_TYPE(safewstring_type_name_c, "WSTRING")
-
     /***********************************/
     /* B 1.3.2 - Generic Data Types    */
     /***********************************/
-
-    /*  structure_type_name ':' structure_specification */
-    //SYM_REF2(structure_type_declaration_c, structure_type_name, structure_specification)
-    void *visit(structure_type_declaration_c *symbol) {
-      current_mode = arraydeclaration_im;
-      symbol->structure_specification->accept(*this);
-      current_mode = arrayname_im;
-      generate_c_typedecl_c::visit(symbol);
-      current_mode = none_im;
-      return NULL;
-    }
-
-    /* helper symbol for structure_declaration */
-    /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
-    /* structure_element_declaration_list structure_element_declaration ';' */
-    //SYM_LIST(structure_element_declaration_list_c)
-    void *visit(structure_element_declaration_list_c *symbol) {
-      switch (current_mode) {
-        case arraydeclaration_im:
-          iterator_visitor_c::visit(symbol);
-          break;
-        default:
-          generate_c_typedecl_c::visit(symbol);
-          break;
-      }
-      return NULL;
-    }
-
-    /*  structure_element_name ':' spec_init */
-    //SYM_REF2(structure_element_declaration_c, structure_element_name, spec_init)
-    void *visit(structure_element_declaration_c *symbol) {
-      switch (current_mode) {
-        case arraydeclaration_im:
-          {
-            array_spec_init_c *spec_init = dynamic_cast<array_spec_init_c*>(symbol->spec_init);
-            if (spec_init != NULL) {
-              symbol->spec_init->accept(*this);
-            }
-          }
-          break;
-        default:
-          generate_c_typedecl_c::visit(symbol);
-          break;
-      }
-      return NULL;
-    }
 
     /******************************************/
     /* B 1.4.3 - Declaration & Initialization */
     /******************************************/
 
-    void *visit(input_declarations_c *symbol) {
-      symbol->input_declaration_list->accept(*this);
-      return NULL;
-    }
+    void *visit(edge_declaration_c           *symbol) {return NULL;}
+    void *visit(en_param_declaration_c       *symbol) {return NULL;}
+    void *visit(eno_param_declaration_c      *symbol) {return NULL;}
 
-    void *visit(edge_declaration_c *symbol) {
-      return NULL;
-    }
-
-    void *visit(en_param_declaration_c *symbol) {
-      return NULL;
-    }
-
-    void *visit(eno_param_declaration_c *symbol) {
-      return NULL;
-    }
-
-    void *visit(var1_init_decl_c *symbol) {
-      return NULL;
-    }
-
-    /*  var1_list ':' array_spec_init */
-    // SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)
-    void *visit(array_var_init_decl_c *symbol) {
-      current_mode = arraydeclaration_im;
-      symbol->array_spec_init->accept(*this);
-      current_mode = none_im;
-      return NULL;
-    }
+    void *visit(var1_init_decl_c             *symbol) {return NULL;}
 
     /* array_specification [ASSIGN array_initialization] */
     /* array_initialization may be NULL ! */
     void *visit(array_spec_init_c *symbol) {
-      switch (current_mode) {
-        case arraydeclaration_im:
-          {
-            array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
-            if (specification != NULL)
-              symbol->array_specification->accept(*this);
-          }
-          break;
-        case arrayname_im:
-          {
-            array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
-            if (specification != NULL)
-              symbol->array_specification->accept(*this);
-            identifier_c *name = dynamic_cast<identifier_c*>(symbol->array_specification);
-            if (name != NULL)
-              s4o_incl.print(name->value);
-          }
-          break;
-        default:
-          return generate_c_typedecl_c::visit(symbol);
-          break;
-      }
+      symbol->array_specification->accept(*this);
+      int implicit_id_count = symbol->array_specification->anotations_map.count("generate_c_annotaton__implicit_type_id");
+      if (implicit_id_count  > 1) ERROR;
+      if (implicit_id_count == 1)
+        symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = symbol->array_specification->anotations_map["generate_c_annotaton__implicit_type_id"];
       return NULL;
     }
 
     /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
     void *visit(array_specification_c *symbol) {
-      switch (current_mode) {
-        case arraydeclaration_im:
-          {
-            current_mode = arrayname_im;
-            std::map<std::string,int>::iterator definition;
-            current_array_name = "__";
-            symbol->non_generic_type_name->accept(*this);
-            symbol->array_subrange_list->accept(*this);
-            current_mode = arraydeclaration_im;
-
-            definition = inline_array_defined.find(current_array_name);
-            if (definition == inline_array_defined.end()) {
-              s4o_incl.print("__DECLARE_ARRAY_TYPE(");
-              s4o_incl.print(current_array_name);
-              s4o_incl.print(",");
-              symbol->non_generic_type_name->accept(*this);
-              s4o_incl.print(",");
-              symbol->array_subrange_list->accept(*this);
-              s4o_incl.print(")\n\n");
-
-              inline_array_defined[current_array_name] = 0; // insert an element, indicating this array type has been defined!
-            }
-          }
-          break;
-        case arrayname_im:
-          {
-              std::map<std::string,int>::iterator definition;
-              current_array_name = "__";
-              symbol->non_generic_type_name->accept(*this);
-              symbol->array_subrange_list->accept(*this);
-              s4o_incl.print(current_array_name);
-          }
-          break;
-        default:
-          return generate_c_typedecl_c::visit(symbol);
-          break;
-      }
+      identifier_c *id = generate_unique_id(symbol);
+      /* Warning: The following is dangerous... 
+       * We are asking the generate_c_typedecl_c visitor to visit a newly created array_type_declaration_c object
+       * that has not been through stage 3, and therefore does not have stage 3 annotations filled in.
+       * This will only work if generate_c_typedecl_c does ot depend on the stage 3 annotations!
+       */
+      array_spec_init_c        array_spec(symbol, NULL);
+      array_type_declaration_c array_decl(id, &array_spec);
+      array_decl.accept(generate_c_typedecl); // Must be done _before_ adding the annotation, due to the way generate_c_typedecl_c works
+      symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = id;
       return NULL;
     }
-
-    /*  signed_integer DOTDOT signed_integer */
-    //SYM_REF2(subrange_c, lower_limit, upper_limit)
-    void *visit(subrange_c *symbol) {
-      switch (current_mode) {
-        case arrayname_im:
-          current_array_name += "_";
-          {
-            std::stringstream ss;
-            ss << symbol->dimension;
-            current_array_name += ss.str();
-          }
-          break;
-        case arraydeclaration_im:
-          s4o_incl.print("[");
-          s4o_incl.print(symbol->dimension);
-          s4o_incl.print("]");
-        default:
-          generate_c_typedecl_c::visit(symbol);
-          break;
-      }
-      return NULL;
-    }
-
+    
     /*  var1_list ':' initialized_structure */
     // SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
-    void *visit(structured_var_init_decl_c *symbol) {
-      return NULL;
-    }
+    void *visit(structured_var_init_decl_c   *symbol) {return NULL;}
 
     /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
     /* structure_initialization -> may be NULL ! */
-    void *visit(fb_name_decl_c *symbol) {
-      return NULL;
-    }
-
-    /* VAR_OUTPUT [RETAIN | NON_RETAIN] var_init_decl_list END_VAR */
-    /* option -> may be NULL ! */
-    void *visit(output_declarations_c *symbol) {
-      symbol->var_init_decl_list->accept(*this);
-      return NULL;
-    }
-
-    /*  VAR_IN_OUT var_declaration_list END_VAR */
-    void *visit(input_output_declarations_c *symbol) {
-      symbol->var_declaration_list->accept(*this);
-      return NULL;
-    }
-
-    /*  var1_list ':' array_specification */
-    //SYM_REF2(array_var_declaration_c, var1_list, array_specification)
-    void *visit(array_var_declaration_c *symbol) {
-      array_specification_c *specification = dynamic_cast<array_specification_c*>(symbol->array_specification);
-      if (specification != NULL) {
-        current_mode = arraydeclaration_im;
-        symbol->array_specification->accept(*this);
-        current_mode = none_im;
-      }
-      return NULL;
-    }
+    void *visit(fb_name_decl_c               *symbol) {return NULL;}
 
     /*  var1_list ':' structure_type_name */
     //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
-    void *visit(structured_var_declaration_c *symbol) {
-      return NULL;
-    }
-
-    /* VAR [CONSTANT] var_init_decl_list END_VAR */
-    /* option -> may be NULL ! */
-    /* helper symbol for input_declarations */
-    void *visit(var_declarations_c *symbol) {
-      symbol->var_init_decl_list->accept(*this);
-      return NULL;
-    }
-
-    /*  VAR RETAIN var_init_decl_list END_VAR */
-    void *visit(retentive_var_declarations_c *symbol) {
-      symbol->var_init_decl_list->accept(*this);
-      return NULL;
-    }
-
-    /*  VAR [CONSTANT|RETAIN|NON_RETAIN] located_var_decl_list END_VAR */
-    /* option -> may be NULL ! */
-    //SYM_REF2(located_var_declarations_c, option, located_var_decl_list)
-    void *visit(located_var_declarations_c *symbol) {
-      symbol->located_var_decl_list->accept(*this);
-      return NULL;
-    }
-
-    /*  [variable_name] location ':' located_var_spec_init */
-    /* variable_name -> may be NULL ! */
-    //SYM_REF4(located_var_decl_c, variable_name, location, located_var_spec_init, unused)
-    void *visit(located_var_decl_c *symbol) {
-      array_spec_init_c* array_spec_init = dynamic_cast<array_spec_init_c*>(symbol->located_var_spec_init);
-      if (array_spec_init != NULL) {
-        current_mode = arraydeclaration_im;
-        symbol->located_var_spec_init->accept(*this);
-        current_mode = none_im;
-      }
-      return NULL;
-    }
-
-    /*| VAR_EXTERNAL [CONSTANT] external_declaration_list END_VAR */
-    /* option -> may be NULL ! */
-    //SYM_REF2(external_var_declarations_c, option, external_declaration_list)
-    void *visit(external_var_declarations_c *symbol) {
-      symbol->external_declaration_list->accept(*this);
-      return NULL;
-    }
-
-    /*  global_var_name ':' (simple_specification|subrange_specification|enumerated_specification|array_specification|prev_declared_structure_type_name|function_block_type_name */
-    //SYM_REF2(external_declaration_c, global_var_name, specification)
-    void *visit(external_declaration_c *symbol) {
-      array_specification_c* array_specification = dynamic_cast<array_specification_c*>(symbol->specification);
-      if (array_specification != NULL) {
-        current_mode = arraydeclaration_im;
-        symbol->specification->accept(*this);
-        current_mode = none_im;
-      }
-      return NULL;
-    }
-
-    /*| VAR_GLOBAL [CONSTANT|RETAIN] global_var_decl_list END_VAR */
-    /* option -> may be NULL ! */
-    // SYM_REF2(global_var_declarations_c, option, global_var_decl_list)
-    void *visit(global_var_declarations_c *symbol) {
-      symbol->global_var_decl_list->accept(*this);
-      return NULL;
-    }
-
-    /*| global_var_spec ':' [located_var_spec_init|function_block_type_name] */
-    /* type_specification ->may be NULL ! */
-    // SYM_REF2(global_var_decl_c, global_var_spec, type_specification)
-    void *visit(global_var_decl_c *symbol) {
-      array_spec_init_c* array_spec_init = dynamic_cast<array_spec_init_c*>(symbol->type_specification);
-      if (array_spec_init != NULL) {
-        current_mode = arraydeclaration_im;
-        symbol->type_specification->accept(*this);
-        current_mode = none_im;
-      }
-      return NULL;
-    }
-
-    void *visit(function_var_decls_c *symbol) {
-      symbol->decl_list->accept(*this);
-      return NULL;
-    }
-
-    /*****************************/
-    /* B 1.5.2 - Function Blocks */
-    /*****************************/
-
-    /*  VAR_TEMP temp_var_decl_list END_VAR */
-    void *visit(temp_var_decls_c *symbol) {
-      symbol->var_decl_list->accept(*this);
-      return NULL;
-    }
-
-    /*  VAR NON_RETAIN var_init_decl_list END_VAR */
-    void *visit(non_retentive_var_decls_c *symbol) {
-      symbol->var_decl_list->accept(*this);
-      return NULL;
-    }
+    void *visit(structured_var_declaration_c *symbol) {return NULL;}
 
 };
+
+
+
+
+
 
 
 
@@ -2485,15 +2155,17 @@ END_RESOURCE
 
 class generate_c_c: public iterator_visitor_c {
   protected:
-    stage4out_c &s4o;
-    stage4out_c pous_s4o;
-    stage4out_c pous_incl_s4o;
-    stage4out_c located_variables_s4o;
-    stage4out_c variables_s4o;
-    generate_c_datatypes_c generate_c_datatypes;
-    generate_c_pous_c generate_c_pous;
+    stage4out_c                      &s4o;
+    stage4out_c                  pous_s4o;
+    stage4out_c             pous_incl_s4o;
+    stage4out_c     located_variables_s4o;
+    stage4out_c             variables_s4o;
     
-    symbol_c *current_configuration;
+    generate_c_datatypes_c generate_c_datatypes;
+    generate_c_typedecl_c  generate_c_typedecl;
+    generate_c_pous_c      generate_c_pous;
+    
+    symbol_c   *current_configuration;
 
     const char *current_name;
     const char *current_builddir;
@@ -2509,7 +2181,8 @@ class generate_c_c: public iterator_visitor_c {
             pous_incl_s4o(builddir, "POUS", "h"),
             located_variables_s4o(builddir, "LOCATED_VARIABLES","h"),
             variables_s4o(builddir, "VARIABLES","csv"),
-            generate_c_datatypes(&pous_incl_s4o)
+            generate_c_datatypes(&pous_incl_s4o),
+            generate_c_typedecl (&pous_incl_s4o)
     {
       current_builddir = builddir;
       current_configuration = NULL;
@@ -2583,8 +2256,14 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.3.3 - Derived data types */
 /********************************/
     /*  TYPE type_declaration_list END_TYPE */
-    void *visit(data_type_declaration_c *symbol) {
-      symbol->accept(generate_c_datatypes);
+//   void *visit(data_type_declaration_c *symbol)  // handled by iterator_visitor_c
+
+    /* helper symbol for data_type_declaration */
+    void *visit(type_declaration_list_c *symbol) {
+      for(int i = 0; i < symbol->n; i++) {
+        symbol->elements[i]->accept(generate_c_datatypes);
+        symbol->elements[i]->accept(generate_c_typedecl);
+      }
       return NULL;
     }
 
