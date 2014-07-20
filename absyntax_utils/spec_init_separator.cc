@@ -134,6 +134,19 @@ void *spec_init_sperator_c::visit(array_spec_init_c *symbol) {
   return NULL;
 }
 
+/* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+/* NOTE: this symbol may be used directly in implictly defined variables in VAR_TEMP!! 
+ *       so we must consider it here too!
+ */
+void *spec_init_sperator_c::visit(array_specification_c *symbol) {
+  TRACE("spec_init_sperator_c::array_spec_init_c");
+  switch (search_what) {
+    case search_spec: return symbol;
+    case search_init: return NULL;
+  }
+  return NULL;
+}
+
 /* enumerated_specification ASSIGN enumerated_value */
 void *spec_init_sperator_c::visit(enumerated_spec_init_c *symbol) {
   TRACE("spec_init_sperator_c::enumerated_spec_init_c");

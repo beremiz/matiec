@@ -85,6 +85,9 @@ class spec_init_sperator_c: public null_visitor_c {
   /* array_initialization may be NULL ! */
   void *visit(array_spec_init_c *symbol);
   
+  /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+  void *visit(array_specification_c *symbol);
+
   /* enumerated_specification ASSIGN enumerated_value */
   void *visit(enumerated_spec_init_c *symbol);
   
