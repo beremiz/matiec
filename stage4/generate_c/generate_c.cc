@@ -754,13 +754,13 @@ void *generate_c_SFC_IL_ST_c::visit(statement_list_c *symbol) {
 /***********************************************************************/
 
 
-identifier_c *generate_unique_id(symbol_c *clone = NULL) {
+identifier_c *generate_unique_id(const char *prefix = "", symbol_c *clone = NULL) {
   static int counter = 0;
   
   counter++;
-  int   len = snprintf(NULL, 0, "__UNIQUE_ID_%d", counter);
+  int   len = snprintf(NULL, 0, "%s__UID_%d", prefix, counter); // UID -> Unique IDentifier
   char *str = (char *)malloc(len+1);
-  if (snprintf(str, len+1, "__UNIQUE_ID_%d", counter) < 0) ERROR;
+  if (snprintf(str, len+1,      "%s__UID_%d", prefix, counter) < 0) ERROR;
   
   identifier_c *id = new identifier_c(str);
   if (NULL == id) ERROR;
@@ -770,13 +770,34 @@ identifier_c *generate_unique_id(symbol_c *clone = NULL) {
 }
 
 
+identifier_c *generate_unique_id(symbol_c *prefix, symbol_c *clone = NULL) {
+  token_c *token = dynamic_cast<token_c *>(prefix);
+  //if (NULL == token) ERROR;
+  if (NULL == token)
+    return generate_unique_id("", clone);
+  return generate_unique_id(token->value, clone);
+}
 
+
+/* This class will generate a new datatype for each implicitly declared array datatype
+ * (i.e. arrays declared in a variable declaration, or a struct datatype declaration...)
+ * 
+ * e.g.:
+ *      VAR  a: ARRAY [1..3] OF INT; END_VAR   <---- ARRAY datatype is implicitly declared inside the variable declaration
+ *      TYPE STRUCT
+ *               a: ARRAY [1..3] OF INT;       <---- ARRAY datatype is implicitly declared inside the struct type declaration  
+ *               b: INT;
+ *            END_STRUCT
+ *      END_TYPE
+ */
 class generate_c_datatypes_c: public iterator_visitor_c {
   private:
     generate_c_typedecl_c generate_c_typedecl;
+    symbol_c *prefix;
   public:
     generate_c_datatypes_c(stage4out_c *s4o_incl_ptr)
       : generate_c_typedecl(s4o_incl_ptr) {
+        prefix = NULL;
     };
     virtual ~generate_c_datatypes_c(void) {
     }
@@ -784,24 +805,19 @@ class generate_c_datatypes_c: public iterator_visitor_c {
     /*************************/
     /* B.1 - Common elements */
     /*************************/
-    /*******************************************/
-    /* B 1.1 - Letters, digits and identifiers */
-    /*******************************************/
-
     /**********************/
     /* B.1.3 - Data types */
     /**********************/
-    /***********************************/
-    /* B 1.3.1 - Elementary Data Types */
-    /***********************************/
-    /***********************************/
-    /* B 1.3.2 - Generic Data Types    */
-    /***********************************/
+    /********************************/
+    /* B 1.3.3 - Derived data types */
+    /********************************/
+    /*  identifier ':' array_spec_init */
+    void *visit(array_type_declaration_c *symbol) {return NULL;} // This is not an implicitly defined array!
+
 
     /******************************************/
     /* B 1.4.3 - Declaration & Initialization */
     /******************************************/
-
     void *visit(edge_declaration_c           *symbol) {return NULL;}
     void *visit(en_param_declaration_c       *symbol) {return NULL;}
     void *visit(eno_param_declaration_c      *symbol) {return NULL;}
@@ -821,7 +837,7 @@ class generate_c_datatypes_c: public iterator_visitor_c {
 
     /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
     void *visit(array_specification_c *symbol) {
-      identifier_c *id = generate_unique_id(symbol);
+      identifier_c *id = generate_unique_id(prefix, symbol);
       /* Warning: The following is dangerous... 
        * We are asking the generate_c_typedecl_c visitor to visit a newly created array_type_declaration_c object
        * that has not been through stage 3, and therefore does not have stage 3 annotations filled in.
@@ -846,6 +862,33 @@ class generate_c_datatypes_c: public iterator_visitor_c {
     //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
     void *visit(structured_var_declaration_c *symbol) {return NULL;}
 
+    /***********************/
+    /* B 1.5.1 - Functions */
+    /***********************/      
+    void *visit(function_declaration_c *symbol) {
+      prefix = symbol->derived_function_name;
+      symbol->var_declarations_list->accept(*this);
+      prefix = NULL;
+      return NULL;
+    }
+    /*****************************/
+    /* B 1.5.2 - Function Blocks */
+    /*****************************/
+    void *visit(function_block_declaration_c *symbol) {
+      prefix = symbol->fblock_name;
+      symbol->var_declarations->accept(*this);
+      prefix = NULL;
+      return NULL;
+    }
+    /**********************/
+    /* B 1.5.3 - Programs */
+    /**********************/    
+    void *visit(program_declaration_c *symbol) {
+      prefix = symbol->program_type_name;
+      symbol->var_declarations->accept(*this);
+      prefix = NULL;
+      return NULL;
+    }
 };
 
 
@@ -2296,7 +2339,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.5.1 - Functions */
 /***********************/      
     void *visit(function_declaration_c *symbol) {
-      handle_pou(handle_function,symbol->derived_function_name, symbol->var_declarations_list)
+      handle_pou(handle_function,symbol->derived_function_name, symbol)
       return NULL;
     }
     
@@ -2304,7 +2347,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.5.2 - Function Blocks */
 /*****************************/
     void *visit(function_block_declaration_c *symbol) {
-      handle_pou(handle_function_block,symbol->fblock_name, symbol->var_declarations)
+      handle_pou(handle_function_block,symbol->fblock_name, symbol)
       return NULL;
     }
     
@@ -2312,7 +2355,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.5.3 - Programs */
 /**********************/    
     void *visit(program_declaration_c *symbol) {
-      handle_pou(handle_program,symbol->program_type_name, symbol->var_declarations)
+      handle_pou(handle_program,symbol->program_type_name, symbol)
       return NULL;
     }
     
