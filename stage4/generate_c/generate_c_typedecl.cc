@@ -629,6 +629,15 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 /* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
 // SYM_REF1(ref_spec_c, type_name)
 void *visit(ref_spec_c *symbol) {
+  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
+  if (implicit_id_count  > 1) ERROR;
+  if (implicit_id_count == 1) {
+      /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
+       * has already been defined. So, we simly print out the id of that C datatpe...
+       */
+    symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*basedecl);
+    return NULL;
+  }
   return symbol->type_name->accept(*this);
 }
 
@@ -637,6 +646,15 @@ void *visit(ref_spec_c *symbol) {
 /* NOTE: ref_initialization may be NULL!! */
 // SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
 void *visit(ref_spec_init_c *symbol) {
+  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
+  if (implicit_id_count  > 1) ERROR;
+  if (implicit_id_count == 1) {
+      /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
+       * has already been defined. So, we simly print out the id of that C datatpe...
+       */
+    symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*basedecl);
+    return NULL;
+  }
   return symbol->ref_spec->accept(*this);
 }
 

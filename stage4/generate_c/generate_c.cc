@@ -781,6 +781,9 @@ identifier_c *generate_unique_id(symbol_c *prefix, symbol_c *clone = NULL) {
 
 /* This class will generate a new datatype for each implicitly declared array datatype
  * (i.e. arrays declared in a variable declaration, or a struct datatype declaration...)
+ * It will do the same for implicitly declared RFE_TO datatypes.
+ * 
+ * The class will be called once for each POU declaration, and once for each derived datatype declaration.
  * 
  * e.g.:
  *      VAR  a: ARRAY [1..3] OF INT; END_VAR   <---- ARRAY datatype is implicitly declared inside the variable declaration
@@ -814,6 +817,36 @@ class generate_c_datatypes_c: public iterator_visitor_c {
     /*  identifier ':' array_spec_init */
     void *visit(array_type_declaration_c *symbol) {return NULL;} // This is not an implicitly defined array!
 
+    /* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
+    void *visit(ref_spec_c *symbol) {
+      identifier_c *id = generate_unique_id(prefix, symbol);
+      /* Warning: The following is dangerous... 
+       * We are asking the generate_c_typedecl_c visitor to visit a newly created ref_spec_init_c object
+       * that has not been through stage 3, and therefore does not have stage 3 annotations filled in.
+       * This will only work if generate_c_typedecl_c does ot depend on the stage 3 annotations!
+       */
+      ref_spec_init_c   ref_spec(symbol, NULL);
+      ref_type_decl_c   ref_decl(id, &ref_spec);
+      ref_decl.accept(generate_c_typedecl); // Must be done _before_ adding the annotation, due to the way generate_c_typedecl_c works
+      symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = id;
+      return NULL;
+    }
+
+    /* For the moment, we do not support initialising reference data types */
+    /* ref_spec_init: ref_spec [ ASSIGN ref_initialization ] */ 
+    /* NOTE: ref_initialization may be NULL!! */
+    // SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
+    void *visit(ref_spec_init_c *symbol) {
+      symbol->ref_spec->accept(*this);
+      int implicit_id_count = symbol->ref_spec->anotations_map.count("generate_c_annotaton__implicit_type_id");
+      if (implicit_id_count  > 1) ERROR;
+      if (implicit_id_count == 1)
+        symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = symbol->ref_spec->anotations_map["generate_c_annotaton__implicit_type_id"];
+      return NULL;
+    }
+
+    /* ref_type_decl: identifier ':' ref_spec_init */
+    void *visit(ref_type_decl_c *symbol) {return NULL;} // This is not an implicitly defined REF_TO!
 
     /******************************************/
     /* B 1.4.3 - Declaration & Initialization */
@@ -821,8 +854,6 @@ class generate_c_datatypes_c: public iterator_visitor_c {
     void *visit(edge_declaration_c           *symbol) {return NULL;}
     void *visit(en_param_declaration_c       *symbol) {return NULL;}
     void *visit(eno_param_declaration_c      *symbol) {return NULL;}
-
-    void *visit(var1_init_decl_c             *symbol) {return NULL;}
 
     /* array_specification [ASSIGN array_initialization] */
     /* array_initialization may be NULL ! */
@@ -861,6 +892,7 @@ class generate_c_datatypes_c: public iterator_visitor_c {
     /*  var1_list ':' structure_type_name */
     //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
     void *visit(structured_var_declaration_c *symbol) {return NULL;}
+
 
     /***********************/
     /* B 1.5.1 - Functions */
