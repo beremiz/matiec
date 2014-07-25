@@ -2296,7 +2296,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 0 - Programming Model */
 /***************************/
     void *visit(library_c *symbol) {
-      pous_incl_s4o.print("#ifndef __POUS_H\n#define __POUS_H\n\n#include \"accessor.h\"\n\n");
+      pous_incl_s4o.print("#ifndef __POUS_H\n#define __POUS_H\n\n#include \"accessor.h\"\n#include \"iec_std_lib.h\"\n\n");
 
       for(int i = 0; i < symbol->n; i++) {
         symbol->elements[i]->accept(*this);
