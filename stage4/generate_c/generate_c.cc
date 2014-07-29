@@ -2345,24 +2345,29 @@ class generate_c_c: public iterator_visitor_c {
 /**************************************/
 /* B.1.5 - Program organization units */
 /**************************************/
-#define handle_pou(fname,pname,var_decl_list) \
+#define handle_pou(fname,pname) \
       if (!allow_output) return NULL;\
       if (generate_pou_filepairs__) {\
-        stage4out_c s4o_c(current_builddir, get_datatype_info_c::get_id_str(pname), "c");\
-        stage4out_c s4o_h(current_builddir, get_datatype_info_c::get_id_str(pname), "h");\
+	const char *pou_name = get_datatype_info_c::get_id_str(pname);\
+        stage4out_c s4o_c(current_builddir, pou_name, "c");\
+        stage4out_c s4o_h(current_builddir, pou_name, "h");\
+        s4o_c.print("#include \""); s4o_c.print(pou_name); s4o_c.print(".h\"\n");\
+        s4o_h.print("#ifndef __");  s4o_h.print(pou_name); s4o_h.print("_H\n");\
+        s4o_h.print("#define __");  s4o_h.print(pou_name); s4o_h.print("_H\n");\
         generate_c_datatypes_c generate_c_datatypes__(&s4o_h);\
-        var_decl_list->accept(generate_c_datatypes__);\
+        symbol->accept(generate_c_datatypes__); /* generate implicitly delcared datatypes (arrays and ref_to) */\
         generate_c_pous_c::fname(symbol, s4o_h, true); /* generate the <pou_name>.h file */\
         generate_c_pous_c::fname(symbol, s4o_c, false);/* generate the <pou_name>.c file */\
+        s4o_h.print("#endif /* __");  s4o_h.print(pou_name); s4o_h.print("_H */\n");\
         /* add #include directives to the POUS.h and POUS.c files... */\
         pous_incl_s4o.print("#include \"");\
         pous_s4o.     print("#include \"");\
-        pous_incl_s4o.print(get_datatype_info_c::get_id_str(pname));\
-        pous_s4o.     print(get_datatype_info_c::get_id_str(pname));\
+        pous_incl_s4o.print(pou_name);\
+        pous_s4o.     print(pou_name);\
         pous_incl_s4o.print(".h\"\n");\
         pous_s4o.     print(".c\"\n");\
       } else {\
-        var_decl_list->accept(generate_c_datatypes);\
+        symbol->accept(generate_c_datatypes);\
         generate_c_pous_c::fname(symbol, pous_incl_s4o, true);\
         generate_c_pous_c::fname(symbol, pous_s4o,      false);\
       }
@@ -2371,7 +2376,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.5.1 - Functions */
 /***********************/      
     void *visit(function_declaration_c *symbol) {
-      handle_pou(handle_function,symbol->derived_function_name, symbol)
+      handle_pou(handle_function,symbol->derived_function_name)
       return NULL;
     }
     
@@ -2379,7 +2384,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.5.2 - Function Blocks */
 /*****************************/
     void *visit(function_block_declaration_c *symbol) {
-      handle_pou(handle_function_block,symbol->fblock_name, symbol)
+      handle_pou(handle_function_block,symbol->fblock_name)
       return NULL;
     }
     
@@ -2387,7 +2392,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.5.3 - Programs */
 /**********************/    
     void *visit(program_declaration_c *symbol) {
-      handle_pou(handle_program,symbol->program_type_name, symbol)
+      handle_pou(handle_program,symbol->program_type_name)
       return NULL;
     }
     
