@@ -1412,7 +1412,10 @@ void *narrow_candidate_datatypes_c::narrow_binary_expression(const struct widen_
 				l_expr->datatype = l_type;
 				r_expr->datatype = r_type;
 				count ++;
-			} else if ((l_type == r_type) && get_datatype_info_c::is_enumerated(l_type) && get_datatype_info_c::is_BOOL_compatible(symbol->datatype)) {
+			} else if (   /* handle the special case of enumerations */
+			              (get_datatype_info_c::is_BOOL_compatible(symbol->datatype) && get_datatype_info_c::is_enumerated(l_type) && (l_type == r_type))
+			              /* handle the special case of comparison between REF_TO datatypes */
+			           || (get_datatype_info_c::is_BOOL_compatible(symbol->datatype) && get_datatype_info_c::is_ref_to    (l_type) && get_datatype_info_c::is_type_equal(l_type, r_type))) {
 				if (NULL != deprecated_operation)  *deprecated_operation = false;
 				l_expr->datatype = l_type;
 				r_expr->datatype = r_type;

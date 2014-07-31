@@ -94,6 +94,12 @@ class search_base_type_c: public null_visitor_c {
   /*********************/
   /* B 1.2 - Constants */
   /*********************/
+  /*********************************/
+  /* B 1.2.XX - Reference Literals */
+  /*********************************/
+  /* defined in IEC 61131-3 v3 - Basically the 'NULL' keyword! */
+    void *visit(ref_value_null_literal_c *symbol);
+    
   /******************************/
   /* B 1.2.1 - Numeric Literals */
   /******************************/

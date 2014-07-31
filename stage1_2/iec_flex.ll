@@ -1251,8 +1251,9 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	/******************************************************/
 
 
-REF	{if (get_opt_ref_operator()) return REF;    else{REJECT;}}		/* Keyword in IEC 61131-3 v3 */
-REF_TO	{if (get_opt_ref_operator()) return REF_TO; else{REJECT;}}		/* Keyword in IEC 61131-3 v3 */
+REF	{if (get_opt_ref_operator()) return REF;        else{REJECT;}}		/* Keyword in IEC 61131-3 v3 */
+REF_TO	{if (get_opt_ref_operator()) return REF_TO;     else{REJECT;}}		/* Keyword in IEC 61131-3 v3 */
+NULL	{if (get_opt_ref_operator()) return NULL_token; else{REJECT;}}		/* Keyword in IEC 61131-3 v3 */
 
 EN	return EN;			/* Keyword */
 ENO	return ENO;			/* Keyword */

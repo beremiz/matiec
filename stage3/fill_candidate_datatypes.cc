@@ -662,13 +662,15 @@ void *fill_candidate_datatypes_c::handle_binary_expression(const struct widen_en
 
 /* handle the two equality comparison operations, i.e. = (euqal) and != (not equal) */
 /* This function is special, as it will also allow enumeration data types to be compared, with the result being a BOOL data type!
- * This possibility os not expressed in the 'widening' tables, so we need to hard code it here
+ * It will also allow to REF_TO datatypes to be compared.
+ * These possibilities are not expressed in the 'widening' tables, so we need to hard code it here
  */
 void *fill_candidate_datatypes_c::handle_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr) {
 	handle_binary_expression(widen_table, symbol, l_expr, r_expr);
 	for(unsigned int i = 0; i < l_expr->candidate_datatypes.size(); i++)
 		for(unsigned int j = 0; j < r_expr->candidate_datatypes.size(); j++) {
-			if ((l_expr->candidate_datatypes[i] == r_expr->candidate_datatypes[j]) && get_datatype_info_c::is_enumerated(l_expr->candidate_datatypes[i]))
+			if (   (get_datatype_info_c::is_enumerated(l_expr->candidate_datatypes[i]) && (l_expr->candidate_datatypes[i] == r_expr->candidate_datatypes[j]))
+			    || (get_datatype_info_c::is_ref_to    (l_expr->candidate_datatypes[i]) && get_datatype_info_c::is_type_equal(l_expr->candidate_datatypes[i], r_expr->candidate_datatypes[j])))   
 				add_datatype_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name);
 		}
 	return NULL;
@@ -689,15 +691,48 @@ symbol_c *fill_candidate_datatypes_c::base_type(symbol_c *symbol) {
 /***************************/
 /* main entry function! */
 void *fill_candidate_datatypes_c::visit(library_c *symbol) {
-  symbol->accept(populate_globalenumvalue_symtable);
-  /* Now let the base class iterator_visitor_c iterate through all the library elements */
-  return iterator_visitor_c::visit(symbol);  
+	symbol->accept(populate_globalenumvalue_symtable);
+	/* Now let the base class iterator_visitor_c iterate through all the library elements */
+	return iterator_visitor_c::visit(symbol);  
 }
 
 
 /*********************/
 /* B 1.2 - Constants */
 /*********************/
+/*********************************/
+/* B 1.2.XX - Reference Literals */
+/*********************************/
+/* defined in IEC 61131-3 v3 - Basically the 'NULL' keyword! */
+void *fill_candidate_datatypes_c::visit(ref_value_null_literal_c *symbol) {
+	/* 'NULL' does not have any specific datatype. It is compatible with any reference, i.e. REF_TO <anything>
+	 * The fill_candidate_datatypes / narrow_candidate_datatypes algorithm would require us to add
+	 * as possible datatypes all the REF_TO <datatype>. To do this we would need to go through the list of all 
+	 * user declared datatypes, as well as all the elementary datatypes. This is easily done by using the
+	 * type_symtable symbol table declared in absyntax_utils.hh.
+	 * 
+	 *  for(int i=0; i<type_symtable.n; i++)  add_datatype_to_candidate_list(symbol, new ref_spec_c(type_symtable[i]));
+	 *  add_datatype_to_candidate_list(symbol, new ref_spec_c( ... SINT ...));
+	 *  add_datatype_to_candidate_list(symbol, new ref_spec_c( ...  INT ...));
+	 *  add_datatype_to_candidate_list(symbol, new ref_spec_c( ... LINT ...));
+	 *     ...
+	 * 
+	 * However, doing this for all NULL constants that may show up is probably a little too crazy, just for 
+	 * the 'pleasure' of following the standard fill/narrow algorithm.
+	 *
+	 * I have therefore opted to handle this as a special case: We use the ref_value_null_literal_c symbol itself as the NULL datatype!
+	 * This implies the following changes:
+	 *   - We change the get_datatype_info_c::is_type_equal() to take the NULL datatype into account
+	 *   - We change the get_datatype_info_c::is_ref_to()     to take the NULL datatype into account
+	 *   - We change the fill_candidate_datatypes_c::visit(assignment_statement_c) to make sure it uses the datatype of the lvalue 
+	 *            as the datatype of the assignment statement
+	 *   - We search_base_type_c::get_basetype_decl
+	 */
+	add_datatype_to_candidate_list(symbol, symbol);
+	return NULL;
+}
+
+
 /******************************/
 /* B 1.2.1 - Numeric Literals */
 /******************************/
@@ -2001,7 +2036,6 @@ void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 /*********************************/
 void *fill_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 	symbol_c *left_type, *right_type;
-
 	symbol->l_exp->accept(*this);
 	symbol->r_exp->accept(*this);
 	for (unsigned int i = 0; i < symbol->l_exp->candidate_datatypes.size(); i++) {
@@ -2009,7 +2043,7 @@ void *fill_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 			left_type = symbol->l_exp->candidate_datatypes[i];
 			right_type = symbol->r_exp->candidate_datatypes[j];
 			if (get_datatype_info_c::is_type_equal(left_type, right_type))
-				add_datatype_to_candidate_list(symbol, left_type);
+				add_datatype_to_candidate_list(symbol, left_type);  // NOTE: Must use left_type, as the right_type may be the 'NULL' reference! (see comment in visit(ref_value_null_literal_c)) */
 		}
 	}
 	if (debug) std::cout << ":= [" << symbol->l_exp->candidate_datatypes.size() << "," << symbol->r_exp->candidate_datatypes.size() << "] ==> "  << symbol->candidate_datatypes.size() << " result.\n";

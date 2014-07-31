@@ -248,9 +248,13 @@ bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_t
       (typeid(*first_type) == typeid(*second_type)))                 {return true;}
 
   /* ANY_DERIVED */
-  if (is_ref_to(first_type) && is_ref_to(second_type))
-      return is_type_equal(search_base_type_c::get_basetype_decl(get_ref_to(first_type )),
-                           search_base_type_c::get_basetype_decl(get_ref_to(second_type)));
+  if (is_ref_to(first_type) && is_ref_to(second_type)) {
+    /* if either of them is the constant 'NULL' then we consider them 'equal', as NULL is compatible to a REF_TO any datatype! */
+    if (typeid(* first_type) == typeid(ref_value_null_literal_c))    {return true;}  
+    if (typeid(*second_type) == typeid(ref_value_null_literal_c))    {return true;}
+    return is_type_equal(search_base_type_c::get_basetype_decl(get_ref_to(first_type )),
+                         search_base_type_c::get_basetype_decl(get_ref_to(second_type)));
+  }
 
   return (first_type == second_type);
 }
@@ -295,6 +299,7 @@ bool get_datatype_info_c::is_ref_to(symbol_c *type_symbol) {
   if (typeid(*type_decl) == typeid(ref_type_decl_c))                           {return true;}   /* identifier ':' ref_spec_init */
   if (typeid(*type_decl) == typeid(ref_spec_init_c))                           {return true;}   /* ref_spec [ ASSIGN ref_initialization ]; */
   if (typeid(*type_decl) == typeid(ref_spec_c))                                {return true;}   /* REF_TO (non_generic_type_name | function_block_type_name) */
+  if (typeid(*type_decl) == typeid(ref_value_null_literal_c))                  {return true;}   /* REF_TO (non_generic_type_name | function_block_type_name) */
   return false;
 }
 

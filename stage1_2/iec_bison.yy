@@ -414,9 +414,10 @@ typedef struct YYLTYPE {
 %type <leaf>	en_identifier
 %type <leaf>	eno_identifier
 
-/* Keyword in IEC 61131-3 v3 */
+/* Keywords in IEC 61131-3 v3 */
 %token	REF
 %token	REF_TO
+%token	NULL_token  /* cannot use simply 'NULL', as it conflicts with the NULL keyword in C++ */
 
 
 
@@ -444,6 +445,23 @@ typedef struct YYLTYPE {
 /*********************/
 %type <leaf>	constant
 %type <leaf>	non_int_or_real_constant
+
+/*********************************/
+/* B 1.2.XX - Reference Literals */
+/*********************************/
+/* NOTE: The following syntax was added by MJS in order to add support for the NULL keyword, defined in  IEC 61131-3 v3
+ *       In v3 expressions that reduce to a reference datatype (REF_TO) are handled explicitly in the syntax 
+ *       (e.g., any variable that is a of reference datatpe falls under the 'ref_name' rule), which means 
+ *       that we would need to keep track of which variables are declared as REF_TO. 
+ *       In order to reduce the changes to the current IEC 61131-3 v2 syntax, I have opted not to do this,
+ *       and simply let the ref_expressions (Ref_Assign, Ref_Compare) be interpreted as all other standard expressions 
+ *       in v2. However, ref_expressions allow the use of the 'NULL' constant, which is handled explicitly
+ *       in the ref_expressions syntax of v3.
+ *       To allow the use of the 'NULL' constant in this extended v2, I have opted to interpret this 'NULL' constant 
+ *       as a literal.
+ */
+%type  <leaf>	ref_value_null_literal  /* defined in IEC 61131-3 v3 - Basically the 'NULL' keyword! */
+
 
 /******************************/
 /* B 1.2.1 - Numeric Literals */
@@ -1777,6 +1795,7 @@ constant:
  * rules, is not defined in the spec!
  * We therefore replaced unsigned_integer as integer
  */
+| ref_value_null_literal /* defined in IEC 61131-3 v3. Basically the 'NULL' keyword! */
 ;
 
 
@@ -1808,6 +1827,16 @@ non_int_or_real_constant:
  */
 ;
 
+/*********************************/
+/* B 1.2.XX - Reference Literals */
+/*********************************/
+/* NOTE: The following syntax was added by MJS in order to add support for the NULL keyword, defined in  IEC 61131-3 v3
+ *       Please read the comment where the 'ref_value_null_literal' is declared as a <leaf> 
+ */
+/* defined in IEC 61131-3 v3 - Basically the 'NULL' keyword! */
+ref_value_null_literal: 
+  NULL_token	{$$ = new ref_value_null_literal_c(locloc(@$));}
+;
 
 /******************************/
 /* B 1.2.1 - Numeric Literals */

@@ -133,6 +133,12 @@ void *search_base_type_c::visit(identifier_c *type_name) {
 /*********************/
 /* B 1.2 - Constants */
 /*********************/
+/*********************************/
+/* B 1.2.XX - Reference Literals */
+/*********************************/
+/* defined in IEC 61131-3 v3 - Basically the 'NULL' keyword! */
+/* See the comment in fill_candidate_datatypes_c::visit(ref_value_null_literal_c) for reason why we use this symbol as a datatype! */
+void *search_base_type_c::visit(ref_value_null_literal_c *symbol) {return (void *)symbol;}
 
 /******************************/
 /* B 1.2.1 - Numeric Literals */

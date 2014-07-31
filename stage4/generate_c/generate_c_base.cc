@@ -303,6 +303,12 @@ class generate_c_base_c: public iterator_visitor_c {
 /*********************/
   /* originally empty... */
 
+/*********************************/
+/* B 1.2.XX - Reference Literals */
+/*********************************/
+/* defined in IEC 61131-3 v3 - Basically the 'NULL' keyword! */
+    void *visit(ref_value_null_literal_c *symbol) {s4o.print("NULL"); return NULL;}
+
 /******************************/
 /* B 1.2.1 - Numeric Literals */
 /******************************/

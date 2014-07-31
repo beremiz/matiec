@@ -258,6 +258,11 @@ void *visit(identifier_c *symbol) {return print_token(symbol);}
 /*********************/
 /* B 1.2 - Constants */
 /*********************/
+/*********************************/
+/* B 1.2.XX - Reference Literals */
+/*********************************/
+/* defined in IEC 61131-3 v3 - Basically the 'NULL' keyword! */
+void *visit(ref_value_null_literal_c *symbol)  {s4o.print("NULL"); return NULL;}
 
 /******************************/
 /* B 1.2.1 - Numeric Literals */
@@ -276,7 +281,7 @@ void *visit(bit_string_literal_c *symbol) {return print_literal(symbol->type, sy
 void *visit(boolean_literal_c *symbol)    {return print_literal(symbol->type, symbol->value);}
 
 /* helper class for boolean_literal_c */
-void *visit(boolean_true_c *symbol)       {s4o.print(/*"TRUE"*/"1"); return NULL;}
+void *visit(boolean_true_c *symbol)       {s4o.print(/*"TRUE" */"1"); return NULL;}
 void *visit(boolean_false_c *symbol)      {s4o.print(/*"FALSE"*/"0"); return NULL;}
 
 /*******************************/
