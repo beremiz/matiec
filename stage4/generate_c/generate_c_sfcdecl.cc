@@ -195,6 +195,12 @@ class generate_c_sfcdecl_c: protected generate_c_base_c {
           for(int i = 0; i < symbol->n; i++)
              symbol->elements[i]->accept(*this);
           {
+            // first fill up the this->variable_list variable!
+            wanted_sfcdeclaration = actioncount_sd;
+            for(int i = 0; i < symbol->n; i++)
+               symbol->elements[i]->accept(*this);
+            wanted_sfcdeclaration = actiondef_sd;
+            // Now do the defines for actions that reference a variable instead of an action block!
             std::list<VARIABLE>::iterator pt;
             for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
               s4o.print("#define ");
@@ -216,7 +222,14 @@ class generate_c_sfcdecl_c: protected generate_c_base_c {
           break;
         case actionundef_sd:
           s4o.print("// Actions undefinitions\n");
+          for(int i = 0; i < symbol->n; i++)
+            symbol->elements[i]->accept(*this);
           {
+            // first fill up the this->variable_list variable!
+            wanted_sfcdeclaration = actioncount_sd;
+            for(int i = 0; i < symbol->n; i++)
+               symbol->elements[i]->accept(*this);
+            wanted_sfcdeclaration = actionundef_sd;
             std::list<VARIABLE>::iterator pt;
             for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
               s4o.print("#undef ");
@@ -225,8 +238,6 @@ class generate_c_sfcdecl_c: protected generate_c_base_c {
               s4o.print("\n");
             }
           }
-          for(int i = 0; i < symbol->n; i++)
-            symbol->elements[i]->accept(*this);
           s4o.print("\n");
           break;
         default:
@@ -331,9 +342,8 @@ class generate_c_sfcdecl_c: protected generate_c_base_c {
     void *visit(action_association_c *symbol) {
       /* we try to find the variable instance declaration, to determine if symbol is variable... */
       symbol_c *var_decl = search_var_instance_decl->get_decl(symbol->action_name);
-
       if (var_decl != NULL) {
-    	std::list<VARIABLE>::iterator pt;
+        std::list<VARIABLE>::iterator pt;
         for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
           if (!compare_identifiers(pt->symbol, symbol->action_name))
             return NULL;

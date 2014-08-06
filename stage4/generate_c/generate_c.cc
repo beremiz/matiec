@@ -1214,16 +1214,12 @@ class generate_c_pous_c {
         /* (B.3) Generate private internal variables for SFC */
         sfcdecl = new generate_c_sfcdecl_c(&s4o, symbol, FB_FUNCTION_PARAM"->");
         sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::sfcinit_sd);
-        delete sfcdecl;
       
         s4o.indent_left();
         s4o.print(s4o.indent_spaces + "}\n\n");
-      }    
-      
-      if (!print_declaration) {
+
         /* (C) Function with FB body */
         /* (C.1) Step definitions */
-        sfcdecl = new generate_c_sfcdecl_c(&s4o, symbol, FB_FUNCTION_PARAM"->");
         sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::stepdef_sd);
       
         /* (C.2) Action definitions */
