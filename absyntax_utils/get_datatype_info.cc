@@ -238,11 +238,15 @@ symbol_c *get_datatype_info_c::get_id(symbol_c *datatype) {
 }
 
 
-/* Returns true if both datatypes are identicial.
- * WARING: When handling REF_TO datatypes, it may return 'true' even though
- *         the datatypes are not identicial. This occurs when at least one of the
- *         datatypes if a ref_to_any_c, which os equivalent to a (void *), and the
- *         other datatype is any REF_TO datatype (including a ref_to_any_c).
+/* Returns true if both datatypes are equivalent (not necessarily equal!).
+ * WARNING: May return true even though the datatypes are not the same/identicial!!!
+ *          This occurs when at least one of the datatypes is of a generic
+ *          datatype (or a REF_TO a generic datatype). 
+ *          (Generic dataypes: ANY, ANY_INT, ANY_NUM, ...)
+ * NOTE: Currently only the ANY generic datatype is implemented!
+ * NOTE: Currently stage1_2 only allows the use of the ANY keyword when in conjuntion with
+ *       the REF_TO keyword (i.e. REF_TO ANY), so when handling non REF_TO datatypes,
+ *       this function will currently only return true if the dataypes are identicial.
  */
 bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_type) {
   if (!is_type_valid( first_type))                                   {return false;}
