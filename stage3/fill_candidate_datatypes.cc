@@ -720,15 +720,10 @@ void *fill_candidate_datatypes_c::visit(ref_value_null_literal_c *symbol) {
 	 * However, doing this for all NULL constants that may show up is probably a little too crazy, just for 
 	 * the 'pleasure' of following the standard fill/narrow algorithm.
 	 *
-	 * I have therefore opted to handle this as a special case: We use the ref_value_null_literal_c symbol itself as the NULL datatype!
-	 * This implies the following changes:
-	 *   - We change the get_datatype_info_c::is_type_equal() to take the NULL datatype into account
-	 *   - We change the get_datatype_info_c::is_ref_to()     to take the NULL datatype into account
-	 *   - We change the fill_candidate_datatypes_c::visit(assignment_statement_c) to make sure it uses the datatype of the lvalue 
-	 *            as the datatype of the assignment statement
-	 *   - We search_base_type_c::get_basetype_decl
+	 * I have therefore opted to handle this as a special case:
+	 *     We use the ref_spec_c, pointing to a generic_type_any_c, as a pointer to ANY (basically, a void *)
 	 */
-	add_datatype_to_candidate_list(symbol, symbol);
+	add_datatype_to_candidate_list(symbol, new ref_spec_c(new generic_type_any_c()));
 	return NULL;
 }
 

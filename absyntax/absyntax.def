@@ -295,6 +295,26 @@ SYM_REF0(safewstring_type_name_c)
 /* B.1.3.2 - Generic data types */
 /********************************/
 
+/* ANY is currently only allowed when defining REF_TO ANY datatypes
+ * (equivalent to a (void *)). This is a non standard extension to the
+ * standard.
+ * Standard library function that use the generic datatypes (ANY_***) are
+ * currently handed as overloaded functions, and do not therefore require
+ * the use of the generic datatype keywords.
+ */
+SYM_REF0(generic_type_any_c)            // ANY
+/*
+SYM_REF0(generic_type_any_derived_c)    // ANY_DERIVED
+SYM_REF0(generic_type_any_elementary_c) // ANY_ELEMENTARY
+SYM_REF0(generic_type_any_magnitude_c)  // ANY_MAGNITUDE
+SYM_REF0(generic_type_any_num_c)        // ANY_NUM
+SYM_REF0(generic_type_any_real_c)       // ANY_REAL
+SYM_REF0(generic_type_any_int_c)        // ANY_INT
+SYM_REF0(generic_type_any_bit_c)        // ANY_BIT
+SYM_REF0(generic_type_any_string_c)     // ANY_STRING
+SYM_REF0(generic_type_any_date_c)       // ANY_DATE
+*/
+
 /********************************/
 /* B 1.3.3 - Derived data types */
 /********************************/

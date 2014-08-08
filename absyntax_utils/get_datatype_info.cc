@@ -238,27 +238,33 @@ symbol_c *get_datatype_info_c::get_id(symbol_c *datatype) {
 }
 
 
+/* Returns true if both datatypes are identicial.
+ * WARING: When handling REF_TO datatypes, it may return 'true' even though
+ *         the datatypes are not identicial. This occurs when at least one of the
+ *         datatypes if a ref_to_any_c, which os equivalent to a (void *), and the
+ *         other datatype is any REF_TO datatype (including a ref_to_any_c).
+ */
 bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_type) {
-  if ((NULL == first_type) || (NULL == second_type))                 {return false;}
-  if (typeid(* first_type) == typeid(invalid_type_name_c))           {return false;}
-  if (typeid(*second_type) == typeid(invalid_type_name_c))           {return false;}
-    
+  if (!is_type_valid( first_type))                                   {return false;}
+  if (!is_type_valid(second_type))                                   {return false;}
+
+  /* GENERIC DATATYPES */
+  /* For the moment, we only support the ANY generic datatype! */
+  if ((is_ANY_generic_type( first_type)) ||
+      (is_ANY_generic_type(second_type)))                            {return true;}
+      
   /* ANY_ELEMENTARY */
   if ((is_ANY_ELEMENTARY(first_type)) &&
       (typeid(*first_type) == typeid(*second_type)))                 {return true;}
 
   /* ANY_DERIVED */
   if (is_ref_to(first_type) && is_ref_to(second_type)) {
-    /* if either of them is the constant 'NULL' then we consider them 'equal', as NULL is compatible to a REF_TO any datatype! */
-    if (typeid(* first_type) == typeid(ref_value_null_literal_c))    {return true;}  
-    if (typeid(*second_type) == typeid(ref_value_null_literal_c))    {return true;}
     return is_type_equal(search_base_type_c::get_basetype_decl(get_ref_to(first_type )),
                          search_base_type_c::get_basetype_decl(get_ref_to(second_type)));
   }
 
   return (first_type == second_type);
 }
-
 
 
 bool get_datatype_info_c::is_type_valid(symbol_c *type) {
@@ -299,7 +305,6 @@ bool get_datatype_info_c::is_ref_to(symbol_c *type_symbol) {
   if (typeid(*type_decl) == typeid(ref_type_decl_c))                           {return true;}   /* identifier ':' ref_spec_init */
   if (typeid(*type_decl) == typeid(ref_spec_init_c))                           {return true;}   /* ref_spec [ ASSIGN ref_initialization ]; */
   if (typeid(*type_decl) == typeid(ref_spec_c))                                {return true;}   /* REF_TO (non_generic_type_name | function_block_type_name) */
-  if (typeid(*type_decl) == typeid(ref_value_null_literal_c))                  {return true;}   /* REF_TO (non_generic_type_name | function_block_type_name) */
   return false;
 }
 
@@ -404,6 +409,12 @@ bool get_datatype_info_c::is_structure(symbol_c *type_symbol) {
 
 
 
+bool get_datatype_info_c::is_ANY_generic_type(symbol_c *type_symbol) {
+  symbol_c *type_decl = search_base_type_c::get_basetype_decl(type_symbol);
+  if (NULL == type_decl)                                             {return false;}  
+  if (typeid(*type_decl) == typeid(generic_type_any_c))              {return true;}   /*  The ANY keyword! */
+  return false;
+}
 
 
 bool get_datatype_info_c::is_ANY_ELEMENTARY(symbol_c *type_symbol) {

@@ -434,6 +434,10 @@ void *visit(safedword_type_name_c *symbol)   {s4o.print("SAFEDWORD");   return N
 void *visit(safestring_type_name_c *symbol)  {s4o.print("SAFESTRING");  return NULL;}
 void *visit(safewstring_type_name_c *symbol) {s4o.print("SAFEWSTRING"); return NULL;}
 
+/********************************/
+/* B.1.3.2 - Generic data types */
+/********************************/
+void *visit(generic_type_any_c      *symbol) {s4o.print("ANY");         return NULL;}
 
 /********************************/
 /* B 1.3.3 - Derived data types */

@@ -62,6 +62,12 @@ class get_datatype_info_c {
 
     static symbol_c *get_ref_to                    (symbol_c *type_symbol);    // Defined in IEC 61131-3 v3 (returns the type that is being referenced/pointed to)        
     
+    /* Returns true if both datatypes are identicial.
+     * WARING: When handling REF_TO datatypes, it may return 'true' even though
+     *         the datatypes are not identicial. This occurs when at least one of the
+     *         datatypes if a ref_to_any_c, which os equivalent to a (void *), and the
+     *         other datatype is any REF_TO datatype (including a ref_to_any_c).
+     */
     static bool is_type_equal(symbol_c *first_type, symbol_c *second_type);
     static bool is_type_valid(symbol_c *type);
 
@@ -77,10 +83,14 @@ class get_datatype_info_c {
     static bool is_ANY_REAL_literal(symbol_c *type_symbol); /* Can't we do away with this?? */
     static bool is_ANY_INT_literal (symbol_c *type_symbol); /* Can't we do away with this?? */
 
+    static bool is_ANY_generic_type                (symbol_c *type_symbol);
+
+    //static bool is_ANY_ELEMENTARY_generic_type   (symbol_c *type_symbol);
     static bool is_ANY_ELEMENTARY                  (symbol_c *type_symbol);
     static bool is_ANY_SAFEELEMENTARY              (symbol_c *type_symbol);
     static bool is_ANY_ELEMENTARY_compatible       (symbol_c *type_symbol);
 
+    //static bool is_ANY_MAGNITUDE_generic_type    (symbol_c *type_symbol);
     static bool is_ANY_MAGNITUDE                   (symbol_c *type_symbol);
     static bool is_ANY_SAFEMAGNITUDE               (symbol_c *type_symbol);
     static bool is_ANY_MAGNITUDE_compatible        (symbol_c *type_symbol);
@@ -89,6 +99,7 @@ class get_datatype_info_c {
     static bool is_ANY_signed_SAFEMAGNITUDE        (symbol_c *type_symbol);
     static bool is_ANY_signed_MAGNITUDE_compatible (symbol_c *type_symbol);
 
+    //static bool is_ANY_NUM_generic_type          (symbol_c *type_symbol);
     static bool is_ANY_NUM                         (symbol_c *type_symbol);
     static bool is_ANY_SAFENUM                     (symbol_c *type_symbol);
     static bool is_ANY_NUM_compatible              (symbol_c *type_symbol);
@@ -97,6 +108,7 @@ class get_datatype_info_c {
     static bool is_ANY_signed_SAFENUM              (symbol_c *type_symbol);
     static bool is_ANY_signed_NUM_compatible       (symbol_c *type_symbol);
 
+    //static bool is_ANY_INT_generic_type          (symbol_c *type_symbol);
     static bool is_ANY_INT                         (symbol_c *type_symbol);
     static bool is_ANY_SAFEINT                     (symbol_c *type_symbol);
     static bool is_ANY_INT_compatible              (symbol_c *type_symbol);
@@ -109,6 +121,7 @@ class get_datatype_info_c {
     static bool is_ANY_unsigned_SAFEINT            (symbol_c *type_symbol);
     static bool is_ANY_unsigned_INT_compatible     (symbol_c *type_symbol);
 
+    //static bool is_ANY_REAL_generic_type         (symbol_c *type_symbol);
     static bool is_ANY_REAL                        (symbol_c *type_symbol);
     static bool is_ANY_SAFEREAL                    (symbol_c *type_symbol);
     static bool is_ANY_REAL_compatible             (symbol_c *type_symbol);
@@ -121,10 +134,12 @@ class get_datatype_info_c {
     static bool is_SAFEBOOL                        (symbol_c *type_symbol);
     static bool is_BOOL_compatible                 (symbol_c *type_symbol);
 
+    //static bool is_ANY_BIT_generic_type          (symbol_c *type_symbol);
     static bool is_ANY_BIT                         (symbol_c *type_symbol);
     static bool is_ANY_SAFEBIT                     (symbol_c *type_symbol);
     static bool is_ANY_BIT_compatible              (symbol_c *type_symbol);
 
+    //static bool is_ANY_DATE_generic_type         (symbol_c *type_symbol);
     static bool is_ANY_DATE                        (symbol_c *type_symbol);
     static bool is_ANY_SAFEDATE                    (symbol_c *type_symbol);
     static bool is_ANY_DATE_compatible             (symbol_c *type_symbol);
@@ -133,6 +148,7 @@ class get_datatype_info_c {
     static bool is_SAFETIME                        (symbol_c *type_symbol);
     static bool is_TIME_compatible                 (symbol_c *type_symbol);
 
+    //static bool is_ANY_STRING_generic_type       (symbol_c *type_symbol);
     static bool is_ANY_STRING                      (symbol_c *type_symbol);
     static bool is_ANY_SAFESTRING                  (symbol_c *type_symbol);
     static bool is_ANY_STRING_compatible           (symbol_c *type_symbol);
