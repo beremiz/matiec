@@ -120,9 +120,10 @@ static void printusage(const char *cmd) {
       /* Part 1: Concepts and Function Blocks,              */
       /* Version 1.0 is Official Release                    */
       /******************************************************/
-  printf(" -s : allow use of safe extensions (e.g. SAFExxx data types))\n");
-  printf(" -n : allow use of nested comments (an IEC 61131-3 v3 feature)\n");
-  printf(" -r : allow use of REF() operator  (an IEC 61131-3 v3 feature)\n");
+  printf(" -s : allow use of safe datatypes (SAFEBOOL, etc.)   (defined in PLCOpen Safety)\n");
+  printf(" -n : allow use of nested comments                   (an IEC 61131-3 v3 feature)\n");
+  printf(" -r : allow use of references (REF_TO, REF, NULL)    (an IEC 61131-3 v3 feature)\n");
+  printf(" -R : allow use of REF_TO ANY datatypes (implies -r) (a non-standard extension!)\n");
   printf(" -c : create conversion functions for enumerated data types\n");
   printf(" -O : options for output (code generation) stage. Available options for %s are...\n", cmd);
   stage4_print_options();
@@ -147,41 +148,39 @@ int main(int argc, char **argv) {
   stage1_2_options.conversion_functions = false; /* Create a conversion function for derived datatype */
   stage1_2_options.nested_comments      = false; /* Allow the use of nested comments. */
   stage1_2_options.ref_operator         = false; /* Allow the use of REF() operator. */
+  stage1_2_options.ref_to_any           = false; /* Allow the use of REF_TO ANY datatype. */
   stage1_2_options.includedir           = NULL;  /* Include directory, where included files will be searched for... */
 
   /******************************************/
   /*   Parse command line options...        */
   /******************************************/
-  while ((optres = getopt(argc, argv, ":nhvfrscI:T:O:")) != -1) {
+  while ((optres = getopt(argc, argv, ":nhvfrRscI:T:O:")) != -1) {
     switch(optres) {
     case 'h':
       printusage(argv[0]);
       return 0;
-
     case 'v':
       fprintf(stdout, "%s version %s\n" "changeset id: %s\n", PACKAGE_NAME, PACKAGE_VERSION, HGVERSION);      
       return 0;
-
     case 'f':
       stage1_2_options.full_token_loc = true;
       break;
-
     case 's':
       stage1_2_options.safe_extensions = true;
       break;
-
+    case 'R':
+      stage1_2_options.ref_operator = true; /* use of REF_TO ANY implies activating support for REF extensions! */
+      stage1_2_options.ref_to_any   = true;
+      break;
     case 'r':
       stage1_2_options.ref_operator = true;
       break;
-
     case 'c':
       stage1_2_options.conversion_functions = true;
       break;
-
     case 'n':
       stage1_2_options.nested_comments = true;
       break;
-
     case 'I':
       /* NOTE: To improve the usability under windows:
        *       We delete last char's path if it ends with "\".
@@ -192,28 +191,23 @@ int main(int argc, char **argv) {
       if (optarg[path_len] == '\\') optarg[path_len]= '\0';
       stage1_2_options.includedir = optarg;
       break;
-
     case 'T':
       /* NOTE: see note above */
       path_len = strlen(optarg) - 1;
       if (optarg[path_len] == '\\') optarg[path_len]= '\0';
       builddir = optarg;
       break;
-
     case 'O':
       if (stage4_parse_options(optarg) < 0) errflg++;
       break;
-
     case ':':       /* -I, -T, or -O without operand */
       fprintf(stderr, "Option -%c requires an operand\n", optopt);
       errflg++;
       break;
-
     case '?':
       fprintf(stderr, "Unrecognized option: -%c\n", optopt);
       errflg++;
       break;
-
     default:
       fprintf(stderr, "Unknown error while parsing command line options.");
       errflg++;

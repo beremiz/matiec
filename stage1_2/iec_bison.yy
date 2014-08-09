@@ -208,6 +208,9 @@ extern bool full_token_loc;
  */
 extern bool conversion_functions_;
 
+/* A global flag used to tell the parser whether to allow use of REF_TO ANY datatypes (non-standard extension) */
+extern bool allow_ref_to_any;
+
 /* A pointer to the root of the parsing tree that will be generated 
  * by bison.
  */
@@ -3223,7 +3226,12 @@ ref_spec: /* defined in IEC 61131-3 v3 */
 | REF_TO function_block_type_name
 	{$$ = new ref_spec_c($2, locloc(@$));}
 | REF_TO ANY
-	{$$ = new ref_spec_c(new generic_type_any_c(locloc(@2)), locloc(@$));}
+	{$$ = new ref_spec_c(new generic_type_any_c(locloc(@2)), locloc(@$));
+	 if (!allow_ref_to_any) {
+	   print_err_msg(locf(@$), locl(@$), "REF_TO ANY datatypes are not allowed (use -R option to activate support for this non-standard syntax)."); 
+	   yynerrs++;
+	 }
+	}
 /* The following line is actually not included in IEC 61131-3, but we add it anyway otherwise it will not be possible to
  * define a REF_TO datatype as an alias to an already previously declared REF_TO datatype.
  * For example:
@@ -8156,6 +8164,9 @@ bool allow_extensible_function_parameters = false;
  */
 bool full_token_loc;
 
+/* A global flag used to tell the parser whether to allow use of REF_TO ANY datatypes (non-standard extension) */
+bool allow_ref_to_any = false;
+
 /* A pointer to the root of the parsing tree that will be generated 
  * by bison.
  */
@@ -8383,7 +8394,8 @@ extern const char *INCLUDE_DIRECTORIES[];
 int stage2__(const char *filename, 
              const char *includedir,     /* Include directory, where included files will be searched for... */
              symbol_c **tree_root_ref,
-             bool full_token_loc_        /* error messages specify full token location */
+             bool full_token_loc_,       /* error messages specify full token location */
+             bool ref_to_any_            /* allow use of non-standard REF_TO ANY datatypes */
             ) {
   char *libfilename = NULL;
 
@@ -8413,9 +8425,10 @@ int stage2__(const char *filename,
     return -1;
   }
 
-  allow_function_overloading = true;
+  allow_function_overloading           = true;
   allow_extensible_function_parameters = true;
-  full_token_loc = full_token_loc_;
+  full_token_loc   = full_token_loc_;
+  allow_ref_to_any = ref_to_any_;
   if (yyparse() != 0)
       ERROR;
   fclose(libfile);
@@ -8446,9 +8459,11 @@ int stage2__(const char *filename,
     return -1;
   }
 
-  allow_function_overloading = false;
+  allow_function_overloading           = false;
   allow_extensible_function_parameters = false;
-  full_token_loc = full_token_loc_;
+  full_token_loc   = full_token_loc_;
+  allow_ref_to_any = ref_to_any_;
+  //allow_ref_to_any = false;    /* we only allow REF_TO ANY in library functions/FBs, no matter what the user asks for in the command line */
 
   if (yyparse() != 0) {
     fprintf (stderr, "\nParsing failed because of too many consecutive syntax errors. Bailing out!\n");

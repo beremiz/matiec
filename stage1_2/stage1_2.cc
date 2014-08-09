@@ -238,7 +238,8 @@ char *strdup3(const char *a, const char *b, const char *c) {
 int stage2__(const char *filename, 
              const char *includedir,     /* Include directory, where included files will be searched for... */
              symbol_c **tree_root_ref,
-             bool full_token_loc         /* error messages specify full token location */
+             bool full_token_loc,        /* error messages specify full token location */
+             bool ref_to_any             /* allow use of non-standard REF_TO ANY datatypes */
             );
 
 
@@ -258,6 +259,6 @@ int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t 
   ref_operator_    = options.ref_operator;    
   safe_extensions_ = options.safe_extensions;
   conversion_functions_ = options.conversion_functions;
-  return stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc);
+  return stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc, options.ref_to_any);
 }
 
