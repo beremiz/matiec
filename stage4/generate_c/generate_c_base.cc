@@ -590,7 +590,8 @@ void *visit(date_and_time_c *symbol) {
 /********************************/
 /* B.1.3.2 - Generic data types */
 /********************************/
-  /* originally empty... */
+    /* Currently only used in REF_TO ANY, which is mapped onto (void *) */
+    void *visit(generic_type_any_c *symbol)      {s4o.print("void");    return NULL;}
 
 /********************************/
 /* B 1.3.3 - Derived data types */

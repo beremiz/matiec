@@ -3215,12 +3215,15 @@ string_type_declaration_init:
 /* NOTE: in IEC 61131-3 v3, the formal syntax definition does not define non_generic_type_name to include FB type names.
  *       However, in section "6.3.4.10 References", example 4 includes a  REF_TO a FB type!
  *       We have therefore explicitly added the "REF_TO function_block_type_name" to this rule!
+ * NOTE: the REF_TO ANY is a non-standard extension to the standard. This is basically equivalent to a (void *)
  */
 ref_spec: /* defined in IEC 61131-3 v3 */
   REF_TO non_generic_type_name
 	{$$ = new ref_spec_c($2, locloc(@$));}
 | REF_TO function_block_type_name
 	{$$ = new ref_spec_c($2, locloc(@$));}
+| REF_TO ANY
+	{$$ = new ref_spec_c(new generic_type_any_c(locloc(@2)), locloc(@$));}
 /* The following line is actually not included in IEC 61131-3, but we add it anyway otherwise it will not be possible to
  * define a REF_TO datatype as an alias to an already previously declared REF_TO datatype.
  * For example:
