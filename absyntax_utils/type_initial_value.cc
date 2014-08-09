@@ -72,24 +72,25 @@ type_initial_value_c *type_initial_value_c::instance(void) {
 
   _instance = new type_initial_value_c;
 
-  real_0 = new real_c("0");
-  integer_0 = new integer_c("0");
-  integer_1 = new integer_c("1");
-  bool_0 = new boolean_literal_c(new bool_type_name_c(),new boolean_false_c());
+  null_literal = new ref_value_null_literal_c();
+  real_0       = new real_c("0");
+  integer_0    = new integer_c("0");
+  integer_1    = new integer_c("1");
+  bool_0       = new boolean_literal_c(new bool_type_name_c(),new boolean_false_c());
   /* FIXME: Our current implementation only allows dates from 1970 onwards,
    * but the standard defines the date 0001-01-01 as the default value
    * for the DATE data type. Untill we fix our implementation, we use 1970-01-01
    * as our default value!!
    */
 //date_literal_0 =  new date_literal_c(integer_1, integer_1, integer_1);
-  date_literal_0 =  new date_literal_c(new integer_c("1970"), integer_1, integer_1);
+  date_literal_0    = new date_literal_c(new integer_c("1970"), integer_1, integer_1);
   daytime_literal_0 = new daytime_c(integer_0, integer_0, real_0);
-  time_0 = new duration_c(new time_type_name_c(), NULL, new interval_c(NULL, NULL, NULL, integer_0, NULL));  // T#0s
-  date_0 = new date_c(new date_type_name_c(), date_literal_0);  //  D#0001-01-01
-  tod_0 = new time_of_day_c(new tod_type_name_c(), daytime_literal_0);  //  TOD#00:00:00
-  dt_0 = new date_and_time_c(new dt_type_name_c(), date_literal_0, daytime_literal_0);  //  DT#0001-01-01-00:00:00
-  string_0  = new single_byte_character_string_c("''");
-  wstring_0 = new double_byte_character_string_c("\"\"");
+  time_0       = new duration_c     (new time_type_name_c(), NULL, new interval_c(NULL, NULL, NULL, integer_0, NULL));  // T#0s
+  date_0       = new date_c         (new date_type_name_c(), date_literal_0);  //  D#0001-01-01
+  tod_0        = new time_of_day_c  (new  tod_type_name_c(), daytime_literal_0);  //  TOD#00:00:00
+  dt_0         = new date_and_time_c(new   dt_type_name_c(), date_literal_0, daytime_literal_0);  //  DT#0001-01-01-00:00:00
+  string_0     = new single_byte_character_string_c("''");
+  wstring_0    = new double_byte_character_string_c("\"\"");
 
   return _instance;
 }
@@ -377,16 +378,40 @@ void *type_initial_value_c::visit(string_type_declaration_c *symbol)	{
 }
 
 
-type_initial_value_c	*type_initial_value_c::_instance = NULL;
-real_c			*type_initial_value_c::real_0 = NULL;
-integer_c		*type_initial_value_c::integer_0 = NULL;
-integer_c		*type_initial_value_c::integer_1 = NULL;
-boolean_literal_c	*type_initial_value_c::bool_0 = NULL;
-date_literal_c	*type_initial_value_c::date_literal_0 = NULL;
-daytime_c	*type_initial_value_c::daytime_literal_0 = NULL;
-duration_c	*type_initial_value_c::time_0 = NULL;
-date_c	*type_initial_value_c::date_0 = NULL;
-time_of_day_c	*type_initial_value_c::tod_0 = NULL;
-date_and_time_c	*type_initial_value_c::dt_0 = NULL;
-single_byte_character_string_c *type_initial_value_c::string_0 = NULL;
-double_byte_character_string_c *type_initial_value_c::wstring_0 = NULL;
+/* REF_TO (non_generic_type_name | function_block_type_name) */
+void *type_initial_value_c::visit(ref_spec_c *symbol) {
+  return null_literal;
+}
+
+
+/* ref_spec [ ASSIGN ref_initialization ]; */
+/* NOTE: ref_initialization may be NULL!!  */
+void *type_initial_value_c::visit(ref_spec_init_c *symbol) {
+  return handle_type_spec(symbol->ref_spec, symbol->ref_initialization);
+}
+/* identifier ':' ref_spec_init */
+void *type_initial_value_c::visit(ref_type_decl_c *symbol) {
+  return symbol->ref_spec_init->accept(*this);
+}
+
+
+
+
+
+
+
+
+type_initial_value_c            *type_initial_value_c::_instance         = NULL;
+ref_value_null_literal_c        *type_initial_value_c::null_literal      = NULL;
+real_c                          *type_initial_value_c::real_0            = NULL;
+integer_c                       *type_initial_value_c::integer_0         = NULL;
+integer_c                       *type_initial_value_c::integer_1         = NULL;
+boolean_literal_c               *type_initial_value_c::bool_0            = NULL;
+date_literal_c                  *type_initial_value_c::date_literal_0    = NULL;
+daytime_c                       *type_initial_value_c::daytime_literal_0 = NULL;
+duration_c                      *type_initial_value_c::time_0            = NULL;
+date_c                          *type_initial_value_c::date_0            = NULL;
+time_of_day_c                   *type_initial_value_c::tod_0             = NULL;
+date_and_time_c                 *type_initial_value_c::dt_0              = NULL;
+single_byte_character_string_c  *type_initial_value_c::string_0          = NULL;
+double_byte_character_string_c  *type_initial_value_c::wstring_0         = NULL;

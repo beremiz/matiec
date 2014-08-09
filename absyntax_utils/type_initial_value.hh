@@ -64,15 +64,16 @@ class type_initial_value_c : public null_visitor_c {
 
   private:
     /* constants for the default values of elementary data types... */
-    static real_c		*real_0;
-    static integer_c		*integer_0, *integer_1;
-    static boolean_literal_c	*bool_0;
-    static date_literal_c	*date_literal_0;
-    static daytime_c		*daytime_literal_0;
-    static duration_c		*time_0;
-    static date_c		*date_0;
-    static time_of_day_c	*tod_0;
-    static date_and_time_c	*dt_0;
+    static ref_value_null_literal_c       *null_literal;
+    static real_c                         *real_0;
+    static integer_c                      *integer_0, *integer_1;
+    static boolean_literal_c              *bool_0;
+    static date_literal_c                 *date_literal_0;
+    static daytime_c                      *daytime_literal_0;
+    static duration_c                     *time_0;
+    static date_c                         *date_0;
+    static time_of_day_c                  *tod_0;
+    static date_and_time_c                *dt_0;
     static single_byte_character_string_c *string_0;
     static double_byte_character_string_c *wstring_0;
 
@@ -281,6 +282,14 @@ class type_initial_value_c : public null_visitor_c {
      //					string_type_declaration_size,
      // 				string_type_declaration_init) /* may be == NULL! */
     void *visit(string_type_declaration_c *symbol);
+    
+    /* REF_TO (non_generic_type_name | function_block_type_name) */
+    void *visit(ref_spec_c *symbol);
+    /* ref_spec [ ASSIGN ref_initialization ]; */
+    void *visit(ref_spec_init_c *symbol);
+    /* identifier ':' ref_spec_init */
+    void *visit(ref_type_decl_c *symbol);
+    
 }; // type_initial_value_c
 
 
