@@ -116,13 +116,14 @@ class generate_c_base_c: public iterator_visitor_c {
       std::string str = "";
       bool leading_zero = true;
       for (unsigned int i = offset; i < strlen(token->value); i++) {
-        if (leading_zero &&
-        	(token->value[i] != '0' ||
-        	 i == strlen(token->value) - 1 ||
-        	 token->value[i + 1] == '.'
-        	))
+        if (leading_zero
+            && (   token->value[i] != '0'
+                || i == strlen(token->value) - 1
+                || token->value[i + 1] == '.'
+                )
+            )
           leading_zero = false;
-    	if (!leading_zero && token->value[i] != '_')
+            if (!leading_zero && token->value[i] != '_')
           str += token->value[i];
       }
       return s4o.printupper(str);
@@ -140,31 +141,31 @@ class generate_c_base_c: public iterator_visitor_c {
       total_bits = 0;
       for (i = offset; i < strlen(token->value); i++)
         if (token->value[i] != '_')
-	  total_bits++;
+          total_bits++;
 
       value = 0;
       bit_mult = (unsigned char)1 << (((total_bits+3)%4)+1);
       for (i = offset; i < strlen(token->value); i++) {
         if (token->value[i] != '_') {
-	  bit_mult /= 2;
-	  value += bit_mult * ((token->value[i] == '0')? 0:1);
-	  if (bit_mult == 1) {
-	    str[0] = (value <= 9)? (char)'0' + value : (char)'A' + value - 10;
-	    s4o.print(str);
+          bit_mult /= 2;
+          value += bit_mult * ((token->value[i] == '0')? 0:1);
+          if (bit_mult == 1) {
+            str[0] = (value <= 9)? (char)'0' + value : (char)'A' + value - 10;
+            s4o.print(str);
             bit_mult = 0x10;
             value = 0;
-	  }
-	}
+          }
+        }
       }
 
       return NULL;
     }
 
     void *print_list(list_c *list,
-		     std::string pre_elem_str = "",
-		     std::string inter_elem_str = "",
-		     std::string post_elem_str = "",
-		     visitor_c *visitor = NULL) {
+                     std::string pre_elem_str = "",
+                     std::string inter_elem_str = "",
+                     std::string post_elem_str = "",
+                     visitor_c *visitor = NULL) {
       if (visitor == NULL) visitor = this;
 
       if (list->n > 0) {
@@ -187,8 +188,8 @@ class generate_c_base_c: public iterator_visitor_c {
 
 
     void *print_binary_expression(symbol_c *l_exp,
-				  symbol_c *r_exp,
-				  const char *operation) {
+                                  symbol_c *r_exp,
+                                  const char *operation) {
       s4o.print("(");
       l_exp->accept(*this);
       s4o.print(operation);
@@ -198,7 +199,7 @@ class generate_c_base_c: public iterator_visitor_c {
     }
 
     void *print_unary_expression(symbol_c *exp,
-				 const char *operation) {
+                                 const char *operation) {
       s4o.print(operation);
       s4o.print("(");
       exp->accept(*this);
@@ -208,7 +209,7 @@ class generate_c_base_c: public iterator_visitor_c {
 
     void *print_binary_function(const char *function,
           symbol_c *l_exp,
-				  symbol_c *r_exp) {
+          symbol_c *r_exp) {
       s4o.print(function);
       s4o.print("(");
       l_exp->accept(*this);
@@ -216,7 +217,7 @@ class generate_c_base_c: public iterator_visitor_c {
       r_exp->accept(*this);
       s4o.print(")");
       return NULL;
-   	}
+    }
 
     void *print_compare_function(const char *function,
           symbol_c *compare_type,
@@ -239,9 +240,9 @@ class generate_c_base_c: public iterator_visitor_c {
       if (!get_datatype_info_c::is_type_valid(type)) ERROR;
       bool is_subrange = get_datatype_info_c::is_subrange(type);
       if (is_subrange) {
-		s4o.print("__CHECK_");
-		type->accept(*this);
-		s4o.print("(");
+        s4o.print("__CHECK_");
+        type->accept(*this);
+        s4o.print("(");
       }
       if (fb_name != NULL) {
         s4o.print(GET_VAR);
@@ -254,7 +255,7 @@ class generate_c_base_c: public iterator_visitor_c {
       }
       else {
         if (temp)
-    	  s4o.print(TEMP_VAR);
+        s4o.print(TEMP_VAR);
         value->accept(*this);
       }
       if (is_subrange)
@@ -337,8 +338,8 @@ class generate_c_base_c: public iterator_visitor_c {
       if (NULL != symbol->type)
         return print_literal(symbol->type, symbol->value);
       else {
-	bool_type_name_c bool_type;
-	return print_literal(&bool_type, symbol->value);
+        bool_type_name_c bool_type;
+        return print_literal(&bool_type, symbol->value);
       }
     }
 
@@ -396,12 +397,12 @@ class generate_c_base_c: public iterator_visitor_c {
           default: {
             if (isxdigit(c)) {
               /* this should be safe, since the code has passed the syntax parser!! */
-	      char c2 = symbol->value[++i];
-	      if (isxdigit(c2)) {
-	        str += '\\'; str += 'x'; str += c; str += c2;
-	        count++; continue;
-	      }
-	    }
+              char c2 = symbol->value[++i];
+              if (isxdigit(c2)) {
+                str += '\\'; str += 'x'; str += c; str += c2;
+                count++; continue;
+              }
+            }
           }
           /* otherwise we have an invalid string!! */
           /* This should not have got through the syntax parser! */
