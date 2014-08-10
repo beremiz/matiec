@@ -170,6 +170,10 @@ void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
 	     /*********************/
 	     /* B 1.2 - Constants */
 	     /*********************/
+	     /*********************************/
+	     /* B 1.2.XX - Reference Literals */
+	     /*********************************/
+	     (typeid( *lvalue ) == typeid( ref_value_null_literal_c       )) || /* defined in IEC 61131-3 v3 - Basically the 'NULL' keyword! */
 	     /******************************/
 	     /* B 1.2.1 - Numeric Literals */
 	     /******************************/
@@ -212,6 +216,7 @@ void lvalue_check_c::check_assignment_to_expression(symbol_c *lvalue) {
 	     /***********************/
 	     /* B 3.1 - Expressions */
 	     /***********************/
+	     (typeid( *lvalue ) == typeid( ref_expression_c               )) || /* an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the variable! */
 	     (typeid( *lvalue ) == typeid( or_expression_c                )) ||
 	     (typeid( *lvalue ) == typeid( xor_expression_c               )) ||
 	     (typeid( *lvalue ) == typeid( and_expression_c               )) ||
