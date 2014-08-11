@@ -619,7 +619,61 @@ void *visit(enumerated_value_c *symbol) {
 }
 
 
-  
+/*  identifier ':' array_spec_init */
+void *visit(array_type_declaration_c *symbol) {ERROR;/* Should never get called! */ return NULL;}
+
+/* array_specification [ASSIGN array_initialization] */
+/* array_initialization may be NULL ! */
+void *visit(array_spec_init_c *symbol) {
+  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
+  if (implicit_id_count != 1) ERROR;
+  /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
+   * has already been defined. So, we simly print out the id of that C datatpe...
+   */
+  return symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*this);
+}
+
+/* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+void *visit(array_specification_c *symbol) {
+  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
+  if (implicit_id_count != 1) ERROR;
+  /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
+   * has already been defined. So, we simly print out the id of that C datatpe...
+   */
+  return symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*this);
+}
+
+
+/* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
+void *visit(ref_spec_c *symbol) {
+  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
+  if (implicit_id_count != 1) ERROR;
+  /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
+   * has already been defined. So, we simly print out the id of that C datatpe...
+   */
+  return symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*this);
+}
+
+/* For the moment, we do not support initialising reference data types */
+/* ref_spec_init: ref_spec [ ASSIGN ref_initialization ] */ 
+/* NOTE: ref_initialization may be NULL!! */
+// SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
+void *visit(ref_spec_init_c *symbol) {
+  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
+  if (implicit_id_count != 1) ERROR;
+  /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
+   * has already been defined. So, we simly print out the id of that C datatpe...
+   */
+  return symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*this);
+}
+
+/* ref_type_decl: identifier ':' ref_spec_init */
+void *visit(ref_type_decl_c *symbol) {ERROR;/* Should never get called! */ return NULL;}
+
+
+
+
+
 /* NOTE:     visit(subrange_spec_init_c *)
  *      and  visit(subrange_specification_c *)
  *      together simply print out the integer datatype
@@ -643,7 +697,10 @@ void *visit(subrange_specification_c *symbol) {
   return NULL;
 }
   
-  
+
+/* NOTE: Why is this here? This visit() method should not be here!!
+ * TODO: Figure out who is dependent on this method, and move it to its correct location!
+ */
 /* helper symbol for array_specification */
 /* array_subrange_list ',' subrange */
 void *visit(array_subrange_list_c *symbol) {
