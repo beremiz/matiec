@@ -75,6 +75,53 @@ class get_datatype_id_c: null_visitor_c {
     }
     
   protected:
+    /***********************************/
+    /* B 1.3.1 - Elementary Data Types */
+    /***********************************/
+    void *visit(time_type_name_c        *symbol) {return (void *)symbol;};
+    void *visit(bool_type_name_c        *symbol) {return (void *)symbol;};
+    void *visit(sint_type_name_c        *symbol) {return (void *)symbol;};
+    void *visit(int_type_name_c         *symbol) {return (void *)symbol;};
+    void *visit(dint_type_name_c        *symbol) {return (void *)symbol;};
+    void *visit(lint_type_name_c        *symbol) {return (void *)symbol;};
+    void *visit(usint_type_name_c       *symbol) {return (void *)symbol;};
+    void *visit(uint_type_name_c        *symbol) {return (void *)symbol;};
+    void *visit(udint_type_name_c       *symbol) {return (void *)symbol;};
+    void *visit(ulint_type_name_c       *symbol) {return (void *)symbol;};
+    void *visit(real_type_name_c        *symbol) {return (void *)symbol;};
+    void *visit(lreal_type_name_c       *symbol) {return (void *)symbol;};
+    void *visit(date_type_name_c        *symbol) {return (void *)symbol;};
+    void *visit(tod_type_name_c         *symbol) {return (void *)symbol;};
+    void *visit(dt_type_name_c          *symbol) {return (void *)symbol;};
+    void *visit(byte_type_name_c        *symbol) {return (void *)symbol;};
+    void *visit(word_type_name_c        *symbol) {return (void *)symbol;};
+    void *visit(lword_type_name_c       *symbol) {return (void *)symbol;};
+    void *visit(dword_type_name_c       *symbol) {return (void *)symbol;};
+    void *visit(string_type_name_c      *symbol) {return (void *)symbol;};
+    void *visit(wstring_type_name_c     *symbol) {return (void *)symbol;};
+
+    void *visit(safetime_type_name_c    *symbol) {return (void *)symbol;};
+    void *visit(safebool_type_name_c    *symbol) {return (void *)symbol;};
+    void *visit(safesint_type_name_c    *symbol) {return (void *)symbol;};
+    void *visit(safeint_type_name_c     *symbol) {return (void *)symbol;};
+    void *visit(safedint_type_name_c    *symbol) {return (void *)symbol;};
+    void *visit(safelint_type_name_c    *symbol) {return (void *)symbol;};
+    void *visit(safeusint_type_name_c   *symbol) {return (void *)symbol;};
+    void *visit(safeuint_type_name_c    *symbol) {return (void *)symbol;};
+    void *visit(safeudint_type_name_c   *symbol) {return (void *)symbol;};
+    void *visit(safeulint_type_name_c   *symbol) {return (void *)symbol;};
+    void *visit(safereal_type_name_c    *symbol) {return (void *)symbol;};
+    void *visit(safelreal_type_name_c   *symbol) {return (void *)symbol;};
+    void *visit(safedate_type_name_c    *symbol) {return (void *)symbol;};
+    void *visit(safetod_type_name_c     *symbol) {return (void *)symbol;};
+    void *visit(safedt_type_name_c      *symbol) {return (void *)symbol;};
+    void *visit(safebyte_type_name_c    *symbol) {return (void *)symbol;};
+    void *visit(safeword_type_name_c    *symbol) {return (void *)symbol;};
+    void *visit(safelword_type_name_c   *symbol) {return (void *)symbol;};
+    void *visit(safedword_type_name_c   *symbol) {return (void *)symbol;};
+    void *visit(safestring_type_name_c  *symbol) {return (void *)symbol;};
+    void *visit(safewstring_type_name_c *symbol) {return (void *)symbol;};
+
     /********************************/
     /* B 1.3.3 - Derived data types */
     /********************************/
@@ -92,6 +139,11 @@ class get_datatype_id_c: null_visitor_c {
     void *visit(string_type_declaration_c     *symbol)  {return symbol->string_type_name;}
     /* ref_type_decl: identifier ':' ref_spec_init */
     void *visit(ref_type_decl_c               *symbol)  {return symbol->ref_type_name;}
+    /* NOTE: DO NOT place any code here that references symbol->anotations_map["generate_c_annotaton__implicit_type_id"] !!
+     *       All anotations in the symbol->anotations_map[] are considered a stage4 construct. In the above example,
+     *       That anotation is specific to the generate_c stage4 code, and must therefore NOT be referenced
+     *       in the absyntax_utils code, as this last code should be independent of the stage4 version!
+     */ 
     
     /*****************************/
     /* B 1.5.2 - Function Blocks */
@@ -204,6 +256,11 @@ class get_datatype_id_str_c: public null_visitor_c {
     void *visit(string_type_declaration_c     *symbol)  {return symbol->string_type_name->accept(*this);}
     /* ref_type_decl: identifier ':' ref_spec_init */
     void *visit(ref_type_decl_c               *symbol)  {return symbol->ref_type_name->accept(*this);}
+    /* NOTE: DO NOT place any code here that references symbol->anotations_map["generate_c_annotaton__implicit_type_id"] !!
+     *       All anotations in the symbol->anotations_map[] are considered a stage4 construct. In the above example,
+     *       That anotation is specific to the generate_c stage4 code, and must therefore NOT be referenced
+     *       in the absyntax_utils code, as this last code should be independent of the stage4 version!
+     */ 
     
     /*****************************/
     /* B 1.5.2 - Function Blocks */
@@ -248,6 +305,80 @@ symbol_c *get_datatype_info_c::get_id(symbol_c *datatype) {
  *       the REF_TO keyword (i.e. REF_TO ANY), so when handling non REF_TO datatypes,
  *       this function will currently only return true if the dataypes are identicial.
  */
+
+/* NOTE: Currently the datatype model used by matiec considers any implicitly defined datatype
+ *       (e.g. an array datatype defined in the variable declaration itself, instead of inside a TYPE ... END_TYPE
+ *       construct) to be different (i.e. not the same datatype, and therefore not compatible) to any other
+ *       datatype, including with datatypes declared identically to the implicit datatype.
+ *       e.g.
+ *         TYPE my_array_t: ARRAY [1..3] OF INT; END_TYPE;
+ *         FUNCTION_BLOCK FOO
+ *          VAR my_array:  ARRAY [1..3] OF INT; END_VAR
+ *         ...
+ *         END_FUNCTION_BLOCK
+ * 
+ *         In the abive code, my_array is NOT considered to te compatible with my_Array_t !!!
+ * 
+ *       In essence, the currently supported datatype model considers all datatypes to be different to each other,
+ *       even though the stored data is the same (Let us call this rule (0))!
+ *       There are 2 exceptions to the above rule:
+ *        (1) Datatypes that are directly derived from other datatypes.
+ *              (this rule is specified in the standard, so we follow it!)
+ *        (2) REF_TO datatypes that reference the same datatype
+ *              (I dont think the standard says anything about this!)
+ *
+ *         TYPE 
+ *          my_array_1_t: ARRAY [1..3] OF INT; 
+ *          my_array_2_t: ARRAY [1..3] OF INT; 
+ *          my_array_3_t: my_array_1_t; 
+ *          A_ref_t: REF_TO my_array_1_t;
+ *          B_ref_t: REF_TO my_array_1_t;
+ *          C_ref_t: A_ref_t;
+ *         END_TYPE;
+ *                 
+ *         In the above code, my_array_1_t is a distinct datatype to my_array_2_t
+ *           (this is different to C and C++, where they would be considered the same datatype!)
+ *           (following rule (0))
+ *         In the above code, my_array_3_t is the same datatype as my_array_1_t
+ *           (following rule (1))
+ *         In the above code, A_ref_t is the same datatype as B_ref_t
+ *           (following rule (2))
+ *         In the above code, A_ref_t is the same datatype as C_ref_t
+ *           (following rule (1))
+ *
+ *       Note that rule (0) means that a function/FB with a parameter whose datatype is implicitly defined
+ *       can never be passed a value!
+ *         FUNCTION_BLOCK FOO
+ *          VAR_INPUT my_array:  ARRAY [1..3] OF INT; END_VAR
+ *         ...
+ *         END_FUNCTION_BLOCK
+ *
+ *       Any call to FB foo can never pass a value to parameter my_array, as its datatype is distinct
+ *       to all other datatypes, and therefore passing any other variable to my_array will result in an
+ *       'incompatible datatypes' error!
+ *       The above seems natural o me (Mario) in a programming language that is very strongly typed.
+ * 
+ *       However, if we did not have exception (2), the following would also be invalid:
+ *         TYPE my_array_t: ARRAY [1..3] OF INT; END_TYPE;
+ *         FUNCTION_BLOCK FOO_t
+ *          VAR_INPUT my_array: REF_TO my_array_t; END_VAR
+ *         ...
+ *         END_FUNCTION_BLOCK
+ * 
+ *         FUNCTION_BLOCK BAR
+ *          VAR
+ *            my_array: my_array_t; 
+ *            foo: FOO_t;
+ *          END_VAR
+ *          foo(REF(my_array));  <----- invalid, without rule 2!!
+ *         ...
+ *         END_FUNCTION_BLOCK
+ * 
+ *       Rule/exception (2) goes against the datatype model used for all other datatypes.
+ *       This rule was adopted as without it, the datatype of the value returned by the REF() 
+ *       operator would be considered distinct to all other datatypes, and therefore the
+ *       REF() operator would be essentially useless.
+ */
 bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_type) {
   if (!is_type_valid( first_type))                                   {return false;}
   if (!is_type_valid(second_type))                                   {return false;}
@@ -266,7 +397,6 @@ bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_t
     return is_type_equal(search_base_type_c::get_basetype_decl(get_ref_to(first_type )),
                          search_base_type_c::get_basetype_decl(get_ref_to(second_type)));
   }
-
   return (first_type == second_type);
 }
 
