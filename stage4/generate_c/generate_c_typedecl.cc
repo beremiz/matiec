@@ -638,6 +638,9 @@ void *visit(ref_spec_c *symbol) {
     symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*basedecl);
     return NULL;
   }
+  /* This is NOT part of an implicitly declared datatype (i.e. we are being called from an visit(ref_type_decl_c *),
+   * through the visit(ref_spec_init_c*)), so we need to simply print out the name of the datatype we reference to.
+   */
   return symbol->type_name->accept(*this);
 }
 
@@ -655,6 +658,9 @@ void *visit(ref_spec_init_c *symbol) {
     symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*basedecl);
     return NULL;
   }
+  /* This is NOT part of an implicitly declared datatype (i.e. we are being called from an visit(ref_type_decl_c *)),
+   * so we need to simply print out the name of the datatype we reference to.
+   */
   return symbol->ref_spec->accept(*this);
 }
 

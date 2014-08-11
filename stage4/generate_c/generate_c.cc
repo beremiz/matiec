@@ -781,7 +781,7 @@ identifier_c *generate_unique_id(symbol_c *prefix, symbol_c *clone = NULL) {
 
 /* This class will generate a new datatype for each implicitly declared array datatype
  * (i.e. arrays declared in a variable declaration, or a struct datatype declaration...)
- * It will do the same for implicitly declared RFE_TO datatypes.
+ * It will do the same for implicitly declared REF_TO datatypes.
  * 
  * The class will be called once for each POU declaration, and once for each derived datatype declaration.
  * 
