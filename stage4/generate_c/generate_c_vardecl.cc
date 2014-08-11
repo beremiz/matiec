@@ -689,7 +689,7 @@ void *generate_c_array_initialization_c::visit(structure_element_initialization_
 
 
 
-class generate_c_vardecl_c: protected generate_c_typedecl_c {
+class generate_c_vardecl_c: protected generate_c_base_c {
 
   /* A Helper class to the main class... */
   /* print a string, except the first time it is called */
@@ -1097,7 +1097,7 @@ class generate_c_vardecl_c: protected generate_c_typedecl_c {
 
   public:
     generate_c_vardecl_c(stage4out_c *s4o_ptr, varformat_t varformat, unsigned int vartype, symbol_c* res_name = NULL)
-    : generate_c_typedecl_c(s4o_ptr) {
+    : generate_c_base_c(s4o_ptr) {
       wanted_varformat = varformat;
       wanted_vartype   = vartype;
       current_vartype  = none_vt;
