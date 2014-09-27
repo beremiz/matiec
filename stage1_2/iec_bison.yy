@@ -198,22 +198,19 @@ extern bool allow_function_overloading;
  */
 extern bool allow_extensible_function_parameters;
 
-/* A global flag used to tell the parser whether to include the full variable location
- * when printing out error messages...
- */
+/* A global flag used to tell the parser whether to include the full variable location when printing out error messages... */
 extern bool full_token_loc;
 
-/* A global flag used to tell the parser whether to generate conversion function
- * for enumerated data types.
- */
+/* A global flag used to tell the parser whether to generate conversion function for enumerated data types. */
 extern bool conversion_functions_;
 
 /* A global flag used to tell the parser whether to allow use of REF_TO ANY datatypes (non-standard extension) */
 extern bool allow_ref_to_any;
 
-/* A pointer to the root of the parsing tree that will be generated 
- * by bison.
- */
+/* A global flag used to tell the parser whether to allow use of REF_TO as a struct or array element (non-standard extension) */
+extern bool allow_ref_to_in_derived_datatypes;
+
+/* A pointer to the root of the parsing tree that will be generated  by bison. */
 extern symbol_c *tree_root;
 
 
@@ -785,9 +782,10 @@ typedef struct YYLTYPE {
 %token END_STRUCT
 
 
-%type  <leaf>	ref_spec      /* defined in IEC 61131-3 v3 */
-%type  <leaf>	ref_spec_init /* defined in IEC 61131-3 v3 */
-%type  <leaf>	ref_type_decl /* defined in IEC 61131-3 v3 */
+%type  <leaf>	ref_spec                 /* defined in IEC 61131-3 v3 */
+%type  <leaf>	ref_spec_non_recursive   /* helper symbol */
+%type  <leaf>	ref_spec_init            /* defined in IEC 61131-3 v3 */
+%type  <leaf>	ref_type_decl            /* defined in IEC 61131-3 v3 */
 
 
 
@@ -2878,6 +2876,23 @@ array_specification:
   prev_declared_array_type_name
 | ARRAY '[' array_subrange_list ']' OF non_generic_type_name
 	{$$ = new array_specification_c($3, $6, locloc(@$));}
+| ARRAY '[' array_subrange_list ']' OF ref_spec_non_recursive
+	/* non standard extension: Allow use of arrays storing REF_TO datatypes that are declared as 'ARRAY [1..3] OF REF_TO INT' */
+	/*                                                                                                            ^^^^^^      */
+	/* NOTE: We use ref_spec and not ref_spec_init as for the moment I do not want to allow direct specification of initial value.
+	 *       I (MJS) am not too sure whether this is currently supported in code generation, so leave it out for now.
+	 *       It also does not seem to be a very good idea to allow initial value specification when declaring the array,
+	 *       since the standard syntax does not allow it either for any other datatype!
+	 * NOTE: We use ref_spec_non_recursive instead of ref_spec in order to remove a reduce/reduce conflict.
+	 *       Note that non_generic_type_name that is used in the previous rule already include the prev_declared_ref_type_name.
+	 *       which leads to the reduce/reduce conflict, as it is also included in ref_spec.
+	 */
+	{$$ = new array_specification_c($3, $6, locloc(@$));
+	 if (!allow_ref_to_in_derived_datatypes) {
+	   print_err_msg(locf(@$), locl(@$), "REF_TO may not be used in an ARRAY specification (use -R option to activate support for this non-standard syntax)."); 
+	   yynerrs++;
+	 }
+	}
 /* ERROR_CHECK_BEGIN */
 | ARRAY array_subrange_list ']' OF non_generic_type_name
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'[' missing before subrange list in array specification."); yynerrs++;}
@@ -3065,6 +3080,13 @@ structure_element_declaration:
 	{$$ = new structure_element_declaration_c($1, $3, locloc(@$));}
 | structure_element_name ':' initialized_structure
 	{$$ = new structure_element_declaration_c($1, $3, locloc(@$));}
+| structure_element_name ':' ref_spec_init                              /* non standard extension: Allow use of struct elements storing REF_TO datatypes (either using REF_TO or a previosuly declared ref type) */
+	{ $$ = new structure_element_declaration_c($1, $3, locloc(@$));
+	  if (!allow_ref_to_in_derived_datatypes) {
+	    print_err_msg(locf(@$), locl(@$), "REF_TO and reference datatypes may not be used in a STRUCT element (use -R option to activate support for this non-standard syntax)."); 
+	    yynerrs++;
+	  }
+	}
 /* ERROR_CHECK_BEGIN */
 | structure_element_name simple_spec_init
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between structure element name and simple specification."); yynerrs++;}
@@ -3220,7 +3242,7 @@ string_type_declaration_init:
  *       We have therefore explicitly added the "REF_TO function_block_type_name" to this rule!
  * NOTE: the REF_TO ANY is a non-standard extension to the standard. This is basically equivalent to a (void *)
  */
-ref_spec: /* defined in IEC 61131-3 v3 */
+ref_spec_non_recursive: /* helper symbol, used to remove a reduce/reduce conflict in a non-standard syntax I (Mario) have added!! */
   REF_TO non_generic_type_name
 	{$$ = new ref_spec_c($2, locloc(@$));}
 | REF_TO function_block_type_name
@@ -3232,20 +3254,51 @@ ref_spec: /* defined in IEC 61131-3 v3 */
 	   yynerrs++;
 	 }
 	}
-/* The following line is actually not included in IEC 61131-3, but we add it anyway otherwise it will not be possible to
- * define a REF_TO datatype as an alias to an already previously declared REF_TO datatype.
- * For example:
- *       TYPE
- *          ref1: REF_TO INT;
- *          ref2: ref1;    <-- without the following rule, this would not be allowed!!
- *       END_TYPE
- *
- * This extra rule also makes it possible to declare variables using a previously declared REF_TO datatype
- *  For example:
- *     VAR  refvar: ref1; END_VAR
- */
+;
+
+ref_spec: /* defined in IEC 61131-3 v3 */
+  ref_spec_non_recursive
 | prev_declared_ref_type_name 
 ;
+
+
+/* The IEC 61131-3 v3 standard actually only defines the following syntax:
+ * 
+ *  Ref_Type_Decl: Ref_Type_Name ':' Ref_Spec_Init;
+ *  Ref_Spec_Init: Ref_Spec ( ':=' Ref_Value )?;
+ *  Ref_Spec     : 'REF_TO' + Data_Type_Access;
+ *
+ * Note that the above syntax it is not possible to define a REF_TO datatype as 
+ * an alias to an already previously declared REF_TO datatype.
+ *
+ * I (Mario) believe that this is probably a bug in the IEC 61131-3 syntax, and I have therefore
+ * changed that standard definition to...
+ *
+ *  Ref_Type_Decl: Ref_Type_Name ':' Ref_Spec_Init;
+ *  Ref_Spec_Init: Ref_Spec ( ':=' Ref_Value )?;
+ *  Ref_Spec     : ('REF_TO' + Data_Type_Access) | Ref_Type_Name;
+ *  
+ * For example:
+ *       TYPE
+ *          ref1_t: REF_TO INT;
+ *          ref2_t: ref1_t;    <-- without the above changes, this would not be allowed!!
+ *       END_TYPE
+ *
+ * This change also makes it possible to declare variables using a previously declared REF_TO datatype
+ *  For example:
+ *     VAR  refvar: ref1_t; END_VAR
+ *
+ * This change also makes it possible to declare arrays containing a previously declared ref type.
+ *  For example:
+ *     VAR  refvar: ARRAY [1..3] OF ref1_t;     END_VAR   <--- becomes OK
+ *     VAR  refvar: ARRAY [1..3] OF REF_TO INT; END_VAR   <--- still not OK. (Only becomes OK with other non-standard rules in another location of this file!)
+ *
+ * Interestingly, this change does NOT make it possible to declare structure elements of a previously declared ref type.
+ *  For example:
+ *     TYPE struct_t: STRUCT elem1: ref1_t;     END_STRUCT; END_TYPE;    <--- still not OK. (Only becomes OK with other non-standard rules in another location of this file!)
+ *     TYPE struct_t: STRUCT elem1: REF_TO INT; END_STRUCT; END_TYPE;    <--- still not OK. (Only becomes OK with other non-standard rules in another location of this file!)
+ */
+
 
 
 ref_spec_init: /* defined in IEC 61131-3 v3 */
@@ -3263,6 +3316,9 @@ ref_type_decl:  /* defined in IEC 61131-3 v3 */
 	 library_element_symtable.insert($1, prev_declared_ref_type_name_token);
 	}
 ;
+
+
+
 
 
 
@@ -8159,17 +8215,14 @@ bool allow_function_overloading = false;
  */
 bool allow_extensible_function_parameters = false;
 
-/* A global flag used to tell the parser whether to include the full variable location
- * when printing out error messages...
- */
+/* A global flag indicating whether to include the full variable location when printing out error messages... */
 bool full_token_loc;
-
 /* A global flag used to tell the parser whether to allow use of REF_TO ANY datatypes (non-standard extension) */
 bool allow_ref_to_any = false;
+/* A global flag used to tell the parser whether to allow use of REF_TO as a struct or array element (non-standard extension) */
+bool allow_ref_to_in_derived_datatypes = false;
 
-/* A pointer to the root of the parsing tree that will be generated 
- * by bison.
- */
+/* A pointer to the root of the parsing tree that will be generated by bison. */
 symbol_c *tree_root;
 
 
@@ -8392,10 +8445,10 @@ extern const char *INCLUDE_DIRECTORIES[];
 
 
 int stage2__(const char *filename, 
-             const char *includedir,     /* Include directory, where included files will be searched for... */
+             const char *includedir,   /* Include directory, where included files will be searched for... */
              symbol_c **tree_root_ref,
-             bool full_token_loc_,       /* error messages specify full token location */
-             bool ref_to_any_            /* allow use of non-standard REF_TO ANY datatypes */
+             bool full_token_loc_,                     /* error messages specify full token location */
+             bool allow_ref_to_nonstandard_extensions_ /* allow use of non-standard REF_TO ANY datatypes, and REF_TO inside structs and arrays */
             ) {
   char *libfilename = NULL;
 
@@ -8427,8 +8480,9 @@ int stage2__(const char *filename,
 
   allow_function_overloading           = true;
   allow_extensible_function_parameters = true;
-  full_token_loc   = full_token_loc_;
-  allow_ref_to_any = ref_to_any_;
+  full_token_loc                       = full_token_loc_;
+  allow_ref_to_any                     = allow_ref_to_nonstandard_extensions_;
+  allow_ref_to_in_derived_datatypes    = allow_ref_to_nonstandard_extensions_;
   if (yyparse() != 0)
       ERROR;
   fclose(libfile);
@@ -8461,8 +8515,9 @@ int stage2__(const char *filename,
 
   allow_function_overloading           = false;
   allow_extensible_function_parameters = false;
-  full_token_loc   = full_token_loc_;
-  allow_ref_to_any = ref_to_any_;
+  full_token_loc                       = full_token_loc_;
+  allow_ref_to_any                     = allow_ref_to_nonstandard_extensions_;
+  allow_ref_to_in_derived_datatypes    = allow_ref_to_nonstandard_extensions_;  
   //allow_ref_to_any = false;    /* we only allow REF_TO ANY in library functions/FBs, no matter what the user asks for in the command line */
 
   if (yyparse() != 0) {

@@ -641,7 +641,9 @@ void *visit(ref_spec_c *symbol) {
   /* This is NOT part of an implicitly declared datatype (i.e. we are being called from an visit(ref_type_decl_c *),
    * through the visit(ref_spec_init_c*)), so we need to simply print out the name of the datatype we reference to.
    */
-  return symbol->type_name->accept(*this);
+  symbol->type_name->accept(*this);
+  s4o_incl.print("*");
+  return NULL;
 }
 
 /* For the moment, we do not support initialising reference data types */

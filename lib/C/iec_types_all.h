@@ -124,7 +124,7 @@ typedef struct {\
 __DECLARE_COMPLEX_STRUCT(type)
 
 #define __DECLARE_REFTO_TYPE(type, name)\
-typedef name * type;\
+typedef name type;\
 __DECLARE_COMPLEX_STRUCT(type)
 
 
