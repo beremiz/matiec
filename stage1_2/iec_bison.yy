@@ -416,6 +416,7 @@ typedef struct YYLTYPE {
 
 /* Keywords in IEC 61131-3 v3 */
 %token	REF
+%token	DREF
 %token	REF_TO
 %token	NULL_token  /* cannot use simply 'NULL', as it conflicts with the NULL keyword in C++ */
 
@@ -1319,7 +1320,8 @@ typedef struct YYLTYPE {
  *      are not required. Their values are integrated
  *      directly into other rules...
  */
-%type  <leaf>	ref_expression  /* an extension to the IEC 61131-3 v2 standard, based on the IEC 61131-3 v3 standard */ 
+%type  <leaf>	  ref_expression  /* an extension to the IEC 61131-3 v2 standard, based on the IEC 61131-3 v3 standard */ 
+%type  <leaf>	deref_expression  /* an extension to the IEC 61131-3 v2 standard, based on the IEC 61131-3 v3 standard */ 
 %type  <leaf>	expression
 %type  <leaf>	xor_expression
 %type  <leaf>	and_expression
@@ -3399,7 +3401,27 @@ symbolic_variable:
 | identifier
 	{$$ = new symbolic_variable_c($1, locloc(@$));}
 */
+| symbolic_variable '^'     
+	/* Dereferencing operator defined in IEC 61131-3 v3. However, implemented here differently then how it is defined in the standard! See following note for explanation! */
+	{$$ = new deref_expression_c($1, locloc(@$));}
 ;
+/*
+ * NOTE: The syntax defined in the v3 standard for the dereferencing operator '^' seems to me to be un-intentionally
+ *       limited. For example
+ *         ref_to_bool_var := REF(        array_of_bool [1] );   <---     Allowed!
+ *         ref_to_bool_var := REF( ref_to_array_of_bool^[1] );   <---     Allowed!
+ *         bool_var        := array_of_ref_to_bool[1]^;          <--- NOT Allowed!
+ *         ref_to_array_of_bool^[1] := FALSE;                    <---     Allowed!
+ *       I consider this a bug in the v3 standard!!
+ *       I have therefore opted to implement this by simply adding a rule to symbolic_variable 
+ *         symbolic_variable: 
+ *                ...
+ *           | symbolic_variable '^'
+ *       This simple rule should be able to cover all the needed dereferencing syntax!
+ *       I have also added a dereferencing expression for the DREF() operator.
+ *       Since both of them do the exact same operation, they will both be translated to the exact same
+ *       entry type in the abstract syntax tree (an deref_expression_c)
+ */
 
 
 /* NOTE: in section B 1.7, when configuring a program, symbolic_variable
@@ -7233,7 +7255,8 @@ il_jump_operator:
 /***********************/
 expression:
   xor_expression
-| ref_expression  /* an extension to the IEC 61131-3 v2 standard, based on the IEC 61131-3 v3 standard */ 
+| ref_expression    /* an extension to the IEC 61131-3 v2 standard, based on the IEC 61131-3 v3 standard */ 
+| deref_expression  /* an extension to the IEC 61131-3 v2 standard, based on the IEC 61131-3 v3 standard */ 
 | expression OR xor_expression
 	{$$ = new or_expression_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
@@ -7252,6 +7275,14 @@ expression:
 ref_expression:
   REF '(' symbolic_variable ')'
 	{$$ = new ref_expression_c($3, locloc(@$));}
+;
+
+/*  DREF(var_name) */
+/*  This is an extension to the IEC 61131-3 standard. It is actually defined in the IEC 61131-3 v3 standard */
+/*  The DREF() operator accesses the variable stored in the specified address. Basically, it dereferences a pointer to the variable */
+deref_expression:
+  DREF '(' symbolic_variable ')'
+	{$$ = new deref_expression_c($3, locloc(@$));}
 ;
 
 xor_expression:

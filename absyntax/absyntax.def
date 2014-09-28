@@ -1139,16 +1139,17 @@ SYM_REF2(il_assign_out_operator_c, option, variable_name)
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
-SYM_REF1(ref_expression_c, exp)  /* an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
-SYM_REF2(or_expression_c, l_exp, r_exp)
+SYM_REF1(  ref_expression_c, exp)  /* an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+SYM_REF1(deref_expression_c, exp)  /* an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Dereferences an address!        */
+SYM_REF2( or_expression_c, l_exp, r_exp)
 SYM_REF2(xor_expression_c, l_exp, r_exp)
 SYM_REF2(and_expression_c, l_exp, r_exp)
 SYM_REF2(equ_expression_c, l_exp, r_exp)
 SYM_REF2(notequ_expression_c, l_exp, r_exp)
-SYM_REF2(lt_expression_c, l_exp, r_exp)
-SYM_REF2(gt_expression_c, l_exp, r_exp)
-SYM_REF2(le_expression_c, l_exp, r_exp)
-SYM_REF2(ge_expression_c, l_exp, r_exp)
+SYM_REF2( lt_expression_c, l_exp, r_exp)
+SYM_REF2( gt_expression_c, l_exp, r_exp)
+SYM_REF2( le_expression_c, l_exp, r_exp)
+SYM_REF2( ge_expression_c, l_exp, r_exp)
 SYM_REF2(add_expression_c, l_exp, r_exp, bool deprecated_operation;)
 SYM_REF2(sub_expression_c, l_exp, r_exp, bool deprecated_operation;)
 SYM_REF2(mul_expression_c, l_exp, r_exp, bool deprecated_operation;)

@@ -111,6 +111,15 @@
 #define __GET_LOCATED_REF(name, ...)\
 	(&((*(name.value)) __VA_ARGS__))
 
+#define __GET_VAR_DREF(name, ...)\
+	(*(name.value __VA_ARGS__))
+#define __GET_EXTERNAL_DREF(name, ...)\
+	(*((*(name.value)) __VA_ARGS__))
+#define __GET_EXTERNAL_FB_DREF(name, ...)\
+	(*(__GET_VAR(((*name) __VA_ARGS__))))
+#define __GET_LOCATED_DREF(name, ...)\
+	(*((*(name.value)) __VA_ARGS__))
+
 
 // variable setting macros
 #define __SET_VAR(prefix, name, suffix, new_value)\

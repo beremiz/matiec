@@ -1917,24 +1917,25 @@ void *visit(il_assign_out_operator_c *symbol) {
 /***********************/
 /* B 3.1 - Expressions */
 /***********************/
-void *visit(ref_expression_c *symbol) {return  s4o.print("REF("); symbol->exp->accept(*this); s4o.print(")");} /* an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
-void *visit(or_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " OR ");}
-void *visit(xor_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " XOR ");}
-void *visit(and_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " AND ");}
-void *visit(equ_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " = ");}
+void *visit(   ref_expression_c *symbol) {return  s4o.print( "REF("); symbol->exp->accept(*this); s4o.print(")");} /* an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+void *visit( deref_expression_c *symbol) {return  s4o.print("DREF("); symbol->exp->accept(*this); s4o.print(")");} /* an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+void *visit(    or_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " OR ");}
+void *visit(   xor_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " XOR ");}
+void *visit(   and_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " AND ");}
+void *visit(   equ_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " = ");}
 void *visit(notequ_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " <> ");}
-void *visit(lt_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " < ");}
-void *visit(gt_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " > ");}
-void *visit(le_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " <= ");}
-void *visit(ge_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " >= ");}
-void *visit(add_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " + ");}
-void *visit(sub_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " - ");}
-void *visit(mul_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " * ");}
-void *visit(div_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " / ");}
-void *visit(mod_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " MOD ");}
-void *visit(power_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " ** ");}
-void *visit(neg_expression_c *symbol) {return print_unary_expression(symbol, symbol->exp, "-");}
-void *visit(not_expression_c *symbol) {return print_unary_expression(symbol, symbol->exp, "NOT ");}
+void *visit(    lt_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " < ");}
+void *visit(    gt_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " > ");}
+void *visit(    le_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " <= ");}
+void *visit(    ge_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " >= ");}
+void *visit(   add_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " + ");}
+void *visit(   sub_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " - ");}
+void *visit(   mul_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " * ");}
+void *visit(   div_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " / ");}
+void *visit(   mod_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " MOD ");}
+void *visit( power_expression_c *symbol) {return print_binary_expression(symbol, symbol->l_exp, symbol->r_exp, " ** ");}
+void *visit(   neg_expression_c *symbol) {return print_unary_expression (symbol, symbol->exp, "-");}
+void *visit(   not_expression_c *symbol) {return print_unary_expression (symbol, symbol->exp, "NOT ");}
 
 void *visit(function_invocation_c *symbol) {
   symbol->function_name->accept(*this);

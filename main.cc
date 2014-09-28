@@ -122,7 +122,7 @@ static void printusage(const char *cmd) {
       /******************************************************/
   printf(" -s : allow use of safe datatypes (SAFEBOOL, etc.)   (defined in PLCOpen Safety)\n");
   printf(" -n : allow use of nested comments                   (an IEC 61131-3 v3 feature)\n");
-  printf(" -r : allow use of references (REF_TO, REF, NULL)    (an IEC 61131-3 v3 feature)\n");
+  printf(" -r : allow use of references (REF_TO, REF, ^, NULL) (an IEC 61131-3 v3 feature)\n");
   printf(" -R : allow use of REF_TO ANY datatypes              (a non-standard extension!)\n");
   printf("        as well as REF_TO in ARRAYs and STRUCTs      (a non-standard extension!)\n");
   printf(" -c : create conversion functions for enumerated data types\n");

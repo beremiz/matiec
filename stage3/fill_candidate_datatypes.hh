@@ -337,24 +337,25 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /***********************/
     /* B 3.1 - Expressions */
     /***********************/
-    void *visit(ref_expression_c *symbol);
-    void *visit(or_expression_c *symbol);
-    void *visit(xor_expression_c *symbol);
-    void *visit(and_expression_c *symbol);
-    void *visit(equ_expression_c *symbol);
-    void *visit(notequ_expression_c *symbol);
-    void *visit(lt_expression_c *symbol);
-    void *visit(gt_expression_c *symbol);
-    void *visit(le_expression_c *symbol);
-    void *visit(ge_expression_c *symbol);
-    void *visit(add_expression_c *symbol);
-    void *visit(sub_expression_c *symbol);
-    void *visit(mul_expression_c *symbol);
-    void *visit(div_expression_c *symbol);
-    void *visit(mod_expression_c *symbol);
-    void *visit(power_expression_c *symbol);
-    void *visit(neg_expression_c *symbol);
-    void *visit(not_expression_c *symbol);
+    void *visit(   deref_expression_c *symbol);
+    void *visit(     ref_expression_c *symbol);
+    void *visit(      or_expression_c *symbol);
+    void *visit(     xor_expression_c *symbol);
+    void *visit(     and_expression_c *symbol);
+    void *visit(     equ_expression_c *symbol);
+    void *visit(  notequ_expression_c *symbol);
+    void *visit(      lt_expression_c *symbol);
+    void *visit(      gt_expression_c *symbol);
+    void *visit(      le_expression_c *symbol);
+    void *visit(      ge_expression_c *symbol);
+    void *visit(     add_expression_c *symbol);
+    void *visit(     sub_expression_c *symbol);
+    void *visit(     mul_expression_c *symbol);
+    void *visit(     div_expression_c *symbol);
+    void *visit(     mod_expression_c *symbol);
+    void *visit(   power_expression_c *symbol);
+    void *visit(     neg_expression_c *symbol);
+    void *visit(     not_expression_c *symbol);
     void *visit(function_invocation_c *symbol);
 
     /*********************************/
