@@ -93,10 +93,10 @@ bool get_opt_safe_extensions();
 /************************************/
 bool get_opt_nested_comments();
 
-/************************************/
-/* whether to allow REF() operator  */
-/************************************/
-bool get_opt_ref_operator();
+/**************************************************************************/
+/* whether to allow REF(), DREF(), REF_TO, NULL and ^ operators/keywords  */
+/**************************************************************************/
+bool get_opt_ref_standard_extensions();
 
 
 

@@ -51,7 +51,7 @@
 
 
 
-
+static stage1_2_options_t options_;
 
 /******************************************************/
 /* whether we are supporting safe extensions          */
@@ -60,27 +60,18 @@
 /* Part 1: Concepts and Function Blocks,              */
 /* Version 1.0 – Official Release                   */
 /******************************************************/
-bool safe_extensions_ = false;
-bool get_opt_safe_extensions() {return safe_extensions_;}
+bool get_opt_safe_extensions() {return options_.safe_extensions;}
 
 /************************************/
 /* whether to allow nested comments */
 /************************************/
-bool nested_comments_ = false;
-bool get_opt_nested_comments() {return nested_comments_;}
+bool get_opt_nested_comments() {return options_.nested_comments;}
 
-/************************************/
-/* whether to allow REF() operator  */
-/************************************/
-bool ref_operator_ = false;
-bool get_opt_ref_operator() {return ref_operator_;}
+/**************************************************************************/
+/* whether to allow REF(), DREF(), REF_TO, NULL and ^ operators/keywords  */
+/**************************************************************************/
+bool get_opt_ref_standard_extensions() {return options_.ref_standard_extensions;}
 
-
-/******************************************************/
-/* whether we are supporting conversion functions     */
-/* for enumerate data types                           */
-/******************************************************/
-bool conversion_functions_ = false;
 
 
 /****************************************************/
@@ -234,12 +225,9 @@ char *strdup3(const char *a, const char *b, const char *c) {
 /***********************************************************************/
 /***********************************************************************/
 
-
 int stage2__(const char *filename, 
-             const char *includedir,     /* Include directory, where included files will be searched for... */
              symbol_c **tree_root_ref,
-             bool full_token_loc,        /* error messages specify full token location */
-             bool ref_to_any             /* allow use of non-standard REF_TO ANY datatypes */
+             stage1_2_options_t options
             );
 
 
@@ -254,11 +242,7 @@ int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t 
        *       These callback functions will get their data from local (to this file) global variables...
        *       We now set those variables...
        */
-
-  nested_comments_ = options.nested_comments;    
-  ref_operator_    = options.ref_operator;    
-  safe_extensions_ = options.safe_extensions;
-  conversion_functions_ = options.conversion_functions;
-  return stage2__(filename, options.includedir, tree_root_ref, options.full_token_loc, options.ref_to_any);
+  options_ = options;
+  return stage2__(filename, tree_root_ref, options);
 }
 

@@ -202,9 +202,12 @@ extern bool allow_extensible_function_parameters;
 extern bool full_token_loc;
 
 /* A global flag used to tell the parser whether to generate conversion function for enumerated data types. */
-extern bool conversion_functions_;
+extern bool conversion_functions;
 
-/* A global flag used to tell the parser whether to allow use of REF_TO ANY datatypes (non-standard extension) */
+/* A global flag used to tell the parser whether to allow use of DREF and '^' operators (defined in IEC 61131-3 v3) */
+extern bool allow_ref_dereferencing;
+
+/* A global flag used to tell the parser whether to allow use of REF_TO ANY datatypes (non-standard extension to IEC 61131-3 v3) */
 extern bool allow_ref_to_any;
 
 /* A global flag used to tell the parser whether to allow use of REF_TO as a struct or array element (non-standard extension) */
@@ -2552,7 +2555,7 @@ structure_type_name: identifier;
 
 data_type_declaration:
   TYPE type_declaration_list END_TYPE
-	{$$ = new data_type_declaration_c($2, locloc(@$)); if (conversion_functions_) include_string((create_enumtype_conversion_functions_c::get_declaration($$)).c_str());}
+	{$$ = new data_type_declaration_c($2, locloc(@$)); if (conversion_functions) include_string((create_enumtype_conversion_functions_c::get_declaration($$)).c_str());}
 /* ERROR_CHECK_BEGIN */
 | TYPE END_TYPE
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "no data type declared in data type(s) declaration."); yynerrs++;}
@@ -3403,7 +3406,12 @@ symbolic_variable:
 */
 | symbolic_variable '^'     
 	/* Dereferencing operator defined in IEC 61131-3 v3. However, implemented here differently then how it is defined in the standard! See following note for explanation! */
-	{$$ = new deref_expression_c($1, locloc(@$));}
+	{$$ = new deref_expression_c($1, locloc(@$));
+	 if (!allow_ref_dereferencing) {
+	   print_err_msg(locf(@$), locl(@$), "Derefencing REF_TO datatypes with '^' is not allowed (use -r option to activate support for this IEC 61131-3 v3 feature)."); 
+	   yynerrs++;
+	 }
+}
 ;
 /*
  * NOTE: The syntax defined in the v3 standard for the dereferencing operator '^' seems to me to be un-intentionally
@@ -8248,6 +8256,10 @@ bool allow_extensible_function_parameters = false;
 
 /* A global flag indicating whether to include the full variable location when printing out error messages... */
 bool full_token_loc;
+/* A global flag used to tell the parser whether to generate conversion function for enumerated data types. */
+bool conversion_functions = false;
+/* A global flag used to tell the parser whether to allow use of DREF and '^' operators (defined in IEC 61131-3 v3) */
+bool allow_ref_dereferencing;
 /* A global flag used to tell the parser whether to allow use of REF_TO ANY datatypes (non-standard extension) */
 bool allow_ref_to_any = false;
 /* A global flag used to tell the parser whether to allow use of REF_TO as a struct or array element (non-standard extension) */
@@ -8474,17 +8486,14 @@ NULL
 extern const char *INCLUDE_DIRECTORIES[];
 
 
-
 int stage2__(const char *filename, 
-             const char *includedir,   /* Include directory, where included files will be searched for... */
              symbol_c **tree_root_ref,
-             bool full_token_loc_,                     /* error messages specify full token location */
-             bool allow_ref_to_nonstandard_extensions_ /* allow use of non-standard REF_TO ANY datatypes, and REF_TO inside structs and arrays */
-            ) {
+             stage1_2_options_t options
+            ) {             
   char *libfilename = NULL;
 
-  if (includedir != NULL) {
-    INCLUDE_DIRECTORIES[0] = includedir;
+  if (options.includedir != NULL) {
+    INCLUDE_DIRECTORIES[0] = options.includedir;
   }
 
   /* first parse the standard library file... */
@@ -8511,9 +8520,11 @@ int stage2__(const char *filename,
 
   allow_function_overloading           = true;
   allow_extensible_function_parameters = true;
-  full_token_loc                       = full_token_loc_;
-  allow_ref_to_any                     = allow_ref_to_nonstandard_extensions_;
-  allow_ref_to_in_derived_datatypes    = allow_ref_to_nonstandard_extensions_;
+  full_token_loc                       = options.full_token_loc;
+  conversion_functions                 = options.conversion_functions;
+  allow_ref_dereferencing              = options.ref_standard_extensions;
+  allow_ref_to_any                     = options.ref_nonstand_extensions;
+  allow_ref_to_in_derived_datatypes    = options.ref_nonstand_extensions;
   if (yyparse() != 0)
       ERROR;
   fclose(libfile);
@@ -8546,9 +8557,11 @@ int stage2__(const char *filename,
 
   allow_function_overloading           = false;
   allow_extensible_function_parameters = false;
-  full_token_loc                       = full_token_loc_;
-  allow_ref_to_any                     = allow_ref_to_nonstandard_extensions_;
-  allow_ref_to_in_derived_datatypes    = allow_ref_to_nonstandard_extensions_;  
+  full_token_loc                       = options.full_token_loc;
+  conversion_functions                 = options.conversion_functions;
+  allow_ref_dereferencing              = options.ref_standard_extensions;
+  allow_ref_to_any                     = options.ref_nonstand_extensions;
+  allow_ref_to_in_derived_datatypes    = options.ref_nonstand_extensions;
   //allow_ref_to_any = false;    /* we only allow REF_TO ANY in library functions/FBs, no matter what the user asks for in the command line */
 
   if (yyparse() != 0) {

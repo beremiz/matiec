@@ -144,13 +144,13 @@ int main(int argc, char **argv) {
   int path_len;
 
   /* Default values for the command line options... */
-  stage1_2_options.safe_extensions      = false; /* allow use of SAFExxx datatypes */
-  stage1_2_options.full_token_loc       = false; /* error messages specify full token location */
-  stage1_2_options.conversion_functions = false; /* Create a conversion function for derived datatype */
-  stage1_2_options.nested_comments      = false; /* Allow the use of nested comments. */
-  stage1_2_options.ref_operator         = false; /* Allow the use of REF() operator. */
-  stage1_2_options.ref_to_any           = false; /* Allow the use of REF_TO ANY datatype. */
-  stage1_2_options.includedir           = NULL;  /* Include directory, where included files will be searched for... */
+  stage1_2_options.safe_extensions         = false; /* allow use of SAFExxx datatypes */
+  stage1_2_options.full_token_loc          = false; /* error messages specify full token location */
+  stage1_2_options.conversion_functions    = false; /* Create a conversion function for derived datatype */
+  stage1_2_options.nested_comments         = false; /* Allow the use of nested comments. */
+  stage1_2_options.ref_standard_extensions = false; /* Allow the use of REFerences (keywords REF_TO, REF, DREF, ^, NULL). */
+  stage1_2_options.ref_nonstand_extensions = false; /* Allow the use of non-standard extensions to REF_TO datatypes: REF_TO ANY, and REF_TO in struct elements! */
+  stage1_2_options.includedir              = NULL;  /* Include directory, where included files will be searched for... */
 
   /******************************************/
   /*   Parse command line options...        */
@@ -170,11 +170,11 @@ int main(int argc, char **argv) {
       stage1_2_options.safe_extensions = true;
       break;
     case 'R':
-      stage1_2_options.ref_operator = true; /* use of REF_TO ANY implies activating support for REF extensions! */
-      stage1_2_options.ref_to_any   = true;
+      stage1_2_options.ref_standard_extensions = true; /* use of REF_TO ANY implies activating support for REF extensions! */
+      stage1_2_options.ref_nonstand_extensions = true;
       break;
     case 'r':
-      stage1_2_options.ref_operator = true;
+      stage1_2_options.ref_standard_extensions = true;
       break;
     case 'c':
       stage1_2_options.conversion_functions = true;
