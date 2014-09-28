@@ -1899,7 +1899,7 @@ void *fill_candidate_datatypes_c::visit(deref_expression_c  *symbol) {
     ref_spec_c *ref_spec = dynamic_cast<ref_spec_c *>(symbol->exp->candidate_datatypes[i]);
     
     if (NULL != ref_spec)
-      add_datatype_to_candidate_list(symbol, ref_spec->type_name);
+      add_datatype_to_candidate_list(symbol, search_base_type_c::get_basetype_decl(ref_spec->type_name));
   }
   
   return NULL;
