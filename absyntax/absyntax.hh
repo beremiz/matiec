@@ -136,6 +136,8 @@ class symbol_c {
     symbol_c *datatype;
     /* The POU in which the symbolic variable (or structured variable, or array variable, or located variable, - any more?)
      * was declared. This will point to a Configuration, Resource, Program, FB, or Function.
+     * This is set in stage 3 by the datatype analyser algorithm (fill/narrow) for the symbols:
+     *  symbolic_variable_c, array_variable_c, structured_variable_c
      */
     symbol_c *scope;    
 

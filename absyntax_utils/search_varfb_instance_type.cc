@@ -428,13 +428,6 @@ void *search_varfb_instance_type_c::visit(deref_expression_c  *symbol) {
     current_basetype_id   = search_base_type_c::get_basetype_id  (ref_spec->type_name);
   }
   
-/* ########### WARNING ########################################################## */
-/* The following two lines DO NOT belong here. It is just a temporary measure until I get the chance 
- * to clean this up, and move it to fill/narrow candidate datatypes in stage 3 
- */
-  symbol->datatype = current_basetype_decl;
-  symbol->exp->datatype = ref_spec;
-  
   return NULL;
 }
 
@@ -453,13 +446,6 @@ void *search_varfb_instance_type_c::visit(deref_operator_c  *symbol) {
     current_basetype_decl = search_base_type_c::get_basetype_decl(ref_spec->type_name);
     current_basetype_id   = search_base_type_c::get_basetype_id  (ref_spec->type_name);
   }
-  
-/* ########### WARNING ########################################################## */
-/* The following two lines DO NOT belong here. It is just a temporary measure until I get the chance 
- * to clean this up, and move it to fill/narrow candidate datatypes in stage 3 
- */
-  symbol->datatype = current_basetype_decl;
-  symbol->exp->datatype = ref_spec;
   
   return NULL;
 }

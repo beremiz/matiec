@@ -62,7 +62,12 @@
 /**********************************************************/
 /**********************************************************/
 
+
+/****************************************************************************************************/
+/****************************************************************************************************/
 /* Return the identifier (name) of a datatype, typically declared in a TYPE .. END_TYPE declaration */
+/****************************************************************************************************/
+/****************************************************************************************************/
 class get_datatype_id_c: null_visitor_c {
   private:
     static get_datatype_id_c *singleton;
@@ -157,9 +162,13 @@ get_datatype_id_c *get_datatype_id_c::singleton = NULL;
 
 
 
-/***********************************************************************/
-/***********************************************************************/
 
+
+/**************************************************/
+/**************************************************/
+/* transform elementary data type class to string */
+/**************************************************/
+/**************************************************/
 
 /* A small helper class, to transform elementary data type to string.
  * this allows us to generate more relevant error messages...
@@ -273,6 +282,115 @@ get_datatype_id_str_c *get_datatype_id_str_c::singleton = NULL;
 
 
 
+/*********************************************************/
+/*********************************************************/
+/* get the datatype of a field inside a struct data type */
+/*********************************************************/
+/*********************************************************/
+
+class get_struct_info_c : null_visitor_c {
+  private:
+    symbol_c *current_field;
+    /* singleton class! */
+    static get_struct_info_c *singleton;
+
+  public:
+    get_struct_info_c(void) {current_field = NULL;}
+
+    static symbol_c *get_field_type_id(symbol_c *struct_type, symbol_c *field_name) {
+      if (NULL == singleton)    singleton = new get_struct_info_c;
+      if (NULL == singleton)    ERROR;
+      singleton->current_field = field_name;
+      return (symbol_c *)struct_type->accept(*singleton);
+    }
+
+
+  private:
+    /*************************/
+    /* B.1 - Common elements */
+    /*************************/
+    /********************************/
+    /* B 1.3.3 - Derived data types */
+    /********************************/
+    /*  structure_type_name ':' structure_specification */
+    /* NOTE: this is only used inside a TYPE ... END_TYPE declaration.  It is never used directly when declaring a new variable! */
+    /* NOTE: structure_specification will point to either initialized_structure_c  OR  structure_element_declaration_list_c */
+    void *visit(structure_type_declaration_c *symbol) {return symbol->structure_specification->accept(*this);}
+
+    /* structure_type_name ASSIGN structure_initialization */
+    /* structure_initialization may be NULL ! */
+    // SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
+    /* NOTE: only the initialized structure is never used when declaring a new variable instance */
+    void *visit(initialized_structure_c *symbol) {return symbol->structure_type_name->accept(*this);}
+
+    /* helper symbol for structure_declaration */
+    /* structure_declaration:  STRUCT structure_element_declaration_list END_STRUCT */
+    /* structure_element_declaration_list structure_element_declaration ';' */
+    void *visit(structure_element_declaration_list_c *symbol) {
+      /* now search the structure declaration */
+      for(int i = 0; i < symbol->n; i++) {
+        void *tmp = symbol->elements[i]->accept(*this);
+        if (NULL != tmp) return tmp;
+      }
+      return NULL; // not found!!
+    }  
+
+    /*  structure_element_name ':' spec_init */
+    void *visit(structure_element_declaration_c *symbol) {
+      if (compare_identifiers(symbol->structure_element_name, current_field) == 0)
+        return symbol->spec_init; /* found the type of the element we were looking for! */
+      return NULL;   /* not the element we are looking for! */
+    }
+      
+
+    /* helper symbol for structure_initialization */
+    /* structure_initialization: '(' structure_element_initialization_list ')' */
+    /* structure_element_initialization_list ',' structure_element_initialization */
+    void *visit(structure_element_initialization_list_c *symbol) {ERROR; return NULL;} /* should never get called... */
+    /*  structure_element_name ASSIGN value */
+    void *visit(structure_element_initialization_c *symbol) {ERROR; return NULL;} /* should never get called... */
+
+
+    /**************************************/
+    /* B.1.5 - Program organization units */
+    /**************************************/
+    /*****************************/
+    /* B 1.5.2 - Function Blocks */
+    /*****************************/
+    /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
+    // SYM_REF4(function_block_declaration_c, fblock_name, var_declarations, fblock_body, unused)
+    void *visit(function_block_declaration_c *symbol) {
+      /* now search the function block declaration for the variable... */
+      search_var_instance_decl_c search_decl(symbol);
+      return search_decl.get_decl(current_field);
+    }
+      
+    /*********************************************/
+    /* B.1.6  Sequential function chart elements */
+    /*********************************************/
+    /* INITIAL_STEP step_name ':' action_association_list END_STEP */
+    // SYM_REF2(initial_step_c, step_name, action_association_list)
+    void *visit(initial_step_c *symbol) {
+      identifier_c T("T");  identifier_c X("X");
+      /* Hard code the datatypes of the implicit variables Stepname.X and Stepname.T */
+      if (compare_identifiers(&T, current_field) == 0)  return &get_datatype_info_c::time_type_name;
+      if (compare_identifiers(&X, current_field) == 0)  return &get_datatype_info_c::bool_type_name;
+      return NULL;
+    }
+      
+    /* STEP step_name ':' action_association_list END_STEP */
+    // SYM_REF2(step_c, step_name, action_association_list)
+    /* The code here should be identicial to the code in the visit(initial_step_c *) visitor! So we simply call the other visitor! */
+    void *visit(step_c *symbol) {initial_step_c initial_step(NULL, NULL); return initial_step.accept(*this);}
+      
+}; // get_struct_info_c
+
+get_struct_info_c *get_struct_info_c::singleton = NULL;
+
+
+
+
+
 /**********************************************************/
 /**********************************************************/
 /**********************************************************/
@@ -294,6 +412,10 @@ symbol_c *get_datatype_info_c::get_id(symbol_c *datatype) {
   return get_datatype_id_c::get_id(datatype);
 }
 
+
+symbol_c *get_datatype_info_c::get_struct_field_type_id(symbol_c *struct_datatype, symbol_c *struct_fieldname) {
+  return get_struct_info_c::get_field_type_id(struct_datatype, struct_fieldname);
+}
 
 /* Returns true if both datatypes are equivalent (not necessarily equal!).
  * WARNING: May return true even though the datatypes are not the same/identicial!!!
