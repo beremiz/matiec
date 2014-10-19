@@ -405,3 +405,61 @@ void *search_varfb_instance_type_c::visit(step_c *symbol) {
   initial_step_c initial_step(NULL, NULL);
   return initial_step.accept(*this);
 }
+
+
+/***************************************/
+/* B.3 - Language ST (Structured Text) */
+/***************************************/
+/***********************/
+/* B 3.1 - Expressions */
+/***********************/
+/* SYM_REF1(deref_expression_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+void *search_varfb_instance_type_c::visit(deref_expression_c  *symbol) {
+  symbol->exp->accept(*this);
+  symbol_c *basetype_decl = current_basetype_decl;
+  this->init(); /* set all current_*** pointers to NULL ! */
+  
+  /* Check whether the expression if a REF_TO datatype, and if so, set the new datatype to the datatype it references! */
+    /* Determine whether the datatype is a ref_spec_c, as this is the class used as the    */
+    /* canonical/base datatype of REF_TO types (see search_base_type_c ...)                */   
+  ref_spec_c * ref_spec = dynamic_cast<ref_spec_c *>(basetype_decl);
+  if (NULL != ref_spec) {
+    current_basetype_decl = search_base_type_c::get_basetype_decl(ref_spec->type_name);
+    current_basetype_id   = search_base_type_c::get_basetype_id  (ref_spec->type_name);
+  }
+  
+/* ########### WARNING ########################################################## */
+/* The following two lines DO NOT belong here. It is just a temporary measure until I get the chance 
+ * to clean this up, and move it to fill/narrow candidate datatypes in stage 3 
+ */
+  symbol->datatype = current_basetype_decl;
+  symbol->exp->datatype = ref_spec;
+  
+  return NULL;
+}
+
+  
+/* SYM_REF1(deref_operator_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+void *search_varfb_instance_type_c::visit(deref_operator_c  *symbol) {
+  symbol->exp->accept(*this);
+  symbol_c *basetype_decl = current_basetype_decl;
+  this->init(); /* set all current_*** pointers to NULL ! */
+  
+  /* Check whether the expression if a REF_TO datatype, and if so, set the new datatype to the datatype it references! */
+    /* Determine whether the datatype is a ref_spec_c, as this is the class used as the    */
+    /* canonical/base datatype of REF_TO types (see search_base_type_c ...)                */   
+  ref_spec_c * ref_spec = dynamic_cast<ref_spec_c *>(basetype_decl);
+  if (NULL != ref_spec) {
+    current_basetype_decl = search_base_type_c::get_basetype_decl(ref_spec->type_name);
+    current_basetype_id   = search_base_type_c::get_basetype_id  (ref_spec->type_name);
+  }
+  
+/* ########### WARNING ########################################################## */
+/* The following two lines DO NOT belong here. It is just a temporary measure until I get the chance 
+ * to clean this up, and move it to fill/narrow candidate datatypes in stage 3 
+ */
+  symbol->datatype = current_basetype_decl;
+  symbol->exp->datatype = ref_spec;
+  
+  return NULL;
+}

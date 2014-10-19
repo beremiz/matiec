@@ -747,9 +747,10 @@ SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
  *           this into account!
  */
 // SYM_REF2(structured_variable_c, record_variable, field_selector)
+// TODO:  It seems to me this code no longer gets to execute, since the function is overloaded in generate_c_st_c and generate_c_il_c
+//        I will have to check this later, and delete this code if the above is really true!
 void *visit(structured_variable_c *symbol) {
   TRACE("structured_variable_c");
-
   symbol->record_variable->accept(*this);
   s4o.print(".");
   symbol->field_selector->accept(*this);

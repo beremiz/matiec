@@ -1906,6 +1906,23 @@ void *fill_candidate_datatypes_c::visit(deref_expression_c  *symbol) {
 }
 
 
+/* SYM_REF1(deref_operator_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+void *fill_candidate_datatypes_c::visit(deref_operator_c  *symbol) {
+  symbol->exp->accept(*this);
+
+  for (unsigned int i = 0; i < symbol->exp->candidate_datatypes.size(); i++) {
+    /* Determine whether the datatype is a ref_spec_c, as this is the class used as the    */
+    /* canonical/base datatype of REF_TO types (see search_base_type_c ...)                */ 
+    ref_spec_c *ref_spec = dynamic_cast<ref_spec_c *>(symbol->exp->candidate_datatypes[i]);
+    
+    if (NULL != ref_spec)
+      add_datatype_to_candidate_list(symbol, search_base_type_c::get_basetype_decl(ref_spec->type_name));
+  }
+  
+  return NULL;
+}
+
+
 /* SYM_REF1(ref_expression_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
 void *fill_candidate_datatypes_c::visit(  ref_expression_c  *symbol) {
   /* We must first determine the datatype of the expression passed to the REF() operator, with no ambiguities! 

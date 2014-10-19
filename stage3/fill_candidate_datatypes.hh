@@ -337,6 +337,7 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /***********************/
     /* B 3.1 - Expressions */
     /***********************/
+    void *visit(   deref_operator_c   *symbol);
     void *visit(   deref_expression_c *symbol);
     void *visit(     ref_expression_c *symbol);
     void *visit(      or_expression_c *symbol);

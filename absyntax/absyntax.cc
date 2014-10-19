@@ -56,6 +56,7 @@ symbol_c::symbol_c(
   this->last_line    = last_line;
   this->last_column  = last_column;
   this->last_order   = last_order;
+  this->parent       = NULL;
   this->datatype     = NULL;
   this->scope        = NULL;
   this->const_value._real64.status   = cs_undefined;
@@ -110,6 +111,12 @@ void list_c::add_element(symbol_c *elem) {
   elements[n++] = elem;
  
   if (NULL == elem) return;
+  /* Sometimes add_element() is called in stage3 or stage4 to temporarily add an AST symbol to the list.
+   * Since this symbol already belongs in some other place in the aST, it will have the 'parent' pointer set, 
+   * and so we must not overwrite it. We only set the 'parent' pointer on new symbols that have the 'parent'
+   * pointer still set to NULL.
+   */
+  if (NULL == elem->parent) elem->parent = this;  
 
   /* adjust the location parameters, taking into account the new element. */
   if (NULL == first_file) {
@@ -199,6 +206,7 @@ class_name_c::class_name_c(symbol_c *ref1,							\
                            int ll, int lc, const char *lfile, long int lorder)			\
 			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
   this->ref1 = ref1;										\
+  if  (NULL != ref1)   ref1->parent = this;							\
 }												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
@@ -211,6 +219,8 @@ class_name_c::class_name_c(symbol_c *ref1,							\
 			  :symbol_c(fl, fc, ffile, forder, ll, lc, lfile, lorder) {		\
   this->ref1 = ref1;										\
   this->ref2 = ref2;										\
+  if  (NULL != ref1)   ref1->parent = this;							\
+  if  (NULL != ref2)   ref2->parent = this;										\
 }												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
@@ -225,6 +235,9 @@ class_name_c::class_name_c(symbol_c *ref1,							\
   this->ref1 = ref1;										\
   this->ref2 = ref2;										\
   this->ref3 = ref3;										\
+  if  (NULL != ref1)   ref1->parent = this;							\
+  if  (NULL != ref2)   ref2->parent = this;							\
+  if  (NULL != ref3)   ref3->parent = this;							\
 }												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
@@ -241,6 +254,10 @@ class_name_c::class_name_c(symbol_c *ref1,							\
   this->ref2 = ref2;										\
   this->ref3 = ref3;										\
   this->ref4 = ref4;										\
+  if  (NULL != ref1)   ref1->parent = this;							\
+  if  (NULL != ref2)   ref2->parent = this;							\
+  if  (NULL != ref3)   ref3->parent = this;							\
+  if  (NULL != ref4)   ref4->parent = this;							\
 }												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
@@ -259,6 +276,11 @@ class_name_c::class_name_c(symbol_c *ref1,							\
   this->ref3 = ref3;										\
   this->ref4 = ref4;										\
   this->ref5 = ref5;										\
+  if  (NULL != ref1)   ref1->parent = this;							\
+  if  (NULL != ref2)   ref2->parent = this;							\
+  if  (NULL != ref3)   ref3->parent = this;							\
+  if  (NULL != ref4)   ref4->parent = this;							\
+  if  (NULL != ref5)   ref5->parent = this;							\
 }												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 
@@ -280,6 +302,12 @@ class_name_c::class_name_c(symbol_c *ref1,							\
   this->ref4 = ref4;										\
   this->ref5 = ref5;										\
   this->ref6 = ref6;										\
+  if  (NULL != ref1)   ref1->parent = this;							\
+  if  (NULL != ref2)   ref2->parent = this;							\
+  if  (NULL != ref3)   ref3->parent = this;							\
+  if  (NULL != ref4)   ref4->parent = this;							\
+  if  (NULL != ref5)   ref5->parent = this;							\
+  if  (NULL != ref6)   ref6->parent = this;							\
 }												\
 void *class_name_c::accept(visitor_c &visitor) {return visitor.visit(this);}
 

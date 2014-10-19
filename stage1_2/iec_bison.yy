@@ -3406,7 +3406,7 @@ symbolic_variable:
 */
 | symbolic_variable '^'     
 	/* Dereferencing operator defined in IEC 61131-3 v3. However, implemented here differently then how it is defined in the standard! See following note for explanation! */
-	{$$ = new deref_expression_c($1, locloc(@$));
+	{$$ = new deref_operator_c($1, locloc(@$));
 	 if (!allow_ref_dereferencing) {
 	   print_err_msg(locf(@$), locl(@$), "Derefencing REF_TO datatypes with '^' is not allowed (use -r option to activate support for this IEC 61131-3 v3 feature)."); 
 	   yynerrs++;

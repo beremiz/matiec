@@ -197,7 +197,17 @@ class search_varfb_instance_type_c : null_visitor_c {
     /* STEP step_name ':' action_association_list END_STEP */
     // SYM_REF2(step_c, step_name, action_association_list)
     void *visit(step_c *symbol);
-
+    
+    /***************************************/
+    /* B.3 - Language ST (Structured Text) */
+    /***************************************/
+    /***********************/
+    /* B 3.1 - Expressions */
+    /***********************/
+    /* SYM_REF1(deref_expression_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+    void *visit(deref_operator_c    *symbol);
+    void *visit(deref_expression_c  *symbol);
+    
 }; // search_varfb_instance_type_c
 
 

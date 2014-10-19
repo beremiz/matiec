@@ -1395,6 +1395,23 @@ void *narrow_candidate_datatypes_c::visit(deref_expression_c  *symbol) {
 }
 
 
+/* SYM_REF1(deref_operator_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
+void *narrow_candidate_datatypes_c::visit(deref_operator_c  *symbol) {
+  for (unsigned int i = 0; i < symbol->exp->candidate_datatypes.size(); i++) {
+    /* Determine whether the datatype is a ref_spec_c, as this is the class used as the    */
+    /* canonical/base datatype of REF_TO types (see search_base_type_c ...)                */ 
+    ref_spec_c *ref_spec = dynamic_cast<ref_spec_c *>(symbol->exp->candidate_datatypes[i]);
+    
+    if ((NULL != ref_spec) && get_datatype_info_c::is_type_equal(ref_spec->type_name, symbol->datatype))
+      /* if it points to the required datatype for symbol, then that is the required datatype for symbol->exp */
+      symbol->exp->datatype = ref_spec;
+  }
+  
+  symbol->exp->accept(*this);
+  return NULL;
+}
+
+
 /* SYM_REF1(ref_expression_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
 void *narrow_candidate_datatypes_c::visit(  ref_expression_c  *symbol) {
   if (symbol->exp->candidate_datatypes.size() > 0) {

@@ -109,6 +109,9 @@ class symbol_c {
     /*
      * Annotations produced during stage 1_2
      */    
+    /* Points to the parent symbol in the AST, i.e. the symbol in the AST that will contain the current symbol */
+    symbol_c *parent; 
+    
     /* Line number for the purposes of error checking.  */
     int first_line;
     int first_column;
