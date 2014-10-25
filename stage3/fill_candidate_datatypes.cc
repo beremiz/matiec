@@ -1966,6 +1966,9 @@ void *fill_candidate_datatypes_c::visit(deref_operator_c  *symbol) {
   if (symbol->candidate_datatypes.size() == 1)
     // narrow the symbol->datatype for this symbol as explained above!
     symbol->datatype = symbol->candidate_datatypes[0];
+
+  /*        Since the deref_operator_c may be used inside structures, we must handle set the 'scope' annotation here too! */
+  symbol->scope = symbol->exp->scope;
   
   return NULL;
 }
