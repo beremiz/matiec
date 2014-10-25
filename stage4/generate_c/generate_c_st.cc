@@ -349,7 +349,7 @@ void *visit(structured_variable_c *symbol) {
         if (NULL == symbol->record_variable->scope) ERROR;
         search_var_instance_decl_c search_var_instance_decl(symbol->record_variable->scope);
         if      (search_var_instance_decl_c::external_vt == search_var_instance_decl.get_vartype(get_var_name_c::get_last_field(symbol->record_variable)))
-          s4o.print("->"); /* please read the comment in visit(deref_operator_c *) tio understand what this line is doing! */
+          s4o.print("->");
         else if (dynamic_cast<deref_operator_c *>(symbol->record_variable) != NULL)
           s4o.print("->"); /* please read the comment in visit(deref_operator_c *) tio understand what this line is doing! */
         else  
@@ -402,7 +402,11 @@ void *visit(array_variable_c *symbol) {
       current_array_type = search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable);
       if (current_array_type == NULL) ERROR;
 
-      s4o.print(".table");
+      if (dynamic_cast<deref_operator_c *>(symbol->subscripted_variable) != NULL)
+        s4o.print("->"); /* please read the comment in visit(deref_operator_c *) tio understand what this line is doing! */
+      else
+        s4o.print(".");
+      s4o.print("table");
       wanted_variablegeneration = expression_vg;
       symbol->subscript_list->accept(*this);
       wanted_variablegeneration = complextype_suffix_vg;
@@ -498,12 +502,13 @@ void *visit(deref_operator_c *symbol) {
     s4o.print(")");  
   } else {
     /* For code in FBs, and PROGRAMS... */
-    if (NULL == dynamic_cast<structured_variable_c *>(symbol->parent)) {
+    if (   (NULL == dynamic_cast<structured_variable_c *>(symbol->parent)) 
+        && (NULL == dynamic_cast<     array_variable_c *>(symbol->parent))) {
       s4o.print("(*");  
       symbol->exp->accept(*this);    
       s4o.print(")");  
     } else {
-      /* We are in a structured variable - the structured_variable_c itself will already have printed out the '->' !! */ 
+      /* We are in a structured variable - the structured_variable_c or the array_variable_c will already have printed out the '->' !! */ 
       if (NULL != dynamic_cast<deref_operator_c *>(symbol->exp))
         STAGE4_ERROR(symbol, symbol->exp, "The use of two or more consecutive derefencing operators between a struct variable and its record elem (ex: struct_ref_ref^^.elem) is currently not supported for code inside a Function_Block.");
       symbol->exp->accept(*this);
