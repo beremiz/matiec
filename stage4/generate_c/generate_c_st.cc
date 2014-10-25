@@ -505,7 +505,7 @@ void *visit(deref_operator_c *symbol) {
     } else {
       /* We are in a structured variable - the structured_variable_c itself will already have printed out the '->' !! */ 
       if (NULL != dynamic_cast<deref_operator_c *>(symbol->exp))
-        STAGE4_ERROR(symbol, symbol->exp, "The use of consecutive derefencing operators between a struct and its elem (ex: struct_ref_ref^^.elem) is currently not supported for code inside a Function_Block.");
+        STAGE4_ERROR(symbol, symbol->exp, "The use of two or more consecutive derefencing operators between a struct variable and its record elem (ex: struct_ref_ref^^.elem) is currently not supported for code inside a Function_Block.");
       symbol->exp->accept(*this);
     }
   }
