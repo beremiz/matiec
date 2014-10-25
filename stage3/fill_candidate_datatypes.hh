@@ -78,6 +78,8 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
      */
     symbol_c *current_enumerated_spec_type;
     
+    /* pointer to the Function, FB, or Program currently being analysed */
+    symbol_c *current_scope;
     /* Pointer to the previous IL instruction, which contains the current data type (actually, the list of candidate data types) of the data stored in the IL stack, i.e. the default variable, a.k.a. accumulator */
     symbol_c *prev_il_instruction;
     /* the current IL operand being analyzed */

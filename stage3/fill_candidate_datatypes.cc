@@ -273,6 +273,7 @@ fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
 	prev_il_instruction = NULL;
 	search_var_instance_decl = NULL;
 	current_enumerated_spec_type = NULL;
+	current_scope = NULL;
 }
 
 fill_candidate_datatypes_c::~fill_candidate_datatypes_c(void) {
@@ -1170,6 +1171,7 @@ void *fill_candidate_datatypes_c::visit(ref_type_decl_c *symbol) {return fill_ty
 /* B 1.4 - Variables */
 /*********************/
 void *fill_candidate_datatypes_c::visit(symbolic_variable_c *symbol) {
+	symbol->scope = current_scope;  // the scope in which this variable was declared!
 	/*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
 	 *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
 	 *        in this fill_candidate_datatypes_c itself!
@@ -1231,7 +1233,11 @@ void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
 	 *        END_VAR
 	 */
 	symbol->subscripted_variable->accept(*this);
+	// the scope in which this variable was declared! It will be the same as the subscripted variable (a symbolic_variable_ !)
+	symbol->scope = symbol->subscripted_variable->scope;
+	if (NULL == symbol->scope) ERROR;
 
+	/* get the declaration of the data type __stored__ in the array... */
 	add_datatype_to_candidate_list(symbol, search_base_type_c::get_basetype_decl(get_datatype_info_c::get_array_storedtype_id(symbol->subscripted_variable->datatype)));   /* will only add if non NULL */
 
 	/*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
@@ -1273,6 +1279,7 @@ void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 	 *      (e.g.  arrayvar[ varx + TRUNC(realvar)].elem1)
 	 */
 	symbol->record_variable->accept(*this);
+	symbol->scope = symbol->record_variable->datatype;	// the scope in which this variable was declared! Will be used in stage4
 	
 	/*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
 	 *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
@@ -1412,6 +1419,7 @@ void *fill_candidate_datatypes_c::visit(located_var_decl_c *symbol) {
 void *fill_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 	if (debug) printf("Filling candidate data types list of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
 	local_enumerated_value_symtable.reset();
+	current_scope = symbol;	
 	symbol->var_declarations_list->accept(populate_enumvalue_symtable);
 
 	search_var_instance_decl = new search_var_instance_decl_c(symbol);
@@ -1420,6 +1428,7 @@ void *fill_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 	delete search_var_instance_decl;
 	search_var_instance_decl = NULL;
 
+	current_scope = NULL;	
 	local_enumerated_value_symtable.reset();
 	return NULL;
 }
@@ -1430,6 +1439,7 @@ void *fill_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 	if (debug) printf("Filling candidate data types list of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
 	local_enumerated_value_symtable.reset();
+	current_scope = symbol;	
 	symbol->var_declarations->accept(populate_enumvalue_symtable);
 
 	search_var_instance_decl = new search_var_instance_decl_c(symbol);
@@ -1438,6 +1448,7 @@ void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 	delete search_var_instance_decl;
 	search_var_instance_decl = NULL;
 
+	current_scope = NULL;	
 	local_enumerated_value_symtable.reset();
 	
 	/* The FB declaration itself may be used as a dataype! We now do the fill algorithm considering 
@@ -1454,6 +1465,7 @@ void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 void *fill_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 	if (debug) printf("Filling candidate data types list in program %s\n", ((token_c *)(symbol->program_type_name))->value);
 	local_enumerated_value_symtable.reset();
+	current_scope = symbol;	
 	symbol->var_declarations->accept(populate_enumvalue_symtable);
 	
 	search_var_instance_decl = new search_var_instance_decl_c(symbol);
@@ -1462,6 +1474,7 @@ void *fill_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 	delete search_var_instance_decl;
 	search_var_instance_decl = NULL;
 
+	current_scope = NULL;	
 	local_enumerated_value_symtable.reset();
 	return NULL;
 }

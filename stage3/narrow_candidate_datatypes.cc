@@ -70,7 +70,6 @@ narrow_candidate_datatypes_c::narrow_candidate_datatypes_c(symbol_c *ignore) {
 	fake_prev_il_instruction = NULL;
 	current_il_instruction   = NULL;
 	il_operand = NULL;
-	current_scope = NULL;
 }
 
 narrow_candidate_datatypes_c::~narrow_candidate_datatypes_c(void) {
@@ -683,7 +682,6 @@ void *narrow_candidate_datatypes_c::visit(ref_type_decl_c *symbol) {return narro
 /*********************/
 // SYM_REF1(symbolic_variable_c, var_name)
 void *narrow_candidate_datatypes_c::visit(symbolic_variable_c *symbol) {
-	symbol->scope = current_scope;  // the scope in which this variable was declared!
 	symbol->var_name->datatype = symbol->datatype;
 	return NULL;
 }
@@ -707,8 +705,6 @@ void *narrow_candidate_datatypes_c::visit(array_variable_c *symbol) {
 	if (symbol->subscripted_variable->candidate_datatypes.size() == 1)
 	  symbol->subscripted_variable->datatype = symbol->subscripted_variable->candidate_datatypes[0]; // set the datatype
 
-	// the scope in which this variable was declared! It will be the same as the subscripted variable (a symbolic_variable_ !)
-	symbol->scope = symbol->subscripted_variable->scope;	
 	return NULL;
 }
 
@@ -743,7 +739,6 @@ void *narrow_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 	if (symbol->record_variable->candidate_datatypes.size() == 1)
 	  symbol->record_variable->datatype = symbol->record_variable->candidate_datatypes[0]; // set the datatype
 
-	symbol->scope = symbol->record_variable->datatype;	// the scope in which this variable was declared!
 	return NULL;
 }
 
@@ -800,14 +795,12 @@ void *narrow_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 	symbol->type_name->datatype = search_base_type_c::get_basetype_decl(symbol->type_name);
 	symbol->datatype = symbol->type_name->datatype;
 	
-	current_scope = symbol;	
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	symbol->var_declarations_list->accept(*this);
 	if (debug) printf("Narrowing candidate data types list in body of function %s\n", ((token_c *)(symbol->derived_function_name))->value);
 	symbol->function_body->accept(*this);
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
-	current_scope = NULL;	
 	return NULL;
 }
 
@@ -815,14 +808,12 @@ void *narrow_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 /* B 1.5.2 Function blocks */
 /***************************/
 void *narrow_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
-	current_scope = symbol;	
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	symbol->var_declarations->accept(*this);
 	if (debug) printf("Narrowing candidate data types list in body of FB %s\n", ((token_c *)(symbol->fblock_name))->value);
 	symbol->fblock_body->accept(*this);
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
-	current_scope = NULL;	
 
 	// A FB declaration can also be used as a Datatype! We now do the narrow algorithm considering it as such!
 	if (symbol->candidate_datatypes.size() == 1)
@@ -834,14 +825,12 @@ void *narrow_candidate_datatypes_c::visit(function_block_declaration_c *symbol) 
 /* B 1.5.3 Programs */
 /********************/
 void *narrow_candidate_datatypes_c::visit(program_declaration_c *symbol) {
-	current_scope = symbol;	
 	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
 	symbol->var_declarations->accept(*this);
 	if (debug) printf("Narrowing candidate data types list in body of program %s\n", ((token_c *)(symbol->program_type_name))->value);
 	symbol->function_block_body->accept(*this);
 	delete search_varfb_instance_type;
 	search_varfb_instance_type = NULL;
-	current_scope = NULL;	
 	return NULL;
 }
 
