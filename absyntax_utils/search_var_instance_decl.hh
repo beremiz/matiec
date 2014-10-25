@@ -130,9 +130,10 @@ class search_var_instance_decl_c: public search_visitor_c {
     static const unsigned int non_retain_opt  = 0x0003;
 #endif    
     
-    symbol_c *   get_decl   (symbol_c *variable_instance_name); 
-    vt_t         get_vartype(symbol_c *variable_instance_name);
-    opt_t        get_option (symbol_c *variable_instance_name);
+    symbol_c *get_decl          (symbol_c *variable_instance_name); 
+    symbol_c *get_basetype_decl (symbol_c *variable_instance_name); 
+    vt_t      get_vartype       (symbol_c *variable_instance_name);
+    opt_t     get_option        (symbol_c *variable_instance_name);
 
   private:
     symbol_c *search_scope;

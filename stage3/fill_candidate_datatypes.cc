@@ -271,7 +271,7 @@ static populate_localenumvalue_symtable_c populate_enumvalue_symtable;
 fill_candidate_datatypes_c::fill_candidate_datatypes_c(symbol_c *ignore) {
 	il_operand = NULL;
 	prev_il_instruction = NULL;
-	search_varfb_instance_type = NULL;
+	search_var_instance_decl = NULL;
 	current_enumerated_spec_type = NULL;
 }
 
@@ -555,7 +555,7 @@ void fill_candidate_datatypes_c::handle_function_call(symbol_c *fcall, generic_f
  *        CU counter_var
  */
 void *fill_candidate_datatypes_c::handle_implicit_il_fb_call(symbol_c *il_instruction, const char *param_name, symbol_c *&called_fb_declaration) {
-	symbol_c *fb_decl = (NULL == il_operand)? NULL : search_varfb_instance_type->get_basetype_decl(il_operand);
+	symbol_c *fb_decl = (NULL == il_operand)? NULL : search_var_instance_decl->get_basetype_decl(il_operand);
 	if (! get_datatype_info_c::is_function_block(fb_decl)) fb_decl = NULL;
 
 	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
@@ -1173,10 +1173,11 @@ void *fill_candidate_datatypes_c::visit(symbolic_variable_c *symbol) {
 	/*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
 	 *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
 	 *        in this fill_candidate_datatypes_c itself!
-	 *        This is needed because we need to know in which scope (i.e. the datatype of the recor_variable in a structtured_variable_c)
-	 *        we will search for the field_variable of the structured_variable_c
+	 *        This is needed because we need to know in which scope (i.e. the datatype of the record_variable in a structtured_variable_c)
+	 *        we will search for the field_variable of the structured_variable_c. Similarly, it is also used to determine the datatype 
+	 *        to which a REF_TO variable points to. 
 	 */
-	symbol->datatype = search_varfb_instance_type->get_basetype_decl(symbol); // Do the narrow algorithm in this fill_candidate_datatypes_c!!
+	symbol->datatype = search_var_instance_decl->get_basetype_decl(symbol); // Do the narrow algorithm in this fill_candidate_datatypes_c!!
 	add_datatype_to_candidate_list(symbol, symbol->datatype); /* will only add if non NULL */
 	if (debug) std::cout << "VAR [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
@@ -1213,25 +1214,6 @@ void *fill_candidate_datatypes_c::visit(direct_variable_c *symbol) {
 /*  subscripted_variable '[' subscript_list ']' */
 // SYM_REF2(array_variable_c, subscripted_variable, subscript_list)
 void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
-	/* get the declaration of the data type __stored__ in the array... */
-	/* if we were to want the data type of the array itself, then we should call_param_name
-	 * search_varfb_instance_type->get_basetype_decl(symbol->subscripted_variable)
-	 */
-	add_datatype_to_candidate_list(symbol, search_varfb_instance_type->get_basetype_decl(symbol));   /* will only add if non NULL */
-
-	/*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
-	 *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
-	 *        in this fill_candidate_datatypes_c itself!
-	 *        This is needed because we need to know in which scope (i.e. the datatype of the recor_variable in a structtured_variable_c)
-	 *        we will search for the field_variable of the structured_variable_c
-	 */
-	if (symbol->candidate_datatypes.size() == 1)
-	  // narrow the symbol->datatype for this strcutured_variable as explained above!
-	  symbol->datatype = symbol->candidate_datatypes[0];
-
-	/* recursively call the subscript list, so we can check the data types of the expressions used for the subscripts */
-	symbol->subscript_list->accept(*this);
-
 	/* recursively call the subscripted_variable. We need to do this since the array variable may be stored inside a structured
 	 * variable (i.e. if it is an element inside a struct), in which case we want to recursively visit every element of the struct,
 	 * as it may contain more arrays whose subscripts must also be visited!
@@ -1249,6 +1231,22 @@ void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
 	 *        END_VAR
 	 */
 	symbol->subscripted_variable->accept(*this);
+
+	add_datatype_to_candidate_list(symbol, search_base_type_c::get_basetype_decl(get_datatype_info_c::get_array_storedtype_id(symbol->subscripted_variable->datatype)));   /* will only add if non NULL */
+
+	/*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
+	 *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
+	 *        in this fill_candidate_datatypes_c itself!
+	 *        This is needed because we need to know in which scope (i.e. the datatype of the record_variable in a structtured_variable_c)
+	 *        we will search for the field_variable of the structured_variable_c. Similarly, it is also used to determine the datatype 
+	 *        to which a REF_TO variable points to. 
+	 */
+	if (symbol->candidate_datatypes.size() == 1)
+	  // narrow the symbol->datatype for this array_variable as explained above!
+	  symbol->datatype = symbol->candidate_datatypes[0];
+
+	/* recursively call the subscript list, so we can check the data types of the expressions used for the subscripts */
+	symbol->subscript_list->accept(*this);
 
 	if (debug) std::cout << "ARRAY_VAR [" << symbol->candidate_datatypes.size() << "]\n";	
 	return NULL;
@@ -1279,8 +1277,9 @@ void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 	/*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
 	 *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
 	 *        in this fill_candidate_datatypes_c itself!
-	 *        This is needed because we need to know in which scope (i.e. the datatype of the recor_variable in a structtured_variable_c)
-	 *        we will search for the field_variable of the structured_variable_c
+	 *        This is needed because we need to know in which scope (i.e. the datatype of the record_variable in a structtured_variable_c)
+	 *        we will search for the field_variable of the structured_variable_c. Similarly, it is also used to determine the datatype 
+	 *        to which a REF_TO variable points to. 
 	 */
 	if (NULL != symbol->record_variable->datatype) 
 	  // We relly on the fact that we have already narrowed the symbol->datatype for the record variable, and use it as the scope in which the filed_variable is declared!
@@ -1299,9 +1298,6 @@ void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 
 void *fill_candidate_datatypes_c::visit(var1_list_c *symbol) {
   for(int i = 0; i < symbol->n; i++) {
-    /* We don't really need to set the datatype of each variable. We just check the declaration itself! 
-    add_datatype_to_candidate_list(symbol->elements[i], search_varfb_instance_type->get_basetype_decl(symbol->elements[i])); // will only add if non NULL 
-    */
     symbol->elements[i]->accept(*this); // handle the extensible_input_parameter_c, etc...
   }
   return NULL;
@@ -1418,11 +1414,11 @@ void *fill_candidate_datatypes_c::visit(function_declaration_c *symbol) {
 	local_enumerated_value_symtable.reset();
 	symbol->var_declarations_list->accept(populate_enumvalue_symtable);
 
-	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
+	search_var_instance_decl = new search_var_instance_decl_c(symbol);
 	symbol->var_declarations_list->accept(*this);
 	symbol->function_body->accept(*this);
-	delete search_varfb_instance_type;
-	search_varfb_instance_type = NULL;
+	delete search_var_instance_decl;
+	search_var_instance_decl = NULL;
 
 	local_enumerated_value_symtable.reset();
 	return NULL;
@@ -1436,11 +1432,11 @@ void *fill_candidate_datatypes_c::visit(function_block_declaration_c *symbol) {
 	local_enumerated_value_symtable.reset();
 	symbol->var_declarations->accept(populate_enumvalue_symtable);
 
-	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
+	search_var_instance_decl = new search_var_instance_decl_c(symbol);
 	symbol->var_declarations->accept(*this);
 	symbol->fblock_body->accept(*this);
-	delete search_varfb_instance_type;
-	search_varfb_instance_type = NULL;
+	delete search_var_instance_decl;
+	search_var_instance_decl = NULL;
 
 	local_enumerated_value_symtable.reset();
 	
@@ -1460,11 +1456,11 @@ void *fill_candidate_datatypes_c::visit(program_declaration_c *symbol) {
 	local_enumerated_value_symtable.reset();
 	symbol->var_declarations->accept(populate_enumvalue_symtable);
 	
-	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
+	search_var_instance_decl = new search_var_instance_decl_c(symbol);
 	symbol->var_declarations->accept(*this);
 	symbol->function_block_body->accept(*this);
-	delete search_varfb_instance_type;
-	search_varfb_instance_type = NULL;
+	delete search_var_instance_decl;
+	search_var_instance_decl = NULL;
 
 	local_enumerated_value_symtable.reset();
 	return NULL;
@@ -1679,7 +1675,7 @@ void *fill_candidate_datatypes_c::visit(il_jump_operation_c *symbol) {
 /* NOTE: The parameter 'called_fb_declaration'is used to pass data between stage 3 and stage4 */
 // SYM_REF4(il_fb_call_c, il_call_operator, fb_name, il_operand_list, il_param_list, symbol_c *called_fb_declaration)
 void *fill_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
-	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+	symbol_c *fb_decl = search_var_instance_decl->get_basetype_decl(symbol->fb_name);
 	if (! get_datatype_info_c::is_function_block(fb_decl)) fb_decl = NULL;
 
 	/* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
@@ -1948,8 +1944,9 @@ void *fill_candidate_datatypes_c::visit(deref_operator_c  *symbol) {
   /*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
    *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
    *        in this fill_candidate_datatypes_c itself!
-   *        This is needed because we need to know in which scope (i.e. the datatype of the recor_variable in a structtured_variable_c)
-   *        we will search for the field_variable of the structured_variable_c
+   *        This is needed because we need to know in which scope (i.e. the datatype of the record_variable in a structtured_variable_c)
+   *        we will search for the field_variable of the structured_variable_c. Similarly, it is also used to determine the datatype 
+   *        to which a REF_TO variable points to. 
    * 
    *        Since the deref_operator_c may be used inside structures, we must narrow it here, if possible!
    */
@@ -2120,7 +2117,7 @@ void *fill_candidate_datatypes_c::visit(assignment_statement_c *symbol) {
 /* B 3.2.2 Subprogram Control Statements */
 /*****************************************/
 void *fill_candidate_datatypes_c::visit(fb_invocation_c *symbol) {
-	symbol_c *fb_decl = search_varfb_instance_type->get_basetype_decl(symbol->fb_name);
+	symbol_c *fb_decl = search_var_instance_decl->get_basetype_decl(symbol->fb_name);
 	if (! get_datatype_info_c::is_function_block(fb_decl )) fb_decl = NULL;
 	if (NULL == fb_decl) ERROR; /* Although a call to a non-declared FB is a semantic error, this is currently caught by stage 2! */
 	

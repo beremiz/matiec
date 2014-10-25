@@ -417,6 +417,17 @@ symbol_c *get_datatype_info_c::get_struct_field_type_id(symbol_c *struct_datatyp
   return get_struct_info_c::get_field_type_id(struct_datatype, struct_fieldname);
 }
 
+symbol_c *get_datatype_info_c::get_array_storedtype_id(symbol_c *type_symbol) {
+  // returns the datatype of the variables stored in the array
+  symbol_c *basetype = search_base_type_c::get_basetype_decl(type_symbol);
+  array_specification_c *symbol = dynamic_cast<array_specification_c *>(basetype);
+
+  if (NULL != symbol) 
+    return symbol->non_generic_type_name;
+  return NULL; // this is not an array!
+}
+  
+  
 /* Returns true if both datatypes are equivalent (not necessarily equal!).
  * WARNING: May return true even though the datatypes are not the same/identicial!!!
  *          This occurs when at least one of the datatypes is of a generic

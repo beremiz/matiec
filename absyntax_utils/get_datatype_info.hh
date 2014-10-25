@@ -60,7 +60,8 @@ class get_datatype_info_c {
     static symbol_c   *get_id    (symbol_c *datatype); /* get the identifier (name) of the datatype); returns NULL if anonymous datatype! Does not work for elementary datatypes!*/
     static const char *get_id_str(symbol_c *datatype); /* get the identifier (name) of the datatype); returns NULL if anonymous datatype! */
 
-    static symbol_c *get_struct_field_type_id      (symbol_c *struct_datatype, symbol_c *struct_fieldname);
+    static symbol_c *get_struct_field_type_id      (symbol_c *struct_datatype, symbol_c *struct_fieldname); // returns datatype of a field in a structure
+    static symbol_c *get_array_storedtype_id       (symbol_c *type_symbol);    // returns the datatype of the variables stored in the array
     static symbol_c *get_ref_to                    (symbol_c *type_symbol);    // Defined in IEC 61131-3 v3 (returns the type that is being referenced/pointed to)        
     
     /* Returns true if both datatypes are equivalent (not necessarily equal!).

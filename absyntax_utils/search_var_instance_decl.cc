@@ -109,6 +109,10 @@ symbol_c *search_var_instance_decl_c::get_decl(symbol_c *variable) {
   return (symbol_c *)search_scope->accept(*this);
 }
 
+symbol_c *search_var_instance_decl_c::get_basetype_decl(symbol_c *variable) {
+  return search_base_type_c::get_basetype_decl(get_decl(variable));
+}
+
 search_var_instance_decl_c::vt_t search_var_instance_decl_c::get_vartype(symbol_c *variable) {
   this->current_vartype = none_vt;
   this->current_option  = none_opt;
