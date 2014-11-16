@@ -105,7 +105,9 @@ symbol_c *search_base_type_c::get_basetype_id  (symbol_c *symbol) {
 /*******************************************/
 /* B 1.1 - Letters, digits and identifiers */
 /*******************************************/
-void *search_base_type_c::visit(identifier_c *type_name) {
+
+
+void *search_base_type_c::handle_datatype_identifier(token_c *type_name) {
   symbol_c *type_decl;
 
   this->current_basetype_name = type_name;
@@ -128,6 +130,9 @@ void *search_base_type_c::visit(identifier_c *type_name) {
     
   return NULL;
 }
+
+void *search_base_type_c::visit(                 identifier_c *type_name) {return handle_datatype_identifier(type_name);}  // still needed to handle FB and program datatypes!
+void *search_base_type_c::visit(derived_datatype_identifier_c *type_name) {return handle_datatype_identifier(type_name);}
 
 
 /*********************/

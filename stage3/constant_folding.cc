@@ -788,8 +788,21 @@ static void intersect_prev_cvalues(il_instruction_c *symbol) {
 /***********************************************************************/
 /***********************************************************************/
 
-
-
+#if 0
+// not currently needed, so comment it out!...
+// returns true if both symbols have the same value in all the cvalues
+bool constant_folding_c::is_equal_cvalue(symbol_c *symbol_1, symbol_c *symbol_2) {
+	if (VALID_CVALUE  (real64, symbol_1) != VALID_CVALUE  (real64, symbol_2)) return false;
+	if (VALID_CVALUE  (uint64, symbol_1) != VALID_CVALUE  (uint64, symbol_2)) return false;
+	if (VALID_CVALUE  ( int64, symbol_1) != VALID_CVALUE  ( int64, symbol_2)) return false;
+	if (VALID_CVALUE  (  bool, symbol_1) != VALID_CVALUE  (  bool, symbol_2)) return false;
+	if (VALID_CVALUE  (real64, symbol_1) && !ISEQUAL_CVALUE(real64, symbol_1, symbol_2)) return false;
+	if (VALID_CVALUE  (uint64, symbol_1) && !ISEQUAL_CVALUE(uint64, symbol_1, symbol_2)) return false;
+	if (VALID_CVALUE  ( int64, symbol_1) && !ISEQUAL_CVALUE( int64, symbol_1, symbol_2)) return false;
+	if (VALID_CVALUE  (  bool, symbol_1) && !ISEQUAL_CVALUE(  bool, symbol_1, symbol_2)) return false;
+	return true;
+}
+#endif
 
 
 

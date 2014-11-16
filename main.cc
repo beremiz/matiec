@@ -113,15 +113,8 @@ static void printusage(const char *cmd) {
   printf(" -h : show this help message\n");
   printf(" -v : print version number\n");  
   printf(" -f : display full token location on error messages\n");
-      /******************************************************/
-      /* whether we are supporting safe extensions          */
-      /* as defined in PLCopen - Technical Committee 5      */
-      /* Safety Software Technical Specification,           */
-      /* Part 1: Concepts and Function Blocks,              */
-      /* Version 1.0 is Official Release                    */
-      /******************************************************/
-  printf(" -s : allow use of safe datatypes (SAFEBOOL, etc.)   (defined in PLCOpen Safety)\n");
-  printf(" -n : allow use of nested comments                   (an IEC 61131-3 v3 feature)\n");
+  printf(" -l : use a relaxed datatype equivalence model       (a non-standard extension?)\n");  
+  printf(" -s : allow use of safe datatypes (SAFEBOOL, etc.)   (defined in PLCOpen Safety)\n"); // PLCopen TC5 "Safety Software Technical Specification - Part 1" v1.0
   printf(" -r : allow use of references (REF_TO, REF, ^, NULL) (an IEC 61131-3 v3 feature)\n");
   printf(" -R : allow use of REF_TO ANY datatypes              (a non-standard extension!)\n");
   printf("        as well as REF_TO in ARRAYs and STRUCTs      (a non-standard extension!)\n");
@@ -135,27 +128,32 @@ static void printusage(const char *cmd) {
 }
 
 
+/* declare the global options variable */
+runtime_options_t runtime_options;
+
 
 int main(int argc, char **argv) {
   symbol_c *tree_root;
   char * builddir = NULL;
-  stage1_2_options_t stage1_2_options;
   int optres, errflg = 0;
   int path_len;
 
   /* Default values for the command line options... */
-  stage1_2_options.safe_extensions         = false; /* allow use of SAFExxx datatypes */
-  stage1_2_options.full_token_loc          = false; /* error messages specify full token location */
-  stage1_2_options.conversion_functions    = false; /* Create a conversion function for derived datatype */
-  stage1_2_options.nested_comments         = false; /* Allow the use of nested comments. */
-  stage1_2_options.ref_standard_extensions = false; /* Allow the use of REFerences (keywords REF_TO, REF, DREF, ^, NULL). */
-  stage1_2_options.ref_nonstand_extensions = false; /* Allow the use of non-standard extensions to REF_TO datatypes: REF_TO ANY, and REF_TO in struct elements! */
-  stage1_2_options.includedir              = NULL;  /* Include directory, where included files will be searched for... */
+  runtime_options.safe_extensions         = false; /* allow use of SAFExxx datatypes */
+  runtime_options.full_token_loc          = false; /* error messages specify full token location */
+  runtime_options.conversion_functions    = false; /* Create a conversion function for derived datatype */
+  runtime_options.nested_comments         = false; /* Allow the use of nested comments. */
+  runtime_options.ref_standard_extensions = false; /* Allow the use of REFerences (keywords REF_TO, REF, DREF, ^, NULL). */
+  runtime_options.ref_nonstand_extensions = false; /* Allow the use of non-standard extensions to REF_TO datatypes: REF_TO ANY, and REF_TO in struct elements! */
+  runtime_options.includedir              = NULL;  /* Include directory, where included files will be searched for... */
 
+  /* Default values for the command line options... */
+  runtime_options.relaxed_datatype_model    = false; /* by default use the strict datatype equivalence model */
+  
   /******************************************/
   /*   Parse command line options...        */
   /******************************************/
-  while ((optres = getopt(argc, argv, ":nhvfrRscI:T:O:")) != -1) {
+  while ((optres = getopt(argc, argv, ":nhvflsrRcI:T:O:")) != -1) {
     switch(optres) {
     case 'h':
       printusage(argv[0]);
@@ -163,24 +161,28 @@ int main(int argc, char **argv) {
     case 'v':
       fprintf(stdout, "%s version %s\n" "changeset id: %s\n", PACKAGE_NAME, PACKAGE_VERSION, HGVERSION);      
       return 0;
+    case 'l':
+      runtime_options.relaxed_datatype_model = true;
+      break;
+  
     case 'f':
-      stage1_2_options.full_token_loc = true;
+      runtime_options.full_token_loc = true;
       break;
     case 's':
-      stage1_2_options.safe_extensions = true;
+      runtime_options.safe_extensions = true;
       break;
     case 'R':
-      stage1_2_options.ref_standard_extensions = true; /* use of REF_TO ANY implies activating support for REF extensions! */
-      stage1_2_options.ref_nonstand_extensions = true;
+      runtime_options.ref_standard_extensions = true; /* use of REF_TO ANY implies activating support for REF extensions! */
+      runtime_options.ref_nonstand_extensions = true;
       break;
     case 'r':
-      stage1_2_options.ref_standard_extensions = true;
+      runtime_options.ref_standard_extensions = true;
       break;
     case 'c':
-      stage1_2_options.conversion_functions = true;
+      runtime_options.conversion_functions = true;
       break;
     case 'n':
-      stage1_2_options.nested_comments = true;
+      runtime_options.nested_comments = true;
       break;
     case 'I':
       /* NOTE: To improve the usability under windows:
@@ -190,7 +192,7 @@ int main(int argc, char **argv) {
        */
       path_len = strlen(optarg) - 1;
       if (optarg[path_len] == '\\') optarg[path_len]= '\0';
-      stage1_2_options.includedir = optarg;
+      runtime_options.includedir = optarg;
       break;
     case 'T':
       /* NOTE: see note above */
@@ -236,7 +238,7 @@ int main(int argc, char **argv) {
   /*   Run the compiler...   */
   /***************************/
   /* 1st Pass */
-  if (stage1_2(argv[optind], &tree_root, stage1_2_options) < 0)
+  if (stage1_2(argv[optind], &tree_root) < 0)
     return EXIT_FAILURE;
 
   /* 2nd Pass */
@@ -245,7 +247,7 @@ int main(int argc, char **argv) {
     /* moved to bison, although it could perfectly well still be here instead of in bison code. */
   //add_en_eno_param_decl_c::add_to(tree_root);
 
-  /* Do semantic verification of code (data type and lvalue checking currently implemented) */
+  /* Do semantic verification of code */
   if (stage3(tree_root) < 0)
     return EXIT_FAILURE;
   

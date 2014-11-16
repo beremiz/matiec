@@ -43,6 +43,7 @@
 #include "../absyntax/absyntax.hh"
 
 
+#include "../main.hh"
 #include "stage1_2.hh"
 #include "iec_bison.hh"
 #include "stage1_2_priv.hh"
@@ -51,7 +52,6 @@
 
 
 
-static stage1_2_options_t options_;
 
 /******************************************************/
 /* whether we are supporting safe extensions          */
@@ -60,17 +60,17 @@ static stage1_2_options_t options_;
 /* Part 1: Concepts and Function Blocks,              */
 /* Version 1.0 – Official Release                   */
 /******************************************************/
-bool get_opt_safe_extensions() {return options_.safe_extensions;}
+bool get_opt_safe_extensions() {return runtime_options.safe_extensions;}
 
 /************************************/
 /* whether to allow nested comments */
 /************************************/
-bool get_opt_nested_comments() {return options_.nested_comments;}
+bool get_opt_nested_comments() {return runtime_options.nested_comments;}
 
 /**************************************************************************/
 /* whether to allow REF(), DREF(), REF_TO, NULL and ^ operators/keywords  */
 /**************************************************************************/
-bool get_opt_ref_standard_extensions() {return options_.ref_standard_extensions;}
+bool get_opt_ref_standard_extensions() {return runtime_options.ref_standard_extensions;}
 
 
 
@@ -226,12 +226,11 @@ char *strdup3(const char *a, const char *b, const char *c) {
 /***********************************************************************/
 
 int stage2__(const char *filename, 
-             symbol_c **tree_root_ref,
-             stage1_2_options_t options
+             symbol_c **tree_root_ref
             );
 
 
-int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t options) {
+int stage1_2(const char *filename, symbol_c **tree_root_ref) {
       /* NOTE: we only call stage2 (bison - syntax analysis) directly, as stage 2 will itself call stage1 (flex - lexical analysis)
        *       automatically as needed
        */
@@ -242,7 +241,6 @@ int stage1_2(const char *filename, symbol_c **tree_root_ref, stage1_2_options_t 
        *       These callback functions will get their data from local (to this file) global variables...
        *       We now set those variables...
        */
-  options_ = options;
-  return stage2__(filename, tree_root_ref, options);
+  return stage2__(filename, tree_root_ref);
 }
 

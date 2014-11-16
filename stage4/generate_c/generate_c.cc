@@ -250,7 +250,7 @@ int  stage4_parse_options(char *options) {}
  *     LEN( STRING) : INT     -> prints out ->  INT__STRING
  *     MUL(TIME, INT) : TIME  -> prints out ->  TIME__TIME__INT
  */
-class print_function_parameter_data_types_c: public generate_c_base_c {
+class print_function_parameter_data_types_c: public generate_c_base_and_typeid_c {
   private:
     symbol_c *current_type;
     bool_type_name_c tmp_bool;
@@ -269,7 +269,7 @@ class print_function_parameter_data_types_c: public generate_c_base_c {
     
   public:
     print_function_parameter_data_types_c(stage4out_c *s4o_ptr): 
-      generate_c_base_c(s4o_ptr)
+      generate_c_base_and_typeid_c(s4o_ptr)
       {current_type = NULL;}
 
     /**************************************/
@@ -752,185 +752,6 @@ void *generate_c_SFC_IL_ST_c::visit(statement_list_c *symbol) {
 
 
 
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-/***********************************************************************/
-
-
-identifier_c *generate_unique_id(const char *prefix = "", symbol_c *clone = NULL) {
-  static int counter = 0;
-  
-  counter++;
-  int   len = snprintf(NULL, 0, "%s__UID_%d", prefix, counter); // UID -> Unique IDentifier
-  char *str = (char *)malloc(len+1);
-  if (snprintf(str, len+1,      "%s__UID_%d", prefix, counter) < 0) ERROR;
-  
-  identifier_c *id = new identifier_c(str);
-  if (NULL == id) ERROR;
-  if (NULL != clone)
-    *(dynamic_cast<symbol_c *>(id)) = *(dynamic_cast<symbol_c *>(clone));
-  return id;
-}
-
-
-identifier_c *generate_unique_id(symbol_c *prefix, symbol_c *clone = NULL) {
-  token_c *token = dynamic_cast<token_c *>(prefix);
-  //if (NULL == token) ERROR;
-  if (NULL == token)
-    return generate_unique_id("", clone);
-  return generate_unique_id(token->value, clone);
-}
-
-
-/* This class will generate a new datatype for each implicitly declared array datatype
- * (i.e. arrays declared in a variable declaration, or a struct datatype declaration...)
- * It will do the same for implicitly declared REF_TO datatypes.
- * 
- * The class will be called once for each POU declaration, and once for each derived datatype declaration.
- * 
- * e.g.:
- *      VAR  a: ARRAY [1..3] OF INT; END_VAR   <---- ARRAY datatype is implicitly declared inside the variable declaration
- *      TYPE STRUCT
- *               a: ARRAY [1..3] OF INT;       <---- ARRAY datatype is implicitly declared inside the struct type declaration  
- *               b: INT;
- *            END_STRUCT
- *      END_TYPE
- */
-class generate_c_datatypes_c: public iterator_visitor_c {
-  private:
-    generate_c_typedecl_c generate_c_typedecl;
-    symbol_c *prefix;
-  public:
-    generate_c_datatypes_c(stage4out_c *s4o_incl_ptr)
-      : generate_c_typedecl(s4o_incl_ptr) {
-        prefix = NULL;
-    };
-    virtual ~generate_c_datatypes_c(void) {
-    }
-
-    /*************************/
-    /* B.1 - Common elements */
-    /*************************/
-    /**********************/
-    /* B.1.3 - Data types */
-    /**********************/
-    /********************************/
-    /* B 1.3.3 - Derived data types */
-    /********************************/
-    /*  identifier ':' array_spec_init */
-    void *visit(array_type_declaration_c *symbol) {return NULL;} // This is not an implicitly defined array!
-
-    /* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
-    void *visit(ref_spec_c *symbol) {
-      identifier_c *id = generate_unique_id(prefix, symbol);
-      /* Warning: The following is dangerous... 
-       * We are asking the generate_c_typedecl_c visitor to visit a newly created ref_spec_init_c object
-       * that has not been through stage 3, and therefore does not have stage 3 annotations filled in.
-       * This will only work if generate_c_typedecl_c does ot depend on the stage 3 annotations!
-       */
-      ref_spec_init_c   ref_spec(symbol, NULL);
-      ref_type_decl_c   ref_decl(id, &ref_spec);
-      ref_decl.accept(generate_c_typedecl); // Must be done _before_ adding the annotation, due to the way generate_c_typedecl_c works
-      symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = id;
-      return NULL;
-    }
-
-    /* For the moment, we do not support initialising reference data types */
-    /* ref_spec_init: ref_spec [ ASSIGN ref_initialization ] */ 
-    /* NOTE: ref_initialization may be NULL!! */
-    // SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
-    void *visit(ref_spec_init_c *symbol) {
-      symbol->ref_spec->accept(*this);
-      int implicit_id_count = symbol->ref_spec->anotations_map.count("generate_c_annotaton__implicit_type_id");
-      if (implicit_id_count  > 1) ERROR;
-      if (implicit_id_count == 1)
-        symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = symbol->ref_spec->anotations_map["generate_c_annotaton__implicit_type_id"];
-      return NULL;
-    }
-
-    /* ref_type_decl: identifier ':' ref_spec_init */
-    void *visit(ref_type_decl_c *symbol) {return NULL;} // This is not an implicitly defined REF_TO!
-
-    /******************************************/
-    /* B 1.4.3 - Declaration & Initialization */
-    /******************************************/
-    void *visit(edge_declaration_c           *symbol) {return NULL;}
-    void *visit(en_param_declaration_c       *symbol) {return NULL;}
-    void *visit(eno_param_declaration_c      *symbol) {return NULL;}
-
-    /* array_specification [ASSIGN array_initialization] */
-    /* array_initialization may be NULL ! */
-    void *visit(array_spec_init_c *symbol) {
-      symbol->array_specification->accept(*this);
-      int implicit_id_count = symbol->array_specification->anotations_map.count("generate_c_annotaton__implicit_type_id");
-      if (implicit_id_count  > 1) ERROR;
-      if (implicit_id_count == 1)
-        symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = symbol->array_specification->anotations_map["generate_c_annotaton__implicit_type_id"];
-      return NULL;
-    }
-
-    /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
-    void *visit(array_specification_c *symbol) {
-      identifier_c *id = generate_unique_id(prefix, symbol);
-      /* Warning: The following is dangerous... 
-       * We are asking the generate_c_typedecl_c visitor to visit a newly created array_type_declaration_c object
-       * that has not been through stage 3, and therefore does not have stage 3 annotations filled in.
-       * This will only work if generate_c_typedecl_c does ot depend on the stage 3 annotations!
-       */
-      array_spec_init_c        array_spec(symbol, NULL);
-      array_type_declaration_c array_decl(id, &array_spec);
-      array_decl.accept(generate_c_typedecl); // Must be done _before_ adding the annotation, due to the way generate_c_typedecl_c works
-      symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = id;
-      return NULL;
-    }
-    
-    /*  var1_list ':' initialized_structure */
-    // SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
-    void *visit(structured_var_init_decl_c   *symbol) {return NULL;}
-
-    /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
-    /* structure_initialization -> may be NULL ! */
-    void *visit(fb_name_decl_c               *symbol) {return NULL;}
-
-    /*  var1_list ':' structure_type_name */
-    //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
-    void *visit(structured_var_declaration_c *symbol) {return NULL;}
-
-
-    /***********************/
-    /* B 1.5.1 - Functions */
-    /***********************/      
-    void *visit(function_declaration_c *symbol) {
-      prefix = symbol->derived_function_name;
-      symbol->var_declarations_list->accept(*this);
-      prefix = NULL;
-      return NULL;
-    }
-    /*****************************/
-    /* B 1.5.2 - Function Blocks */
-    /*****************************/
-    void *visit(function_block_declaration_c *symbol) {
-      prefix = symbol->fblock_name;
-      symbol->var_declarations->accept(*this);
-      prefix = NULL;
-      return NULL;
-    }
-    /**********************/
-    /* B 1.5.3 - Programs */
-    /**********************/    
-    void *visit(program_declaration_c *symbol) {
-      prefix = symbol->program_type_name;
-      symbol->var_declarations->accept(*this);
-      prefix = NULL;
-      return NULL;
-    }
-};
-
-
-
-
 
 
 
@@ -986,8 +807,8 @@ class generate_c_pous_c {
     /*   FUNCTION derived_function_name ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
     /* | FUNCTION derived_function_name ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
     static void handle_function(function_declaration_c *symbol, stage4out_c &s4o, bool print_declaration) {
-      generate_c_vardecl_c *vardecl = NULL;
-      generate_c_base_c     print_base(&s4o);
+      generate_c_vardecl_c          *vardecl = NULL;
+      generate_c_base_and_typeid_c   print_base(&s4o);
       
       TRACE("function_declaration_c");
     
@@ -1123,9 +944,9 @@ class generate_c_pous_c {
     /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
     //SYM_REF4(function_block_declaration_c, fblock_name, var_declarations, fblock_body, unused)
     static void handle_function_block(function_block_declaration_c *symbol, stage4out_c &s4o, bool print_declaration) {
-      generate_c_vardecl_c     *vardecl;
-      generate_c_sfcdecl_c     *sfcdecl;
-      generate_c_base_c         print_base(&s4o);
+      generate_c_vardecl_c          *vardecl;
+      generate_c_sfcdecl_c          *sfcdecl;
+      generate_c_base_and_typeid_c   print_base(&s4o);
       TRACE("function_block_declaration_c");
     
       /* (A) Function Block data structure declaration... */
@@ -1325,9 +1146,9 @@ class generate_c_pous_c {
     /*  PROGRAM program_type_name program_var_declarations_list function_block_body END_PROGRAM */
     //SYM_REF4(program_declaration_c, program_type_name, var_declarations, function_block_body, unused)
     static void handle_program(program_declaration_c *symbol, stage4out_c &s4o, bool print_declaration) {
-      generate_c_vardecl_c     *vardecl;
-      generate_c_sfcdecl_c     *sfcdecl;
-      generate_c_base_c         print_base(&s4o);
+      generate_c_vardecl_c          *vardecl;
+      generate_c_sfcdecl_c          *sfcdecl;
+      generate_c_base_and_typeid_c   print_base(&s4o);
       TRACE("program_declaration_c");
     
       /* (A) Program data structure declaration... */
@@ -1499,13 +1320,13 @@ class generate_c_pous_c {
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_c_config_c: public generate_c_base_c {
+class generate_c_config_c: public generate_c_base_and_typeid_c {
     private:
     stage4out_c &s4o_incl;
     
     public:
     generate_c_config_c(stage4out_c *s4o_ptr, stage4out_c *s4o_incl_ptr)
-      : generate_c_base_c(s4o_ptr), s4o_incl(*s4o_incl_ptr) {
+      : generate_c_base_and_typeid_c(s4o_ptr), s4o_incl(*s4o_incl_ptr) {
     };
 
     virtual ~generate_c_config_c(void) {}
@@ -1710,7 +1531,7 @@ void *visit(single_resource_declaration_c *symbol) {
 /***********************************************************************/
 
 
-class generate_c_resources_c: public generate_c_typedecl_c {
+class generate_c_resources_c: public generate_c_base_and_typeid_c {
 
   search_var_instance_decl_c *search_config_instance;
   search_var_instance_decl_c *search_resource_instance;
@@ -1726,7 +1547,7 @@ class generate_c_resources_c: public generate_c_typedecl_c {
 
   public:
     generate_c_resources_c(stage4out_c *s4o_ptr, symbol_c *config_scope, symbol_c *resource_scope, unsigned long time)
-      : generate_c_typedecl_c(s4o_ptr) {
+      : generate_c_base_and_typeid_c(s4o_ptr) {
       current_configuration = config_scope;
       search_config_instance   = new search_var_instance_decl_c(config_scope);
       search_resource_instance = new search_var_instance_decl_c(resource_scope);
@@ -2237,9 +2058,9 @@ class generate_c_c: public iterator_visitor_c {
     stage4out_c     located_variables_s4o;
     stage4out_c             variables_s4o;
     
-    generate_c_datatypes_c generate_c_datatypes;
-    generate_c_typedecl_c  generate_c_typedecl;
-    generate_c_pous_c      generate_c_pous;
+    generate_c_typedecl_c          generate_c_typedecl;
+    generate_c_implicit_typedecl_c generate_c_implicit_typedecl;
+    generate_c_pous_c              generate_c_pous;
     
     symbol_c   *current_configuration;
 
@@ -2257,8 +2078,8 @@ class generate_c_c: public iterator_visitor_c {
             pous_incl_s4o(builddir, "POUS", "h"),
             located_variables_s4o(builddir, "LOCATED_VARIABLES","h"),
             variables_s4o(builddir, "VARIABLES","csv"),
-            generate_c_datatypes(&pous_incl_s4o),
-            generate_c_typedecl (&pous_incl_s4o)
+            generate_c_typedecl         (&pous_incl_s4o),
+            generate_c_implicit_typedecl(&pous_incl_s4o, &generate_c_typedecl)
     {
       current_builddir = builddir;
       current_configuration = NULL;
@@ -2337,7 +2158,7 @@ class generate_c_c: public iterator_visitor_c {
     /* helper symbol for data_type_declaration */
     void *visit(type_declaration_list_c *symbol) {
       for(int i = 0; i < symbol->n; i++) {
-        symbol->elements[i]->accept(generate_c_datatypes);
+        symbol->elements[i]->accept(generate_c_implicit_typedecl);
         symbol->elements[i]->accept(generate_c_typedecl);
       }
       return NULL;
@@ -2349,14 +2170,14 @@ class generate_c_c: public iterator_visitor_c {
 #define handle_pou(fname,pname) \
       if (!allow_output) return NULL;\
       if (generate_pou_filepairs__) {\
-	const char *pou_name = get_datatype_info_c::get_id_str(pname);\
+        const char *pou_name = get_datatype_info_c::get_id_str(pname);\
         stage4out_c s4o_c(current_builddir, pou_name, "c");\
         stage4out_c s4o_h(current_builddir, pou_name, "h");\
         s4o_c.print("#include \""); s4o_c.print(pou_name); s4o_c.print(".h\"\n");\
         s4o_h.print("#ifndef __");  s4o_h.print(pou_name); s4o_h.print("_H\n");\
         s4o_h.print("#define __");  s4o_h.print(pou_name); s4o_h.print("_H\n");\
-        generate_c_datatypes_c generate_c_datatypes__(&s4o_h);\
-        symbol->accept(generate_c_datatypes__); /* generate implicitly delcared datatypes (arrays and ref_to) */\
+        generate_c_implicit_typedecl_c generate_c_implicit_typedecl__(&s4o_h);\
+        symbol->accept(generate_c_implicit_typedecl__); /* generate implicitly delcared datatypes (arrays and ref_to) */\
         generate_c_pous_c::fname(symbol, s4o_h, true); /* generate the <pou_name>.h file */\
         generate_c_pous_c::fname(symbol, s4o_c, false);/* generate the <pou_name>.c file */\
         s4o_h.print("#endif /* __");  s4o_h.print(pou_name); s4o_h.print("_H */\n");\
@@ -2368,7 +2189,7 @@ class generate_c_c: public iterator_visitor_c {
         pous_incl_s4o.print(".h\"\n");\
         pous_s4o.     print(".c\"\n");\
       } else {\
-        symbol->accept(generate_c_datatypes);\
+        symbol->accept(generate_c_implicit_typedecl);\
         generate_c_pous_c::fname(symbol, pous_incl_s4o, true);\
         generate_c_pous_c::fname(symbol, pous_s4o,      false);\
       }
@@ -2403,7 +2224,7 @@ class generate_c_c: public iterator_visitor_c {
 /********************************/
     void *visit(configuration_declaration_c *symbol) {
       if (symbol->global_var_declarations != NULL)
-        symbol->global_var_declarations->accept(generate_c_datatypes);
+        symbol->global_var_declarations->accept(generate_c_implicit_typedecl);
       static int configuration_count = 0;
 
       if (configuration_count++) {
@@ -2446,7 +2267,7 @@ class generate_c_c: public iterator_visitor_c {
 
     void *visit(resource_declaration_c *symbol) {
       if (symbol->global_var_declarations != NULL)
-        symbol->global_var_declarations->accept(generate_c_datatypes);
+        symbol->global_var_declarations->accept(generate_c_implicit_typedecl);
       symbol->resource_name->accept(*this);
       stage4out_c resources_s4o(current_builddir, current_name, "c");
       generate_c_resources_c generate_c_resources(&resources_s4o, current_configuration, symbol, common_ticktime);

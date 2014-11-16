@@ -42,31 +42,10 @@
 
 
 
-/*
- * This file includes the interface through which the main function accesses the stage1_2 services 
- */
+/* This file includes the interface through which the main function accesses the stage1_2 services */
 
 
-
-typedef struct {
-		/******************************************************/
-		/* whether we are suporting safe extensions           */
-		/* as defined in PLCopen - Technical Committee 5      */
-		/* Safety Software Technical Specification,           */
-		/* Part 1: Concepts and Function Blocks,              */
-		/* Version 1.0 – Official Release                     */
-		/******************************************************/
-	bool safe_extensions;
-	bool full_token_loc;           /* error messages specify full token location */
-	bool conversion_functions;     /* Create a conversion function for derived datatype */
-	bool nested_comments;          /* Allow the use of nested comments. */
-	bool ref_standard_extensions;  /* Allow the use of REFerences (keywords REF_TO, REF, DREF, ^, NULL). */
-	bool ref_nonstand_extensions;  /* Allow the use of non-standard extensions to REF_TO datatypes: REF_TO ANY, and REF_TO in struct elements! */
-	const char *includedir;        /* Include directory, where included files will be searched for... */
-} stage1_2_options_t;
-
-
-int stage1_2(const char *filename, symbol_c **tree_root, stage1_2_options_t options);
+int stage1_2(const char *filename, symbol_c **tree_root);
 
 
 

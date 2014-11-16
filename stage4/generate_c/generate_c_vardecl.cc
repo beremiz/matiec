@@ -60,7 +60,7 @@ class initialization_analyzer_c: public null_visitor_c {
 
 
 // Does this class really need to derive from generate_c_typedecl_c ???
-class generate_c_array_initialization_c: public generate_c_typedecl_c {
+class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
 
   public:
     typedef enum {
@@ -83,7 +83,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
     unsigned long long int current_initialization_count;
 
   public:
-    generate_c_array_initialization_c(stage4out_c *s4o_ptr): generate_c_typedecl_c(s4o_ptr) {}
+    generate_c_array_initialization_c(stage4out_c *s4o_ptr): generate_c_base_and_typeid_c(s4o_ptr) {}
     ~generate_c_array_initialization_c(void) {}
 
     void init_array_size(symbol_c *array_specification) {
@@ -149,9 +149,7 @@ class generate_c_array_initialization_c: public generate_c_typedecl_c {
         case arraysize_am:
           /* look up the type declaration... */
           type_decl = type_symtable.find_value(type_name);
-          if (type_decl == type_symtable.end_value())
-            /* Type declaration not found!! */
-            ERROR;
+          if (type_decl == type_symtable.end_value())   ERROR;  // Type declaration not found!!
           type_decl->accept(*this);
           break;
         default:
@@ -495,7 +493,12 @@ class structure_init_element_iterator_c : public null_visitor_c {
     }
 };
 
-class generate_c_structure_initialization_c: public generate_c_typedecl_c {
+
+
+
+
+
+class generate_c_structure_initialization_c: public generate_c_base_and_typeid_c {
 
   public:
     typedef enum {
@@ -513,7 +516,7 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
     symbol_c* current_element_default_value;
 
   public:
-    generate_c_structure_initialization_c(stage4out_c *s4o_ptr): generate_c_typedecl_c(s4o_ptr) {}
+    generate_c_structure_initialization_c(stage4out_c *s4o_ptr): generate_c_base_and_typeid_c(s4o_ptr) {}
     ~generate_c_structure_initialization_c(void) {}
 
     void init_structure_default(symbol_c *structure_type_name) {
@@ -555,6 +558,24 @@ class generate_c_structure_initialization_c: public generate_c_typedecl_c {
     }
 
     void *visit(identifier_c *type_name) {
+      symbol_c *type_decl;
+      switch (current_mode) {
+        case initdefault_sm:
+          /* look up the type declaration... */
+          type_decl = type_symtable.find_value(type_name);
+          if (type_decl == type_symtable.end_value())
+            /* Type declaration not found!! */
+            ERROR;
+          type_decl->accept(*this);
+          break;
+        default:
+          print_token(type_name);
+          break;
+      }
+      return NULL;
+    }
+    
+    void *visit(derived_datatype_identifier_c *type_name) {
       symbol_c *type_decl;
       switch (current_mode) {
         case initdefault_sm:
@@ -689,7 +710,7 @@ void *generate_c_array_initialization_c::visit(structure_element_initialization_
 
 
 
-class generate_c_vardecl_c: protected generate_c_base_c {
+class generate_c_vardecl_c: protected generate_c_base_and_typeid_c {
 
   /* A Helper class to the main class... */
   /* print a string, except the first time it is called */
@@ -890,8 +911,11 @@ class generate_c_vardecl_c: protected generate_c_base_c {
     void update_type_init(symbol_c *symbol /* a spec_init_c, subrange_spec_init_c, etc... */ ) {
       this->current_var_type_symbol = spec_init_sperator_c::get_spec(symbol);
       this->current_var_init_symbol = spec_init_sperator_c::get_init(symbol);
-      if (NULL == this->current_var_type_symbol)
-        ERROR;
+      if (NULL == this->current_var_type_symbol) ERROR;
+      if (NULL == this->current_var_type_symbol->datatype) {debug_c::print(this->current_var_type_symbol); ERROR;}
+      if (get_datatype_info_c::is_array(this->current_var_type_symbol))
+        this->current_var_type_symbol = this->current_var_type_symbol->datatype; 
+      if (NULL == this->current_var_type_symbol) ERROR;
       if (NULL == this->current_var_init_symbol) {
         /* We try to find the data type's default value... */
         this->current_var_init_symbol = type_initial_value_c::get(this->current_var_type_symbol);
@@ -1097,7 +1121,7 @@ class generate_c_vardecl_c: protected generate_c_base_c {
 
   public:
     generate_c_vardecl_c(stage4out_c *s4o_ptr, varformat_t varformat, unsigned int vartype, symbol_c* res_name = NULL)
-    : generate_c_base_c(s4o_ptr) {
+    : generate_c_base_and_typeid_c(s4o_ptr) {
       wanted_varformat = varformat;
       wanted_vartype   = vartype;
       current_vartype  = none_vt;
@@ -1408,7 +1432,8 @@ void *visit(array_var_init_decl_c *symbol) {
   /* Start off by setting the current_var_type_symbol and
    * current_var_init_symbol private variables...
    */
-  update_type_init(symbol->array_spec_init);
+  if (NULL == symbol->array_spec_init->datatype) ERROR;
+  update_type_init(symbol->array_spec_init->datatype); // we want to print the name of the base datatype, and nt the derived datatype, so we use '->datatype'!
 
   /* now to produce the c equivalent... */
   if (wanted_varformat == constructorinit_vf) {
@@ -1550,7 +1575,8 @@ void *visit(array_var_declaration_c *symbol) {
   /* Start off by setting the current_var_type_symbol and
    * current_var_init_symbol private variables...
    */
-  update_type_init(symbol->array_specification);
+  if (symbol->array_specification->datatype == NULL) {debug_c::print(symbol->array_specification); ERROR;}
+  update_type_init(symbol->array_specification->datatype); // we want to print the name of the base datatype, and nt the derived datatype, so we use '->datatype'!
 
   /* now to produce the c equivalent... */
   if (wanted_varformat == constructorinit_vf) {
@@ -1839,8 +1865,9 @@ void *visit(external_declaration_c *symbol) {
   /* Start off by setting the current_var_type_symbol and
    * current_var_init_symbol private variables...
    */
-  this->current_var_type_symbol = symbol->specification;
-  this->current_var_init_symbol = NULL;
+  update_type_init(symbol->specification);
+  this->current_var_init_symbol = NULL; // We do NOt want to initialize external variables.
+
   if(!get_datatype_info_c::is_type_valid(this->current_var_type_symbol)) ERROR;
   bool is_fb = get_datatype_info_c::is_function_block(this->current_var_type_symbol);
 

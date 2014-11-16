@@ -74,6 +74,7 @@ class search_base_type_c: public null_visitor_c {
     
   private:  
     static void create_singleton(void);
+    void *handle_datatype_identifier(token_c *type_name);
 
   public:
     search_base_type_c(void);
@@ -88,8 +89,8 @@ class search_base_type_c: public null_visitor_c {
   /*******************************************/
   /* B 1.1 - Letters, digits and identifiers */
   /*******************************************/
-    void *visit(identifier_c *type_name);
-
+    void *visit(                 identifier_c *type_name);
+    void *visit(derived_datatype_identifier_c *type_name);
     
   /*********************/
   /* B 1.2 - Constants */

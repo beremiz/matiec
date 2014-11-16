@@ -55,6 +55,9 @@ class get_datatype_info_c {
      get_datatype_info_c(void) {};
     ~get_datatype_info_c(void) {};
 
+    // A helper method to get_datatype_info_c::is_type_equal()
+    // Assuming the relaxed datatype model, return whether the two array datatypes are equal/equivalent
+    static bool is_arraytype_equal_relaxed(symbol_c *first_type, symbol_c *second_type);
   
   public:
     static symbol_c   *get_id    (symbol_c *datatype); /* get the identifier (name) of the datatype); returns NULL if anonymous datatype! Does not work for elementary datatypes!*/
@@ -65,14 +68,17 @@ class get_datatype_info_c {
     static symbol_c *get_ref_to                    (symbol_c *type_symbol);    // Defined in IEC 61131-3 v3 (returns the type that is being referenced/pointed to)        
     
     /* Returns true if both datatypes are equivalent (not necessarily equal!).
-     * WARNING: May return true even though the datatypes are not the same/identicial!!!
-     *          This occurs when at least one of the datatypes is of a generic
-     *          datatype (or a REF_TO a generic datatype). 
-     *          (Generic dataypes: ANY, ANY_INT, ANY_NUM, ...)
+     * Two datatype models are supported: relaxed and strict (chosen from a command line option).
+     * WARNING: May return true even though the datatypes are not the same/identical!!!
+     *          In both of the models, this may occur when at least one of the datatypes is of a generic
+     *          datatype (Generic dataypes: ANY, ANY_INT, ANY_NUM, ...), 
+     *          or when two REF_TO datatypes both reference an equivalent datatype.
+     *          In only the relaxed datatype, it may also return true if two array datatypes
+     *          have the same subrange limits, and contain the same data. 
+     *          
      * NOTE: Currently only the ANY generic datatype is implemented!
      * NOTE: Currently stage1_2 only allows the use of the ANY keyword when in conjuntion with
-     *       the REF_TO keyword (i.e. REF_TO ANY), so when handling non REF_TO datatypes,
-     *       this function will currently only return true if the dataypes are identicial.
+     *       the REF_TO keyword (i.e. REF_TO ANY).
      */
     static bool is_type_equal(symbol_c *first_type, symbol_c *second_type);
     static bool is_type_valid(symbol_c *type);

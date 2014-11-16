@@ -23,6 +23,221 @@
  */
 #include <stdlib.h>
 
+
+/* Ths class contains two main classes:
+ *    - generate_c_typedecl_c
+ *    - generate_c_implicit_typedecl_c
+ * 
+ * and an auxiliary class
+ *    - generate_datatypes_aliasid_c
+ * 
+ * 
+ * Both the generate_c_typedecl_c and the generate_c_implicit_typedecl_c may set a stage4
+ * annotation (in the stage4 annotation map of each symbol_c) named 
+ *   "generate_c_annotaton__implicit_type_id"
+ * If this annotation is set, the generate_c_base_c will print out this value instead of 
+ * the datatype's name!
+ * 
+ * 
+ * 
+ * generate_c_typedecl_c
+ * ---------------------
+ *   Given a datatype object (i.e. an object in the AST that is also used to define a datatype,
+ *    typically one that may be returned by search_basetype_c), this class will generate the 
+ *    C code to declare an equivakent datatype in C.
+ *   Note that array datatypes are handled in a special way; instead of using the name given
+ *    to it in the IEC 61131-3 source code, and new alias is created for the datatype name in C.
+ *    Eplanations why we do this may be found further on...
+ * 
+ * 
+ * generate_c_implicit_typedecl_c
+ * ------------------------------
+ *   Given a POU or a derived datatype declaration, it will search for any implicitly defined 
+ *    datatypes in that POU/datatype declaration. Implicit datatypes are datatypes that are not 
+ *    explicitly declared and given a name. Example:
+ *       VAR a: ARRAY [9..11] of INT; END_VAR
+ *    Here, the array is implictly delcared.
+ *    For eac implicitly defined datatype, an alias for that datatype is created (by calling
+ *    generate_datatypes_aliasid_c), and a C declaration is generated in C source code (by
+ *    calling generate_c_typedecl_c).
+ * 
+ * 
+ * generate_datatypes_aliasid_c
+ * ----------------------------
+ *   Given a datatype object (i.e. an object in the AST that defines a datatype), it will create
+ *    an alias name for that datatype.
+ *    This class is used by both the generate_c_implicit_typedecl_c, and the generate_c_typedecl_c
+ *    classes!
+ */
+
+
+
+
+
+
+/* generate an alias/name (identifier) for array and REF_TO datatypes */
+/*
+ *  The generated alias is created based on the structure of the datatype itself, in order to
+ *  guarantee that any two datatypes that have the same internal format will result in the same
+ *  alias.
+ *   examples:
+ *      ARRAY [9..11] of INT        --> __ARRAY_9_11_OF_INT
+ *      REF_TO INT                  --> __REF_TO_INT
+ *      ARRAY [9..11] of REF_TO INT --> __ARRAY_9_11_OF___REF_TO_INT
+ */
+class generate_datatypes_aliasid_c: fcall_visitor_c {
+
+  private:
+    //std::map<std::string, int> inline_array_defined;
+    std::string current_array_name;
+    static generate_datatypes_aliasid_c *singleton_;
+
+  public:
+    generate_datatypes_aliasid_c(void) {};
+
+    virtual ~generate_datatypes_aliasid_c(void) {
+      //inline_array_defined.clear(); // Not really necessary...
+    }
+
+    /* implement the virtual member function declared in fcall_visitor_c */
+    // by default generate an ERROR if a visit method is called, unless it is explicitly handled in generate_datatypes_aliasid_c
+    void fcall(symbol_c *symbol) {ERROR;} 
+
+    static identifier_c *create_id(symbol_c *symbol) {
+      if (NULL == singleton_) singleton_ = new generate_datatypes_aliasid_c();
+      if (NULL == singleton_) ERROR;
+      singleton_->current_array_name = "";
+      symbol->accept(*singleton_);
+      const char *str1 = singleton_->current_array_name.c_str();
+      char       *str2 = (char *)malloc(strlen(str1)+1);
+      if (NULL == str2) ERROR;
+      strcpy(str2, str1);
+      identifier_c *id = new identifier_c(str2);
+      /* Copy all the anotations in the symbol_c object 'symbol' to the newly created 'id' object
+       *   This includes the location (in the IEC 61131-3 source file) annotations set in stage1_2,
+       *   the symbol->datatype set in stage3, and any other anotaions that may be created in the future!
+       */
+      *(dynamic_cast<symbol_c *>(id)) = *(dynamic_cast<symbol_c *>(symbol));
+      return id;
+    }
+    
+    /*************************/
+    /* B.1 - Common elements */
+    /*************************/
+    /**********************/
+    /* B.1.3 - Data types */
+    /**********************/
+    /***********************************/
+    /* B 1.3.1 - Elementary Data Types */
+    /***********************************/
+    /***********************************/
+    /* B 1.3.2 - Generic Data Types    */
+    /***********************************/
+    /********************************/
+    /* B 1.3.3 - Derived data types */
+    /********************************/
+    /* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
+    void *visit(ref_spec_c *symbol) {
+      current_array_name = "__REF_TO_";
+      current_array_name += get_datatype_info_c::get_id_str(symbol->type_name);
+      return NULL;
+    }
+
+    /******************************************/
+    /* B 1.4.3 - Declaration & Initialization */
+    /******************************************/
+    /* array_specification [ASSIGN array_initialization] */
+    /* array_initialization may be NULL ! */
+    void *visit(array_spec_init_c *symbol) {
+      if (NULL == symbol->datatype) ERROR;
+      symbol->datatype->accept(*this); // the base datatype should be an array_specification_c !!
+      return NULL;
+    }
+
+    /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+    void *visit(array_specification_c *symbol) {
+      current_array_name = "__ARRAY_OF_";
+      if (    get_datatype_info_c::is_ref_to(symbol->non_generic_type_name)
+          && (get_datatype_info_c::get_ref_to(symbol->non_generic_type_name) != NULL)) {
+        /* handle situations where we have 2 impliclitly defined datatype, namely a REF_TO inside an ARRAY
+         *    e.g. TYPE array_of_ref_to_sint : ARRAY [1..3] OF  REF_TO  SINT; END_TYPE
+         * The second condition (get_datatype_info_c::get_ref_to(symbol->non_generic_type_name) != NULL)
+         * in the above if() is to make sure we use the standard algorithm if the array is of a previously 
+         * defined REF_TO type, in which case symbol->non_generic_type_name will reference an identifier_c!
+         *    e.g. TYPE array_of_ref_to_sint : ARRAY [1..3] OF  REF_TO  SINT; END_TYPE
+         */
+        current_array_name += "__REF_TO_";
+        current_array_name += get_datatype_info_c::get_id_str(get_datatype_info_c::get_ref_to(symbol->non_generic_type_name));
+      } else {
+        current_array_name += get_datatype_info_c::get_id_str(symbol->non_generic_type_name);
+      }
+      symbol->array_subrange_list->accept(*this);
+      return NULL;
+    }
+
+    /* helper symbol for array_specification */
+    /* array_subrange_list ',' subrange */
+    void *visit(array_subrange_list_c *symbol) {
+      for(int i = 0; i < symbol->n; i++) {symbol->elements[i]->accept(*this);}
+      return NULL;
+    }
+
+    /*  signed_integer DOTDOT signed_integer */
+    //SYM_REF2(subrange_c, lower_limit, upper_limit)
+    void *visit(subrange_c *symbol) {
+      current_array_name += "_";
+      std::stringstream ss;
+      ss << symbol->dimension;
+      current_array_name += ss.str();
+      return NULL;
+    }
+
+
+};
+
+
+generate_datatypes_aliasid_c *generate_datatypes_aliasid_c::singleton_ = NULL;
+
+
+
+
+
+
+
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/
+/***************************************************************************************/
+
+/* Given an object in the AST that defines a datatype, generate the C source code that declares an
+ * equivalent dataype in C.
+ * WARNING: This class maintains internal state in the datatypes_already_defined map.
+ *          Using multiple isntances of this class may result in different C source code
+ *          compared to when a single instance of this class is used for all datatype declarations!
+ * 
+ * Except for arrays, the C datatype will have the same name as the name of the datatype in the
+ * IEC 61131-3 source code.
+ * For arrays an alias is created for each datatype. This alias has the property of being equal
+ * for arrays with the same internal structure.
+ * 
+ * Example:
+ *  TYPE
+ *      array1: ARRAY [9..11] of INT;
+ *      array2: ARRAY [9..11] of INT;
+ *  END_TYPE
+ * 
+ * will result in both arrays having the same name (__ARRAY_9_11_OF_INT) in the C source code.
+ * 
+ * A single C datatype declaration will be generated for both arrays
+ *  (the datatypes_already_defined keeps track of which datatypes have already been declared in C)
+ * This method of handling arrays is needed when the relaxed datatype model is used 
+ * (see get_datatype_info_c for explanation on the relaxed datatype model).
+ */
+/* Notice that this class inherits from generate_c_base_c, and not from generate_c_base_and_typeid_c.
+ * This is intentional! 
+ * Whenever this class needs to print out the id of a datatype, it will explicitly use a private instance
+ * (generate_c_typeid) of generate_c_base_and_typeid_c!
+ */
 class generate_c_typedecl_c: public generate_c_base_c {
 
   protected:
@@ -30,18 +245,18 @@ class generate_c_typedecl_c: public generate_c_base_c {
 
   private:
     symbol_c* current_type_name;
-    bool array_is_derived;
-    generate_c_base_c *basedecl;
-
+    generate_c_base_and_typeid_c *generate_c_typeid;
+    std::map<std::string, int> datatypes_already_defined;
+    
   public:
-    generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_c(s4o_ptr), s4o_incl(*s4o_ptr) {
+    generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_c(s4o_ptr), s4o_incl(*s4o_ptr) /*, generate_c_print_typename(s4o_ptr) */{
       current_typedefinition = none_td;
       current_basetypedeclaration = none_bd;
       current_type_name = NULL;
-      basedecl = new generate_c_base_c(&s4o_incl);
+      generate_c_typeid = new generate_c_base_and_typeid_c(&s4o_incl);
     }
     ~generate_c_typedecl_c(void) {
-      delete basedecl;
+      delete generate_c_typeid;
     }
 
     typedef enum {
@@ -71,13 +286,11 @@ class generate_c_typedecl_c: public generate_c_base_c {
       if (visitor == NULL) visitor = this;
 
       if (list->n > 0) {
-//std::cout << "generate_c_base_c::print_list(n = " << list->n << ")   000\n";
         s4o_incl.print(pre_elem_str);
         list->elements[0]->accept(*visitor);
       }
 
       for(int i = 1; i < list->n; i++) {
-//std::cout << "generate_c_base_c::print_list   " << i << "\n";
         s4o_incl.print(inter_elem_str);
         list->elements[i]->accept(*visitor);
       }
@@ -100,8 +313,6 @@ class generate_c_typedecl_c: public generate_c_base_c {
 /*******************************************/
 /* B 1.1 - Letters, digits and identifiers */
 /*******************************************/
-  /* done in base class(es) */
-
 /*********************/
 /* B 1.2 - Constants */
 /*********************/
@@ -154,7 +365,7 @@ void *visit(subrange_type_declaration_c *symbol) {
   current_type_name = symbol->subrange_type_name;
 
   s4o_incl.print("__DECLARE_DERIVED_TYPE(");
-  current_type_name->accept(*basedecl);
+  current_type_name->accept(*generate_c_typeid);
   s4o_incl.print(",");
   current_basetypedeclaration = subrangebasetype_bd;
   symbol->subrange_spec_init->accept(*this);
@@ -184,16 +395,16 @@ void *visit(subrange_specification_c *symbol) {
   if (current_typedefinition == subrange_td) {
     switch (current_basetypedeclaration) {
       case subrangebasetype_bd:
-        symbol->integer_type_name->accept(*basedecl);
+        symbol->integer_type_name->accept(*generate_c_typeid);
         break;
       case subrangetest_bd:
         if (symbol->subrange != NULL) {
           s4o_incl.print("static inline ");
-          current_type_name->accept(*basedecl);
+          current_type_name->accept(*generate_c_typeid);
           s4o_incl.print(" __CHECK_");
-          current_type_name->accept(*basedecl);
+          current_type_name->accept(*generate_c_typeid);
           s4o_incl.print("(");
-          current_type_name->accept(*basedecl);
+          current_type_name->accept(*generate_c_typeid);
           s4o_incl.print(" value) {\n");
           s4o_incl.indent_right();
 
@@ -217,9 +428,9 @@ void *visit(subrange_specification_c *symbol) {
         }
         else {
           s4o_incl.print("#define __CHECK_");
-          current_type_name->accept(*basedecl);
+          current_type_name->accept(*generate_c_typeid);
           s4o_incl.print(" __CHECK_");
-          symbol->integer_type_name->accept(*basedecl);
+          symbol->integer_type_name->accept(*generate_c_typeid);
           s4o_incl.print("\n");
         }
         break;
@@ -247,19 +458,19 @@ void *visit(subrange_c *symbol) {
       break;
     case subrange_td:
       s4o_incl.print(s4o_incl.indent_spaces + "if (value < ");
-      symbol->lower_limit->accept(*basedecl);
+      symbol->lower_limit->accept(*generate_c_typeid);
       s4o_incl.print(")\n");
       s4o_incl.indent_right();
       s4o_incl.print(s4o_incl.indent_spaces + "return ");
-      symbol->lower_limit->accept(*basedecl);
+      symbol->lower_limit->accept(*generate_c_typeid);
       s4o_incl.print(";\n");
       s4o_incl.indent_left();
       s4o_incl.print(s4o_incl.indent_spaces + "else if (value > ");
-      symbol->upper_limit->accept(*basedecl);
+      symbol->upper_limit->accept(*generate_c_typeid);
       s4o_incl.print(")\n");
       s4o_incl.indent_right();
       s4o_incl.print(s4o_incl.indent_spaces + "return ");
-      symbol->upper_limit->accept(*basedecl);
+      symbol->upper_limit->accept(*generate_c_typeid);
       s4o_incl.print(";\n");
       s4o_incl.indent_left();
       s4o_incl.print(s4o_incl.indent_spaces + "else\n");
@@ -280,7 +491,7 @@ void *visit(enumerated_type_declaration_c *symbol) {
   current_type_name = symbol->enumerated_type_name;
 
   s4o_incl.print("__DECLARE_ENUMERATED_TYPE(");
-  current_type_name->accept(*basedecl);
+  current_type_name->accept(*generate_c_typeid);
   s4o_incl.print(",\n");
   s4o_incl.indent_right();
   symbol->enumerated_spec_init->accept(*this);
@@ -299,7 +510,7 @@ void *visit(enumerated_spec_init_c *symbol) {
   if (current_typedefinition == enumerated_td)
     symbol->enumerated_specification->accept(*this);
   else
-    symbol->enumerated_specification->accept(*basedecl);
+    symbol->enumerated_specification->accept(*generate_c_typeid);
   return NULL;
 }
 
@@ -319,22 +530,40 @@ void *visit(enumerated_value_c *symbol) {}
 /*  identifier ':' array_spec_init */
 void *visit(array_type_declaration_c *symbol) {
   TRACE("array_type_declaration_c");
+  
+  // NOTE: remeber that symbol->array_spec_init may point to an identifier_c, which is why we use symbol->array_spec_init->datatype instead!
+  if (NULL == symbol->array_spec_init->datatype) ERROR;
+  identifier_c *id = generate_datatypes_aliasid_c::create_id(symbol->array_spec_init->datatype);
+  
+  /* NOTE  An array_type_declaration_c will be created in stage4 for each implicitly defined array,
+   *       and this generate_c_typedecl_c will be called to define that array in C.
+   *       However, every implictly defined array with the exact same parameters will be mapped
+   *       to the same identifier (e.g: __ARRAY_OF_INT_33 where 33 is the number of elements in the array).
+   *       In order for the C compiler not to find the same datatype being defined two or more times, 
+   *       we will keep track of the array datatypes that have already been declared, and henceforth
+   *       only declare arrays that have not been previously defined.
+   */
+  if (datatypes_already_defined.find(id->value) != datatypes_already_defined.end())
+    goto end; // already defined. No need to define it again!!
+  datatypes_already_defined[id->value] = 1; // insert this datatype into the list of already defined arrays!
+  
   current_typedefinition = array_td;
-  current_type_name = symbol->identifier;
+  current_type_name = id;
 
-  int implicit_id_count = symbol->array_spec_init->anotations_map.count("generate_c_annotaton__implicit_type_id");
-  if (implicit_id_count  > 1) ERROR;
-  if (implicit_id_count == 1)
-    s4o_incl.print("__DECLARE_DERIVED_TYPE(");
-  else
-    s4o_incl.print("__DECLARE_ARRAY_TYPE(");
-  current_type_name->accept(*basedecl);
+  s4o_incl.print("__DECLARE_ARRAY_TYPE(");
+  current_type_name->accept(*generate_c_typeid);
   s4o_incl.print(",");
   symbol->array_spec_init->accept(*this);
   s4o_incl.print(")\n");
 
   current_type_name = NULL;
   current_typedefinition = none_td;
+
+end:  
+  symbol                 ->anotations_map["generate_c_annotaton__implicit_type_id"] = id;
+  symbol->datatype       ->anotations_map["generate_c_annotaton__implicit_type_id"] = id;
+  symbol->array_spec_init->anotations_map["generate_c_annotaton__implicit_type_id"] = id; // probably not needed, bu let's play safe.
+  
   return NULL;
 }
 
@@ -344,16 +573,6 @@ void *visit(array_type_declaration_c *symbol) {
 /* array_initialization may be NULL ! */
 void *visit(array_spec_init_c *symbol) {
   TRACE("array_spec_init_c");  
-  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
-  if (implicit_id_count  > 1) ERROR;
-  if (implicit_id_count == 1) {
-      /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
-       * has already been defined. So, we simly print out the id of that C datatpe...
-       */
-    symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*basedecl);
-    return NULL;
-  }
-//   if (current_typedefinition != array_td) {debug_c::print(symbol); ERROR;}
   symbol->array_specification->accept(*this);
   return NULL;
 }
@@ -361,17 +580,8 @@ void *visit(array_spec_init_c *symbol) {
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 void *visit(array_specification_c *symbol) {
   TRACE("array_specification_c");
-  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
-  if (implicit_id_count  > 1) ERROR;
-  if (implicit_id_count == 1) {
-      /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
-       * has already been defined. So, we simly print out the id of that C datatpe...
-       */
-    symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*basedecl);
-    return NULL;
-  }
   // The 2nd and 3rd argument of a call to the __DECLARE_ARRAY_TYPE macro!
-  symbol->non_generic_type_name->accept(*this);
+  symbol->non_generic_type_name->accept(/*generate_c_print_typename*/*generate_c_typeid);
   s4o_incl.print(",");
   current_basetypedeclaration = arraysubrange_bd;
   symbol->array_subrange_list->accept(*this);
@@ -399,14 +609,14 @@ void *visit(simple_type_declaration_c *symbol) {
   TRACE("simple_type_declaration_c");
 
   s4o_incl.print("__DECLARE_DERIVED_TYPE(");
-  symbol->simple_type_name->accept(*basedecl);
+  symbol->simple_type_name->accept(*generate_c_typeid);
   s4o_incl.print(",");
   symbol->simple_spec_init->accept(*this);
   s4o_incl.print(")\n");
 
   if (get_datatype_info_c::is_subrange(symbol->simple_type_name)) {
     s4o_incl.print("#define __CHECK_");
-    current_type_name->accept(*basedecl);
+    current_type_name->accept(*generate_c_typeid);
     s4o_incl.print(" __CHECK_");
     symbol->simple_spec_init->accept(*this);
     s4o_incl.print("\n");
@@ -420,7 +630,7 @@ void *visit(simple_type_declaration_c *symbol) {
 // <constant> may be NULL
 void *visit(simple_spec_init_c *symbol) {
   TRACE("simple_spec_init_c");
-  symbol->simple_specification->accept(*basedecl);
+  symbol->simple_specification->accept(*generate_c_typeid);
   return NULL;
 }
 
@@ -482,7 +692,7 @@ void *visit(structure_type_declaration_c *symbol) {
   current_typedefinition = struct_td;
 
   s4o_incl.print("__DECLARE_STRUCT_TYPE(");
-  symbol->structure_type_name->accept(*basedecl);
+  symbol->structure_type_name->accept(*generate_c_typeid);
   s4o_incl.print(",");
   symbol->structure_specification->accept(*this);
   s4o_incl.print(")\n");
@@ -497,9 +707,7 @@ void *visit(structure_type_declaration_c *symbol) {
 //SYM_REF2(initialized_structure_c, structure_type_name, structure_initialization)
 void *visit(initialized_structure_c *symbol) {
   TRACE("initialized_structure_c");
-  
-  symbol->structure_type_name->accept(*basedecl);
-  
+  symbol->structure_type_name->accept(*generate_c_typeid);
   return NULL;
 }
 
@@ -525,9 +733,9 @@ void *visit(structure_element_declaration_list_c *symbol) {
 void *visit(structure_element_declaration_c *symbol) {
   TRACE("structure_element_declaration_c");
 
-  symbol->spec_init->accept(*this);
+  symbol->spec_init->accept(/*generate_c_print_typename*/*generate_c_typeid);
   s4o_incl.print(" ");
-  symbol->structure_element_name->accept(*basedecl);
+  symbol->structure_element_name->accept(*generate_c_typeid);
   s4o_incl.print(";\n");
   s4o_incl.print(s4o_incl.indent_spaces);
 
@@ -628,20 +836,8 @@ SYM_REF4(string_type_declaration_c,	string_type_name,
 
 /* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
 // SYM_REF1(ref_spec_c, type_name)
-void *visit(ref_spec_c *symbol) {
-  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
-  if (implicit_id_count  > 1) ERROR;
-  if (implicit_id_count == 1) {
-      /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
-       * has already been defined. So, we simly print out the id of that C datatpe...
-       */
-    symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*basedecl);
-    return NULL;
-  }
-  /* This is NOT part of an implicitly declared datatype (i.e. we are being called from an visit(ref_type_decl_c *),
-   * through the visit(ref_spec_init_c*)), so we need to simply print out the name of the datatype we reference to.
-   */
-  symbol->type_name->accept(*this);
+void *visit(ref_spec_c *symbol) { 
+  symbol->type_name->accept(/*generate_c_print_typename*/*generate_c_typeid);
   s4o_incl.print("*");
   return NULL;
 }
@@ -651,31 +847,31 @@ void *visit(ref_spec_c *symbol) {
 /* NOTE: ref_initialization may be NULL!! */
 // SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
 void *visit(ref_spec_init_c *symbol) {
-  int implicit_id_count = symbol->anotations_map.count("generate_c_annotaton__implicit_type_id");
-  if (implicit_id_count  > 1) ERROR;
-  if (implicit_id_count == 1) {
-      /* this is part of an implicitly declared datatype (i.e. inside a variable decaration), for which an equivalent C datatype
-       * has already been defined. So, we simly print out the id of that C datatpe...
-       */
-    symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*basedecl);
-    return NULL;
-  }
-  /* This is NOT part of an implicitly declared datatype (i.e. we are being called from an visit(ref_type_decl_c *)),
-   * so we need to simply print out the name of the datatype we reference to.
-   */
-  return symbol->ref_spec->accept(*this);
+  return symbol->ref_spec->accept(*generate_c_typeid);
 }
 
 /* ref_type_decl: identifier ':' ref_spec_init */
 // SYM_REF2(ref_type_decl_c, ref_type_name, ref_spec_init)
 void *visit(ref_type_decl_c *symbol) {
   TRACE("ref_type_decl_c");
+
+  /* NOTE  An ref_type_decl_c will be created in stage4 for each implicitly defined REF_TO datatype,
+   *       and this generate_c_typedecl_c will be called to define that REF_TO datatype in C.
+   *       However, every implictly defined REF_TO datatype with the exact same parameters will be mapped
+   *       to the same identifier (e.g: __REF_TO_INT).
+   *       In order for the C compiler not to find the same datatype being defined two or more times, 
+   *       we will keep track of the datatypes that have already been declared, and henceforth
+   *       only declare the datatypes that have not been previously defined.
+   */
+  if (datatypes_already_defined.find(((identifier_c *)(symbol->ref_type_name))->value) != datatypes_already_defined.end())
+    return NULL; // already defined. No need to define it again!!
+  datatypes_already_defined[((identifier_c *)(symbol->ref_type_name))->value] = 1; // insert this datatype into the list of already defined arrays!
   
   current_type_name = NULL;
   current_typedefinition = none_td;
 
   s4o_incl.print("__DECLARE_REFTO_TYPE(");
-  symbol->ref_type_name->accept(*basedecl);
+  symbol->ref_type_name->accept(*generate_c_typeid);
   s4o_incl.print(", ");
   symbol->ref_spec_init->accept(*this);
   s4o_incl.print(")\n");
@@ -685,10 +881,6 @@ void *visit(ref_type_decl_c *symbol) {
 
   return NULL;
 }
-
-
-
-
 
 
 
@@ -793,10 +985,176 @@ void *visit(direct_variable_c *symbol) {
 /********************************/
   /* leave for derived classes... */
 
-
-
-
 }; /* generate_c_typedecl_c */
+
+
+
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
+
+
+/* This class will generate a new datatype for each implicitly declared array datatype
+ * (i.e. arrays declared in a variable declaration, or a struct datatype declaration...)
+ * It will do the same for implicitly declared REF_TO datatypes.
+ * 
+ * Each new implicitly datatype will be atributed an alias, and a C datatype will be declared for that alias.
+ * The alias itself will be stored (annotated) in the datatype object in the AST, using the annotation
+ * map reserved for stage4 anotations. The alias is stored under the "generate_c_annotaton__implicit_type_id"
+ * entry, and this entry will then be used whenever the name of the datatype is needed (to declare a varable,
+ * for example). 
+ * 
+ * The class will be called once for each POU declaration, and once for each derived datatype declaration.
+ * 
+ * e.g.:
+ *      VAR  x: ARRAY [1..3] OF INT; END_VAR   <---- ARRAY  datatype is implicitly declared inside the variable declaration
+ *      VAR  y: REF_TO INT;          END_VAR   <---- REF_TO datatype is implicitly declared inside the variable declaration
+ *      TYPE STRUCT
+ *               a: ARRAY [1..3] OF INT;       <---- ARRAY  datatype is implicitly declared inside the struct type declaration  
+ *               b: REF_TO INT;                <---- REF_TO datatype is implicitly declared inside the struct type declaration
+ *               c: INT;
+ *            END_STRUCT
+ *      END_TYPE
+ */
+class generate_c_implicit_typedecl_c: public iterator_visitor_c {
+  private:
+    generate_c_typedecl_c *generate_c_typedecl_;
+    generate_c_typedecl_c  generate_c_typedecl_local;
+    symbol_c *prefix;
+  public:
+    generate_c_implicit_typedecl_c(stage4out_c *s4o, generate_c_typedecl_c *generate_c_typedecl=NULL) 
+      : generate_c_typedecl_local(s4o) {
+        generate_c_typedecl_ = generate_c_typedecl;
+        if (NULL == generate_c_typedecl_) 
+          generate_c_typedecl_ = &generate_c_typedecl_local;
+        prefix = NULL;
+    };
+    virtual ~generate_c_implicit_typedecl_c(void) {
+    }
+
+    /*************************/
+    /* B.1 - Common elements */
+    /*************************/
+    /**********************/
+    /* B.1.3 - Data types */
+    /**********************/
+    /********************************/
+    /* B 1.3.3 - Derived data types */
+    /********************************/
+    /*  identifier ':' array_spec_init */
+    void *visit(array_type_declaration_c *symbol) {return NULL;} // This is not an implicitly defined array!
+
+    /* ref_spec:  REF_TO (non_generic_type_name | function_block_type_name) */
+    void *visit(ref_spec_c *symbol) {
+      identifier_c *id = generate_datatypes_aliasid_c::create_id(symbol);
+      /* Warning: The following is dangerous... 
+       * We are asking the generate_c_typedecl_c visitor to visit a newly created ref_spec_init_c object
+       * that has not been through stage 3, and therefore does not have stage 3 annotations filled in.
+       * This will only work if generate_c_typedecl_c does ot depend on the stage 3 annotations!
+       */
+      ref_spec_init_c   ref_spec(symbol, NULL);
+      ref_type_decl_c   ref_decl(id, &ref_spec);
+      ref_decl.accept(*generate_c_typedecl_);
+      symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = id;
+      return NULL;
+    }
+
+    /* For the moment, we do not support initialising reference data types */
+    /* ref_spec_init: ref_spec [ ASSIGN ref_initialization ] */ 
+    /* NOTE: ref_initialization may be NULL!! */
+    // SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
+    void *visit(ref_spec_init_c *symbol) {
+      symbol->ref_spec->accept(*this);
+      int implicit_id_count = symbol->ref_spec->anotations_map.count("generate_c_annotaton__implicit_type_id");
+      if (implicit_id_count  > 1) ERROR;
+      if (implicit_id_count == 1)
+        symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = symbol->ref_spec->anotations_map["generate_c_annotaton__implicit_type_id"];
+      return NULL;
+    }
+
+    /* ref_type_decl: identifier ':' ref_spec_init */
+    void *visit(ref_type_decl_c *symbol) {return NULL;} // This is not an implicitly defined REF_TO!
+
+    /******************************************/
+    /* B 1.4.3 - Declaration & Initialization */
+    /******************************************/
+    void *visit(edge_declaration_c           *symbol) {return NULL;}
+    void *visit(en_param_declaration_c       *symbol) {return NULL;}
+    void *visit(eno_param_declaration_c      *symbol) {return NULL;}
+
+    /* array_specification [ASSIGN array_initialization] */
+    /* array_initialization may be NULL ! */
+    void *visit(array_spec_init_c *symbol) {
+      symbol->array_specification->accept(*this);
+      int implicit_id_count = symbol->array_specification->anotations_map.count("generate_c_annotaton__implicit_type_id");
+      if (implicit_id_count  > 1) ERROR;
+      if (implicit_id_count == 1)
+        symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = symbol->array_specification->anotations_map["generate_c_annotaton__implicit_type_id"];
+      return NULL;
+    }
+
+    /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
+    void *visit(array_specification_c *symbol) {
+      identifier_c *id = generate_datatypes_aliasid_c::create_id(symbol);
+      /* Warning: The following is dangerous... 
+       * We are asking the generate_c_typedecl_c visitor to visit a newly created array_type_declaration_c object
+       * that has not been through stage 3, and therefore does not have stage 3 annotations filled in.
+       * This will only work if generate_c_typedecl_c does ot depend on the stage 3 annotations!
+       */
+      array_spec_init_c        array_spec(symbol, NULL);
+      array_type_declaration_c array_decl(id, &array_spec);
+      array_decl.datatype = symbol->datatype;
+      array_spec.datatype = symbol->datatype;
+      array_decl.accept(*generate_c_typedecl_);
+      symbol->anotations_map["generate_c_annotaton__implicit_type_id"] = id;
+      return NULL;
+    }
+    
+    /*  var1_list ':' initialized_structure */
+    // SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure)
+    void *visit(structured_var_init_decl_c   *symbol) {return NULL;}
+
+    /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
+    /* structure_initialization -> may be NULL ! */
+    void *visit(fb_name_decl_c               *symbol) {return NULL;}
+
+    /*  var1_list ':' structure_type_name */
+    //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name)
+    void *visit(structured_var_declaration_c *symbol) {return NULL;}
+
+
+    /***********************/
+    /* B 1.5.1 - Functions */
+    /***********************/      
+    void *visit(function_declaration_c *symbol) {
+      prefix = symbol->derived_function_name;
+      symbol->var_declarations_list->accept(*this);
+      prefix = NULL;
+      return NULL;
+    }
+    /*****************************/
+    /* B 1.5.2 - Function Blocks */
+    /*****************************/
+    void *visit(function_block_declaration_c *symbol) {
+      prefix = symbol->fblock_name;
+      symbol->var_declarations->accept(*this);
+      prefix = NULL;
+      return NULL;
+    }
+    /**********************/
+    /* B 1.5.3 - Programs */
+    /**********************/    
+    void *visit(program_declaration_c *symbol) {
+      prefix = symbol->program_type_name;
+      symbol->var_declarations->accept(*this);
+      prefix = NULL;
+      return NULL;
+    }
+};
+
+
 
 
 

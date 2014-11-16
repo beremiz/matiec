@@ -66,6 +66,14 @@ class constant_folding_c : public iterator_visitor_c {
 	virtual ~constant_folding_c(void);
 	int get_error_count();
 
+	#if 0
+	// not currently needed, so comment it out!...
+	/* utility functions for other stage3 algorithms to access the contant folded values */
+	/* written as static since we do not need to iteratively visit the symbols! */
+	// returns true if both symbols have the same value in all the cvalues
+	static bool is_equal_cvalue(symbol_c *symbol_1, symbol_c *symbol_2);
+	#endif
+
   private:
     /*********************/
     /* B 1.2 - Constants */

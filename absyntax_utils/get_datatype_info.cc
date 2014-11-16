@@ -43,7 +43,7 @@
  */
 #include "absyntax_utils.hh"
 
-#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros, as well as the runtime_options global variable
 
 
 
@@ -199,7 +199,8 @@ class get_datatype_id_str_c: public null_visitor_c {
     /*******************************************/
     /* B 1.1 - Letters, digits and identifiers */
     /*******************************************/
-    void *visit(identifier_c *symbol) {return (void *)symbol->value;};
+    void *visit(                 identifier_c *symbol) {return (void *)symbol->value;};
+    void *visit(derived_datatype_identifier_c *symbol) {return (void *)symbol->value;};
 
     /***********************************/
     /* B 1.3.1 - Elementary Data Types */
@@ -247,6 +248,11 @@ class get_datatype_id_str_c: public null_visitor_c {
     void *visit(safedword_type_name_c   *symbol) {return (void *)"SAFEDWORD";   };
     void *visit(safestring_type_name_c  *symbol) {return (void *)"SAFESTRING";  };
     void *visit(safewstring_type_name_c *symbol) {return (void *)"SAFEWSTRING"; };
+
+    /********************************/
+    /* B.1.3.2 - Generic data types */
+    /********************************/
+    void *visit(generic_type_any_c *symbol) {return (void *)"ANY"; };
 
     /********************************/
     /* B 1.3.3 - Derived data types */
@@ -417,17 +423,21 @@ symbol_c *get_datatype_info_c::get_struct_field_type_id(symbol_c *struct_datatyp
   return get_struct_info_c::get_field_type_id(struct_datatype, struct_fieldname);
 }
 
+
+
 symbol_c *get_datatype_info_c::get_array_storedtype_id(symbol_c *type_symbol) {
   // returns the datatype of the variables stored in the array
-  symbol_c *basetype = search_base_type_c::get_basetype_decl(type_symbol);
-  array_specification_c *symbol = dynamic_cast<array_specification_c *>(basetype);
-
-  if (NULL != symbol) 
+  array_specification_c *symbol = NULL;
+  if (NULL == symbol)  symbol = dynamic_cast<array_specification_c *>(type_symbol);
+  if (NULL == symbol)  symbol = dynamic_cast<array_specification_c *>(search_base_type_c::get_basetype_decl(type_symbol));
+  if (NULL != symbol)  
     return symbol->non_generic_type_name;
   return NULL; // this is not an array!
 }
   
   
+  
+
 /* Returns true if both datatypes are equivalent (not necessarily equal!).
  * WARNING: May return true even though the datatypes are not the same/identicial!!!
  *          This occurs when at least one of the datatypes is of a generic
@@ -439,7 +449,13 @@ symbol_c *get_datatype_info_c::get_array_storedtype_id(symbol_c *type_symbol) {
  *       this function will currently only return true if the dataypes are identicial.
  */
 
-/* NOTE: Currently the datatype model used by matiec considers any implicitly defined datatype
+/* NOTE: matiec supports a strict and a relaxed data type model. Which datatype model to use is chosen
+ *       as a command line option.
+ * 
+ * 
+ *       The Strict Datatype Model
+ *       =========================
+ *       The strict datatype model used by matiec considers any implicitly defined datatype
  *       (e.g. an array datatype defined in the variable declaration itself, instead of inside a TYPE ... END_TYPE
  *       construct) to be different (i.e. not the same datatype, and therefore not compatible) to any other
  *       datatype, including with datatypes declared identically to the implicit datatype.
@@ -459,6 +475,8 @@ symbol_c *get_datatype_info_c::get_array_storedtype_id(symbol_c *type_symbol) {
  *              (this rule is specified in the standard, so we follow it!)
  *        (2) REF_TO datatypes that reference the same datatype
  *              (I dont think the standard says anything about this!)
+ *              (This rule should actually be part of the relaxed datatype model, but for now we
+ *               will leave it in the strict datatype model) 
  *
  *         TYPE 
  *          my_array_1_t: ARRAY [1..3] OF INT; 
@@ -511,6 +529,29 @@ symbol_c *get_datatype_info_c::get_array_storedtype_id(symbol_c *type_symbol) {
  *       This rule was adopted as without it, the datatype of the value returned by the REF() 
  *       operator would be considered distinct to all other datatypes, and therefore the
  *       REF() operator would be essentially useless.
+ * 
+ * 
+ *       The Relaxed Datatype Model
+ *       ==========================
+ *       In the relaxed datatype model, the same rules as the strict datatype model are followed, with the
+ *       exception of implicitly defined array datatypes, which are now considered equal if they define
+ *       identical datatypes.
+ *       This means that in the following example
+ *         TYPE 
+ *          array_t: ARRAY [1..3] OF INT; 
+ *         END_TYPE;
+ *         VAR
+ *          array_var1: array_t; 
+ *          array_var2: ARRAY [1..3] OF INT; 
+ *          array_var3: ARRAY [1..3] OF INT; 
+ *         END_VAR
+ * 
+ *       all three variables (array_var1, array_var2, and array_var3) are considered as being of the
+ *       same datatype.
+ *      
+ *       Note that the strict datatype model currently actually uses a relaxed datatype model for 
+ *       REF_TO datatypes, so in both the relaxed and strict datatype models matiec currently uses a 
+ *       relaxed datatype equivalince for REF_TO datatypes.
  */
 bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_type) {
   if (!is_type_valid( first_type))                                   {return false;}
@@ -522,16 +563,116 @@ bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_t
       (is_ANY_generic_type(second_type)))                            {return true;}
       
   /* ANY_ELEMENTARY */
-  if ((is_ANY_ELEMENTARY(first_type)) &&
+  if ((is_ANY_ELEMENTARY_compatible(first_type)) &&
       (typeid(*first_type) == typeid(*second_type)))                 {return true;}
-
-  /* ANY_DERIVED */
+  if (   is_ANY_ELEMENTARY_compatible(first_type) 
+      || is_ANY_ELEMENTARY_compatible(second_type))                  {return false;}  
+  
+  /* ANY_DERIVED  */
+  // from now on, we are sure both datatypes are derived...
   if (is_ref_to(first_type) && is_ref_to(second_type)) {
     return is_type_equal(search_base_type_c::get_basetype_decl(get_ref_to(first_type )),
                          search_base_type_c::get_basetype_decl(get_ref_to(second_type)));
   }
-  return (first_type == second_type);
+
+    // check for same datatype
+  if (first_type == second_type)                                     {return true;}
+  
+    // remaining type equivalence rules are not applied in the strict datatype model
+  if (false == runtime_options.relaxed_datatype_model)               {return false;}
+  
+    // check for array equivalence usig the relaxed datatype model
+  if (is_arraytype_equal_relaxed(first_type, second_type))           {return true;}
+
+  return false;
 }
+
+
+
+/* A local helper function that transforms strings conatining signed_integers into a normalized
+ * form, so they can be compared for equality.
+ *   examples:
+ *     82  ->  82 
+ *     8_2 ->  82 
+ *    +82  ->  82
+ *    082  ->  82
+ *   +082  ->  82
+ *    -82  -> -82
+ *    -8_2 -> -82
+ *   -082  -> -82
+ */
+#include <string.h>  /* required for strlen() */
+static std::string normalize_integer(symbol_c *symbol) {
+  integer_c *token = dynamic_cast<integer_c *>(symbol);
+  if (NULL == token) ERROR;
+  
+  std::string str = "";
+  bool leading_zero = true;
+  unsigned int offset = 0;
+
+  // handle any possible leading '-' or '+'
+  if        (token->value[0] == '-') {
+      //    '-' -> retained
+      str += token->value[0];
+      offset++;
+  } else if (token->value[0] == '+')
+      //    '+' -> skip, so '+8' and '8' will both result in '8'
+      offset++;
+    
+  for (unsigned int i = offset; i < strlen(token->value); i++) {
+    if (leading_zero && (token->value[i] != '0'))
+      leading_zero = false;
+    if (!leading_zero && token->value[i] != '_')
+      str += token->value[i];
+  }
+  return str;
+}
+
+
+/* A helper method to get_datatype_info_c::is_type_equal()
+ *  Assuming the relaxed datatype model, determine whether the two array datatypes are equal/equivalent
+ */
+bool get_datatype_info_c::is_arraytype_equal_relaxed(symbol_c *first_type, symbol_c *second_type) {
+  symbol_c *basetype_1 = search_base_type_c::get_basetype_decl( first_type);
+  symbol_c *basetype_2 = search_base_type_c::get_basetype_decl(second_type);
+  array_specification_c *array_1 = dynamic_cast<array_specification_c *>(basetype_1);
+  array_specification_c *array_2 = dynamic_cast<array_specification_c *>(basetype_2);
+
+  // are they both array datatypes? 
+  if ((NULL == array_1) || (NULL == array_2))
+    return false;
+  
+  // number of subranges
+  array_subrange_list_c *subrange_list_1 = dynamic_cast<array_subrange_list_c *>(array_1->array_subrange_list);
+  array_subrange_list_c *subrange_list_2 = dynamic_cast<array_subrange_list_c *>(array_2->array_subrange_list);
+  if ((NULL == subrange_list_1) || (NULL == subrange_list_2)) ERROR;
+  if (subrange_list_1->n != subrange_list_2->n)
+    return false;
+  
+  // comparison of each subrange start and end elements
+  for (int i = 0; i < subrange_list_1->n; i++) {
+    subrange_c *subrange_1 = dynamic_cast<subrange_c *>(subrange_list_1->elements[i]);
+    subrange_c *subrange_2 = dynamic_cast<subrange_c *>(subrange_list_2->elements[i]);
+    if ((NULL == subrange_1) || (NULL == subrange_2)) ERROR;
+    #if 0
+    /* An alternative method of checking whether the subranges have the same values, using the result of the constant folding agorithm.
+     * This method has the drawback that it inserts a dependency on having to run the constant folding algorithm before
+     *  the get_datatype_info_c::is_type_equal() method is called.
+     * The probably slower alternative of comparing the strings themselves is therefor used.
+     */
+    if (!constant_folding_c::is_equal_cvalue(subrange_1->lower_limit, subrange_2->lower_limit)) return false;
+    if (!constant_folding_c::is_equal_cvalue(subrange_1->upper_limit, subrange_2->upper_limit)) return false;
+    #endif
+    if (normalize_integer(subrange_1->lower_limit) != normalize_integer(subrange_2->lower_limit)) return false;
+    if (normalize_integer(subrange_1->upper_limit) != normalize_integer(subrange_2->upper_limit)) return false;
+  }
+
+  return is_type_equal(search_base_type_c::get_basetype_decl(array_1->non_generic_type_name),
+                       search_base_type_c::get_basetype_decl(array_2->non_generic_type_name));
+}
+
+
+
 
 
 bool get_datatype_info_c::is_type_valid(symbol_c *type) {
