@@ -43,7 +43,7 @@
  */
 #include "absyntax_utils.hh"
 
-#include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
+#include "../main.hh" // required for ERROR() and ERROR_MSG() macros, as well as the runtime_options global variable
 
 
 
@@ -576,14 +576,13 @@ bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_t
   }
 
     // check for same datatype
-  if (first_type == second_type)                                       {return true;}
+  if (first_type == second_type)                                     {return true;}
   
     // remaining type equivalence rules are not applied in the strict datatype model
-  //if (!option...relaxed_datatypemodel)
-    //return false;
+  if (false == runtime_options.relaxed_datatype_model)               {return false;}
   
     // check for array equivalence usig the relaxed datatype model
-  if (is_arraytype_equal_relaxed(first_type, second_type))             {return true;}
+  if (is_arraytype_equal_relaxed(first_type, second_type))           {return true;}
 
   return false;
 }

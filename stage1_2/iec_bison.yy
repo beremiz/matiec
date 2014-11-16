@@ -8487,13 +8487,12 @@ extern const char *INCLUDE_DIRECTORIES[];
 
 
 int stage2__(const char *filename, 
-             symbol_c **tree_root_ref,
-             stage1_2_options_t options
+             symbol_c **tree_root_ref
             ) {             
   char *libfilename = NULL;
 
-  if (options.includedir != NULL) {
-    INCLUDE_DIRECTORIES[0] = options.includedir;
+  if (runtime_options.includedir != NULL) {
+    INCLUDE_DIRECTORIES[0] = runtime_options.includedir;
   }
 
   /* first parse the standard library file... */
@@ -8520,11 +8519,11 @@ int stage2__(const char *filename,
 
   allow_function_overloading           = true;
   allow_extensible_function_parameters = true;
-  full_token_loc                       = options.full_token_loc;
-  conversion_functions                 = options.conversion_functions;
-  allow_ref_dereferencing              = options.ref_standard_extensions;
-  allow_ref_to_any                     = options.ref_nonstand_extensions;
-  allow_ref_to_in_derived_datatypes    = options.ref_nonstand_extensions;
+  full_token_loc                       = runtime_options.full_token_loc;
+  conversion_functions                 = runtime_options.conversion_functions;
+  allow_ref_dereferencing              = runtime_options.ref_standard_extensions;
+  allow_ref_to_any                     = runtime_options.ref_nonstand_extensions;
+  allow_ref_to_in_derived_datatypes    = runtime_options.ref_nonstand_extensions;
   if (yyparse() != 0)
       ERROR;
   fclose(libfile);
@@ -8557,11 +8556,11 @@ int stage2__(const char *filename,
 
   allow_function_overloading           = false;
   allow_extensible_function_parameters = false;
-  full_token_loc                       = options.full_token_loc;
-  conversion_functions                 = options.conversion_functions;
-  allow_ref_dereferencing              = options.ref_standard_extensions;
-  allow_ref_to_any                     = options.ref_nonstand_extensions;
-  allow_ref_to_in_derived_datatypes    = options.ref_nonstand_extensions;
+  full_token_loc                       = runtime_options.full_token_loc;
+  conversion_functions                 = runtime_options.conversion_functions;
+  allow_ref_dereferencing              = runtime_options.ref_standard_extensions;
+  allow_ref_to_any                     = runtime_options.ref_nonstand_extensions;
+  allow_ref_to_in_derived_datatypes    = runtime_options.ref_nonstand_extensions;
   //allow_ref_to_any = false;    /* we only allow REF_TO ANY in library functions/FBs, no matter what the user asks for in the command line */
 
   if (yyparse() != 0) {
