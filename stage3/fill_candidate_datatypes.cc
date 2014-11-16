@@ -1303,10 +1303,57 @@ void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 /* B 1.4.3 - Declaration & Initialisation */
 /******************************************/
 
+/* When handling the declaration of variables the fill/narrow algorithm will simply visit the objects
+ * in the abstract syntax tree defining the desired datatype for the variables. Tis is to set the 
+ * symbol->datatype to the basetype of that datatype.
+ *
+ * Note that we do not currently set the symbol->datatype annotation for the identifier_c objects naming the 
+ * variables inside the variable declaration. However, this is liable to change in the future, so do not write
+ * any code that depends on this!
+ * 
+ * example:
+ *    VAR  var1, var2, var3  :  my_type;  END_VAR
+ *   (*    ^^^^  ^^^^  ^^^^                -> will NOT have the symbol->datatype set (for now, may change in the future!) *)
+ *   (*                         ^^^^^^^    -> WILL     have the symbol->datatype set *)
+ * 
+ * (remeber too that the identifier_c objects identifying variables inside ST/IL/SFC code *will* have their 
+ *  symbol->datatype annotation filled by the fill/narrow algorithm)
+ */
+void *fill_candidate_datatypes_c::fill_var_declaration(symbol_c *var_list, symbol_c *type) {
+  /* The type may be either a datatype object (e.g. array_spec_init_c, ...), or a derived_datatype_identifier_c
+   * naming a previously declared datatype.
+   * If it is a derived_datatype_identifier_c, we will search the list of all declared datatypes to determine 
+   * the requested datatype. This is done automatically by the search_base_type_c::get_basetype_decl() method, 
+   * so we do not need to do anything special here!
+   */
+  add_datatype_to_candidate_list(type, search_base_type_c::get_basetype_decl(type));  /* will only add if non NULL */
+  type->accept(*this);
+  // handle the extensible_input_parameter_c, etc...
+  /* The extensible_input_parameter_c will be visited since this class inherits from the iterator_visitor_c.
+   * It needs to be visited in order to handle the datatype of the first_index parameter of that class.
+   */
+  var_list->accept(*this);
+  return NULL;
+}
+
+
+void *fill_candidate_datatypes_c::visit(var1_init_decl_c             *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->spec_init);}
+void *fill_candidate_datatypes_c::visit(array_var_init_decl_c        *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->array_spec_init);}
+void *fill_candidate_datatypes_c::visit(structured_var_init_decl_c   *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->initialized_structure);}
+void *fill_candidate_datatypes_c::visit(fb_name_decl_c               *symbol) {return fill_var_declaration(symbol->fb_name_list,    symbol->fb_spec_init);}
+void *fill_candidate_datatypes_c::visit(array_var_declaration_c      *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->array_specification);}
+void *fill_candidate_datatypes_c::visit(structured_var_declaration_c *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->structure_type_name);}
+void *fill_candidate_datatypes_c::visit(external_declaration_c       *symbol) {return fill_var_declaration(symbol->global_var_name, symbol->specification);}
+void *fill_candidate_datatypes_c::visit(global_var_decl_c            *symbol) {return fill_var_declaration(symbol->global_var_spec, symbol->type_specification);}
+void *fill_candidate_datatypes_c::visit(incompl_located_var_decl_c   *symbol) {return fill_var_declaration(symbol->variable_name,   symbol->var_spec);}
+//void *fill_candidate_datatypes_c::visit(single_byte_string_var_declaration_c *symbol) {return handle_var_declaration(symbol->single_byte_string_spec);}
+//void *fill_candidate_datatypes_c::visit(double_byte_string_var_declaration_c *symbol) {return handle_var_declaration(symbol->double_byte_string_spec);}
+
+
+
+// NOTE: this method is not required since fill_candidate_datatypes_c inherits from iterator_visitor_c. TODO: delete this method!
 void *fill_candidate_datatypes_c::visit(var1_list_c *symbol) {
-  for(int i = 0; i < symbol->n; i++) {
-    symbol->elements[i]->accept(*this); // handle the extensible_input_parameter_c, etc...
-  }
+  for(int i = 0; i < symbol->n; i++) {symbol->elements[i]->accept(*this);}
   return NULL;
 }  
 
@@ -1509,10 +1556,56 @@ void *fill_candidate_datatypes_c::visit(transition_condition_c *symbol) {
 /* B 1.7 Configuration elements */
 /********************************/
 void *fill_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
-	// TODO !!!
-	/* for the moment we must return NULL so semantic analysis of remaining code is not interrupted! */
+	if (debug) printf("Filling candidate data types list in configuration %s\n", ((token_c *)(symbol->configuration_name))->value);
+	current_scope = symbol;
+//	local_enumerated_value_symtable.reset();  // TODO
+//	symbol->global_var_declarations->accept(populate_enumvalue_symtable);  // TODO
+	
+	search_var_instance_decl = new search_var_instance_decl_c(symbol);
+	symbol->global_var_declarations          ->accept(*this);
+	symbol->resource_declarations            ->accept(*this); // points to a single_resource_declaration_c or a resource_declaration_list_c
+//	symbol->access_declarations              ->accept(*this); // TODO
+//	symbol->instance_specific_initializations->accept(*this); // TODO
+
+	delete search_var_instance_decl;
+	search_var_instance_decl = NULL;
+
+	current_scope = NULL;	
+//	local_enumerated_value_symtable.reset();  // TODO
 	return NULL;
 }
+
+
+void *fill_candidate_datatypes_c::visit(resource_declaration_c *symbol) {
+	if (debug) printf("Filling candidate data types list in resource %s\n", ((token_c *)(symbol->resource_name))->value);
+//	local_enumerated_value_symtable.reset();  // TODO-> this must be replaced with local_enumerated_value_symtable.push(), which is not yet implemented for the dsyntable_c!
+	symbol_c *prev_scope = current_scope;
+	current_scope = symbol;
+	/* TODO Enumeration constants may be defined inside a VAR_GLOBAL .. END_VAR variable declaration list. 
+	 * We currently do not yet consider enumeration values defined in the var declarations inside a resource!
+	 */
+//	symbol->global_var_declarations->accept(populate_enumvalue_symtable);  // TODO!
+	
+	search_var_instance_decl_c *prev_search_var_instance_decl = search_var_instance_decl;
+	search_var_instance_decl  = new  search_var_instance_decl_c(symbol);
+	symbol->global_var_declarations->accept(*this);
+	symbol->resource_declaration   ->accept(*this);  // points to a single_resource_declaration_c!
+
+	delete search_var_instance_decl;
+	search_var_instance_decl = prev_search_var_instance_decl;
+
+	current_scope = prev_scope;	
+//	local_enumerated_value_symtable.reset();  // TODO-> this must be replaced with local_enumerated_value_symtable.pop(), which is not yet implemented for the dsyntable_c!
+	return NULL;
+}
+
+
+void *fill_candidate_datatypes_c::visit(single_resource_declaration_c *symbol) {
+//	symbol->task_configuration_list    ->accept(*this);  // TODO
+//	symbol->program_configuration_list ->accept(*this);  // TODO
+	return NULL;
+}
+
 
 /****************************************/
 /* B.2 - Language IL (Instruction List) */

@@ -86,7 +86,8 @@ class type_initial_value_c : public null_visitor_c {
     void *handle_type_spec(symbol_c *base_type_name, symbol_c *type_spec_init);
 
   private:
-    void *visit(identifier_c *type_name);
+    void *visit(                 identifier_c *type_name);
+    void *visit(derived_datatype_identifier_c *type_name);
 
     /***********************************/
     /* B 1.3.1 - Elementary Data Types */

@@ -117,8 +117,27 @@ void *type_initial_value_c::handle_type_spec(symbol_c *base_type_name, symbol_c 
 }
 
 
+/* visitor for identifier_c is necessary because type_initial_value_c will be called to analyse PROGRAM identfiers,
+ * which are still transformed into identfier_c, instead of a derived_datatype_identifier_c
+ */
+void *type_initial_value_c::visit(                 identifier_c *type_name) {
+  /* look up the type declaration... */
+  symbol_c *type_decl = type_symtable.find_value(type_name);
+  if (type_decl == type_symtable.end_value())
+    /* Type declaration not found!! */
+    /* NOTE: Variables declared out of function block 'data types',
+     *    for eg:  VAR  timer: TON; END_VAR
+     * do not have a default value, so (TON) will never be found in the
+     * type symbol table. This means we cannot simply consider this
+     * an error and abort, but must rather return a NULL.
+     */
+     return NULL;
 
-void *type_initial_value_c::visit(identifier_c *type_name) {
+  return type_decl->accept(*this);
+}
+
+  
+void *type_initial_value_c::visit(derived_datatype_identifier_c *type_name) {
   /* look up the type declaration... */
   symbol_c *type_decl = type_symtable.find_value(type_name);
   if (type_decl == type_symtable.end_value())

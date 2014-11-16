@@ -96,10 +96,11 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     void *handle_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
     void *handle_binary_expression  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
     void *handle_binary_operator    (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr);
-    void *handle_conditional_il_flow_control_operator(symbol_c *symbol);
-    void *fill_type_decl(symbol_c *symbol, symbol_c *type_name, symbol_c *spec_init);
-    void *fill_spec_init(symbol_c *symbol, symbol_c *type_spec, symbol_c *init_value);
-    
+    void *handle_conditional_il_flow_control_operator   (symbol_c *symbol);
+    void *fill_type_decl            (symbol_c *symbol,   symbol_c *type_name, symbol_c *spec_init);
+    void *fill_spec_init            (symbol_c *symbol,   symbol_c *type_spec, symbol_c *init_value);
+    void *fill_var_declaration      (symbol_c *var_list, symbol_c *type);
+
     /* a helper function... */
     symbol_c *base_type(symbol_c *symbol);    
     
@@ -230,9 +231,20 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /******************************************/
     /* B 1.4.3 - Declaration & Initialisation */
     /******************************************/
-    void *visit(var1_list_c *symbol);
-    void *visit(location_c *symbol);
-    void *visit(located_var_decl_c *symbol);
+    void *visit(var1_list_c                  *symbol);
+    void *visit(location_c                   *symbol);
+    void *visit(located_var_decl_c           *symbol);
+    void *visit(var1_init_decl_c             *symbol);
+    void *visit(array_var_init_decl_c        *symbol);
+    void *visit(structured_var_init_decl_c   *symbol);
+    void *visit(fb_name_decl_c               *symbol);
+    void *visit(array_var_declaration_c      *symbol);
+    void *visit(structured_var_declaration_c *symbol);
+    void *visit(external_declaration_c       *symbol);
+    void *visit(global_var_decl_c            *symbol);
+    void *visit(incompl_located_var_decl_c   *symbol);
+    //void *visit(single_byte_string_var_declaration_c *symbol);
+    //void *visit(double_byte_string_var_declaration_c *symbol);
 
     /**************************************/
     /* B 1.5 - Program organization units */
@@ -260,7 +272,9 @@ class fill_candidate_datatypes_c: public iterator_visitor_c {
     /********************************/
     /* B 1.7 Configuration elements */
     /********************************/
-    void *visit(configuration_declaration_c *symbol);
+    void *visit(configuration_declaration_c   *symbol);
+    void *visit(resource_declaration_c        *symbol);
+    void *visit(single_resource_declaration_c *symbol);
 
     /****************************************/
     /* B.2 - Language IL (Instruction List) */

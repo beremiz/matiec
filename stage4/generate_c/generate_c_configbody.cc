@@ -22,11 +22,11 @@
  * used in safety-critical situations without a full and competent review.
  */
 
-class generate_c_configbody_c: public generate_c_base_c {
+class generate_c_configbody_c: public generate_c_base_and_typeid_c {
 
   public:
     generate_c_configbody_c(stage4out_c *s4o_ptr)
-    : generate_c_base_c(s4o_ptr) {
+    : generate_c_base_and_typeid_c(s4o_ptr) {
       current_resource_name = NULL;
     }
 

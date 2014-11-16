@@ -747,6 +747,44 @@ void *narrow_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 /* B 1.4.3 - Declaration & Initialisation */
 /******************************************/
 
+/* When handling the declaration of variables the fill/narrow algorithm will simply visit the objects
+ * in the abstract syntax tree defining the desired datatype for the variables. Tis is to set the 
+ * symbol->datatype to the basetype of that datatype.
+ *
+ * Note that we do not currently set the symbol->datatype annotation for the identifier_c objects naming the 
+ * variables inside the variable declaration. However, this is liable to change in the future, so do not write
+ * any code that depends on this!
+ * 
+ * example:
+ *    VAR  var1, var2, var3  :  my_type;  END_VAR
+ *   (*    ^^^^  ^^^^  ^^^^                -> will NOT have the symbol->datatype set (for now, may change in the future!) *)
+ *   (*                         ^^^^^^^    -> WILL     have the symbol->datatype set *)
+ * 
+ * (remeber too that the identifier_c objects identifying variables inside ST/IL/SFC code *will* have their 
+ *  symbol->datatype annotation filled by the fill/narrow algorithm)
+ */
+void *narrow_candidate_datatypes_c::narrow_var_declaration(symbol_c *type) {
+  if (type->candidate_datatypes.size() == 1)
+    type->datatype = type->candidate_datatypes[0];
+  type->accept(*this); 
+  return NULL;
+}
+
+
+void *narrow_candidate_datatypes_c::visit(var1_init_decl_c             *symbol) {return narrow_var_declaration(symbol->spec_init);}
+void *narrow_candidate_datatypes_c::visit(array_var_init_decl_c        *symbol) {return narrow_var_declaration(symbol->array_spec_init);}
+void *narrow_candidate_datatypes_c::visit(structured_var_init_decl_c   *symbol) {return narrow_var_declaration(symbol->initialized_structure);}
+void *narrow_candidate_datatypes_c::visit(fb_name_decl_c               *symbol) {return narrow_var_declaration(symbol->fb_spec_init);}
+void *narrow_candidate_datatypes_c::visit(array_var_declaration_c      *symbol) {return narrow_var_declaration(symbol->array_specification);}
+void *narrow_candidate_datatypes_c::visit(structured_var_declaration_c *symbol) {return narrow_var_declaration(symbol->structure_type_name);}
+void *narrow_candidate_datatypes_c::visit(external_declaration_c       *symbol) {return narrow_var_declaration(symbol->specification);}
+void *narrow_candidate_datatypes_c::visit(global_var_decl_c            *symbol) {return narrow_var_declaration(symbol->type_specification);}
+void *narrow_candidate_datatypes_c::visit(incompl_located_var_decl_c   *symbol) {return narrow_var_declaration(symbol->var_spec);}
+//void *narrow_candidate_datatypes_c::visit(single_byte_string_var_declaration_c *symbol) {return handle_var_declaration(symbol->single_byte_string_spec);}
+//void *narrow_candidate_datatypes_c::visit(double_byte_string_var_declaration_c *symbol) {return handle_var_declaration(symbol->double_byte_string_spec);}
+
+
+
 void *narrow_candidate_datatypes_c::visit(var1_list_c *symbol) {
 #if 0   /* We don't really need to set the datatype of each variable. We just check the declaration itself! */
   for(int i = 0; i < symbol->n; i++) {
@@ -856,10 +894,36 @@ void *narrow_candidate_datatypes_c::visit(transition_condition_c *symbol) {
 /* B 1.7 Configuration elements */
 /********************************/
 void *narrow_candidate_datatypes_c::visit(configuration_declaration_c *symbol) {
-	// TODO !!!
-	/* for the moment we must return NULL so semantic analysis of remaining code is not interrupted! */
+	if (debug) printf("Narrowing candidate data types list in configuration %s\n", ((token_c *)(symbol->configuration_name))->value);
+	search_varfb_instance_type = new search_varfb_instance_type_c(symbol);
+	symbol->global_var_declarations->accept(*this);
+	symbol->resource_declarations            ->accept(*this); // points to a single_resource_declaration_c or a resource_declaration_list_c
+//	symbol->access_declarations              ->accept(*this); // TODO
+//	symbol->instance_specific_initializations->accept(*this); // TODO
+	delete search_varfb_instance_type;
+	search_varfb_instance_type = NULL;
 	return NULL;
 }
+
+
+void *narrow_candidate_datatypes_c::visit(resource_declaration_c *symbol) {
+	if (debug) printf("Narrowing candidate data types list in resource %s\n", ((token_c *)(symbol->resource_name))->value);
+	search_varfb_instance_type_c *prev_search_varfb_instance_type = search_varfb_instance_type;
+	search_varfb_instance_type  =  new search_varfb_instance_type_c(symbol);
+	symbol->global_var_declarations->accept(*this);
+	symbol->resource_declaration   ->accept(*this);  // points to a single_resource_declaration_c!
+	delete search_varfb_instance_type;
+	search_varfb_instance_type = prev_search_varfb_instance_type;
+	return NULL;
+}
+
+
+void *narrow_candidate_datatypes_c::visit(single_resource_declaration_c *symbol) {
+//	symbol->task_configuration_list    ->accept(*this);  // TODO
+//	symbol->program_configuration_list ->accept(*this);  // TODO
+	return NULL;
+}
+
 
 
 /****************************************/

@@ -26,7 +26,7 @@
 #define INLINE_RESULT_TEMP_VAR "__res"
 #define INLINE_PARAM_COUNT "__PARAM_COUNT"
 
-class generate_c_inlinefcall_c: public generate_c_base_c {
+class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
 
   public:
     typedef enum {
@@ -76,7 +76,7 @@ class generate_c_inlinefcall_c: public generate_c_base_c {
 
   public:
     generate_c_inlinefcall_c(stage4out_c *s4o_ptr, symbol_c *name, symbol_c *scope, const char *variable_prefix = NULL)
-    : generate_c_base_c(s4o_ptr),
+    : generate_c_base_and_typeid_c(s4o_ptr),
       implicit_variable_current(IL_DEFVAR, NULL)
     {
       search_varfb_instance_type = new search_varfb_instance_type_c(scope);

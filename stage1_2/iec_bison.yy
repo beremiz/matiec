@@ -1608,13 +1608,13 @@ any_identifier:
 prev_declared_variable_name       : prev_declared_variable_name_token        {$$ = new identifier_c($1, locloc(@$));};
 prev_declared_fb_name             : prev_declared_fb_name_token              {$$ = new identifier_c($1, locloc(@$));};
 
-prev_declared_simple_type_name    : prev_declared_simple_type_name_token     {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_subrange_type_name  : prev_declared_subrange_type_name_token   {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_enumerated_type_name: prev_declared_enumerated_type_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_array_type_name     : prev_declared_array_type_name_token      {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_structure_type_name : prev_declared_structure_type_name_token  {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_string_type_name    : prev_declared_string_type_name_token     {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_ref_type_name       : prev_declared_ref_type_name_token        {$$ = new identifier_c($1, locloc(@$));};  /* defined in IEC 61131-3 v3 */
+prev_declared_simple_type_name    : prev_declared_simple_type_name_token     {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_subrange_type_name  : prev_declared_subrange_type_name_token   {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_enumerated_type_name: prev_declared_enumerated_type_name_token {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_array_type_name     : prev_declared_array_type_name_token      {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_structure_type_name : prev_declared_structure_type_name_token  {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_string_type_name    : prev_declared_string_type_name_token     {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_ref_type_name       : prev_declared_ref_type_name_token        {$$ = new derived_datatype_identifier_c($1, locloc(@$));};  /* defined in IEC 61131-3 v3 */
 
 prev_declared_derived_function_name      : prev_declared_derived_function_name_token       {$$ = new identifier_c($1, locloc(@$));};
 prev_declared_derived_function_block_name: prev_declared_derived_function_block_name_token {$$ = new identifier_c($1, locloc(@$));};

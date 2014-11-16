@@ -80,9 +80,10 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     void *narrow_S_and_R_operator    (symbol_c *symbol, const char *param_name, symbol_c * called_fb_declaration);
     void *narrow_store_operator      (symbol_c *symbol);
     void *narrow_conditional_operator(symbol_c *symbol);
-    void *narrow_binary_operator    (const struct widen_entry widen_table[], symbol_c *symbol,                                     bool *deprecated_operation = NULL);
-    void *narrow_binary_expression  (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL, bool allow_enums = false);
-    void *narrow_equality_comparison(const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL);
+    void *narrow_binary_operator     (const struct widen_entry widen_table[], symbol_c *symbol,                                     bool *deprecated_operation = NULL);
+    void *narrow_binary_expression   (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL, bool allow_enums = false);
+    void *narrow_equality_comparison (const struct widen_entry widen_table[], symbol_c *symbol, symbol_c *l_expr, symbol_c *r_expr, bool *deprecated_operation = NULL);
+    void *narrow_var_declaration     (symbol_c *type);
 
     void *set_il_operand_datatype    (symbol_c *il_operand, symbol_c *datatype);
 
@@ -201,9 +202,20 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /******************************************/
     /* B 1.4.3 - Declaration & Initialisation */
     /******************************************/
-    void *visit(var1_list_c *symbol);
-    void *visit(location_c *symbol);
-    void *visit(located_var_decl_c *symbol);
+    void *visit(var1_list_c                  *symbol);
+    void *visit(location_c                   *symbol);
+    void *visit(located_var_decl_c           *symbol);
+    void *visit(var1_init_decl_c             *symbol);
+    void *visit(array_var_init_decl_c        *symbol);
+    void *visit(structured_var_init_decl_c   *symbol);
+    void *visit(fb_name_decl_c               *symbol);
+    void *visit(array_var_declaration_c      *symbol);
+    void *visit(structured_var_declaration_c *symbol);
+    void *visit(external_declaration_c       *symbol);
+    void *visit(global_var_decl_c            *symbol);
+    void *visit(incompl_located_var_decl_c   *symbol);
+    //void *visit(single_byte_string_var_declaration_c *symbol);
+    //void *visit(double_byte_string_var_declaration_c *symbol);
 
     /**************************************/
     /* B 1.5 - Program organization units */
@@ -231,7 +243,10 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /********************************/
     /* B 1.7 Configuration elements */
     /********************************/
-    void *visit(configuration_declaration_c *symbol);
+    void *visit(configuration_declaration_c   *symbol);
+    void *visit(resource_declaration_c        *symbol);
+    void *visit(single_resource_declaration_c *symbol);
+
     /****************************************/
     /* B.2 - Language IL (Instruction List) */
     /****************************************/

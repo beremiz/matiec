@@ -184,7 +184,7 @@ class search_type_symbol_c: public iterator_visitor_c {
 /***********************************************************************/
 /***********************************************************************/
 
-class generate_var_list_c: protected generate_c_typedecl_c {
+class generate_var_list_c: protected generate_c_base_and_typeid_c {
   
   public:
     typedef struct {
@@ -222,7 +222,7 @@ class generate_var_list_c: protected generate_c_typedecl_c {
     
   public:
     generate_var_list_c(stage4out_c *s4o_ptr, symbol_c *scope)
-    : generate_c_typedecl_c(s4o_ptr) {
+    : generate_c_base_and_typeid_c(s4o_ptr) {
       search_type_symbol = new search_type_symbol_c(scope);
       current_var_number = 0;
       current_var_type_symbol = NULL;
