@@ -1052,9 +1052,9 @@ incompl_location	%[IQM]\*
 	 *       continue in the <vardecl_state> state, untill the end of the FUNCTION, FUNCTION_BLOCK
 	 *       or PROGAM.
 	 */
-FUNCTION				yy_push_state(header_state); return FUNCTION;
-FUNCTION_BLOCK				yy_push_state(header_state); return FUNCTION_BLOCK;
-PROGRAM					yy_push_state(header_state); return PROGRAM;
+FUNCTION				BEGIN(header_state); return FUNCTION;
+FUNCTION_BLOCK				BEGIN(header_state); return FUNCTION_BLOCK;
+PROGRAM					BEGIN(header_state); return PROGRAM;
 CONFIGURATION				BEGIN(config_state); return CONFIGURATION;
 }
 
@@ -1108,7 +1108,7 @@ END_PROGRAM			unput_text(0); BEGIN(INITIAL);
 
 	/* vardecl_list_state -> pop to $previous_state (vardecl_list_state) */
 <vardecl_state>{
-END_VAR				yy_pop_state(); return END_VAR; /* pop back to header_state */
+END_VAR				yy_pop_state(); return END_VAR; /* pop back to vardecl_list_state */
 }
 
 
