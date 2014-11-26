@@ -238,7 +238,7 @@ generate_datatypes_aliasid_c *generate_datatypes_aliasid_c::singleton_ = NULL;
  * Whenever this class needs to print out the id of a datatype, it will explicitly use a private instance
  * (generate_c_typeid) of generate_c_base_and_typeid_c!
  */
-class generate_c_typedecl_c: public generate_c_base_c {
+class generate_c_typedecl_c: public generate_c_base_and_typeid_c {
 
   protected:
     stage4out_c &s4o_incl;
@@ -249,7 +249,7 @@ class generate_c_typedecl_c: public generate_c_base_c {
     std::map<std::string, int> datatypes_already_defined;
     
   public:
-    generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_c(s4o_ptr), s4o_incl(*s4o_ptr) /*, generate_c_print_typename(s4o_ptr) */{
+    generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_and_typeid_c(s4o_ptr), s4o_incl(*s4o_ptr) /*, generate_c_print_typename(s4o_ptr) */{
       current_typedefinition = none_td;
       current_basetypedeclaration = none_bd;
       current_type_name = NULL;
@@ -281,18 +281,16 @@ class generate_c_typedecl_c: public generate_c_base_c {
     void *print_list_incl(list_c *list,
          std::string pre_elem_str = "",
          std::string inter_elem_str = "",
-         std::string post_elem_str = "",
-         visitor_c *visitor = NULL) {
-      if (visitor == NULL) visitor = this;
+         std::string post_elem_str = "") {
 
       if (list->n > 0) {
         s4o_incl.print(pre_elem_str);
-        list->elements[0]->accept(*visitor);
+        list->elements[0]->accept(*this);
       }
 
       for(int i = 1; i < list->n; i++) {
         s4o_incl.print(inter_elem_str);
-        list->elements[i]->accept(*visitor);
+        list->elements[i]->accept(*this);
       }
 
       if (list->n > 0)
@@ -368,12 +366,12 @@ void *visit(subrange_type_declaration_c *symbol) {
   current_type_name->accept(*generate_c_typeid);
   s4o_incl.print(",");
   current_basetypedeclaration = subrangebasetype_bd;
-  symbol->subrange_spec_init->accept(*this);
+  symbol->subrange_spec_init->accept(*this); // always calls subrange_spec_init_c
   current_basetypedeclaration = none_bd;
   s4o_incl.print(")\n");
   
   current_basetypedeclaration = subrangetest_bd;
-  symbol->subrange_spec_init->accept(*this);
+  symbol->subrange_spec_init->accept(*this); // always calls subrange_spec_init_c
   current_basetypedeclaration = none_bd;
   
   current_type_name = NULL;
@@ -385,7 +383,7 @@ void *visit(subrange_type_declaration_c *symbol) {
 /* subrange_specification ASSIGN signed_integer */
 void *visit(subrange_spec_init_c *symbol) {
   TRACE("subrange_spec_init_c");
-  symbol->subrange_specification->accept(*this);
+  symbol->subrange_specification->accept(*this); // always calls subrange_specification_c
   return NULL;
 }
 
@@ -421,7 +419,7 @@ void *visit(subrange_specification_c *symbol) {
           }
           */
 
-          symbol->subrange->accept(*this);
+          symbol->subrange->accept(*this); // always calls subrange_c
 
           s4o_incl.indent_left();
           s4o_incl.print("}\n");
@@ -454,7 +452,7 @@ void *visit(subrange_c *symbol) {
         s4o_incl.print("]");
       }
       else
-        symbol->lower_limit->accept(*this);
+        symbol->lower_limit->accept(*this);  // always calls neg_integer_c or integer_c
       break;
     case subrange_td:
       s4o_incl.print(s4o_incl.indent_spaces + "if (value < ");
@@ -494,7 +492,7 @@ void *visit(enumerated_type_declaration_c *symbol) {
   current_type_name->accept(*generate_c_typeid);
   s4o_incl.print(",\n");
   s4o_incl.indent_right();
-  symbol->enumerated_spec_init->accept(*this);
+  symbol->enumerated_spec_init->accept(*this); // always calls enumerated_spec_init_c
   s4o_incl.indent_left();
   s4o_incl.print(")\n");
 
@@ -508,7 +506,7 @@ void *visit(enumerated_type_declaration_c *symbol) {
 void *visit(enumerated_spec_init_c *symbol) {
   TRACE("enumerated_spec_init_c");
   if (current_typedefinition == enumerated_td)
-    symbol->enumerated_specification->accept(*this);
+    symbol->enumerated_specification->accept(*this); // always calls enumerated_value_list_c or derived_datatype_identifier_c
   else
     symbol->enumerated_specification->accept(*generate_c_typeid);
   return NULL;
@@ -518,7 +516,7 @@ void *visit(enumerated_spec_init_c *symbol) {
 /* enumerated_value_list ',' enumerated_value */
 void *visit(enumerated_value_list_c *symbol) {
   TRACE("enumerated_value_list_c");
-  print_list_incl(symbol, s4o_incl.indent_spaces, ",\n"+s4o_incl.indent_spaces, "\n");
+  print_list_incl(symbol, s4o_incl.indent_spaces, ",\n"+s4o_incl.indent_spaces, "\n");  // will always call enumerated_value_c
   return NULL;
 }
 
@@ -553,7 +551,7 @@ void *visit(array_type_declaration_c *symbol) {
   s4o_incl.print("__DECLARE_ARRAY_TYPE(");
   current_type_name->accept(*generate_c_typeid);
   s4o_incl.print(",");
-  symbol->array_spec_init->accept(*this);
+  symbol->array_spec_init->accept(*this); // always calls array_spec_init_c
   s4o_incl.print(")\n");
 
   current_type_name = NULL;
@@ -573,7 +571,7 @@ end:
 /* array_initialization may be NULL ! */
 void *visit(array_spec_init_c *symbol) {
   TRACE("array_spec_init_c");  
-  symbol->array_specification->accept(*this);
+  symbol->array_specification->accept(*this); // always calls array_specification_c or derived_datatype_identifier_c
   return NULL;
 }
 
@@ -584,7 +582,7 @@ void *visit(array_specification_c *symbol) {
   symbol->non_generic_type_name->accept(/*generate_c_print_typename*/*generate_c_typeid);
   s4o_incl.print(",");
   current_basetypedeclaration = arraysubrange_bd;
-  symbol->array_subrange_list->accept(*this);
+  symbol->array_subrange_list->accept(*this); // always calls array_subrange_list_c, which the iterator_visitor_c base class will call subrange_c
   current_basetypedeclaration = none_bd;
   return NULL;
 }
@@ -593,7 +591,7 @@ void *visit(array_specification_c *symbol) {
 /*  TYPE type_declaration_list END_TYPE */
 void *visit(data_type_declaration_c *symbol) {
   TRACE("data_type_declaration_c");
-  symbol->type_declaration_list->accept(*this);
+  symbol->type_declaration_list->accept(*this); // will always call type_declaration_list_c
   s4o_incl.print("\n\n");
   return NULL;
 }
@@ -601,7 +599,7 @@ void *visit(data_type_declaration_c *symbol) {
 /* helper symbol for data_type_declaration */
 void *visit(type_declaration_list_c *symbol) {
   TRACE("type_declaration_list_c");
-  return print_list_incl(symbol, "", "\n", "\n");
+  return print_list_incl(symbol, "", "\n", "\n"); // will always call string_type_declaration_c, structure_type_declaration_c, array_type_declaration_c, simple_type_declaration_c, subrange_type_declaration_c, enumerated_type_declaration_c, ref_type_decl_c
 }
 
 /*  simple_type_name ':' simple_spec_init */
@@ -611,14 +609,14 @@ void *visit(simple_type_declaration_c *symbol) {
   s4o_incl.print("__DECLARE_DERIVED_TYPE(");
   symbol->simple_type_name->accept(*generate_c_typeid);
   s4o_incl.print(",");
-  symbol->simple_spec_init->accept(*this);
+  symbol->simple_spec_init->accept(*this); // always calls simple_spec_init_c
   s4o_incl.print(")\n");
 
   if (get_datatype_info_c::is_subrange(symbol->simple_type_name)) {
     s4o_incl.print("#define __CHECK_");
     current_type_name->accept(*generate_c_typeid);
     s4o_incl.print(" __CHECK_");
-    symbol->simple_spec_init->accept(*this);
+    symbol->simple_spec_init->accept(*this); // always calls simple_spec_init_c
     s4o_incl.print("\n");
   }
 
@@ -694,7 +692,7 @@ void *visit(structure_type_declaration_c *symbol) {
   s4o_incl.print("__DECLARE_STRUCT_TYPE(");
   symbol->structure_type_name->accept(*generate_c_typeid);
   s4o_incl.print(",");
-  symbol->structure_specification->accept(*this);
+  symbol->structure_specification->accept(*this); // always calls initialized_structure_c or structure_element_declaration_list
   s4o_incl.print(")\n");
 
   current_typedefinition = none_td;
@@ -721,7 +719,7 @@ void *visit(structure_element_declaration_list_c *symbol) {
   s4o_incl.indent_right();
   s4o_incl.print(s4o_incl.indent_spaces);
 
-  print_list_incl(symbol, "", s4o_incl.indent_spaces, "");
+  print_list_incl(symbol, "", s4o_incl.indent_spaces, ""); // will always call structure_element_declaration_c
 
   s4o_incl.indent_left();
   s4o_incl.print(s4o_incl.indent_spaces);
@@ -873,7 +871,7 @@ void *visit(ref_type_decl_c *symbol) {
   s4o_incl.print("__DECLARE_REFTO_TYPE(");
   symbol->ref_type_name->accept(*generate_c_typeid);
   s4o_incl.print(", ");
-  symbol->ref_spec_init->accept(*this);
+  symbol->ref_spec_init->accept(*this); // always calls ref_spec_init_c
   s4o_incl.print(")\n");
 
   current_type_name = NULL;
@@ -1066,7 +1064,7 @@ class generate_c_implicit_typedecl_c: public iterator_visitor_c {
     /* NOTE: ref_initialization may be NULL!! */
     // SYM_REF2(ref_spec_init_c, ref_spec, ref_initialization)
     void *visit(ref_spec_init_c *symbol) {
-      symbol->ref_spec->accept(*this);
+      symbol->ref_spec->accept(*this); //--> always calls ref_spec_c or derived_datatype_identifier_c
       int implicit_id_count = symbol->ref_spec->anotations_map.count("generate_c_annotaton__implicit_type_id");
       if (implicit_id_count  > 1) ERROR;
       if (implicit_id_count == 1)
@@ -1087,7 +1085,7 @@ class generate_c_implicit_typedecl_c: public iterator_visitor_c {
     /* array_specification [ASSIGN array_initialization] */
     /* array_initialization may be NULL ! */
     void *visit(array_spec_init_c *symbol) {
-      symbol->array_specification->accept(*this);
+      symbol->array_specification->accept(*this); //--> always calls array_specification_c or derived_datatype_identifier_c
       int implicit_id_count = symbol->array_specification->anotations_map.count("generate_c_annotaton__implicit_type_id");
       if (implicit_id_count  > 1) ERROR;
       if (implicit_id_count == 1)
@@ -1130,7 +1128,7 @@ class generate_c_implicit_typedecl_c: public iterator_visitor_c {
     /***********************/      
     void *visit(function_declaration_c *symbol) {
       prefix = symbol->derived_function_name;
-      symbol->var_declarations_list->accept(*this);
+      symbol->var_declarations_list->accept(*this); //--> always calls var_declarations_list_c
       prefix = NULL;
       return NULL;
     }
@@ -1139,7 +1137,7 @@ class generate_c_implicit_typedecl_c: public iterator_visitor_c {
     /*****************************/
     void *visit(function_block_declaration_c *symbol) {
       prefix = symbol->fblock_name;
-      symbol->var_declarations->accept(*this);
+      symbol->var_declarations->accept(*this); //--> always calls var_declarations_list_c
       prefix = NULL;
       return NULL;
     }
@@ -1148,7 +1146,7 @@ class generate_c_implicit_typedecl_c: public iterator_visitor_c {
     /**********************/    
     void *visit(program_declaration_c *symbol) {
       prefix = symbol->program_type_name;
-      symbol->var_declarations->accept(*this);
+      symbol->var_declarations->accept(*this); //--> always calls var_declarations_list_c
       prefix = NULL;
       return NULL;
     }
