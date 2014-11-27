@@ -233,20 +233,30 @@ generate_datatypes_aliasid_c *generate_datatypes_aliasid_c::singleton_ = NULL;
  * This method of handling arrays is needed when the relaxed datatype model is used 
  * (see get_datatype_info_c for explanation on the relaxed datatype model).
  */
-/* Notice that this class inherits from generate_c_base_c, and not from generate_c_base_and_typeid_c.
- * This is intentional! 
- * Whenever this class needs to print out the id of a datatype, it will explicitly use a private instance
- * (generate_c_typeid) of generate_c_base_and_typeid_c!
+/* The generate_c_typedecl_c inherits from generate_c_base_and_typeid_c because it will need the visitor's() to
+ *   identifier_c, derived_datatype_identifier_c, and enumerated_value_c
  */
 class generate_c_typedecl_c: public generate_c_base_and_typeid_c {
 
   protected:
+    /* The following member variable is completely useless - the s4o variable inherited from generate_c_base_and_typeid_c
+     * could be used to the same effect. We keep it here merely because this generate_c_typedecl_c will typically be called
+     * with s4o referencing an include file (typically POUS.h), and using s4o_incl throughout this code will help the reader
+     * of the code to keep this fact in mind.
+     */
     stage4out_c &s4o_incl;
 
   private:
     symbol_c* current_type_name;
-    generate_c_base_and_typeid_c *generate_c_typeid;
     std::map<std::string, int> datatypes_already_defined;
+    /* Although this generate_c_typedecl_c inherits directly from generate_c_base_and_typeid_c, we still need an independent
+     * instance of that base class. This is because generate_c_typedecl_c will overload some of the visitors in the base class
+     * generate_c_base_and_typeid_c.
+     *  When we want the to use the version of these visitors() in generate_c_typedecl_c,        we call accept(*this);
+     *  When we want the to use the version of these visitors() in generate_c_base_and_typeid_c, we call accept(*generate_c_typeid);
+     */
+    generate_c_base_and_typeid_c *generate_c_typeid;
+
     
   public:
     generate_c_typedecl_c(stage4out_c *s4o_ptr): generate_c_base_and_typeid_c(s4o_ptr), s4o_incl(*s4o_ptr) /*, generate_c_print_typename(s4o_ptr) */{
@@ -895,7 +905,7 @@ void *visit(direct_variable_c *symbol) {
   TRACE("direct_variable_c");
   /* Do not use print_token() as it will change everything into uppercase */
   if (strlen(symbol->value) == 0) ERROR;
-  return s4o.printlocation(symbol->value + 1);
+  return s4o_incl.printlocation(symbol->value + 1);
 }
 
 
