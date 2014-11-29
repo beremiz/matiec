@@ -1589,13 +1589,14 @@ any_identifier:
 | prev_declared_fb_name
 | prev_declared_variable_name
 /**/
-| prev_declared_enumerated_type_name
-| prev_declared_simple_type_name
-| prev_declared_subrange_type_name
-| prev_declared_array_type_name
-| prev_declared_structure_type_name
-| prev_declared_string_type_name
-| prev_declared_ref_type_name  /* defined in IEC 61131-3 v3 */
+    /* ref_type_name is defined in IEC 61131-3 v3 */
+| prev_declared_ref_type_name               {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
+| prev_declared_simple_type_name            {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
+| prev_declared_subrange_type_name          {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
+| prev_declared_enumerated_type_name        {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
+| prev_declared_array_type_name             {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
+| prev_declared_structure_type_name         {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
+| prev_declared_string_type_name            {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
 | prev_declared_derived_function_name
 | prev_declared_derived_function_block_name
 | prev_declared_program_type_name
