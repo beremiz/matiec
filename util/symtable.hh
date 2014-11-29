@@ -96,18 +96,21 @@ template<typename value_type, value_type null_value> class symtable_c {
     value_t find_value(const char *identifier_str);
     value_t find_value(const symbol_c *symbol);
 
-    iterator find(const char *identifier_str) {return _base.find(identifier_str);}
 
-  /* iterators pointing to beg/end of map... */
-    iterator begin() 			{return _base.begin();}
-    const_iterator begin() const	{return _base.begin();}
-    iterator end()			{return _base.end();}
-    const_iterator end() const 		{return _base.end();}
-    reverse_iterator rbegin()		{return _base.rbegin();}
-    const_reverse_iterator rbegin() const {return _base.rbegin();}
-    reverse_iterator rend() 		{return _base.rend();}
-    const_reverse_iterator rend() const	{return _base.rend();}
-
+  /* iterators ... */
+  /* NOTE: These member functions are incorrect, as the returned iterator will not iterate through the inner_scopes!! */
+  /*       We simply comment it all out, as they are not currently needed!                                            */
+  #if 0
+    iterator               find (const char *identifier_str) {return _base.find(identifier_str);}
+    iterator               begin()                           {return _base.begin();}
+    const_iterator         begin()  const                    {return _base.begin();}
+    iterator               end()                             {return _base.end();}
+    const_iterator         end()    const                    {return _base.end();}
+    reverse_iterator       rbegin()                          {return _base.rbegin();}
+    const_reverse_iterator rbegin() const                    {return _base.rbegin();}
+    reverse_iterator       rend()                            {return _base.rend();}
+    const_reverse_iterator rend()   const                    {return _base.rend();}
+  #endif
     /* debuging function... */
     void print(void);
 };
