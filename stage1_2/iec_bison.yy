@@ -2607,16 +2607,21 @@ single_element_type_declaration:
 simple_type_declaration:
 /*  simple_type_name ':' simple_spec_init */
 /* To understand why simple_spec_init was brocken up into its consituent components in the following rules, please see note in the definition of 'enumerated_type_declaration'. */
-/* PRE_PARSING: The rules expected to be applied by the preparser. */
+/* PRE_PARSING or SINGLE_PHASE_PARSING */
+/*  The following rules will be run either by:
+ *      - the pre_parsing phase of two phase parsing (when preparsing command line option is chosen).
+ *      - the standard single phase parser (when preparsing command line option is not chosen).
+ */
   identifier ':' simple_specification           {library_element_symtable.insert($1, prev_declared_simple_type_name_token);}
-	{if (!get_preparse_state()) ERROR;}  
+	{if (!get_preparse_state()) $$ = new simple_type_declaration_c($1, $3, locloc(@$));}
 | identifier ':' elementary_type_name           {library_element_symtable.insert($1, prev_declared_simple_type_name_token);} ASSIGN constant
-	{if (!get_preparse_state()) ERROR;}  
+	{if (!get_preparse_state()) $$ = new simple_type_declaration_c($1, new simple_spec_init_c($3, $6, locf(@3), locl(@5)), locloc(@$));}
 | identifier ':' prev_declared_simple_type_name {library_element_symtable.insert($1, prev_declared_simple_type_name_token);} ASSIGN constant
-	{if (!get_preparse_state()) ERROR;}  
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+	{if (!get_preparse_state()) $$ = new simple_type_declaration_c($1, new simple_spec_init_c($3, $6, locf(@3), locl(@5)), locloc(@$));}
+/* POST_PARSING */
+/*  These rules will be run after the preparser phase of two phase parsing has finished (only gets to execute if preparsing command line option is chosen). */
 | prev_declared_simple_type_name ':' simple_spec_init
-	{$$ = new simple_type_declaration_c($1, $3, locloc(@$));}
+	{$$ = new simple_type_declaration_c(new identifier_c(((token_c *)$1)->value, locloc(@1)), $3, locloc(@$));} // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
 /* These three rules can now be safely replaced by the original rule abvoe!! */
 /*
 | prev_declared_simple_type_name ':' simple_specification
@@ -2698,12 +2703,17 @@ simple_specification:
 
 subrange_type_declaration:
 /*  subrange_type_name ':' subrange_spec_init */
-/* PRE_PARSING: The rules expected to be applied by the preparser. */
+/* PRE_PARSING or SINGLE_PHASE_PARSING */
+/*  The following rules will be run either by:
+ *      - the pre_parsing phase of two phase parsing (when preparsing command line option is chosen).
+ *      - the standard single phase parser (when preparsing command line option is not chosen).
+ */
   identifier ':' subrange_spec_init	{library_element_symtable.insert($1, prev_declared_subrange_type_name_token);}
-	{if (!get_preparse_state()) ERROR;}  
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+	{if (!get_preparse_state()) $$ = new subrange_type_declaration_c($1, $3, locloc(@$));}  
+/* POST_PARSING */
+/*  These rules will be run after the preparser phase of two phase parsing has finished (only gets to execute if preparsing command line option is chosen). */
 | prev_declared_subrange_type_name ':' subrange_spec_init
-	{$$ = new subrange_type_declaration_c($1, $3, locloc(@$));}
+	{$$ = new subrange_type_declaration_c(new identifier_c(((token_c *)$1)->value, locloc(@1)), $3, locloc(@$));} // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
 /* ERROR_CHECK_BEGIN */
 | error ':' subrange_spec_init
 	{$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid name defined for subrange type declaration."); yyerrok;}
@@ -2775,15 +2785,20 @@ enumerated_type_declaration:
  *           identifier ':' enumerated_spec_init
  *       and include the library_element_symtable.insert(...) code in the rule actions!
  */
-/* PRE_PARSING: The rules expected to be applied by the preparser. */
+/* PRE_PARSING or SINGLE_PHASE_PARSING */
+/*  The following rules will be run either by:
+ *      - the pre_parsing phase of two phase parsing (when preparsing command line option is chosen).
+ *      - the standard single phase parser (when preparsing command line option is not chosen).
+ */
   identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);}
-	{if (!get_preparse_state()) ERROR;}  
+	{if (!get_preparse_state()) $$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, NULL, locloc(@3)), locloc(@$));}
 | identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);} ASSIGN enumerated_value
-	{if (!get_preparse_state()) ERROR;}  
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+	{if (!get_preparse_state()) $$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, $6, locf(@3), locl(@6)), locloc(@$));}
+/* POST_PARSING */
+/*  These rules will be run after the preparser phase of two phase parsing has finished (only gets to execute if preparsing command line option is chosen). */
 /* Since the enumerated type name is placed in the library_element_symtable during preparsing, we can now safely use the single rule: */
 | prev_declared_enumerated_type_name ':' enumerated_spec_init 
-	{$$ = new enumerated_type_declaration_c($1, $3, locloc(@$));}
+	{$$ = new enumerated_type_declaration_c(new identifier_c(((token_c *)$1)->value, locloc(@1)), $3, locloc(@$));} // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
   /* These two rules are equivalent to the above rule */
 /*
 | prev_declared_enumerated_type_name ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);}
@@ -2878,12 +2893,17 @@ enumerated_value_without_identifier:
 
 array_type_declaration:
 /*  array_type_name ':' array_spec_init */
-/* PRE_PARSING: The rules expected to be applied by the preparser. */
+/* PRE_PARSING or SINGLE_PHASE_PARSING */
+/*  The following rules will be run either by:
+ *      - the pre_parsing phase of two phase parsing (when preparsing command line option is chosen).
+ *      - the standard single phase parser (when preparsing command line option is not chosen).
+ */
   identifier ':' array_spec_init   {library_element_symtable.insert($1, prev_declared_array_type_name_token);}
-	{if (!get_preparse_state()) ERROR;}  
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+	{if (!get_preparse_state()) new array_type_declaration_c($1, $3, locloc(@$));}
+/* POST_PARSING */
+/*  These rules will be run after the preparser phase of two phase parsing has finished (only gets to execute if preparsing command line option is chosen). */
 | prev_declared_array_type_name ':' array_spec_init
-	{$$ = new array_type_declaration_c($1, $3, locloc(@$));}
+	{$$ = new array_type_declaration_c(new identifier_c(((token_c *)$1)->value, locloc(@1)), $3, locloc(@$));} // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
 /* ERROR_CHECK_BEGIN */
 | identifier array_spec_init
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between data type name and specification in array type declaration."); yynerrs++;}
@@ -3034,12 +3054,17 @@ array_initial_element:
 
 structure_type_declaration:
 /*  structure_type_name ':' structure_specification */
-/* PRE_PARSING: The rules expected to be applied by the preparser. */
+/* PRE_PARSING or SINGLE_PHASE_PARSING */
+/*  The following rules will be run either by:
+ *      - the pre_parsing phase of two phase parsing (when preparsing command line option is chosen).
+ *      - the standard single phase parser (when preparsing command line option is not chosen).
+ */
   identifier ':' structure_specification  {library_element_symtable.insert($1, prev_declared_structure_type_name_token);}
-	{if (!get_preparse_state()) ERROR;}  
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+	{if (!get_preparse_state()) $$ = new structure_type_declaration_c($1, $3, locloc(@$));}
+/* POST_PARSING */
+/*  These rules will be run after the preparser phase of two phase parsing has finished (only gets to execute if preparsing command line option is chosen). */
 | prev_declared_structure_type_name ':' structure_specification
-	{$$ = new structure_type_declaration_c($1, $3, locloc(@$));}
+	{$$ = new structure_type_declaration_c(new identifier_c(((token_c *)$1)->value, locloc(@1)), $3, locloc(@$));} // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
 /* ERROR_CHECK_BEGIN */
 | identifier structure_specification
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between data type name and specification in structure type declaration."); yynerrs++;}
@@ -3221,12 +3246,17 @@ string_type_name: identifier;
 
 string_type_declaration:
 /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
-/* PRE_PARSING: The rules expected to be applied by the preparser. */
+/* PRE_PARSING or SINGLE_PHASE_PARSING */
+/*  The following rules will be run either by:
+ *      - the pre_parsing phase of two phase parsing (when preparsing command line option is chosen).
+ *      - the standard single phase parser (when preparsing command line option is not chosen).
+ */
   identifier ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init	{library_element_symtable.insert($1, prev_declared_string_type_name_token);}
-	{if (!get_preparse_state()) ERROR;}  
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+	{if (!get_preparse_state()) $$ = new string_type_declaration_c($1, $3, $4, $5, locloc(@$));}
+/* POST_PARSING */
+/*  These rules will be run after the preparser phase of two phase parsing has finished (only gets to execute if preparsing command line option is chosen). */
 | prev_declared_string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init
-	{$$ = new string_type_declaration_c($1, $3, $4, $5, locloc(@$));}
+	{$$ = new string_type_declaration_c(new identifier_c(((token_c *)$1)->value, locloc(@1)), $3, $4, $5, locloc(@$));} // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
 ;
 
 
@@ -3351,14 +3381,18 @@ ref_spec_init: /* defined in IEC 61131-3 v3 */
 ;
 
 ref_type_decl:  /* defined in IEC 61131-3 v3 */
-/* PRE_PARSING: The rules expected to be applied by the preparser. */
+/* PRE_PARSING or SINGLE_PHASE_PARSING */
+/*  The following rules will be run either by:
+ *      - the pre_parsing phase of two phase parsing (when preparsing command line option is chosen).
+ *      - the standard single phase parser (when preparsing command line option is not chosen).
+ */
   identifier ':' ref_spec_init  {library_element_symtable.insert($1, prev_declared_ref_type_name_token);}
-	{if (!get_preparse_state()) ERROR;}  
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+	{if (!get_preparse_state()) $$ = new ref_type_decl_c($1, $3, locloc(@$));}
+/* POST_PARSING */
+/*  These rules will be run after the preparser phase of two phase parsing has finished (only gets to execute if preparsing command line option is chosen). */
 | prev_declared_ref_type_name ':' ref_spec_init
-	{$$ = new ref_type_decl_c($1, $3, locloc(@$));}
+	{$$ = new ref_type_decl_c(new identifier_c(((token_c *)$1)->value, locloc(@1)), $3, locloc(@$));}  // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
 ;
-
 
 
 
