@@ -73,6 +73,15 @@ bool get_opt_nested_comments() {return runtime_options.nested_comments;}
 bool get_opt_ref_standard_extensions() {return runtime_options.ref_standard_extensions;}
 
 
+/**********************************************************************************************/
+/* whether bison is doing the pre-parsing, where POU bodies and var declarations are ignored! */
+/**********************************************************************************************/
+static bool preparse_state__ = false;
+
+void set_preparse_state(void) {preparse_state__ = true; }
+void rst_preparse_state(void) {preparse_state__ = false;}
+bool get_preparse_state(void) {return preparse_state__;}     // returns true if bison is in preparse state
+
 
 /****************************************************/
 /* Controlling the entry to the body_state in flex. */

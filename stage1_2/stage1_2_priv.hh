@@ -142,6 +142,12 @@ void include_string(const char *source_code);
 FILE *parse_file(const char *filename);
 
 
+/**********************************************************************************************/
+/* whether bison is doing the pre-parsing, where POU bodies and var declarations are ignored! */
+/**********************************************************************************************/
+void set_preparse_state(void);
+void rst_preparse_state(void);
+bool get_preparse_state();  // returns true if bison is in preparse state
 
 /****************************************************/
 /* Controlling the entry to the body_state in flex. */

@@ -116,12 +116,13 @@ void symtable_c<value_type, null_value>::insert(const char *identifier_str, valu
   }
 
   // std::cout << "store_identifier(" << identifier_str << "): \n";
+  iterator i = _base.find(identifier_str);
+  if ((i != _base.end()) && (i->second != new_value)) {ERROR;}  /* error inserting new identifier: identifier already in map associated to a different value */
+  if ((i != _base.end()) && (i->second == new_value)) {return;} /* identifier already in map associated with the same value */
+
   std::pair<const char *, value_t> new_element(identifier_str, new_value);
   std::pair<iterator, bool> res = _base.insert(new_element);
-  if (!res.second)
-    /* error inserting new identifier... */
-    /* identifier already in map?        */
-    ERROR;
+  if (!res.second) {ERROR;} /* unknown error inserting new identifier */
 }
 
 template<typename value_type, value_type null_value>

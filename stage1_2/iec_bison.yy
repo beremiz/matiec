@@ -1141,6 +1141,7 @@ typedef struct YYLTYPE {
 %type  <leaf>	prev_declared_resource_name
 %token  <ID>	prev_declared_resource_name_token
 
+%type  <leaf>	prev_declared_configuration_name
 %token  <ID>	prev_declared_configuration_name_token
 
 // %type  <leaf>	prev_declared_task_name
@@ -1605,20 +1606,20 @@ any_identifier:
 ;
 
 
-prev_declared_variable_name       : prev_declared_variable_name_token        {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_fb_name             : prev_declared_fb_name_token              {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_variable_name:        prev_declared_variable_name_token        {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_fb_name:              prev_declared_fb_name_token              {$$ = new identifier_c($1, locloc(@$));};
 
-prev_declared_simple_type_name    : prev_declared_simple_type_name_token     {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
-prev_declared_subrange_type_name  : prev_declared_subrange_type_name_token   {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_simple_type_name:     prev_declared_simple_type_name_token     {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_subrange_type_name:   prev_declared_subrange_type_name_token   {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
 prev_declared_enumerated_type_name: prev_declared_enumerated_type_name_token {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
-prev_declared_array_type_name     : prev_declared_array_type_name_token      {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
-prev_declared_structure_type_name : prev_declared_structure_type_name_token  {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
-prev_declared_string_type_name    : prev_declared_string_type_name_token     {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
-prev_declared_ref_type_name       : prev_declared_ref_type_name_token        {$$ = new derived_datatype_identifier_c($1, locloc(@$));};  /* defined in IEC 61131-3 v3 */
+prev_declared_array_type_name:      prev_declared_array_type_name_token      {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_structure_type_name:  prev_declared_structure_type_name_token  {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_string_type_name:     prev_declared_string_type_name_token     {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
+prev_declared_ref_type_name:        prev_declared_ref_type_name_token        {$$ = new derived_datatype_identifier_c($1, locloc(@$));};  /* defined in IEC 61131-3 v3 */
 
-prev_declared_derived_function_name      : prev_declared_derived_function_name_token       {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_derived_function_name:       prev_declared_derived_function_name_token       {$$ = new identifier_c($1, locloc(@$));};
 prev_declared_derived_function_block_name: prev_declared_derived_function_block_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_program_type_name          : prev_declared_program_type_name_token           {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_program_type_name:           prev_declared_program_type_name_token           {$$ = new identifier_c($1, locloc(@$));};
 
 
 
@@ -2605,12 +2606,25 @@ single_element_type_declaration:
 simple_type_declaration:
 /*  simple_type_name ':' simple_spec_init */
 /* To understand why simple_spec_init was brocken up into its consituent components in the following rules, please see note in the definition of 'enumerated_type_declaration'. */
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
   identifier ':' simple_specification           {library_element_symtable.insert($1, prev_declared_simple_type_name_token);}
-	{$$ = new simple_type_declaration_c($1, $3, locloc(@$));}
+	{if (!get_preparse_state()) ERROR;}  
 | identifier ':' elementary_type_name           {library_element_symtable.insert($1, prev_declared_simple_type_name_token);} ASSIGN constant
-	{$$ = new simple_type_declaration_c($1, new simple_spec_init_c($3, $6, locf(@3), locl(@6)), locloc(@$));}
+	{if (!get_preparse_state()) ERROR;}  
 | identifier ':' prev_declared_simple_type_name {library_element_symtable.insert($1, prev_declared_simple_type_name_token);} ASSIGN constant
-	{$$ = new simple_type_declaration_c($1, new simple_spec_init_c($3, $6, locf(@3), locl(@6)), locloc(@$));}
+	{if (!get_preparse_state()) ERROR;}  
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+| prev_declared_simple_type_name ':' simple_spec_init
+	{$$ = new simple_type_declaration_c($1, $3, locloc(@$));}
+/* These three rules can now be safely replaced by the original rule abvoe!! */
+/*
+| prev_declared_simple_type_name ':' simple_specification
+	{$$ = new simple_type_declaration_c($1, $3, locloc(@$));}
+| prev_declared_simple_type_name ':' elementary_type_name           ASSIGN constant
+	{$$ = new simple_type_declaration_c($1, new simple_spec_init_c($3, $5, locf(@3), locl(@5)), locloc(@$));}
+| prev_declared_simple_type_name ':' prev_declared_simple_type_name ASSIGN constant
+	{$$ = new simple_type_declaration_c($1, new simple_spec_init_c($3, $5, locf(@3), locl(@5)), locloc(@$));}
+*/
 /* ERROR_CHECK_BEGIN */
 | error ':' simple_spec_init
 	{$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid name defined for data type declaration.");yyerrok;}
@@ -2683,10 +2697,12 @@ simple_specification:
 
 subrange_type_declaration:
 /*  subrange_type_name ':' subrange_spec_init */
-  identifier ':' subrange_spec_init
-	{$$ = new subrange_type_declaration_c($1, $3, locloc(@$));
-	 library_element_symtable.insert($1, prev_declared_subrange_type_name_token);
-	}
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
+  identifier ':' subrange_spec_init	{library_element_symtable.insert($1, prev_declared_subrange_type_name_token);}
+	{if (!get_preparse_state()) ERROR;}  
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+| prev_declared_subrange_type_name ':' subrange_spec_init
+	{$$ = new subrange_type_declaration_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | error ':' subrange_spec_init
 	{$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid name defined for subrange type declaration."); yyerrok;}
@@ -2758,10 +2774,22 @@ enumerated_type_declaration:
  *           identifier ':' enumerated_spec_init
  *       and include the library_element_symtable.insert(...) code in the rule actions!
  */
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
   identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);}
-	{$$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, NULL, locloc(@3)), locloc(@$));}
+	{if (!get_preparse_state()) ERROR;}  
 | identifier ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);} ASSIGN enumerated_value
+	{if (!get_preparse_state()) ERROR;}  
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+/* Since the enumerated type name is placed in the library_element_symtable during preparsing, we can now safely use the single rule: */
+| prev_declared_enumerated_type_name ':' enumerated_spec_init 
+	{$$ = new enumerated_type_declaration_c($1, $3, locloc(@$));}
+  /* These two rules are equivalent to the above rule */
+/*
+| prev_declared_enumerated_type_name ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);}
+	{$$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, NULL, locloc(@3)), locloc(@$));}
+| prev_declared_enumerated_type_name ':' enumerated_specification {library_element_symtable.insert($1, prev_declared_enumerated_type_name_token);} ASSIGN enumerated_value
 	{$$ = new enumerated_type_declaration_c($1, new enumerated_spec_init_c($3, $6, locf(@3), locl(@6)), locloc(@$));}
+*/
 /* ERROR_CHECK_BEGIN */
 | error ':' enumerated_spec_init
 	{$$ = NULL; print_err_msg(locf(@1), locl(@1), "invalid name defined for enumerated type declaration."); yyerrok;}
@@ -2849,10 +2877,12 @@ enumerated_value_without_identifier:
 
 array_type_declaration:
 /*  array_type_name ':' array_spec_init */
-  identifier ':' array_spec_init
-	{$$ = new array_type_declaration_c($1, $3, locloc(@$));
-	 library_element_symtable.insert($1, prev_declared_array_type_name_token);
-	}
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
+  identifier ':' array_spec_init   {library_element_symtable.insert($1, prev_declared_array_type_name_token);}
+	{if (!get_preparse_state()) ERROR;}  
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+| prev_declared_array_type_name ':' array_spec_init
+	{$$ = new array_type_declaration_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | identifier array_spec_init
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between data type name and specification in array type declaration."); yynerrs++;}
@@ -3003,10 +3033,12 @@ array_initial_element:
 
 structure_type_declaration:
 /*  structure_type_name ':' structure_specification */
-  identifier ':' structure_specification
-	{$$ = new structure_type_declaration_c($1, $3, locloc(@$));
-	 library_element_symtable.insert($1, prev_declared_structure_type_name_token);
-	}
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
+  identifier ':' structure_specification  {library_element_symtable.insert($1, prev_declared_structure_type_name_token);}
+	{if (!get_preparse_state()) ERROR;}  
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+| prev_declared_structure_type_name ':' structure_specification
+	{$$ = new structure_type_declaration_c($1, $3, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | identifier structure_specification
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing between data type name and specification in structure type declaration."); yynerrs++;}
@@ -3188,10 +3220,12 @@ string_type_name: identifier;
 
 string_type_declaration:
 /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
-  identifier ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init
-	{$$ = new string_type_declaration_c($1, $3, $4, $5, locloc(@$));
-	 library_element_symtable.insert($1, prev_declared_string_type_name_token);
-	}
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
+  identifier ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init	{library_element_symtable.insert($1, prev_declared_string_type_name_token);}
+	{if (!get_preparse_state()) ERROR;}  
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+| prev_declared_string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init
+	{$$ = new string_type_declaration_c($1, $3, $4, $5, locloc(@$));}
 ;
 
 
@@ -3316,10 +3350,12 @@ ref_spec_init: /* defined in IEC 61131-3 v3 */
 ;
 
 ref_type_decl:  /* defined in IEC 61131-3 v3 */
-  identifier ':' ref_spec_init
-	{$$ = new ref_type_decl_c($1, $3, locloc(@$));
-	 library_element_symtable.insert($1, prev_declared_ref_type_name_token);
-	}
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
+  identifier ':' ref_spec_init  {library_element_symtable.insert($1, prev_declared_ref_type_name_token);}
+	{if (!get_preparse_state()) ERROR;}  
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+| prev_declared_ref_type_name ':' ref_spec_init
+	{$$ = new ref_type_decl_c($1, $3, locloc(@$));}
 ;
 
 
@@ -4820,60 +4856,48 @@ standard_function_name_expression_clashes:
 
 
 derived_function_name:
-  identifier
+  identifier  /* will never occur during normal parsing, only needed for preparsing to change it to a prev_declared_derived_function_name! */
 | prev_declared_derived_function_name
 	{$$ = $1;
-	 if (!allow_function_overloading) {
-	   fprintf(stderr, "Function overloading not allowed. Invalid identifier %s\n", ((token_c *)($1))->value);
-	   ERROR;
-	 }
+	 if (get_preparse_state() && !allow_function_overloading) {print_err_msg(locloc(@$), "Function overloading not allowed. Invalid identifier.\n"); yynerrs++;}
 	}
 | AND
 	{$$ = new identifier_c("AND", locloc(@$));
-	 if (!allow_function_overloading) print_err_msg(locloc(@1), "Function overloading \"AND\" not allowed. Invalid identifier\n");
+	 if (!allow_function_overloading) {print_err_msg(locloc(@$), "Function overloading not allowed. Invalid identifier.\n"); yynerrs++;}
 	}
 | OR
 	{$$ = new identifier_c("OR", locloc(@$));
-	 if (!allow_function_overloading) print_err_msg(locloc(@1), "Function overloading \"OR\" not allowed. Invalid identifier\n");
+	 if (!allow_function_overloading) {print_err_msg(locloc(@$), "Function overloading not allowed. Invalid identifier.\n"); yynerrs++;}
 	}
 | XOR
 	{$$ = new identifier_c("XOR", locloc(@$));
-	 if (!allow_function_overloading) print_err_msg(locloc(@1), "Function overloading \"XOR\" not allowed. Invalid identifier\n");
+	 if (!allow_function_overloading) {print_err_msg(locloc(@$), "Function overloading not allowed. Invalid identifier.\n"); yynerrs++;}
 	}
 | NOT
 	{$$ = new identifier_c("NOT", locloc(@$));
-	 if (!allow_function_overloading) print_err_msg(locloc(@1), "Function overloading \"NOT\" not allowed. Invalid identifier\n");
+	 if (!allow_function_overloading) {print_err_msg(locloc(@$), "Function overloading not allowed. Invalid identifier.\n"); yynerrs++;}
 	}
 | MOD
 	{$$ = new identifier_c("MOD", locloc(@$));
-	 if (!allow_function_overloading) print_err_msg(locloc(@1), "Function overloading \"MOD\" not allowed. Invalid identifier\n");
+	 if (!allow_function_overloading) {print_err_msg(locloc(@$), "Function overloading not allowed. Invalid identifier.\n"); yynerrs++;}
 	}
 ;
 
 
 function_declaration:
 /*  FUNCTION derived_function_name ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
-  function_name_declaration ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
+  FUNCTION derived_function_name END_FUNCTION   /* rule that is only expected to be used during preparse state => MUST print an error if used outside preparse() state!! */
+	{$$ = NULL; 
+	 if (get_preparse_state())    {library_element_symtable.insert($2, prev_declared_derived_function_name_token);}
+	 else                         {print_err_msg(locl(@1), locf(@3), "FUNCTION with no variable declarations and no body."); yynerrs++;}
+	 }
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+| function_name_declaration ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
 	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
-	 if (allow_function_overloading) {
-	   switch (library_element_symtable.find_value($1)) {
-	     case prev_declared_derived_function_name_token:
-	       /* do nothing, already in map. */
-	       break;
-	     case BOGUS_TOKEN_ID:
-	       /* Not yet in map. Must insert...*/
-	       library_element_symtable.insert($1, prev_declared_derived_function_name_token);
-	       break;
-	     default:
-	       /* Already in map but associated with something else other than a funtion name! */
-	       ERROR;
-	   }
-	 } else {
-	   library_element_symtable.insert($1, prev_declared_derived_function_name_token);
-	 }
 	}
 /* | FUNCTION derived_function_name ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
 | function_name_declaration ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
@@ -4881,15 +4905,6 @@ function_declaration:
 	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
-	 if (allow_function_overloading) {
-	   switch (library_element_symtable.find_value($1)) {
-	     case prev_declared_derived_function_name_token: /* do nothing, already in map. */ break;
-	     case BOGUS_TOKEN_ID: library_element_symtable.insert($1, prev_declared_derived_function_name_token); break;
-	     default: ERROR;
-	   }
-	 } else {
-	   library_element_symtable.insert($1, prev_declared_derived_function_name_token);
-	 }
 	}
 /* ERROR_CHECK_BEGIN */
 | function_name_declaration elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
@@ -4954,6 +4969,7 @@ function_declaration:
  *       the parser to reduce it, before parsing the function body!
  */
 function_name_declaration:
+  /* FUNCTION derived_function_name */
   FUNCTION derived_function_name
 	{$$ = $2;
 	 /* the function name functions as a
@@ -5087,10 +5103,16 @@ derived_function_block_name: identifier;
 
 
 function_block_declaration:
-  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
+  FUNCTION_BLOCK derived_function_block_name END_FUNCTION_BLOCK   /* rule that is only expected to be used during preparse state => MUST print an error if used outside preparse() state!! */
+	{$$ = NULL; 
+	 if (get_preparse_state())    {library_element_symtable.insert($2, prev_declared_derived_function_block_name_token);}
+	 else                         {print_err_msg(locl(@1), locf(@3), "FUNCTION_BLOCK with no variable declarations and no body."); yynerrs++;}
+	 }
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+| FUNCTION_BLOCK prev_declared_derived_function_block_name io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
 	{$$ = new function_block_declaration_c($2, $3, $4, locloc(@$));
 	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
-	 library_element_symtable.insert($2, prev_declared_derived_function_block_name_token);
 	 /* Clear the variable_name_symtable. Since
 	  * we have finished parsing the function block,
 	  * the variable names are now out of scope, so
@@ -5108,8 +5130,10 @@ function_block_declaration:
 	{$$ = NULL; print_err_msg(locl(@2), locf(@3), "no variable(s) declared in function declaration."); yynerrs++;}
 | FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations_list END_FUNCTION_BLOCK
 	{$$ = NULL; print_err_msg(locl(@3), locf(@4), "no body defined in function block declaration."); yynerrs++;}
+/*  Rule already covered by the rule to handle the preparse state!
 | FUNCTION_BLOCK derived_function_block_name END_FUNCTION_BLOCK
 	{$$ = NULL; print_err_msg(locl(@2), locf(@3), "no variable(s) declared and body defined in function block declaration."); yynerrs++;}
+*/
 | FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations_list function_block_body END_OF_INPUT
 	{$$ = NULL; print_err_msg(locf(@1), locl(@2), "no variable(s) declared and body defined in function block declaration."); yynerrs++;}	
 | FUNCTION_BLOCK error END_FUNCTION_BLOCK
@@ -5240,9 +5264,15 @@ program_type_name: identifier;
 
 
 program_declaration:
-  PROGRAM program_type_name program_var_declarations_list function_block_body END_PROGRAM
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
+  PROGRAM program_type_name END_PROGRAM   /* rule that is only expected to be used during preparse state => MUST print an error if used outside preparse() state!! */
+	{$$ = NULL; 
+	 if (get_preparse_state())    {library_element_symtable.insert($2, prev_declared_program_type_name_token);}
+	 else                         {print_err_msg(locl(@1), locf(@3), "PROGRAM with no variable declarations and no body."); yynerrs++;}
+	 }
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+| PROGRAM prev_declared_program_type_name program_var_declarations_list function_block_body END_PROGRAM
 	{$$ = new program_declaration_c($2, $3, $4, locloc(@$));
-	 library_element_symtable.insert($2, prev_declared_program_type_name_token);
 	 /* Clear the variable_name_symtable. Since
 	  * we have finished parsing the program declaration,
 	  * the variable names are now out of scope, so
@@ -5256,13 +5286,15 @@ program_declaration:
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "no program name defined in program declaration.");}
 | PROGRAM error program_var_declarations_list function_block_body END_PROGRAM
 	{$$ = NULL; print_err_msg(locf(@2), locl(@2), "invalid program name in program declaration."); yyerrok;}
-| PROGRAM program_type_name function_block_body END_PROGRAM
+| PROGRAM prev_declared_program_type_name function_block_body END_PROGRAM
 	{$$ = NULL; print_err_msg(locl(@2), locf(@3), "no variable(s) declared in program declaration."); yynerrs++;}
-| PROGRAM program_type_name program_var_declarations_list END_PROGRAM
+| PROGRAM prev_declared_program_type_name program_var_declarations_list END_PROGRAM
 	{$$ = NULL; print_err_msg(locl(@3), locf(@4), "no body defined in program declaration."); yynerrs++;}
-| PROGRAM program_type_name END_PROGRAM
+/*  Rule already covered by the rule to handle the preparse state!
+| PROGRAM prev_declared_program_type_name END_PROGRAM 
 	{$$ = NULL; print_err_msg(locl(@2), locf(@3), "no variable(s) declared and body defined in program declaration."); yynerrs++;}
-| PROGRAM program_type_name program_var_declarations_list function_block_body END_OF_INPUT
+*/
+| PROGRAM prev_declared_program_type_name program_var_declarations_list function_block_body END_OF_INPUT
 	{$$ = NULL; print_err_msg(locf(@1), locl(@2), "unclosed program declaration."); yynerrs++;}
 | PROGRAM error END_PROGRAM
 	{$$ = NULL; print_err_msg(locf(@2), locl(@2), "unknown error in program declaration."); yyerrok;}
@@ -5741,10 +5773,11 @@ action_body:
  * If it ever becomes necessary to change this interpretation of
  * the syntax, then this section of the syntax parser must be updated!
  */
-prev_declared_global_var_name: prev_declared_global_var_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_resource_name: prev_declared_resource_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_program_name: prev_declared_program_name_token {$$ = new identifier_c($1, locloc(@$));};
-// prev_declared_task_name: prev_declared_task_name_token {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_global_var_name:    prev_declared_global_var_name_token    {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_resource_name:      prev_declared_resource_name_token      {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_program_name:       prev_declared_program_name_token       {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_configuration_name: prev_declared_configuration_name_token {$$ = new identifier_c($1, locloc(@$));};
+// prev_declared_task_name:       prev_declared_task_name_token          {$$ = new identifier_c($1, locloc(@$));};
 
 
 
@@ -5768,7 +5801,14 @@ configuration_name: identifier;
 resource_type_name: any_identifier;
 
 configuration_declaration:
-  CONFIGURATION configuration_name
+/* PRE_PARSING: The rules expected to be applied by the preparser. */
+  CONFIGURATION configuration_name END_CONFIGURATION   /* rule that is only expected to be used during preparse state */
+	{$$ = NULL; 
+	 if (get_preparse_state())    {library_element_symtable.insert($2, prev_declared_configuration_name_token);}
+	 else                         {print_err_msg(locl(@1), locf(@3), "no resource(s) nor program(s) defined in configuration declaration."); yynerrs++;}
+	 }
+/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+| CONFIGURATION prev_declared_configuration_name
    global_var_declarations_list
    single_resource_declaration
    {variable_name_symtable.pop();
@@ -5777,18 +5817,16 @@ configuration_declaration:
    optional_instance_specific_initializations
   END_CONFIGURATION
 	{$$ = new configuration_declaration_c($2, $3, $4, $6, $7, locloc(@$));
-	 library_element_symtable.insert($2, prev_declared_configuration_name_token);
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
 	}
-| CONFIGURATION configuration_name
+| CONFIGURATION prev_declared_configuration_name
    global_var_declarations_list
    resource_declaration_list
    optional_access_declarations
    optional_instance_specific_initializations
  END_CONFIGURATION
 	{$$ = new configuration_declaration_c($2, $3, $4, $5, $6, locloc(@$));
-	 library_element_symtable.insert($2, prev_declared_configuration_name_token);
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
 }
@@ -5825,12 +5863,14 @@ configuration_declaration:
    optional_instance_specific_initializations
   END_CONFIGURATION
   {$$ = NULL; print_err_msg(locf(@2), locl(@2), "invalid configuration name defined in configuration declaration."); yyerrok;}
+/*  Rule already covered by the rule to handle the preparse state!
 | CONFIGURATION configuration_name
    global_var_declarations_list
    optional_access_declarations
    optional_instance_specific_initializations
   END_CONFIGURATION
   {$$ = NULL; print_err_msg(locl(@3), locf(@4), "no resource(s) defined in configuration declaration."); yynerrs++;}
+*/
 | CONFIGURATION configuration_name
    global_var_declarations_list
    error
@@ -8486,28 +8526,13 @@ NULL
 extern const char *INCLUDE_DIRECTORIES[];
 
 
-int stage2__(const char *filename, 
-             symbol_c **tree_root_ref
-            ) {             
-  char *libfilename = NULL;
-
-  if (runtime_options.includedir != NULL) {
-    INCLUDE_DIRECTORIES[0] = runtime_options.includedir;
-  }
-
-  /* first parse the standard library file... */
-  /* Do not debug the standard library, even if debug flag is set! */
-  /*
+static int parse_files(const char *libfilename, const char *filename) {
+  /* first parse the standard library file... */  
+  /*   Do not debug the standard library, even if debug flag is set!
   #if YYDEBUG
     yydebug = 1;
   #endif
   */
-
-  if ((libfilename = strdup3(INCLUDE_DIRECTORIES[0], "/", LIBFILE)) == NULL) {
-    fprintf (stderr, "Out of memory. Bailing out!\n");
-    return -1;
-  }
-  
   FILE *libfile = NULL;
   if((libfile = parse_file(libfilename)) == NULL) {
     char *errmsg = strdup2("Error opening library file ", libfilename);
@@ -8524,19 +8549,16 @@ int stage2__(const char *filename,
   allow_ref_dereferencing              = runtime_options.ref_standard_extensions;
   allow_ref_to_any                     = runtime_options.ref_nonstand_extensions;
   allow_ref_to_in_derived_datatypes    = runtime_options.ref_nonstand_extensions;
-  if (yyparse() != 0)
-      ERROR;
+  if (yyparse() != 0)  ERROR;
   fclose(libfile);
       
-  if (yynerrs > 0) {
-    fprintf (stderr, "\n%d error(s) found in %s. Bailing out!\n", yynerrs /* global variable */, libfilename);
-    ERROR;
+  if (yynerrs > 0) {  /* NOTE: yynerrs is a global variable */
+    /* Hopefully the libraries do not contain any errors, so this should not occur! */
+    fprintf (stderr, "\n%d error(s) found in %s. Bailing out!\n", yynerrs, libfilename);
+    return -2;
   }
-  free(libfilename);
 
-  /* if by any chance the library is not complete, we
-   * now add the missing reserved keywords to the list!!!
-   */
+  /* if by any chance the library is not complete, we now add the missing reserved keywords to the list!!!  */
   for(int i = 0; standard_function_block_names[i] != NULL; i++)
     if (library_element_symtable.find_value(standard_function_block_names[i]) ==
         library_element_symtable.end_value())
@@ -8551,7 +8573,7 @@ int stage2__(const char *filename,
     char *errmsg = strdup2("Error opening main file ", filename);
     perror(errmsg);
     free(errmsg);
-    return -1;
+    return -3;
   }
 
   allow_function_overloading           = false;
@@ -8573,7 +8595,79 @@ int stage2__(const char *filename,
     fprintf (stderr, "\n%d error(s) found. Bailing out!\n", yynerrs /* global variable */);
     exit(EXIT_FAILURE);
   }
+
+  return 0;
+}  
+
+
+
+
+
+/* We parse the input source code twice!!
+ *  1st pass -->  Pre-parsing
+ *  -------------------------
+ *  The intention of the first pass is to fill up the library_element_symtable with the names of all
+ *  the POUs (Functions, FBs, Programs and Configurations), as well as all the Derived Datatypes.
+ * 
+ *  During this pass POUs are only parsed until their name is obtained, and the remaining source
+ *  code (variable declarations and body) is completely thrown away by flex. Datatype declarations
+ *  however are parsed normally!
+ *
+ *  At the end of the pre-parsing, the AST will contain only the derived datatype declarations,
+ *  and this tree will be trown away (by simply resetting tree_root = NULL).
+ *  More importantly, the library_element_symtable will contain the names of all the POUs and 
+ *  derived datatypes.
+ *
+ *  2st pass -->  Normal parsing
+ *  ----------------------------
+ *  In this second parse the whole source code is parsed correctly, and the AST is generated
+ *  completely.
+ *
+ *  However, if the pre-parsing has been done before this normal parsing, the POUs may appear
+ *  in the source code in any order, as calling a POU (e.g. calling a function) that has not yet
+ *  been declared will no longer generate a parsing error because the name of the function being 
+ *  called is already in the library_element_symtable.
+ *
+ *  Declaring variables of datatypes that have not yet been declared will also be possible, as the
+ *  datatypes will also already be in the library_element_symtable!
+ */
+
+int stage2__(const char *filename, 
+             symbol_c **tree_root_ref
+            ) {             
+  char *libfilename = NULL;
+
+  /* Determine the full path name of the standard library file... */
+  if (runtime_options.includedir != NULL)
+    INCLUDE_DIRECTORIES[0] = runtime_options.includedir;
+
+  if ((libfilename = strdup3(INCLUDE_DIRECTORIES[0], "/", LIBFILE)) == NULL) {
+    fprintf (stderr, "Out of memory. Bailing out!\n");
+    exit(EXIT_FAILURE);
+  }
+
+  /*******************************/
+  /* Do the  PRE parsing run...! */
+  /*******************************/
+  // fprintf (stderr, "----> Starting pre-parsing!\n");
+  tree_root = NULL;
+  set_preparse_state();
+  if (parse_files(libfilename, filename) < 0)
+    exit(EXIT_FAILURE);
+  // TODO: delete the current AST. For the moment, we leave all the objects in memory (not much of an issue in a program that always runs to completion).
+
+  /*******************************/
+  /* Do the main parsing run...! */
+  /*******************************/
+  // fprintf (stderr, "----> Starting normal parsing!\n");
+  tree_root = NULL;
+  rst_preparse_state();
+  if (parse_files(libfilename, filename) < 0)
+    exit(EXIT_FAILURE);
   
+
+  /* Final clean-up... */
+  free(libfilename);
   if (tree_root_ref != NULL)
     *tree_root_ref = tree_root;
 

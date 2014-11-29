@@ -347,8 +347,31 @@ int GetNextChar(char *b, int maxBuffer);
  *       Unfortunately, flex will join '_' and '4h' to create a legal {identifier} '_4h',
  *       and return that identifier instead! So, we added this state!
  *
- * There is a main state machine...
+ * The ignore_pou_state state is only used when bison says it is doing the pre-parsing.
+ * During pre-parsing, the main state machine will only transition between
+ * INITIAL and ignore_pou_state, and from here back to INITIAL. All other
+ * transitions are inhibited. This inhibition is actually just enforced by making
+ * sure that the INITIAL ---> ignore_pou_state transition is tested before all other
+ * transitions coming out of INITIAL state. All other transitions are unaffected, as they
+ * never get a chance to be evaluated when bison is doing pre-parsing.
+ * Pre-parsing is a first quick scan through the whole input source code simply
+ * to determine the list of POUs and datatypes that will be defined in that
+ * code. Basically, the objective is to fill up the previously_declared_xxxxx
+ * maps, without processing the code itself. Once these maps have been filled up,
+ * bison will throw away the AST (abstract syntax tree) created up to that point, 
+ * and scan through the same source code again, but this time creating a correct AST.
+ * This pre-scan allows the source code to reference POUs and datatypes that are
+ * only declared after they are used!
  * 
+ *
+ * Here is a main state machine...
+ *                                                                         --+  
+ *                                                                           |  these states are
+ *              +------------> get_pou_name_state  ----> ignore_pou_state    |  only active 
+ *              |                                            |               |  when bison is 
+ *              |  ------------------------------------------+               |  doing the 
+ *              |  |                                                         |  pre-parsing!!
+ *              |  v                                                       --+
  *       +---> INITIAL <-------> config
  *       |        \
  *       |        V
@@ -379,11 +402,17 @@ int GetNextChar(char *b, int maxBuffer);
  *   
  * 
  * Possible state changes are:
+ *   INITIAL -> goto(ignore_pou_state)
+ *               (This transition state is only used when bison says it is doing the pre-parsing.)
+ *               (This transition takes precedence over all other transitions!)
+ *               (when a FUNCTION, FUNCTION_BLOCK, PROGRAM or CONFIGURATION is found)
+ * 
  *   INITIAL -> goto(config_state)
  *                (when a CONFIGURATION is found)
  * 
  *   INITIAL -> goto(header_state)
  *               (when a FUNCTION, FUNCTION_BLOCK, or PROGRAM is found)
+ * 
  *   header_state -> goto(vardecl_list_state)
  *               (When the first VAR token is found, i.e. at begining of first VAR .. END_VAR declaration)
  * 
@@ -410,10 +439,12 @@ int GetNextChar(char *b, int maxBuffer);
  *   sfc_state     -> pop() to vardecl_list_state
  *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
  * 
+ *   ignore_pou_state   -> goto(INITIAL)
+ *                         (when a END_FUNCTION, END_FUNCTION_BLOCK, END_PROGRAM or END_CONFIGURATION is found)
  *   vardecl_list_state -> goto(INITIAL)
- *                     (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
- *   config_state  -> goto(INITIAL)
- *                     (when a END_CONFIGURATION is found)
+ *                         (when a END_FUNCTION, END_FUNCTION_BLOCK, or END_PROGRAM is found)
+ *   config_state       -> goto(INITIAL)
+ *                         (when a END_CONFIGURATION is found)
  * 
  *  
  *   sfc_state     -> push current state(sfc_state); goto(body_state)
@@ -433,6 +464,10 @@ int GetNextChar(char *b, int maxBuffer);
  * and yet another for time literals.
  */
 
+
+/* Bison is in the pre-parsing stage, and we are parsing a POU. Ignore everything up to the end of the POU! */
+%x ignore_pou_state
+%x get_pou_name_state
 
 /* we are parsing a configuration. */
 %s config_state
@@ -1052,10 +1087,24 @@ incompl_location	%[IQM]\*
 	 *       continue in the <vardecl_state> state, untill the end of the FUNCTION, FUNCTION_BLOCK
 	 *       or PROGAM.
 	 */
-FUNCTION				BEGIN(header_state); return FUNCTION;
-FUNCTION_BLOCK				BEGIN(header_state); return FUNCTION_BLOCK;
-PROGRAM					BEGIN(header_state); return PROGRAM;
-CONFIGURATION				BEGIN(config_state); return CONFIGURATION;
+
+FUNCTION{st_whitespace} 		if (get_preparse_state()) BEGIN(get_pou_name_state); else BEGIN(header_state); return FUNCTION;
+FUNCTION_BLOCK{st_whitespace}		if (get_preparse_state()) BEGIN(get_pou_name_state); else BEGIN(header_state); return FUNCTION_BLOCK;
+PROGRAM{st_whitespace}			if (get_preparse_state()) BEGIN(get_pou_name_state); else BEGIN(header_state); return PROGRAM;
+CONFIGURATION{st_whitespace}		if (get_preparse_state()) BEGIN(get_pou_name_state); else BEGIN(config_state); return CONFIGURATION;
+}
+
+<get_pou_name_state>{
+{identifier}			BEGIN(ignore_pou_state); yylval.ID=strdup(yytext); return identifier_token;
+.				BEGIN(ignore_pou_state); unput_text(0);
+}
+
+<ignore_pou_state>{
+END_FUNCTION			unput_text(0); BEGIN(INITIAL);
+END_FUNCTION_BLOCK		unput_text(0); BEGIN(INITIAL); 
+END_PROGRAM			unput_text(0); BEGIN(INITIAL); 
+END_CONFIGURATION		unput_text(0); BEGIN(INITIAL); 
+.|\n				{}/* Ignore text inside POU! (including the '\n' character!)) */
 }
 
 	/* INITIAL -> body_state */
@@ -1180,7 +1229,7 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 <il_state>{il_whitespace}		/* Eat any whitespace */
 
 	/* The comments */
-<body_state,vardecl_list_state>{comment_beg}		yy_push_state(comment_state);
+<get_pou_name_state,ignore_pou_state,body_state,vardecl_list_state>{comment_beg}		yy_push_state(comment_state);
 {comment_beg}						yy_push_state(comment_state);
 <comment_state>{
 {comment_beg}						{if (get_opt_nested_comments()) yy_push_state(comment_state);}
