@@ -113,6 +113,7 @@ static void printusage(const char *cmd) {
   printf(" -h : show this help message\n");
   printf(" -v : print version number\n");  
   printf(" -f : display full token location on error messages\n");
+  printf(" -p : allow use of forward references                (a non-standard extension?)\n");  
   printf(" -l : use a relaxed datatype equivalence model       (a non-standard extension?)\n");  
   printf(" -s : allow use of safe datatypes (SAFEBOOL, etc.)   (defined in PLCOpen Safety)\n"); // PLCopen TC5 "Safety Software Technical Specification - Part 1" v1.0
   printf(" -r : allow use of references (REF_TO, REF, ^, NULL) (an IEC 61131-3 v3 feature)\n");
@@ -139,6 +140,7 @@ int main(int argc, char **argv) {
   int path_len;
 
   /* Default values for the command line options... */
+  runtime_options.pre_parsing             = false; /* allow use of forward references (run pre-parsing phase before the definitive parsing phase that builds the AST) */
   runtime_options.safe_extensions         = false; /* allow use of SAFExxx datatypes */
   runtime_options.full_token_loc          = false; /* error messages specify full token location */
   runtime_options.conversion_functions    = false; /* Create a conversion function for derived datatype */
@@ -153,7 +155,7 @@ int main(int argc, char **argv) {
   /******************************************/
   /*   Parse command line options...        */
   /******************************************/
-  while ((optres = getopt(argc, argv, ":nhvflsrRcI:T:O:")) != -1) {
+  while ((optres = getopt(argc, argv, ":nhvfplsrRcI:T:O:")) != -1) {
     switch(optres) {
     case 'h':
       printusage(argv[0]);
@@ -164,7 +166,9 @@ int main(int argc, char **argv) {
     case 'l':
       runtime_options.relaxed_datatype_model = true;
       break;
-  
+    case 'p':
+      runtime_options.pre_parsing = true;
+      break;
     case 'f':
       runtime_options.full_token_loc = true;
       break;

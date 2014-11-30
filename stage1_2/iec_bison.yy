@@ -8730,13 +8730,14 @@ int stage2__(const char *filename,
   /*******************************/
   /* Do the  PRE parsing run...! */
   /*******************************/
-  // fprintf (stderr, "----> Starting pre-parsing!\n");
-  tree_root = NULL;
-  set_preparse_state();
-  if (parse_files(libfilename, filename) < 0)
-    exit(EXIT_FAILURE);
-  // TODO: delete the current AST. For the moment, we leave all the objects in memory (not much of an issue in a program that always runs to completion).
-
+  if (runtime_options.pre_parsing) {
+    // fprintf (stderr, "----> Starting pre-parsing!\n");
+    tree_root = NULL;
+    set_preparse_state();
+    if (parse_files(libfilename, filename) < 0)
+      exit(EXIT_FAILURE);
+    // TODO: delete the current AST. For the moment, we leave all the objects in memory (not much of an issue in a program that always runs to completion).
+  }
   /*******************************/
   /* Do the main parsing run...! */
   /*******************************/
