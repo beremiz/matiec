@@ -2899,7 +2899,7 @@ array_type_declaration:
  *      - the standard single phase parser (when preparsing command line option is not chosen).
  */
   identifier ':' array_spec_init   {library_element_symtable.insert($1, prev_declared_array_type_name_token);}
-	{if (!get_preparse_state()) new array_type_declaration_c($1, $3, locloc(@$));}
+	{if (!get_preparse_state()) $$ = new array_type_declaration_c($1, $3, locloc(@$));}
 /* POST_PARSING */
 /*  These rules will be run after the preparser phase of two phase parsing has finished (only gets to execute if preparsing command line option is chosen). */
 | prev_declared_array_type_name ':' array_spec_init
@@ -4933,6 +4933,7 @@ function_declaration:
 	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
+	 library_element_symtable.insert($1, prev_declared_derived_function_name_token);
 	}
 /* | FUNCTION derived_function_name ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
 | function_name_declaration ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
@@ -4940,6 +4941,7 @@ function_declaration:
 	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
+	 library_element_symtable.insert($1, prev_declared_derived_function_name_token);
 	}
 /* ERROR_CHECK_BEGIN */
 | function_name_declaration elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
@@ -5138,20 +5140,29 @@ derived_function_block_name: identifier;
 
 
 function_block_declaration:
-/* PRE_PARSING: The rules expected to be applied by the preparser. */
+/* PRE_PARSING: The rules expected to be applied by the preparser. Will only run if pre-parsing command line option is ON. */
   FUNCTION_BLOCK derived_function_block_name END_FUNCTION_BLOCK   /* rule that is only expected to be used during preparse state => MUST print an error if used outside preparse() state!! */
 	{$$ = NULL; 
 	 if (get_preparse_state())    {library_element_symtable.insert($2, prev_declared_derived_function_block_name_token);}
 	 else                         {print_err_msg(locl(@1), locf(@3), "FUNCTION_BLOCK with no variable declarations and no body."); yynerrs++;}
 	 }
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+/* POST_PARSING: The rules expected to be applied after the preparser runs. Will only run if pre-parsing command line option is ON. */
 | FUNCTION_BLOCK prev_declared_derived_function_block_name io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
 	{$$ = new function_block_declaration_c($2, $3, $4, locloc(@$));
 	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
-	 /* Clear the variable_name_symtable. Since
-	  * we have finished parsing the function block,
-	  * the variable names are now out of scope, so
-	  * are no longer valid!
+	 /* Clear the variable_name_symtable. Since we have finished parsing the function block,
+	  * the variable names are now out of scope, so are no longer valid!
+	  */
+	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
+	}
+/* STANDARD_PARSING: The rules expected to be applied in single-phase parsing. Will only run if pre-parsing command line option is OFF. */
+| FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
+	{$$ = new function_block_declaration_c($2, $3, $4, locloc(@$));
+	 library_element_symtable.insert($2, prev_declared_derived_function_block_name_token);
+	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
+	 /* Clear the variable_name_symtable. Since we have finished parsing the function block,
+	  * the variable names are now out of scope, so are no longer valid!
 	  */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
@@ -5299,19 +5310,26 @@ program_type_name: identifier;
 
 
 program_declaration:
-/* PRE_PARSING: The rules expected to be applied by the preparser. */
+/* PRE_PARSING: The rules expected to be applied by the preparser. Will only run if pre-parsing command line option is ON. */
   PROGRAM program_type_name END_PROGRAM   /* rule that is only expected to be used during preparse state => MUST print an error if used outside preparse() state!! */
 	{$$ = NULL; 
 	 if (get_preparse_state())    {library_element_symtable.insert($2, prev_declared_program_type_name_token);}
 	 else                         {print_err_msg(locl(@1), locf(@3), "PROGRAM with no variable declarations and no body."); yynerrs++;}
 	 }
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+/* POST_PARSING: The rules expected to be applied after the preparser runs. Will only run if pre-parsing command line option is ON. */
 | PROGRAM prev_declared_program_type_name program_var_declarations_list function_block_body END_PROGRAM
 	{$$ = new program_declaration_c($2, $3, $4, locloc(@$));
-	 /* Clear the variable_name_symtable. Since
-	  * we have finished parsing the program declaration,
-	  * the variable names are now out of scope, so
-	  * are no longer valid!
+	 /* Clear the variable_name_symtable. Since we have finished parsing the program declaration,
+	  * the variable names are now out of scope, so are no longer valid!
+	  */
+	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
+	}
+/* STANDARD_PARSING: The rules expected to be applied in single-phase parsing. Will only run if pre-parsing command line option is OFF. */
+| PROGRAM program_type_name {library_element_symtable.insert($2, prev_declared_program_type_name_token);} program_var_declarations_list function_block_body END_PROGRAM
+	{$$ = new program_declaration_c($2, $4, $5, locloc(@$));
+	 /* Clear the variable_name_symtable. Since we have finished parsing the program declaration,
+	  * the variable names are now out of scope, so are no longer valid!
 	  */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
@@ -5836,13 +5854,13 @@ configuration_name: identifier;
 resource_type_name: any_identifier;
 
 configuration_declaration:
-/* PRE_PARSING: The rules expected to be applied by the preparser. */
+/* PRE_PARSING: The rules expected to be applied by the preparser. Will only run if pre-parsing command line option is ON. */
   CONFIGURATION configuration_name END_CONFIGURATION   /* rule that is only expected to be used during preparse state */
 	{$$ = NULL; 
 	 if (get_preparse_state())    {library_element_symtable.insert($2, prev_declared_configuration_name_token);}
 	 else                         {print_err_msg(locl(@1), locf(@3), "no resource(s) nor program(s) defined in configuration declaration."); yynerrs++;}
 	 }
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+/* POST_PARSING: The rules expected to be applied after the preparser runs. Will only run if pre-parsing command line option is ON. */
 | CONFIGURATION prev_declared_configuration_name
    global_var_declarations_list
    single_resource_declaration
@@ -5864,6 +5882,31 @@ configuration_declaration:
 	{$$ = new configuration_declaration_c($2, $3, $4, $5, $6, locloc(@$));
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
+}
+/* STANDARD_PARSING: The rules expected to be applied in single-phase parsing. Will only run if pre-parsing command line option is OFF. */
+| CONFIGURATION configuration_name
+   global_var_declarations_list
+   single_resource_declaration
+   {variable_name_symtable.pop();
+    direct_variable_symtable.pop();}
+   optional_access_declarations
+   optional_instance_specific_initializations
+  END_CONFIGURATION
+	{$$ = new configuration_declaration_c($2, $3, $4, $6, $7, locloc(@$));
+	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
+	 library_element_symtable.insert($2, prev_declared_configuration_name_token);
+	}
+| CONFIGURATION configuration_name
+   global_var_declarations_list
+   resource_declaration_list
+   optional_access_declarations
+   optional_instance_specific_initializations
+ END_CONFIGURATION
+	{$$ = new configuration_declaration_c($2, $3, $4, $5, $6, locloc(@$));
+	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
+	 library_element_symtable.insert($2, prev_declared_configuration_name_token);
 }
 /* ERROR_CHECK_BEGIN */
 | CONFIGURATION 
@@ -8584,7 +8627,10 @@ static int parse_files(const char *libfilename, const char *filename) {
   allow_ref_dereferencing              = runtime_options.ref_standard_extensions;
   allow_ref_to_any                     = runtime_options.ref_nonstand_extensions;
   allow_ref_to_in_derived_datatypes    = runtime_options.ref_nonstand_extensions;
-  if (yyparse() != 0)  ERROR;
+  if (yyparse() != 0) {
+    fprintf (stderr, "\nParsing failed because of too many consecutive syntax errors in standard library. Bailing out!\n");
+    exit(EXIT_FAILURE);
+  }
   fclose(libfile);
       
   if (yynerrs > 0) {  /* NOTE: yynerrs is a global variable */
