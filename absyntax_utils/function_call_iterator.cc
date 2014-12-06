@@ -89,10 +89,10 @@ symbol_c *function_call_iterator_c::next(void) {TRACE("function_call_iterator_c:
 }
 
 /* Returns the name of the currently referenced function invocation */
-identifier_c *function_call_iterator_c::fname(void) {
-  identifier_c *identifier = dynamic_cast<identifier_c *>(current_fcall_name);
-  if (identifier == NULL) ERROR;
-  return identifier;
+token_c *function_call_iterator_c::fname(void) {
+  token_c *fname_sym = dynamic_cast<token_c *>(current_fcall_name);
+  if (fname_sym == NULL) ERROR;
+  return fname_sym;
 }
 
 

@@ -247,6 +247,8 @@ class list_c: public symbol_c {
     virtual void insert_element(symbol_c *elem, int pos = 0);
      /* remove element at position pos. */
     virtual void remove_element(int pos = 0);
+     /* remove all elements from list. Does not delete the elements in the list! */ 
+    virtual void clear(void);
 };
 
 

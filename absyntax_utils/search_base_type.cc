@@ -131,8 +131,9 @@ void *search_base_type_c::handle_datatype_identifier(token_c *type_name) {
   return NULL;
 }
 
-void *search_base_type_c::visit(                 identifier_c *type_name) {return handle_datatype_identifier(type_name);}  // still needed to handle FB and program datatypes!
-void *search_base_type_c::visit(derived_datatype_identifier_c *type_name) {return handle_datatype_identifier(type_name);}
+void *search_base_type_c::visit(                 identifier_c *type_name) {return handle_datatype_identifier(type_name);}  
+void *search_base_type_c::visit(derived_datatype_identifier_c *type_name) {return handle_datatype_identifier(type_name);}  
+void *search_base_type_c::visit(         poutype_identifier_c *type_name) {return handle_datatype_identifier(type_name);}  
 
 
 /*********************/

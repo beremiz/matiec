@@ -987,7 +987,7 @@ void *fill_candidate_datatypes_c::visit(enumerated_type_declaration_c *symbol) {
 
 /* enumerated_specification ASSIGN enumerated_value */
 // SYM_REF2(enumerated_spec_init_c, enumerated_specification, enumerated_value)
-// NOTE: enumerated_specification is either an enumerated_value_list_c or identifier_c.
+// NOTE: enumerated_specification is either an enumerated_value_list_c or derived_datatype_identifier_c.
 void *fill_candidate_datatypes_c::visit(enumerated_spec_init_c *symbol) {return fill_spec_init(symbol, symbol->enumerated_specification, symbol->enumerated_value);}
 
 

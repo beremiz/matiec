@@ -74,11 +74,12 @@ symbol_c *spec_init_sperator_c::get_init(symbol_c *spec_init) {
 /* B 1.1 - Letters, digits and identifiers */
 /*******************************************/
 // SYM_TOKEN(identifier_c)
-/* visitor for identifier_c is necessary because spec_init_sperator_c will be called to analyse PROGRAM identfiers,
- * which are still transformed into identfier_c, instead of a derived_datatype_identifier_c
- */
-void *spec_init_sperator_c::visit(                 identifier_c *symbol) {
-  TRACE("spec_init_sperator_c::identifier_c");
+/* visitor for identifier_c should no longer be necessary. All references to derived datatypes are now stored in then */
+/* AST using either poutype_identifier_c or derived_datatype_identifier_c                                             */
+void *spec_init_sperator_c::visit(                 identifier_c *symbol) { ERROR; return NULL;} /* should never occur */
+
+void *spec_init_sperator_c::visit(         poutype_identifier_c *symbol) {
+  TRACE("spec_init_sperator_c::poutype_identifier_c");
   switch (search_what) {
     /* if we ever get called sith a simple identifier_c, then it must be a previously declared type... */
     case search_spec: return symbol;
@@ -90,7 +91,7 @@ void *spec_init_sperator_c::visit(                 identifier_c *symbol) {
   
   
 void *spec_init_sperator_c::visit(derived_datatype_identifier_c *symbol) {
-  TRACE("spec_init_sperator_c::identifier_c");
+  TRACE("spec_init_sperator_c::derived_datatype_identifier_c");
   switch (search_what) {
     /* if we ever get called sith a simple identifier_c, then it must be a previously declared type... */
     case search_spec: return symbol;
@@ -226,6 +227,7 @@ void *spec_init_sperator_c::visit(ref_spec_init_c *symbol) {
   }
   ERROR; /* should never occur */
   return NULL;
+
 }
 
 

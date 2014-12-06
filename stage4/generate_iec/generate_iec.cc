@@ -255,6 +255,7 @@ void *visit(library_c *symbol) {return print_list(symbol);}
 /*******************************************/
 void *visit(                 identifier_c *symbol) {return print_token(symbol);}
 void *visit(derived_datatype_identifier_c *symbol) {return print_token(symbol);}
+void *visit(         poutype_identifier_c *symbol) {return print_token(symbol);}
 
 /*********************/
 /* B 1.2 - Constants */

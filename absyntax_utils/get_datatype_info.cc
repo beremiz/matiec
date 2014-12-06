@@ -149,12 +149,18 @@ class get_datatype_id_c: null_visitor_c {
      *       That anotation is specific to the generate_c stage4 code, and must therefore NOT be referenced
      *       in the absyntax_utils code, as this last code should be independent of the stage4 version!
      */ 
-    
+
     /*****************************/
     /* B 1.5.2 - Function Blocks */
     /*****************************/
     /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
     void *visit(function_block_declaration_c  *symbol)  {return symbol->fblock_name;}
+    /**********************/
+    /* B 1.5.3 - Programs */
+    /**********************/
+    /*  PROGRAM program_type_name program_var_declarations_list function_block_body END_PROGRAM */
+    void *visit(program_declaration_c  *symbol)  {return symbol->program_type_name;}
+    
 }; // get_datatype_id_c 
 
 get_datatype_id_c *get_datatype_id_c::singleton = NULL;
@@ -200,7 +206,12 @@ class get_datatype_id_str_c: public null_visitor_c {
     /* B 1.1 - Letters, digits and identifiers */
     /*******************************************/
     void *visit(                 identifier_c *symbol) {return (void *)symbol->value;};
-    void *visit(derived_datatype_identifier_c *symbol) {return (void *)symbol->value;};
+    // Should not be necessary, as datatype declarations currently use an identifier_c for their name! 
+    // Only references to the datatype (when declaring variable, for ex., will use poutype_identifier_c
+    void *visit(derived_datatype_identifier_c *symbol) {return (void *)symbol->value;};   
+    // Should not be necessary, as FB declarations currently use an identifier_c for their name! 
+    // Only references to the FB (when declaring variable, for ex., will use poutype_identifier_c
+    void *visit(         poutype_identifier_c *symbol) {return (void *)symbol->value;};  
 
     /***********************************/
     /* B 1.3.1 - Elementary Data Types */
@@ -277,11 +288,23 @@ class get_datatype_id_str_c: public null_visitor_c {
      *       in the absyntax_utils code, as this last code should be independent of the stage4 version!
      */ 
     
+    /***********************/
+    /* B 1.5.1 - Functions */
+    /***********************/
+    /* Functions are not really datatypes, but we include it here as it helps in printing out error messages!   */
+    /* Currently this is needed only by remove_forward_depencies_c::print_circ_error()                          */
+    /*  FUNCTION derived_function_name ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
+    void *visit(      function_declaration_c  *symbol)  {return symbol->derived_function_name->accept(*this);}
     /*****************************/
     /* B 1.5.2 - Function Blocks */
     /*****************************/
     /*  FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations function_block_body END_FUNCTION_BLOCK */
     void *visit(function_block_declaration_c  *symbol)  {return symbol->fblock_name->accept(*this);}    
+    /**********************/
+    /* B 1.5.3 - Programs */
+    /**********************/
+    /*  PROGRAM program_type_name program_var_declarations_list function_block_body END_PROGRAM */
+    void *visit(       program_declaration_c  *symbol)  {return symbol->program_type_name->accept(*this);} 
 };
 
 get_datatype_id_str_c *get_datatype_id_str_c::singleton = NULL;

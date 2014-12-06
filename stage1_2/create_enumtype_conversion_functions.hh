@@ -55,7 +55,10 @@ class create_enumtype_conversion_functions_c: public iterator_visitor_c {
     virtual ~create_enumtype_conversion_functions_c(void);
     static std::string &get_declaration(symbol_c *symbol);
 
-    void *visit(identifier_c *symbol);
+    void *visit(                 identifier_c *symbol);
+    void *visit(         poutype_identifier_c *symbol);
+    void *visit(derived_datatype_identifier_c *symbol);
+    
     /**********************/
     /* B 1.3 - Data types */
     /**********************/

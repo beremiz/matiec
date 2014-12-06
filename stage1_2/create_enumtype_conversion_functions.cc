@@ -76,11 +76,12 @@ std::string &create_enumtype_conversion_functions_c::get_declaration(symbol_c *s
     return singleton->text;
 }
 
+/* As the name of derived datatypes and POUs are still stored as identifiers in the respective datatype and POU declaration,  */
+/* only the indintifier_c visitor should be necessary!                                                                        */
+void *create_enumtype_conversion_functions_c::visit(                 identifier_c *symbol) {currentToken = symbol->value; return NULL;}
+void *create_enumtype_conversion_functions_c::visit(         poutype_identifier_c *symbol) {ERROR; return NULL;}
+void *create_enumtype_conversion_functions_c::visit(derived_datatype_identifier_c *symbol) {ERROR; return NULL;}
 
-void *create_enumtype_conversion_functions_c::visit(identifier_c *symbol) {
-    currentToken = symbol->value;
-    return NULL;
-}
 
 /**********************/
 /* B 1.3 - Data types */

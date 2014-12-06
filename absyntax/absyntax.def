@@ -128,6 +128,7 @@ SYM_TOKEN(identifier_c)
 /* A special identifier class, used for identifiers that have been previously declared as a derived datatype */
 /*  This is currently needed because generate_c stage 4 needs to handle the array datatype identifiers differently to all other identifiers. */
 SYM_TOKEN(derived_datatype_identifier_c) 
+SYM_TOKEN(poutype_identifier_c) 
 
 
 /*********************/

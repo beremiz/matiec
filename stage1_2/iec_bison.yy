@@ -224,7 +224,10 @@ extern symbol_c *tree_root;
 /* The functions declared here are defined at the end of this file... */
 
 /* Convert an il_operator_c into an identifier_c */
-symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator);
+identifier_c         *il_operator_c_2_identifier_c        (symbol_c *il_operator);
+/* Convert an il_operator_c into an poutype_identifier_c */
+poutype_identifier_c *il_operator_c_2_poutype_identifier_c(symbol_c *il_operator);
+
 
 /* return if current token is a syntax element */
 /* ERROR_CHECK_BEGIN */
@@ -1597,16 +1600,25 @@ any_identifier:
 | prev_declared_array_type_name             {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
 | prev_declared_structure_type_name         {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
 | prev_declared_string_type_name            {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the derived_datatype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
-| prev_declared_derived_function_name
-| prev_declared_derived_function_block_name
-| prev_declared_program_type_name
+| prev_declared_derived_function_name       {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the          poutype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
+| prev_declared_derived_function_block_name {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the          poutype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
+| prev_declared_program_type_name           {$$ = new identifier_c(((token_c *)$1)->value, locloc(@$));}; // change the          poutype_identifier_c into an identifier_c, as it will be taking the place of an identifier!
 /**/
 | prev_declared_resource_name
 | prev_declared_program_name
 | prev_declared_global_var_name
 ;
 
-
+/* NOTE: Notice that the symbol classes:
+ *            - derived_datatype_identifier_c
+ *            - poutype_identifier_c
+ *       are only inserted into the AST when referencing a derived dataype or a POU
+ *       (e.g. when declaring a variable, making a function call, instantiating a program in a resource,
+ *        or delaring a derived datatype that derives from another previously delcared datatype).
+ *
+ *       In the declaration of the datatype or POU itself, the name of the datatype or POU will be stored
+ *       inside an identifier_c instead!!
+ */
 prev_declared_variable_name:        prev_declared_variable_name_token        {$$ = new identifier_c($1, locloc(@$));};
 prev_declared_fb_name:              prev_declared_fb_name_token              {$$ = new identifier_c($1, locloc(@$));};
 
@@ -1618,9 +1630,11 @@ prev_declared_structure_type_name:  prev_declared_structure_type_name_token  {$$
 prev_declared_string_type_name:     prev_declared_string_type_name_token     {$$ = new derived_datatype_identifier_c($1, locloc(@$));};
 prev_declared_ref_type_name:        prev_declared_ref_type_name_token        {$$ = new derived_datatype_identifier_c($1, locloc(@$));};  /* defined in IEC 61131-3 v3 */
 
-prev_declared_derived_function_name:       prev_declared_derived_function_name_token       {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_derived_function_block_name: prev_declared_derived_function_block_name_token {$$ = new identifier_c($1, locloc(@$));};
-prev_declared_program_type_name:           prev_declared_program_type_name_token           {$$ = new identifier_c($1, locloc(@$));};
+prev_declared_derived_function_name:       prev_declared_derived_function_name_token       {$$ = new poutype_identifier_c($1, locloc(@$));};
+prev_declared_derived_function_block_name: prev_declared_derived_function_block_name_token {$$ = new poutype_identifier_c($1, locloc(@$));};
+prev_declared_program_type_name:           prev_declared_program_type_name_token           {$$ = new poutype_identifier_c($1, locloc(@$));};
+/* NOTE: The poutype_identifier_c was introduced to allow the implementation of remove_forward_dependencies_c */
+
 
 
 
@@ -4825,9 +4839,10 @@ standard_function_name_no_NOT_clashes:
 //| standard_function_name_simpleop_only_clashes
 ;
 
+/* standard_function_name_no_clashes is only used in function invocations, so we use the poutype_identifier_c class! */
 standard_function_name_no_clashes:
   standard_function_name_token
-	{$$ = new identifier_c($1, locloc(@$));}
+	{$$ = new poutype_identifier_c($1, locloc(@$));}
 ;
 
 
@@ -4836,9 +4851,10 @@ standard_function_name_simpleop_clashes:
 //| standard_function_name_simpleop_only_clashes
 ;
 
+/* standard_function_name_NOT_clashes is only used in function invocations, so we use the poutype_identifier_c class! */
 standard_function_name_NOT_clashes:
   NOT
-	{$$ = new identifier_c(strdup("NOT"), locloc(@$));}
+	{$$ = new poutype_identifier_c(strdup("NOT"), locloc(@$));}
 ;
 
 /* Add here any other IL simple operators that collide
@@ -4853,39 +4869,40 @@ standard_function_name_simpleop_only_clashes:
 ;
 */
 
+/* standard_function_name_expression_clashes is only used in function invocations, so we use the poutype_identifier_c class! */
 standard_function_name_expression_clashes:
-  AND	{$$ = new identifier_c(strdup("AND"), locloc(@$));}
-| OR	{$$ = new identifier_c(strdup("OR"), locloc(@$));}
-| XOR	{$$ = new identifier_c(strdup("XOR"), locloc(@$));}
-| ADD	{$$ = new identifier_c(strdup("ADD"), locloc(@$));}
-| SUB	{$$ = new identifier_c(strdup("SUB"), locloc(@$));}
-| MUL	{$$ = new identifier_c(strdup("MUL"), locloc(@$));}
-| DIV	{$$ = new identifier_c(strdup("DIV"), locloc(@$));}
-| MOD	{$$ = new identifier_c(strdup("MOD"), locloc(@$));}
-| GT	{$$ = new identifier_c(strdup("GT"), locloc(@$));}
-| GE	{$$ = new identifier_c(strdup("GE"), locloc(@$));}
-| EQ	{$$ = new identifier_c(strdup("EQ"), locloc(@$));}
-| LT	{$$ = new identifier_c(strdup("LT"), locloc(@$));}
-| LE	{$$ = new identifier_c(strdup("LE"), locloc(@$));}
-| NE	{$$ = new identifier_c(strdup("NE"), locloc(@$));}
+  AND	{$$ = new poutype_identifier_c(strdup("AND"), locloc(@$));}
+| OR	{$$ = new poutype_identifier_c(strdup("OR"), locloc(@$));}
+| XOR	{$$ = new poutype_identifier_c(strdup("XOR"), locloc(@$));}
+| ADD	{$$ = new poutype_identifier_c(strdup("ADD"), locloc(@$));}
+| SUB	{$$ = new poutype_identifier_c(strdup("SUB"), locloc(@$));}
+| MUL	{$$ = new poutype_identifier_c(strdup("MUL"), locloc(@$));}
+| DIV	{$$ = new poutype_identifier_c(strdup("DIV"), locloc(@$));}
+| MOD	{$$ = new poutype_identifier_c(strdup("MOD"), locloc(@$));}
+| GT	{$$ = new poutype_identifier_c(strdup("GT"), locloc(@$));}
+| GE	{$$ = new poutype_identifier_c(strdup("GE"), locloc(@$));}
+| EQ	{$$ = new poutype_identifier_c(strdup("EQ"), locloc(@$));}
+| LT	{$$ = new poutype_identifier_c(strdup("LT"), locloc(@$));}
+| LE	{$$ = new poutype_identifier_c(strdup("LE"), locloc(@$));}
+| NE	{$$ = new poutype_identifier_c(strdup("NE"), locloc(@$));}
 /*
-  AND_operator	{$$ = il_operator_c_2_identifier_c($1);}
+  AND_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
 //NOTE: AND2 (corresponding to the source code string '&') does not clash
 //      with a standard function name, so should be commented out!
-//| AND2_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| OR_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| XOR_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| ADD_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| SUB_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| MUL_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| DIV_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| MOD_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| GT_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| GE_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| EQ_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| LT_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| LE_operator	{$$ = il_operator_c_2_identifier_c($1);}
-| NE_operator	{$$ = il_operator_c_2_identifier_c($1);}
+//| AND2_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| OR_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| XOR_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| ADD_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| SUB_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| MUL_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| DIV_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| MOD_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| GT_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| GE_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| EQ_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| LT_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| LE_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
+| NE_operator	{$$ = il_operator_c_2_poutype_identifier_c($1);}
 */
 ;
 
@@ -4893,7 +4910,7 @@ standard_function_name_expression_clashes:
 derived_function_name:
   identifier  /* will never occur during normal parsing, only needed for preparsing to change it to a prev_declared_derived_function_name! */
 | prev_declared_derived_function_name
-	{$$ = $1;
+	{$$ = new identifier_c(((token_c *)$1)->value, locloc(@$)); // transform the poutype_identifier_c into an identifier_c
 	 if (get_preparse_state() && !allow_function_overloading) {print_err_msg(locloc(@$), "Function overloading not allowed. Invalid identifier.\n"); yynerrs++;}
 	}
 | AND
@@ -4927,7 +4944,7 @@ function_declaration:
 	 if (get_preparse_state())    {library_element_symtable.insert($2, prev_declared_derived_function_name_token);}
 	 else                         {print_err_msg(locl(@1), locf(@3), "FUNCTION with no variable declarations and no body."); yynerrs++;}
 	 }
-/* STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
+/* POST_PARSING and STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
 | function_name_declaration ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
 	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
@@ -6692,7 +6709,7 @@ il_simple_operation:
  *       those whose names coincide with operators !!
  */
 | function_name_no_clashes
-	{$$ = new il_function_call_c($1, NULL, locloc(@$));}
+	{$$ = new il_function_call_c($1, NULL, locloc(@$)); if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR;} // $1 should be a poutype_identifier_c
 /* NOTE: the line
  *         | il_simple_operator il_operand
  *       already contains the 'NOT', 'MOD', etc. operators, followed by a single il_operand.
@@ -6720,9 +6737,9 @@ il_simple_operation:
  *       are followed by a il_operand_list with __two__ or more il_operands!!
  */
 | function_name_no_clashes il_operand_list
-	{$$ = new il_function_call_c($1, $2, locloc(@$));}
+	{$$ = new il_function_call_c($1, $2, locloc(@$)); if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR;} // $1 should be a poutype_identifier_c
 | il_simple_operator_clash il_operand_list2
-	{$$ = new il_function_call_c(il_operator_c_2_identifier_c($1), $2, locloc(@$));}
+	{$$ = new il_function_call_c(il_operator_c_2_poutype_identifier_c($1), $2, locloc(@$));}
 ;
 
 
@@ -6881,9 +6898,9 @@ il_formal_funct_call:
  *       (AND MOD OR XOR ADD DIV EQ GT GE LT LE MUL NE SUB)
  */
   function_name_no_clashes '(' eol_list ')'
-	{$$ = new il_formal_funct_call_c($1, NULL, locloc(@$));}
+	{$$ = new il_formal_funct_call_c($1, NULL, locloc(@$)); if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR;} // $1 should be a poutype_identifier_c
 | function_name_simpleop_clashes '(' eol_list ')'
-	{$$ = new il_formal_funct_call_c($1, NULL, locloc(@$));}
+	{$$ = new il_formal_funct_call_c($1, NULL, locloc(@$)); if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR;} // $1 should be a poutype_identifier_c
 /* | function_name '(' eol_list il_param_list ')' */
 /* For the above syntax, we no longer have two ways of interpreting the
  * same syntax. The above is always a function call!
@@ -6898,9 +6915,9 @@ il_formal_funct_call:
  * We must therefore interpret the IL operators as function names!
  */
 | function_name_no_clashes '(' eol_list il_param_list ')'
-	{$$ = new il_formal_funct_call_c($1, $4, locloc(@$));}
+	{$$ = new il_formal_funct_call_c($1, $4, locloc(@$)); if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR;} // $1 should be a poutype_identifier_c
 | function_name_simpleop_clashes '(' eol_list il_param_list ')'
-	{$$ = new il_formal_funct_call_c($1, $4, locloc(@$));}
+	{$$ = new il_formal_funct_call_c($1, $4, locloc(@$)); if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR;} // $1 should be a poutype_identifier_c
 /* The following line should read:
  *
  * | function_name_expression_clashes '(' eol_list il_param_list ')'
@@ -6920,10 +6937,10 @@ il_formal_funct_call:
  * We need to figure out which symbol was created, destroy it,
  * and create the correct symbol for our case.
  * This is a lot of work, so I put it in a function
- * at the end of this file... il_operator_c_2_identifier_c()
+ * at the end of this file... il_operator_c_2_poutype_identifier_c()
  */
 | il_expr_operator_clash_eol_list il_param_list ')'
-	{$$ = new il_formal_funct_call_c(il_operator_c_2_identifier_c($1), $2, locloc(@$));}
+	{$$ = new il_formal_funct_call_c(il_operator_c_2_poutype_identifier_c($1), $2, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | function_name_no_clashes '(' eol_list error ')'
   {$$ = NULL; print_err_msg(locf(@4), locl(@4), "invalid parameter list defined in IL formal function call."); yyerrok;} 
@@ -7738,9 +7755,9 @@ primary_expression:
 function_invocation:
 /*  function_name '(' [param_assignment_list] ')' */
   function_name_no_NOT_clashes '(' param_assignment_formal_list ')'
-	{$$ = new function_invocation_c($1, $3, NULL, locloc(@$));}
+	{$$ = new function_invocation_c($1, $3, NULL, locloc(@$)); if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR;} // $1 should be a poutype_identifier_c
 | function_name_no_NOT_clashes '(' param_assignment_nonformal_list ')'
-	{$$ = new function_invocation_c($1, NULL, $3, locloc(@$));}
+	{$$ = new function_invocation_c($1, NULL, $3, locloc(@$)); if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR;} // $1 should be a poutype_identifier_c
 /* ERROR_CHECK_BEGIN */ 
 | function_name_no_NOT_clashes param_assignment_formal_list ')'
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "'(' missing after function name in ST expression."); yynerrs++;}
@@ -8494,7 +8511,17 @@ identifier_c *token_2_identifier_c(char *value, ) {
 /* NOTE: this code is very ugly and un-eficient, but I (Mario) have many
  *       more things to worry about right now, so just let it be...
  */
-symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator) {
+poutype_identifier_c *il_operator_c_2_poutype_identifier_c(symbol_c *il_operator) {
+  identifier_c         *    id = il_operator_c_2_identifier_c(il_operator);
+  poutype_identifier_c *pou_id = new poutype_identifier_c(strdup(id->value));
+
+  *(symbol_c *)pou_id = *(symbol_c *)id;
+  delete id;
+  return pou_id;
+}
+  
+
+identifier_c *il_operator_c_2_identifier_c(symbol_c *il_operator) {
   const char *name = NULL;
   identifier_c *res;
 
@@ -8560,7 +8587,7 @@ symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator) {
 
   if (name == NULL)
     ERROR;
-
+/*
   res = new identifier_c(strdup(name), 
                          il_operator->first_line,
                          il_operator->first_column,
@@ -8572,6 +8599,11 @@ symbol_c *il_operator_c_2_identifier_c(symbol_c *il_operator) {
                          il_operator->last_order
                         );
   free(il_operator);
+*/
+  res = new identifier_c(strdup(name));
+  *(symbol_c *)res = *(symbol_c *)il_operator;
+  delete il_operator;
+  
   return res;
 }
 

@@ -327,7 +327,8 @@ class generate_c_base_c: public iterator_visitor_c {
 /*******************************************/
 /* B 1.1 - Letters, digits and identifiers */
 /*******************************************/
-    void *visit(identifier_c *symbol) {return print_token(symbol);}
+    void *visit(                 identifier_c *symbol) {return print_token(symbol);}
+    void *visit(         poutype_identifier_c *symbol) {return print_token(symbol);}
     /* If you need the derived_datatype_identifier_c visitor, then you should probably be 
      * inheriting from generate_c_base_and_typeid_c and not generate_c_base_c !!
      */
@@ -951,7 +952,7 @@ void *visit(ref_spec_init_c *symbol) {
   if (1  < implicit_id_count) ERROR;
   if (1 == implicit_id_count)
     return symbol->anotations_map["generate_c_annotaton__implicit_type_id"]->accept(*this);
-  return symbol->ref_spec->accept(*this); // this is probably pointing to an identifier_c !!
+  return symbol->ref_spec->accept(*this); // this is probably pointing to an ***_identifier_c !!
 }
 
 /* ref_type_decl: identifier ':' ref_spec_init */

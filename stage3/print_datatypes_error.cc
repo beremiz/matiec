@@ -164,14 +164,14 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 				/* Check if there are duplicate parameter values */
 				if(fcp_iterator.search_f(param_name) != param_value) {
 					function_invocation_error = true;
-					STAGE3_ERROR(0, param_name, param_name, "Duplicate parameter '%s' when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+					STAGE3_ERROR(0, param_name, param_name, "Duplicate parameter '%s' when invoking %s '%s'", ((token_c *)param_name)->value, POU_str, ((token_c *)fcall_data.function_name)->value);
 					continue; /* jump to next parameter */
 				}
 
 				/* Find the corresponding parameter in function declaration */
 				if (NULL == fp_iterator.search(param_name)) {
 					function_invocation_error = true;
-					STAGE3_ERROR(0, param_name, param_name, "Invalid parameter '%s' when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+					STAGE3_ERROR(0, param_name, param_name, "Invalid parameter '%s' when invoking %s '%s'", ((token_c *)param_name)->value, POU_str, ((token_c *)fcall_data.function_name)->value);
 					continue; /* jump to next parameter */
 				} 
 
@@ -184,20 +184,20 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 					if ((function_param_iterator_c::direction_in    != param_dir) &&
 					    (function_param_iterator_c::direction_inout != param_dir)) {
 						function_invocation_error = true;
-						STAGE3_ERROR(0, param_name, param_name, "Invalid assignment syntax ':=' used for parameter '%s', when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+						STAGE3_ERROR(0, param_name, param_name, "Invalid assignment syntax ':=' used for parameter '%s', when invoking %s '%s'", ((token_c *)param_name)->value, POU_str, ((token_c *)fcall_data.function_name)->value);
 						continue; /* jump to next parameter */
 					}
 				} else if   (function_call_param_iterator_c::assign_out == call_param_dir) {
 					if ((function_param_iterator_c::direction_out   != param_dir)) {
 						function_invocation_error = true;
-						STAGE3_ERROR(0, param_name, param_name, "Invalid assignment syntax '=>' used for parameter '%s', when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+						STAGE3_ERROR(0, param_name, param_name, "Invalid assignment syntax '=>' used for parameter '%s', when invoking %s '%s'", ((token_c *)param_name)->value, POU_str, ((token_c *)fcall_data.function_name)->value);
 						continue; /* jump to next parameter */
 					}
 				} else ERROR;
 
 				if (!get_datatype_info_c::is_type_valid(param_value->datatype)) {
 					function_invocation_error = true;
-					STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility between parameter '%s' and value being passed, when invoking %s '%s'", ((identifier_c *)param_name)->value, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+					STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility between parameter '%s' and value being passed, when invoking %s '%s'", ((token_c *)param_name)->value, POU_str, ((token_c *)fcall_data.function_name)->value);
 					continue; /* jump to next parameter */
 				}
 			}
@@ -223,7 +223,7 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 					 * We will iterate through all the real previous IL instructions, and analyse each of them one by one */
 					if (il_instruction_symbol->prev_il_instruction.size() == 0) {
 						function_invocation_error = true;
-						STAGE3_ERROR(0, fcall, fcall, "No available data to pass to first parameter of IL function %s. Missing a previous LD instruction?", ((identifier_c *)fcall_data.function_name)->value);
+						STAGE3_ERROR(0, fcall, fcall, "No available data to pass to first parameter of IL function %s. Missing a previous LD instruction?", ((token_c *)fcall_data.function_name)->value);
 					}
 #if 0
 					/* NOTE: We currently comment out this code...
@@ -237,14 +237,14 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 						symbol_c *value = il_instruction_symbol->prev_il_instruction[p];  
 						if (!get_datatype_info_c::is_type_valid(value->datatype)) {
 							function_invocation_error = true;
-							STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility for value passed to first parameter when invoking function '%s'", ((identifier_c *)fcall_data.function_name)->value);
-							STAGE3_ERROR(0, value, value, "This is the IL instruction producing the incompatible data type to first parameter of function '%s'", ((identifier_c *)fcall_data.function_name)->value);
+							STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility for value passed to first parameter when invoking function '%s'", ((token_c *)fcall_data.function_name)->value);
+							STAGE3_ERROR(0, value, value, "This is the IL instruction producing the incompatible data type to first parameter of function '%s'", ((token_c *)fcall_data.function_name)->value);
 						}
 					}
 #else
 					if (!get_datatype_info_c::is_type_valid(il_instruction_symbol->datatype)) {
 						function_invocation_error = true;
-						STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility between value in IL 'accumulator' and first parameter of function '%s'", ((identifier_c *)fcall_data.function_name)->value);
+						STAGE3_ERROR(0, fcall, fcall, "Data type incompatibility between value in IL 'accumulator' and first parameter of function '%s'", ((token_c *)fcall_data.function_name)->value);
 					}
 #endif
 					if (function_invocation_error)
@@ -253,7 +253,7 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 				} else {
 					if (!get_datatype_info_c::is_type_valid(param_value->datatype)) {
 						function_invocation_error = true;
-						STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((identifier_c *)fcall_data.function_name)->value);
+						STAGE3_ERROR(0, param_value, param_value, "Data type incompatibility for value passed in position %d when invoking %s '%s'", i, POU_str, ((token_c *)fcall_data.function_name)->value);
 					}
 					param_value->accept(*this);
 				}
@@ -262,12 +262,12 @@ void print_datatypes_error_c::handle_function_invocation(symbol_c *fcall, generi
 
 	if (NULL == fcall_data.called_function_declaration) {
 		function_invocation_error = true;
-		STAGE3_ERROR(0, fcall, fcall, "Unable to resolve which overloaded %s '%s' is being invoked.", POU_str, ((identifier_c *)fcall_data.function_name)->value);
+		STAGE3_ERROR(0, fcall, fcall, "Unable to resolve which overloaded %s '%s' is being invoked.", POU_str, ((token_c *)fcall_data.function_name)->value);
 	}
 
 	if (function_invocation_error) {
 		/* No compatible function exists */
-		STAGE3_ERROR(2, fcall, fcall, "Invalid parameters when invoking %s '%s'", POU_str, ((identifier_c *)fcall_data.function_name)->value);
+		STAGE3_ERROR(2, fcall, fcall, "Invalid parameters when invoking %s '%s'", POU_str, ((token_c *)fcall_data.function_name)->value);
 	} 
 
 	return;

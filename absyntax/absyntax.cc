@@ -172,7 +172,16 @@ void list_c::remove_element(int pos) {
   /* corrent the new size */
   n--;
   /* elements = (symbol_c **)realloc(elements, n * sizeof(symbol_c *)); */
+  /* TODO: adjust the location parameters, taking into account the removed element. */
 }
+
+
+/* remove element at position pos. */
+void list_c::clear(void) {
+  n = 0;
+  /* TODO: adjust the location parameters, taking into account the removed element. */
+}
+
 
 #define SYM_LIST(class_name_c, ...)								\
 class_name_c::class_name_c(									\

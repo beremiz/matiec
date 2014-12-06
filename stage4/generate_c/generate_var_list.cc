@@ -90,7 +90,10 @@ class search_location_type_c: public iterator_visitor_c {
 /***********************************************************************/
 /***********************************************************************/
 
-
+/* TODO: Delete this helper class search_type_symbol_c, as well as the search_fb_typedecl_c
+ *       in the absyntac_utils directory. They are no longer usefull, now that we have
+ *       datatype analysis working!
+ */
 class search_type_symbol_c: public iterator_visitor_c {
 
   public:
@@ -143,7 +146,23 @@ class search_type_symbol_c: public iterator_visitor_c {
       return (this->current_var_type_name);
     }
 
-    void *visit(identifier_c* symbol) {
+    void *visit(derived_datatype_identifier_c* symbol) {
+      if (this->current_var_type_name == NULL) {
+        this->current_var_type_name = symbol;
+
+        this->current_var_type_symbol = search_fb_typedecl->get_decl(this->current_var_type_name);
+        if (this->current_var_type_symbol != NULL)
+          this->current_var_type_category = function_block_vtc;
+
+        else {
+          this->current_var_type_symbol = search_base_type_c::get_basetype_decl(this->current_var_type_name);
+          this->current_var_type_symbol->accept(*this);
+        }
+      }
+      return NULL;
+    }
+
+    void *visit(poutype_identifier_c* symbol) {
       if (this->current_var_type_name == NULL) {
         this->current_var_type_name = symbol;
 

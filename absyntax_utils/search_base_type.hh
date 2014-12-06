@@ -91,7 +91,8 @@ class search_base_type_c: public null_visitor_c {
   /*******************************************/
     void *visit(                 identifier_c *type_name);
     void *visit(derived_datatype_identifier_c *type_name);
-    
+    void *visit(         poutype_identifier_c *type_name);
+
   /*********************/
   /* B 1.2 - Constants */
   /*********************/

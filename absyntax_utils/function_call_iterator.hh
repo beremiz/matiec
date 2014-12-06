@@ -73,7 +73,7 @@ class function_call_iterator_c : public iterator_visitor_c {
     symbol_c *next(void);
 
     /* Returns the name of the currently referenced function invocation */
-    identifier_c *fname(void);
+    token_c *fname(void);
 
   private:
   /***************************************/

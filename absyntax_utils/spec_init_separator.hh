@@ -67,7 +67,8 @@ class spec_init_sperator_c: public null_visitor_c {
   // SYM_TOKEN(identifier_c)
   void *visit(                 identifier_c *symbol);
   void *visit(derived_datatype_identifier_c *symbol);
-  
+  void *visit(         poutype_identifier_c *symbol);
+
 
   /********************************/
   /* B 1.3.3 - Derived data types */

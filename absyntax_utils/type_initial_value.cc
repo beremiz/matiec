@@ -110,48 +110,29 @@ symbol_c *type_initial_value_c::get(symbol_c *type) {
 void *type_initial_value_c::handle_type_spec(symbol_c *base_type_name, symbol_c *type_spec_init) {
   if (type_spec_init != NULL)
      return type_spec_init;
-   /* no initial value specified, so we return
-   * the initial value of the type this type is based on...
-    */
+  /* no initial value specified, so we return the initial value of the type this type is based on... */
   return base_type_name->accept(*this);
 }
 
 
-/* visitor for identifier_c is necessary because type_initial_value_c will be called to analyse PROGRAM identfiers,
- * which are still transformed into identfier_c, instead of a derived_datatype_identifier_c
- */
-void *type_initial_value_c::visit(                 identifier_c *type_name) {
+void *type_initial_value_c::handle_type_name(symbol_c *type_name) {
   /* look up the type declaration... */
   symbol_c *type_decl = type_symtable.find_value(type_name);
-  if (type_decl == type_symtable.end_value())
     /* Type declaration not found!! */
-    /* NOTE: Variables declared out of function block 'data types',
-     *    for eg:  VAR  timer: TON; END_VAR
-     * do not have a default value, so (TON) will never be found in the
-     * type symbol table. This means we cannot simply consider this
-     * an error and abort, but must rather return a NULL.
+    /* NOTE: Variables declared out of function block 'data types',for eg:  VAR  timer: TON; END_VAR
+     * do not have a default value, so (TON) will never be found in the type symbol table. This means 
+     * we cannot simply consider this an error and abort, but must rather return a NULL.
      */
-     return NULL;
+  if (type_decl == type_symtable.end_value())   return NULL;
 
   return type_decl->accept(*this);
 }
 
-  
-void *type_initial_value_c::visit(derived_datatype_identifier_c *type_name) {
-  /* look up the type declaration... */
-  symbol_c *type_decl = type_symtable.find_value(type_name);
-  if (type_decl == type_symtable.end_value())
-    /* Type declaration not found!! */
-    /* NOTE: Variables declared out of function block 'data types',
-     *    for eg:  VAR  timer: TON; END_VAR
-     * do not have a default value, so (TON) will never be found in the
-     * type symbol table. This means we cannot simply consider this
-     * an error and abort, but must rather return a NULL.
-     */
-     return NULL;
-
-  return type_decl->accept(*this);
-}
+/* visitor for identifier_c should no longer be necessary. All references to derived datatypes are now stored in then          */
+/* AST using either poutype_identifier_c or derived_datatype_identifier_c. In principe, the following should not be necesasry  */
+void *type_initial_value_c::visit(                 identifier_c *symbol) {return handle_type_name(symbol);} /* should never occur */
+void *type_initial_value_c::visit(         poutype_identifier_c *symbol) {return handle_type_name(symbol);} /* in practice it might never get called, as FB, Functions and Programs do not have initial value  */
+void *type_initial_value_c::visit(derived_datatype_identifier_c *symbol) {return handle_type_name(symbol);}
 
 /***********************************/
 /* B 1.3.1 - Elementary Data Types */

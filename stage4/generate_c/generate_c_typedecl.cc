@@ -539,7 +539,7 @@ void *visit(enumerated_value_c *symbol) {}
 void *visit(array_type_declaration_c *symbol) {
   TRACE("array_type_declaration_c");
   
-  // NOTE: remeber that symbol->array_spec_init may point to an identifier_c, which is why we use symbol->array_spec_init->datatype instead!
+  // NOTE: remeber that symbol->array_spec_init may point to a derived_datatype_identifier_c, which is why we use symbol->array_spec_init->datatype instead!
   if (NULL == symbol->array_spec_init->datatype) ERROR;
   identifier_c *id = generate_datatypes_aliasid_c::create_id(symbol->array_spec_init->datatype);
   
@@ -871,9 +871,12 @@ void *visit(ref_type_decl_c *symbol) {
    *       we will keep track of the datatypes that have already been declared, and henceforth
    *       only declare the datatypes that have not been previously defined.
    */
-  if (datatypes_already_defined.find(((identifier_c *)(symbol->ref_type_name))->value) != datatypes_already_defined.end())
+  identifier_c *tmp_id;
+  tmp_id = dynamic_cast<identifier_c *>(symbol->ref_type_name);
+  if (NULL == tmp_id) ERROR;
+  if (datatypes_already_defined.find(tmp_id->value) != datatypes_already_defined.end())
     return NULL; // already defined. No need to define it again!!
-  datatypes_already_defined[((identifier_c *)(symbol->ref_type_name))->value] = 1; // insert this datatype into the list of already defined arrays!
+  datatypes_already_defined[tmp_id->value] = 1; // insert this datatype into the list of already defined arrays!
   
   current_type_name = NULL;
   current_typedefinition = none_td;

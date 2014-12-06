@@ -59,7 +59,7 @@ class initialization_analyzer_c: public null_visitor_c {
 };
 
 
-// Does this class really need to derive from generate_c_typedecl_c ???
+
 class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
 
   public:
@@ -194,7 +194,6 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
     
     /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
     void *visit(array_specification_c *symbol) {
-      identifier_c* type_name;
       switch (current_mode) {
         case arraysize_am:
           symbol->array_subrange_list->accept(*this);

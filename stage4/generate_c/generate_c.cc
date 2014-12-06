@@ -1614,13 +1614,10 @@ class generate_c_resources_c: public generate_c_base_and_typeid_c {
     /*******************************************/
     /* B 1.1 - Letters, digits and identifiers */
     /*******************************************/
-    
     void *visit(identifier_c *symbol) {
-        if (configuration_name)
-          s4o.print(symbol->value);
-        else
-          generate_c_base_c::visit(symbol);
-        return NULL;
+      if (configuration_name)  s4o.print(symbol->value);
+      else                     generate_c_base_c::visit(symbol);
+      return NULL;
     }
 
     /********************/
@@ -1821,8 +1818,11 @@ END_RESOURCE
           print_retain();
           s4o.print(");\n");
           break;
-        case run_dt:
-          current_program_name = ((identifier_c*)(symbol->program_name))->value;
+        case run_dt: 
+          { identifier_c *tmp_id = dynamic_cast<identifier_c*>(symbol->program_name);
+            if (NULL == tmp_id) ERROR;
+            current_program_name = tmp_id->value;
+	  }
           if (symbol->task_name != NULL) {
             s4o.print(s4o.indent_spaces);
             s4o.print("if (");
@@ -2144,10 +2144,11 @@ class generate_c_c: public iterator_visitor_c {
 /*******************************************/
 /* B 1.1 - Letters, digits and identifiers */
 /*******************************************/
-    void *visit(identifier_c *symbol) {
-        current_name = symbol->value;
-        return NULL;
-    }
+    void *visit(identifier_c *symbol) {current_name = symbol->value; return NULL;}
+    /* In the derived datatype and POUs declarations, the names are stored as identfier_c, so the following visitors are not required! */
+    void *visit(derived_datatype_identifier_c *symbol) {ERROR; return NULL;}
+    void *visit(         poutype_identifier_c *symbol) {ERROR; return NULL;}
+    
 
 /********************************/
 /* B 1.3.3 - Derived data types */
@@ -2167,6 +2168,9 @@ class generate_c_c: public iterator_visitor_c {
 /**************************************/
 /* B.1.5 - Program organization units */
 /**************************************/
+/* WARNING: The following code is buggy when generating an independent pair of files for each POU, as the
+ *          specially created stage4out_c (s4o_c and s4o_h) will not comply with the enable/disable_code_generation_pragma_c
+ */
 #define handle_pou(fname,pname) \
       if (!allow_output) return NULL;\
       if (generate_pou_filepairs__) {\
