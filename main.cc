@@ -134,7 +134,7 @@ runtime_options_t runtime_options;
 
 
 int main(int argc, char **argv) {
-  symbol_c *tree_root;
+  symbol_c *tree_root, *ordered_tree_root;
   char * builddir = NULL;
   int optres, errflg = 0;
   int path_len;
@@ -252,11 +252,11 @@ int main(int argc, char **argv) {
   //add_en_eno_param_decl_c::add_to(tree_root);
 
   /* Do semantic verification of code */
-  if (stage3(tree_root) < 0)
+  if (stage3(tree_root, &ordered_tree_root) < 0)
     return EXIT_FAILURE;
   
   /* 3rd Pass */
-  if (stage4(tree_root, builddir) < 0)
+  if (stage4(ordered_tree_root, builddir) < 0)
     return EXIT_FAILURE;
 
   /* 4th Pass */

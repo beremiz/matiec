@@ -36,6 +36,6 @@
 #include "../util/symtable.hh"
 
 
-int stage3(symbol_c *tree_root);
+int stage3(symbol_c *tree_root, symbol_c **ordered_tree_root);
 
 #endif /* _STAGE3_HH */

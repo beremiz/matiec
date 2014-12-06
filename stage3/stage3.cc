@@ -44,6 +44,8 @@
 #include "constant_folding.hh"
 #include "declaration_check.hh"
 #include "enum_declaration_check.hh"
+#include "remove_forward_dependencies.hh"
+
 
 
 static int enum_declaration_check(symbol_c *tree_root){
@@ -114,7 +116,26 @@ static int array_range_check(symbol_c *tree_root){
 }
 
 
-int stage3(symbol_c *tree_root){
+
+/* Removing forward dependencies only makes sense when stage1_2 is run with the pre-parsing option.
+ * This algorithm has no dependencies on other stage 3 algorithms.
+ * Typically this is run last, just to show that the remaining algorithms also do not depend on the fact that 
+ * the library_c (i.e. the source code) does not contain forward dependencies.
+ */
+static int remove_forward_dependencies(symbol_c *tree_root, symbol_c **ordered_tree_root) {
+	if (NULL != ordered_tree_root)    *ordered_tree_root = tree_root; // by default, consider tree_root already ordered
+	if (!runtime_options.pre_parsing)  return 0;                      // No re-ordering necessary, just return
+	  
+	/* We need to re-order the elements in the library, to fix any forward references! */
+	remove_forward_dependencies_c remove_forward_dependencies;
+	symbol_c *new_tree_root = remove_forward_dependencies.create_new_tree(tree_root);
+	if (NULL ==     new_tree_root)   ERROR;
+	if (NULL != ordered_tree_root)   *ordered_tree_root = new_tree_root;
+	return remove_forward_dependencies.get_error_count();
+}
+
+
+int stage3(symbol_c *tree_root, symbol_c **ordered_tree_root) {
 	int error_count = 0;
 	error_count += enum_declaration_check(tree_root);
 	error_count += declaration_safety(tree_root);
@@ -123,6 +144,7 @@ int stage3(symbol_c *tree_root){
 	error_count += type_safety(tree_root);
 	error_count += lvalue_check(tree_root);
 	error_count += array_range_check(tree_root);
+	error_count += remove_forward_dependencies(tree_root, ordered_tree_root);
 	
 	if (error_count > 0) {
 		fprintf(stderr, "%d error(s) found. Bailing out!\n", error_count); 
