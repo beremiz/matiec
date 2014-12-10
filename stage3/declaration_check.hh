@@ -46,8 +46,6 @@ public:
     virtual ~declaration_check_c(void);
     int get_error_count();
 
-    void check_global_decl(symbol_c *p_decl);
-
     /*****************************/
     /* B 1.5.2 - Function Blocks */
     /*****************************/
