@@ -739,6 +739,8 @@ typedef struct YYLTYPE {
 %type  <leaf>	subrange_spec_init
 %type  <leaf>	subrange_specification
 %type  <leaf>	subrange
+/* A non standard construct, used to support the use of variables in array subranges. e.g.: ARRAY [12..max] OF INT */
+%type  <leaf>	subrange_with_var
 
 %type  <leaf>	enumerated_type_declaration
 %type  <leaf>	enumerated_spec_init
@@ -2769,6 +2771,29 @@ subrange_specification:
 ;
 
 
+/* a non standard construct, used to allow the declaration of array subranges using a variable */
+subrange_with_var:
+  signed_integer DOTDOT signed_integer
+	{$$ = new subrange_c($1, $3, locloc(@$));}
+| any_identifier DOTDOT signed_integer
+	{$$ = new subrange_c($1, $3, locloc(@$));}
+| signed_integer DOTDOT any_identifier
+	{$$ = new subrange_c($1, $3, locloc(@$));}
+| any_identifier DOTDOT any_identifier
+	{$$ = new subrange_c($1, $3, locloc(@$));}
+/* ERROR_CHECK_BEGIN */
+| signed_integer signed_integer
+	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'..' missing between bounds in subrange definition."); yynerrs++;}
+| signed_integer DOTDOT error
+	{$$ = NULL;
+	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no value defined for upper bound in subrange definition.");}
+	 else {print_err_msg(locf(@3), locl(@3), "invalid value for upper bound in subrange definition."); yyclearin;}
+	 yyerrok;
+	}
+/* ERROR_CHECK_END */
+;
+
+
 subrange:
   signed_integer DOTDOT signed_integer
 	{$$ = new subrange_c($1, $3, locloc(@$));}
@@ -2783,6 +2808,7 @@ subrange:
 	}
 /* ERROR_CHECK_END */
 ;
+
 
 enumerated_type_declaration:
 /*  enumerated_type_name ':' enumerated_spec_init */
@@ -2989,9 +3015,10 @@ array_specification:
 
 /* helper symbol for array_specification */
 array_subrange_list:
-  subrange
+/* the construct 'subrange' has been replaced with 'subrange_with_var' in order to support the declaration of array ranges using a varable: e.g. ARRAY [2..max] OF INT */
+  subrange_with_var
 	{$$ = new array_subrange_list_c(locloc(@$)); $$->add_element($1);}
-| array_subrange_list ',' subrange
+| array_subrange_list ',' subrange_with_var
 	{$$ = $1; $$->add_element($3);}
 /* ERROR_CHECK_BEGIN */
 | array_subrange_list subrange
