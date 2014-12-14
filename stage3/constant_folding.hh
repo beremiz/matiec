@@ -115,9 +115,6 @@ class constant_folding_c : public iterator_visitor_c {
     /* B 1.4.3 - Declaration & Initialisation */
     /******************************************/
     void *visit(    var1_init_decl_c         *symbol);
-    void *visit(        input_declarations_c *symbol);
-    void *visit( input_output_declarations_c *symbol);
-    void *visit(retentive_var_declarations_c *symbol);
     void *visit(     external_declaration_c  *symbol);
 
     /**************************************/

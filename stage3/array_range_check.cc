@@ -215,7 +215,7 @@ void *array_range_check_c::visit(subrange_c *symbol) {
 			if (dimension < lower_ull)
 				STAGE3_ERROR(0, symbol, symbol, "Number of elements in array subrange exceeds maximum number of elements (%llu).", std::numeric_limits< unsigned long long int >::max());
 		}
-	} else ERROR;
+	} else {debug_c::print_ast(symbol);ERROR;}
 
 	/* correct value for dimension is actually ---> dimension = upper_limit - lower_limit + 1
 	 * Up to now, we have only determined dimension = upper_limit - lower_limit
