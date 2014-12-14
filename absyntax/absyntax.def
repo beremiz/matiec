@@ -526,6 +526,15 @@ SYM_REF2(ref_type_decl_c, ref_type_name, ref_spec_init)
 /*********************/
 SYM_REF1(symbolic_variable_c, var_name)
 
+/* symbolic_constant_c is used only when a variable is used inside the subrange of an array declaration
+ *    e.g.: ARRAY [1 .. maxval] OF INT
+ *  where maxval is a CONSTANT variable. 
+ *  When maxval shows up in the POU body,          it will be stored as a standard symbolic_variable_c in the AST.
+ *  When maxval shows up in the ARRAY declaration, it will be stored as a          symbolic_constant_c in the AST.
+ *  This will allow us to more easily handle this special case, without affecting the remaining working code.
+ */ 
+SYM_REF1(symbolic_constant_c, var_name)  // a non-standard extension!!
+
 /********************************************/
 /* B.1.4.1   Directly Represented Variables */
 /********************************************/
@@ -560,6 +569,7 @@ SYM_REF0(constant_option_c)
 SYM_REF0(retain_option_c)
 SYM_REF0(non_retain_option_c)
 
+/* VAR_INPUT [option] input_declaration_list END_VAR */
 /* option -> the RETAIN/NON_RETAIN/<NULL> directive... */
 /* NOTE: We need to implicitly define the EN and ENO function and FB parameters when the user
  *       does not do it explicitly in the IEC 61131-3 source code. 

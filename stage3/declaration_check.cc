@@ -75,6 +75,7 @@
 
 
 
+#include "constant_folding.hh"
 
 
 #include <set>
@@ -140,6 +141,13 @@ class check_extern_c: public iterator_visitor_c {
           if ((glo_opt == search_var_instance_decl_c::constant_opt) && (ext_opt != search_var_instance_decl_c::constant_opt))
             STAGE3_ERROR(0, glo_decl, glo_decl, "Declaration error. The external variable must be declared as constant, as it maps to a constant global variable.");
     
+          /* Copy the const_value from the global to the external variable.
+           *   This is actually part of the constant folding algorithm. It is placed here because it needs the extern<->global pairing
+           *   information to run correctly, which is all available right here!
+           */
+          constant_folding_c constant_folding;
+          constant_folding.handle_var_extern_global_pair(var_name /* extern_var */, ext_decl /* extern_decl */, NULL /* global_var */, glo_decl /* global_decl */);
+
           /* TODO: Check redefinition data type.
            *       We need a new class (like search_base_type class) to get type id by variable declaration.
            *  symbol_c *glo_type = ????;

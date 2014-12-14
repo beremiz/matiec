@@ -2776,11 +2776,11 @@ subrange_with_var:
   signed_integer DOTDOT signed_integer
 	{$$ = new subrange_c($1, $3, locloc(@$));}
 | any_identifier DOTDOT signed_integer
-	{$$ = new subrange_c($1, $3, locloc(@$));}
+	{$$ = new subrange_c(new symbolic_constant_c($1, locloc(@1)), $3, locloc(@$));}
 | signed_integer DOTDOT any_identifier
-	{$$ = new subrange_c($1, $3, locloc(@$));}
+	{$$ = new subrange_c($1, new symbolic_constant_c($3, locloc(@3)), locloc(@$));}
 | any_identifier DOTDOT any_identifier
-	{$$ = new subrange_c($1, $3, locloc(@$));}
+	{$$ = new subrange_c(new symbolic_constant_c($1, locloc(@1)), new symbolic_constant_c($3, locloc(@3)), locloc(@$));}
 /* ERROR_CHECK_BEGIN */
 | signed_integer signed_integer
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'..' missing between bounds in subrange definition."); yynerrs++;}
@@ -4333,6 +4333,18 @@ external_declaration_list:
 ;
 
 
+
+/* Warning: When handling VAR_EXTERNAL declarations, the constant folding algorithm may (depending on the command line parameters) 
+ *          set the symbol_c->const_value annotations on both the external_var_name as well as on its VAR_EXTERNAL datatype specification symbol.
+ *          Setting the const_value on the datatype specification symbol of a VAR_EXTERNAL declaration is only possible if the declaration of 
+ *          several external variables in a list is not allowed (as each variable could have a potentially distinct initial value).
+ *           VAR_EXTERNAL
+ *             a, b, c, d: INT;  (* incorrect syntax! *)
+ *           END_VAR
+ *          
+ *          If anybody considers extending this standard syntax to allow the above syntax (several variables in a list), then be sure to go
+ *          and fix the constant folding algorithm (more precisely, the constant_folding_c::handle_var_extern_global_pair() function.
+ */
 external_declaration:
   global_var_name ':' simple_specification
 	{$$ = new external_declaration_c($1, $3, locloc(@$));

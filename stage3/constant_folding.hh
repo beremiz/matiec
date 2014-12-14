@@ -65,7 +65,10 @@ class constant_folding_c : public iterator_visitor_c {
 	constant_folding_c(symbol_c *symbol = NULL);
 	virtual ~constant_folding_c(void);
 	int get_error_count();
-
+	int handle_var_extern_global_pair(symbol_c *extern_var_name, symbol_c *extern_var_decl, symbol_c *global_var_name, symbol_c *global_var_decl);
+  private:
+	void *handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl);
+  public:
 	#if 0
 	// not currently needed, so comment it out!...
 	/* utility functions for other stage3 algorithms to access the contant folded values */
@@ -105,14 +108,36 @@ class constant_folding_c : public iterator_visitor_c {
     /*********************/
     #if DO_CONSTANT_PROPAGATION__
     void *visit(symbolic_variable_c *symbol);
-    #endif
+    #endif // DO_CONSTANT_PROPAGATION__
+    void *visit(symbolic_constant_c *symbol);
+                             
+    /******************************************/
+    /* B 1.4.3 - Declaration & Initialisation */
+    /******************************************/
+    void *visit(    var1_init_decl_c         *symbol);
+    void *visit(        input_declarations_c *symbol);
+    void *visit( input_output_declarations_c *symbol);
+    void *visit(retentive_var_declarations_c *symbol);
+    void *visit(     external_declaration_c  *symbol);
+
+    /**************************************/
+    /* B.1.5 - Program organization units */
+    /**************************************/
+    /***********************/
+    /* B 1.5.1 - Functions */
+    /***********************/
+    void *visit(function_declaration_c *symbol);
+    
+    /*****************************/
+    /* B 1.5.2 - Function Blocks */
+    /*****************************/
+    void *visit(function_block_declaration_c *symbol);
 
     /**********************/
     /* B 1.5.3 - Programs */
     /**********************/
-    #if DO_CONSTANT_PROPAGATION__
     void *visit(program_declaration_c *symbol);
-    #endif
+
 
     /****************************************/
     /* B.2 - Language IL (Instruction List) */

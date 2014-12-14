@@ -712,10 +712,8 @@ void *visit(ref_type_decl_c *symbol) {
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
-void *visit(symbolic_variable_c *symbol) {
-  symbol->var_name->accept(*this);
-  return NULL;
-}
+void *visit(symbolic_variable_c *symbol) {return symbol->var_name->accept(*this);}
+void *visit(symbolic_constant_c *symbol) {return symbol->var_name->accept(*this);}
 
 /********************************************/
 /* B.1.4.1   Directly Represented Variables */
