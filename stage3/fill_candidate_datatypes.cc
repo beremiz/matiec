@@ -68,11 +68,10 @@
 #include <string.h>
 #include <strings.h>
 
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.value)
-#define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
-#define IS_OVERFLOW(dtype, symbol)            (symbol_c::cs_overflow == (symbol)->const_value._##dtype.status)
 
-
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.get())
+#define VALID_CVALUE(dtype, symbol)           ((symbol)->const_value._##dtype.is_valid())
+#define IS_OVERFLOW(dtype, symbol)            ((symbol)->const_value._##dtype.is_overflow())
 
 
 /* set to 1 to see debug info during execution */

@@ -118,7 +118,7 @@ void print_symbol_c::dump_symbol(symbol_c* symbol) {
   fprintf(stderr, "}\t");         
   
   /* print the const values... */
-  fprintf(stderr, " constv{f=%f, i=%"PRId64", u=%"PRIu64", b=%d}\t", symbol->const_value._real64.value, symbol->const_value._int64.value, symbol->const_value._uint64.value, symbol->const_value._bool.value?1:0);
+  fprintf(stderr, " constv{f=%f, i=%"PRId64", u=%"PRIu64", b=%d}\t", symbol->const_value._real64.get(), symbol->const_value._int64.get(), symbol->const_value._uint64.get(), symbol->const_value._bool.get()?1:0);
   
 }
 

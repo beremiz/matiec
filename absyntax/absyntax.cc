@@ -44,6 +44,7 @@
 
 
 
+
 /* The base class of all symbols */
 symbol_c::symbol_c(
                    int first_line, int first_column, const char *ffile, long int first_order,
@@ -59,10 +60,6 @@ symbol_c::symbol_c(
   this->parent       = NULL;
   this->datatype     = NULL;
   this->scope        = NULL;
-  this->const_value._real64.status   = cs_undefined;
-  this->const_value._int64.status    = cs_undefined;
-  this->const_value._uint64.status   = cs_undefined;
-  this->const_value._bool.status     = cs_undefined;
 }
 
 

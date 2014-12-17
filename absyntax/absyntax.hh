@@ -93,9 +93,50 @@ class nocasecmp_c {
 
 
 
+/*** constant folding ***/
+/* During stage 3 (semantic analysis/checking) we will be doing constant folding.
+ * That algorithm will anotate the abstract syntax tree with the result of operations
+ * on literals (i.e. 44 + 55 will store the result 99).
+ * Since the same source code (e.g. 1 + 0) may actually be a BOOL or an ANY_INT,
+ * or an ANY_BIT, we need to handle all possibilities, and determine the result of the
+ * operation assuming each type.
+ * For this reason, we have one entry for each possible type, with some expressions
+ * having more than one entry filled in!
+ */    
+class const_value_c {
+  public:
+    typedef enum { cs_undefined,   /* not defined/not yet evaluated --> const_value is not valid! */
+                   cs_non_const,   /* we have determined that expression is not a const value --> const_value is not valid! */
+                   cs_const_value, /* const value is valid */
+                   cs_overflow     /* result produced overflow or underflow --> const_value is not valid! */
+                 } const_status_t;
+ 
+    template<typename value_type> class const_value__ {
+      const_status_t status;  
+      value_type     value;
+      
+      public:
+      const_value__(void): status(cs_undefined), value(0) {};
+      
+      value_type get(void)              {return value;}
+      void       set(value_type value_) {status = cs_const_value; value = value_;}
+      void       set_overflow(void)     {status = cs_overflow   ;}
+      void       set_nonconst(void)     {status = cs_non_const  ;}
+      bool       is_valid    (void)     {return (status == cs_const_value);}
+      bool       is_overflow (void)     {return (status == cs_overflow   );}
+      bool       is_nonconst (void)     {return (status == cs_non_const  );}
+      bool       is_zero     (void)     {return (is_valid() && (get() == 0));}
+    };
 
-
-
+    const_value__< int64_t>  _int64; /* status is initialised to UNDEFINED */
+    const_value__<uint64_t> _uint64; /* status is initialised to UNDEFINED */
+    const_value__<real64_t> _real64; /* status is initialised to UNDEFINED */
+    const_value__<bool    >   _bool; /* status is initialised to UNDEFINED */
+    
+    /* default constructor and destructor */
+     const_value_c(void) {};
+    ~const_value_c(void) {};
+};
 
 
 
@@ -142,33 +183,8 @@ class symbol_c {
     symbol_c *scope;    
 
     /*** constant folding ***/
-    /* During stage 3 (semantic analysis/checking) we will be doing constant folding.
-     * That algorithm will anotate the abstract syntax tree with the result of operations
-     * on literals (i.e. 44 + 55 will store the result 99).
-     * Since the same source code (e.g. 1 + 0) may actually be a BOOL or an ANY_INT,
-     * or an ANY_BIT, we need to handle all possibilities, and determine the result of the
-     * operation assuming each type.
-     * For this reason, we have one entry for each possible type, with some expressions
-     * having more than one entry filled in!
-     */
-    typedef enum { cs_undefined,   /* not defined/not yet evaluated --> const_value is not valid! */
-                   cs_non_const,   /* we have determined that expression is not a const value --> const_value is not valid! */
-                   cs_const_value, /* const value is valid */
-                   cs_overflow     /* result produced overflow or underflow --> const_value is not valid! */
-                 } const_status_t;
- 
-    typedef struct const_value_real64_s {const_status_t status;  real64_t  value;  const_value_real64_s (): status(cs_undefined), value(0.0)   {} } const_value_real64_t;
-    typedef struct const_value_int64_s  {const_status_t status;   int64_t  value;  const_value_int64_s  (): status(cs_undefined), value(0)     {} } const_value_int64_t;
-    typedef struct const_value_uint64_s {const_status_t status;  uint64_t  value;  const_value_uint64_s (): status(cs_undefined), value(0)     {} } const_value_uint64_t;
-    typedef struct const_value_bool_s   {const_status_t status;      bool  value;  const_value_bool_s   (): status(cs_undefined), value(false) {} } const_value_bool_t;
-
-    typedef struct {
-      const_value_real64_t _real64; /* status is initialised to UNDEFINED */
-      const_value_int64_t   _int64; /* status is initialised to UNDEFINED */
-      const_value_uint64_t _uint64; /* status is initialised to UNDEFINED */
-      const_value_bool_t     _bool; /* status is initialised to UNDEFINED */
-    } const_value_t;
-    const_value_t const_value;
+    /* If the symbol has a constant numerical value, this will be set to that value by constant_folding_c */
+    const_value_c const_value;
     
     /*** Enumeration datatype checking ***/    
     /* Not all symbols will contain the following anotations, which is why they are not declared here in symbol_c

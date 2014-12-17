@@ -68,8 +68,9 @@
     warning_found = true;                                                                                                   \
 }
 
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.value)
-#define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
+
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.get())
+#define VALID_CVALUE(dtype, symbol)           ((symbol)->const_value._##dtype.is_valid())
 
 /*  The cmp_unsigned_signed function compares two numbers u and s.
  *  It returns an integer indicating the relationship between the numbers:

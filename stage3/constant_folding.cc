@@ -186,15 +186,16 @@
 
 
 
-#define SET_CVALUE(dtype, symbol, new_value) {((symbol)->const_value._##dtype.value) = new_value; ((symbol)->const_value._##dtype.status) = symbol_c::cs_const_value;}
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.value)
-#define SET_OVFLOW(dtype, symbol)             ((symbol)->const_value._##dtype.status) = symbol_c::cs_overflow
-#define SET_NONCONST(dtype, symbol)           ((symbol)->const_value._##dtype.status) = symbol_c::cs_non_const
+#define SET_CVALUE(dtype, symbol, new_value)  ((symbol)->const_value._##dtype.set(new_value))
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.get())
+#define SET_OVFLOW(dtype, symbol)             ((symbol)->const_value._##dtype.set_overflow())
+#define SET_NONCONST(dtype, symbol)           ((symbol)->const_value._##dtype.set_nonconst())
 
-#define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
-#define IS_OVFLOW(dtype, symbol)              (symbol_c::cs_overflow    == (symbol)->const_value._##dtype.status)
-#define IS_NONCONST(dtype, symbol)            (symbol_c::cs_non_const   == (symbol)->const_value._##dtype.status)
-#define ISZERO_CVALUE(dtype, symbol)          ((VALID_CVALUE(dtype, symbol)) && (GET_CVALUE(dtype, symbol) == 0))
+#define VALID_CVALUE(dtype, symbol)           ((symbol)->const_value._##dtype.is_valid())
+#define IS_OVFLOW(dtype, symbol)              ((symbol)->const_value._##dtype.is_overflow())
+#define IS_NONCONST(dtype, symbol)            ((symbol)->const_value._##dtype.is_nonconst())
+#define ISZERO_CVALUE(dtype, symbol)          ((symbol)->const_value._##dtype.is_zero())
+
 
 #define ISEQUAL_CVALUE(dtype, symbol1, symbol2) \
 	(VALID_CVALUE(dtype, symbol1) && VALID_CVALUE(dtype, symbol2) && (GET_CVALUE(dtype, symbol1) == GET_CVALUE(dtype, symbol2))) 
@@ -225,18 +226,16 @@
  * - constant * constant = non_const (if not equal)
  */
 #define COMPUTE_MEET_SEMILATTICE(dtype, c1, c2, resValue) {\
-		if (( c1._##dtype.value  != c2._##dtype.value && c2._##dtype.status == symbol_c::cs_const_value &&\
-              c1._##dtype.status == symbol_c::cs_const_value) ||\
-		    ( c1._##dtype.status == symbol_c::cs_non_const && c2._##dtype.status == symbol_c::cs_const_value ) ||\
-		    ( c2._##dtype.status == symbol_c::cs_non_const && c1._##dtype.status == symbol_c::cs_const_value  )) {\
-			resValue._##dtype.status = symbol_c::cs_non_const;\
+		if (( c1._##dtype.get()  != c2._##dtype.get() && c2._##dtype.is_valid() && c1._##dtype.is_valid()) ||\
+		    ( c1._##dtype.is_nonconst() && c2._##dtype.is_valid() ) ||\
+		    ( c2._##dtype.is_nonconst() && c1._##dtype.is_valid() )) {\
+			resValue._##dtype.set_nonconst();\
 		} else {\
-			resValue._##dtype.status = symbol_c::cs_const_value;\
-			resValue._##dtype.value  = c1._##dtype.value;\
+			resValue._##dtype.set(c1._##dtype.get());\
 		}\
 }
 
-typedef std::map <std::string, symbol_c::const_value_t> map_values_t;
+typedef std::map <std::string, const_value_c> map_values_t;
 
 static map_values_t values;
 
@@ -734,11 +733,11 @@ static map_values_t inner_left_join_values(map_values_t m1, map_values_t m2) {
 	itr = m1.begin();
 	for ( ; itr != m1.end(); ++itr) {
 		std::string name = itr->first;
-		symbol_c::const_value_t value;
+		const_value_c value;
 
 		if (m2.count(name) > 0) {
-			symbol_c::const_value_t c1 = itr->second;
-			symbol_c::const_value_t c2 = m2[name];
+			const_value_c c1 = itr->second;
+			const_value_c c2 = m2[name];
 			COMPUTE_MEET_SEMILATTICE (real64, c1, c2, value);
 			COMPUTE_MEET_SEMILATTICE (uint64, c1, c2, value);
 			COMPUTE_MEET_SEMILATTICE ( int64, c1, c2, value);
@@ -1581,7 +1580,7 @@ void *constant_folding_c::visit(for_statement_c *symbol) {
 	symbol->beg_expression->accept(*this);
 	symbol->end_expression->accept(*this);
 	varName =  get_var_name_c::get_name(symbol->control_variable)->value;
-	values[varName]._int64.status = symbol_c::cs_non_const;
+	values[varName]._int64.status = const_value_c::cs_non_const;
 
 	/* Optimize dead code */
 	if (NULL != symbol->by_expression) {

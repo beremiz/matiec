@@ -53,8 +53,8 @@
 
 
 /* Macros to access the constant value of each expression (if it exists) from the annotation introduced to the symbol_c object by constant_folding_c in stage3! */
-#define VALID_CVALUE(dtype, symbol)           (symbol_c::cs_const_value == (symbol)->const_value._##dtype.status)
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.value) 
+#define VALID_CVALUE(dtype, symbol)           ((symbol)->const_value._##dtype.is_valid())
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.get()) 
 
 
 
