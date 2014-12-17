@@ -663,6 +663,21 @@ void *visit(symbolic_variable_c *symbol) {
   return NULL;
 }
 
+/* symbolic_constant_c is used only when a variable is used inside the subrange of an array declaration
+ *    e.g.: ARRAY [1 .. maxval] OF INT
+ *  where maxval is a CONSTANT variable. 
+ *  When maxval shows up in the POU body,          it will be stored as a standard symbolic_variable_c in the AST.
+ *  When maxval shows up in the ARRAY declaration, it will be stored as a          symbolic_constant_c in the AST.
+ *  This will allow us to more easily handle this special case, without affecting the remaining working code.
+ */ 
+// a non-standard extension!!
+void *visit(symbolic_constant_c *symbol) {
+  TRACE("symbolic_variable_c");
+  if      (symbol->const_value. _int64.is_valid()) s4o.print(symbol->const_value. _int64.get());
+  else if (symbol->const_value._uint64.is_valid()) s4o.print(symbol->const_value._uint64.get());
+  else ERROR;
+  return NULL;
+}
 
 /********************************************/
 /* B.1.4.1   Directly Represented Variables */
