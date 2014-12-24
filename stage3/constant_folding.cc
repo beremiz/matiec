@@ -806,6 +806,8 @@ bool constant_folding_c::is_equal_cvalue(symbol_c *symbol_1, symbol_c *symbol_2)
 
 
 constant_folding_c::constant_folding_c(symbol_c *symbol) {
+    fixed_init_value_ = false;
+    function_pou_ = false;
     error_count = 0;
     warning_found = false;
     current_display_error_level = 0;
@@ -989,14 +991,14 @@ void *constant_folding_c::visit(fixed_point_c *symbol) {
 /*********************/
 /* B 1.4 - Variables */
 /*********************/
-#if DO_CONSTANT_PROPAGATION__
+// #if DO_CONSTANT_PROPAGATION__
 void *constant_folding_c::visit(symbolic_variable_c *symbol) {
 	std::string varName = get_var_name_c::get_name(symbol->var_name)->value;
 	if (values.count(varName) > 0) 
 		symbol->const_value = values[varName];
 	return NULL;
 }
-#endif  // DO_CONSTANT_PROPAGATION__
+// #endif  // DO_CONSTANT_PROPAGATION__
 
 void *constant_folding_c::visit(symbolic_constant_c *symbol) {
 	std::string varName = get_var_name_c::get_name(symbol->var_name)->value;
@@ -1035,6 +1037,14 @@ int constant_folding_c::handle_var_extern_global_pair(symbol_c *extern_var_name,
 }
 
 
+  
+void *constant_folding_c::handle_var_decl(symbol_c *var_list, bool fixed_init_value) {
+  fixed_init_value_ = fixed_init_value;
+  var_list->accept(*this); 
+  fixed_init_value_ = false; 
+  return NULL;
+}
+
 void *constant_folding_c::handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl) {
   type_decl->accept(*this);  // Do constant folding of the initial value, and literals in subranges! (we will probably be doing this multiple times for the same init value, but this is safe as the cvalue is idem-potent)
   symbol_c *init_value = type_initial_value_c::get(type_decl);  
@@ -1047,22 +1057,26 @@ void *constant_folding_c::handle_var_list_decl(symbol_c *var_list, symbol_c *typ
     if (NULL == var_name) {
       if (NULL != dynamic_cast<extensible_input_parameter_c *>(list->elements[i]))
         continue; // this is an extensible standard function. Ignore this variable, and continue!
-      debug_c::print(list->elements[i]);
+      // debug_c::print(list->elements[i]);
       ERROR;
     }
-    std::string varName = var_name->value;
-    values[varName] = init_value->const_value;
     list->elements[i]->const_value = init_value->const_value;
+    if (fixed_init_value_) {
+      std::string varName = var_name->value;
+      values[varName] = init_value->const_value;
+    }
   }
   return NULL;
 }
 
-/* | var1_list ',' variable_name */
-//SYM_LIST(var1_list_c)           // Not needed!
 //SYM_REF0(constant_option_c)     // Not needed!
 //SYM_REF0(retain_option_c)       // Not needed!
 //SYM_REF0(non_retain_option_c)   // Not needed!
+bool constant_folding_c::is_constant(symbol_c *option) {return (NULL != dynamic_cast<constant_option_c *>(option));}
+bool constant_folding_c::is_retain  (symbol_c *option) {return (NULL != dynamic_cast<  retain_option_c *>(option));}
 
+/* | var1_list ',' variable_name */
+//SYM_LIST(var1_list_c)           // Not needed!
 
 /* spec_init is one of the following...
  *    simple_spec_init_c *
@@ -1075,49 +1089,65 @@ void *constant_folding_c::visit(var1_init_decl_c *symbol) {return handle_var_lis
 /* | [var1_list ','] variable_name integer '..' */
 /* NOTE: This is an extension to the standard!!! */
 //SYM_REF2(extensible_input_parameter_c, var_name, first_index)          // Not needed!
+
 /* var1_list ':' array_spec_init */
 //SYM_REF2(array_var_init_decl_c, var1_list, array_spec_init)            // We do not yet handle arrays!
+
 /*  var1_list ':' initialized_structure */
 //SYM_REF2(structured_var_init_decl_c, var1_list, initialized_structure) // We do not yet handle structures!
+
 /* fb_name_list ':' function_block_type_name ASSIGN structure_initialization */
 //SYM_REF2(fb_name_decl_c, fb_name_list, fb_spec_init)                   // We do not yet handle FBs!
+
 /* fb_name_list ',' fb_name */
 //SYM_LIST(fb_name_list_c)                                               // Not needed!
+
 /* VAR_INPUT [option] input_declaration_list END_VAR */
 /* option -> the RETAIN/NON_RETAIN/<NULL> directive... */
 //SYM_REF3(input_declarations_c, option, input_declaration_list, method) // Not needed since we inherit from iterator_visitor_c!
-// NOTE: Input variables can take any initial value, so we can not set the const_value annotation => we do NOT call handle_var_list_decl() !!!
+// NOTE: Input variables can take any initial value, so we can not set the const_value annotation => we set fixed_init_value to false !!!
 //       We must still visit it iteratively, to set the const_value of all literals in the type declarations.
+void *constant_folding_c::visit(input_declarations_c *symbol) {return handle_var_decl(symbol->input_declaration_list, false);}
+
 /* helper symbol for input_declarations */
 //SYM_LIST(input_declaration_list_c)                                     // Not needed!
+
 /* VAR_OUTPUT [RETAIN | NON_RETAIN] var_init_decl_list END_VAR */
 /* option -> may be NULL ! */
-//SYM_REF3(output_declarations_c, option, var_init_decl_list, method)    // Not needed since we inherit from iterator_visitor_c!
+//SYM_REF3(output_declarations_c, option, var_init_decl_list, method) 
+void *constant_folding_c::visit(output_declarations_c *symbol) {return handle_var_decl(symbol->var_init_decl_list, !is_retain(symbol->option) && function_pou_);}
 
 /*  VAR_IN_OUT var_declaration_list END_VAR */
-//SYM_REF1(input_output_declarations_c, var_declaration_list)            // Not needed since we inherit from iterator_visitor_c!
-// NOTE: Input variables can take any initial value, so we can not set the const_value annotation => we do NOT call handle_var_list_decl() !!!
+//SYM_REF1(input_output_declarations_c, var_declaration_list)
+// NOTE: Input variables can take any initial value, so we can not set the const_value annotation => we set fixed_init_value to false !!!
 //       We must still visit it iteratively, to set the const_value of all literals in the type declarations.
+void *constant_folding_c::visit(input_output_declarations_c *symbol) {return handle_var_decl(symbol->var_declaration_list, false);}
+
 /* helper symbol for input_output_declarations */
 /* var_declaration_list var_declaration ';' */
 //SYM_LIST(var_declaration_list_c)                                       // Not needed since we inherit from iterator_visitor_c!
+
 /*  var1_list ':' array_specification */
 //SYM_REF2(array_var_declaration_c, var1_list, array_specification)      // We do not yet handle arrays! 
+
 /*  var1_list ':' structure_type_name */
 //SYM_REF2(structured_var_declaration_c, var1_list, structure_type_name) // We do not yet handle structures!
+
 /* VAR [CONSTANT] var_init_decl_list END_VAR */
 /* option -> may be NULL ! */
-//SYM_REF2(var_declarations_c, option, var_init_decl_list)               // Not needed: we inherit from iterator_c
+//SYM_REF2(var_declarations_c, option, var_init_decl_list)
+void *constant_folding_c::visit(var_declarations_c *symbol) {return handle_var_decl(symbol->var_init_decl_list, false);}
 
 /*  VAR RETAIN var_init_decl_list END_VAR */
 //SYM_REF1(retentive_var_declarations_c, var_init_decl_list)             // Not needed since we inherit from iterator_visitor_c!
-// NOTE: Retentive variables can take any initial value, so we can not set the const_value annotation => we do NOT call handle_var_list_decl() !!!
+// NOTE: Retentive variables can take any initial value, so we can not set the const_value annotation => we set fixed_init_value to false !!!
 //       We must still visit it iteratively, to set the const_value of all literals in the type declarations.
-/*  VAR [CONSTANT|RETAIN|NON_RETAIN] located_var_decl_list END_VAR */
-/* option -> may be NULL ! */
+void *constant_folding_c::visit(retentive_var_declarations_c *symbol) {return handle_var_decl(symbol->var_init_decl_list, false);}
 
 #if 0  
 // TODO
+/*  VAR [CONSTANT|RETAIN|NON_RETAIN] located_var_decl_list END_VAR */
+/* option -> may be NULL ! */
 SYM_REF2(located_var_declarations_c, option, located_var_decl_list)
 /* helper symbol for located_var_declarations */
 /* located_var_decl_list located_var_decl ';' */
@@ -1130,7 +1160,7 @@ SYM_REF3(located_var_decl_c, variable_name, location, located_var_spec_init)
 /*| VAR_EXTERNAL [CONSTANT] external_declaration_list END_VAR */
 /* option -> may be NULL ! */
 // SYM_REF2(external_var_declarations_c, option, external_declaration_list)
-// void *constant_folding_c::visit(external_var_declarations_c *symbol) {} // Not needed: we inherit from iterator_c
+void *constant_folding_c::visit(external_var_declarations_c *symbol) {return handle_var_decl(symbol->external_declaration_list, is_constant(symbol->option));}
 
 /* helper symbol for external_var_declarations */
 /*| external_declaration_list external_declaration';' */
@@ -1142,9 +1172,11 @@ SYM_REF3(located_var_decl_c, variable_name, location, located_var_spec_init)
 void *constant_folding_c::visit(external_declaration_c *symbol) {
   // Note that specification->const_value will have been set by handle_var_extern_global_pair, which is called from declaration_check_c
   symbol->global_var_name->const_value = symbol->specification->const_value;
-  std::string varName = get_var_name_c::get_name(symbol->global_var_name)->value;
-  values[varName] = symbol->specification->const_value;
-  // If the datatype specification is a subrange or array, do constant folding of all the literals in that type declaration...
+  if (fixed_init_value_) {
+    std::string varName = get_var_name_c::get_name(symbol->global_var_name)->value;
+    values[varName] = symbol->specification->const_value;
+  }
+  // If the datatype specification is a subrange or array, do constant folding of all the literals in that type declaration... (ex: literals in array subrange limits)
   symbol->specification->accept(*this);  // should never get to change the const_value of the symbol->specification symbol (only its children!).
   return NULL;
 }
@@ -1220,10 +1252,28 @@ SYM_LIST(var_init_decl_list_c)
 void *constant_folding_c::visit(function_declaration_c *symbol) {
 	values.clear(); /* Clear global map */
 	/* Add initial value of all declared variables into Values map. */
+	function_pou_ = true;
 	symbol->var_declarations_list->accept(*this);
+	function_pou_ = false;
 	symbol->function_body->accept(*this);
 	return NULL;
 }
+
+
+/* intermediate helper symbol for
+ * - function_declaration
+ * - function_block_declaration
+ * - program_declaration
+ */
+// SYM_LIST(var_declarations_list_c) // Not needed since we inherit from iterator_c
+
+/* option -> storage method, CONSTANT or <null> */
+// SYM_REF2(function_var_decls_c, option, decl_list)
+// NOTE: function_var_decls_c is only used inside Functions, so it is safe to call with fixed_init_value_ = true 
+void *constant_folding_c::visit(function_var_decls_c *symbol) {return handle_var_decl(symbol->decl_list, true);}
+
+/* intermediate helper symbol for function_var_decls */
+// SYM_LIST(var2_init_decl_list_c) // Not needed since we inherit from iterator_c
 
 
 /*****************************/
@@ -1235,10 +1285,23 @@ void *constant_folding_c::visit(function_declaration_c *symbol) {
 void *constant_folding_c::visit(function_block_declaration_c *symbol) {
 	values.clear(); /* Clear global map */
 	/* Add initial value of all declared variables into Values map. */
+	function_pou_ = false;
 	symbol->var_declarations->accept(*this);
 	symbol->fblock_body->accept(*this);
 	return NULL;
 }
+
+/*  VAR_TEMP temp_var_decl_list END_VAR */
+// SYM_REF1(temp_var_decls_c, var_decl_list)
+void *constant_folding_c::visit(temp_var_decls_c *symbol) {debug_c::print(symbol); return handle_var_decl(symbol->var_decl_list, true);}
+
+/* intermediate helper symbol for temp_var_decls */
+// SYM_LIST(temp_var_decls_list_c)
+
+/*  VAR NON_RETAIN var_init_decl_list END_VAR */
+// SYM_REF1(non_retentive_var_decls_c, var_decl_list)
+// NOTE: non_retentive_var_decls_c is only used inside FBs and Programs, so it is safe to call with fixed_init_value_ = false 
+void *constant_folding_c::visit(non_retentive_var_decls_c *symbol) {debug_c::print(symbol); return handle_var_decl(symbol->var_decl_list, false);}
 
 
 /**********************/
@@ -1249,6 +1312,7 @@ void *constant_folding_c::visit(function_block_declaration_c *symbol) {
 void *constant_folding_c::visit(program_declaration_c *symbol) {
 	values.clear(); /* Clear global map */
 	/* Add initial value of all declared variables into Values map. */
+	function_pou_ = false;
 	symbol->var_declarations->accept(*this);
 	symbol->function_block_body->accept(*this);
 	return NULL;
@@ -1525,7 +1589,6 @@ void *constant_folding_c::visit(   not_expression_c *symbol) {symbol->  exp->acc
 
 
 
-#if DO_CONSTANT_PROPAGATION__
 /*********************************/
 /* B 3.2.1 Assignment Statements */
 /*********************************/
@@ -1533,13 +1596,14 @@ void *constant_folding_c::visit(assignment_statement_c *symbol) {
 	std::string varName;
 
 	symbol->r_exp->accept(*this);
+	symbol->l_exp->accept(*this); // if the lvalue has an array, do contant folding of the array indexes!
 	symbol->l_exp->const_value = symbol->r_exp->const_value;
 	varName = get_var_name_c::get_name(symbol->l_exp)->value;
 	values[varName] = symbol->l_exp->const_value;
-
 	return NULL;
 }
 
+#if DO_CONSTANT_PROPAGATION__
 /********************************/
 /* B 3.2.3 Selection Statements */
 /********************************/
