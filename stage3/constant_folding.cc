@@ -1048,8 +1048,9 @@ void *constant_folding_c::handle_var_decl(symbol_c *var_list, bool fixed_init_va
 void *constant_folding_c::handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl) {
   type_decl->accept(*this);  // Do constant folding of the initial value, and literals in subranges! (we will probably be doing this multiple times for the same init value, but this is safe as the cvalue is idem-potent)
   symbol_c *init_value = type_initial_value_c::get(type_decl);  
-  if (NULL == init_value)   return NULL; // this is probably a FB datatype, for which no initial value exists! Do nothing and return.
-
+  if (NULL == init_value)   {debug_c::print(type_decl); return NULL;} // this is probably a FB datatype, for which no initial value exists! Do nothing and return.
+  init_value->accept(*this); // necessary when handling default initial values, that were not constant folded in the call type_decl->accept(*this)
+  
   list_c *list = dynamic_cast<list_c *>(var_list);
   if (NULL == list) ERROR;
   for (int i = 0; i < list->n; i++) {
