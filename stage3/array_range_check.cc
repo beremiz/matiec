@@ -198,15 +198,23 @@ void *array_range_check_c::visit(subrange_c *symbol) {
 		// do the sums in such a way that no overflow is possible... even during intermediate steps used by compiler!
 		// remember that the result (dimension) is unsigned, while the operands are signed!!
 		// dimension = GET_CVALUE( int64, symbol->upper_limit) - VALID_CVALUE( int64, symbol->lower_limit);
-		if (GET_CVALUE( int64, symbol->lower_limit) >= 0) {
+		if  (GET_CVALUE( int64, symbol->lower_limit)  >   GET_CVALUE( int64, symbol->upper_limit)) {
+			STAGE3_ERROR(0, symbol, symbol, "Subrange has lower limit (%"PRId64") larger than upper limit (%"PRId64").", GET_CVALUE( int64, symbol->lower_limit), GET_CVALUE( int64, symbol->upper_limit));
+			dimension = std::numeric_limits< unsigned long long int >::max() - 1; // -1 because it will be incremented at the end of this function!! 
+		} else if (GET_CVALUE( int64, symbol->lower_limit) >= 0) {
 			dimension = GET_CVALUE( int64, symbol->upper_limit) - GET_CVALUE( int64, symbol->lower_limit);
 		} else {
 			dimension  = -GET_CVALUE( int64, symbol->lower_limit);
 			dimension +=  GET_CVALUE( int64, symbol->upper_limit);     
 		}
 	} else if (VALID_CVALUE(uint64, symbol->upper_limit) && VALID_CVALUE(uint64, symbol->lower_limit)) {
-		dimension = GET_CVALUE(uint64, symbol->upper_limit) - GET_CVALUE(uint64, symbol->lower_limit); 
+		if  (GET_CVALUE(uint64, symbol->lower_limit)  >   GET_CVALUE(uint64, symbol->upper_limit)) {
+			STAGE3_ERROR(0, symbol, symbol, "Subrange has lower limit (%"PRIu64") larger than upper limit (%"PRIu64").", GET_CVALUE(uint64, symbol->lower_limit), GET_CVALUE(uint64, symbol->upper_limit));
+			dimension = std::numeric_limits< unsigned long long int >::max() - 1; // -1 because it will be incremented at the end of this function!! 
+		} else
+			dimension = GET_CVALUE(uint64, symbol->upper_limit) - GET_CVALUE(uint64, symbol->lower_limit); 
 	} else if (VALID_CVALUE(uint64, symbol->upper_limit) && VALID_CVALUE( int64, symbol->lower_limit)) {
+		// No need to check whether lower_limit > upper_limit, as we only reach this point if lower_limit < 0 (and upper_limit must be >= 0!)
 		if (GET_CVALUE( int64, symbol->lower_limit) >= 0) {
 			dimension = GET_CVALUE(uint64, symbol->upper_limit) - GET_CVALUE( int64, symbol->lower_limit);
 		} else {
@@ -216,6 +224,14 @@ void *array_range_check_c::visit(subrange_c *symbol) {
 			if (dimension < lower_ull)
 				STAGE3_ERROR(0, symbol, symbol, "Number of elements in array subrange exceeds maximum number of elements (%llu).", std::numeric_limits< unsigned long long int >::max());
 		}
+	} else if (!VALID_CVALUE(uint64, symbol->upper_limit) && !VALID_CVALUE( int64, symbol->upper_limit)) {
+		STAGE3_ERROR(0, symbol->upper_limit, symbol->upper_limit, "Subrange upper limit is not a constant value.");
+		// set dimension to largest possible value so we do not get any further related error messages.
+		dimension = std::numeric_limits< unsigned long long int >::max() - 1; // -1 because it will be incremented at the end of this function!! 
+	} else if (!VALID_CVALUE(uint64, symbol->lower_limit) && !VALID_CVALUE( int64, symbol->lower_limit)) {
+		STAGE3_ERROR(0, symbol->lower_limit, symbol->lower_limit, "Subrange lower limit is not a constant value.");
+		// set dimension to largest possible value so we do not get any further related error messages.
+		dimension = std::numeric_limits< unsigned long long int >::max() - 1; // -1 because it will be incremented at the end of this function!! 
 	} else {ERROR;}
 
 	/* correct value for dimension is actually ---> dimension = upper_limit - lower_limit + 1
