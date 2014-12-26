@@ -200,15 +200,6 @@ void rst_pop_state(void);
  *
  *       In essence, they are a data passing mechanism between Bison and Flex.
  */
-/* NOTE: BOGUS_TOKEN_ID is defined in the bison generated file iec_bison.hh.
- *       We need this constant defined before we can declare the symbol tables.
- *       However, we cannot #include "iec_bison.hh" in this file (stage1_2_priv.hh) directly
- *       because of the way bison ver. 2.3 is copying all declarations in the prologue
- *       of iec.y to the iec_bison.hh file (including an #include stage1_2_priv.hh).
- *       So, if we were to include "iec_bison.hh" here, we would get a circular include.
- *       All this means that whoever includes this file (stage1_2_priv.hh) will need
- *       to take care to first inlcude iec_bison.hh !!
- */ 
 /* A symbol table to store all the library elements */
 /* e.g.: <function_name , function_decl>
  *       <fb_name , fb_decl>
@@ -216,17 +207,20 @@ void rst_pop_state(void);
  *       <program_name , program_decl>
  *       <configuration_name , configuration_decl>
  */
-extern symtable_c<int, BOGUS_TOKEN_ID> library_element_symtable;
+typedef symtable_c<int>             library_element_symtable_t;
+extern  library_element_symtable_t  library_element_symtable;
 
 /* A symbol table to store the declared variables of
  * the function currently being parsed...
  */
-extern symtable_c<int, BOGUS_TOKEN_ID> variable_name_symtable;
+typedef symtable_c<int>             variable_name_symtable_t;
+extern  variable_name_symtable_t    variable_name_symtable;
 
 /* A symbol table to store the declared direct variables of
  * the function currently being parsed...
  */
-extern symtable_c<int, BOGUS_TOKEN_ID> direct_variable_symtable;
+typedef symtable_c<int>             direct_variable_symtable_t;
+extern  direct_variable_symtable_t  direct_variable_symtable;
 
 /* Function only called from within flex!
  *

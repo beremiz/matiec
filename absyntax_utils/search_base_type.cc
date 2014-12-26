@@ -108,8 +108,6 @@ symbol_c *search_base_type_c::get_basetype_id  (symbol_c *symbol) {
 
 
 void *search_base_type_c::handle_datatype_identifier(token_c *type_name) {
-  symbol_c *type_decl;
-
   this->current_basetype_name = type_name;
   /* if we have reached this point, it is because the current_basetype is not yet pointing to the base datatype we are looking for,
    * so we will be searching for the delcaration of the type named in type_name, which might be the base datatype (we search recursively!)
@@ -117,16 +115,16 @@ void *search_base_type_c::handle_datatype_identifier(token_c *type_name) {
   this->current_basetype  = NULL; 
   
   /* look up the type declaration... */
-  type_decl = type_symtable.find_value(type_name);
-  if (type_decl != type_symtable.end_value())
-    return type_decl->accept(*this);
+  type_symtable_t::iterator iter1 = type_symtable.find(type_name);
+  if (iter1 != type_symtable.end())
+    return iter1->second->accept(*this); // iter1->second is the type_decl 
     
-  type_decl = function_block_type_symtable.find_value(type_name);
-  if (type_decl != function_block_type_symtable.end_value())
-    return type_decl->accept(*this);
+  function_block_type_symtable_t::iterator iter2  = function_block_type_symtable.find(type_name);
+  if (iter2 != function_block_type_symtable.end())
+    return iter2->second->accept(*this); // iter2->second is the type_decl 
   
   /* Type declaration not found!! */
-    ERROR;
+  ERROR;
     
   return NULL;
 }

@@ -108,12 +108,10 @@ function_declaration_c null_symbol1(NULL,NULL,NULL,NULL);
 dsymtable_c<function_declaration_c *, &null_symbol1> function_symtable;
 
 /* A symbol table with all globally declared functions block types... */
-function_block_declaration_c null_symbol2(NULL,NULL,NULL);
-symtable_c<function_block_declaration_c *, &null_symbol2> function_block_type_symtable;
+symtable_c<function_block_declaration_c *> function_block_type_symtable;
 
 /* A symbol table with all globally declared program types... */
-program_declaration_c null_symbol3(NULL,NULL,NULL);
-symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
+symtable_c<program_declaration_c *> program_type_symtable;
 
 /* A symbol table with all user declared type definitions... */
 /* Note that function block types and program types have their
@@ -121,8 +119,7 @@ symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
  *
  * The symbol_c * associated to the value will point to the data type declaration.
  */
-symbol_c null_symbol4;
-symtable_c<symbol_c *, &null_symbol4> type_symtable;
+symtable_c<symbol_c *> type_symtable;
 
 
 /***********************************************************************/

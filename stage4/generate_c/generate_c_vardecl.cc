@@ -144,13 +144,13 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
     }
     
     void *visit(identifier_c *type_name) {
-      symbol_c *type_decl;
+      type_symtable_t::iterator iter = type_symtable.end();
       switch (current_mode) {
         case arraysize_am:
           /* look up the type declaration... */
-          type_decl = type_symtable.find_value(type_name);
-          if (type_decl == type_symtable.end_value())   ERROR;  // Type declaration not found!!
-          type_decl->accept(*this);
+          iter = type_symtable.find(type_name);
+          if (iter == type_symtable.end())   ERROR;  // Type declaration not found!!
+          iter->second->accept(*this);  // iter->second is a type_decl
           break;
         default:
           print_token(type_name);
@@ -557,15 +557,14 @@ class generate_c_structure_initialization_c: public generate_c_base_and_typeid_c
     }
 
     void *visit(identifier_c *type_name) {
-      symbol_c *type_decl;
+      type_symtable_t::iterator iter = type_symtable.end();
       switch (current_mode) {
         case initdefault_sm:
           /* look up the type declaration... */
-          type_decl = type_symtable.find_value(type_name);
-          if (type_decl == type_symtable.end_value())
-            /* Type declaration not found!! */
-            ERROR;
-          type_decl->accept(*this);
+          iter = type_symtable.find(type_name);
+          if (iter == type_symtable.end())
+            ERROR; // Type declaration not found!!
+          iter->second->accept(*this); // iter->second is a type_decl
           break;
         default:
           print_token(type_name);
@@ -575,15 +574,14 @@ class generate_c_structure_initialization_c: public generate_c_base_and_typeid_c
     }
     
     void *visit(derived_datatype_identifier_c *type_name) {
-      symbol_c *type_decl;
+      type_symtable_t::iterator iter = type_symtable.end();
       switch (current_mode) {
         case initdefault_sm:
           /* look up the type declaration... */
-          type_decl = type_symtable.find_value(type_name);
-          if (type_decl == type_symtable.end_value())
-            /* Type declaration not found!! */
-            ERROR;
-          type_decl->accept(*this);
+          iter = type_symtable.find(type_name);
+          if (iter == type_symtable.end())
+            ERROR; // Type declaration not found!!
+          iter->second->accept(*this); // iter->second is a type_decl
           break;
         default:
           print_token(type_name);
@@ -2523,11 +2521,9 @@ void *visit(program_configuration_list_c *symbol) {
 private:
   /* a helper function to the program_configuration_c visitor... */
   void program_constructor_call(program_configuration_c *symbol) {
-  program_declaration_c *p_decl = program_type_symtable.find_value(symbol->program_type_name);
-
-  if (p_decl == program_type_symtable.end_value())
-    /* should never occur. The program being called MUST be in the symtable... */
-    ERROR;
+  program_type_symtable_t::iterator iter = program_type_symtable.find(symbol->program_type_name);
+  if (iter == program_type_symtable.end()) ERROR; // The program being called MUST be in the symtable.
+  program_declaration_c *p_decl = iter->second;
 
   symbol->program_name->accept(*this);
   s4o.print("(");

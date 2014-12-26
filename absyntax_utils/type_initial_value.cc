@@ -117,15 +117,15 @@ void *type_initial_value_c::handle_type_spec(symbol_c *base_type_name, symbol_c 
 
 void *type_initial_value_c::handle_type_name(symbol_c *type_name) {
   /* look up the type declaration... */
-  symbol_c *type_decl = type_symtable.find_value(type_name);
+  type_symtable_t::iterator iter = type_symtable.find(type_name);
     /* Type declaration not found!! */
     /* NOTE: Variables declared out of function block 'data types',for eg:  VAR  timer: TON; END_VAR
      * do not have a default value, so (TON) will never be found in the type symbol table. This means 
      * we cannot simply consider this an error and abort, but must rather return a NULL.
      */
-  if (type_decl == type_symtable.end_value())   return NULL;
+  if (iter == type_symtable.end())   return NULL;
 
-  return type_decl->accept(*this);
+  return iter->second->accept(*this);  // iter->second is the type_decl
 }
 
 /* visitor for identifier_c should no longer be necessary. All references to derived datatypes are now stored in then          */

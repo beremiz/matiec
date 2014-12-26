@@ -52,8 +52,7 @@
 
 
 class   find_forward_dependencies_c;
-extern  symbol_c remove_forward_dependencies_c_null_symbol;
-typedef symtable_c<symbol_c *, &remove_forward_dependencies_c_null_symbol> identifiers_symbtable_t;
+typedef symtable_c<symbol_c *> identifiers_symbtable_t;
 
 
 

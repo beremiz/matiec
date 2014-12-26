@@ -108,7 +108,7 @@ class find_forward_dependencies_c: public search_visitor_c {
   /*******************************************/
   // return NULL if the symbol is already in the declared_identifiers symbol table, otherwise return the missing symbol!
   void *visit(            poutype_identifier_c *symbol)
-    {if (declared_identifiers->find_value(symbol) != declared_identifiers->end_value()) return NULL; else return symbol;}
+    {if (declared_identifiers->find(symbol) != declared_identifiers->end()) return NULL; else return symbol;}
 };   /* class find_forward_dependencies_c */
 
 
@@ -194,7 +194,7 @@ void *remove_forward_dependencies_c::handle_library_symbol(symbol_c *symbol, sym
   if ((search2 != NULL) && (search2->accept(*find_forward_dependencies) != NULL)) return NULL; // A forward depency has not yet been satisfied. Wait for a later iteration to try again!
   if ((search3 != NULL) && (search3->accept(*find_forward_dependencies) != NULL)) return NULL; // A forward depency has not yet been satisfied. Wait for a later iteration to try again!
   /* no forward dependencies found => insert into new AST, and add to the 'defined identifiers' and 'inserted symbol' lists */
-  if (declared_identifiers.find_value(name) == declared_identifiers.end_value())
+  if (declared_identifiers.find(name) == declared_identifiers.end())
       declared_identifiers.insert(name, NULL);  // only add if not yet in the symbol table (an overloaded version of this same POU could have been inderted previously!)
   inserted_symbols.insert(symbol);
   new_tree->add_element(current_code_generation_pragma);  

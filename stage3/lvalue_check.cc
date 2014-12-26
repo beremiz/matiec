@@ -132,8 +132,9 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 	 *       So, as soon as we find one record/structure element that is not a FB, no other record/structure element
 	 *       will be of FB type, which means we can quit this check!
 	 */
-	function_block_declaration_c *fb_decl = function_block_type_symtable.find_value(basetype_id);
-	if (function_block_type_symtable.end_value() == fb_decl) return;
+	function_block_type_symtable_t::iterator iter = function_block_type_symtable.find(basetype_id);
+	if (function_block_type_symtable.end() == iter) return;
+	function_block_declaration_c *fb_decl = iter->second;
 
 	while (NULL != (struct_elem = decompose_lvalue.get_next())) {
 		search_var_instance_decl_c   fb_search_var_instance_decl(fb_decl);
@@ -146,8 +147,10 @@ void lvalue_check_c::check_assignment_to_output(symbol_c *lvalue) {
 		type_decl   = fb_search_var_instance_decl.get_decl(struct_elem);
 		basetype_id = search_base_type_c::get_basetype_id(type_decl);
 		if (NULL == basetype_id) return; /* same comment as above... */
-		fb_decl = function_block_type_symtable.find_value(basetype_id);
-		if (function_block_type_symtable.end_value() == fb_decl) return; /* same comment as above... */
+
+		iter = function_block_type_symtable.find(basetype_id);
+		if (function_block_type_symtable.end() == iter) return; /* same comment as above... */
+		fb_decl = iter->second;  
 	}
 }
 

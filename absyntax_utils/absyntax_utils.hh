@@ -61,12 +61,12 @@ typedef dsymtable_c<function_declaration_c *, &null_symbol1> function_symtable_t
 extern function_symtable_t function_symtable;
 
 /* A symbol table with all globally declared functions block types... */
-extern function_block_declaration_c null_symbol2;
-extern symtable_c<function_block_declaration_c *, &null_symbol2> function_block_type_symtable;
+typedef symtable_c<function_block_declaration_c *> function_block_type_symtable_t;
+extern  function_block_type_symtable_t function_block_type_symtable;
 
 /* A symbol table with all globally declared program types... */
-extern program_declaration_c null_symbol3;
-extern symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
+typedef symtable_c<program_declaration_c *> program_type_symtable_t;
+extern  program_type_symtable_t program_type_symtable;
 
 /* A symbol table with all user declared type definitions... */
 /* Note that function block types and program types have their
@@ -74,8 +74,8 @@ extern symtable_c<program_declaration_c *, &null_symbol3> program_type_symtable;
  *
  * The symbol_c * associated to the value will point to the data type declaration.
  */
-extern symbol_c null_symbol4;
-extern symtable_c<symbol_c *, &null_symbol4> type_symtable;
+typedef symtable_c<symbol_c *> type_symtable_t;
+extern  type_symtable_t type_symtable;
 
 
 /***********************************************************************/

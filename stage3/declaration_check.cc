@@ -178,11 +178,11 @@ class check_extern_c: public iterator_visitor_c {
      * Note too that we must also check the datatypes of external and global variables!! 
      */
     void *visit(fb_spec_init_c *symbol) {
-      symbol_c *fb_decl = function_block_type_symtable.find_value(symbol->function_block_type_name);
+      function_block_type_symtable_t::iterator iter = function_block_type_symtable.find(symbol->function_block_type_name);
       /* stage1_2 guarantees that we are sure to find a declaration in FB or Program symtable. */
-      if (fb_decl == function_block_type_symtable.end_value())
+      if (iter == function_block_type_symtable.end())
         ERROR;
-      fb_decl->accept(*this);
+      iter->second->accept(*this); // iter->second is a fb_decl
       return NULL;
     }
     
@@ -309,12 +309,18 @@ void *declaration_check_c::visit(resource_declaration_c *symbol) {
 
 /*  PROGRAM [RETAIN | NON_RETAIN] program_name [WITH task_name] ':' program_type_name ['(' prog_conf_elements ')'] */
 void *declaration_check_c::visit(program_configuration_c *symbol) {
-  symbol_c *p_decl = program_type_symtable.find_value(symbol->program_type_name);
-  if (p_decl == program_type_symtable.end_value())
-    p_decl = function_block_type_symtable.find_value(symbol->program_type_name);
-  if (p_decl == function_block_type_symtable.end_value())
-    ERROR;  // Should never occur! stage1_2 guarantees that we are sure to find a declaration in FB or Program symtable.
+  symbol_c *p_decl = NULL;
+  program_type_symtable_t       ::iterator iter_p = program_type_symtable       .find(symbol->program_type_name);
+  function_block_type_symtable_t::iterator iter_f = function_block_type_symtable.find(symbol->program_type_name);
+
+  if  (iter_p != program_type_symtable       .end())  p_decl = iter_p->second;
+  if  (iter_f != function_block_type_symtable.end())  p_decl = iter_f->second;
   
+  if ((iter_f != function_block_type_symtable.end()) && (iter_p != program_type_symtable.end())) 
+    ERROR;  // Should never occur! stage1_2 guarantees that the same identifier cannot be re-used.
+  if ((iter_f == function_block_type_symtable.end()) && (iter_p == program_type_symtable.end())) 
+    ERROR;  // Should never occur! stage1_2 guarantees that we are sure to find a declaration in FB or Program symtable.
+
   check_extern_c check_extern(current_pou_decl, current_resource_decl);
   p_decl->accept(check_extern);
   return NULL;

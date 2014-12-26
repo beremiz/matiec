@@ -135,15 +135,6 @@ void rst_pop_state(void) {pop_state__ = 0;}
 /* NOTE: only accessed indirectly by the lexical parser (flex)
  *       through the function get_identifier_token()
  */
-/* NOTE: BOGUS_TOKEN_ID is defined in the bison generated file iec_bison.hh.
- *       We need this constant defined before we can declare the symbol tables.
- *       However, we cannot #include "iec_bison.hh" in this file (stage1_2_priv.hh) directly
- *       because of the way bison ver. 3.2 is copying all declarations in the prologue
- *       of iec.y to the iec_bison.hh file (including an #include stage1_2_priv.hh).
- *       So, if we were to include "iec_bison.hh" here, we would get a circular include.
- *       All this means that whoever includes this file (stage1_2_priv.hh) will need
- *       to take care to first inlcude iec_bison.hh !!
- */ 
 /* A symbol table to store all the library elements */
 /* e.g.: <function_name , function_decl>
  *       <fb_name , fb_decl>
@@ -151,17 +142,17 @@ void rst_pop_state(void) {pop_state__ = 0;}
  *       <program_name , program_decl>
  *       <configuration_name , configuration_decl>
  */
-/* static */ symtable_c<int, BOGUS_TOKEN_ID> library_element_symtable;
+/* static */ library_element_symtable_t library_element_symtable;
 
 /* A symbol table to store the declared variables of
  * the function currently being parsed...
  */
-/* static */ symtable_c<int, BOGUS_TOKEN_ID> variable_name_symtable;
+/* static */ variable_name_symtable_t   variable_name_symtable;
 
 /* A symbol table to store the declared direct variables of
  * the function currently being parsed...
  */
-/* static */ symtable_c<int, BOGUS_TOKEN_ID> direct_variable_symtable;
+/* static */ direct_variable_symtable_t direct_variable_symtable;
 
 /* Function only called from within flex!
  *
@@ -173,12 +164,16 @@ void rst_pop_state(void) {pop_state__ = 0;}
  */
 int get_identifier_token(const char *identifier_str) {
 //  std::cout << "get_identifier_token(" << identifier_str << "): \n";
-  int token_id;
+  variable_name_symtable_t  ::iterator iter1;
+  library_element_symtable_t::iterator iter2;
 
-  if ((token_id = variable_name_symtable.find_value(identifier_str)) == variable_name_symtable.end_value())
-    if ((token_id = library_element_symtable.find_value(identifier_str)) == library_element_symtable.end_value())
-      return identifier_token;
-  return token_id;
+  if ((iter1 = variable_name_symtable.find(identifier_str)) != variable_name_symtable.end())
+    return iter1->second;
+    
+  if ((iter2 = library_element_symtable.find(identifier_str)) != library_element_symtable.end())
+    return iter2->second;
+  
+  return identifier_token;
 }
 
 /* Function only called from within flex!
@@ -188,11 +183,12 @@ int get_identifier_token(const char *identifier_str) {
  * symbol found.
  */
 int get_direct_variable_token(const char *direct_variable_str) {
-  int token_id;
+  direct_variable_symtable_t::iterator iter;
 
-  if ((token_id = direct_variable_symtable.find_value(direct_variable_str)) == direct_variable_symtable.end_value())
-    return direct_variable_token;
-  return token_id;
+  if ((iter = direct_variable_symtable.find(direct_variable_str)) != direct_variable_symtable.end())
+    return iter->second;
+
+  return direct_variable_token;
 }
 
 /************************/

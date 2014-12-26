@@ -8712,8 +8712,8 @@ static int parse_files(const char *libfilename, const char *filename) {
 
   /* if by any chance the library is not complete, we now add the missing reserved keywords to the list!!!  */
   for(int i = 0; standard_function_block_names[i] != NULL; i++)
-    if (library_element_symtable.find_value(standard_function_block_names[i]) ==
-        library_element_symtable.end_value())
+    if (library_element_symtable.find(standard_function_block_names[i]) ==
+        library_element_symtable.end())
       library_element_symtable.insert(standard_function_block_names[i], standard_function_block_name_token);
 
   /* now parse the input file... */
