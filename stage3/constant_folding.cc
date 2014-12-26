@@ -1045,7 +1045,7 @@ void *constant_folding_c::handle_var_decl(symbol_c *var_list, bool fixed_init_va
 void *constant_folding_c::handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl) {
   type_decl->accept(*this);  // Do constant folding of the initial value, and literals in subranges! (we will probably be doing this multiple times for the same init value, but this is safe as the cvalue is idem-potent)
   symbol_c *init_value = type_initial_value_c::get(type_decl);  
-  if (NULL == init_value)   {debug_c::print(type_decl); return NULL;} // this is probably a FB datatype, for which no initial value exists! Do nothing and return.
+  if (NULL == init_value)   {return NULL;} // this is probably a FB datatype, for which no initial value exists! Do nothing and return.
   init_value->accept(*this); // necessary when handling default initial values, that were not constant folded in the call type_decl->accept(*this)
   
   list_c *list = dynamic_cast<list_c *>(var_list);
@@ -1328,7 +1328,7 @@ void *constant_folding_c::visit(function_block_declaration_c *symbol) {
 
 /*  VAR_TEMP temp_var_decl_list END_VAR */
 // SYM_REF1(temp_var_decls_c, var_decl_list)
-void *constant_folding_c::visit(temp_var_decls_c *symbol) {debug_c::print(symbol); return handle_var_decl(symbol->var_decl_list, true);}
+void *constant_folding_c::visit(temp_var_decls_c *symbol) {return handle_var_decl(symbol->var_decl_list, true);}
 
 /* intermediate helper symbol for temp_var_decls */
 // SYM_LIST(temp_var_decls_list_c)
@@ -1336,7 +1336,7 @@ void *constant_folding_c::visit(temp_var_decls_c *symbol) {debug_c::print(symbol
 /*  VAR NON_RETAIN var_init_decl_list END_VAR */
 // SYM_REF1(non_retentive_var_decls_c, var_decl_list)
 // NOTE: non_retentive_var_decls_c is only used inside FBs and Programs, so it is safe to call with fixed_init_value_ = false 
-void *constant_folding_c::visit(non_retentive_var_decls_c *symbol) {debug_c::print(symbol); return handle_var_decl(symbol->var_decl_list, false);}
+void *constant_folding_c::visit(non_retentive_var_decls_c *symbol) {return handle_var_decl(symbol->var_decl_list, false);}
 
 
 /**********************/
