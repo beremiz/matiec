@@ -47,7 +47,7 @@ symtable_c<value_type>::symtable_c(void) {inner_scope = NULL;}
 
  /* clear all entries... */
 template<typename value_type>
-void symtable_c<value_type>::reset(void) {
+void symtable_c<value_type>::clear(void) {
   _base.clear();
 }
 
@@ -142,25 +142,47 @@ void symtable_c<value_type>::insert(const symbol_c *symbol, value_t new_value) {
 
 
 template<typename value_type>
-typename symtable_c<value_type>::iterator symtable_c<value_type>::end(void) {return _base.end();}
+int symtable_c<value_type>::count(const       char *identifier_str) {return _base.count(identifier_str)+((inner_scope == NULL)?0:inner_scope->count(identifier_str));}
+template<typename value_type>
+int symtable_c<value_type>::count(const std::string identifier_str) {return _base.count(identifier_str)+((inner_scope == NULL)?0:inner_scope->count(identifier_str));}
+
+
+// in the operator[] we delegate to find(), since that method will also search in the inner scopes!
+template<typename value_type>
+typename symtable_c<value_type>::value_t symtable_c<value_type>::operator[] (const       char *identifier_str) {return find(identifier_str)->second;}
+template<typename value_type>
+typename symtable_c<value_type>::value_t symtable_c<value_type>::operator[] (const std::string identifier_str) {return find(identifier_str)->second;}
+
+
+template<typename value_type>
+typename symtable_c<value_type>::iterator symtable_c<value_type>::end  (void) {return _base.end  ();}
+
+template<typename value_type>
+typename symtable_c<value_type>::iterator symtable_c<value_type>::begin(void) {return _base.begin();}
 
 /* returns end() if not found! */
 template<typename value_type>
-typename symtable_c<value_type>::iterator symtable_c<value_type>::find(const char *identifier_str) {
-  if (inner_scope != NULL) {
-    iterator i = inner_scope->find(identifier_str);
-    if (i != inner_scope->end())  // NOTE: must use the end() value of the inner scope!
-      /* found in the lower level */
-      return i;
-  }
-
+typename symtable_c<value_type>::iterator symtable_c<value_type>::find(const       char *identifier_str) {
+  iterator i;
+  if ((inner_scope != NULL) && ((i = inner_scope->find(identifier_str)) != inner_scope->end()))  // NOTE: must use the end() value of the inner scope!
+      return i;  // found in the lower level
   /* if no lower level, or not found in lower level... */
   return _base.find(identifier_str);
 }
 
 
 template<typename value_type>
-typename symtable_c<value_type>::iterator symtable_c<value_type>::find(const symbol_c *symbol) {
+typename symtable_c<value_type>::iterator symtable_c<value_type>::find(const std::string identifier_str) {
+  iterator i;
+  if ((inner_scope != NULL) && ((i = inner_scope->find(identifier_str)) != inner_scope->end()))  // NOTE: must use the end() value of the inner scope!
+      return i;  // found in the lower level
+  /* if no lower level, or not found in lower level... */
+  return _base.find(identifier_str);
+}
+
+
+template<typename value_type>
+typename symtable_c<value_type>::iterator symtable_c<value_type>::find(const   symbol_c *symbol) {
   const token_c *name = dynamic_cast<const token_c *>(symbol);
   if (name == NULL)
     ERROR;

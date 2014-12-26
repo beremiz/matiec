@@ -1390,10 +1390,12 @@ END_RESOURCE
 // SYM_REF4(resource_declaration_c, resource_name, resource_type_name, global_var_declarations, resource_declaration, 
 //          enumvalue_symtable_t enumvalue_symtable; localvar_symbmap_t localvar_symbmap; localvar_symbvec_t localvar_symbvec;)
 void *constant_folding_c::visit(resource_declaration_c *symbol) {
-	values.clear(); /* Clear global map */
+	values.push(); /* Create inner scope */
 	/* Add initial value of all declared variables into Values map. */
 	function_pou_ = false;
-	return iterator_visitor_c::visit(symbol); // let the base iterator class handle the rest (basically iterate through the whole configuration and do the constant folding!
+	iterator_visitor_c::visit(symbol); // let the base iterator class handle the rest (basically iterate through the whole configuration and do the constant folding!
+	values.pop(); /* Delete inner scope */
+	return NULL;
 }
 
 

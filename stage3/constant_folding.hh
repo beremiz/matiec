@@ -41,6 +41,7 @@
 
 #include <vector>
 #include "../absyntax_utils/absyntax_utils.hh"
+#include "../util/symtable.hh"
 
 
 
@@ -68,7 +69,7 @@ class constant_folding_c : public iterator_visitor_c {
     virtual ~constant_folding_c(void);
     int get_error_count();
     int handle_var_extern_global_pair(symbol_c *extern_var_name, symbol_c *extern_var_decl, symbol_c *global_var_name, symbol_c *global_var_decl);
-    typedef std::map <std::string, const_value_c> map_values_t;
+    typedef symtable_c<const_value_c> map_values_t;
   private:
     map_values_t values;
     void *handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl);
