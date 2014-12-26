@@ -44,7 +44,7 @@
 
 
 
-template<typename value_type, value_type null_value> class dsymtable_c {
+template<typename value_type> class dsymtable_c {
   /* Case insensitive string compare copied from
    * "The C++ Programming Language" - 3rd Edition
    * by Bjarne Stroustrup, ISBN 0201889544.
@@ -92,11 +92,6 @@ template<typename value_type, value_type null_value> class dsymtable_c {
     int count(const char *identifier_str)    {return _base.count(identifier_str);}
     int count(const symbol_c *symbol)        {return count(symbol_to_string(symbol));}
     
-    /* Search for an entry. Will return end_value() if not found */
-    value_t end_value(void)                          {return null_value;}
-    value_t find_value(const char *identifier_str);
-    value_t find_value(const symbol_c *symbol)       {return find_value(symbol_to_string(symbol));}
-
     /* Search for an entry associated with identifier_str. Will return end() if not found */
     iterator find(const char *identifier_str)        {return _base.find(identifier_str);}
     iterator find(const symbol_c *symbol)            {return find(symbol_to_string(symbol));}

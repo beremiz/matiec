@@ -104,8 +104,7 @@ int compare_identifiers(symbol_c *ident1, symbol_c *ident2) {
 
 
 /* A symbol table with all globally declared functions... */
-function_declaration_c null_symbol1(NULL,NULL,NULL,NULL);
-dsymtable_c<function_declaration_c *, &null_symbol1> function_symtable;
+dsymtable_c<function_declaration_c *> function_symtable;
 
 /* A symbol table with all globally declared functions block types... */
 symtable_c<function_block_declaration_c *> function_block_type_symtable;

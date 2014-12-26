@@ -90,8 +90,7 @@ static int debug = 0;
  */
 /* NOTE: we do not store any NULL values in this symbol table, so we can safely use NULL and the null value. */
 
-symbol_c null_enumvalue_symbol; /* cannot be static, so it may be used in the template!! */
-typedef dsymtable_c<symbol_c *, &null_enumvalue_symbol> enumerated_value_symtable_t;
+typedef dsymtable_c<symbol_c *> enumerated_value_symtable_t;
 static enumerated_value_symtable_t global_enumerated_value_symtable;
  
  
@@ -1052,8 +1051,8 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 				enumerated_type = symbol->type; 
 	}
 	else {
-		symbol_c *global_enumerated_type = global_enumerated_value_symtable.find_value  (symbol->value);
-		symbol_c * local_enumerated_type =  local_enumerated_value_symtable.find_value  (symbol->value);
+		symbol_c *global_enumerated_type = global_enumerated_value_symtable.find (symbol->value)->second;
+		symbol_c * local_enumerated_type =  local_enumerated_value_symtable.find (symbol->value)->second;
 		int       global_multiplicity    = global_enumerated_value_symtable.count(symbol->value);
 		int        local_multiplicity    =  local_enumerated_value_symtable.count(symbol->value);
 

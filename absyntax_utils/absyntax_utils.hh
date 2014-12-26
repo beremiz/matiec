@@ -56,8 +56,7 @@
 int compare_identifiers(symbol_c *ident1, symbol_c *ident2);
 
 /* A symbol table with all globally declared functions... */
-extern function_declaration_c null_symbol1;
-typedef dsymtable_c<function_declaration_c *, &null_symbol1> function_symtable_t;
+typedef dsymtable_c<function_declaration_c *> function_symtable_t;
 extern function_symtable_t function_symtable;
 
 /* A symbol table with all globally declared functions block types... */
