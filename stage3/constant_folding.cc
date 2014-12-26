@@ -235,9 +235,6 @@
 		}\
 }
 
-typedef std::map <std::string, const_value_c> map_values_t;
-
-static map_values_t values;
 
 
 
@@ -726,9 +723,9 @@ static void *handle_pow(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2) {
 	return NULL;
 }
 
-static map_values_t inner_left_join_values(map_values_t m1, map_values_t m2) {
-	map_values_t::const_iterator itr;
-	map_values_t ret;
+static constant_folding_c::map_values_t inner_left_join_values(constant_folding_c::map_values_t m1, constant_folding_c::map_values_t m2) {
+	constant_folding_c::map_values_t::const_iterator itr;
+	constant_folding_c::map_values_t ret;
 
 	itr = m1.begin();
 	for ( ; itr != m1.end(); ++itr) {
@@ -1171,7 +1168,7 @@ void *constant_folding_c::visit(external_var_declarations_c *symbol) {return han
 /*  global_var_name ':' (simple_specification|subrange_specification|enumerated_specification|array_specification|prev_declared_structure_type_name|function_block_type_name */
 //SYM_REF2(external_declaration_c, global_var_name, specification)
 void *constant_folding_c::visit(external_declaration_c *symbol) {
-  // Note that specification->const_value will have been set by handle_var_extern_global_pair, which is called from declaration_check_c
+  // Note that specification->const_value will have been set by handle_var_extern_global_pair(), which is called from declaration_check_c
   symbol->global_var_name->const_value = symbol->specification->const_value;
   if (fixed_init_value_) {
     std::string varName = get_var_name_c::get_name(symbol->global_var_name)->value;
@@ -1182,33 +1179,70 @@ void *constant_folding_c::visit(external_declaration_c *symbol) {
   return NULL;
 }
 
-/* Visitors related to GLOBAL variables are not really needed, 
- * as they are already handled by handle_var_extern_global_pair, which is called from declaration_check_c 
- * 
+/* NOTE that the constant folding of GLOBAL variables is already handled by handle_var_extern_global_pair, which 
+ * is called from declaration_check_c,
  * This is done like this because we need to know the pairing of external<->global variables to get the cvalue
  * from the global variable. Since the external<->global pairing information is available in the declaration_check_c,
  * we have that class call the constant_folding_c::handle_var_extern_global_pair(), which will actually do the 
  * constant folding of the global and the external variable declarations!
  */
+/* NOTE: The constant propagation portion of this algorithm must still be done here!!
+ * Even though the constant folding of GLOBAL variables are already handled by handle_var_extern_global_pair(),
+ * we must still visit them here, since when doing constant propagation of a Configuration or a Resource we need the
+ * values of constant variables to be placed in the values[] map, as these same variables may be used to declare
+ * arrays of a variable size
+ *    VAR_GLOBAL CONSTANT max     : INT := 42;             END_VAR
+ *    VAR_GLOBAL          array_v : ARRAY [1..max] of INT; END_VAR  <---- NOTE the use of 'max' in the subrange!
+ */
 /*| VAR_GLOBAL [CONSTANT|RETAIN] global_var_decl_list END_VAR */
 /* option -> may be NULL ! */
 // SYM_REF2(global_var_declarations_c, option, global_var_decl_list)
+/* Note that calling handle_var_decl() will result in doing constant folding of literals (of datatype initial values)
+ * that were already constant folded by the method handle_var_extern_global_pair()
+ * Nevertheless, since constant folding is idem-potent, it is simpler to just call handle_var_decl() instead
+ * of writing some code specific for this situation!
+ */
+void *constant_folding_c::visit(global_var_declarations_c *symbol) {return handle_var_decl(symbol->global_var_decl_list, is_constant(symbol->option));}
+
+
 /* helper symbol for global_var_declarations */
 /*| global_var_decl_list global_var_decl ';' */
 // SYM_LIST(global_var_decl_list_c)
+// void *constant_folding_c::visit(global_var_decl_list_c *symbol) {} // Not needed: we inherit from iterator_c
+
 /*| global_var_spec ':' [located_var_spec_init|function_block_type_name] */
 /* type_specification ->may be NULL ! */
 //SYM_REF2(global_var_decl_c, global_var_spec, type_specification)
+void *constant_folding_c::visit(global_var_decl_c *symbol) {
+  /* global_var_spec may be either a global_var_spec_c or a global_var_list_c.
+   * Since we already have a nice method that handles var lists (handle_var_list_decl() )
+   * if it is a global_var_spec_c we will create a temporary list so we can call that method!
+   */
+  global_var_spec_c *var_spec = dynamic_cast<global_var_spec_c *>(symbol->global_var_spec);
+  if (NULL == var_spec) {
+    // global_var_spec is a global_var_list_c
+    return handle_var_list_decl(symbol->global_var_spec, symbol->type_specification);
+  } else {
+    global_var_list_c var_list;
+    var_list.add_element(var_spec->global_var_name);
+    return handle_var_list_decl(&var_list, symbol->type_specification);
+  }
+}
+
+
 /*| global_var_name location */
-//SYM_REF2(global_var_spec_c, global_var_name, location)
+//SYM_REF2(global_var_spec_c, global_var_name, location)              // Not needed!
+
 /*  AT direct_variable */
-//SYM_REF1(location_c, direct_variable)
+//SYM_REF1(location_c, direct_variable)                               // Not needed!
+
 /*| global_var_list ',' global_var_name */
-//SYM_LIST(global_var_list_c)
+//SYM_LIST(global_var_list_c)                                         // Not needed!
 
 
 #if 0  
 // TODO
+// We do not do constant folding of strings yet, so there is no need to implement this now!
 /*  var1_list ':' single_byte_string_spec */
 SYM_REF2(single_byte_string_var_declaration_c, var1_list, single_byte_string_spec)
 /*  STRING ['[' integer ']'] [ASSIGN single_byte_character_string] */
@@ -1318,6 +1352,93 @@ void *constant_folding_c::visit(program_declaration_c *symbol) {
 	symbol->function_block_body->accept(*this);
 	return NULL;
 }
+
+
+/********************************/
+/* B 1.7 Configuration elements */
+/********************************/
+
+/*
+CONFIGURATION configuration_name
+   optional_global_var_declarations
+   (resource_declaration_list | single_resource_declaration)
+   optional_access_declarations
+   optional_instance_specific_initializations
+END_CONFIGURATION
+*/
+/* enumvalue_symtable is filled in by enum_declaration_check_c, during stage3 semantic verification, with a list of all enumerated constants declared inside this POU */
+// SYM_REF5(configuration_declaration_c, configuration_name, global_var_declarations, resource_declarations, access_declarations, instance_specific_initializations, 
+//          enumvalue_symtable_t enumvalue_symtable; localvar_symbmap_t localvar_symbmap; localvar_symbvec_t localvar_symbvec;)
+void *constant_folding_c::visit(configuration_declaration_c *symbol) {
+	values.clear(); /* Clear global map */
+	/* Add initial value of all declared variables into Values map. */
+	function_pou_ = false;
+	return iterator_visitor_c::visit(symbol); // let the base iterator class handle the rest (basically iterate through the whole configuration and do the constant folding!
+}
+
+
+/* helper symbol for configuration_declaration */
+// SYM_LIST(resource_declaration_list_c)           // Not needed: we inherit from iterator_c
+
+/*
+RESOURCE resource_name ON resource_type_name
+   optional_global_var_declarations
+   single_resource_declaration
+END_RESOURCE
+*/
+/* enumvalue_symtable is filled in by enum_declaration_check_c, during stage3 semantic verification, with a list of all enumerated constants declared inside this POU */
+// SYM_REF4(resource_declaration_c, resource_name, resource_type_name, global_var_declarations, resource_declaration, 
+//          enumvalue_symtable_t enumvalue_symtable; localvar_symbmap_t localvar_symbmap; localvar_symbvec_t localvar_symbvec;)
+void *constant_folding_c::visit(resource_declaration_c *symbol) {
+	values.clear(); /* Clear global map */
+	/* Add initial value of all declared variables into Values map. */
+	function_pou_ = false;
+	return iterator_visitor_c::visit(symbol); // let the base iterator class handle the rest (basically iterate through the whole configuration and do the constant folding!
+}
+
+
+
+/* task_configuration_list program_configuration_list */
+// SYM_REF2(single_resource_declaration_c, task_configuration_list, program_configuration_list)
+/* helper symbol for single_resource_declaration */
+// SYM_LIST(task_configuration_list_c)
+/* helper symbol for single_resource_declaration */
+// SYM_LIST(program_configuration_list_c)
+/* helper symbol for: (access_path, instance_specific_init) */
+// SYM_LIST(any_fb_name_list_c)
+/*  [resource_name '.'] global_var_name ['.' structure_element_name] */
+// SYM_REF3(global_var_reference_c, resource_name, global_var_name, structure_element_name)
+/*  prev_declared_program_name '.' symbolic_variable */
+// SYM_REF2(program_output_reference_c, program_name, symbolic_variable)
+/*  TASK task_name task_initialization */
+// SYM_REF2(task_configuration_c, task_name, task_initialization)
+/*  '(' [SINGLE ASSIGN data_source ','] [INTERVAL ASSIGN data_source ','] PRIORITY ASSIGN integer ')' */
+// SYM_REF3(task_initialization_c, single_data_source, interval_data_source, priority_data_source)
+/*  PROGRAM [RETAIN | NON_RETAIN] program_name [WITH task_name] ':' program_type_name ['(' prog_conf_elements ')'] */
+/* NOTE: The parameter 'called_prog_declaration'is used to pass data between stage 3 and stage4 */
+// SYM_REF5(program_configuration_c, retain_option, program_name, task_name, program_type_name, prog_conf_elements,
+//          symbol_c *called_prog_declaration;)
+/* prog_conf_elements ',' prog_conf_element */
+// SYM_LIST(prog_conf_elements_c)
+/*  fb_name WITH task_name */
+// SYM_REF2(fb_task_c, fb_name, task_name)
+/*  any_symbolic_variable ASSIGN prog_data_source */
+// SYM_REF2(prog_cnxn_assign_c, symbolic_variable, prog_data_source)
+/* any_symbolic_variable SENDTO data_sink */
+// SYM_REF2(prog_cnxn_sendto_c, symbolic_variable, data_sink)
+/* VAR_CONFIG instance_specific_init_list END_VAR */
+// SYM_REF1(instance_specific_initializations_c, instance_specific_init_list)
+/* helper symbol for instance_specific_initializations */
+// SYM_LIST(instance_specific_init_list_c)
+/* resource_name '.' program_name '.' {fb_name '.'}
+    ((variable_name [location] ':' located_var_spec_init) | (fb_name ':' fb_initialization))
+*/
+// SYM_REF6(instance_specific_init_c, resource_name, program_name, any_fb_name_list, variable_name, location, initialization)
+/* helper symbol for instance_specific_init */
+/* function_block_type_name ':=' structure_initialization */
+// SYM_REF2(fb_initialization_c, function_block_type_name, structure_initialization)
+
+
 
 
 /****************************************/
