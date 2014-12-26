@@ -149,9 +149,9 @@ int symtable_c<value_type>::count(const std::string identifier_str) {return _bas
 
 // in the operator[] we delegate to find(), since that method will also search in the inner scopes!
 template<typename value_type>
-typename symtable_c<value_type>::value_t symtable_c<value_type>::operator[] (const       char *identifier_str) {return find(identifier_str)->second;}
+typename symtable_c<value_type>::value_t& symtable_c<value_type>::operator[] (const       char *identifier_str) {iterator i = find(identifier_str); return (i!=end())?i->second:_base[identifier_str];}
 template<typename value_type>
-typename symtable_c<value_type>::value_t symtable_c<value_type>::operator[] (const std::string identifier_str) {return find(identifier_str)->second;}
+typename symtable_c<value_type>::value_t& symtable_c<value_type>::operator[] (const std::string identifier_str) {iterator i = find(identifier_str); return (i!=end())?i->second:_base[identifier_str];}
 
 
 template<typename value_type>

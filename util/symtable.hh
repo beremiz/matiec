@@ -91,9 +91,9 @@ template<typename value_type> class symtable_c {
     void insert(const char *identifier_str, value_t value); // insert a new (string,value) pair. Give an error if string already in map associated to different value!
     void insert(const symbol_c *symbol, value_t value);     // insert a new (string,value) pair. Give an error if string already in map associated to different value!
 
-    value_t operator[](const       char *identifier_str);
-    value_t operator[](const std::string identifier_str);
- // value_t operator[](const   symbol_c *identifier    ); // not yet implemented
+    value_t& operator[](const       char *identifier_str);
+    value_t& operator[](const std::string identifier_str);
+ // value_t& operator[](const   symbol_c *identifier    ); // not yet implemented
    
     /* Since symtable_c does not allow duplicates in each level, count() will return
      *  - 0 : if not found in any level

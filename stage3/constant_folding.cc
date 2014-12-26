@@ -1060,8 +1060,7 @@ void *constant_folding_c::handle_var_list_decl(symbol_c *var_list, symbol_c *typ
     }
     list->elements[i]->const_value = init_value->const_value;
     if (fixed_init_value_) {
-      std::string varName = var_name->value;
-      values[varName] = init_value->const_value;
+      values[var_name->value] = init_value->const_value;
     }
   }
   return NULL;
@@ -1171,8 +1170,7 @@ void *constant_folding_c::visit(external_declaration_c *symbol) {
   // Note that specification->const_value will have been set by handle_var_extern_global_pair(), which is called from declaration_check_c
   symbol->global_var_name->const_value = symbol->specification->const_value;
   if (fixed_init_value_) {
-    std::string varName = get_var_name_c::get_name(symbol->global_var_name)->value;
-    values[varName] = symbol->specification->const_value;
+    values[get_var_name_c::get_name(symbol->global_var_name)->value] = symbol->specification->const_value;
   }
   // If the datatype specification is a subrange or array, do constant folding of all the literals in that type declaration... (ex: literals in array subrange limits)
   symbol->specification->accept(*this);  // should never get to change the const_value of the symbol->specification symbol (only its children!).
@@ -1722,8 +1720,7 @@ void *constant_folding_c::visit(assignment_statement_c *symbol) {
 	symbol->r_exp->accept(*this);
 	symbol->l_exp->accept(*this); // if the lvalue has an array, do contant folding of the array indexes!
 	symbol->l_exp->const_value = symbol->r_exp->const_value;
-	varName = get_var_name_c::get_name(symbol->l_exp)->value;
-	values[varName] = symbol->l_exp->const_value;
+	values[get_var_name_c::get_name(symbol->l_exp)->value] = symbol->l_exp->const_value;
 	return NULL;
 }
 
@@ -1762,13 +1759,11 @@ void *constant_folding_c::visit(if_statement_c *symbol) {
 void *constant_folding_c::visit(for_statement_c *symbol) {
 	map_values_t values_incoming;
 	map_values_t values_statement_result;
-	std::string varName;
 
 	values_incoming = values; /* save incoming status */
 	symbol->beg_expression->accept(*this);
 	symbol->end_expression->accept(*this);
-	varName =  get_var_name_c::get_name(symbol->control_variable)->value;
-	values[varName]._int64.status = const_value_c::cs_non_const;
+	values[get_var_name_c::get_name(symbol->control_variable)->value]._int64.status = const_value_c::cs_non_const;
 
 	/* Optimize dead code */
 	if (NULL != symbol->by_expression) {
