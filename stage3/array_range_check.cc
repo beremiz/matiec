@@ -232,6 +232,14 @@ void *array_range_check_c::visit(subrange_c *symbol) {
 		STAGE3_ERROR(0, symbol->lower_limit, symbol->lower_limit, "Subrange lower limit is not a constant value.");
 		// set dimension to largest possible value so we do not get any further related error messages.
 		dimension = std::numeric_limits< unsigned long long int >::max() - 1; // -1 because it will be incremented at the end of this function!! 
+		/* NOTE: Note that both the "subrange *** limit is not a constant value" error messages are only necessary due to an extension
+		 *       that matiec supports by allowing non-literals in subrange declarations (currently only subranges in array declarations).
+		 *         e.g.:  array_var: ARRAY [1..max] of INT;   <--- illegal according to IEC 61131-1 due to the 'max' non literal
+		 *       Matiec will allow the above syntax, as long as the 'max' variable can be determined to be constant throughout
+		 *       the program execution at runtime (and not only constant when program initiates) - for example, a VAR CONSTANT
+		 *       variable.
+		 *       These two checks will verify if we were able to fold the variable into a constant value, or not.
+		 */
 	} else {ERROR;}
 
 	/* correct value for dimension is actually ---> dimension = upper_limit - lower_limit + 1
