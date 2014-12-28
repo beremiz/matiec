@@ -121,9 +121,9 @@ class constant_folding_c : public iterator_visitor_c {
     /*********************/
     /* B 1.4 - Variables */
     /*********************/
-//     #if DO_CONSTANT_PROPAGATION__
+    #if DO_CONSTANT_PROPAGATION__
     void *visit(symbolic_variable_c *symbol);
-//     #endif // DO_CONSTANT_PROPAGATION__
+    #endif // DO_CONSTANT_PROPAGATION__
     void *visit(symbolic_constant_c *symbol);
                              
     /******************************************/
@@ -261,13 +261,12 @@ class constant_folding_c : public iterator_visitor_c {
     void *visit(   not_expression_c *symbol);
     //void *visit(function_invocation_c *symbol); /* TODO */
 
-    
+    #if DO_CONSTANT_PROPAGATION__
     /*********************************/
     /* B 3.2.1 Assignment Statements */
     /*********************************/
     void *visit(assignment_statement_c *symbol);
 
-    #if DO_CONSTANT_PROPAGATION__
     /********************************/
     /* B 3.2.3 Selection Statements */
     /********************************/
