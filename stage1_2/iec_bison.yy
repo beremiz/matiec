@@ -2776,11 +2776,26 @@ subrange_with_var:
   signed_integer DOTDOT signed_integer
 	{$$ = new subrange_c($1, $3, locloc(@$));}
 | any_identifier DOTDOT signed_integer
-	{$$ = new subrange_c(new symbolic_constant_c($1, locloc(@1)), $3, locloc(@$));}
+	{$$ = new subrange_c(new symbolic_constant_c($1, locloc(@1)), $3, locloc(@$));
+	 if (!runtime_options.nonliteral_in_array_size) {
+	   print_err_msg(locf(@1), locl(@1), "Use of variables in array size limits is not allowed in IEC 61131-3 (use -a option to activate support for this non-standard feature)."); 
+	   yynerrs++;
+	 }
+	}
 | signed_integer DOTDOT any_identifier
-	{$$ = new subrange_c($1, new symbolic_constant_c($3, locloc(@3)), locloc(@$));}
+	{$$ = new subrange_c($1, new symbolic_constant_c($3, locloc(@3)), locloc(@$));
+	 if (!runtime_options.nonliteral_in_array_size) {
+	   print_err_msg(locf(@3), locl(@3), "Use of variables in array size limits is not allowed in IEC 61131-3 (use -a option to activate support for this non-standard feature)."); 
+	   yynerrs++;
+	 }
+	}
 | any_identifier DOTDOT any_identifier
-	{$$ = new subrange_c(new symbolic_constant_c($1, locloc(@1)), new symbolic_constant_c($3, locloc(@3)), locloc(@$));}
+	{$$ = new subrange_c(new symbolic_constant_c($1, locloc(@1)), new symbolic_constant_c($3, locloc(@3)), locloc(@$));
+	 if (!runtime_options.nonliteral_in_array_size) {
+	   print_err_msg(locf(@$), locl(@$), "Use of variables in array size limits is not allowed in IEC 61131-3 (use -a option to activate support for this non-standard feature)."); 
+	   yynerrs++;
+	 }
+	}
 /* ERROR_CHECK_BEGIN */
 | signed_integer signed_integer
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "'..' missing between bounds in subrange definition."); yynerrs++;}
