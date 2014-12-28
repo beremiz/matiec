@@ -46,8 +46,9 @@
 
 class debug_c { 
   public:
-    static void print(symbol_c *symbol);
-    static void print(const char *str);
+    static void print(const_value_c  cvalue);
+    static void print(symbol_c      *symbol);
+    static void print(const char    *str);
 
     /* print the AST from this point downwards */
     static void print_ast(symbol_c *root_symbol);

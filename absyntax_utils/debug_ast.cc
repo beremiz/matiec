@@ -49,6 +49,30 @@
 
 
 
+static void dump_cvalue(const_value_c const_value) {
+  fprintf(stderr, "constv{");
+  if      (const_value._real64.is_valid   ()) fprintf(stderr, "%f",        const_value._real64.get());
+  else if (const_value._real64.is_overflow()) fprintf(stderr, "ov");
+  else if (const_value._real64.is_nonconst()) fprintf(stderr, "nc");
+  else                                        fprintf(stderr, "?");
+  fprintf(stderr, ", i=");
+  if      (const_value. _int64.is_valid   ()) fprintf(stderr, "%"PRId64"", const_value. _int64.get());
+  else if (const_value. _int64.is_overflow()) fprintf(stderr, "ov");
+  else if (const_value. _int64.is_nonconst()) fprintf(stderr, "nc");
+  else                                        fprintf(stderr, "?");
+  fprintf(stderr, ", u=");
+  if      (const_value._uint64.is_valid   ()) fprintf(stderr, "%"PRIu64"", const_value._uint64.get());
+  else if (const_value._uint64.is_overflow()) fprintf(stderr, "ov");
+  else if (const_value._uint64.is_nonconst()) fprintf(stderr, "nc");
+  else                                        fprintf(stderr, "?");
+  fprintf(stderr, ", b=");
+  if      (const_value.  _bool.is_valid   ()) fprintf(stderr, "%d",        const_value.  _bool.get()?1:0);
+  else if (const_value.  _bool.is_overflow()) fprintf(stderr, "ov");
+  else if (const_value.  _bool.is_nonconst()) fprintf(stderr, "nc");
+  else                                        fprintf(stderr, "?");
+  fprintf(stderr, "}");
+}
+
 
 
 /*********************************/
@@ -94,6 +118,7 @@ void print_symbol_c::fcall(symbol_c* symbol) {
 }
 
 
+
 void print_symbol_c::dump_symbol(symbol_c* symbol) {
   fprintf(stderr, "(%s->%03d:%03d..%03d:%03d) \t%s\t", symbol->first_file, symbol->first_line, symbol->first_column, symbol->last_line, symbol->last_column, symbol->absyntax_cname());
 
@@ -115,11 +140,11 @@ void print_symbol_c::dump_symbol(symbol_c* symbol) {
   } else {
     fprintf(stderr, "(%lu)\t\t\t\t\t", (unsigned long int)symbol->candidate_datatypes.size());
   }
-  fprintf(stderr, "}\t");         
+  fprintf(stderr, "}\t ");         
   
   /* print the const values... */
-  fprintf(stderr, " constv{f=%f, i=%"PRId64", u=%"PRIu64", b=%d}\t", symbol->const_value._real64.get(), symbol->const_value._int64.get(), symbol->const_value._uint64.get(), symbol->const_value._bool.get()?1:0);
-  
+  dump_cvalue(symbol->const_value);
+  fprintf(stderr, "\t");
 }
 
 
@@ -210,6 +235,10 @@ void print_ast_c::suffix_fcall(symbol_c* symbol) {}
 
 void debug_c::print(const char *str) {
   fprintf(stderr, "%s", str);
+}
+
+void debug_c::print(const_value_c cvalue) {
+  dump_cvalue(cvalue);
 }
 
 void debug_c::print(symbol_c *symbol) {
