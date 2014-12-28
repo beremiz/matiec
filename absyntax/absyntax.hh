@@ -125,6 +125,7 @@ class const_value_c {
       bool       is_valid    (void)     {return (status == cs_const_value);}
       bool       is_overflow (void)     {return (status == cs_overflow   );}
       bool       is_nonconst (void)     {return (status == cs_non_const  );}
+      bool       is_undefined(void)     {return (status == cs_undefined  );}
       bool       is_zero     (void)     {return (is_valid() && (get() == 0));}
     };
 
