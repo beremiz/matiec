@@ -592,6 +592,10 @@ static void CHECK_OVERFLOW_real64(symbol_c *res_ptr) {
 /***********************************************************************/
 
 
+/* TODO: FIXME !!!!!
+ *   The following operation is wrong - it does not handle the comparisons of all possible datatypes correctly.
+ *   The result of comparig the bool, int64, and uint64 are overwritten by the comparison of the real64 type!
+ */
 /* static void *handle_cmp(symbol_c *symbol, symbol_c *oper1, symbol_c *oper2, OPERATION) */
 #define handle_cmp(symbol, oper1, oper2, operation) {               \
 	if ((NULL == oper1) || (NULL == oper2)) return NULL;        \
