@@ -127,6 +127,13 @@ class const_value_c {
       bool       is_nonconst (void)     {return (status == cs_non_const  );}
       bool       is_undefined(void)     {return (status == cs_undefined  );}
       bool       is_zero     (void)     {return (is_valid() && (get() == 0));}
+
+      /* comparison operator */
+      bool operator==(const const_value__ cv) {
+        return (    ((status!=cs_const_value) && (status==cv.status)) 
+                 || ((status==cs_const_value) && (value ==cv.value )));
+      }
+
     };
 
     const_value__< int64_t>  _int64; /* status is initialised to UNDEFINED */
@@ -137,6 +144,10 @@ class const_value_c {
     /* default constructor and destructor */
      const_value_c(void) {};
     ~const_value_c(void) {};
+    
+    /* comparison operator */
+    bool operator==(const const_value_c cv)
+      {return ((_int64==cv._int64) && (_uint64==cv._uint64) && (_real64==cv._real64) && (_bool==cv._bool));}                                                     
 };
 
 

@@ -194,6 +194,7 @@
 #define VALID_CVALUE(dtype, symbol)           ((symbol)->const_value._##dtype.is_valid())
 #define IS_OVFLOW(dtype, symbol)              ((symbol)->const_value._##dtype.is_overflow())
 #define IS_NONCONST(dtype, symbol)            ((symbol)->const_value._##dtype.is_nonconst())
+#define IS_UNDEFINED(dtype, symbol)           ((symbol)->const_value._##dtype.is_undefined())
 #define ISZERO_CVALUE(dtype, symbol)          ((symbol)->const_value._##dtype.is_zero())
 
 
@@ -1254,8 +1255,29 @@ void *constant_folding_c::visit(external_declaration_c *symbol) {
   /* However, we only do this is if the visit() method for the Program/FB in which this VAR_EXTERN is found was called from the visit(configurtion/resource) visitor!
    * When we are called from the visit(library_c) visitor, we do not have the required information to do this!
    */ 
-  if (NULL != current_configuration)
+  if (NULL != current_configuration) {
+    /* before copying the constant value from the VAR_GLOBAL declaration (which is stored in the var_global_values[] map)
+     * we check to see if the VAR_EXTERN constant values has already been set by a previous call to constant fold the POU
+     * in which this VAR_EXTERN is found we simply check to see if any const value of this VAR_EXTERN variable has already
+     * been set previously!
+     */
+    if (   !IS_UNDEFINED( int64, symbol->specification) || !IS_UNDEFINED(uint64, symbol->specification) 
+        || !IS_UNDEFINED(real64, symbol->specification) || !IS_UNDEFINED(  bool, symbol->specification)) {
+      /* The const_value for this VAR_EXTERN has already been previously set. Lets check to see if it is the exact
+       * same const value - if not we produce an error message!
+       * 
+       * NOTE: comparison is inverted with '!'
+       */
+      if (! (symbol->specification->const_value == var_global_values[get_var_name_c::get_name(symbol->global_var_name)->value]))
+        STAGE3_ERROR(0, symbol, symbol, "The initial value of this external variable is ambiguous (the Program/FB in which "
+                                        "this external variable is declared has been used to instantiate a Program/FB in more "
+                                        "than one configuration and/or resource - and each resource sets the corresponding global "
+                                        "variable to a distinct constant initial value).");
+    }
+    
+    // only now do we copy the const value from the var_global to the var_external.
     symbol->specification->const_value = var_global_values[get_var_name_c::get_name(symbol->global_var_name)->value];
+  }
   
   symbol->global_var_name->const_value = symbol->specification->const_value;
   if (fixed_init_value_) {
