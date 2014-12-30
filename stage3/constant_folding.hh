@@ -68,10 +68,12 @@ class constant_folding_c : public iterator_visitor_c {
     constant_folding_c(symbol_c *symbol = NULL);
     virtual ~constant_folding_c(void);
     int get_error_count();
-    int handle_var_extern_global_pair(symbol_c *extern_var_name, symbol_c *extern_var_decl, symbol_c *global_var_name, symbol_c *global_var_decl);
     typedef symtable_c<const_value_c> map_values_t;
   private:
+    symbol_c *current_resource;
+    symbol_c *current_configuration;
     map_values_t values;
+    map_values_t var_global_values;
     void *handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl);
     void *handle_var_decl     (symbol_c *var_list, bool fixed_init_value);
     // Flag to indicate whether the variables in the variable declaration list will always have a fixed value when the POU is executed!
@@ -93,6 +95,10 @@ class constant_folding_c : public iterator_visitor_c {
 	#endif
 
   private:
+    /***************************/
+    /* B 0 - Programming Model */
+    /***************************/
+    void *visit(library_c *symbol);
     /*********************/
     /* B 1.2 - Constants */
     /*********************/
@@ -166,6 +172,8 @@ class constant_folding_c : public iterator_visitor_c {
     /********************************/
     void *visit( configuration_declaration_c *symbol);
     void *visit(      resource_declaration_c *symbol);
+    void *visit(     program_configuration_c *symbol);
+    void *visit(                   fb_task_c *symbol);
 
 
     /****************************************/
