@@ -53,10 +53,11 @@
 
 
 class constant_folding_c : public iterator_visitor_c {
-    search_varfb_instance_type_c *search_varfb_instance_type;
+  protected:
     int error_count;
     bool warning_found;
     int current_display_error_level;
+  private:
     /* Pointer to the previous IL instruction, which contains the current cvalue of the data stored in the IL stack, i.e. the default variable, a.k.a. accumulator */
     symbol_c *prev_il_instruction;
     /* the current IL operand being analyzed */
@@ -68,37 +69,8 @@ class constant_folding_c : public iterator_visitor_c {
     constant_folding_c(symbol_c *symbol = NULL);
     virtual ~constant_folding_c(void);
     int get_error_count();
-    typedef symtable_c<const_value_c> map_values_t;
+ 
   private:
-    symbol_c *current_resource;
-    symbol_c *current_configuration;
-    map_values_t values;
-    map_values_t var_global_values;
-    void *handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl);
-    void *handle_var_decl     (symbol_c *var_list, bool fixed_init_value);
-    // Flag to indicate whether the variables in the variable declaration list will always have a fixed value when the POU is executed!
-    // VAR CONSTANT ... END_VAR will always be true
-    // VAR          ... END_VAR will always be true for functions (who initialise local variables every time they are called), but false for FBs and PROGRAMS
-    bool fixed_init_value_; 
-    bool function_pou_;
-    bool is_constant(symbol_c *option);
-    bool is_retain  (symbol_c *option);
-
-
-  public:
-	#if 0
-	// not currently needed, so comment it out!...
-	/* utility functions for other stage3 algorithms to access the contant folded values */
-	/* written as static since we do not need to iteratively visit the symbols! */
-	// returns true if both symbols have the same value in all the cvalues
-	static bool is_equal_cvalue(symbol_c *symbol_1, symbol_c *symbol_2);
-	#endif
-
-  private:
-    /***************************/
-    /* B 0 - Programming Model */
-    /***************************/
-    void *visit(library_c *symbol);
     /*********************/
     /* B 1.2 - Constants */
     /*********************/
@@ -123,58 +95,6 @@ class constant_folding_c : public iterator_visitor_c {
     /* B 1.2.3.1 - Duration */
     /********* **************/
     void *visit(fixed_point_c *symbol);
-
-    /*********************/
-    /* B 1.4 - Variables */
-    /*********************/
-    #if DO_CONSTANT_PROPAGATION__
-    void *visit(symbolic_variable_c *symbol);
-    #endif // DO_CONSTANT_PROPAGATION__
-    void *visit(symbolic_constant_c *symbol);
-                             
-    /******************************************/
-    /* B 1.4.3 - Declaration & Initialisation */
-    /******************************************/
-    void *visit(        input_declarations_c *symbol);
-    void *visit(       output_declarations_c *symbol);
-    void *visit( input_output_declarations_c *symbol);
-    void *visit(          var_declarations_c *symbol);
-    void *visit(retentive_var_declarations_c *symbol);
-    void *visit( external_var_declarations_c *symbol);
-    void *visit(   global_var_declarations_c *symbol);
-    void *visit(  external_declaration_c     *symbol);
-    void *visit(global_var_decl_c            *symbol);
-    void *visit( var1_init_decl_c            *symbol);
-
-    /**************************************/
-    /* B.1.5 - Program organization units */
-    /**************************************/
-    /***********************/
-    /* B 1.5.1 - Functions */
-    /***********************/
-    void *visit(function_declaration_c *symbol);
-    void *visit(function_var_decls_c   *symbol);
-
-    /*****************************/
-    /* B 1.5.2 - Function Blocks */
-    /*****************************/
-    void *visit(function_block_declaration_c *symbol);
-    void *visit(            temp_var_decls_c *symbol);
-    void *visit(   non_retentive_var_decls_c *symbol);
-
-    /**********************/
-    /* B 1.5.3 - Programs */
-    /**********************/
-    void *visit(       program_declaration_c *symbol);
-
-    /********************************/
-    /* B 1.7 Configuration elements */
-    /********************************/
-    void *visit( configuration_declaration_c *symbol);
-    void *visit(      resource_declaration_c *symbol);
-    void *visit(     program_configuration_c *symbol);
-    void *visit(                   fb_task_c *symbol);
-
 
     /****************************************/
     /* B.2 - Language IL (Instruction List) */
@@ -267,6 +187,127 @@ class constant_folding_c : public iterator_visitor_c {
     void *visit( power_expression_c *symbol);
     void *visit(   neg_expression_c *symbol);
     void *visit(   not_expression_c *symbol);
+    //void *visit(function_invocation_c *symbol); /* TODO */
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+class constant_propagation_c : public constant_folding_c {
+  public:
+    constant_propagation_c(symbol_c *symbol = NULL);
+    virtual ~constant_propagation_c(void);
+    typedef symtable_c<const_value_c> map_values_t;
+  private:
+    symbol_c *current_resource;
+    symbol_c *current_configuration;
+    map_values_t values;
+    map_values_t var_global_values;
+    void *handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl);
+    void *handle_var_decl     (symbol_c *var_list, bool fixed_init_value);
+    // Flag to indicate whether the variables in the variable declaration list will always have a fixed value when the POU is executed!
+    // VAR CONSTANT ... END_VAR will always be true
+    // VAR          ... END_VAR will always be true for functions (who initialise local variables every time they are called), but false for FBs and PROGRAMS
+    bool fixed_init_value_; 
+    bool function_pou_;
+    bool is_constant(symbol_c *option);
+    bool is_retain  (symbol_c *option);
+    static map_values_t inner_left_join_values(map_values_t m1, map_values_t m2);
+
+
+  private:
+    /***************************/
+    /* B 0 - Programming Model */
+    /***************************/
+    void *visit(library_c *symbol);
+
+    /*********************/
+    /* B 1.4 - Variables */
+    /*********************/
+    #if DO_CONSTANT_PROPAGATION__
+    void *visit(symbolic_variable_c *symbol);
+    #endif // DO_CONSTANT_PROPAGATION__
+    void *visit(symbolic_constant_c *symbol);
+                             
+    /******************************************/
+    /* B 1.4.3 - Declaration & Initialisation */
+    /******************************************/
+    void *visit(        input_declarations_c *symbol);
+    void *visit(       output_declarations_c *symbol);
+    void *visit( input_output_declarations_c *symbol);
+    void *visit(          var_declarations_c *symbol);
+    void *visit(retentive_var_declarations_c *symbol);
+    void *visit( external_var_declarations_c *symbol);
+    void *visit(   global_var_declarations_c *symbol);
+    void *visit(  external_declaration_c     *symbol);
+    void *visit(global_var_decl_c            *symbol);
+    void *visit( var1_init_decl_c            *symbol);
+
+    /**************************************/
+    /* B.1.5 - Program organization units */
+    /**************************************/
+    /***********************/
+    /* B 1.5.1 - Functions */
+    /***********************/
+    void *visit(function_declaration_c *symbol);
+    void *visit(function_var_decls_c   *symbol);
+
+    /*****************************/
+    /* B 1.5.2 - Function Blocks */
+    /*****************************/
+    void *visit(function_block_declaration_c *symbol);
+    void *visit(            temp_var_decls_c *symbol);
+    void *visit(   non_retentive_var_decls_c *symbol);
+
+    /**********************/
+    /* B 1.5.3 - Programs */
+    /**********************/
+    void *visit(       program_declaration_c *symbol);
+
+    /********************************/
+    /* B 1.7 Configuration elements */
+    /********************************/
+    void *visit( configuration_declaration_c *symbol);
+    void *visit(      resource_declaration_c *symbol);
+    void *visit(     program_configuration_c *symbol);
+    void *visit(                   fb_task_c *symbol);
+
+
+    /****************************************/
+    /* B.2 - Language IL (Instruction List) */
+    /****************************************/
+    /***********************************/
+    /* B 2.1 Instructions and Operands */
+    /***********************************/
+    //void *visit(il_function_call_c *symbol);  /* TODO */
+    // void *visit(il_fb_call_c *symbol);       /* TODO: move from constant_folding_c */
+    //void *visit(il_formal_funct_call_c *symbol);   /* TODO */
+    //void *visit(il_operand_list_c *symbol);  /* Not needed, since we inherit from iterator_visitor_c */
+
+
+    /*******************/
+    /* B 2.2 Operators */
+    /*******************/
+    /* Symbol class handled together with function call checks */
+    // void *visit(il_assign_operator_c *symbol, variable_name);
+    /* Symbol class handled together with function call checks */
+    // void *visit(il_assign_operator_c *symbol, option, variable_name);
+
+    /***************************************/
+    /* B.3 - Language ST (Structured Text) */
+    /***************************************/
+    /***********************/
+    /* B 3.1 - Expressions */
+    /***********************/
     //void *visit(function_invocation_c *symbol); /* TODO */
 
     #if DO_CONSTANT_PROPAGATION__

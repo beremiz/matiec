@@ -71,10 +71,10 @@ static int flow_control_analysis(symbol_c *tree_root){
 /* Constant folding assumes that flow control analysis has been completed!
  * so be sure to call flow_control_analysis() before calling this function!
  */
-static int constant_folding(symbol_c *tree_root){
-    constant_folding_c constant_folding(tree_root);
-    tree_root->accept(constant_folding);
-    return constant_folding.get_error_count();
+static int constant_propagation(symbol_c *tree_root){
+    constant_propagation_c constant_propagation(tree_root);
+    tree_root->accept(constant_propagation);
+    return constant_propagation.get_error_count();
 }
 
 
@@ -140,7 +140,7 @@ int stage3(symbol_c *tree_root, symbol_c **ordered_tree_root) {
 	error_count += enum_declaration_check(tree_root);
 	error_count += declaration_safety(tree_root);
 	error_count += flow_control_analysis(tree_root);
-	error_count += constant_folding(tree_root);
+	error_count += constant_propagation(tree_root);
 	error_count += type_safety(tree_root);
 	error_count += lvalue_check(tree_root);
 	error_count += array_range_check(tree_root);
