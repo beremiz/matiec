@@ -55,6 +55,16 @@ static int enum_declaration_check(symbol_c *tree_root){
 }
 
 
+/* In order to correctly handle variable sized arrays
+ * declaration_safety() must only be run after constant folding!
+ *   NOTE that the dependency does not resides directly in declaration_check_c,
+ *        but rather indirectly in the call to get_datatype_info_c::is_type_equal()
+ *        which may in turn call get_datatype_info_c::is_arraytype_equal_relaxed()
+ *
+ * Example of a variable sized array:
+ *   VAR_EXTERN CONSTANT max: INT; END_VAR;
+ *   VAR_EXTERN xx: ARRAY [1..max] OF INT; END_VAR;
+ */
 static int declaration_safety(symbol_c *tree_root){
     declaration_check_c declaration_check(tree_root);
     tree_root->accept(declaration_check);
@@ -138,9 +148,9 @@ static int remove_forward_dependencies(symbol_c *tree_root, symbol_c **ordered_t
 int stage3(symbol_c *tree_root, symbol_c **ordered_tree_root) {
 	int error_count = 0;
 	error_count += enum_declaration_check(tree_root);
-	error_count += declaration_safety(tree_root);
 	error_count += flow_control_analysis(tree_root);
 	error_count += constant_propagation(tree_root);
+	error_count += declaration_safety(tree_root);
 	error_count += type_safety(tree_root);
 	error_count += lvalue_check(tree_root);
 	error_count += array_range_check(tree_root);

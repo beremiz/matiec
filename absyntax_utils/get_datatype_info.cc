@@ -677,17 +677,23 @@ bool get_datatype_info_c::is_arraytype_equal_relaxed(symbol_c *first_type, symbo
     subrange_c *subrange_1 = dynamic_cast<subrange_c *>(subrange_list_1->elements[i]);
     subrange_c *subrange_2 = dynamic_cast<subrange_c *>(subrange_list_2->elements[i]);
     if ((NULL == subrange_1) || (NULL == subrange_2)) ERROR;
-    #if 0
-    /* An alternative method of checking whether the subranges have the same values, using the result of the constant folding agorithm.
+    
+    /* check whether the subranges have the same values, using the result of the constant folding agorithm.
      * This method has the drawback that it inserts a dependency on having to run the constant folding algorithm before
      *  the get_datatype_info_c::is_type_equal() method is called.
-     * The probably slower alternative of comparing the strings themselves is therefor used.
+     *  This is why we implement an alternative method in case the subrange limits have not yet been reduced to a cvalue!
      */
-    if (!constant_folding_c::is_equal_cvalue(subrange_1->lower_limit, subrange_2->lower_limit)) return false;
-    if (!constant_folding_c::is_equal_cvalue(subrange_1->upper_limit, subrange_2->upper_limit)) return false;
-    #endif
-    if (normalize_integer(subrange_1->lower_limit) != normalize_integer(subrange_2->lower_limit)) return false;
-    if (normalize_integer(subrange_1->upper_limit) != normalize_integer(subrange_2->upper_limit)) return false;
+    if (    (subrange_1->lower_limit->const_value._int64.is_valid() || subrange_1->lower_limit->const_value._uint64.is_valid())
+         && (subrange_2->lower_limit->const_value._int64.is_valid() || subrange_2->lower_limit->const_value._uint64.is_valid())
+         && (subrange_1->upper_limit->const_value._int64.is_valid() || subrange_1->upper_limit->const_value._uint64.is_valid())
+         && (subrange_2->upper_limit->const_value._int64.is_valid() || subrange_2->upper_limit->const_value._uint64.is_valid())
+       ) {
+      if (! (subrange_1->lower_limit->const_value == subrange_2->lower_limit->const_value)) return false;
+      if (! (subrange_1->upper_limit->const_value == subrange_2->upper_limit->const_value)) return false;
+    } else {
+      if (normalize_integer(subrange_1->lower_limit) != normalize_integer(subrange_2->lower_limit)) return false;
+      if (normalize_integer(subrange_1->upper_limit) != normalize_integer(subrange_2->upper_limit)) return false;
+    }
   }
 
   return is_type_equal(search_base_type_c::get_basetype_decl(array_1->non_generic_type_name),
