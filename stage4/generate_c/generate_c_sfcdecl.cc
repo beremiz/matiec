@@ -192,14 +192,16 @@ class generate_c_sfcdecl_c: protected generate_c_base_and_typeid_c {
           break;
         case actiondef_sd:
           s4o.print("// Actions definitions\n");
-          for(int i = 0; i < symbol->n; i++)
-             symbol->elements[i]->accept(*this);
           {
             // first fill up the this->variable_list variable!
             wanted_sfcdeclaration = actioncount_sd;
             for(int i = 0; i < symbol->n; i++)
                symbol->elements[i]->accept(*this);
+            action_number = 0; // reset the counter!
             wanted_sfcdeclaration = actiondef_sd;
+            // Now do the defines for actions!
+            for(int i = 0; i < symbol->n; i++)
+              symbol->elements[i]->accept(*this);
             // Now do the defines for actions that reference a variable instead of an action block!
             std::list<VARIABLE>::iterator pt;
             for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
