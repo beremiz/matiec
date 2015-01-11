@@ -623,32 +623,67 @@ bool get_datatype_info_c::is_type_equal(symbol_c *first_type, symbol_c *second_t
  *    -82  -> -82
  *    -8_2 -> -82
  *   -082  -> -82
+ * 
+ * NOTE: since matiec supports arrays with a variable size (a non compliant IEC 61131-3 extension)
+ *        (e.g.: ARRAY [1..max] of INT, where max must be a constant variable)
+ *       the symbol passed to this function may also be a symbolic_variable
+ *       (or more correctly, a symbolic_constant_c).
+ *       In this case we simply return the string itself.
  */
 #include <string.h>  /* required for strlen() */
-static std::string normalize_integer(symbol_c *symbol) {
-  integer_c *token = dynamic_cast<integer_c *>(symbol);
-  if (NULL == token) ERROR;
-  
-  std::string str = "";
-  bool leading_zero = true;
-  unsigned int offset = 0;
+static std::string normalize_subrange_limit(symbol_c *symbol) {
+  // See if it is an integer...  
+  integer_c *integer = dynamic_cast<integer_c *>(symbol);
+  if (NULL != integer) {
+    // handle it as an integer!
+    std::string str = "";
+    bool leading_zero = true;
+    unsigned int offset = 0;
 
-  // handle any possible leading '-' or '+'
-  if        (token->value[0] == '-') {
-      //    '-' -> retained
-      str += token->value[0];
-      offset++;
-  } else if (token->value[0] == '+')
-      //    '+' -> skip, so '+8' and '8' will both result in '8'
-      offset++;
-    
-  for (unsigned int i = offset; i < strlen(token->value); i++) {
-    if (leading_zero && (token->value[i] != '0'))
-      leading_zero = false;
-    if (!leading_zero && token->value[i] != '_')
-      str += token->value[i];
+    // handle any possible leading '-' or '+'
+    if        (integer->value[0] == '-') {
+        //    '-' -> retained
+        str += integer->value[0];
+        offset++;
+    } else if (integer->value[0] == '+')
+        //    '+' -> skip, so '+8' and '8' will both result in '8'
+        offset++;
+      
+    for (unsigned int i = offset; i < strlen(integer->value); i++) {
+      if (leading_zero && (integer->value[i] != '0'))
+        leading_zero = false;
+      if (!leading_zero && integer->value[i] != '_')
+        str += integer->value[i];
+    }
+    return str;
   }
-  return str;
+  
+  // See if it is an sybolic_variable_c or symbolic_constant_c...  
+  /* NOTE: Remember that this is only needed if the subrange limit has not yet been
+   *       constant_folded --> when the const_value is valid, the normalize_subrange_limit()
+   *       never gets called!!
+   * 
+   *       Situations where it has not been constant folded can occur if:
+   *         - the get_datatype_info_c::is_type_equal() is called before the constant folding algorithm does its thing
+   *         - the constant folding algorithm is called before get_datatype_info_c::is_type_equal(), but
+   *           the symbol does not get constant folded
+   *           (e.g: the POU containing a VAR_EXTERN is not instantiated, and that external variable is used to define a 
+   *            limit of an array (ARRAY of [1..ext_var] OF INT)
+   *        However, currently get_datatype_info_c::is_type_equal() is not called to handle the above case, 
+   *        and constant_folding is being called before all algorithms that call get_datatype_info_c::is_type_equal(),
+   *        which means that the following code is really not needed. But it is best to have it here just in case...
+   */
+  token_c             *token    = NULL;
+  symbolic_constant_c *symconst = dynamic_cast<symbolic_constant_c *>(symbol);
+  symbolic_variable_c *symvar   = dynamic_cast<symbolic_variable_c *>(symbol);
+  if (NULL != symconst) token   = dynamic_cast<            token_c *>(symconst->var_name);
+  if (NULL != symvar  ) token   = dynamic_cast<            token_c *>(symvar  ->var_name);
+  if (NULL != token)
+    // handle it as a symbolic_variable/constant_c
+    return token->value;    
+  
+  ERROR;
+  return NULL; // humour the compiler...
 }
 
 
@@ -691,8 +726,9 @@ bool get_datatype_info_c::is_arraytype_equal_relaxed(symbol_c *first_type, symbo
       if (! (subrange_1->lower_limit->const_value == subrange_2->lower_limit->const_value)) return false;
       if (! (subrange_1->upper_limit->const_value == subrange_2->upper_limit->const_value)) return false;
     } else {
-      if (normalize_integer(subrange_1->lower_limit) != normalize_integer(subrange_2->lower_limit)) return false;
-      if (normalize_integer(subrange_1->upper_limit) != normalize_integer(subrange_2->upper_limit)) return false;
+      // NOTE: nocasecmp_c() class is defined in absyntax.hh. nocasecmp_c() instantiates an object, and nocasecmp_c()() uses the () operator on that object. 
+      if (! nocasecmp_c()(normalize_subrange_limit(subrange_1->lower_limit), normalize_subrange_limit(subrange_2->lower_limit))) return false;
+      if (! nocasecmp_c()(normalize_subrange_limit(subrange_1->upper_limit), normalize_subrange_limit(subrange_2->upper_limit))) return false;
     }
   }
 
