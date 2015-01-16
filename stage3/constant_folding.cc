@@ -1352,6 +1352,11 @@ static constant_propagation_c::map_values_t inner_left_join_values(constant_prop
    *         propagation algorithm is idem-potent (assuming the same constant values in the 
    *         beginning), and we can use these multiple calls to the same POU to detect if
    *         the situation mentioned in (1) is ocurring.
+   *         Note too that FBs may also include VAR_EXTERN CONSTANT variables, which must also
+   *         get their constant value from the corresponding global variable (declared in the 
+   *         configuration, program and FBs currently in scope). For this reason, when a FB
+   *         variable is instantiated inside a configuration, program or FB, we must recursively
+   *         visit the FB type declaration!
    *       - After analysing all the configurations, we analyse all the other POUs that have
    *         not yet been called (because they are not instantiated directly from within
    *         any configuration - e.g. functions, and most FBs!).
@@ -1414,7 +1419,36 @@ void *constant_propagation_c::handle_var_decl(symbol_c *var_list, bool fixed_ini
 void *constant_propagation_c::handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl, bool is_global_var) {
   type_decl->accept(*this);  // Do constant folding of the initial value, and literals in subranges! (we will probably be doing this multiple times for the same init value, but this is safe as the cvalue is idem-potent)
   symbol_c *init_value = type_initial_value_c::get(type_decl);  
-  if (NULL == init_value)   {return NULL;} // this is probably a FB datatype, for which no initial value exists! Do nothing and return.
+
+  /* There are two main possibilities here: either we are instantiating FBs, or some other variable.
+   *   (1) if it is a FB, we must recursively visit the FB type declaration, to let any VAR_EXTERN
+   *       variables there get their initial value from the current var_global_values[] map!!
+   *   (2) if it is a normal variable, we will store the initial value of that variable in the values[] map.
+   *        (and also store it in the var_global_values[] map is it is a VAR_GLOBAL variable!)
+   */
+   
+  /* Check whether we have situation (1) mentioned above! */ 
+  /* find the possible declaration (i.e. the datatype) of the possible FB being instantiated */
+  // NOTE: we do not use symbol->datatype so this const propagation algorithm will not depend on the fill/narrow datatypes algorithm!
+  function_block_type_symtable_t::iterator itr = function_block_type_symtable.end(); // assume not a FB!
+  symbol_c *type_symbol = spec_init_sperator_c::get_spec(type_decl);
+  token_c  *type_name  = dynamic_cast<token_c *>(type_symbol);
+  if (type_name != NULL)
+    itr = function_block_type_symtable.find(type_name);
+  if (itr != function_block_type_symtable.end()) {
+    // Handle the situation (1) mentioned above, i.e. handle the instantiation of FBs. 
+    // -------------------------------------------------------------------------------
+    //  Remmeber that in this case we will recursively visit the FB type declaration!!
+    function_block_declaration_c *fb_type = itr->second;
+    if (NULL == fb_type) ERROR; // syntax parsing should not allow this!
+    // TODO: detect whether we are already currently visiting this exact same FB declaration (possible with -p option), so we do not get into an infinite loop!!
+    fb_type->accept(*this);
+    return NULL;
+  }
+  
+  // Handle the situation (2) mentioned above, i.e. handle the instantiation of non-FB variables. 
+  // --------------------------------------------------------------------------------------------
+  if (NULL == init_value)   {return NULL;} // this is some datatype for which no initial value exists! Do nothing and return.
   init_value->accept(*this); // necessary when handling default initial values, that were not constant folded in the call type_decl->accept(*this)
   
   list_c *list = dynamic_cast<list_c *>(var_list);
@@ -1470,18 +1504,12 @@ void *constant_propagation_c::visit(var1_init_decl_c *symbol) {return handle_var
 //SYM_REF2(fb_name_decl_c, fb_name_list, fb_spec_init)
 void *constant_propagation_c::visit(fb_name_decl_c *symbol) {
   /* A FB has been instantiated inside the POU currently being analysed. We must therefore visit this FB's type declaration
-   *  and give a chance of the VAR_EXTERNs in that FB to get the const values from the global variables currently in scope!
+   *  and give the VAR_EXTERNs in that FB a chance to get the const values from the global variables currently in scope!
    */
-  /* find the declaration (i.e. the datatype) of the FB being instantiated */
-  // NOTE: we do not use symbol->datatype so this const propagation algorithm will not depend on the fill/narrow datatypes algorithm!
-  symbol_c *fb_type_name = spec_init_sperator_c::get_spec(symbol->fb_spec_init);
-  function_block_type_symtable_t::iterator itr = function_block_type_symtable.find(fb_type_name);
-  if (itr == function_block_type_symtable.end()) ERROR; // syntax parsing should not allow this!
-  function_block_declaration_c *fb_type = itr->second;
-  if (NULL == fb_type) ERROR; // syntax parsing should not allow this!
-  // TODO: detect whether we are already currently visiting this exact same FB declaration (possible with -p option), so we do not get into an infinite loop!!
-  fb_type->accept(*this);
-  return NULL;
+  // NOTE: The generic handle_var_list_decl() can handle the above situation, so we simply call it!
+  // NOTE: The handle_var_list_decl() should not be needing the fb_name_list to do the above, so we call
+  //         it with NULL to highlight this fact!
+  return handle_var_list_decl(NULL, symbol->fb_spec_init);
 }
 
 
