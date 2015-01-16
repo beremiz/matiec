@@ -201,6 +201,7 @@ class constant_folding_c : public iterator_visitor_c {
 
 
 
+#include <deque>
 
 class constant_propagation_c : public constant_folding_c {
   public:
@@ -212,6 +213,9 @@ class constant_propagation_c : public constant_folding_c {
     symbol_c *current_configuration;
     map_values_t *values;
     map_values_t var_global_values;
+    /* A stack of all the FB declarations currently being recursively constant propagated */
+    std::deque<function_block_declaration_c *> fbs_currently_being_visited; // We use a deque instead of stack, so we can search in the stack using direct access to its elements!
+
     void *handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl, bool is_global_var = false);
     void *handle_var_decl     (symbol_c *var_list, bool fixed_init_value);
     // Flag to indicate whether the variables in the variable declaration list will always have a fixed value when the POU is executed!

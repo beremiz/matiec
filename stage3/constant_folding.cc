@@ -1416,6 +1416,8 @@ void *constant_propagation_c::handle_var_decl(symbol_c *var_list, bool fixed_ini
   return NULL;
 }
 
+
+#include <algorithm>    // std::find
 void *constant_propagation_c::handle_var_list_decl(symbol_c *var_list, symbol_c *type_decl, bool is_global_var) {
   type_decl->accept(*this);  // Do constant folding of the initial value, and literals in subranges! (we will probably be doing this multiple times for the same init value, but this is safe as the cvalue is idem-potent)
   symbol_c *init_value = type_initial_value_c::get(type_decl);  
@@ -1441,8 +1443,17 @@ void *constant_propagation_c::handle_var_list_decl(symbol_c *var_list, symbol_c 
     //  Remmeber that in this case we will recursively visit the FB type declaration!!
     function_block_declaration_c *fb_type = itr->second;
     if (NULL == fb_type) ERROR; // syntax parsing should not allow this!
-    // TODO: detect whether we are already currently visiting this exact same FB declaration (possible with -p option), so we do not get into an infinite loop!!
-    fb_type->accept(*this);
+    // WARNING: Before calling fb_type->accept(*this), we must first determine whether we are already currently visiting this exact 
+    //          same FB declaration (possible with -p option), so we do not get into an infinite loop!!
+    // NOTE: We use the std::find() standard algorithm, since the std::stack and std::deque do not have the find() member function.
+    //       We could alternatively use a std::set instead of std::deque, but then it would not be evident that insertion and deletion
+    //       of fb_types follows a push() and pop() algorithm typical of stacks.
+    if (std::find(fbs_currently_being_visited.begin(), fbs_currently_being_visited.end(), fb_type) == fbs_currently_being_visited.end()) {
+      // The fb_type is not in the fbs_currently_being_visited stack, so we push it onto the stack, and then visit it!!
+      fbs_currently_being_visited.push_back(fb_type);
+      fb_type->accept(*this);
+      fbs_currently_being_visited.pop_back();
+    }
     return NULL;
   }
   
