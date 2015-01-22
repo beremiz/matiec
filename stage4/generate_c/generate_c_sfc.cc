@@ -161,25 +161,17 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
             current_step = symbol->step_name;
             s4o.print(s4o.indent_spaces + "{\n");
             s4o.indent_right();
-            s4o.print(s4o.indent_spaces + "char activated = ");
-            s4o.print(GET_VAR);
-            s4o.print("(");
-            print_step_argument(current_step, "X");
-            s4o.print(") && !");
-            print_step_argument(current_step, "prev_state");
-            s4o.print(";\n");
-            s4o.print(s4o.indent_spaces + "char desactivated = !");
-            s4o.print(GET_VAR);
-            s4o.print("(");
-            print_step_argument(current_step, "X");
-            s4o.print(") && ");
-            print_step_argument(current_step, "prev_state");
-            s4o.print(";\n");
             s4o.print(s4o.indent_spaces + "char active = ");
             s4o.print(GET_VAR);
             s4o.print("(");
             print_step_argument(current_step, "X");
             s4o.print(");\n");
+            s4o.print(s4o.indent_spaces + "char activated = active && !");
+            print_step_argument(current_step, "prev_state");
+            s4o.print(";\n");
+            s4o.print(s4o.indent_spaces + "char desactivated = !active && ");
+            print_step_argument(current_step, "prev_state");
+            s4o.print(";\n\n");
             symbol->action_association_list->accept(*this);
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}\n\n");
@@ -201,26 +193,17 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
             current_step = symbol->step_name;
             s4o.print(s4o.indent_spaces + "{\n");
             s4o.indent_right();
-            s4o.print(s4o.indent_spaces + "char activated, desactivated, active;\n");
-            s4o.print(s4o.indent_spaces + "activated = ");
-            s4o.print(GET_VAR);
-            s4o.print("(");
-            print_step_argument(current_step, "X");
-            s4o.print(") && !");
-            print_step_argument(current_step, "prev_state");
-            s4o.print(";\n");
-            s4o.print(s4o.indent_spaces + "desactivated = !");
-            s4o.print(GET_VAR);
-            s4o.print("(");
-            print_step_argument(current_step, "X");
-            s4o.print(") && ");
-            print_step_argument(current_step, "prev_state");
-            s4o.print(";\n");
-            s4o.print(s4o.indent_spaces + "active = ");
+            s4o.print(s4o.indent_spaces + "char active = ");
             s4o.print(GET_VAR);
             s4o.print("(");
             print_step_argument(current_step, "X");
             s4o.print(");\n");
+            s4o.print(s4o.indent_spaces + "char activated = active && !");
+            print_step_argument(current_step, "prev_state");
+            s4o.print(";\n");
+            s4o.print(s4o.indent_spaces + "char desactivated = !active && ");
+            print_step_argument(current_step, "prev_state");
+            s4o.print(";\n\n");
             symbol->action_association_list->accept(*this);
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}\n\n");
@@ -523,114 +506,148 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
       return NULL;
     }
 
+    
+    void print_set_var(symbol_c *var, const char *value) {  
+      unsigned int vartype = search_var_instance_decl->get_vartype(var);
+      s4o.print("{"); // it is safer to embed these macros nside a {..} block
+      if (vartype == search_var_instance_decl_c::external_vt)
+        s4o.print(SET_EXTERNAL);
+      else if (vartype == search_var_instance_decl_c::located_vt)
+        s4o.print(SET_LOCATED);
+      else
+        s4o.print(SET_VAR);
+      s4o.print("(");
+      print_variable_prefix();
+      s4o.print(",");
+      var->accept(*this);
+      s4o.print(",,");
+      s4o.print(value);
+      s4o.print(");}");
+    }
+
+    void print_set_action_state(symbol_c *action, const char *value) {  
+      s4o.print("{"); // it is safer to embed these macros nside a {..} block
+      s4o.print(SET_VAR);
+      s4o.print("(");
+      print_action_argument(action, "state", true);
+      s4o.print(",,");
+      s4o.print(value);
+      s4o.print(");}");
+    }
+    
+    void print_set_var_or_action_state(symbol_c *action, const char *value) {  
+      if (is_variable(current_action))  
+        print_set_var         (action, value);
+      else
+        print_set_action_state(action, value);
+    }
+    
     void *visit(action_qualifier_c *symbol) {
       switch (wanted_sfcgeneration) {
         case actionassociation_sg:
           {
             char *qualifier = (char *)symbol->action_qualifier->accept(*this);
-            s4o.print(s4o.indent_spaces + "if (");
-            if (strcmp(qualifier, "N") == 0 || strcmp(qualifier, "S") == 0 ||
-                strcmp(qualifier, "R") == 0) {
-              s4o.print("active");
+            /* N qualifier */
+            if (strcmp(qualifier, "N") == 0) {
+              s4o.print(s4o.indent_spaces + "if (active)       ");
+              print_set_var_or_action_state(current_action, "1");
+              s4o.print(";\n");
+              s4o.print(s4o.indent_spaces + "if (desactivated) ");
+              print_set_var_or_action_state(current_action, "0");
+              s4o.print(";\n");
+              return NULL;
             }
-            else if (strcmp(qualifier, "P") == 0 || strcmp(qualifier, "SD") == 0 ||
-                     strcmp(qualifier, "DS") == 0 || strcmp(qualifier, "SL") == 0 ||
-                     strcmp(qualifier, "P0") == 0) {
-              s4o.print("activated");
+            /* S qualifier */
+            if (strcmp(qualifier, "S") == 0) {
+              s4o.print(s4o.indent_spaces + "if (active)       {");
+              print_action_argument(current_action, "set");
+              s4o.print(" = 1;}\n");
+              return NULL;
             }
-            else if (strcmp(qualifier, "P1") == 0) {
-              s4o.print("desactivated");
+            /* R qualifier */
+            if (strcmp(qualifier, "R") == 0) {
+              s4o.print(s4o.indent_spaces + "if (active)       {");
+              print_action_argument(current_action, "reset");
+              s4o.print(" = 1;}\n");
+              return NULL;
             }
-            else if (strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0) {
-              s4o.print("active && __time_cmp(");
+            /* L or D qualifiers */
+            if ((strcmp(qualifier, "L") == 0) || 
+                (strcmp(qualifier, "D") == 0)) {
+              s4o.print(s4o.indent_spaces + "if (active && __time_cmp(");
               print_step_argument(current_step, "T.value");
               s4o.print(", ");
               symbol->action_time->accept(*this);
-              if (strcmp(qualifier, "D") == 0) {
-                s4o.print(") >= 0");
-              }
-              else {
-                s4o.print(") < 0");
-              }
+              if (strcmp(qualifier, "L") == 0)
+                s4o.print(") < 0) ");
+              else
+                s4o.print(") >= 0) ");
+              s4o.print("\n" + s4o.indent_spaces + "                  ");
+              print_set_var_or_action_state(current_action, "1");
+              if (strcmp(qualifier, "L") == 0)
+                // in L, we force to zero while state is active and time has been reached
+                // or when the state is deactivated.
+                s4o.print("\n" + s4o.indent_spaces + "else if (desactivated || active)");
+              else
+                s4o.print("\n" + s4o.indent_spaces + "else if (desactivated)");
+              s4o.print("\n" + s4o.indent_spaces + "                  ");
+              print_set_var_or_action_state(current_action, "0");
+              s4o.print(";\n");
+              return NULL;
             }
-            s4o.print(") {\n");
-            s4o.indent_right();
-            s4o.print(s4o.indent_spaces);
-            if (strcmp(qualifier, "N") == 0 || strcmp(qualifier, "P") == 0 ||
-                strcmp(qualifier, "D") == 0 || strcmp(qualifier, "L") == 0 ||
-                strcmp(qualifier, "P0") == 0 || strcmp(qualifier, "P1") == 0) {
-
-              if (is_variable(current_action)) {
-                unsigned int vartype = search_var_instance_decl->get_vartype(current_action);
-
-                if (vartype == search_var_instance_decl_c::external_vt)
-                  s4o.print(SET_EXTERNAL);
-                else if (vartype == search_var_instance_decl_c::located_vt)
-                  s4o.print(SET_LOCATED);
-                else
-                  s4o.print(SET_VAR);
-                s4o.print("(");
-                print_variable_prefix();
-                s4o.print(",");
-                current_action->accept(*this);
-                s4o.print(",,1);\n");
-                s4o.indent_left();
-                s4o.print(s4o.indent_spaces + "}\n");
-                s4o.print(s4o.indent_spaces + "else if (active) {\n");
-                s4o.indent_right();
-                s4o.print(s4o.indent_spaces);
-                if (vartype == search_var_instance_decl_c::external_vt)
-                  s4o.print(SET_EXTERNAL);
-                else if (vartype == search_var_instance_decl_c::located_vt)
-                  s4o.print(SET_LOCATED);
-                else
-                  s4o.print(SET_VAR);
-                s4o.print("(");
-                print_variable_prefix();
-                s4o.print(",");
-                current_action->accept(*this);
-                s4o.print(",,0);\n");
-              }
-
-              else {
-                s4o.print(SET_VAR);
-                s4o.print("(");
-                print_action_argument(current_action, "state", true);
-                s4o.print(",,1);\n");
-              }
+            /* P, P1 or P0 qualifiers */
+            if ( (strcmp(qualifier, "P" ) == 0) || 
+                 (strcmp(qualifier, "P1") == 0) ||
+                 (strcmp(qualifier, "P0") == 0)) {
+              if (strcmp(qualifier, "P0") == 0)
+                s4o.print(s4o.indent_spaces + "if (desactivated) ");
+              else
+                s4o.print(s4o.indent_spaces + "if (activated)    ");
+              print_set_var_or_action_state(current_action, "1");
+              s4o.print("\n" + s4o.indent_spaces + "else              ");
+              print_set_var_or_action_state(current_action, "0");
+              s4o.print(";\n");
+              return NULL;
             }
-            if (strcmp(qualifier, "S") == 0 || strcmp(qualifier, "SL") == 0) {
+            /* SL qualifier */
+            if (strcmp(qualifier, "SL") == 0) {
+              s4o.print(s4o.indent_spaces + "if (activated) {");
+              s4o.indent_right();
+              s4o.print("\n" + s4o.indent_spaces);
               print_action_argument(current_action, "set");
-              s4o.print(" = 1;\n");
-            }
-            if (strcmp(qualifier, "R") == 0) {
-              print_action_argument(current_action, "reset");
-              s4o.print(" = 1;\n");
-            }
-            if (strcmp(qualifier, "SD") == 0 || strcmp(qualifier, "DS") == 0 || 
-                strcmp(qualifier, "SL") == 0) {
-              if (strcmp(qualifier, "SL") == 0) {
-            	s4o.print(s4o.indent_spaces);
-            	print_action_argument(current_action, "reset_remaining_time");
-              }
-              else {
-                print_action_argument(current_action, "set_remaining_time");
-              }
+              s4o.print(" = 1;\n" + s4o.indent_spaces);
+              print_action_argument(current_action, "reset_remaining_time");
               s4o.print(" = ");
               symbol->action_time->accept(*this);
               s4o.print(";\n");
-            }
-            s4o.indent_left();
-            s4o.print(s4o.indent_spaces + "}\n");
-            if (strcmp(qualifier, "DS") == 0) {
-              s4o.print(s4o.indent_spaces + "if (desactivated) {\n");
-              s4o.indent_right();
-              s4o.print(s4o.indent_spaces);
-              print_action_argument(current_action, "set_remaining_time");
-              s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
               s4o.indent_left();
               s4o.print(s4o.indent_spaces + "}\n");
+              return NULL;
             }
+            /* SD and DS qualifiers */
+            if ( (strcmp(qualifier, "SD") == 0) ||
+                 (strcmp(qualifier, "DS") == 0)) {
+              s4o.print(s4o.indent_spaces + "if (activated) {");
+              s4o.indent_right();
+              s4o.print("\n" + s4o.indent_spaces);
+              print_action_argument(current_action, "set_remaining_time");
+              s4o.print(" = ");
+              symbol->action_time->accept(*this);
+              s4o.print(";\n");
+              s4o.indent_left();
+              s4o.print(s4o.indent_spaces + "}\n");
+              if (strcmp(qualifier, "DS") == 0) {
+                s4o.print(s4o.indent_spaces + "if (desactivated) {");
+                s4o.indent_right();
+                s4o.print("\n" + s4o.indent_spaces);
+                print_action_argument(current_action, "set_remaining_time");
+                s4o.print(" = __time_to_timespec(1, 0, 0, 0, 0, 0);\n");
+                s4o.indent_left();
+                s4o.print(s4o.indent_spaces + "}\n");
+              }
+              return NULL;
+            }
+            ERROR;
           }
           break;
         default:
@@ -875,6 +892,8 @@ class generate_c_sfc_c: public generate_c_base_and_typeid_c {
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
+      s4o.print("__action_list[i].set_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n" + s4o.indent_spaces);
+      print_variable_prefix();
       s4o.print("__action_list[i].stored = 1;\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n" + s4o.indent_spaces + "if (");
@@ -882,8 +901,6 @@ class generate_c_sfc_c: public generate_c_base_and_typeid_c {
       s4o.print("__action_list[i].reset) {\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
-      print_variable_prefix();
-      s4o.print("__action_list[i].set_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n" + s4o.indent_spaces);
       print_variable_prefix();
       s4o.print("__action_list[i].reset_remaining_time = __time_to_timespec(1, 0, 0, 0, 0, 0);\n" + s4o.indent_spaces);
       print_variable_prefix();
