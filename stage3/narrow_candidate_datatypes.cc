@@ -700,10 +700,9 @@ void *narrow_candidate_datatypes_c::visit(array_variable_c *symbol) {
 
 	/* Set the datatype of the subscripted variable and visit it recursively. For the reason why we do this,                                                 */
 	/* Please read the comments in the array_variable_c and structured_variable_c visitors in the fill_candidate_datatypes.cc file! */
-	symbol->subscripted_variable->accept(*this); // visit recursively
-
 	if (symbol->subscripted_variable->candidate_datatypes.size() == 1)
 	  symbol->subscripted_variable->datatype = symbol->subscripted_variable->candidate_datatypes[0]; // set the datatype
+	symbol->subscripted_variable->accept(*this); // visit recursively
 
 	return NULL;
 }
@@ -734,10 +733,9 @@ void *narrow_candidate_datatypes_c::visit(subscript_list_c *symbol) {
 void *narrow_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 	/* Set the datatype of the record_variable and visit it recursively. For the reason why we do this,                                                      */
 	/* Please read the comments in the array_variable_c and structured_variable_c visitors in the fill_candidate_datatypes.cc file! */
-	symbol->record_variable->accept(*this); // visit recursively
-
 	if (symbol->record_variable->candidate_datatypes.size() == 1)
 	  symbol->record_variable->datatype = symbol->record_variable->candidate_datatypes[0]; // set the datatype
+	symbol->record_variable->accept(*this); // visit recursively
 
 	return NULL;
 }

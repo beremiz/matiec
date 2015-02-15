@@ -1170,15 +1170,7 @@ void *fill_candidate_datatypes_c::visit(ref_type_decl_c *symbol) {return fill_ty
 /*********************/
 void *fill_candidate_datatypes_c::visit(symbolic_variable_c *symbol) {
 	symbol->scope = current_scope;  // the scope in which this variable was declared!
-	/*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
-	 *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
-	 *        in this fill_candidate_datatypes_c itself!
-	 *        This is needed because we need to know in which scope (i.e. the datatype of the record_variable in a structtured_variable_c)
-	 *        we will search for the field_variable of the structured_variable_c. Similarly, it is also used to determine the datatype 
-	 *        to which a REF_TO variable points to. 
-	 */
-	symbol->datatype = search_var_instance_decl->get_basetype_decl(symbol); // Do the narrow algorithm in this fill_candidate_datatypes_c!!
-	add_datatype_to_candidate_list(symbol, symbol->datatype); /* will only add if non NULL */
+	add_datatype_to_candidate_list(symbol, search_var_instance_decl->get_basetype_decl(symbol)); /* will only add if non NULL */
 	if (debug) std::cout << "VAR [" << symbol->candidate_datatypes.size() << "]\n";
 	return NULL;
 }
@@ -1235,19 +1227,11 @@ void *fill_candidate_datatypes_c::visit(array_variable_c *symbol) {
 	symbol->scope = symbol->subscripted_variable->scope;
 	if (NULL == symbol->scope) ERROR;
 
-	/* get the declaration of the data type __stored__ in the array... */
-	add_datatype_to_candidate_list(symbol, search_base_type_c::get_basetype_decl(get_datatype_info_c::get_array_storedtype_id(symbol->subscripted_variable->datatype)));   /* will only add if non NULL */
-
-	/*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
-	 *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
-	 *        in this fill_candidate_datatypes_c itself!
-	 *        This is needed because we need to know in which scope (i.e. the datatype of the record_variable in a structtured_variable_c)
-	 *        we will search for the field_variable of the structured_variable_c. Similarly, it is also used to determine the datatype 
-	 *        to which a REF_TO variable points to. 
-	 */
-	if (symbol->candidate_datatypes.size() == 1)
-	  // narrow the symbol->datatype for this array_variable as explained above!
-	  symbol->datatype = symbol->candidate_datatypes[0];
+	
+	for (unsigned int i = 0; i < symbol->subscripted_variable->candidate_datatypes.size(); i++) {
+	  /* get the declaration of the data type __stored__ in the array... */
+	  add_datatype_to_candidate_list(symbol, search_base_type_c::get_basetype_decl(get_datatype_info_c::get_array_storedtype_id(symbol->subscripted_variable->candidate_datatypes[i])));   /* will only add if non NULL */
+	}
 
 	/* recursively call the subscript list, so we can check the data types of the expressions used for the subscripts */
 	symbol->subscript_list->accept(*this);
@@ -1277,22 +1261,16 @@ void *fill_candidate_datatypes_c::visit(structured_variable_c *symbol) {
 	 *      (e.g.  arrayvar[ varx + TRUNC(realvar)].elem1)
 	 */
 	symbol->record_variable->accept(*this);
-	symbol->scope = symbol->record_variable->datatype;	// the scope in which this variable was declared! Will be used in stage4
-	
-	/*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
-	 *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
-	 *        in this fill_candidate_datatypes_c itself!
-	 *        This is needed because we need to know in which scope (i.e. the datatype of the record_variable in a structtured_variable_c)
-	 *        we will search for the field_variable of the structured_variable_c. Similarly, it is also used to determine the datatype 
-	 *        to which a REF_TO variable points to. 
-	 */
-	if (NULL != symbol->record_variable->datatype) 
-	  // We relly on the fact that we have already narrowed the symbol->datatype for the record variable, and use it as the scope in which the filed_variable is declared!
-	  add_datatype_to_candidate_list(symbol, search_base_type_c::get_basetype_decl(get_datatype_info_c::get_struct_field_type_id(symbol->record_variable->datatype, symbol->field_selector)));  /* will only add if non NULL */
-	if (symbol->candidate_datatypes.size() == 1)
-	  // narrow the symbol->datatype for this strcutured_variable as explained above!
-	  symbol->datatype = symbol->candidate_datatypes[0];
-	return NULL;
+
+	if (symbol->record_variable->candidate_datatypes.size() == 1) {
+	  // set the scope in which this variable is declared (will be a struct datatype declaration!)
+	  // We rely on the fact that if only one candidate datatype exists, then it will be the scope in which the field_variable is declared!
+	  symbol->scope = symbol->record_variable->candidate_datatypes[0];  // the scope in which this variable was declared! Will be used in stage4
+	  // Determine candidate datatypes...
+	  add_datatype_to_candidate_list(symbol, search_base_type_c::get_basetype_decl(get_datatype_info_c::get_struct_field_type_id(symbol->scope, symbol->field_selector)));  /* will only add if non NULL */
+	}
+
+	  return NULL;
 }
 
 
@@ -2045,20 +2023,7 @@ void *fill_candidate_datatypes_c::visit(deref_operator_c  *symbol) {
     
   }
 
-  /*  NOTE: We need to fully determine the datatype of each element in the structured_variable inside this fill_candidate_datatypes class!
-   *        Basically, for variables (be they symbolic_variable, structured_variable, array_variable), we do the narrow algorithm
-   *        in this fill_candidate_datatypes_c itself!
-   *        This is needed because we need to know in which scope (i.e. the datatype of the record_variable in a structtured_variable_c)
-   *        we will search for the field_variable of the structured_variable_c. Similarly, it is also used to determine the datatype 
-   *        to which a REF_TO variable points to. 
-   * 
-   *        Since the deref_operator_c may be used inside structures, we must narrow it here, if possible!
-   */
-  if (symbol->candidate_datatypes.size() == 1)
-    // narrow the symbol->datatype for this symbol as explained above!
-    symbol->datatype = symbol->candidate_datatypes[0];
-
-  /*        Since the deref_operator_c may be used inside structures, we must handle set the 'scope' annotation here too! */
+  /* Since the deref_operator_c may be used inside structures, we must handle set the 'scope' annotation here too! */
   symbol->scope = symbol->exp->scope;
   
   return NULL;
@@ -2067,29 +2032,23 @@ void *fill_candidate_datatypes_c::visit(deref_operator_c  *symbol) {
 
 /* SYM_REF1(ref_expression_c, exp)  --> an extension to the IEC 61131-3 standard - based on the IEC 61131-3 v3 standard. Returns address of the varible! */
 void *fill_candidate_datatypes_c::visit(  ref_expression_c  *symbol) {
-  /* We must first determine the datatype of the expression passed to the REF() operator, with no ambiguities! 
-   * To do this, we could use the complete standard fill/narrow algorithm for determining the datatype
-   * of the expression. This is actually possible, as nothing stops us from directly calling the narrow_candidate_datatypes_c
-   * from this method inside fill_candidate_datatypes_c, to complete the fill/narrow algorithm on this
-   * expression only.
-   * However, for the moment we take a shortcut, and set the expression's "datatype" directly, even though this 
-   * should really only be done in narrow_candidate_datatypes_c. This is possible because the expression should be
-   * an lvalue (assuming source code has no bugs), with only one candidate datatype.
-   * 
-   * (We should really check whether the expression is an lvalue. For now, leave it for the future!)
-   * 
-   * Note, however, that array variables are also lvalues, and they may containg complex
-   * expressions that include function calls in their indexes. These complex expressions must therefore still be
+  /* 
+   * Note that symbol->exp may be an array variable, and these may containg complex
+   * expressions that include function calls in their indexes. These complex expressions must also be
    * analysed using the standard fill/narrow algorithm...
    */
   symbol->exp->accept(*this);
-  if (symbol->exp->candidate_datatypes.size() == 1)
-    symbol->exp->datatype = symbol->exp->candidate_datatypes[0];
 
-  /* Create a new object of ref_spec_c, as this is the class used as the  */
-  /* canonical/base datatype of REF_TO types (see search_base_type_c ...) */ 
-  ref_spec_c *ref_spec = new ref_spec_c(symbol->exp->datatype);
-  add_datatype_to_candidate_list(symbol, ref_spec);
+  /* Currently the IEC 61131-3 symtax requires that the REF() operator have as a parameter a lvalue (a variable), that will have
+   * at most one candidate_datatype. This means that we do not really need the for() loop here, but we use it
+   * anyway as it is the correct way of implementing the fill/narrow algorithm! 
+   */
+  for (unsigned int i = 0; i < symbol->exp->candidate_datatypes.size(); i++) {
+    /* Create a new object of ref_spec_c, as this is the class used as the  */
+    /* canonical/base datatype of REF_TO types (see search_base_type_c ...) */ 
+    ref_spec_c *ref_spec = new ref_spec_c(symbol->exp->candidate_datatypes[i]);
+    add_datatype_to_candidate_list(symbol, ref_spec);
+  }
   return NULL;
 }
     
