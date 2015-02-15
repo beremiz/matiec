@@ -1193,7 +1193,7 @@ void *print_datatypes_error_c::visit(if_statement_c *symbol) {
 	symbol->expression->accept(*this);
 	if ((!get_datatype_info_c::is_type_valid(symbol->expression->datatype)) &&
 	    (symbol->expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'IF' condition (should be BOOL).");
+		STAGE3_ERROR(0, symbol->expression, symbol->expression, "Invalid data type for 'IF' condition (should be BOOL).");
 	}
 	if (NULL != symbol->statement_list)
 		symbol->statement_list->accept(*this);
@@ -1208,7 +1208,7 @@ void *print_datatypes_error_c::visit(elseif_statement_c *symbol) {
 	symbol->expression->accept(*this);
 	if ((!get_datatype_info_c::is_type_valid(symbol->expression->datatype)) &&
 	    (symbol->expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'ELSIF' condition (should be BOOL).");
+		STAGE3_ERROR(0, symbol->expression, symbol->expression, "Invalid data type for 'ELSIF' condition (should be BOOL).");
 	}
 	if (NULL != symbol->statement_list)
 		symbol->statement_list->accept(*this);
@@ -1220,7 +1220,7 @@ void *print_datatypes_error_c::visit(case_statement_c *symbol) {
 	symbol->expression->accept(*this);
 	if ((!get_datatype_info_c::is_type_valid(symbol->expression->datatype)) &&
 	    (symbol->expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(0, symbol, symbol, "'CASE' quantity not an integer or enumerated.");
+		STAGE3_ERROR(0, symbol->expression, symbol->expression, "'CASE' quantity not an integer or enumerated.");
 	}
 	symbol->case_element_list->accept(*this);
 	if (NULL != symbol->statement_list)
@@ -1239,23 +1239,23 @@ void *print_datatypes_error_c::visit(for_statement_c *symbol) {
 	/* Control variable */
 	if ((!get_datatype_info_c::is_type_valid(symbol->control_variable->datatype)) &&
 	    (symbol->control_variable->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'FOR' control variable.");
+		STAGE3_ERROR(0, symbol->control_variable, symbol->control_variable, "Invalid data type for 'FOR' control variable.");
 	}
 	/* BEG expression */
 	if ((!get_datatype_info_c::is_type_valid(symbol->beg_expression->datatype)) &&
 	    (symbol->beg_expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'FOR' begin expression.");
+		STAGE3_ERROR(0, symbol->beg_expression, symbol->beg_expression, "Invalid data type for 'FOR' begin expression.");
 	}
 	/* END expression */
 	if ((!get_datatype_info_c::is_type_valid(symbol->end_expression->datatype)) &&
 	    (symbol->end_expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'FOR' end expression.");
+		STAGE3_ERROR(0, symbol->end_expression, symbol->end_expression, "Invalid data type for 'FOR' end expression.");
 	}
 	/* BY expression */
 	if ((NULL != symbol->by_expression) &&
 	    (!get_datatype_info_c::is_type_valid(symbol->by_expression->datatype)) &&
 	    (symbol->end_expression->candidate_datatypes.size() > 0)) {
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'FOR' by expression.");
+		STAGE3_ERROR(0, symbol->by_expression, symbol->by_expression, "Invalid data type for 'FOR' by expression.");
 	}
 	/* DO statement */
 	if (NULL != symbol->statement_list)
@@ -1267,7 +1267,7 @@ void *print_datatypes_error_c::visit(for_statement_c *symbol) {
 void *print_datatypes_error_c::visit(while_statement_c *symbol) {
 	symbol->expression->accept(*this);
 	if (!get_datatype_info_c::is_type_valid(symbol->expression->datatype)) {
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'WHILE' condition.");
+		STAGE3_ERROR(0, symbol->expression, symbol->expression, "Invalid data type for 'WHILE' condition.");
 		return NULL;
 	}
 	if (NULL != symbol->statement_list)
@@ -1277,7 +1277,7 @@ void *print_datatypes_error_c::visit(while_statement_c *symbol) {
 
 void *print_datatypes_error_c::visit(repeat_statement_c *symbol) {
 	if (!get_datatype_info_c::is_type_valid(symbol->expression->datatype)) {
-		STAGE3_ERROR(0, symbol, symbol, "Invalid data type for 'REPEAT' condition.");
+		STAGE3_ERROR(0, symbol->expression, symbol->expression, "Invalid data type for 'REPEAT' condition.");
 		return NULL;
 	}
 	if (NULL != symbol->statement_list)
