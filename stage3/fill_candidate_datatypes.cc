@@ -696,6 +696,44 @@ void *fill_candidate_datatypes_c::visit(library_c *symbol) {
 }
 
 
+/*************************/
+/* B.1 - Common elements */
+/*************************/
+/*******************************************/
+/* B 1.1 - Letters, digits and identifiers */
+/*******************************************/
+
+/* Before the existance of this derived_datatype_identifier_c class, all identifiers were stored in the generic identifier_c class.
+ * Since not all identifiers are used to identify a datatype, the fill/narrow algorithms could not do fill/narrow on all identifiers, and relied
+ * on the parent class to do the fill/narrow when apropriate (i.e. when the identifier was known to reference a datatype
+ * for example, in a variable declaration -->  var1: some_user_defined_type;)
+ *
+ * However, at least one location where an identifier may reference a datatype has not yet been covered:
+ *     array1: ARRAY [1..2] OF INT;
+ *     array2: ARRAY [1..2] OF array1;  (* array1 here is stored as a derived_datatype_identifier_c)
+ *
+ * Instead of doing it like the old way, I have opted to do a generic fill/narrow for all derived_datatype_identifier_c
+ * This means that we can now delete the code of all parents of derived_datatype_identifier_c that are still doing the fill/narrow
+ * explicitly (assuming we do also implement the visitor for poutype_identifier_c). However, I will leave this code cleanup for some later oportunity.
+ */
+void *fill_candidate_datatypes_c::visit(derived_datatype_identifier_c *symbol) {
+  add_datatype_to_candidate_list(symbol, base_type(                type_symtable[symbol->value])); // will only add if datatype is not NULL!
+  return NULL;
+}
+
+/* The datatype of a poutype_identifier_c is currently always being set by the parent object, so we leave this code commented out for now. */
+/* 
+void *fill_candidate_datatypes_c::visit(         poutype_identifier_c *symbol) {
+  add_datatype_to_candidate_list(symbol, base_type( function_block_type_symtable[symbol->value])); // will only add if datatype is not NULL!
+  add_datatype_to_candidate_list(symbol, base_type(        program_type_symtable[symbol->value])); // will only add if datatype is not NULL!
+//add_datatype_to_candidate_list(symbol, base_type(            function_symtable[symbol->value])); // will only add if datatype is not NULL!
+  // NOTE: Although poutype_identifier_c is also used to identify functions, these symbols are not used as a datatype, 
+  //       so we do NOT add it as a candidate datatype!
+  return NULL;
+}
+*/
+    
+    
 /*********************/
 /* B 1.2 - Constants */
 /*********************/
@@ -1088,6 +1126,8 @@ void *fill_candidate_datatypes_c::visit(array_spec_init_c *symbol) {return fill_
 
 /* ARRAY '[' array_subrange_list ']' OF non_generic_type_name */
 // SYM_REF2(array_specification_c, array_subrange_list, non_generic_type_name)
+// void *fill_candidate_datatypes_c::visit(array_specification_c *symbol)
+//  NOTE: This visitor does not need to be implemented as fill_candidate_datatypes_c inherits from iterator_visitor_c
 
 /* helper symbol for array_specification */
 /* array_subrange_list ',' subrange */

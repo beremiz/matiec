@@ -95,6 +95,16 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
 
     symbol_c *base_type(symbol_c *symbol);
 
+    /*************************/
+    /* B.1 - Common elements */
+    /*************************/
+    /*******************************************/
+    /* B 1.1 - Letters, digits and identifiers */
+    /*******************************************/
+//  void *visit(                 identifier_c *symbol);
+    void *visit(derived_datatype_identifier_c *symbol);
+//  void *visit(         poutype_identifier_c *symbol);
+
     /**********************/
     /* B 1.3 - Data types */
     /**********************/
