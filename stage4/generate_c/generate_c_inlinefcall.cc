@@ -37,22 +37,6 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
     } variablegeneration_t;
 
   private:
-     /* The result of the comparison IL operations (GT, EQ, LT, ...)
-     * is a boolean variable.
-     * This class keeps track of the current data type stored in the
-     * il default variable. This is usually done by keeping a reference
-     * to the data type of the last operand. Nevertheless, in the case of
-     * the comparison IL operators, the data type of the result (a boolean)
-     * is not the data type of the operand. We therefore need an object
-     * of the boolean data type to keep as a reference of the current
-     * data type.
-     * The following object is it...
-     */
-    bool_type_name_c bool_type;
-    lint_type_name_c lint_type;
-    lword_type_name_c lword_type;
-    lreal_type_name_c lreal_type;
-
     /* The name of the IL default variable... */
     #define IL_DEFVAR   VAR_LEADER "IL_DEFVAR"
 
