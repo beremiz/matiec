@@ -295,6 +295,19 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
       return NULL;
     }
 
+    /*************************/
+    /* B.1 - Common elements */
+    /*************************/
+    /*******************************************/
+    /* B 1.1 - Letters, digits and identifiers */
+    /*******************************************/
+    void *visit(identifier_c *symbol) {
+      if (generating_inlinefunction) {
+        return generate_c_base_c::visit(symbol); // let the base class handle it...
+      }
+      return NULL;
+    }
+
     /*********************/
     /* B 1.4 - Variables */
     /*********************/
