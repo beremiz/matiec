@@ -2258,7 +2258,7 @@ class generate_c_c: public iterator_visitor_c {
         config_s4o.print("unsigned long long common_ticktime__ = ");
         config_s4o.print_long_long_integer(common_ticktime);
         config_s4o.print("; /*ns*/\n");
-        config_s4o.print("unsigned long greatest_tick_count__ = ");
+        config_s4o.print("unsigned long greatest_tick_count__ = (unsigned long)");
         config_s4o.print_long_integer(calculate_common_ticktime.get_greatest_tick_count());
         config_s4o.print("; /*tick*/\n");
       }
