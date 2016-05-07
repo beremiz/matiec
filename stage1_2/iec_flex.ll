@@ -1101,9 +1101,9 @@ CONFIGURATION{st_whitespace}		if (get_preparse_state()) BEGIN(get_pou_name_state
 
 <ignore_pou_state>{
 END_FUNCTION			unput_text(0); BEGIN(INITIAL);
-END_FUNCTION_BLOCK		unput_text(0); BEGIN(INITIAL); 
-END_PROGRAM			unput_text(0); BEGIN(INITIAL); 
-END_CONFIGURATION		unput_text(0); BEGIN(INITIAL); 
+END_FUNCTION_BLOCK		unput_text(0); BEGIN(INITIAL);
+END_PROGRAM			unput_text(0); BEGIN(INITIAL);
+END_CONFIGURATION		unput_text(0); BEGIN(INITIAL);
 .|\n				{}/* Ignore text inside POU! (including the '\n' character!)) */
 }
 
@@ -1147,9 +1147,9 @@ VAR_CONFIG			|
 VAR_ACCESS			|
 VAR				unput_text(0); yy_push_state(vardecl_state);
 
-END_FUNCTION			unput_text(0); BEGIN(INITIAL); 
-END_FUNCTION_BLOCK		unput_text(0); BEGIN(INITIAL); 
-END_PROGRAM			unput_text(0); BEGIN(INITIAL); 
+END_FUNCTION			unput_text(0); BEGIN(INITIAL);
+END_FUNCTION_BLOCK		unput_text(0); BEGIN(INITIAL);
+END_PROGRAM			unput_text(0); BEGIN(INITIAL);
 
 .				unput_text(0); yy_push_state(body_state); /* anything else, just change to body_state! */
 }
@@ -1480,28 +1480,49 @@ AT		return AT;		/* Keyword */
 	/***********************/
 	/* B 1.5.1 - Functions */
 	/***********************/
-FUNCTION	return FUNCTION;	/* Keyword */
-END_FUNCTION	return END_FUNCTION;	/* Keyword */
-VAR		return VAR;		/* Keyword */
-CONSTANT	return CONSTANT;	/* Keyword */
+	/* Note: The following END_FUNCTION rule includes a BEGIN(INITIAL); command.
+	 *       This is necessary in case the input program being pased has syntax errors that force
+	 *       flex's main state machine to never change to the il_state or the st_state
+	 *       after changing to the body_state.
+	 *       Ths BEGIN(INITIAL) command forces the flex state machine to re-synchronise with 
+	 *       the input stream even in the presence of buggy code!
+	 */
+FUNCTION			return FUNCTION;			/* Keyword */
+END_FUNCTION	BEGIN(INITIAL);	return END_FUNCTION;			/* Keyword */  /* see Note above */
+VAR				return VAR;				/* Keyword */
+CONSTANT			return CONSTANT;			/* Keyword */
 
 
 	/*****************************/
 	/* B 1.5.2 - Function Blocks */
 	/*****************************/
-FUNCTION_BLOCK		return FUNCTION_BLOCK;		/* Keyword */
-END_FUNCTION_BLOCK	return END_FUNCTION_BLOCK;	/* Keyword */
-VAR_TEMP		return VAR_TEMP;		/* Keyword */
-VAR			return VAR;			/* Keyword */
-NON_RETAIN		return NON_RETAIN;		/* Keyword */
-END_VAR			return END_VAR;			/* Keyword */
+	/* Note: The following END_FUNCTION_BLOCK rule includes a BEGIN(INITIAL); command.
+	 *       This is necessary in case the input program being pased has syntax errors that force
+	 *       flex's main state machine to never change to the il_state or the st_state
+	 *       after changing to the body_state.
+	 *       Ths BEGIN(INITIAL) command forces the flex state machine to re-synchronise with 
+	 *       the input stream even in the presence of buggy code!
+	 */
+FUNCTION_BLOCK				return FUNCTION_BLOCK;		/* Keyword */
+END_FUNCTION_BLOCK	BEGIN(INITIAL);	return END_FUNCTION_BLOCK;	/* Keyword */  /* see Note above */
+VAR_TEMP				return VAR_TEMP;		/* Keyword */
+VAR					return VAR;			/* Keyword */
+NON_RETAIN				return NON_RETAIN;		/* Keyword */
+END_VAR					return END_VAR;			/* Keyword */
 
 
 	/**********************/
 	/* B 1.5.3 - Programs */
 	/**********************/
-PROGRAM		return PROGRAM;			/* Keyword */
-END_PROGRAM	return END_PROGRAM;		/* Keyword */
+	/* Note: The following END_PROGRAM rule includes a BEGIN(INITIAL); command.
+	 *       This is necessary in case the input program being pased has syntax errors that force
+	 *       flex's main state machine to never change to the il_state or the st_state
+	 *       after changing to the body_state.
+	 *       Ths BEGIN(INITIAL) command forces the flex state machine to re-synchronise with 
+	 *       the input stream even in the presence of buggy code!
+	 */
+PROGRAM				return PROGRAM;				/* Keyword */
+END_PROGRAM	BEGIN(INITIAL);	return END_PROGRAM;			/* Keyword */  /* see Note above */
 
 
 	/********************************************/
@@ -1549,21 +1570,28 @@ S		return S;
 	/********************************/
 	/* B 1.7 Configuration elements */
 	/********************************/
-CONFIGURATION		return CONFIGURATION;		/* Keyword */
-END_CONFIGURATION	return END_CONFIGURATION;	/* Keyword */
-TASK			return TASK;			/* Keyword */
-RESOURCE		return RESOURCE;		/* Keyword */
-ON			return ON;			/* Keyword */
-END_RESOURCE		return END_RESOURCE;		/* Keyword */
-VAR_CONFIG		return VAR_CONFIG;		/* Keyword */
-VAR_ACCESS		return VAR_ACCESS;		/* Keyword */
-END_VAR			return END_VAR;			/* Keyword */
-WITH			return WITH;			/* Keyword */
-PROGRAM			return PROGRAM;			/* Keyword */
-RETAIN			return RETAIN;			/* Keyword */
-NON_RETAIN		return NON_RETAIN;		/* Keyword */
-READ_WRITE		return READ_WRITE;		/* Keyword */
-READ_ONLY		return READ_ONLY;		/* Keyword */
+	/* Note: The following END_CONFIGURATION rule will never get to be used, as we have
+	 *       another identical rule above (closer to the rules handling the transitions
+	 *       of the main state machine) that will always execute before this one.
+	 * Note: The following END_CONFIGURATION rule includes a BEGIN(INITIAL); command.
+	 *       This is nt strictly necessary, but I place it here so it follwos the same
+	 *       pattern used in END_FUNCTION, END_PROGRAM, and END_FUNCTION_BLOCK
+	 */
+CONFIGURATION				return CONFIGURATION;		/* Keyword */
+END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;	/* Keyword */   /* see 2 Notes above! */
+TASK					return TASK;			/* Keyword */
+RESOURCE				return RESOURCE;		/* Keyword */
+ON					return ON;			/* Keyword */
+END_RESOURCE				return END_RESOURCE;		/* Keyword */
+VAR_CONFIG				return VAR_CONFIG;		/* Keyword */
+VAR_ACCESS				return VAR_ACCESS;		/* Keyword */
+END_VAR					return END_VAR;			/* Keyword */
+WITH					return WITH;			/* Keyword */
+PROGRAM					return PROGRAM;			/* Keyword */
+RETAIN					return RETAIN;			/* Keyword */
+NON_RETAIN				return NON_RETAIN;		/* Keyword */
+READ_WRITE				return READ_WRITE;		/* Keyword */
+READ_ONLY				return READ_ONLY;		/* Keyword */
 
 	/* PRIORITY, SINGLE and INTERVAL are not a keywords, so we only return them when 
 	 * it is explicitly required and we are not expecting any identifiers
