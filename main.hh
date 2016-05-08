@@ -40,6 +40,7 @@
 
 typedef struct {
    /* options specific to stage1_2 */
+	bool disable_implicit_en_eno;  /* Disable the generation of implicit EN and ENO parameters on functions and Function Blocks */
 	bool pre_parsing;              /* Support forward references (Run a pre-parsing phase before the defintive parsing phase that builds the AST) */
 	bool safe_extensions;          /* support SAFE_* datatypes defined in PLCOpen TC5 "Safety Software Technical Specification - Part 1" v1.0 */
 	bool full_token_loc;           /* error messages specify full token location */

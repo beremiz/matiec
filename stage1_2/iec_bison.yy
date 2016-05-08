@@ -204,6 +204,9 @@ extern bool full_token_loc;
 /* A global flag used to tell the parser whether to generate conversion function for enumerated data types. */
 extern bool conversion_functions;
 
+/* A global flag used to tell the parser whether to disable generation of implicit EN and ENO parameters. */
+extern bool disable_implicit_en_eno;
+
 /* A global flag used to tell the parser whether to allow use of DREF and '^' operators (defined in IEC 61131-3 v3) */
 extern bool allow_ref_dereferencing;
 
@@ -5001,7 +5004,7 @@ function_declaration:
 /* POST_PARSING and STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
 | function_name_declaration ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
-	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
+	 if (!disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
 	 library_element_symtable.insert($1, prev_declared_derived_function_name_token);
@@ -5009,7 +5012,7 @@ function_declaration:
 /* | FUNCTION derived_function_name ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
 | function_name_declaration ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
-	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
+	 if (!disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
 	 library_element_symtable.insert($1, prev_declared_derived_function_name_token);
@@ -5220,7 +5223,7 @@ function_block_declaration:
 /* POST_PARSING: The rules expected to be applied after the preparser runs. Will only run if pre-parsing command line option is ON. */
 | FUNCTION_BLOCK prev_declared_derived_function_block_name io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
 	{$$ = new function_block_declaration_c($2, $3, $4, locloc(@$));
-	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
+	 if (!disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 /* Clear the variable_name_symtable. Since we have finished parsing the function block,
 	  * the variable names are now out of scope, so are no longer valid!
 	  */
@@ -5231,7 +5234,7 @@ function_block_declaration:
 | FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
 	{$$ = new function_block_declaration_c($2, $3, $4, locloc(@$));
 	 library_element_symtable.insert($2, prev_declared_derived_function_block_name_token);
-	 add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
+	 if (!disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 /* Clear the variable_name_symtable. Since we have finished parsing the function block,
 	  * the variable names are now out of scope, so are no longer valid!
 	  */
@@ -8447,6 +8450,8 @@ bool allow_extensible_function_parameters = false;
 bool full_token_loc;
 /* A global flag used to tell the parser whether to generate conversion function for enumerated data types. */
 bool conversion_functions = false;
+/* A global flag used to tell the parser whether to disable generation of implicit EN and ENO parameters. */
+bool disable_implicit_en_eno;
 /* A global flag used to tell the parser whether to allow use of DREF and '^' operators (defined in IEC 61131-3 v3) */
 bool allow_ref_dereferencing;
 /* A global flag used to tell the parser whether to allow use of REF_TO ANY datatypes (non-standard extension) */
@@ -8710,6 +8715,7 @@ static int parse_files(const char *libfilename, const char *filename) {
   allow_extensible_function_parameters = true;
   full_token_loc                       = runtime_options.full_token_loc;
   conversion_functions                 = runtime_options.conversion_functions;
+  disable_implicit_en_eno              = runtime_options.disable_implicit_en_eno;
   allow_ref_dereferencing              = runtime_options.ref_standard_extensions;
   allow_ref_to_any                     = runtime_options.ref_nonstand_extensions;
   allow_ref_to_in_derived_datatypes    = runtime_options.ref_nonstand_extensions;
@@ -8747,6 +8753,7 @@ static int parse_files(const char *libfilename, const char *filename) {
   allow_extensible_function_parameters = false;
   full_token_loc                       = runtime_options.full_token_loc;
   conversion_functions                 = runtime_options.conversion_functions;
+  disable_implicit_en_eno              = runtime_options.disable_implicit_en_eno;
   allow_ref_dereferencing              = runtime_options.ref_standard_extensions;
   allow_ref_to_any                     = runtime_options.ref_nonstand_extensions;
   allow_ref_to_in_derived_datatypes    = runtime_options.ref_nonstand_extensions;

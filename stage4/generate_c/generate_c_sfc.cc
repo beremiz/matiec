@@ -720,8 +720,6 @@ class generate_c_sfc_c: public generate_c_base_and_typeid_c {
       /* generate elapsed_time initializations */
       s4o.print(s4o.indent_spaces + "// Calculate elapsed_time\n");
       s4o.print(s4o.indent_spaces +"current_time = __CURRENT_TIME;\n");
-//       s4o.print(s4o.indent_spaces +"elapsed_time = __time_sub(__BOOL_LITERAL(TRUE), NULL, current_time, ");
-//       s4o.print(s4o.indent_spaces +"elapsed_time = SUB_TIME(__BOOL_LITERAL(TRUE), NULL, current_time, ");
       s4o.print(s4o.indent_spaces +"elapsed_time = __time_sub(current_time, ");
       print_variable_prefix();
       s4o.print("__lasttick_time);\n");
@@ -768,8 +766,6 @@ class generate_c_sfc_c: public generate_c_base_and_typeid_c {
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-//      s4o.print("__step_list[i].elapsed_time = __time_add(__BOOL_LITERAL(TRUE), NULL, ");
-//      s4o.print("__step_list[i].elapsed_time = ADD_TIME(__BOOL_LITERAL(TRUE), NULL, ");
       s4o.print("__step_list[i].T.value = __time_add(");
       print_variable_prefix();
       s4o.print("__step_list[i].T.value, elapsed_time);\n");
@@ -802,8 +798,6 @@ class generate_c_sfc_c: public generate_c_base_and_typeid_c {
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-//       s4o.print("__action_list[i].set_remaining_time = __time_sub(__BOOL_LITERAL(TRUE), NULL, ");
-//       s4o.print("__action_list[i].set_remaining_time = SUB_TIME(__BOOL_LITERAL(TRUE), NULL, ");
       s4o.print("__action_list[i].set_remaining_time = __time_sub(");
       print_variable_prefix();
       s4o.print("__action_list[i].set_remaining_time, elapsed_time);\n");
@@ -829,8 +823,6 @@ class generate_c_sfc_c: public generate_c_base_and_typeid_c {
       s4o.indent_right();
       s4o.print(s4o.indent_spaces);
       print_variable_prefix();
-//       s4o.print("__action_list[i].reset_remaining_time = __time_sub(__BOOL_LITERAL(TRUE), NULL, ");
-//       s4o.print("__action_list[i].reset_remaining_time = SUB_TIME(__BOOL_LITERAL(TRUE), NULL, ");
       s4o.print("__action_list[i].reset_remaining_time = __time_sub(");
       print_variable_prefix();
       s4o.print("__action_list[i].reset_remaining_time, elapsed_time);\n");
