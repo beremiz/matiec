@@ -764,7 +764,8 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
       symbol_c *parameter_assignment_list = NULL;
       if (NULL != symbol->   formal_param_list) parameter_assignment_list = symbol->   formal_param_list;
       if (NULL != symbol->nonformal_param_list) parameter_assignment_list = symbol->nonformal_param_list;
-      if (NULL == parameter_assignment_list) ERROR;
+      // NOTE-> We support the non-standard feature of POUS with no in, out and inout parameters, so this is no longer an internal error!
+      // if (NULL == parameter_assignment_list) ERROR; 
 
       function_call_param_iterator_c function_call_param_iterator(symbol);
 

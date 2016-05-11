@@ -198,15 +198,6 @@ extern bool allow_function_overloading;
  */
 extern bool allow_extensible_function_parameters;
 
-/* A global flag used to tell the parser whether to include the full variable location when printing out error messages... */
-extern bool full_token_loc;
-
-/* A global flag used to tell the parser whether to generate conversion function for enumerated data types. */
-extern bool conversion_functions;
-
-/* A global flag used to tell the parser whether to disable generation of implicit EN and ENO parameters. */
-extern bool disable_implicit_en_eno;
-
 /* A global flag used to tell the parser whether to allow use of DREF and '^' operators (defined in IEC 61131-3 v3) */
 extern bool allow_ref_dereferencing;
 
@@ -2576,7 +2567,7 @@ structure_type_name: identifier;
 
 data_type_declaration:
   TYPE type_declaration_list END_TYPE
-	{$$ = new data_type_declaration_c($2, locloc(@$)); if (conversion_functions) include_string((create_enumtype_conversion_functions_c::get_declaration($$)).c_str());}
+	{$$ = new data_type_declaration_c($2, locloc(@$)); if (runtime_options.conversion_functions) include_string((create_enumtype_conversion_functions_c::get_declaration($$)).c_str());}
 /* ERROR_CHECK_BEGIN */
 | TYPE END_TYPE
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "no data type declared in data type(s) declaration."); yynerrs++;}
@@ -5004,7 +4995,7 @@ function_declaration:
 /* POST_PARSING and STANDARD_PARSING: The rules expected to be applied after the preparser has finished. */
 | function_name_declaration ':' elementary_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
-	 if (!disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
+	 if (!runtime_options.disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
 	 library_element_symtable.insert($1, prev_declared_derived_function_name_token);
@@ -5012,7 +5003,7 @@ function_declaration:
 /* | FUNCTION derived_function_name ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
 | function_name_declaration ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
-	 if (!disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
+	 if (!runtime_options.disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();
 	 library_element_symtable.insert($1, prev_declared_derived_function_name_token);
@@ -5223,7 +5214,7 @@ function_block_declaration:
 /* POST_PARSING: The rules expected to be applied after the preparser runs. Will only run if pre-parsing command line option is ON. */
 | FUNCTION_BLOCK prev_declared_derived_function_block_name io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
 	{$$ = new function_block_declaration_c($2, $3, $4, locloc(@$));
-	 if (!disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
+	 if (!runtime_options.disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 /* Clear the variable_name_symtable. Since we have finished parsing the function block,
 	  * the variable names are now out of scope, so are no longer valid!
 	  */
@@ -5234,7 +5225,7 @@ function_block_declaration:
 | FUNCTION_BLOCK derived_function_block_name io_OR_other_var_declarations_list function_block_body END_FUNCTION_BLOCK
 	{$$ = new function_block_declaration_c($2, $3, $4, locloc(@$));
 	 library_element_symtable.insert($2, prev_declared_derived_function_block_name_token);
-	 if (!disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
+	 if (!runtime_options.disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 /* Clear the variable_name_symtable. Since we have finished parsing the function block,
 	  * the variable names are now out of scope, so are no longer valid!
 	  */
@@ -7815,11 +7806,16 @@ function_invocation:
 	{$$ = new function_invocation_c($1, $3, NULL, locloc(@$)); if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR;} // $1 should be a poutype_identifier_c
 | function_name_no_NOT_clashes '(' param_assignment_nonformal_list ')'
 	{$$ = new function_invocation_c($1, NULL, $3, locloc(@$)); if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR;} // $1 should be a poutype_identifier_c
+| function_name_no_NOT_clashes '(' ')'
+	{if (NULL == dynamic_cast<poutype_identifier_c*>($1)) ERROR; // $1 should be a poutype_identifier_c
+	 if (runtime_options.allow_missing_var_in)
+		{$$ = new function_invocation_c($1, NULL, NULL, locloc(@$));}
+	 else
+		{$$ = NULL; print_err_msg(locl(@2), locf(@3), "no parameter defined in function invocation of ST expression."); yynerrs++;}
+	}
 /* ERROR_CHECK_BEGIN */ 
 | function_name_no_NOT_clashes param_assignment_formal_list ')'
   {$$ = NULL; print_err_msg(locl(@1), locf(@2), "'(' missing after function name in ST expression."); yynerrs++;}
-| function_name_no_NOT_clashes '(' ')'
-  {$$ = NULL; print_err_msg(locl(@2), locf(@3), "no parameter defined in function invocation of ST expression."); yynerrs++;}
 | function_name_no_NOT_clashes '(' error ')'
   {$$ = NULL; print_err_msg(locf(@3), locl(@3), "invalid parameter(s) defined in function invocation of ST expression."); yyerrok;}
 | function_name_no_NOT_clashes '(' param_assignment_formal_list error
@@ -8446,12 +8442,6 @@ bool allow_function_overloading = false;
  */
 bool allow_extensible_function_parameters = false;
 
-/* A global flag indicating whether to include the full variable location when printing out error messages... */
-bool full_token_loc;
-/* A global flag used to tell the parser whether to generate conversion function for enumerated data types. */
-bool conversion_functions = false;
-/* A global flag used to tell the parser whether to disable generation of implicit EN and ENO parameters. */
-bool disable_implicit_en_eno;
 /* A global flag used to tell the parser whether to allow use of DREF and '^' operators (defined in IEC 61131-3 v3) */
 bool allow_ref_dereferencing;
 /* A global flag used to tell the parser whether to allow use of REF_TO ANY datatypes (non-standard extension) */
@@ -8527,7 +8517,7 @@ void print_err_msg(int first_line,
   if (first_filename == NULL) first_filename = unknown_file;
   if ( last_filename == NULL)  last_filename = unknown_file;
 
-  if (full_token_loc) {
+  if (runtime_options.full_token_loc) {
     if (first_filename == last_filename)
       fprintf(stderr, "%s:%d-%d..%d-%d: error: %s\n", first_filename, first_line, first_column, last_line, last_column, additional_error_msg);
     else
@@ -8713,9 +8703,6 @@ static int parse_files(const char *libfilename, const char *filename) {
 
   allow_function_overloading           = true;
   allow_extensible_function_parameters = true;
-  full_token_loc                       = runtime_options.full_token_loc;
-  conversion_functions                 = runtime_options.conversion_functions;
-  disable_implicit_en_eno              = runtime_options.disable_implicit_en_eno;
   allow_ref_dereferencing              = runtime_options.ref_standard_extensions;
   allow_ref_to_any                     = runtime_options.ref_nonstand_extensions;
   allow_ref_to_in_derived_datatypes    = runtime_options.ref_nonstand_extensions;
@@ -8751,9 +8738,6 @@ static int parse_files(const char *libfilename, const char *filename) {
 
   allow_function_overloading           = false;
   allow_extensible_function_parameters = false;
-  full_token_loc                       = runtime_options.full_token_loc;
-  conversion_functions                 = runtime_options.conversion_functions;
-  disable_implicit_en_eno              = runtime_options.disable_implicit_en_eno;
   allow_ref_dereferencing              = runtime_options.ref_standard_extensions;
   allow_ref_to_any                     = runtime_options.ref_nonstand_extensions;
   allow_ref_to_in_derived_datatypes    = runtime_options.ref_nonstand_extensions;

@@ -121,9 +121,11 @@ static void printusage(const char *cmd) {
   printf(" -R : allow use of REF_TO ANY datatypes              (a non-standard extension!)\n");
   printf("        as well as REF_TO in ARRAYs and STRUCTs      (a non-standard extension!)\n");
   printf(" -a : allow use of non-literals in array size limits (a non-standard extension!)\n");
+  printf(" -i : allow POUs with no in out and inout parameters (a non-standard extension!)\n");
   printf(" -e : disable generation of implicit EN and ENO parameters.\n");
   printf(" -c : create conversion functions for enumerated data types\n");
   printf(" -O : options for output (code generation) stage. Available options for %s are...\n", cmd);
+  runtime_options.allow_missing_var_in    = false; /* disable: allow definition and invocation of POUs with no input, output and in_out parameters! */
   stage4_print_options();
   printf("\n");
   printf("%s - Copyright (C) 2003-2014 \n"
@@ -143,6 +145,7 @@ int main(int argc, char **argv) {
   int path_len;
 
   /* Default values for the command line options... */
+  runtime_options.allow_missing_var_in    = false; /* disable: allow definition and invocation of POUs with no input, output and in_out parameters! */
   runtime_options.disable_implicit_en_eno = false; /* disable: do not generate EN and ENO parameters */
   runtime_options.pre_parsing             = false; /* disable: allow use of forward references (run pre-parsing phase before the definitive parsing phase that builds the AST) */
   runtime_options.safe_extensions         = false; /* disable: allow use of SAFExxx datatypes */
@@ -160,7 +163,7 @@ int main(int argc, char **argv) {
   /******************************************/
   /*   Parse command line options...        */
   /******************************************/
-  while ((optres = getopt(argc, argv, ":nehvfplsrRacI:T:O:")) != -1) {
+  while ((optres = getopt(argc, argv, ":nehvfplsrRaicI:T:O:")) != -1) {
     switch(optres) {
     case 'h':
       printusage(argv[0]);
@@ -176,6 +179,7 @@ int main(int argc, char **argv) {
               runtime_options.ref_nonstand_extensions  = true;  break;
     case 'r': runtime_options.ref_standard_extensions  = true;  break;
     case 'a': runtime_options.nonliteral_in_array_size = true;  break;
+    case 'i': runtime_options.allow_missing_var_in     = true;  break;
     case 'c': runtime_options.conversion_functions     = true;  break;
     case 'n': runtime_options.nested_comments          = true;  break;
     case 'e': runtime_options.disable_implicit_en_eno  = true;  break;

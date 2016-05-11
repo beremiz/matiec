@@ -2170,7 +2170,7 @@ void *fill_candidate_datatypes_c::visit(not_expression_c *symbol) {
 void *fill_candidate_datatypes_c::visit(function_invocation_c *symbol) {
 	if      (NULL != symbol->formal_param_list)        symbol->   formal_param_list->accept(*this);
 	else if (NULL != symbol->nonformal_param_list)     symbol->nonformal_param_list->accept(*this);
-	else ERROR;
+	// else ERROR;  NOTE-> We support the non-standard feature of POUS with no in, out and inout parameters, so this is no longer an internal error!
 
 	generic_function_call_t fcall_param = {
 			  function_name:                symbol->function_name,
