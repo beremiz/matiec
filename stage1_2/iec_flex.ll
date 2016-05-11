@@ -151,17 +151,6 @@ const char *current_filename = NULL;
 
 
 
-/* We will not be using unput() in our flex code... */
-/* NOTE: it seems that this #define is no longer needed, It has been 
- * replaced by %option nounput.
- * Should we simply delete it?
- * For now leave it in, in case someone is using an old version of flex.
- * In any case, the most harm that can result in a warning message
- * when compiling iec.flex.c:
- * warning: ‘void yyunput(int, char*)’ defined but not used
- */
-#define YY_NO_UNPUT
-
 /* Variable defined by the bison parser.
  * It must be initialised with the location
  * of the token being parsed.
