@@ -650,6 +650,9 @@ typedef struct YYLTYPE {
 %token TIME_OF_DAY
 %token TOD
 
+/* A non-standard extension! */
+%token VOID
+
 /******************************************************/
 /* Symbols defined in                                 */
 /* "Safety Software Technical Specification,          */
@@ -5003,6 +5006,14 @@ function_declaration:
 /* | FUNCTION derived_function_name ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION */
 | function_name_declaration ':' derived_type_name io_OR_function_var_declarations_list function_body END_FUNCTION
 	{$$ = new function_declaration_c($1, $3, $4, $5, locloc(@$));
+	 if (!runtime_options.disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
+	 variable_name_symtable.pop();
+	 direct_variable_symtable.pop();
+	 library_element_symtable.insert($1, prev_declared_derived_function_name_token);
+	}
+/* | FUNCTION derived_function_name ':' VOID io_OR_function_var_declarations_list function_body END_FUNCTION */
+| function_name_declaration ':' VOID io_OR_function_var_declarations_list function_body END_FUNCTION
+	{$$ = new function_declaration_c($1, new void_c(locloc(@3)), $4, $5, locloc(@$));
 	 if (!runtime_options.disable_implicit_en_eno) add_en_eno_param_decl_c::add_to($$); /* add EN and ENO declarations, if not already there */
 	 variable_name_symtable.pop();
 	 direct_variable_symtable.pop();

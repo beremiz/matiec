@@ -1367,6 +1367,10 @@ TOD		return TOD;		/* Keyword (Data Type) */
 DATE_AND_TIME	return DATE_AND_TIME;	/* Keyword (Data Type) */
 TIME_OF_DAY	return TIME_OF_DAY;	/* Keyword (Data Type) */
 
+					/* A non-standard extension! */
+VOID		{if (runtime_options.allow_void_datatype) {return VOID;}          else {REJECT;}} 
+
+
 	/*****************************************************************/
 	/* Keywords defined in "Safety Software Technical Specification" */
 	/*****************************************************************/
