@@ -1831,7 +1831,8 @@ void *fill_candidate_datatypes_c::visit(il_fb_call_c *symbol) {
 /* NOTE: The parameter 'called_function_declaration' is used to pass data between the stage 3 and stage 4. */
 // SYM_REF2(il_formal_funct_call_c, function_name, il_param_list, symbol_c *called_function_declaration; int extensible_param_count;)
 void *fill_candidate_datatypes_c::visit(il_formal_funct_call_c *symbol) {
-	symbol->il_param_list->accept(*this);
+	/* non-standard extension allowing functions with no input parameters => il_param_list may be NULL !!! */
+	if (NULL != symbol->il_param_list) symbol->il_param_list->accept(*this); 
 
 	generic_function_call_t fcall_param = {
 		/* fcall_param.function_name               = */ symbol->function_name,
