@@ -7905,7 +7905,15 @@ statement:
 | subprogram_control_statement
 | selection_statement
 | iteration_statement
-| function_invocation /* TODO: this must be conditional on command line parameter! */
+| function_invocation 
+	{ /* This is a non-standard extension (calling a function outside an ST expression!) */
+	  /* Only allow this if command line option has been selected...                     */
+	  $$ = $1; 
+	  if (!runtime_options.allow_void_datatype) {
+	    print_err_msg(locf(@1), locl(@1), "Function invocation in ST code is not allowed outside an expression. To allow this non-standard syntax, activate the apropriate command line option."); 
+	    yynerrs++;
+	  }
+	}  
 ;
 
 
