@@ -658,6 +658,8 @@ void *visit(date_and_time_c *symbol) {
     void *visit(safestring_type_name_c *symbol)  {s4o.print("STRING");  return NULL;}
     void *visit(safewstring_type_name_c *symbol) {s4o.print("WSTRING"); return NULL;}
 
+    void *visit(void_type_name_c *symbol)        {s4o.print("void");    return NULL;}
+
 /********************************/
 /* B.1.3.2 - Generic data types */
 /********************************/

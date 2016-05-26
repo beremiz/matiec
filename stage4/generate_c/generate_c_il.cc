@@ -884,8 +884,11 @@ void *visit(il_function_call_c *symbol) {
   int fdecl_mutiplicity =  function_symtable.count(symbol->function_name);
   if (fdecl_mutiplicity == 0) ERROR;
 
-  this->implicit_variable_result.accept(*this);
-  s4o.print(" = ");
+  /* when function returns a void, we do not store the value in the default variable! */
+  if (!get_datatype_info_c::is_VOID(symbol->datatype)) {
+    this->implicit_variable_result.accept(*this);
+    s4o.print(" = ");
+  }
     
   if (function_type_prefix != NULL) {
     s4o.print("(");
@@ -1288,8 +1291,11 @@ void *visit(il_formal_funct_call_c *symbol) {
     /* function being called is NOT overloaded! */
     f_decl = NULL; 
 
-  this->implicit_variable_result.accept(*this);
-  s4o.print(" = ");
+  /* when function returns a void, we do not store the value in the default variable! */
+  if (!get_datatype_info_c::is_VOID(symbol->datatype)) {
+    this->implicit_variable_result.accept(*this);
+    s4o.print(" = ");
+  }
   
   if (function_type_prefix != NULL) {
     s4o.print("(");

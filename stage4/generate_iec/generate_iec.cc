@@ -414,7 +414,7 @@ void *visit(      dword_type_name_c *symbol) {s4o.print("DWORD");       return N
 void *visit(     string_type_name_c *symbol) {s4o.print("STRING");      return NULL;}
 void *visit(    wstring_type_name_c *symbol) {s4o.print("WSTRING");     return NULL;}
 
-void *visit(                 void_c *symbol) {s4o.print("VOID");        return NULL;} /* a non-standard extension! */
+void *visit(       void_type_name_c *symbol) {s4o.print("VOID");        return NULL;} /* a non-standard extension! */
 
 void *visit(   safetime_type_name_c *symbol) {s4o.print("SAFETIME");    return NULL;}
 void *visit(   safebool_type_name_c *symbol) {s4o.print("SAFEBOOL");    return NULL;}

@@ -859,36 +859,55 @@ class generate_c_pous_c {
     
       /* (B.2) Temporary variable for function's return value */
       /* It will have the same name as the function itself! */
-      s4o.print(s4o.indent_spaces);
-      symbol->type_name->accept(print_base); /* return type */
-      s4o.print(" ");
-      symbol->derived_function_name->accept(print_base);
-      s4o.print(" = ");
-      {
-        /* get the default value of this variable's type */
-        symbol_c *default_value = type_initial_value_c::get(symbol->type_name);
-        if (default_value == NULL) ERROR;
-        initialization_analyzer_c initialization_analyzer(default_value);
-        switch (initialization_analyzer.get_initialization_type()) {
-          case initialization_analyzer_c::struct_it:
-            {
-              generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
-              structure_initialization->init_structure_default(symbol->type_name);
-              structure_initialization->init_structure_values(default_value);
-              delete structure_initialization;
-            }
-            break;
-          case initialization_analyzer_c::array_it:
-            {
-              generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
-              array_initialization->init_array_size(symbol->type_name);
-              array_initialization->init_array_values(default_value);
-              delete array_initialization;
-            }
-            break;
-          default:
-            default_value->accept(print_base);
-            break;
+      /* NOTE: matiec supports a non-standard syntax, in which functions do not return a value
+       *       (declared as returning the special non-standard datatype VOID)
+       *       e.g.:   FUNCTION foo: VOID
+       *                ...
+       *               END_FUNCTION
+       *       
+       *       These functions cannot return any value, so they do not need a variable to
+       *       store the return value.
+       *       Note that any attemot to sto a value in the implicit variable
+       *       e.g.:   FUNCTION foo: VOID
+       *                ...
+       *                 foo := 42;
+       *               END_FUNCTION
+       *       will always return a datatype incompatilibiyt error in stage 3 of matiec, 
+       *       so it is safe for stage 4 to assume that this return variable will never be needed
+       *       if the function's return type is VOID.
+       */
+      if (!get_datatype_info_c::is_VOID(symbol->type_name->datatype)) { // only print return variable if return datatype is not VOID
+        s4o.print(s4o.indent_spaces);
+        symbol->type_name->accept(print_base); /* return type */
+        s4o.print(" ");
+        symbol->derived_function_name->accept(print_base);
+        s4o.print(" = ");
+        {
+          /* get the default value of this variable's type */
+          symbol_c *default_value = type_initial_value_c::get(symbol->type_name);
+          if (default_value == NULL) ERROR;
+          initialization_analyzer_c initialization_analyzer(default_value);
+          switch (initialization_analyzer.get_initialization_type()) {
+            case initialization_analyzer_c::struct_it:
+              {
+                generate_c_structure_initialization_c *structure_initialization = new generate_c_structure_initialization_c(&s4o);
+                structure_initialization->init_structure_default(symbol->type_name);
+                structure_initialization->init_structure_values(default_value);
+                delete structure_initialization;
+              }
+              break;
+            case initialization_analyzer_c::array_it:
+              {
+                generate_c_array_initialization_c *array_initialization = new generate_c_array_initialization_c(&s4o);
+                array_initialization->init_array_size(symbol->type_name);
+                array_initialization->init_array_values(default_value);
+                delete array_initialization;
+              }
+              break;
+            default:
+              default_value->accept(print_base);
+              break;
+          }
         }
       }
       s4o.print(";\n\n");
@@ -909,9 +928,11 @@ class generate_c_pous_c {
         s4o.print(s4o.indent_spaces + "*__ENO = __BOOL_LITERAL(FALSE);\n");
         s4o.indent_left();
         s4o.print(s4o.indent_spaces + "}\n");
-        s4o.print(s4o.indent_spaces + "return ");
-        symbol->derived_function_name->accept(print_base);
-        s4o.print(";\n");
+        if (!get_datatype_info_c::is_VOID(symbol->type_name->datatype)) { // only print return variable if return datatype is not VOID
+          s4o.print(s4o.indent_spaces + "return ");
+          symbol->derived_function_name->accept(print_base);
+          s4o.print(";\n");
+        }
         s4o.indent_left();
         s4o.print(s4o.indent_spaces + "}\n");
       }
@@ -930,9 +951,12 @@ class generate_c_pous_c {
       vardecl->print(symbol->var_declarations_list);
       delete vardecl;
       
-      s4o.print(s4o.indent_spaces + "return ");
-      symbol->derived_function_name->accept(print_base);
-      s4o.print(";\n");
+      if (!get_datatype_info_c::is_VOID(symbol->type_name->datatype)) { // only print 'return <fname>' if return datatype is not VOID
+        s4o.print(s4o.indent_spaces + "return ");
+        symbol->derived_function_name->accept(print_base);
+        s4o.print(";\n");
+      }
+
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n\n\n");
     

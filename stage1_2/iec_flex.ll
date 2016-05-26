@@ -226,6 +226,16 @@ void unput_and_mark(const char c);
 
 void include_file(const char *include_filename);
 
+/* The body_state tries to find a ';' before a END_PROGRAM, END_FUNCTION or END_FUNCTION_BLOCK or END_ACTION
+ * To do so, it must ignore comments and pragmas. This means that we cannot do this in a signle lex rule.
+ * However, we must store any text we consume in every rule, so we can push it back into the buffer
+ * once we have decided if we are parsing ST or IL code. The following functions manage that buffer used by
+ * the body_state.
+ */
+void  append_bodystate_buffer(const char *yytext);
+void   unput_bodystate_buffer(void);
+int  isempty_bodystate_buffer(void);
+
 int GetNextChar(char *b, int maxBuffer);
 %}
 
@@ -958,20 +968,29 @@ incompl_location	%[IQM]\*
 <INITIAL>{file_include_pragma}	unput_text(0); yy_push_state(include_beg);
 
 	/* Pragmas sent to syntax analyser (bison) */
-{disable_code_generation_pragma}               return disable_code_generation_pragma_token;
-{enable_code_generation_pragma}                return enable_code_generation_pragma_token;
-<body_state,vardecl_list_state>{disable_code_generation_pragma}   return disable_code_generation_pragma_token;
-<body_state,vardecl_list_state>{enable_code_generation_pragma}    return enable_code_generation_pragma_token;
-
+	/* NOTE: In the vardecl_list_state we only process the pragmas between two consecutive VAR .. END_VAR blocks.
+	 *       We do not process any pragmas trailing after the last END_VAR. We leave that to the body_state.
+	 *       This is because the pragmas are stored in a statement_list or instruction_list (in bison),
+	 *       but these lists must start with the special tokens start_IL_body_token/start_ST_body_token.
+	 *       This means that these special tokens must be generated (by the body_state) before processing
+	 *       the pragme => we cannot process the trailing pragmas in the vardecl_list_state state.
+	 */
+{disable_code_generation_pragma}				return disable_code_generation_pragma_token;
+{enable_code_generation_pragma}					return enable_code_generation_pragma_token;
+<vardecl_list_state>{disable_code_generation_pragma}/(VAR)	return disable_code_generation_pragma_token; 
+<vardecl_list_state>{enable_code_generation_pragma}/(VAR)	return enable_code_generation_pragma_token;  
+<body_state>{disable_code_generation_pragma}			append_bodystate_buffer(yytext); /* in body state we do not process any tokens, we simply store them for later processing! */
+<body_state>{enable_code_generation_pragma}			append_bodystate_buffer(yytext); /* in body state we do not process any tokens, we simply store them for later processing! */
 	/* Any other pragma we find, we just pass it up to the syntax parser...   */
 	/* Note that the <body_state> state is exclusive, so we have to include it here too. */
+<body_state>{pragma}					append_bodystate_buffer(yytext); /* in body state we do not process any tokens, we simply store them for later processing! */
 {pragma}	{/* return the pragmma without the enclosing '{' and '}' */
 		 int cut = yytext[1]=='{'?2:1;
 		 yytext[strlen(yytext)-cut] = '\0';
 		 yylval.ID=strdup(yytext+cut);
 		 return pragma_token;
 		}
-<body_state,vardecl_list_state>{pragma} {/* return the pragmma without the enclosing '{' and '}' */
+<vardecl_list_state>{pragma}/(VAR) {/* return the pragmma without the enclosing '{' and '}' */
 		 int cut = yytext[1]=='{'?2:1;
 		 yytext[strlen(yytext)-cut] = '\0';
 		 yylval.ID=strdup(yytext+cut);
@@ -1059,28 +1078,10 @@ incompl_location	%[IQM]\*
 
 	/* INITIAL -> header_state */
 <INITIAL>{
-	/* NOTE: how about functions that do not declare variables, and go directly to the body_state???
-	 *      - According to Section 2.5.1.3 (Function Declaration), item 2 in the list, a FUNCTION
-	 *        must have at least one input argument, so a correct declaration will have at least
-	 *        one VAR_INPUT ... VAR_END construct!
-	 *      - According to Section 2.5.2.2 (Function Block Declaration), a FUNCTION_BLOCK
-	 *        must have at least one input argument, so a correct declaration will have at least
-	 *        one VAR_INPUT ... VAR_END construct!
-	 *      - According to Section 2.5.3 (Programs), a PROGRAM must have at least one input
-	 *        argument, so a correct declaration will have at least one VAR_INPUT ... VAR_END
-	 *        construct!
-	 *
-	 *       All the above means that we needn't worry about PROGRAMs, FUNCTIONs or
-	 *       FUNCTION_BLOCKs that do not have at least one VAR_END before the body_state.
-	 *       If the code has an error, and no VAR_END before the body, we will simply
-	 *       continue in the <vardecl_state> state, untill the end of the FUNCTION, FUNCTION_BLOCK
-	 *       or PROGAM.
-	 */
-
-FUNCTION{st_whitespace} 		if (get_preparse_state()) BEGIN(get_pou_name_state); else BEGIN(header_state); return FUNCTION;
-FUNCTION_BLOCK{st_whitespace}		if (get_preparse_state()) BEGIN(get_pou_name_state); else BEGIN(header_state); return FUNCTION_BLOCK;
-PROGRAM{st_whitespace}			if (get_preparse_state()) BEGIN(get_pou_name_state); else BEGIN(header_state); return PROGRAM;
-CONFIGURATION{st_whitespace}		if (get_preparse_state()) BEGIN(get_pou_name_state); else BEGIN(config_state); return CONFIGURATION;
+FUNCTION{st_whitespace} 		if (get_preparse_state()) BEGIN(get_pou_name_state); else {BEGIN(header_state);/* printf("\nChanging to header_state\n"); */} return FUNCTION;
+FUNCTION_BLOCK{st_whitespace}		if (get_preparse_state()) BEGIN(get_pou_name_state); else {BEGIN(header_state);/* printf("\nChanging to header_state\n"); */} return FUNCTION_BLOCK;
+PROGRAM{st_whitespace}			if (get_preparse_state()) BEGIN(get_pou_name_state); else {BEGIN(header_state);/* printf("\nChanging to header_state\n"); */} return PROGRAM;
+CONFIGURATION{st_whitespace}		if (get_preparse_state()) BEGIN(get_pou_name_state); else {BEGIN(config_state);/* printf("\nChanging to config_state\n"); */} return CONFIGURATION;
 }
 
 <get_pou_name_state>{
@@ -1096,21 +1097,40 @@ END_CONFIGURATION		unput_text(0); BEGIN(INITIAL);
 .|\n				{}/* Ignore text inside POU! (including the '\n' character!)) */
 }
 
-	/* INITIAL -> body_state */
-	/* required if the function, program, etc.. has no VAR block! */
-	/* We comment it out since the standard does not allow this.  */
-	/* NOTE: Even if we were to include the following code, it    */
-	/*       would have no effect whatsoever since the above      */
-	/*       rules will take precendence!                         */
-	/*
-<INITIAL>{
-FUNCTION	BEGIN(body_state); return FUNCTION;
-FUNCTION_BLOCK	BEGIN(body_state); return FUNCTION_BLOCK;
-PROGRAM		BEGIN(body_state); return PROGRAM;
-}
-	*/
 
 	/* header_state -> (vardecl_list_state) */
+	/* NOTE: This transition assumes that all POUs with code (Function, FB, and Program) will always contain
+	 *       at least one VAR_XXX block.
+	 *      How about functions that do not declare variables, and go directly to the body_state???
+	 *      - According to Section 2.5.1.3 (Function Declaration), item 2 in the list, a FUNCTION
+	 *        must have at least one input argument, so a correct declaration will have at least
+	 *        one VAR_INPUT ... VAR_END construct!
+	 *      - According to Section 2.5.2.2 (Function Block Declaration), a FUNCTION_BLOCK
+	 *        must have at least one input argument, so a correct declaration will have at least
+	 *        one VAR_INPUT ... VAR_END construct!
+	 *      - According to Section 2.5.3 (Programs), a PROGRAM must have at least one input
+	 *        argument, so a correct declaration will have at least one VAR_INPUT ... VAR_END
+	 *        construct!
+	 *
+	 *       All the above means that we needn't worry about PROGRAMs, FUNCTIONs or
+	 *       FUNCTION_BLOCKs that do not have at least one VAR_END before the body_state.
+	 *       If the code has an error, and no VAR_END before the body, we will simply
+	 *       continue in the <vardecl_state> state, until the end of the FUNCTION, FUNCTION_BLOCK
+	 *       or PROGAM.
+	 * 
+	 * WARNING: From 2016-05 (May 2016) onwards, matiec supports a non-standard option in which a Function
+	 *          may be declared with no Input, Output or IN_OUT variables. This means that the above 
+	 *          assumption is no longer valid.
+	 *          To make things simpler (i.e. so we do not need to change the transition conditions in the flex state machine),
+	 *          when using this non-standard extension matiec requires that Functions must include at least one 
+	 *          VAR .. END_VAR block. This implies that the above assumption remains valid!
+	 *          This limitation of requiring a VAR .. END_VAR block is not really very limiting, as a function
+	 *          with no input and output parameters will probably need to do some 'work', and for that it will
+	 *          probably need some local variables declared in a VAR .. END_VAR block.
+	 *          Note however that in the extreme it might make sense to have a function with no variables whatsoever
+	 *          (e.g.: a function that only calls other functions that all return VOID - another non standard extension!).
+	 *          For now we do not consider this!!
+	 */
 <header_state>{
 VAR				| /* execute the next rule's action, i.e. fall-through! */
 VAR_INPUT			|
@@ -1120,7 +1140,7 @@ VAR_EXTERNAL			|
 VAR_GLOBAL			|
 VAR_TEMP			|
 VAR_CONFIG			|
-VAR_ACCESS			unput_text(0); BEGIN(vardecl_list_state);
+VAR_ACCESS			unput_text(0); /* printf("\nChanging to vardecl_list_state\n") */; BEGIN(vardecl_list_state);
 }
 
 
@@ -1140,7 +1160,7 @@ END_FUNCTION			unput_text(0); BEGIN(INITIAL);
 END_FUNCTION_BLOCK		unput_text(0); BEGIN(INITIAL);
 END_PROGRAM			unput_text(0); BEGIN(INITIAL);
 
-.				unput_text(0); yy_push_state(body_state); /* anything else, just change to body_state! */
+.				unput_text(0); yy_push_state(body_state); //printf("\nChanging to body_state\n");/* anything else, just change to body_state! */
 }
 
 
@@ -1152,39 +1172,37 @@ END_VAR				yy_pop_state(); return END_VAR; /* pop back to vardecl_list_state */
 
 	/* body_state -> (il_state | st_state | sfc_state) */
 <body_state>{
-INITIAL_STEP			unput_text(0); BEGIN(sfc_state); 
+	/* 'INITIAL_STEP' always used in beginning of SFCs !! */
+INITIAL_STEP			{ if (isempty_bodystate_buffer())	{unput_text(0); BEGIN(sfc_state);}
+				  else					{append_bodystate_buffer(yytext);}
+				}
+ 
+	/* ':=', at the very beginning of a 'body', occurs only in transitions and not Function, FB, or Program bodies! */
+:=				{ if (isempty_bodystate_buffer())	{unput_text(0); BEGIN(st_state);} /* We do _not_ return a start_ST_body_token here, as bison does not expect it! */
+				  else				 	{append_bodystate_buffer(yytext);}
+				}
+ 
+	/* check if ';' occurs before an END_FUNCTION, END_FUNCTION_BLOCK, END_PROGRAM or END_ACTION. (If true => we are parsing ST; If false => parsing IL). */
+END_ACTION			| /* execute the next rule's action, i.e. fall-through! */
+END_FUNCTION			|
+END_FUNCTION_BLOCK		|
+END_PROGRAM			{ append_bodystate_buffer(yytext); unput_bodystate_buffer(); BEGIN(il_state); /*printf("returning start_IL_body_token\n");*/ return start_IL_body_token;}
+.|\n				{ append_bodystate_buffer(yytext);
+				  if (strcmp(yytext, ";") == 0)
+				    {unput_bodystate_buffer(); BEGIN(st_state); /*printf("returning start_ST_body_token\n");*/ return start_ST_body_token;}
+				}
+	/* The following rules are not really necessary. They just make compilation faster in case the ST Statement List starts with one fot he following... */
+RETURN				| /* execute the next rule's action, i.e. fall-through! */
+IF				|
+CASE				|
+FOR				|
+WHILE				|
+EXIT				|
+REPEAT				{ if (isempty_bodystate_buffer())	{unput_text(0); BEGIN(st_state); return start_ST_body_token;}
+				  else				 	{append_bodystate_buffer(yytext);}
+				}
 
-{qualified_identifier}		unput_text(0); BEGIN(st_state); /* will always be followed by '[' for an array access, or ':=' as the left hand of an assignment statement */
-{direct_variable_standard}	unput_text(0); BEGIN(st_state); /* will always be followed by ':=' as the left hand of an assignment statement */
-
-RETURN				unput_text(0); BEGIN(st_state);
-IF				unput_text(0); BEGIN(st_state);
-CASE				unput_text(0); BEGIN(st_state);
-FOR				unput_text(0); BEGIN(st_state);
-WHILE				unput_text(0); BEGIN(st_state);
-EXIT				unput_text(0); BEGIN(st_state);
-REPEAT				unput_text(0); BEGIN(st_state);
-
-	/* ':=' occurs only in transitions, and not Function or FB bodies! */
-:=				unput_text(0); BEGIN(st_state);
-
-{identifier}	{int token = get_identifier_token(yytext);
-		 if ((token == prev_declared_fb_name_token) || (token == prev_declared_variable_name_token)) {
-		   /* the code has a call to a function block OR has an assingment with a variable as the lvalue */
-		   unput_text(0); BEGIN(st_state);
-		 } else
- 		 if (token == prev_declared_derived_function_name_token) {
-		   /* the code has a call to a function - must be IL */
-		   unput_text(0); BEGIN(il_state);
-		 } else {
-		   /* Might be a lable in IL, or a bug in ST/IL code. We jump to IL */
-		   unput_text(0); BEGIN(il_state);
-		 }
-		}
-
-.		unput_text(0); BEGIN(il_state); /* Don't know what it could be. This is most likely a bug. Let's just to a random state... */
 }	/* end of body_state lexical parser */
-
 
 
 	/* (il_state | st_state) -> pop to $previous_state (vardecl_list_state or sfc_state) */
@@ -1214,8 +1232,9 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	/* NOTE: pragmas are handled right at the beginning... */
 
 	/* The whitespace */
-<INITIAL,header_state,config_state,body_state,vardecl_list_state,vardecl_state,st_state,sfc_state,task_init_state,sfc_qualifier_state>{st_whitespace}	/* Eat any whitespace */
+<INITIAL,header_state,config_state,vardecl_list_state,vardecl_state,st_state,sfc_state,task_init_state,sfc_qualifier_state>{st_whitespace}	/* Eat any whitespace */
 <il_state>{il_whitespace}		/* Eat any whitespace */
+<body_state>{st_whitespace}		append_bodystate_buffer(yytext); /* in body state we do not process any tokens, we simply store them for later processing! */
 
 	/* The comments */
 <get_pou_name_state,ignore_pou_state,body_state,vardecl_list_state>{comment_beg}		yy_push_state(comment_state);
@@ -1253,6 +1272,14 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	 *       as a funtion as in 'X := MOD(Y, Z);'
 	 *       We solve this by NOT testing for function names here, and
 	 *       handling this function and keyword clash in bison!
+	 */
+	/* NOTE: The following code has been commented out as most users do not want matiec
+	 *       to allow the use of 'R1', 'IN' ... IL operators as identifiers, 
+	 *       even though a literal reading of the standard allows this.
+	 *       We could add this as a commadnd line option, but it is not yet done.
+	 *       For now we just comment out the code, but leave it the commented code
+	 *       in so we can re-activate quickly (without having to go through old commits
+	 *       in the mercurial repository to figure out the missing code!
 	 */
  /*
 {identifier} 	{int token = get_identifier_token(yytext);
@@ -1474,7 +1501,7 @@ AT		return AT;		/* Keyword */
 	/* B 1.5.1 - Functions */
 	/***********************/
 	/* Note: The following END_FUNCTION rule includes a BEGIN(INITIAL); command.
-	 *       This is necessary in case the input program being pased has syntax errors that force
+	 *       This is necessary in case the input program being parsed has syntax errors that force
 	 *       flex's main state machine to never change to the il_state or the st_state
 	 *       after changing to the body_state.
 	 *       Ths BEGIN(INITIAL) command forces the flex state machine to re-synchronise with 
@@ -1490,7 +1517,7 @@ CONSTANT			return CONSTANT;			/* Keyword */
 	/* B 1.5.2 - Function Blocks */
 	/*****************************/
 	/* Note: The following END_FUNCTION_BLOCK rule includes a BEGIN(INITIAL); command.
-	 *       This is necessary in case the input program being pased has syntax errors that force
+	 *       This is necessary in case the input program being parsed has syntax errors that force
 	 *       flex's main state machine to never change to the il_state or the st_state
 	 *       after changing to the body_state.
 	 *       Ths BEGIN(INITIAL) command forces the flex state machine to re-synchronise with 
@@ -1508,7 +1535,7 @@ END_VAR					return END_VAR;			/* Keyword */
 	/* B 1.5.3 - Programs */
 	/**********************/
 	/* Note: The following END_PROGRAM rule includes a BEGIN(INITIAL); command.
-	 *       This is necessary in case the input program being pased has syntax errors that force
+	 *       This is necessary in case the input program being parsed has syntax errors that force
 	 *       flex's main state machine to never change to the il_state or the st_state
 	 *       after changing to the body_state.
 	 *       Ths BEGIN(INITIAL) command forces the flex state machine to re-synchronise with 
@@ -2031,6 +2058,47 @@ void unput_and_mark(const char c) {
 
   free(yycopy);
 }
+
+
+
+/* The body_state tries to find a ';' before a END_PROGRAM, END_FUNCTION or END_FUNCTION_BLOCK or END_ACTION
+ * To do so, it must ignore comments and pragmas. This means that we cannot do this in a signle lex rule.
+ * However, we must store any text we consume in every rule, so we can push it back into the buffer
+ * once we have decided if we are parsing ST or IL code. The following functions manage that buffer used by
+ * the body_state.
+ */
+/* The buffer used by the body_state state */
+char *bodystate_buffer = NULL;
+
+/* append text to bodystate_buffer */
+void  append_bodystate_buffer(const char *text) {
+  //printf("<<<append_bodystate_buffer>>> %d <%s><%s>\n", bodystate_buffer, (NULL != bodystate_buffer)?bodystate_buffer:"NULL", text);
+  long int old_len = 0;
+  if (NULL != bodystate_buffer) old_len = strlen(bodystate_buffer);
+  bodystate_buffer = (char *)realloc(bodystate_buffer, old_len + strlen(text) + 1);
+  if (NULL == bodystate_buffer) ERROR;
+  strcpy(bodystate_buffer + old_len, text);
+  //printf("=<%s> %d %d\n", (NULL != bodystate_buffer)?bodystate_buffer:NULL, old_len + strlen(text) + 1, bodystate_buffer);
+}
+
+/* Return all data in bodystate_buffer back to flex, and empty bodystate_buffer. */
+void   unput_bodystate_buffer(void) {
+  if (NULL == bodystate_buffer) ERROR;
+  //printf("<<<unput_bodystate_buffer>>>\n%s\n", bodystate_buffer);
+  
+  for (long int i = strlen(bodystate_buffer)-1; i >= 0; i--)
+    unput(bodystate_buffer[i]);
+  
+  free(bodystate_buffer);
+  bodystate_buffer = NULL;
+}
+
+
+/* Return true if bodystate_buffer is empty */
+int  isempty_bodystate_buffer(void) {
+  return (NULL == bodystate_buffer);
+}
+
 
 
 
