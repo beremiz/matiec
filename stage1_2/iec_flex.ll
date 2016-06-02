@@ -1172,6 +1172,17 @@ END_VAR				yy_pop_state(); return END_VAR; /* pop back to vardecl_list_state */
 
 	/* body_state -> (il_state | st_state | sfc_state) */
 <body_state>{
+{st_whitespace}			{/* In body state we do not process any tokens,
+				  * we simply store them for later processing!
+				  * NOTE: all whitespace in the begining
+				  * of body_state must be removed so we can
+				  * detect ':=' in the beginning of TRANSACTION
+				  * conditions preceded by whitespace.
+				  * => only add to bodystate_buffer when not in beginning.
+				  */
+				  if (!isempty_bodystate_buffer()) 
+				    append_bodystate_buffer(yytext); 
+				}
 	/* 'INITIAL_STEP' always used in beginning of SFCs !! */
 INITIAL_STEP			{ if (isempty_bodystate_buffer())	{unput_text(0); BEGIN(sfc_state);}
 				  else					{append_bodystate_buffer(yytext);}
@@ -1234,7 +1245,10 @@ END_CONFIGURATION	BEGIN(INITIAL); return END_CONFIGURATION;
 	/* The whitespace */
 <INITIAL,header_state,config_state,vardecl_list_state,vardecl_state,st_state,sfc_state,task_init_state,sfc_qualifier_state>{st_whitespace}	/* Eat any whitespace */
 <il_state>{il_whitespace}		/* Eat any whitespace */
-<body_state>{st_whitespace}		append_bodystate_buffer(yytext); /* in body state we do not process any tokens, we simply store them for later processing! */
+ /* NOTE: Due to the need of having the following rule have higher priority,
+  *        the following rule was moved to an earlier position in this file.
+<body_state>{st_whitespace}		{...}
+ */
 
 	/* The comments */
 <get_pou_name_state,ignore_pou_state,body_state,vardecl_list_state>{comment_beg}		yy_push_state(comment_state);
@@ -2072,7 +2086,7 @@ char *bodystate_buffer = NULL;
 
 /* append text to bodystate_buffer */
 void  append_bodystate_buffer(const char *text) {
-  //printf("<<<append_bodystate_buffer>>> %d <%s><%s>\n", bodystate_buffer, (NULL != bodystate_buffer)?bodystate_buffer:"NULL", text);
+  //printf("<<<append_bodystate_buffer>>> %d <%s><%s>\n", bodystate_buffer, text, (NULL != bodystate_buffer)?bodystate_buffer:"NULL");
   long int old_len = 0;
   if (NULL != bodystate_buffer) old_len = strlen(bodystate_buffer);
   bodystate_buffer = (char *)realloc(bodystate_buffer, old_len + strlen(text) + 1);
