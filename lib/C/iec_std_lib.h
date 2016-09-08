@@ -162,6 +162,16 @@ static inline void __iec_error(void) {
   /*exit(1);*/
 }
 
+
+/*******************/
+/* Math Operations */
+/*******************/
+
+static inline double __expt(double in1, double in2) {
+  return pow(in1, in2);
+}
+
+
 /*******************************/
 /* Time normalization function */
 /*******************************/
@@ -735,8 +745,12 @@ __ANY(__move_)
 
 
 
-
 #include "iec_std_functions.h"
-#include "iec_std_FB.h"
+
+#ifdef  DISABLE_EN_ENO_PARAMETERS
+  #include "iec_std_FB_no_ENENO.h"
+#else
+  #include "iec_std_FB.h"
+#endif
 
 #endif /* _IEC_STD_LIB_H */
