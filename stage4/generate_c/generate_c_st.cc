@@ -593,7 +593,7 @@ void *visit(or_expression_c *symbol) {
 
 void *visit(xor_expression_c *symbol) {
   if (get_datatype_info_c::is_BOOL_compatible(symbol->datatype)) {
-    s4o.print("(");
+    s4o.print("((");
     symbol->l_exp->accept(*this);
     s4o.print(" && !");
     symbol->r_exp->accept(*this);
@@ -601,7 +601,7 @@ void *visit(xor_expression_c *symbol) {
     symbol->l_exp->accept(*this);
     s4o.print(" && ");
     symbol->r_exp->accept(*this);
-    s4o.print(")");
+    s4o.print("))");
     return NULL;
   }
   if (get_datatype_info_c::is_ANY_nBIT_compatible(symbol->datatype))
