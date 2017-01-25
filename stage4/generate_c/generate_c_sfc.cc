@@ -577,7 +577,7 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
               s4o.print(s4o.indent_spaces + "if (active && __time_cmp(");
               print_step_argument(current_step, "T.value");
               s4o.print(", ");
-              symbol->action_time->accept(*this);
+              symbol->action_time->accept(*generate_c_st);
               if (strcmp(qualifier, "L") == 0)
                 s4o.print(") < 0) ");
               else
@@ -618,7 +618,7 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
               s4o.print(" = 1;\n" + s4o.indent_spaces);
               print_action_argument(current_action, "reset_remaining_time");
               s4o.print(" = ");
-              symbol->action_time->accept(*this);
+              symbol->action_time->accept(*generate_c_st);
               s4o.print(";\n");
               s4o.indent_left();
               s4o.print(s4o.indent_spaces + "}\n");
@@ -632,7 +632,7 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
               s4o.print("\n" + s4o.indent_spaces);
               print_action_argument(current_action, "set_remaining_time");
               s4o.print(" = ");
-              symbol->action_time->accept(*this);
+              symbol->action_time->accept(*generate_c_st);
               s4o.print(";\n");
               s4o.indent_left();
               s4o.print(s4o.indent_spaces + "}\n");
