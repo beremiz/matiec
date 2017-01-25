@@ -5846,14 +5846,14 @@ transition_priority:
 
 
 transition_condition:
-  ':' eol_list simple_instr_list
-	{$$ = new transition_condition_c($3, NULL, locloc(@$));}
+ start_IL_body_token ':' eol_list simple_instr_list
+	{$$ = new transition_condition_c($4, NULL, locloc(@$));}
 | ASSIGN expression ';'
 	{$$ = new transition_condition_c(NULL, $2, locloc(@$));}
 /* ERROR_CHECK_BEGIN */
-| eol_list simple_instr_list
+| start_IL_body_token eol_list simple_instr_list
 	{$$ = NULL; print_err_msg(locl(@1), locf(@2), "':' missing before IL condition in transition declaration."); yynerrs++;}
-| ':' eol_list error
+| start_IL_body_token ':' eol_list error
 	{$$ = NULL;
 	 if (is_current_syntax_token()) {print_err_msg(locl(@2), locf(@3), "no instructions defined in IL condition of transition declaration.");}
 	 else {print_err_msg(locf(@3), locl(@3), "invalid instructions in IL condition of transition declaration."); yyclearin;}

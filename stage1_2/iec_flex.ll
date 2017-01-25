@@ -1193,10 +1193,11 @@ INITIAL_STEP			{ if (isempty_bodystate_buffer())	{unput_text(0); BEGIN(sfc_state
 				  else				 	{append_bodystate_buffer(yytext);}
 				}
  
-	/* check if ';' occurs before an END_FUNCTION, END_FUNCTION_BLOCK, END_PROGRAM or END_ACTION. (If true => we are parsing ST; If false => parsing IL). */
+	/* check if ';' occurs before an END_FUNCTION, END_FUNCTION_BLOCK, END_PROGRAM, END_ACTION or END_TRANSITION. (If true => we are parsing ST; If false => parsing IL). */
 END_ACTION			| /* execute the next rule's action, i.e. fall-through! */
 END_FUNCTION			|
 END_FUNCTION_BLOCK		|
+END_TRANSITION   		|
 END_PROGRAM			{ append_bodystate_buffer(yytext); unput_bodystate_buffer(); BEGIN(il_state); /*printf("returning start_IL_body_token\n");*/ return start_IL_body_token;}
 .|\n				{ append_bodystate_buffer(yytext);
 				  if (strcmp(yytext, ";") == 0)
