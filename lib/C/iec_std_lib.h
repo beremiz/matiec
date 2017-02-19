@@ -318,7 +318,7 @@ static inline tm convert_seconds_to_date_and_time(long int seconds) {
 	  days += __isleap(dt.tm_year) ? 366 : 365;
   }
   dt.tm_mon = 1;
-  while (days > __mon_yday[__isleap(dt.tm_year)][dt.tm_mon]) {
+  while (days >= __mon_yday[__isleap(dt.tm_year)][dt.tm_mon]) {
 	  dt.tm_mon += 1;
   }
   dt.tm_day = days - __mon_yday[__isleap(dt.tm_year)][dt.tm_mon - 1] + 1;
