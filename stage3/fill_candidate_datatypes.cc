@@ -958,7 +958,15 @@ void *fill_candidate_datatypes_c::fill_spec_init(symbol_c *symbol, symbol_c *typ
 	type_spec->accept(*this);
 	
 	// use bottom->up algorithm!!
-	if (NULL != init_value) init_value->accept(*this);  
+	/* NOTE: In special cases we will run a modified bottom->up algorithm, i.e. with a top->down indication of 
+	 *       tentative candidate_datatypes... 
+	 *       (e.g. structure_element_initialization_list_c). The tentative candidate_datatypes (a list of
+	 *       candidate_datatypes to consider while running the bottom->up algorithm) will actually be the
+	 *       datatypes in symbol->parent->candidate_datatpes
+	 *       This implies that we can only run this bottom->up algorithm on the initial values _after_
+	 *       having set the symbol->candidate_datatpes of the type specification (i.e. the symbol parameter)
+	 */
+	if (NULL != init_value)  init_value->accept(*this);
 	/* NOTE: Even if the constant and the type are of incompatible data types, we let the
 	 *       ***_spec_init_c object inherit the data type of the type declaration (simple_specification)
 	 *       This will let us produce more informative error messages when checking data type compatibility
@@ -1163,9 +1171,51 @@ void *fill_candidate_datatypes_c::visit(initialized_structure_c *symbol) {return
 /* structure_initialization: '(' structure_element_initialization_list ')' */
 /* structure_element_initialization_list ',' structure_element_initialization */
 // SYM_LIST(structure_element_initialization_list_c)
+void *fill_candidate_datatypes_c::visit(structure_element_initialization_list_c *symbol) {
+	// use bottom->up algorithm -> first let all elements determine their candidate_datatypes
+	iterator_visitor_c::visit(symbol); // call visit(structure_element_initialization_c *) on all elements
+
+	for (unsigned int i = 0; i < symbol->parent->candidate_datatypes.size(); i++) { // size() should always be 1 here -> a single structure or FB type!
+		// assume symbol->parent is a FB type
+		search_varfb_instance_type_c search_varfb_instance_type(symbol->parent->candidate_datatypes[i]);
+		// flag indicating all struct_elem->structure_element_name are structure elements found in the symbol->parent->candidate_datatypes[i] datatype
+		int flag_all_elem_ok = 1; // assume all found
+		for (int k = 0; k < symbol->n; k++) {
+			// assume symbol->parent->candidate_datatypes[i] is a FB type...
+			structure_element_initialization_c *struct_elem = (structure_element_initialization_c *)symbol->elements[k];
+			symbol_c *type = search_varfb_instance_type.get_basetype_decl(struct_elem->structure_element_name);
+			if (!get_datatype_info_c::is_type_valid(type)) {
+				// either get_datatype_info_c::is_type_valid(type) is not a FB type, or the element is not declared in that FB
+				// Lets try a struct type!!
+				// TODO...
+			}
+			if (!get_datatype_info_c::is_ANY_ELEMENTARY(type) && get_datatype_info_c::is_type_valid(type)) {
+				add_datatype_to_candidate_list(struct_elem, type); // for non-elementary datatypes, we must use a top->down algorithm!!
+				struct_elem->accept(*this);
+			}
+			if (search_in_candidate_datatype_list(type, struct_elem->candidate_datatypes) < 0) {
+				flag_all_elem_ok = 0; // the necessary datatype for structure init element is not a candidate_datatype of that element
+			}
+		}
+		if (flag_all_elem_ok) {
+			add_datatype_to_candidate_list(symbol, symbol->parent->candidate_datatypes[i]);
+				fprintf(stderr, "ADDED DATAYPE type--->\n");
+				debug_c::print(symbol);
+		}
+	}
+	return NULL;
+}
+
 
 /*  structure_element_name ASSIGN value */
 // SYM_REF2(structure_element_initialization_c, structure_element_name, value)
+void *fill_candidate_datatypes_c::visit(structure_element_initialization_c *symbol) {
+	symbol->value->accept(*this);
+	symbol->candidate_datatypes = symbol->value->candidate_datatypes;
+	// Note that candidate_datatypes of symbol->structure_element_name are left empty!
+	return NULL;
+}
+
 
 /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
 // SYM_REF4(string_type_declaration_c, string_type_name, elementary_string_type_name, string_type_declaration_size, string_type_declaration_init/* may be == NULL! */) 
