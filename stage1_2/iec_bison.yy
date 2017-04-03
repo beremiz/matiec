@@ -119,7 +119,7 @@ void yyerror (const char *error_msg);
 #define FOR_EACH_ELEMENT(elem, list, code) {		\
   symbol_c *elem;					\
   for(int i = 0; i < list->n; i++) {			\
-    elem = list->elements[i];				\
+    elem = list->get_element(i);			\
     code;						\
   }							\
 }

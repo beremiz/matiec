@@ -99,6 +99,9 @@ list_c::list_c(symbol_c *elem,
 }
 
 
+/* get element in position pos of the list */
+symbol_c *list_c::get_element(int pos) {return elements[pos];}
+
 /* append a new element to the end of the list */
 void list_c::add_element(symbol_c *elem) {
   // printf("list_c::add_element()\n");

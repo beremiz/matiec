@@ -260,6 +260,7 @@ class list_c: public symbol_c {
     virtual const char *absyntax_cname(void) {return "list_c";};
 
     int c,n; /* c: current capacity of list (malloc'd memory);  n: current number of elements in list */
+  private:
     symbol_c **elements;
 
   public:
@@ -271,6 +272,8 @@ class list_c: public symbol_c {
            int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0, /* order in which it is read by lexcial analyser */
            int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0  /* order in which it is read by lexcial analyser */
           );
+     /* get element in position pos of the list */
+    virtual symbol_c *get_element(int pos);
      /* append a new element to the end of the list */
     virtual void add_element(symbol_c *elem);
      /* insert a new element before position pos. */

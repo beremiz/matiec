@@ -1044,7 +1044,7 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_list_c *symbol) {
   
   /* We already know the datatype of the enumerated_value(s) in the list, so we set them directly instead of recursively calling the enumerated_value_c visit method! */
   for(int i = 0; i < symbol->n; i++)
-    add_datatype_to_candidate_list(symbol->elements[i], current_enumerated_spec_type); // top->down algorithm!!
+    add_datatype_to_candidate_list(symbol->get_element(i), current_enumerated_spec_type); // top->down algorithm!!
 
   return NULL;  
 }
@@ -1182,7 +1182,7 @@ void *fill_candidate_datatypes_c::visit(structure_element_initialization_list_c 
 		int flag_all_elem_ok = 1; // assume all found
 		for (int k = 0; k < symbol->n; k++) {
 			// assume symbol->parent->candidate_datatypes[i] is a FB type...
-			structure_element_initialization_c *struct_elem = (structure_element_initialization_c *)symbol->elements[k];
+			structure_element_initialization_c *struct_elem = (structure_element_initialization_c *)symbol->get_element(k);
 			symbol_c *type = search_varfb_instance_type.get_basetype_decl(struct_elem->structure_element_name);
 			if (!get_datatype_info_c::is_type_valid(type)) {
 				// either get_datatype_info_c::is_type_valid(type) is not a FB type, or the element is not declared in that FB
@@ -1419,7 +1419,7 @@ void *fill_candidate_datatypes_c::visit(incompl_located_var_decl_c   *symbol) {r
 
 // NOTE: this method is not required since fill_candidate_datatypes_c inherits from iterator_visitor_c. TODO: delete this method!
 void *fill_candidate_datatypes_c::visit(var1_list_c *symbol) {
-  for(int i = 0; i < symbol->n; i++) {symbol->elements[i]->accept(*this);}
+  for(int i = 0; i < symbol->n; i++) {symbol->get_element(i)->accept(*this);}
   return NULL;
 }  
 
@@ -1698,7 +1698,7 @@ void *fill_candidate_datatypes_c::visit(instruction_list_c *symbol) {
 	 */
 	for(int j = 0; j < 2; j++) {
 		for(int i = 0; i < symbol->n; i++) {
-			symbol->elements[i]->accept(*this);
+			symbol->get_element(i)->accept(*this);
 		}
 	}
 	return NULL;
@@ -1813,7 +1813,7 @@ void *fill_candidate_datatypes_c::visit(il_expression_c *symbol) {
    */
   if ((NULL != symbol->il_operand) && ((NULL == symbol->simple_instr_list) || (0 == ((list_c *)symbol->simple_instr_list)->n))) ERROR; // stage2 is not behaving as we expect it to!
   if  (NULL != symbol->il_operand)
-    symbol->il_operand->candidate_datatypes = ((list_c *)symbol->simple_instr_list)->elements[0]->candidate_datatypes;
+    symbol->il_operand->candidate_datatypes = ((list_c *)symbol->simple_instr_list)->get_element(0)->candidate_datatypes;
   
   /* Now check the if the data type semantics of operation are correct,  */
   il_operand = symbol->simple_instr_list;
@@ -1910,10 +1910,10 @@ void *fill_candidate_datatypes_c::visit(simple_instr_list_c *symbol) {
     return NULL;  /* List is empty! Nothing to do. */
     
   for(int i = 0; i < symbol->n; i++)
-    symbol->elements[i]->accept(*this);
+    symbol->get_element(i)->accept(*this);
 
   /* This object has (inherits) the same candidate datatypes as the last il_instruction */
-  symbol->candidate_datatypes = symbol->elements[symbol->n-1]->candidate_datatypes;
+  symbol->candidate_datatypes = symbol->get_element(symbol->n-1)->candidate_datatypes;
   
   if (debug) std::cout << "simple_instr_list_c [" << symbol->candidate_datatypes.size() << "] result.\n";
   return NULL;

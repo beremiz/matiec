@@ -587,9 +587,9 @@ void *print_datatypes_error_c::visit(array_variable_c *symbol) {
 void *print_datatypes_error_c::visit(subscript_list_c *symbol) {
 	for (int i = 0; i < symbol->n; i++) {
 		int start_error_count = error_count;
-		symbol->elements[i]->accept(*this);
+		symbol->get_element(i)->accept(*this);
 		/* The following error message will only get printed if the current_display_error_level is set higher than 0! */
-		if ((start_error_count == error_count) && (!get_datatype_info_c::is_type_valid(symbol->elements[i]->datatype)))
+		if ((start_error_count == error_count) && (!get_datatype_info_c::is_type_valid(symbol->get_element(i)->datatype)))
 			STAGE3_ERROR(0, symbol, symbol, "Invalid data type for array subscript field.");
 	}
 	return NULL;
