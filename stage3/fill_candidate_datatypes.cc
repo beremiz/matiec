@@ -1199,8 +1199,6 @@ void *fill_candidate_datatypes_c::visit(structure_element_initialization_list_c 
 		}
 		if (flag_all_elem_ok) {
 			add_datatype_to_candidate_list(symbol, symbol->parent->candidate_datatypes[i]);
-				fprintf(stderr, "ADDED DATAYPE type--->\n");
-				debug_c::print(symbol);
 		}
 	}
 	return NULL;
