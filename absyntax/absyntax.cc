@@ -122,8 +122,9 @@ symbol_c *list_c::find_element(const char *token_value) {
   // method of string comparison throughout matiec
   nocasecmp_c ncc; 
   for (int i = 0; i < n; i++) 
-    if (ncc(elements[i].token_value, token_value))
+    if (!ncc(elements[i].token_value, token_value))
       return elements[i].symbol;
+
   return NULL; // not found
 }
 
