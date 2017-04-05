@@ -545,6 +545,16 @@ void *print_datatypes_error_c::visit(enumerated_value_c *symbol) {
 }
 
 
+
+void *print_datatypes_error_c::visit(structure_element_initialization_c *symbol) {
+	symbol->value->accept(*this);
+	if (!get_datatype_info_c::is_type_valid(symbol->datatype))
+		STAGE3_ERROR(0, symbol, symbol, "Initialization element identifier (%s) is not declared in referenced structure/FB scope, or is set to value of incompatible datatype.", 
+			                        symbol->structure_element_name->token->value);
+	return NULL;
+}
+
+    
 /*********************/
 /* B 1.4 - Variables */
 /*********************/

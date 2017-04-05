@@ -673,20 +673,36 @@ void *narrow_candidate_datatypes_c::visit(initialized_structure_c *symbol) {retu
 /* structure_element_initialization_list ',' structure_element_initialization */
 // SYM_LIST(structure_element_initialization_list_c)
 void *narrow_candidate_datatypes_c::visit(structure_element_initialization_list_c *symbol) {
-	if (get_datatype_info_c::is_type_valid(symbol->datatype)) {
-		/* Note that in principle structure_element_initialization_list_c will have at most 1 candidate_datatype
-		 * (the FB or structure in the type specification). However, our algorithm is more generic and will
-		 * assume that more than 1 candidate_datatype is possible. In this case we need to iterate and check each
-		 * candidate_datatype whether it is feasible, as they may all be feasible but not for the same ...
-		 */
-		// assume symbol->datatype is a FB type
-		search_varfb_instance_type_c search_varfb_instance_type(symbol->datatype);
+	symbol_c *type = NULL;
+
+	 // first try to narrow with the correct type, if valid.
+	if (!get_datatype_info_c::is_type_valid(type)) type = symbol->datatype;
+	 // to reduce number of error messages, we try to narrow with parent's spec_init->datatype
+	if (!get_datatype_info_c::is_type_valid(type)) type = symbol->parent->datatype;
+
+	if (get_datatype_info_c::is_type_valid(type)) {
+		// We need to iterate and determine the required datatype of each structure element
+		// assume type is a FB type
+		search_varfb_instance_type_c search_varfb_instance_type(type);
+		// assume type is a STRUCT type
+		structure_element_declaration_list_c *struct_decl = dynamic_cast<structure_element_declaration_list_c *>(type);
 		for (int k = 0; k < symbol->n; k++) {
 			structure_element_initialization_c *struct_elem = (structure_element_initialization_c *)symbol->get_element(k);
-			symbol_c *type = search_varfb_instance_type.get_basetype_decl(struct_elem->structure_element_name);
+			symbol_c *type = NULL;
+			if (struct_decl == NULL) {
+				// type is not a struct. Must be a FB.
+				type = search_varfb_instance_type.get_basetype_decl(struct_elem->structure_element_name);
+			} else {
+				// type is a struct.
+				type = search_base_type_c::get_basetype_decl(struct_decl->find_element(struct_elem->structure_element_name));
+			}
 			set_datatype(type, struct_elem);
 			struct_elem->accept(*this);
-			if (struct_elem->datatype == NULL) ERROR; // should never occur. Already checked in fill_candidate_datatypes_c
+			/* We do best effort narrowing, even in the presence of errors, to reduce number of error messages
+			 * so the following two assertions are not always met.
+			 */
+			// if (!get_datatype_info_c::is_type_valid(type)) ERROR;  
+			// if (struct_elem->datatype == NULL) ERROR; // should never occur. Already checked in fill_candidate_datatypes_c
 		}
 	}
 	return NULL;
@@ -694,7 +710,7 @@ void *narrow_candidate_datatypes_c::visit(structure_element_initialization_list_
 
 /*  structure_element_name ASSIGN value */
 // SYM_REF2(structure_element_initialization_c, structure_element_name, value)
-void *narrow_candidate_datatypes_c::visit(structure_element_initialization_c *symbol) {set_datatype(symbol->datatype, symbol->value); return NULL;}
+void *narrow_candidate_datatypes_c::visit(structure_element_initialization_c *symbol) {set_datatype(symbol->datatype, symbol->value); symbol->value->accept(*this); return NULL;}
 
 /*  string_type_name ':' elementary_string_type_name string_type_declaration_size string_type_declaration_init */
 // SYM_REF4(string_type_declaration_c, string_type_name, elementary_string_type_name, string_type_declaration_size, string_type_declaration_init/* may be == NULL! */) 

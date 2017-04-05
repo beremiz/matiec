@@ -1176,21 +1176,28 @@ void *fill_candidate_datatypes_c::visit(structure_element_initialization_list_c 
 	iterator_visitor_c::visit(symbol); // call visit(structure_element_initialization_c *) on all elements
 
 	for (unsigned int i = 0; i < symbol->parent->candidate_datatypes.size(); i++) { // size() should always be 1 here -> a single structure or FB type!
-		// assume symbol->parent is a FB type
+		// assume symbol->parent->candidate_datatypes[i] is a FB type
 		search_varfb_instance_type_c search_varfb_instance_type(symbol->parent->candidate_datatypes[i]);
+		// assume symbol->parent->candidate_datatypes[i] is a STRUCT data type
+		structure_element_declaration_list_c *struct_decl = dynamic_cast<structure_element_declaration_list_c *>(symbol->parent->candidate_datatypes[i]);
 		// flag indicating all struct_elem->structure_element_name are structure elements found in the symbol->parent->candidate_datatypes[i] datatype
 		int flag_all_elem_ok = 1; // assume all found
 		for (int k = 0; k < symbol->n; k++) {
-			// assume symbol->parent->candidate_datatypes[i] is a FB type...
-			structure_element_initialization_c *struct_elem = (structure_element_initialization_c *)symbol->get_element(k);
-			symbol_c *type = search_varfb_instance_type.get_basetype_decl(struct_elem->structure_element_name);
-			if (!get_datatype_info_c::is_type_valid(type)) {
-				// either get_datatype_info_c::is_type_valid(type) is not a FB type, or the element is not declared in that FB
-				// Lets try a struct type!!
-				// TODO...
+			structure_element_initialization_c *struct_elem = dynamic_cast<structure_element_initialization_c *>(symbol->get_element(k));
+			if (struct_elem == NULL) ERROR;
+			
+			// assume symbol->parent is a FB type...
+			symbol_c *type = NULL;
+			if (struct_decl != NULL) {
+				// search in the struct!!
+				type = search_base_type_c::get_basetype_decl(struct_decl->find_element(struct_elem->structure_element_name));
+			} else {
+				// parent is a FB type. Lets search there!!
+				type = search_varfb_instance_type.get_basetype_decl(struct_elem->structure_element_name);
 			}
 			if (!get_datatype_info_c::is_ANY_ELEMENTARY(type) && get_datatype_info_c::is_type_valid(type)) {
-				add_datatype_to_candidate_list(struct_elem, type); // for non-elementary datatypes, we must use a top->down algorithm!!
+				// for non-elementary datatypes, we must use a top->down algorithm!!
+				add_datatype_to_candidate_list(struct_elem, type); 
 				struct_elem->accept(*this);
 			}
 			if (search_in_candidate_datatype_list(type, struct_elem->candidate_datatypes) < 0) {
