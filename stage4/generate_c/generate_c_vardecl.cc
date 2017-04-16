@@ -976,6 +976,11 @@ class generate_c_vardecl_c: protected generate_c_base_and_typeid_c {
       for (int i = 0; i < init_list->n; i++) {
         structure_element_initialization_c *init_list_elem = dynamic_cast<structure_element_initialization_c *>(init_list->get_element(i));
         if (NULL == init_list_elem) ERROR;
+        if (!get_datatype_info_c::is_ANY_ELEMENTARY(init_list_elem->value->datatype)) {
+          STAGE4_ERROR(init_list_elem, init_list_elem, 
+                       "C code generation does not yet support initializing FB/structures with non-elementary values.");
+          ERROR;
+        }
         s4o.print("\n");
         s4o.print(s4o.indent_spaces);
         s4o.print(INIT_VAR);
