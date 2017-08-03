@@ -244,7 +244,7 @@ void include_file(const char *include_filename);
  * once we have decided if we are parsing ST or IL code. The following functions manage that buffer used by
  * the body_state.
  */
-void  append_bodystate_buffer(const char *text);
+void  append_bodystate_buffer(const char *text, int is_whitespace = 0);
 void   unput_bodystate_buffer(void);
 int  isempty_bodystate_buffer(void);
 
@@ -1198,13 +1198,15 @@ END_VAR				yy_pop_state(); return END_VAR; /* pop back to vardecl_list_state */
 				  * all comments and whitespace, so as not
 				  * to lose track of the line_number and column number
 				  * used when printing debugging messages.
-				  * Note that some of the following rules depend on the fact that 
+				  * NOTE: some of the following rules depend on the fact that 
 				  * the body state buffer is either empty or only contains white space up to
-				  * that point. However, since the vardecl_list_state will eat up all
+				  * that point. Since the vardecl_list_state will eat up all
 				  * whitespace before entering the body_state, the contents of the bodystate_buffer
-				  * will _never_ start with whitespace. 
+				  * will _never_ start with whitespace if the previous state was vardecl_list_state. 
+				  * However, it is possible to enter the body_state from other states (e.g. when 
+				  * parsing SFC code, that contains transitions or actions in other languages)
 				  */
-				  append_bodystate_buffer(yytext); 
+				 append_bodystate_buffer(yytext, 1 /* is whitespace */); 
 				}
 	/* 'INITIAL_STEP' always used in beginning of SFCs !! */
 INITIAL_STEP			{ if (isempty_bodystate_buffer())	{unput_text(0); BEGIN(sfc_state);}
@@ -2119,11 +2121,15 @@ bool  bodystate_is_whitespace = 1; // TRUE (1) if buffer is empty, or only conta
 tracking_t bodystate_init_tracking;
 
 /* append text to bodystate_buffer */
-void  append_bodystate_buffer(const char *text) {
+void  append_bodystate_buffer(const char *text, int is_whitespace) {
   // printf("<<<append_bodystate_buffer>>> %d <%s><%s>\n", bodystate_buffer, text, (NULL != bodystate_buffer)?bodystate_buffer:"NULL");
   long int old_len = 0;
   // make backup of tracking if we are starting off a new body_state_buffer
   if (NULL == bodystate_buffer) bodystate_init_tracking = *current_tracking;
+  // set bodystate_is_whitespace flag if we are starting a new buffer
+  if (NULL == bodystate_buffer) bodystate_is_whitespace = 1;
+  // set bodystate_is_whitespace flag to FALSE if we are adding non white space to buffer
+  if (!is_whitespace)           bodystate_is_whitespace = 0;
 
   if (NULL != bodystate_buffer) old_len = strlen(bodystate_buffer);
   bodystate_buffer = (char *)realloc(bodystate_buffer, old_len + strlen(text) + 1);
@@ -2141,7 +2147,8 @@ void   unput_bodystate_buffer(void) {
     unput_char(bodystate_buffer[i]);
   
   free(bodystate_buffer);
-  bodystate_buffer  = NULL;
+  bodystate_buffer        = NULL;
+  bodystate_is_whitespace = 1;  
   *current_tracking = bodystate_init_tracking;
 }
 
@@ -2149,6 +2156,7 @@ void   unput_bodystate_buffer(void) {
 /* Return true if bodystate_buffer is empty or ony contains whitespace!! */
 int  isempty_bodystate_buffer(void) {
   if (NULL == bodystate_buffer) return 1;
+  if (bodystate_is_whitespace)  return 1;
   return 0;
 }
 
