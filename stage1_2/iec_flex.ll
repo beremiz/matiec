@@ -1133,15 +1133,11 @@ END_CONFIGURATION		unput_text(0); BEGIN(INITIAL);
 	 * WARNING: From 2016-05 (May 2016) onwards, matiec supports a non-standard option in which a Function
 	 *          may be declared with no Input, Output or IN_OUT variables. This means that the above 
 	 *          assumption is no longer valid.
-	 *          To make things simpler (i.e. so we do not need to change the transition conditions in the flex state machine),
-	 *          when using this non-standard extension matiec requires that Functions must include at least one 
-	 *          VAR .. END_VAR block. This implies that the above assumption remains valid!
-	 *          This limitation of requiring a VAR .. END_VAR block is not really very limiting, as a function
-	 *          with no input and output parameters will probably need to do some 'work', and for that it will
-	 *          probably need some local variables declared in a VAR .. END_VAR block.
-	 *          Note however that in the extreme it might make sense to have a function with no variables whatsoever
-	 *          (e.g.: a function that only calls other functions that all return VOID - another non standard extension!).
-	 *          For now we do not consider this!!
+	 * 
+	 * NOTE: Some code being parsed may be erroneous and not contain any VAR END_VAR block.
+	 *       To generate error messages that make sense, the flex state machine should not get lost
+	 *       in these situations. We therefore consider the possibility of finding 
+	 *       END_FUNCTION, END_FUNCTION_BLOCK or END_PROGRAM when inside the header_state.
 	 */
 <header_state>{
 VAR				| /* execute the next rule's action, i.e. fall-through! */
@@ -1152,7 +1148,17 @@ VAR_EXTERNAL			|
 VAR_GLOBAL			|
 VAR_TEMP			|
 VAR_CONFIG			|
-VAR_ACCESS			unput_text(0); /* printf("\nChanging to vardecl_list_state\n") */; BEGIN(vardecl_list_state);
+VAR_ACCESS			unput_text(0); BEGIN(vardecl_list_state);
+
+END_FUNCTION			| /* execute the next rule's action, i.e. fall-through! */
+END_FUNCTION_BLOCK		| 
+END_PROGRAM			unput_text(0); BEGIN(vardecl_list_state); 
+				/* Notice that we do NOT go directly to body_state, as that requires a push().
+				 * If we were to puch to body_state here, then the corresponding pop() at the
+				 *end of body_state would return to header_state.
+				 * After this pop() header_state would not return to INITIAL as it should, but
+				 * would instead enter an infitie loop push()ing again to body_state
+				 */
 }
 
 
