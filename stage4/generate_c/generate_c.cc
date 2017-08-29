@@ -1594,7 +1594,6 @@ class generate_c_resources_c: public generate_c_base_and_typeid_c {
     symbol_c *current_task_name;
     symbol_c *current_global_vars;
     bool configuration_name;
-    stage4out_c *s4o_ptr;
 
   public:
     generate_c_resources_c(stage4out_c *s4o_ptr, symbol_c *config_scope, symbol_c *resource_scope, unsigned long long time)
@@ -1607,7 +1606,6 @@ class generate_c_resources_c: public generate_c_base_and_typeid_c {
       current_task_name = NULL;
       current_global_vars = NULL;
       configuration_name = false;
-      generate_c_resources_c::s4o_ptr = s4o_ptr;
     };
 
     virtual ~generate_c_resources_c(void) {
@@ -1674,8 +1672,8 @@ class generate_c_resources_c: public generate_c_base_and_typeid_c {
     /********************/
     /* 2.1.6 - Pragmas  */
     /********************/
-    void *visit(enable_code_generation_pragma_c * symbol)   {s4o_ptr->enable_output();  return NULL;}
-    void *visit(disable_code_generation_pragma_c * symbol)  {s4o_ptr->disable_output(); return NULL;} 
+    void *visit(enable_code_generation_pragma_c * symbol)   {s4o.enable_output();  return NULL;}
+    void *visit(disable_code_generation_pragma_c * symbol)  {s4o.disable_output(); return NULL;} 
     
 
     /******************************************/
