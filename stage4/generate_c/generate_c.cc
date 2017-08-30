@@ -178,14 +178,22 @@
 
 static int generate_line_directives__ = 0;
 static int generate_pou_filepairs__   = 0;
-static int generate_plc_state_backup_fuctions__ = 1;
+static int generate_plc_state_backup_fuctions__ = 0;
 
 #ifdef __unix__
 /* Parse command line options passed from main.c !! */
-#include <stdlib.h> // for getsybopt()
+#include <stdlib.h> // for getsubopt()
 int  stage4_parse_options(char *options) {
-  enum {                    LINE_OPT = 0            ,  SEPTFILE_OPT              /*, SOME_OTHER_OPT, YET_ANOTHER_OPT */};
-  char *const token[] = { /*[LINE_OPT]=*/(char *)"l",/*SEPTFILE_OPT*/(char *)"p" /*, SOME_OTHER_OPT, ...             */, NULL };
+  enum {LINE_OPT = 0,  
+        SEPTFILE_OPT,
+        BACKUP_OPT    /* option to generate function to backup and restore internal PLC state */
+        /*, SOME_OTHER_OPT, YET_ANOTHER_OPT */};
+  char *const token[] = {
+        /*       LINE_OPT*/(char *)"l",
+        /*   SEPTFILE_OPT*/(char *)"p",
+        /*     BACKUP_OPT*/(char *)"b",
+        /* SOME_OTHER_OPT, ...             */
+        NULL };
   /* unfortunately, the above commented out syntax for array initialization is valid in C, but not in C++ */
   
   char *subopts = options;
@@ -194,8 +202,9 @@ int  stage4_parse_options(char *options) {
 
   while (*subopts != '\0') {
     switch (getsubopt(&subopts, token, &value)) {
-      case     LINE_OPT: generate_line_directives__  = 1; break;
-      case SEPTFILE_OPT: generate_pou_filepairs__    = 1; break;
+      case     LINE_OPT: generate_line_directives__            = 1; break;
+      case SEPTFILE_OPT: generate_pou_filepairs__              = 1; break;
+      case   BACKUP_OPT: generate_plc_state_backup_fuctions__  = 1; break;
       default          : fprintf(stderr, "Unrecognized option: -O %s\n", value); return -1; break;
      }
   }     
@@ -207,6 +216,7 @@ void stage4_print_options(void) {
   printf("          (options must be separated by commas. Example: 'l,w,x')\n"); 
   printf("      l : insert '#line' directives in generated C code.\n"); 
   printf("      p : place each POU in a separate pair of files (<pou_name>.c, <pou_name>.h).\n"); 
+  printf("      b : generate functions to backup and restore internal PLC state.\n"); 
 }
 #else /* not __unix__ */
 /* getsubopt isn't supported with mingw, 
