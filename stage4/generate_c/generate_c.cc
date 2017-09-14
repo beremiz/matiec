@@ -222,7 +222,7 @@ void stage4_print_options(void) {
 /* getsubopt isn't supported with mingw, 
  *  then stage4 options aren't available on windows*/
 void stage4_print_options(void) {}
-int  stage4_parse_options(char *options) {}
+int  stage4_parse_options(char *options) {return 0;}
 #endif 
 
 /***********************************************************************/
@@ -2201,11 +2201,13 @@ void print_backup_restore_function_end(stage4out_c &s4o) {
  */
 class generate_c_backup_config_c: public generate_c_base_and_typeid_c {
   private:
-    const char *func_to_call = NULL; // will later be set to either "_backup__" or "_restore__"
+    const char *func_to_call; // parameter to pass data from: void *visit(configuration_declaration_c *)
+                              //                          to: void *visit(resource_declaration_c *)
 
   public:
     generate_c_backup_config_c(stage4out_c *s4o_ptr)
       : generate_c_base_and_typeid_c(s4o_ptr) {
+      func_to_call = NULL;
     };
 
     virtual ~generate_c_backup_config_c(void) {}
