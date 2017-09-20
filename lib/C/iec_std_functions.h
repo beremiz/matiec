@@ -776,7 +776,7 @@ __xorbool_expand(XOR__BOOL__BOOL) /* Overloaded function */
 
 #define __iec_(TYPENAME) \
 __arith_expand(XOR_##TYPENAME, TYPENAME, ^) /* The explicitly typed standard functions */\
-__arith_expand(XOR__##TYPENAME##__##TYPENAME, TYPENAME, ^) /* Overloaded function */\
+__arith_expand(XOR__##TYPENAME##__##TYPENAME, TYPENAME, ^) /* Overloaded function */
 __ANY_NBIT(__iec_)
 #undef __iec_
 
