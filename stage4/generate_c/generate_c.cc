@@ -2198,6 +2198,27 @@ void print_backup_restore_function_end(stage4out_c &s4o) {
 /* the generated function will backup/restore the global variables declared in the
  * configuration, and call the backup/restore functions of each embedded resource to do
  * the same for the global variables declared inside each resource.
+ *
+ *   The matiec compiler will now generate two additional functions which 
+ *   will backup and restore the PLC internal state to a void *buffer.
+ *       config_backup__(void **buffer, int *maxsize)
+ *       config_restore__(void **buffer, int *maxsize)
+ *
+ *   Both functions will backup/restore the internal state from the memory 
+ *   pointed to by *buffer, up to a maximum of *maxsize bytes.
+ *   Both functions will return with buffer pointing to the first unused 
+ *   byte in the buffer, and maxsize with the number of remaining bytes. If 
+ *   the buffer is not sufficient to store all the internal state, maxsize 
+ *   will return with a negative number, equal to the number of missing 
+ *   bytes.
+ *
+ *   In other words, to know the exact size of the buffer required to store 
+ *   the PLC internal state, malloc() that memory, and do the backup:
+ *          int maxsize = 0;
+ *          config_backup__(NULL, &maxsize);
+ *          void *buffer = malloc(-1 * maxsize);
+ *          // and now to really back the internal state...
+ *          config_backup__(&buffer, &maxsize);
  */
 class generate_c_backup_config_c: public generate_c_base_and_typeid_c {
   private:
