@@ -87,6 +87,7 @@
   /* Do _not_ generate the EN and ENO parameters! */
   #define EN_ENO_PARAMS
   #define EN_ENO
+  #define EN_PFX _NO_EN
 
   #define TEST_EN(TYPENAME)
   #define TEST_EN_COND(TYPENAME, COND)
@@ -96,6 +97,7 @@
   /* _Do_ generate the EN and ENO parameters! */
   #define EN_ENO_PARAMS BOOL EN, BOOL *ENO,
   #define EN_ENO EN, ENO,
+  #define EN_PFX _EN
 
   #define TEST_EN(TYPENAME)\
     if (!EN) {\
@@ -491,21 +493,166 @@ __ANY_REAL(__atan)
 /***   Table 24 - Standard arithmetic functions    ***/
 /*****************************************************/
 
-#define __arith_expand(fname,TYPENAME, OP)\
-static inline TYPENAME fname(EN_ENO_PARAMS UINT param_count, TYPENAME op1, ...){\
-  va_list ap;\
-  UINT i;\
-  TEST_EN(TYPENAME)\
-  \
-  va_start (ap, op1);         /* Initialize the argument list.  */\
-  \
-  for (i = 0; i < param_count - 1; i++){\
-    op1 = op1 OP va_arg (ap, VA_ARGS_##TYPENAME);\
-  }\
-  \
-  va_end (ap);                  /* Clean up.  */\
-  return op1;\
-}
+#define __arith_expand(fname, TYPENAME, OP)				\
+									\
+	static inline TYPENAME fname##1(EN_ENO_PARAMS			\
+					TYPENAME op1) {			\
+		TEST_EN(TYPENAME);					\
+		return op1;						\
+	}								\
+									\
+	static inline TYPENAME fname##2(EN_ENO_PARAMS			\
+					TYPENAME op1,			\
+					TYPENAME op2) {			\
+		TEST_EN(TYPENAME);					\
+		op1 = op1 OP op2;					\
+		return op1;						\
+	}								\
+									\
+	static inline TYPENAME fname##3(EN_ENO_PARAMS			\
+					TYPENAME op1,			\
+					TYPENAME op2,			\
+					TYPENAME op3){			\
+		TEST_EN(TYPENAME);					\
+		op1 = op1 OP op2 OP op3;				\
+		return op1;						\
+	}								\
+									\
+	static inline TYPENAME fname##4(EN_ENO_PARAMS			\
+					TYPENAME op1,			\
+					TYPENAME op2,			\
+					TYPENAME op3,			\
+					TYPENAME op4){			\
+		TEST_EN(TYPENAME);					\
+		op1 = op1 OP op2 OP op3 OP op4;				\
+		return op1;						\
+	}								\
+									\
+	static inline TYPENAME fname##5(EN_ENO_PARAMS			\
+					TYPENAME op1,			\
+					TYPENAME op2,			\
+					TYPENAME op3,			\
+					TYPENAME op4,			\
+					TYPENAME op5){			\
+		TEST_EN(TYPENAME);					\
+		op1 = op1 OP op2 OP op3 OP op4 OP op5;			\
+		return op1;						\
+	}								\
+									\
+	static inline TYPENAME fname##6(EN_ENO_PARAMS			\
+					TYPENAME op1,			\
+					TYPENAME op2,			\
+					TYPENAME op3,			\
+					TYPENAME op4,			\
+					TYPENAME op5,			\
+					TYPENAME op6){			\
+		TEST_EN(TYPENAME);					\
+		op1 = op1 OP op2 OP op3 OP op4 OP op5 OP op6;		\
+		return op1;						\
+	}								\
+									\
+	static inline TYPENAME fname##7(EN_ENO_PARAMS			\
+					TYPENAME op1,			\
+					TYPENAME op2,			\
+					TYPENAME op3,			\
+					TYPENAME op4,			\
+					TYPENAME op5,			\
+					TYPENAME op6,			\
+					TYPENAME op7){			\
+		TEST_EN(TYPENAME);					\
+		op1 = op1 OP op2 OP op3 OP op4 OP op5 OP op6 OP op7;	\
+		return op1;						\
+	}								\
+									\
+	static inline TYPENAME fname##8(EN_ENO_PARAMS			\
+					TYPENAME op1,			\
+					TYPENAME op2,			\
+					TYPENAME op3,			\
+					TYPENAME op4,			\
+					TYPENAME op5,			\
+					TYPENAME op6,			\
+					TYPENAME op7,			\
+					TYPENAME op8){			\
+		TEST_EN(TYPENAME);					\
+		op1 =   op1 OP op2 OP op3 OP op4 OP			\
+			op5 OP op6 OP op7 OP op8;			\
+		return op1;						\
+	}								\
+									\
+	static inline TYPENAME fname##_VAR(EN_ENO_PARAMS		\
+					UINT param_count,		\
+					TYPENAME op1, ...){		\
+		va_list ap;						\
+		UINT i;							\
+		TEST_EN(TYPENAME)					\
+									\
+			va_start (ap, op1);         /* Initialize the argument list.  */ \
+									\
+		for (i = 0; i < param_count - 1; i++){			\
+			op1 = op1 OP va_arg (ap, VA_ARGS_##TYPENAME);	\
+		}							\
+									\
+		va_end (ap);                  /* Clean up.  */		\
+		return op1;						\
+	}								\
+									\
+
+/* macros needed for #if-like behaviour inside of macro */
+#define ARITH_OPERATION_COND_IGNORE(...)
+#define ARITH_OPERATION_COND_IDENT(...) __VA_ARGS__
+#define ARITH_OPERATION_COND_SKIP_
+#define ARITH_OPERATION_COND_CLAUSE1(...) __VA_ARGS__ ARITH_OPERATION_COND_IGNORE
+#define ARITH_OPERATION_COND_CLAUSE2(...) ARITH_OPERATION_COND_IDENT
+
+#define ARITH_OPERATION_COND_(A,B,C,...) C
+#define ARITH_OPERATION_COND(EXP)			\
+	ARITH_OPERATION_COND_(				\
+		EXP,					\
+		ARITH_OPERATION_COND_CLAUSE1,		\
+		ARITH_OPERATION_COND_CLAUSE2, ~)
+
+#define ARITH_OPERATION_LE_(X, Y) ARITH_OPERATION_COND_ ## X ## _LE_ ## Y
+#define ARITH_OPERATION_LE( X, Y) ARITH_OPERATION_LE_(X, Y)
+
+/*
+ * Macro to remove typecast in argument number placed by code generator:
+ * (UINT)3 -> 3
+ */
+#define CLEAR_TYPECAST(X)
+#define MAX_INLINE_PARAM_COUNT 8
+#ifdef DISABLE_EN_ENO_PARAMETERS
+
+#define ARITH_OPERATION_CALL__(FNAME, PARAM_COUNT, ...)			\
+	ARITH_OPERATION_COND(ARITH_OPERATION_LE(PARAM_COUNT, MAX_INLINE_PARAM_COUNT)) \
+	(FNAME##_VAR(PARAM_COUNT, __VA_ARGS__))				\
+	(FNAME##PARAM_COUNT(      __VA_ARGS__))
+
+#define ARITH_OPERATION_CALL_( FNAME, PARAM_COUNT, ...)    ARITH_OPERATION_CALL__(FNAME, PARAM_COUNT, __VA_ARGS__)
+#define ARITH_OPERATION_CALL(  FNAME, PARAM_COUNT, ...)    ARITH_OPERATION_CALL_( FNAME, CLEAR_TYPECAST PARAM_COUNT, __VA_ARGS__)
+
+#else
+
+#define ARITH_OPERATION_CALL__(EN, ENO, FNAME, PARAM_COUNT, ...)	\
+	ARITH_OPERATION_COND(ARITH_OPERATION_LE(PARAM_COUNT, MAX_INLINE_PARAM_COUNT)) \
+	(FNAME##_VAR(       (EN), (ENO), PARAM_COUNT, __VA_ARGS__))	\
+	(FNAME##PARAM_COUNT((EN), (ENO), __VA_ARGS__))
+
+
+#define ARITH_OPERATION_CALL_( EN, ENO, FNAME, PARAM_COUNT, ...)    ARITH_OPERATION_CALL__(EN, ENO, FNAME, PARAM_COUNT, __VA_ARGS__)
+#define ARITH_OPERATION_CALL(  EN, ENO, FNAME, PARAM_COUNT, ...)    ARITH_OPERATION_CALL_(EN, ENO, FNAME, CLEAR_TYPECAST PARAM_COUNT, __VA_ARGS__)
+
+#endif
+
+#ifdef DISABLE_EN_ENO_PARAMETERS
+#define ARITH_OPERATION__TYPE__TYPE_NO_EN(FNAME, PARAM_COUNT, ...)             ARITH_OPERATION_CALL(FNAME, PARAM_COUNT, __VA_ARGS__)
+#else
+#define ARITH_OPERATION__TYPE__TYPE_EN(FNAME, EN, ENO, PARAM_COUNT, ...)       ARITH_OPERATION_CALL(EN, ENO, FNAME, PARAM_COUNT, __VA_ARGS__)
+#endif
+
+#define ARITH_OPERATION__TYPE__TYPE_(PFX, ...)               ARITH_OPERATION__TYPE__TYPE##PFX(__VA_ARGS__)
+#define ARITH_OPERATION__TYPE__TYPE( PFX, ...)               ARITH_OPERATION__TYPE__TYPE_(PFX, __VA_ARGS__)
+
+
 
 #define __arith_static(fname,TYPENAME, OP)\
 /* explicitly typed function */\
@@ -526,6 +673,36 @@ __arith_expand(ADD_##TYPENAME, TYPENAME, +) 			 /* explicitly typed function */\
 __arith_expand(ADD__##TYPENAME##__##TYPENAME, TYPENAME, +)	 /* overloaded function */
 __ANY_NUM(__add)
 
+#define ADD_SINT(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD_SINT,            __VA_ARGS__)
+#define ADD__SINT__SINT(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD__SINT__SINT,     __VA_ARGS__)
+
+#define ADD_INT(...)           ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD_INT,             __VA_ARGS__)
+#define ADD__INT__INT(...)     ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD__INT__INT,       __VA_ARGS__)
+
+#define ADD_DINT(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD_DINT,            __VA_ARGS__)
+#define ADD__DINT__DINT(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD__DINT__DINT,     __VA_ARGS__)
+
+#define ADD_LINT(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD_LINT,            __VA_ARGS__)
+#define ADD__LINT__LINT(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD__LINT__LINT,     __VA_ARGS__)
+
+#define ADD_USINT(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD_USINT,           __VA_ARGS__)
+#define ADD__USINT__USINT(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD__USINT__USINT,   __VA_ARGS__)
+
+#define ADD_UINT(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD_UINT,            __VA_ARGS__)
+#define ADD__UINT__UINT(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD__UINT__UINT,     __VA_ARGS__)
+
+#define ADD_UDINT(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD_UDINT,           __VA_ARGS__)
+#define ADD__UDINT__UDINT(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD__UDINT__UDINT,   __VA_ARGS__)
+
+#define ADD_ULINT(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD_ULINT,           __VA_ARGS__)
+#define ADD__ULINT__ULINT(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD__ULINT__ULINT,   __VA_ARGS__)
+
+#define ADD_REAL(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD_REAL,            __VA_ARGS__)
+#define ADD__REAL__REAL(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD__REAL__REAL,     __VA_ARGS__)
+
+#define ADD_LREAL(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD_LREAL,           __VA_ARGS__)
+#define ADD__LREAL__LREAL(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, ADD__LREAL__LREAL,   __VA_ARGS__)
+
 
   /**************/
   /*     MUL    */
@@ -534,6 +711,36 @@ __ANY_NUM(__add)
 __arith_expand(MUL_##TYPENAME, TYPENAME, *) 			 /* explicitly typed function */\
 __arith_expand(MUL__##TYPENAME##__##TYPENAME, TYPENAME, *)	 /* overloaded function */
 __ANY_NUM(__mul)
+
+#define MUL_SINT(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL_SINT,            __VA_ARGS__)
+#define MUL__SINT__SINT(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL__SINT__SINT,     __VA_ARGS__)
+
+#define MUL_INT(...)           ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL_INT,             __VA_ARGS__)
+#define MUL__INT__INT(...)     ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL__INT__INT,       __VA_ARGS__)
+
+#define MUL_DINT(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL_DINT,            __VA_ARGS__)
+#define MUL__DINT__DINT(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL__DINT__DINT,     __VA_ARGS__)
+
+#define MUL_LINT(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL_LINT,            __VA_ARGS__)
+#define MUL__LINT__LINT(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL__LINT__LINT,     __VA_ARGS__)
+
+#define MUL_USINT(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL_USINT,           __VA_ARGS__)
+#define MUL__USINT__USINT(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL__USINT__USINT,   __VA_ARGS__)
+
+#define MUL_UINT(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL_UINT,            __VA_ARGS__)
+#define MUL__UINT__UINT(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL__UINT__UINT,     __VA_ARGS__)
+
+#define MUL_UDINT(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL_UDINT,           __VA_ARGS__)
+#define MUL__UDINT__UDINT(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL__UDINT__UDINT,   __VA_ARGS__)
+
+#define MUL_ULINT(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL_ULINT,           __VA_ARGS__)
+#define MUL__ULINT__ULINT(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL__ULINT__ULINT,   __VA_ARGS__)
+
+#define MUL_REAL(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL_REAL,            __VA_ARGS__)
+#define MUL__REAL__REAL(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL__REAL__REAL,     __VA_ARGS__)
+
+#define MUL_LREAL(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL_LREAL,           __VA_ARGS__)
+#define MUL__LREAL__LREAL(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, MUL__LREAL__LREAL,   __VA_ARGS__)
 
 
   /**************/
@@ -732,6 +939,8 @@ __ANY_INT(__in1_anynbit_)
   /**************/
 __arith_expand(AND_BOOL, BOOL, && )         /* The explicitly typed standard functions */
 __arith_expand(AND__BOOL__BOOL, BOOL, && )  /* Overloaded function */
+#define AND_BOOL(...)        ARITH_OPERATION__TYPE__TYPE(EN_PFX, AND_BOOL,        __VA_ARGS__)
+#define AND__BOOL__BOOL(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, AND__BOOL__BOOL, __VA_ARGS__)
 
 #define __iec_(TYPENAME) \
 __arith_expand(AND_##TYPENAME, TYPENAME, &)  /* The explicitly typed standard functions */\
@@ -739,17 +948,45 @@ __arith_expand(AND__##TYPENAME##__##TYPENAME, TYPENAME, &)  /* Overloaded functi
 __ANY_NBIT(__iec_)
 #undef __iec_
 
+#define AND_BYTE(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, AND_BYTE,             __VA_ARGS__)
+#define AND__BYTE__BYTE(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, AND__BYTE__BYTE,      __VA_ARGS__)
+
+#define AND_WORD(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, AND_WORD,             __VA_ARGS__)
+#define AND__WORD__WORD(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, AND__WORD__WORD,      __VA_ARGS__)
+
+#define AND_DWORD(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, AND_DWORD,            __VA_ARGS__)
+#define AND__DWORD__DWORD(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, AND__DWORD__DWORD,    __VA_ARGS__)
+
+#define AND_LWORD(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, AND_LWORD,            __VA_ARGS__)
+#define AND__LWORD__LWORD(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, AND__LWORD__LWORD,    __VA_ARGS__)
+
+
   /*************/
   /*     OR    */
   /*************/
 __arith_expand(OR_BOOL, BOOL, || )         /* The explicitly typed standard functions */
 __arith_expand(OR__BOOL__BOOL, BOOL, || )  /* Overloaded function */
+#define OR_BOOL(...)        ARITH_OPERATION__TYPE__TYPE(EN_PFX, OR_BOOL,        __VA_ARGS__)
+#define OR__BOOL__BOOL(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, OR__BOOL__BOOL, __VA_ARGS__)
 
 #define __iec_(TYPENAME) \
 __arith_expand(OR_##TYPENAME, TYPENAME, |)  /* The explicitly typed standard functions */\
 __arith_expand(OR__##TYPENAME##__##TYPENAME, TYPENAME, |)  /* Overloaded function */
 __ANY_NBIT(__iec_)
 #undef __iec_
+
+#define OR_BYTE(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, OR_BYTE,             __VA_ARGS__)
+#define OR__BYTE__BYTE(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, OR__BYTE__BYTE,      __VA_ARGS__)
+
+#define OR_WORD(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, OR_WORD,             __VA_ARGS__)
+#define OR__WORD__WORD(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, OR__WORD__WORD,      __VA_ARGS__)
+
+#define OR_DWORD(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, OR_DWORD,            __VA_ARGS__)
+#define OR__DWORD__DWORD(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, OR__DWORD__DWORD,    __VA_ARGS__)
+
+#define OR_LWORD(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, OR_LWORD,            __VA_ARGS__)
+#define OR__LWORD__LWORD(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, OR__LWORD__LWORD,    __VA_ARGS__)
+
 
   /**************/
   /*     XOR    */
@@ -779,6 +1016,18 @@ __arith_expand(XOR_##TYPENAME, TYPENAME, ^) /* The explicitly typed standard fun
 __arith_expand(XOR__##TYPENAME##__##TYPENAME, TYPENAME, ^) /* Overloaded function */
 __ANY_NBIT(__iec_)
 #undef __iec_
+
+#define XOR_BYTE(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, XOR_BYTE,             __VA_ARGS__)
+#define XOR__BYTE__BYTE(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, XOR__BYTE__BYTE,      __VA_ARGS__)
+
+#define XOR_WORD(...)          ARITH_OPERATION__TYPE__TYPE(EN_PFX, XOR_WORD,             __VA_ARGS__)
+#define XOR__WORD__WORD(...)   ARITH_OPERATION__TYPE__TYPE(EN_PFX, XOR__WORD__WORD,      __VA_ARGS__)
+
+#define XOR_DWORD(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, XOR_DWORD,            __VA_ARGS__)
+#define XOR__DWORD__DWORD(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, XOR__DWORD__DWORD,    __VA_ARGS__)
+
+#define XOR_LWORD(...)         ARITH_OPERATION__TYPE__TYPE(EN_PFX, XOR_LWORD,            __VA_ARGS__)
+#define XOR__LWORD__LWORD(...) ARITH_OPERATION__TYPE__TYPE(EN_PFX, XOR__LWORD__LWORD,    __VA_ARGS__)
 
 
   /**************/
@@ -1582,8 +1831,222 @@ static inline DT CONCAT_DATE_TOD(EN_ENO_PARAMS DATE IN1, TOD IN2){
 
 
 
+/*************************************/
+/*
+  These defines are needed to have #if-like
+  behaviour inside of macro. See macro
+  ARITH_OPERATION_COND above.
 
+  emacs commands to generate defines below.
+  Select commands and eval-region
 
+  (next-line)
+  (next-line)
+  (dotimes (i 200)
+    (insert
+     (format "\n#define ARITH_OPERATION_COND_%d_LE_8 %s" i (if (> i 8) "," "1"))))
+*/
+
+#define ARITH_OPERATION_COND_0_LE_8 1
+#define ARITH_OPERATION_COND_1_LE_8 1
+#define ARITH_OPERATION_COND_2_LE_8 1
+#define ARITH_OPERATION_COND_3_LE_8 1
+#define ARITH_OPERATION_COND_4_LE_8 1
+#define ARITH_OPERATION_COND_5_LE_8 1
+#define ARITH_OPERATION_COND_6_LE_8 1
+#define ARITH_OPERATION_COND_7_LE_8 1
+#define ARITH_OPERATION_COND_8_LE_8 1
+#define ARITH_OPERATION_COND_9_LE_8 ,
+#define ARITH_OPERATION_COND_10_LE_8 ,
+#define ARITH_OPERATION_COND_11_LE_8 ,
+#define ARITH_OPERATION_COND_12_LE_8 ,
+#define ARITH_OPERATION_COND_13_LE_8 ,
+#define ARITH_OPERATION_COND_14_LE_8 ,
+#define ARITH_OPERATION_COND_15_LE_8 ,
+#define ARITH_OPERATION_COND_16_LE_8 ,
+#define ARITH_OPERATION_COND_17_LE_8 ,
+#define ARITH_OPERATION_COND_18_LE_8 ,
+#define ARITH_OPERATION_COND_19_LE_8 ,
+#define ARITH_OPERATION_COND_20_LE_8 ,
+#define ARITH_OPERATION_COND_21_LE_8 ,
+#define ARITH_OPERATION_COND_22_LE_8 ,
+#define ARITH_OPERATION_COND_23_LE_8 ,
+#define ARITH_OPERATION_COND_24_LE_8 ,
+#define ARITH_OPERATION_COND_25_LE_8 ,
+#define ARITH_OPERATION_COND_26_LE_8 ,
+#define ARITH_OPERATION_COND_27_LE_8 ,
+#define ARITH_OPERATION_COND_28_LE_8 ,
+#define ARITH_OPERATION_COND_29_LE_8 ,
+#define ARITH_OPERATION_COND_30_LE_8 ,
+#define ARITH_OPERATION_COND_31_LE_8 ,
+#define ARITH_OPERATION_COND_32_LE_8 ,
+#define ARITH_OPERATION_COND_33_LE_8 ,
+#define ARITH_OPERATION_COND_34_LE_8 ,
+#define ARITH_OPERATION_COND_35_LE_8 ,
+#define ARITH_OPERATION_COND_36_LE_8 ,
+#define ARITH_OPERATION_COND_37_LE_8 ,
+#define ARITH_OPERATION_COND_38_LE_8 ,
+#define ARITH_OPERATION_COND_39_LE_8 ,
+#define ARITH_OPERATION_COND_40_LE_8 ,
+#define ARITH_OPERATION_COND_41_LE_8 ,
+#define ARITH_OPERATION_COND_42_LE_8 ,
+#define ARITH_OPERATION_COND_43_LE_8 ,
+#define ARITH_OPERATION_COND_44_LE_8 ,
+#define ARITH_OPERATION_COND_45_LE_8 ,
+#define ARITH_OPERATION_COND_46_LE_8 ,
+#define ARITH_OPERATION_COND_47_LE_8 ,
+#define ARITH_OPERATION_COND_48_LE_8 ,
+#define ARITH_OPERATION_COND_49_LE_8 ,
+#define ARITH_OPERATION_COND_50_LE_8 ,
+#define ARITH_OPERATION_COND_51_LE_8 ,
+#define ARITH_OPERATION_COND_52_LE_8 ,
+#define ARITH_OPERATION_COND_53_LE_8 ,
+#define ARITH_OPERATION_COND_54_LE_8 ,
+#define ARITH_OPERATION_COND_55_LE_8 ,
+#define ARITH_OPERATION_COND_56_LE_8 ,
+#define ARITH_OPERATION_COND_57_LE_8 ,
+#define ARITH_OPERATION_COND_58_LE_8 ,
+#define ARITH_OPERATION_COND_59_LE_8 ,
+#define ARITH_OPERATION_COND_60_LE_8 ,
+#define ARITH_OPERATION_COND_61_LE_8 ,
+#define ARITH_OPERATION_COND_62_LE_8 ,
+#define ARITH_OPERATION_COND_63_LE_8 ,
+#define ARITH_OPERATION_COND_64_LE_8 ,
+#define ARITH_OPERATION_COND_65_LE_8 ,
+#define ARITH_OPERATION_COND_66_LE_8 ,
+#define ARITH_OPERATION_COND_67_LE_8 ,
+#define ARITH_OPERATION_COND_68_LE_8 ,
+#define ARITH_OPERATION_COND_69_LE_8 ,
+#define ARITH_OPERATION_COND_70_LE_8 ,
+#define ARITH_OPERATION_COND_71_LE_8 ,
+#define ARITH_OPERATION_COND_72_LE_8 ,
+#define ARITH_OPERATION_COND_73_LE_8 ,
+#define ARITH_OPERATION_COND_74_LE_8 ,
+#define ARITH_OPERATION_COND_75_LE_8 ,
+#define ARITH_OPERATION_COND_76_LE_8 ,
+#define ARITH_OPERATION_COND_77_LE_8 ,
+#define ARITH_OPERATION_COND_78_LE_8 ,
+#define ARITH_OPERATION_COND_79_LE_8 ,
+#define ARITH_OPERATION_COND_80_LE_8 ,
+#define ARITH_OPERATION_COND_81_LE_8 ,
+#define ARITH_OPERATION_COND_82_LE_8 ,
+#define ARITH_OPERATION_COND_83_LE_8 ,
+#define ARITH_OPERATION_COND_84_LE_8 ,
+#define ARITH_OPERATION_COND_85_LE_8 ,
+#define ARITH_OPERATION_COND_86_LE_8 ,
+#define ARITH_OPERATION_COND_87_LE_8 ,
+#define ARITH_OPERATION_COND_88_LE_8 ,
+#define ARITH_OPERATION_COND_89_LE_8 ,
+#define ARITH_OPERATION_COND_90_LE_8 ,
+#define ARITH_OPERATION_COND_91_LE_8 ,
+#define ARITH_OPERATION_COND_92_LE_8 ,
+#define ARITH_OPERATION_COND_93_LE_8 ,
+#define ARITH_OPERATION_COND_94_LE_8 ,
+#define ARITH_OPERATION_COND_95_LE_8 ,
+#define ARITH_OPERATION_COND_96_LE_8 ,
+#define ARITH_OPERATION_COND_97_LE_8 ,
+#define ARITH_OPERATION_COND_98_LE_8 ,
+#define ARITH_OPERATION_COND_99_LE_8 ,
+#define ARITH_OPERATION_COND_100_LE_8 ,
+#define ARITH_OPERATION_COND_101_LE_8 ,
+#define ARITH_OPERATION_COND_102_LE_8 ,
+#define ARITH_OPERATION_COND_103_LE_8 ,
+#define ARITH_OPERATION_COND_104_LE_8 ,
+#define ARITH_OPERATION_COND_105_LE_8 ,
+#define ARITH_OPERATION_COND_106_LE_8 ,
+#define ARITH_OPERATION_COND_107_LE_8 ,
+#define ARITH_OPERATION_COND_108_LE_8 ,
+#define ARITH_OPERATION_COND_109_LE_8 ,
+#define ARITH_OPERATION_COND_110_LE_8 ,
+#define ARITH_OPERATION_COND_111_LE_8 ,
+#define ARITH_OPERATION_COND_112_LE_8 ,
+#define ARITH_OPERATION_COND_113_LE_8 ,
+#define ARITH_OPERATION_COND_114_LE_8 ,
+#define ARITH_OPERATION_COND_115_LE_8 ,
+#define ARITH_OPERATION_COND_116_LE_8 ,
+#define ARITH_OPERATION_COND_117_LE_8 ,
+#define ARITH_OPERATION_COND_118_LE_8 ,
+#define ARITH_OPERATION_COND_119_LE_8 ,
+#define ARITH_OPERATION_COND_120_LE_8 ,
+#define ARITH_OPERATION_COND_121_LE_8 ,
+#define ARITH_OPERATION_COND_122_LE_8 ,
+#define ARITH_OPERATION_COND_123_LE_8 ,
+#define ARITH_OPERATION_COND_124_LE_8 ,
+#define ARITH_OPERATION_COND_125_LE_8 ,
+#define ARITH_OPERATION_COND_126_LE_8 ,
+#define ARITH_OPERATION_COND_127_LE_8 ,
+#define ARITH_OPERATION_COND_128_LE_8 ,
+#define ARITH_OPERATION_COND_129_LE_8 ,
+#define ARITH_OPERATION_COND_130_LE_8 ,
+#define ARITH_OPERATION_COND_131_LE_8 ,
+#define ARITH_OPERATION_COND_132_LE_8 ,
+#define ARITH_OPERATION_COND_133_LE_8 ,
+#define ARITH_OPERATION_COND_134_LE_8 ,
+#define ARITH_OPERATION_COND_135_LE_8 ,
+#define ARITH_OPERATION_COND_136_LE_8 ,
+#define ARITH_OPERATION_COND_137_LE_8 ,
+#define ARITH_OPERATION_COND_138_LE_8 ,
+#define ARITH_OPERATION_COND_139_LE_8 ,
+#define ARITH_OPERATION_COND_140_LE_8 ,
+#define ARITH_OPERATION_COND_141_LE_8 ,
+#define ARITH_OPERATION_COND_142_LE_8 ,
+#define ARITH_OPERATION_COND_143_LE_8 ,
+#define ARITH_OPERATION_COND_144_LE_8 ,
+#define ARITH_OPERATION_COND_145_LE_8 ,
+#define ARITH_OPERATION_COND_146_LE_8 ,
+#define ARITH_OPERATION_COND_147_LE_8 ,
+#define ARITH_OPERATION_COND_148_LE_8 ,
+#define ARITH_OPERATION_COND_149_LE_8 ,
+#define ARITH_OPERATION_COND_150_LE_8 ,
+#define ARITH_OPERATION_COND_151_LE_8 ,
+#define ARITH_OPERATION_COND_152_LE_8 ,
+#define ARITH_OPERATION_COND_153_LE_8 ,
+#define ARITH_OPERATION_COND_154_LE_8 ,
+#define ARITH_OPERATION_COND_155_LE_8 ,
+#define ARITH_OPERATION_COND_156_LE_8 ,
+#define ARITH_OPERATION_COND_157_LE_8 ,
+#define ARITH_OPERATION_COND_158_LE_8 ,
+#define ARITH_OPERATION_COND_159_LE_8 ,
+#define ARITH_OPERATION_COND_160_LE_8 ,
+#define ARITH_OPERATION_COND_161_LE_8 ,
+#define ARITH_OPERATION_COND_162_LE_8 ,
+#define ARITH_OPERATION_COND_163_LE_8 ,
+#define ARITH_OPERATION_COND_164_LE_8 ,
+#define ARITH_OPERATION_COND_165_LE_8 ,
+#define ARITH_OPERATION_COND_166_LE_8 ,
+#define ARITH_OPERATION_COND_167_LE_8 ,
+#define ARITH_OPERATION_COND_168_LE_8 ,
+#define ARITH_OPERATION_COND_169_LE_8 ,
+#define ARITH_OPERATION_COND_170_LE_8 ,
+#define ARITH_OPERATION_COND_171_LE_8 ,
+#define ARITH_OPERATION_COND_172_LE_8 ,
+#define ARITH_OPERATION_COND_173_LE_8 ,
+#define ARITH_OPERATION_COND_174_LE_8 ,
+#define ARITH_OPERATION_COND_175_LE_8 ,
+#define ARITH_OPERATION_COND_176_LE_8 ,
+#define ARITH_OPERATION_COND_177_LE_8 ,
+#define ARITH_OPERATION_COND_178_LE_8 ,
+#define ARITH_OPERATION_COND_179_LE_8 ,
+#define ARITH_OPERATION_COND_180_LE_8 ,
+#define ARITH_OPERATION_COND_181_LE_8 ,
+#define ARITH_OPERATION_COND_182_LE_8 ,
+#define ARITH_OPERATION_COND_183_LE_8 ,
+#define ARITH_OPERATION_COND_184_LE_8 ,
+#define ARITH_OPERATION_COND_185_LE_8 ,
+#define ARITH_OPERATION_COND_186_LE_8 ,
+#define ARITH_OPERATION_COND_187_LE_8 ,
+#define ARITH_OPERATION_COND_188_LE_8 ,
+#define ARITH_OPERATION_COND_189_LE_8 ,
+#define ARITH_OPERATION_COND_190_LE_8 ,
+#define ARITH_OPERATION_COND_191_LE_8 ,
+#define ARITH_OPERATION_COND_192_LE_8 ,
+#define ARITH_OPERATION_COND_193_LE_8 ,
+#define ARITH_OPERATION_COND_194_LE_8 ,
+#define ARITH_OPERATION_COND_195_LE_8 ,
+#define ARITH_OPERATION_COND_196_LE_8 ,
+#define ARITH_OPERATION_COND_197_LE_8 ,
+#define ARITH_OPERATION_COND_198_LE_8 ,
+#define ARITH_OPERATION_COND_199_LE_8 ,
 
 
 #endif /* _IEC_STD_FUNCTIONS_H */
