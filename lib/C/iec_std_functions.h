@@ -493,6 +493,28 @@ __ANY_REAL(__atan)
 /***   Table 24 - Standard arithmetic functions    ***/
 /*****************************************************/
 
+/* NOTE: unlike all other standard functions, the arithmetic based (extensible) functions
+ *       (ADD, MUL, AND, OR, XOR) have several implementations:
+ *        - 8 optimized versions for when the functon is called with 1 to 8 INput parameters
+ *        - an extra non-optimized version for every other case. 
+ *       
+ *       This means that instead of the functions usually named 
+ *           ADD_TTTT() 
+ *           ADD__TTTT__TTTT()        (where TTTT is a type, e.g. INT)
+ *       we have instead
+ *           ADD_TTTT1(),  ADD_TTTT2(), ... ,ADD_TTTT8()
+ *           ADD_TTTTX()              
+ *           ADD_TTTT_VAR()           
+ *           ADD__TTTT__TTTT1(), ..., ADD__TTTT__TTTT8()       
+ *           ADD__TTTT__TTTT_VAR()    
+ *       
+ *       The standard names
+ *           ADD_TTTT() 
+ *           ADD__TTTT__TTTT()
+ *       are instead later (in this .h file) declared as macros, which will choose
+ *       at compilation time the correct version/implementation to call
+ *       based on the number of input parameters in that specific call.
+ */
 #define __arith_expand(fname, TYPENAME, OP)				\
 									\
 	static inline TYPENAME fname##1(EN_ENO_PARAMS			\
