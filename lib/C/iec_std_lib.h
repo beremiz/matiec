@@ -35,6 +35,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <ctype.h>
+#include <time.h>
 
 #include <stdio.h>
 #include <stdlib.h>
