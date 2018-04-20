@@ -686,9 +686,13 @@ comment		"(*"({comment_text}*)({asterisk}+)")"
  * In our implementation we therefore have two definitions of whitespace
  *   - one for ST, that includes the newline character
  *   - one for IL without the newline character.
- * Additionally, when parsing IL, the newline character is treated as the EOL token.
- * This requires the use of a state machine in the lexical parser that needs at least 
- * some knowledge of the syntax itself.
+ *
+ * IL whitespace is only active while parsing IL code, whereas ST whitespace
+ * is used in all other circumstances. Additionally, when parsing IL, the newline
+ * character is treated as the EOL token.
+ * The above requires the use of a state machine in the lexical parser to track which
+ * language is being parsed. This requires that the lexical parser (i.e. flex)
+ * have some knowledge of the syntax itself.
  *
  * NOTE: Our definition of whitespace will only work in ASCII!
  *
@@ -702,6 +706,9 @@ comment		"(*"({comment_text}*)({asterisk}+)")"
  *       We use this alternative just to stop the flex utility from
  *       generating the invalid (in this case) warning...
  */
+/* NOTE: il_whitespace_char is not currenty used, be we include it for completeness */ 
+st_whitespace_char		[ \f\n\r\t\v]
+il_whitespace_char		[ \f\r\t\v]
 
 st_whitespace			[ \f\n\r\t\v]*
 il_whitespace			[ \f\r\t\v]*
@@ -1164,19 +1171,28 @@ END_PROGRAM			unput_text(0); BEGIN(vardecl_list_state);
 
 	/* vardecl_list_state -> (vardecl_state | body_state | INITIAL) */
 <vardecl_list_state>{
-VAR_INPUT			| /* execute the next rule's action, i.e. fall-through! */
-VAR_OUTPUT			|
-VAR_IN_OUT			|
-VAR_EXTERNAL			|
-VAR_GLOBAL			|
-VAR_TEMP			|
-VAR_CONFIG			|
-VAR_ACCESS			|
-VAR				unput_text(0); yy_push_state(vardecl_state);
+				/* NOTE: vardecl_list_state is an exclusive state, i.e. when in this state
+				 *       default rules do not apply! This means that when in this state identifiers
+				 *       are not recognised!
+				 * NOTE: Notice that we only change to vardecl_state if the VAR*** is followed by 
+				 *       at least one whitespace. This is to dintinguish the VAR declaration
+				 *       from identifiers starting with 'var' (e.g. a variable named 'varint')
+				 * NOTE: Notice that we cannot use st_whitespace here, as it can legally be empty.
+				 *       We therefore use st_whitespace_char instead.
+				 */  
+VAR_INPUT{st_whitespace_char}		| /* execute the next rule's action, i.e. fall-through! */
+VAR_OUTPUT{st_whitespace_char}		|
+VAR_IN_OUT{st_whitespace_char}		|
+VAR_EXTERNAL{st_whitespace_char}	|
+VAR_GLOBAL{st_whitespace_char}		|
+VAR_TEMP{st_whitespace_char}		|
+VAR_CONFIG{st_whitespace_char}		|
+VAR_ACCESS{st_whitespace_char}		|
+VAR{st_whitespace_char}			unput_text(0); yy_push_state(vardecl_state); //printf("\nChanging to vardecl_state\n");
 
-END_FUNCTION			unput_text(0); BEGIN(INITIAL);
-END_FUNCTION_BLOCK		unput_text(0); BEGIN(INITIAL);
-END_PROGRAM			unput_text(0); BEGIN(INITIAL);
+END_FUNCTION{st_whitespace}		unput_text(0); BEGIN(INITIAL);
+END_FUNCTION_BLOCK{st_whitespace}	unput_text(0); BEGIN(INITIAL);
+END_PROGRAM{st_whitespace}		unput_text(0); BEGIN(INITIAL);
 
 				/* NOTE: Handling of whitespace...
 				 *   - Must come __before__ the next rule for any single character '.'
