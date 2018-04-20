@@ -2148,6 +2148,15 @@ class generate_c_backup_resource_decl_c: public generate_c_base_and_typeid_c {
       s4o.print("_restore__" "(void **buffer, int *maxsize);\n");      
       return NULL;
     }
+    
+    
+    void *visit(single_resource_declaration_c *symbol) {
+      /* __Must__ not insert any code! */
+      /* sinlge resources will not create a specific function for the resource */
+      /* backup and restore opertions will be inserted together with the configuration! */
+      return NULL;
+    }
+    
 };
 
 
@@ -2192,6 +2201,116 @@ void print_backup_restore_function_end(stage4out_c &s4o) {
   s4o.indent_left();
   s4o.print("}\n");      
 }
+
+
+
+
+
+/* generate the backup/restore function for a RESOURCE */
+/* the backup/restore function generated here will be called by the backup/restore
+ * function generated for the configuration in which the resource is embedded
+ */
+class generate_c_backup_resource_c: public generate_c_base_and_typeid_c {
+  public:    
+    const char *operation;
+    
+    generate_c_backup_resource_c(stage4out_c *s4o_ptr)
+      : generate_c_base_and_typeid_c(s4o_ptr) {
+      operation = NULL;
+    };
+
+  
+    virtual ~generate_c_backup_resource_c(void) {}
+
+    
+private:
+    void print_forward_declarations(void) {
+      s4o.print("\n\n\n");
+  
+      s4o.print("void ");
+      s4o.print("_backup__");
+      s4o.print("(void *varptr, int varsize, void **buffer, int *maxsize);\n");
+      s4o.print("void ");
+      s4o.print("_restore__");
+      s4o.print("(void *varptr, int varsize, void **buffer, int *maxsize);\n");
+  
+      s4o.print("\n\n\n");
+      s4o.print("#undef " DECLARE_GLOBAL          "\n");
+      s4o.print("#undef " DECLARE_GLOBAL_FB       "\n");
+      s4o.print("#undef " DECLARE_GLOBAL_LOCATION "\n");
+      s4o.print("#undef " DECLARE_GLOBAL_LOCATED  "\n");
+    }
+
+  public:
+    /********************/
+    /* 2.1.6 - Pragmas  */
+    /********************/
+    void *visit(enable_code_generation_pragma_c * symbol)   {s4o.enable_output(); return NULL;}
+    void *visit(disable_code_generation_pragma_c * symbol)  {s4o.disable_output();return NULL;}
+        
+        
+    /********************************/
+    /* B 1.7 Configuration elements */
+    /********************************/
+    void *visit(resource_declaration_c *symbol) {
+      char *resource_name = strdup(symbol->resource_name->token->value);
+      /* convert to upper case */
+      for (char *c = resource_name; *c != '\0'; *c = toupper(*c), c++);
+      
+      generate_c_vardecl_c vardecl = generate_c_vardecl_c(&s4o,
+                                         generate_c_vardecl_c::local_vf,
+                                         generate_c_vardecl_c::global_vt,
+                                         symbol->resource_name);
+      
+      print_forward_declarations();
+      
+      print_backup_restore_function_beg(s4o, resource_name, "_backup__");
+      if (symbol->global_var_declarations != NULL)   
+        vardecl.print(symbol->global_var_declarations);
+      if (symbol->resource_declaration != NULL) {
+        operation = "_backup__";
+        symbol->resource_declaration->accept(*this);  // will call visit(single_resource_declaration_c *)
+        operation = NULL;
+      }
+      print_backup_restore_function_end(s4o);      
+      
+      print_backup_restore_function_beg(s4o, resource_name, "_restore__");
+      if (symbol->global_var_declarations != NULL)
+        vardecl.print(symbol->global_var_declarations);
+      if (symbol->resource_declaration != NULL) {
+        operation = "_restore__";
+        symbol->resource_declaration->accept(*this);  // will call visit(single_resource_declaration_c *)
+        operation = NULL;
+      }
+      print_backup_restore_function_end(s4o);      
+
+      return NULL;
+    }
+    
+    void *visit(single_resource_declaration_c *symbol) {
+      /* Must store the declared/instatiated PROGRAMS */
+      if (symbol->program_configuration_list != NULL)
+        symbol->program_configuration_list->accept(*this);
+      return NULL;
+    }
+    
+    /*  PROGRAM [RETAIN | NON_RETAIN] program_name [WITH task_name] ':' program_type_name ['(' prog_conf_elements ')'] */
+    // SYM_REF5(program_configuration_c, retain_option, program_name, task_name, program_type_name, prog_conf_elements)
+    void *visit(program_configuration_c *symbol) {
+      // generate the following source code:
+      // _xxxxxx__(&program_name, sizeof(program_name), buffer, maxsize);
+      s4o.print(s4o.indent_spaces);
+      s4o.print(operation); // call _restore__() or _backup__()
+      s4o.print("(&"); 
+      symbol->program_name->accept(*this);
+      s4o.print(", sizeof(");
+      symbol->program_name->accept(*this);
+      s4o.print("), buffer, maxsize);\n");
+      return NULL;
+    }
+
+
+};
 
 
 /* generate the backup/restore function for a CONFIGURATION */
@@ -2264,7 +2383,7 @@ class generate_c_backup_config_c: public generate_c_base_and_typeid_c {
       vardecl.print(symbol);
       s4o.print("\n");
       func_to_call = "_backup__";
-      symbol->resource_declarations->accept(*this);
+      symbol->resource_declarations->accept(*this);  // will call resource_declaration_list_c or single_resource_declaration_c
       func_to_call = NULL;
       print_backup_restore_function_end(s4o);      
     
@@ -2272,7 +2391,7 @@ class generate_c_backup_config_c: public generate_c_base_and_typeid_c {
       vardecl.print(symbol);
       s4o.print("\n");
       func_to_call = "_restore__";
-      symbol->resource_declarations->accept(*this);
+      symbol->resource_declarations->accept(*this);  // will call resource_declaration_list_c or single_resource_declaration_c
       func_to_call = NULL;
       print_backup_restore_function_end(s4o);      
       
@@ -2280,8 +2399,6 @@ class generate_c_backup_config_c: public generate_c_base_and_typeid_c {
     }
     
     void *visit(resource_declaration_c *symbol) {
-      if (symbol->global_var_declarations == NULL)
-        return NULL;
       s4o.print(s4o.indent_spaces);
       symbol->resource_name->accept(*this);
       s4o.print(func_to_call);
@@ -2290,82 +2407,17 @@ class generate_c_backup_config_c: public generate_c_base_and_typeid_c {
     }
     
     void *visit(single_resource_declaration_c *symbol) {
-      /* A single resource never has global variables declared, so nothing to do! */
+      /* If the configuration does not have any resources, we must store/restore the declared program instances
+       * inside the backup() restore() functions created for the configuration.
+       */
+      generate_c_backup_resource_c handle_resource = generate_c_backup_resource_c(&s4o);
+      handle_resource.operation = func_to_call;
+      symbol->accept(handle_resource);
       return NULL;
     }
 
 };
 
-
-
-/* generate the backup/restore function for a RESOURCE */
-/* the backup/restore function generated here will be called by the backup/restore
- * function generated for the configuration in which the resource is embedded
- */
-class generate_c_backup_resource_c: public generate_c_base_and_typeid_c {
-  public:
-    generate_c_backup_resource_c(stage4out_c *s4o_ptr)
-      : generate_c_base_and_typeid_c(s4o_ptr) {
-    };
-
-    virtual ~generate_c_backup_resource_c(void) {}
-
-    
-  public:
-    /********************/
-    /* 2.1.6 - Pragmas  */
-    /********************/
-    void *visit(enable_code_generation_pragma_c * symbol)   {s4o.enable_output(); return NULL;}
-    void *visit(disable_code_generation_pragma_c * symbol)  {s4o.disable_output();return NULL;}
-        
-        
-    /********************************/
-    /* B 1.7 Configuration elements */
-    /********************************/
-    void *visit(resource_declaration_c *symbol) {
-      if (symbol->global_var_declarations == NULL)
-        return NULL;
-
-      char *resource_name = strdup(symbol->resource_name->token->value);
-      /* convert to upper case */
-      for (char *c = resource_name; *c != '\0'; *c = toupper(*c), c++);
-      
-      generate_c_vardecl_c vardecl = generate_c_vardecl_c(&s4o,
-                                         generate_c_vardecl_c::local_vf,
-                                         generate_c_vardecl_c::global_vt,
-                                         symbol->resource_name);
-      s4o.print("\n\n\n");
-
-      s4o.print("void ");
-      s4o.print("_backup__");
-      s4o.print("(void *varptr, int varsize, void **buffer, int *maxsize);\n");
-      s4o.print("void ");
-      s4o.print("_restore__");
-      s4o.print("(void *varptr, int varsize, void **buffer, int *maxsize);\n");
-
-      s4o.print("\n\n\n");
-      s4o.print("#undef " DECLARE_GLOBAL          "\n");
-      s4o.print("#undef " DECLARE_GLOBAL_FB       "\n");
-      s4o.print("#undef " DECLARE_GLOBAL_LOCATION "\n");
-      s4o.print("#undef " DECLARE_GLOBAL_LOCATED  "\n");
-      
-      print_backup_restore_function_beg(s4o, resource_name, "_backup__");
-      vardecl.print(symbol->global_var_declarations);
-      print_backup_restore_function_end(s4o);      
-    
-      print_backup_restore_function_beg(s4o, resource_name, "_restore__");
-      vardecl.print(symbol->global_var_declarations);
-      print_backup_restore_function_end(s4o);      
-    
-      return NULL;
-    }
-    
-    void *visit(single_resource_declaration_c *symbol) {
-      /* A single resource never has global variables declared, so nothing to do! */
-      return NULL;
-    }
-
-};
 
 
 /***********************************************************************/
