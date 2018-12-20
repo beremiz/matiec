@@ -247,6 +247,8 @@ void include_file(const char *include_filename);
 void  append_bodystate_buffer(const char *text, int is_whitespace = 0);
 void   unput_bodystate_buffer(void);
 int  isempty_bodystate_buffer(void);
+void     del_bodystate_buffer(void);
+
 
 int GetNextChar(char *b, int maxBuffer);
 %}
@@ -1231,12 +1233,12 @@ END_VAR				yy_pop_state(); return END_VAR; /* pop back to vardecl_list_state */
 				 append_bodystate_buffer(yytext, 1 /* is whitespace */); 
 				}
 	/* 'INITIAL_STEP' always used in beginning of SFCs !! */
-INITIAL_STEP			{ if (isempty_bodystate_buffer())	{unput_text(0); BEGIN(sfc_state);}
+INITIAL_STEP			{ if (isempty_bodystate_buffer())	{unput_text(0); del_bodystate_buffer(); BEGIN(sfc_state);}
 				  else					{append_bodystate_buffer(yytext);}
 				}
  
 	/* ':=', at the very beginning of a 'body', occurs only in transitions and not Function, FB, or Program bodies! */
-:=				{ if (isempty_bodystate_buffer())	{unput_text(0); BEGIN(st_state);} /* We do _not_ return a start_ST_body_token here, as bison does not expect it! */
+:=				{ if (isempty_bodystate_buffer())	{unput_text(0); del_bodystate_buffer(); BEGIN(st_state);} /* We do _not_ return a start_ST_body_token here, as bison does not expect it! */
 				  else				 	{append_bodystate_buffer(yytext);}
 				}
  
@@ -1257,7 +1259,7 @@ CASE				|
 FOR				|
 WHILE				|
 EXIT				|
-REPEAT				{ if (isempty_bodystate_buffer())	{unput_text(0); BEGIN(st_state); return start_ST_body_token;}
+REPEAT				{ if (isempty_bodystate_buffer())	{unput_text(0); del_bodystate_buffer(); BEGIN(st_state); return start_ST_body_token;}
 				  else				 	{append_bodystate_buffer(yytext);}
 				}
 
@@ -2183,6 +2185,16 @@ int  isempty_bodystate_buffer(void) {
 }
 
 
+/* Delete all data in bodystate. */
+/* Will be used to delete ST whitespace when not needed. If not deleted this whitespace 
+ * will be prepended to the next text block of code being appended to bodystate_buffer,
+ * which may cause trouble if it is IL code
+ */
+void  del_bodystate_buffer(void) {
+  free(bodystate_buffer);
+  bodystate_buffer        = NULL;
+  bodystate_is_whitespace = 1;  
+}
 
 
 /* Called by flex when it reaches the end-of-file */
