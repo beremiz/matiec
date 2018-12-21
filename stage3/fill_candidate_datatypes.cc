@@ -2011,7 +2011,7 @@ void *fill_candidate_datatypes_c::visit(NOT_operator_c *symbol) {
 	 *       We do not need to generate an error message. This error will be caught somewhere else!
 	 */
 	if (NULL == prev_il_instruction) return NULL;
-	if (NULL == il_operand)          return NULL;
+	if (NULL != il_operand)          return NULL;
 	for (unsigned int i = 0; i < prev_il_instruction->candidate_datatypes.size(); i++) {
 		if (get_datatype_info_c::is_ANY_BIT_compatible(prev_il_instruction->candidate_datatypes[i]))
 			add_datatype_to_candidate_list(symbol, prev_il_instruction->candidate_datatypes[i]);
