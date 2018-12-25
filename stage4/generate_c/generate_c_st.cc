@@ -937,7 +937,7 @@ void *visit(statement_list_c *symbol) {
 /* B 3.2.1 Assignment Statements */
 /*********************************/
 void *visit(assignment_statement_c *symbol) {
-  symbol_c *left_type = search_varfb_instance_type->get_type_id(symbol->l_exp);
+  symbol_c *left_type = symbol->l_exp->datatype;
   
   if (this->is_variable_prefix_null()) {
     symbol->l_exp->accept(*this);
