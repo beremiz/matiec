@@ -544,7 +544,7 @@ analyse_variable_c *analyse_variable_c::singleton_ = NULL;
 /***********************************************************************/
 /***********************************************************************/
 
-#define MILLISECOND 1000000
+#define MILLISECOND 1
 #define SECOND 1000 * MILLISECOND
 
 unsigned long long calculate_time(symbol_c *symbol) {
@@ -567,10 +567,6 @@ unsigned long long calculate_time(symbol_c *symbol) {
     /* SYM_REF5(interval_c, days, hours, minutes, seconds, milliseconds) */
       unsigned long long int time_ull = 0; 
       long double            time_ld  = 0;
-      /*
-      const unsigned long long int MILLISECOND = 1000000;
-      const unsigned long long int      SECOND = 1000 * MILLISECOND
-      */
       
       if (NULL != interval->milliseconds) {
         if      (VALID_CVALUE( int64, interval->milliseconds) &&           GET_CVALUE( int64, interval->milliseconds) < 0) ERROR; // interval elements should always be positive!
@@ -2670,6 +2666,8 @@ class generate_c_c: public iterator_visitor_c {
 
         config_s4o.print("unsigned long long common_ticktime__ = ");
         config_s4o.print_long_long_integer(common_ticktime);
+        config_s4o.print(" * ");
+        config_s4o.print_long_long_integer(1000000 / MILLISECOND);
         config_s4o.print("; /*ns*/\n");
         config_s4o.print("unsigned long greatest_tick_count__ = (unsigned long)");
         config_s4o.print_long_integer(calculate_common_ticktime.get_greatest_tick_count());
