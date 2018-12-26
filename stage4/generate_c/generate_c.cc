@@ -544,7 +544,7 @@ analyse_variable_c *analyse_variable_c::singleton_ = NULL;
 /***********************************************************************/
 /***********************************************************************/
 
-#define MILLISECOND 1
+#define MILLISECOND 1000000
 #define SECOND 1000 * MILLISECOND
 
 unsigned long long calculate_time(symbol_c *symbol) {
@@ -649,7 +649,7 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
       if (least_common_ticktime == 0)
         least_common_ticktime = time;
       else
-        least_common_ticktime = (least_common_ticktime * time) / common_ticktime;
+        least_common_ticktime = least_common_ticktime * (time / common_ticktime);
     }
 
     unsigned long long get_common_ticktime(void) {
