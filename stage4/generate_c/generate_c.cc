@@ -544,7 +544,7 @@ analyse_variable_c *analyse_variable_c::singleton_ = NULL;
 /***********************************************************************/
 /***********************************************************************/
 
-#define MILLISECOND 1000000
+#define MILLISECOND ((unsigned long long)1000000)
 #define SECOND 1000 * MILLISECOND
 
 #define ULL_MAX std::numeric_limits<unsigned long long>::max()
