@@ -547,6 +547,24 @@ analyse_variable_c *analyse_variable_c::singleton_ = NULL;
 #define MILLISECOND 1
 #define SECOND 1000 * MILLISECOND
 
+#define ULL_MAX std::numeric_limits<unsigned long long>::max()
+
+/* unsigned long long -> multiply and add : time_var += interval * multiplier  */
+/*  note: multiplier must be <> 0 due to overflow test                         */
+#define ULL_MUL_ADD(time_var, interval, multiplier, overflow_flag) {                       \
+    /* Test overflow on MUL by pre-condition: If (ULL_MAX / a) < b => overflow! */         \
+    overflow_flag |= ((ULL_MAX / (multiplier)) < GET_CVALUE(uint64, interval));            \
+    /* Test overflow on ADD by pre-condition: If (ULL_MAX - a) < b => overflow! */         \
+    overflow_flag |= ((ULL_MAX - (GET_CVALUE(uint64, interval) * multiplier)) < time_var); \
+    time_var += GET_CVALUE(uint64, interval) * (multiplier);                               \
+}
+
+/* long double -> multiply and add : time_var += interval * multiplier  */
+#define LDB_MUL_ADD(time_var, interval, multiplier) {  \
+    time_var += GET_CVALUE(real64, interval) * (multiplier);               \
+}
+
+
 unsigned long long calculate_time(symbol_c *symbol) {
   if (NULL == symbol) return 0;
   
@@ -567,48 +585,50 @@ unsigned long long calculate_time(symbol_c *symbol) {
     /* SYM_REF5(interval_c, days, hours, minutes, seconds, milliseconds) */
       unsigned long long int time_ull = 0; 
       long double            time_ld  = 0;
+      bool                   ovflow   = false;
       
       if (NULL != interval->milliseconds) {
         if      (VALID_CVALUE( int64, interval->milliseconds) &&           GET_CVALUE( int64, interval->milliseconds) < 0) ERROR; // interval elements should always be positive!
-        if      (VALID_CVALUE( int64, interval->milliseconds)) time_ull += GET_CVALUE( int64, interval->milliseconds) * MILLISECOND;
-        else if (VALID_CVALUE(uint64, interval->milliseconds)) time_ull += GET_CVALUE(uint64, interval->milliseconds) * MILLISECOND;
-        else if (VALID_CVALUE(real64, interval->milliseconds)) time_ld  += GET_CVALUE(real64, interval->milliseconds) * MILLISECOND;
+        if      (VALID_CVALUE(uint64, interval->milliseconds)) ULL_MUL_ADD(time_ull, interval->milliseconds,  MILLISECOND, ovflow)
+        else if (VALID_CVALUE(real64, interval->milliseconds)) LDB_MUL_ADD(time_ld , interval->milliseconds,  MILLISECOND)
         else ERROR; // if (NULL != interval->milliseconds) is true, then it must have a valid constant value!
       }
    
       if (NULL != interval->seconds     ) {
         if      (VALID_CVALUE( int64, interval->seconds     ) &&           GET_CVALUE( int64, interval->seconds     ) < 0) ERROR; // interval elements should always be positive!
-        if      (VALID_CVALUE( int64, interval->seconds     )) time_ull += GET_CVALUE( int64, interval->seconds     ) * SECOND;
-        else if (VALID_CVALUE(uint64, interval->seconds     )) time_ull += GET_CVALUE(uint64, interval->seconds     ) * SECOND;
-        else if (VALID_CVALUE(real64, interval->seconds     )) time_ld  += GET_CVALUE(real64, interval->seconds     ) * SECOND;
+        if      (VALID_CVALUE(uint64, interval->seconds     )) ULL_MUL_ADD(time_ull, interval->seconds,       SECOND, ovflow)
+        else if (VALID_CVALUE(real64, interval->seconds     )) LDB_MUL_ADD(time_ld , interval->seconds,       SECOND)
         else ERROR; // if (NULL != interval->seconds) is true, then it must have a valid constant value!
       }
 
       if (NULL != interval->minutes     ) {
         if      (VALID_CVALUE( int64, interval->minutes     ) &&           GET_CVALUE( int64, interval->minutes     ) < 0) ERROR; // interval elements should always be positive!
-        if      (VALID_CVALUE( int64, interval->minutes     )) time_ull += GET_CVALUE( int64, interval->minutes     ) * SECOND * 60;
-        else if (VALID_CVALUE(uint64, interval->minutes     )) time_ull += GET_CVALUE(uint64, interval->minutes     ) * SECOND * 60;
-        else if (VALID_CVALUE(real64, interval->minutes     )) time_ld  += GET_CVALUE(real64, interval->minutes     ) * SECOND * 60;
+        if      (VALID_CVALUE(uint64, interval->minutes     )) ULL_MUL_ADD(time_ull, interval->minutes,       SECOND * 60, ovflow)
+        else if (VALID_CVALUE(real64, interval->minutes     )) LDB_MUL_ADD(time_ld , interval->minutes,       SECOND * 60)
         else ERROR; // if (NULL != interval->minutes) is true, then it must have a valid constant value!
       }
 
       if (NULL != interval->hours       ) {
         if      (VALID_CVALUE( int64, interval->hours       ) &&           GET_CVALUE( int64, interval->hours       ) < 0) ERROR; // interval elements should always be positive!
-        if      (VALID_CVALUE( int64, interval->hours       )) time_ull += GET_CVALUE( int64, interval->hours       ) * SECOND * 60 * 60;
-        else if (VALID_CVALUE(uint64, interval->hours       )) time_ull += GET_CVALUE(uint64, interval->hours       ) * SECOND * 60 * 60;
-        else if (VALID_CVALUE(real64, interval->hours       )) time_ld  += GET_CVALUE(real64, interval->hours       ) * SECOND * 60 * 60;
+        if      (VALID_CVALUE(uint64, interval->hours       )) ULL_MUL_ADD(time_ull, interval->hours,         SECOND * 60 * 60, ovflow)
+        else if (VALID_CVALUE(real64, interval->hours       )) LDB_MUL_ADD(time_ld , interval->hours,         SECOND * 60 * 60)
         else ERROR; // if (NULL != interval->hours) is true, then it must have a valid constant value!
       }
 
       if (NULL != interval->days        ) {
         if      (VALID_CVALUE( int64, interval->days        ) &&           GET_CVALUE( int64, interval->days        ) < 0) ERROR; // interval elements should always be positive!
-        if      (VALID_CVALUE( int64, interval->days        )) time_ull += GET_CVALUE( int64, interval->days        ) * SECOND * 60 * 60 * 24;
-        else if (VALID_CVALUE(uint64, interval->days        )) time_ull += GET_CVALUE(uint64, interval->days        ) * SECOND * 60 * 60 * 24;
-        else if (VALID_CVALUE(real64, interval->days        )) time_ld  += GET_CVALUE(real64, interval->days        ) * SECOND * 60 * 60 * 24;
+        if      (VALID_CVALUE(uint64, interval->days        )) ULL_MUL_ADD(time_ull, interval->days,          SECOND * 60 * 60 * 24, ovflow)
+        else if (VALID_CVALUE(real64, interval->days        )) LDB_MUL_ADD(time_ld , interval->days,          SECOND * 60 * 60 * 24)
         else ERROR; // if (NULL != interval->days) is true, then it must have a valid constant value!
       }
 
+      /* Test overflow on ADD by pre-condition: If (ULL_MAX - a) < b => overflow! */
+      ovflow |= ((ULL_MAX - time_ull) < (unsigned long long)time_ld);
       time_ull += time_ld;
+      
+      if (ovflow)
+        STAGE4_ERROR(symbol, symbol, "Internal overflow calculating task interval (must be <= 49 days).");
+
       return time_ull;
   };
   ERROR; // should never reach this point!
