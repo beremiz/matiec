@@ -547,6 +547,8 @@ analyse_variable_c *analyse_variable_c::singleton_ = NULL;
 #define MILLISECOND 1000000
 #define SECOND 1000 * MILLISECOND
 
+#define ULL_MAX std::numeric_limits<unsigned long long>::max()
+
 unsigned long long calculate_time(symbol_c *symbol) {
   if (NULL == symbol) return 0;
   
@@ -638,8 +640,10 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
       else
         return euclide(b, c);
     }
-    
-    void update_ticktime(unsigned long long time) {
+
+    bool update_ticktime(unsigned long long time) {
+      bool overflow = false;
+      
       if (common_ticktime == 0)
         common_ticktime = time;
       else if (time > common_ticktime)
@@ -648,10 +652,15 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
         common_ticktime = euclide(common_ticktime, time);
       if (least_common_ticktime == 0)
         least_common_ticktime = time;
-      else
+      else {
+        /* Test overflow on MUL by pre-condition: If (ULL_MAX / a) < b => overflow! */
+        overflow = ((ULL_MAX / least_common_ticktime) < (time / common_ticktime));
         least_common_ticktime = least_common_ticktime * (time / common_ticktime);
+      }
+      fprintf(stderr, "time=%llu  least_common_ticktime=%llu  common_ticktime=%llu\n", time, least_common_ticktime, common_ticktime );
+      return !overflow;
     }
-
+    
     unsigned long long get_common_ticktime(void) {
       return common_ticktime;
     }
@@ -667,9 +676,12 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
 //SYM_REF2(task_configuration_c, task_name, task_initialization)  
     void *visit(task_initialization_c *symbol) {
       if (symbol->interval_data_source != NULL) {
-    	  unsigned long long time = calculate_time(symbol->interval_data_source);
-    	  if (time < 0)  ERROR;
-    	  else           update_ticktime(time);
+        unsigned long long time = calculate_time(symbol->interval_data_source);
+        if (!update_ticktime(time))
+          /* time is being stored in ns resolution (MILLISECOND #define is set to 1000000)    */
+          /* time is being stored in unsigned long long (ISO C99 guarantees at least 64 bits) */
+          /* 2⁶64ns works out to around 584.5 years, assuming 365.25 days per year            */
+          STAGE4_ERROR(symbol, symbol, "Internal overflow calculating least common multiple of task intervals (must be < 584 years).");
       }
       return NULL;
     }
