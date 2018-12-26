@@ -1752,8 +1752,20 @@ static inline TIME ADD_TIME(EN_ENO_PARAMS TIME IN1, TIME IN2){
   return __time_add(IN1, IN2);
 }
 
+/* overloaded version of ADD(TIME, TIME) */
+static inline TIME ADD__TIME__TIME__TIME(EN_ENO_PARAMS TIME IN1, TIME IN2){
+  TEST_EN(TIME)
+  return __time_add(IN1, IN2);
+}
+
 static inline TOD ADD_TOD_TIME(EN_ENO_PARAMS TOD IN1, TIME IN2){
   TEST_EN(TOD)
+  return __time_add(IN1, IN2);
+}
+
+/* overloaded version of ADD(TOD, TIME) */
+static inline TOD ADD__TOD__TOD__TIME(EN_ENO_PARAMS TOD IN1, TIME IN2){
+  TEST_EN(TIME)
   return __time_add(IN1, IN2);
 }
 
@@ -1762,7 +1774,19 @@ static inline DT ADD_DT_TIME(EN_ENO_PARAMS DT IN1, TIME IN2){
   return __time_add(IN1, IN2);
 }
 
+/* overloaded version of ADD(DT, TIME) */
+static inline DT ADD__DT__DT__TIME(EN_ENO_PARAMS DT IN1, TIME IN2){
+  TEST_EN(TIME)
+  return __time_add(IN1, IN2);
+}
+
 static inline TIME SUB_TIME(EN_ENO_PARAMS TIME IN1, TIME IN2){
+  TEST_EN(TIME)
+  return __time_sub(IN1, IN2);
+}
+
+/* overloaded version of SUB(TIME, TIME) */
+static inline TIME SUB__TIME__TIME__TIME(EN_ENO_PARAMS TIME IN1, TIME IN2){
   TEST_EN(TIME)
   return __time_sub(IN1, IN2);
 }
@@ -1772,7 +1796,19 @@ static inline TIME SUB_DATE_DATE(EN_ENO_PARAMS DATE IN1, DATE IN2){
   return __time_sub(IN1, IN2);
 }
 
+/* overloaded version of SUB(DATE, DATE) */
+static inline TIME SUB__TIME__DATE__DATE(EN_ENO_PARAMS DATE IN1, DATE IN2){
+  TEST_EN(TIME)
+  return __time_sub(IN1, IN2);
+}
+
 static inline TOD SUB_TOD_TIME(EN_ENO_PARAMS TOD IN1, TIME IN2){
+  TEST_EN(TOD)
+  return __time_sub(IN1, IN2);
+}
+
+/* overloaded version of SUB(TOD, TIME) */
+static inline TOD SUB__TOD__TOD__TIME(EN_ENO_PARAMS TOD IN1, TIME IN2){
   TEST_EN(TOD)
   return __time_sub(IN1, IN2);
 }
@@ -1782,7 +1818,19 @@ static inline TIME SUB_TOD_TOD(EN_ENO_PARAMS TOD IN1, TOD IN2){
   return __time_sub(IN1, IN2);
 }
 
+/* overloaded version of SUB(TOD, TOD) */
+static inline TIME SUB__TIME__TOD__TOD(EN_ENO_PARAMS TOD IN1, TOD IN2){
+  TEST_EN(TIME)
+  return __time_sub(IN1, IN2);
+}
+
 static inline DT SUB_DT_TIME(EN_ENO_PARAMS DT IN1, TIME IN2){
+  TEST_EN(DT)
+  return __time_sub(IN1, IN2);
+}
+
+/* overloaded version of SUB(DT, TIME) */
+static inline DT SUB__DT__DT__TIME(EN_ENO_PARAMS DT IN1, TIME IN2){
   TEST_EN(DT)
   return __time_sub(IN1, IN2);
 }
@@ -1792,10 +1840,25 @@ static inline TIME SUB_DT_DT(EN_ENO_PARAMS DT IN1, DT IN2){
   return __time_sub(IN1, IN2);
 }
 
+/* overloaded version of SUB(DT, DT) */
+static inline TIME SUB__TIME__DT__DT(EN_ENO_PARAMS DT IN1, DT IN2){
+  TEST_EN(TIME)
+  return __time_sub(IN1, IN2);
+}
+
 
 /***  MULTIME  ***/
 #define __iec_(TYPENAME)\
 static inline TIME MULTIME__TIME__TIME__##TYPENAME(EN_ENO_PARAMS TIME IN1, TYPENAME IN2){\
+  TEST_EN(TIME)\
+  return __time_mul(IN1, (LREAL)IN2);\
+}
+__ANY_NUM(__iec_)
+#undef __iec_
+
+/***  MULTIME_TYPENAME  ***/
+#define __iec_(TYPENAME)\
+static inline TIME MULTIME_##TYPENAME(EN_ENO_PARAMS TIME IN1, TYPENAME IN2){\
   TEST_EN(TIME)\
   return __time_mul(IN1, (LREAL)IN2);\
 }
@@ -1814,6 +1877,15 @@ __ANY_NUM(__iec_)
 /***  DIVTIME  ***/
 #define __iec_(TYPENAME)\
 static inline TIME DIVTIME__TIME__TIME__##TYPENAME(EN_ENO_PARAMS TIME IN1, TYPENAME IN2){\
+  TEST_EN(TIME)\
+  return __time_div(IN1, (LREAL)IN2);\
+}
+__ANY_NUM(__iec_)
+#undef __iec_
+
+/***  DIVTIME_TYPENAME  ***/
+#define __iec_(TYPENAME)\
+static inline TIME DIVTIME_##TYPENAME(EN_ENO_PARAMS TIME IN1, TYPENAME IN2){\
   TEST_EN(TIME)\
   return __time_div(IN1, (LREAL)IN2);\
 }

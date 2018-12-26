@@ -836,16 +836,25 @@ __ANY_STRING(__A_anyint_)
 /***  Functions of time data types  ***/
 /**************************************/
 
-__function_2p(ADD_TIME, TIME, IN1, TIME, IN2, TIME)
-__function_2p(ADD_TOD_TIME, TOD, IN1, TOD, IN2, TIME)
-__function_2p(ADD_DT_TIME, DT, IN1, DT, IN2, TIME)
+__function_2p(ADD_TIME,      TIME, IN1, TIME, IN2, TIME)
+__function_2p(ADD,           TIME, IN1, TIME, IN2, TIME)       /* overloaded function */
+__function_2p(ADD_TOD_TIME,  TOD,  IN1, TOD,  IN2, TIME)
+__function_2p(ADD,           TOD,  IN1, TOD,  IN2, TIME)       /* overloaded function */
+__function_2p(ADD_DT_TIME,   DT,   IN1, DT,   IN2, TIME)
+__function_2p(ADD,           DT,   IN1, DT,   IN2, TIME)       /* overloaded function */
 
-__function_2p(SUB_TIME, TIME, IN1, TIME, IN2, TIME)
+__function_2p(SUB_TIME,      TIME, IN1, TIME, IN2, TIME)
+__function_2p(SUB,           TIME, IN1, TIME, IN2, TIME)       /* overloaded function */
 __function_2p(SUB_DATE_DATE, TIME, IN1, DATE, IN2, DATE)
-__function_2p(SUB_TOD_TIME, TOD, IN1, TOD, IN2, TIME)
-__function_2p(SUB_TOD_TOD, TIME, IN1, TOD, IN2, TOD)
-__function_2p(SUB_DT_TIME, DT, IN1, DT, IN2, TIME)
-__function_2p(SUB_DT_DT, TIME, IN1, DT, IN2, DT)
+__function_2p(SUB,           TIME, IN1, DATE, IN2, DATE)       /* overloaded function */
+__function_2p(SUB_TOD_TIME,  TOD,  IN1, TOD,  IN2, TIME)
+__function_2p(SUB,           TOD,  IN1, TOD,  IN2, TIME)       /* overloaded function */
+__function_2p(SUB_TOD_TOD,   TIME, IN1, TOD,  IN2, TOD )
+__function_2p(SUB,           TIME, IN1, TOD,  IN2, TOD )       /* overloaded function */
+__function_2p(SUB_DT_TIME,   DT,   IN1, DT,   IN2, TIME)
+__function_2p(SUB,           DT,   IN1, DT,   IN2, TIME)       /* overloaded function */
+__function_2p(SUB_DT_DT,     TIME, IN1, DT,   IN2, DT  )
+__function_2p(SUB,           TIME, IN1, DT,   IN2, DT  )       /* overloaded function */
 
 
 /***  MULTIME  ***/
