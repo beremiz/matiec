@@ -679,7 +679,6 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
         overflow = ((ULL_MAX / least_common_ticktime) < (time / common_ticktime));
         least_common_ticktime = least_common_ticktime * (time / common_ticktime);
       }
-      fprintf(stderr, "time=%llu  least_common_ticktime=%llu  common_ticktime=%llu\n", time, least_common_ticktime, common_ticktime );
       return !overflow;
     }
     
