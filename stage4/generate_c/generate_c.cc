@@ -544,7 +544,7 @@ analyse_variable_c *analyse_variable_c::singleton_ = NULL;
 /***********************************************************************/
 /***********************************************************************/
 
-#define MILLISECOND 1
+#define MILLISECOND 1000000
 #define SECOND 1000 * MILLISECOND
 
 #define ULL_MAX std::numeric_limits<unsigned long long>::max()
@@ -626,8 +626,12 @@ unsigned long long calculate_time(symbol_c *symbol) {
       ovflow |= ((ULL_MAX - time_ull) < (unsigned long long)time_ld);
       time_ull += time_ld;
       
-      if (ovflow)
-        STAGE4_ERROR(symbol, symbol, "Internal overflow calculating task interval (must be <= 49 days).");
+      if (ovflow) {
+        /* time is being stored in ns resolution (MILLISECOND #define is set to 1000000)    */
+        /* time is being stored in unsigned long long (ISO C99 guarantees at least 64 bits) */
+        /* 2⁶64ns works out to around 584.5 years, assuming 365.25 days per year            */
+        STAGE4_ERROR(symbol, symbol, "Internal overflow calculating task interval (must be < 584 years).");
+      }
 
       return time_ull;
   };
