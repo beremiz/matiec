@@ -371,7 +371,7 @@ class class_name_c: public symbol_c {											\
     symbol_c *ref1;													\
     __VA_ARGS__														\
   public:														\
-    class_name_c(symbol_c *ref1,											\
+    class_name_c(symbol_c *ref1 = NULL,											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
@@ -387,7 +387,7 @@ class class_name_c: public symbol_c {											\
     symbol_c *ref2;													\
     __VA_ARGS__														\
   public:														\
-    class_name_c(symbol_c *ref1,											\
+    class_name_c(symbol_c *ref1 = NULL,											\
 		 symbol_c *ref2 = NULL,											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
@@ -405,9 +405,9 @@ class class_name_c: public symbol_c {											\
     symbol_c *ref3;													\
     __VA_ARGS__														\
   public:														\
-    class_name_c(symbol_c *ref1,											\
-		 symbol_c *ref2,											\
-		 symbol_c *ref3,											\
+    class_name_c(symbol_c *ref1 = NULL,											\
+		 symbol_c *ref2 = NULL,											\
+		 symbol_c *ref3 = NULL,											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
@@ -425,9 +425,9 @@ class class_name_c: public symbol_c {											\
     symbol_c *ref4;													\
     __VA_ARGS__														\
   public:														\
-    class_name_c(symbol_c *ref1,											\
-		 symbol_c *ref2,											\
-		 symbol_c *ref3,											\
+    class_name_c(symbol_c *ref1 = NULL,											\
+		 symbol_c *ref2 = NULL,											\
+		 symbol_c *ref3 = NULL,											\
 		 symbol_c *ref4 = NULL,											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
@@ -447,11 +447,11 @@ class class_name_c: public symbol_c {											\
     symbol_c *ref5;													\
     __VA_ARGS__														\
   public:														\
-    class_name_c(symbol_c *ref1,											\
-		 symbol_c *ref2,											\
-		 symbol_c *ref3,											\
-		 symbol_c *ref4,											\
-		 symbol_c *ref5,											\
+    class_name_c(symbol_c *ref1 = NULL,											\
+		 symbol_c *ref2 = NULL,											\
+		 symbol_c *ref3 = NULL,											\
+		 symbol_c *ref4 = NULL,											\
+		 symbol_c *ref5 = NULL,											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
     virtual void *accept(visitor_c &visitor);										\
@@ -471,11 +471,11 @@ class class_name_c: public symbol_c {											\
     symbol_c *ref6;													\
     __VA_ARGS__														\
   public:														\
-    class_name_c(symbol_c *ref1,											\
-		 symbol_c *ref2,											\
-		 symbol_c *ref3,											\
-		 symbol_c *ref4,											\
-		 symbol_c *ref5,											\
+    class_name_c(symbol_c *ref1 = NULL,											\
+		 symbol_c *ref2 = NULL,											\
+		 symbol_c *ref3 = NULL,											\
+		 symbol_c *ref4 = NULL,											\
+		 symbol_c *ref5 = NULL,											\
 		 symbol_c *ref6 = NULL,											\
                  int fl = 0, int fc = 0, const char *ffile = NULL /* filename */, long int forder=0,			\
                  int ll = 0, int lc = 0, const char *lfile = NULL /* filename */, long int lorder=0);			\
