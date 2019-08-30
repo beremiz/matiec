@@ -548,6 +548,7 @@ analyse_variable_c *analyse_variable_c::singleton_ = NULL;
 #define SECOND 1000 * MILLISECOND
 
 #define ULL_MAX std::numeric_limits<unsigned long long>::max()
+#define UL_MAX std::numeric_limits<uint32_t>::max()
 
 /* unsigned long long -> multiply and add : time_var += interval * multiplier  */
 /*  note: multiplier must be <> 0 due to overflow test                         */
@@ -647,50 +648,76 @@ unsigned long long calculate_time(symbol_c *symbol) {
 class calculate_common_ticktime_c: public iterator_visitor_c {
   private:
     unsigned long long common_ticktime;
-    unsigned long long least_common_ticktime;
-    
+
+    /* Tick overflow can't happen at 2^32 because it
+     * must align with task periods.
+     *
+     * Instead of overflowing naturaly at 2^32
+     * the overall periodicity of tasks scheduling
+     * is used to find the closest overflow lesser than 2^32
+     *
+     */
+
+    /* after common_period ticks, all task period align again */
+    unsigned long common_period;
+
   public:
     calculate_common_ticktime_c(void){
       common_ticktime = 0;
-      least_common_ticktime = 0;
+      common_period = 1; /* first tick time equals single/first task period */
     }
     
-    unsigned long long euclide(unsigned long long a, unsigned long long b) {
-      unsigned long long c = a % b;
-      if (c == 0)
-        return b;
-      else
-        return euclide(b, c);
+    unsigned long long GCM(unsigned long long a, unsigned long long b) {
+      if(a >= b){
+        unsigned long long c = a % b;
+        if (c == 0)
+          return b;
+        else
+          return GCM(b, c);
+      } else {
+        return GCM(b, a);
+      }
     }
 
     bool update_ticktime(unsigned long long time) {
-      bool overflow = false;
-      
       if (common_ticktime == 0)
         common_ticktime = time;
-      else if (time > common_ticktime)
-        common_ticktime = euclide(time, common_ticktime);
-      else
-        common_ticktime = euclide(common_ticktime, time);
-      if (least_common_ticktime == 0)
-        least_common_ticktime = time;
-      else {
-        /* Test overflow on MUL by pre-condition: If (ULL_MAX / a) < b => overflow! */
-        overflow = ((ULL_MAX / least_common_ticktime) < (time / common_ticktime));
-        least_common_ticktime = least_common_ticktime * (time / common_ticktime);
+      else 
+        common_ticktime = GCM(time, common_ticktime);
+
+      unsigned long task_period = (time / common_ticktime); /* in tick count */ 
+      
+      /* New Common Period is 
+       * Least Common Multiple of 
+       * Previous Common Period and
+       * New task period
+       *
+       * LCM(a,b) = a*b/GCD(a,b)
+       */
+      unsigned long long new_common_period =
+        common_period * task_period / GCM(common_period, task_period);
+
+      if(new_common_period >= UL_MAX){
+        return false;
+      } else {
+        common_period = new_common_period;
       }
-      return !overflow;
+      /* else if task period already divides common period,
+       * keep the same common period */
+
+      return true;
     }
     
     unsigned long long get_common_ticktime(void) {
       return common_ticktime;
     }
 
-    unsigned long get_greatest_tick_count(void) {
-      unsigned long long least_common_tick = least_common_ticktime / common_ticktime;
-      if (least_common_tick >> 32)
-        ERROR;
-      return (unsigned long)(~(((unsigned long)-1) % (unsigned long)least_common_tick) + 1);
+    uint32_t get_greatest_tick_count(void) {
+      if (common_period == 1) {
+          return 0;
+      } else {
+          return UL_MAX - (UL_MAX % common_period);
+      }
     }
 
 /*  TASK task_name task_initialization */
@@ -698,11 +725,12 @@ class calculate_common_ticktime_c: public iterator_visitor_c {
     void *visit(task_initialization_c *symbol) {
       if (symbol->interval_data_source != NULL) {
         unsigned long long time = calculate_time(symbol->interval_data_source);
-        if (!update_ticktime(time))
+        if(!update_ticktime(time)) {
           /* time is being stored in ns resolution (MILLISECOND #define is set to 1000000)    */
           /* time is being stored in unsigned long long (ISO C99 guarantees at least 64 bits) */
           /* 2⁶64ns works out to around 584.5 years, assuming 365.25 days per year            */
           STAGE4_ERROR(symbol, symbol, "Internal overflow calculating least common multiple of task intervals (must be < 584 years).");
+        }
       }
       return NULL;
     }
