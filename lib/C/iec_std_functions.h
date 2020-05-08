@@ -1442,6 +1442,7 @@ __ANY_INT(__iec_)
 static inline __strlen_t __pfind(STRING* IN1, STRING* IN2){
     UINT count1 = 0; /* offset of first matching char in IN1 */
     UINT count2 = 0; /* count of matching char */
+    if(!(IN2->len > 0 && IN1->len >= IN2->len)) return 0;
     while(count1 + count2 < IN1->len && count2 < IN2->len)
     {
         if(IN1->body[count1 + count2] != IN2->body[count2]){
@@ -1452,7 +1453,7 @@ static inline __strlen_t __pfind(STRING* IN1, STRING* IN2){
             count2++;
         }
     }
-    return count2 == IN2->len -1 ? 0 : count1 + 1;
+    return count2 == IN2->len ? count1 + 1 : 0;
 }
 
 #define __iec_(TYPENAME) \
