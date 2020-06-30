@@ -1195,7 +1195,7 @@ static inline BOOL fname(EN_ENO_PARAMS TYPENAME op1, TYPENAME op2){\
 #define __iec_(TYPENAME) \
 __ne_num(NE_##TYPENAME, TYPENAME) /* The explicitly typed standard functions */\
 __ne_num(NE__BOOL__##TYPENAME##__##TYPENAME, TYPENAME) /* Overloaded function */
-__ANY_NBIT(__iec_)
+__ANY_BIT(__iec_)
 __ANY_NUM(__iec_)
 #undef __iec_
 
