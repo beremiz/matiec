@@ -890,7 +890,7 @@ __ANY_DATE(__iec_)
 __iec_(TIME)
 #undef __iec_
 
-inline int __str_cmp(uint8_t* str1, __strlen_t len1, uint8_t* str2, __strlen_t len2) { 
+static inline int __str_cmp(uint8_t* str1, __strlen_t len1, uint8_t* str2, __strlen_t len2) { 
     int cmp = memcmp(str1, str2, len1 < len2 ? len1 : len2);
     return cmp ? cmp : (len1 > len2 ? 1 : (len1 < len2 ? - 1 : 0));
 }
