@@ -129,7 +129,7 @@
     if (!(prefix name.flags & __IEC_FORCE_FLAG || __IS_GLOBAL_##name##_FORCED()))\
 		(*(prefix name.value)) suffix = new_value;}
 #define __SET_EXTERNAL_FB(prefix, name, suffix, new_value)\
-	__SET_VAR((*(prefix name)), suffix, new_value)
+	__SET_VAR(prefix, name, suffix, new_value)
 #define __SET_LOCATED(prefix, name, suffix, new_value)\
 	if (!(prefix name.flags & __IEC_FORCE_FLAG)) *(prefix name.value) suffix = new_value
 
