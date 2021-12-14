@@ -87,20 +87,20 @@
 #define __GET_VAR(name, ...)\
 	name.value __VA_ARGS__
 #define __GET_EXTERNAL(name, ...)\
-	((name.flags & __IEC_FORCE_FLAG) ? name.fvalue __VA_ARGS__ : (*(name.value)) __VA_ARGS__)
+	((*(name.value)) __VA_ARGS__)
 #define __GET_EXTERNAL_FB(name, ...)\
 	__GET_VAR(((*name) __VA_ARGS__))
 #define __GET_LOCATED(name, ...)\
-	((name.flags & __IEC_FORCE_FLAG) ? name.fvalue __VA_ARGS__ : (*(name.value)) __VA_ARGS__)
+	((*(name.value)) __VA_ARGS__)
 
 #define __GET_VAR_BY_REF(name, ...)\
-	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &(name.value __VA_ARGS__))
+	(&(name.value __VA_ARGS__))
 #define __GET_EXTERNAL_BY_REF(name, ...)\
-	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &((*(name.value)) __VA_ARGS__))
+	(&((*(name.value)) __VA_ARGS__))
 #define __GET_EXTERNAL_FB_BY_REF(name, ...)\
 	__GET_EXTERNAL_BY_REF(((*name) __VA_ARGS__))
 #define __GET_LOCATED_BY_REF(name, ...)\
-	((name.flags & __IEC_FORCE_FLAG) ? &(name.fvalue __VA_ARGS__) : &((*(name.value)) __VA_ARGS__))
+	(&((*(name.value)) __VA_ARGS__))
 
 #define __GET_VAR_REF(name, ...)\
 	(&(name.value __VA_ARGS__))
