@@ -1341,9 +1341,9 @@ void *visit(repeat_statement_c *symbol) {
   s4o.indent_right();
   symbol->statement_list->accept(*this);
   s4o.indent_left();
-  s4o.print(s4o.indent_spaces); s4o.print("} while(");
+  s4o.print(s4o.indent_spaces); s4o.print("} while(!(");
   symbol->expression->accept(*this);
-  s4o.print(")");
+  s4o.print("))");
   return NULL;
 }
 
