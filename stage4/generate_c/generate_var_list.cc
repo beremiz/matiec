@@ -481,6 +481,7 @@ class generate_var_list_c: protected generate_c_base_and_typeid_c {
     /*  VAR RETAIN var_init_decl_list END_VAR */
     void *visit(retentive_var_declarations_c *symbol) {
       unsigned int was_retain = is_retain;
+      is_retain = 1;
       symbol->var_init_decl_list->accept(*this);
       is_retain = was_retain;
       return NULL;
