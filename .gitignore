@@ -1,0 +1,15 @@
+aclocal.m4
+config.log
+config.status
+configure
+iec2c
+iec2iec
+*.o
+**/Makefile
+**/Makefile.in
+*.Po
+*.a
+autom4te.cache/*
+config/*
+stage1_2/*.cc
+stage1_2/*.hh
