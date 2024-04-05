@@ -56,12 +56,12 @@ static void dump_cvalue(const_value_c const_value) {
   else if (const_value._real64.is_nonconst()) fprintf(stderr, "nc");
   else                                        fprintf(stderr, "?");
   fprintf(stderr, ", i=");
-  if      (const_value. _int64.is_valid   ()) fprintf(stderr, "%"PRId64"", const_value. _int64.get());
+  if      (const_value. _int64.is_valid   ()) fprintf(stderr, "%" PRId64 "", const_value. _int64.get());
   else if (const_value. _int64.is_overflow()) fprintf(stderr, "ov");
   else if (const_value. _int64.is_nonconst()) fprintf(stderr, "nc");
   else                                        fprintf(stderr, "?");
   fprintf(stderr, ", u=");
-  if      (const_value._uint64.is_valid   ()) fprintf(stderr, "%"PRIu64"", const_value._uint64.get());
+  if      (const_value._uint64.is_valid   ()) fprintf(stderr, "%" PRIu64 "", const_value._uint64.get());
   else if (const_value._uint64.is_overflow()) fprintf(stderr, "ov");
   else if (const_value._uint64.is_nonconst()) fprintf(stderr, "nc");
   else                                        fprintf(stderr, "?");
