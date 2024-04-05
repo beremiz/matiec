@@ -49,7 +49,7 @@ typedef IEC_TIMESPEC IEC_TOD;
 #endif
 
 #ifndef STR_LEN_TYPE
-#define STR_LEN_TYPE int8_t
+#define STR_LEN_TYPE uint8_t
 #endif
 
 #define __INIT_REAL 0
