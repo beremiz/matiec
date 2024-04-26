@@ -470,7 +470,10 @@ static inline LINT __pstring_to_sint(STRING* IN) {
     __strlen_t l;
     unsigned int shift = 0;
 
-    if(IN->body[0]=='2' && IN->body[1]=='#'){
+    if(IN->len < 1){
+        /* empty string */
+        return 0;
+    }else if(IN->len > 1 && IN->body[0]=='2' && IN->body[1]=='#'){
         /* 2#0101_1010_1011_1111 */
         for(l = IN->len - 1; l >= 2 && shift < 64; l--)
         {
@@ -480,7 +483,7 @@ static inline LINT __pstring_to_sint(STRING* IN) {
                 shift += 1;
             }
         }
-    }else if(IN->body[0]=='8' && IN->body[1]=='#'){
+    }else if(IN->len > 1 && IN->body[0]=='8' && IN->body[1]=='#'){
         /* 8#1234_5665_4321 */
         for(l = IN->len - 1; l >= 2 && shift < 64; l--)
         {
@@ -490,7 +493,7 @@ static inline LINT __pstring_to_sint(STRING* IN) {
                 shift += 3;
             }
         }
-    }else if(IN->body[0]=='1' && IN->body[1]=='6' && IN->body[2]=='#'){
+    }else if(IN->len > 2 && IN->body[0]=='1' && IN->body[1]=='6' && IN->body[2]=='#'){
         /* 16#1234_5678_9abc_DEFG */
         for(l = IN->len - 1; l >= 3 && shift < 64; l--)
         {
@@ -509,9 +512,9 @@ static inline LINT __pstring_to_sint(STRING* IN) {
     }else{
         /* -123456789 */
         LINT fac = IN->body[0] == '-' ? -1 : 1;
-        for(l = IN->len - 1; l >= 0 && shift < 20; l--)
+        for(l = IN->len; l > 0 && shift < 20; l--)
         {
-            char c = IN->body[l];
+            char c = IN->body[l-1];
             if( c >= '0' && c <= '9'){
                 res += ( c - '0') * fac;
                 fac *= 10;
@@ -533,7 +536,7 @@ static inline LREAL __string_to_real(STRING IN) {
     __strlen_t l;
     l = IN.len;
     /* search the dot */
-    while(--l > 0 && IN.body[l] != '.');
+    while(l > 0 && IN.body[--l] != '.');
     if(l != 0){
         return atof((const char *)&IN.body);
     }else{
@@ -571,7 +574,7 @@ static inline TIME __string_to_time(STRING IN){
     /* Quick hack : only transform seconds */
     /* search the dot */
     l = IN.len;
-    while(--l > 0 && IN.body[l] != '.');
+    while(l > 0 && IN.body[--l] != '.');
     if(l != 0){
         LREAL IN_val = atof((const char *)&IN.body);
         return  (TIME){(long)IN_val, (long)(IN_val - (LINT)IN_val)*1000000000};
