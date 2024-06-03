@@ -1832,6 +1832,7 @@ END_REPEAT	return END_REPEAT;	/* Keyword */
 
 EXIT		return EXIT;		/* Keyword */
 
+CONTINUE    return CONTINUE;    /* Keyword */
 
 
 

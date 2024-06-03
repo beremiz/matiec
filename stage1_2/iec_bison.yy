@@ -1454,6 +1454,7 @@ typedef struct YYLTYPE {
 %type <leaf>	while_statement
 %type <leaf>	repeat_statement
 %type <leaf>	exit_statement
+%type <leaf>	continue_statement
 /* Integrated directly into for_statement */
 // %type <leaf>	for_list
 
@@ -1473,6 +1474,7 @@ typedef struct YYLTYPE {
 %token END_REPEAT
 
 %token EXIT
+%token CONTINUE
 
 
 %%
@@ -8306,6 +8308,7 @@ iteration_statement:
 | while_statement
 | repeat_statement
 | exit_statement
+| continue_statement
 ;
 
 
@@ -8449,7 +8452,9 @@ exit_statement:
   EXIT	{$$ = new exit_statement_c(locloc(@$));}
 ;
 
-
+continue_statement:
+  CONTINUE	{$$ = new continue_statement_c(locloc(@$));}
+;
 
 
 

@@ -2146,6 +2146,10 @@ void *visit(exit_statement_c *symbol) {
   return NULL;
 }
 
+void *visit(continue_statement_c *symbol) {
+  s4o.print("CONTINUE");
+  return NULL;
+}
 
 }; /* class generate_iec_c */
 

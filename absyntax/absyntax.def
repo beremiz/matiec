@@ -1288,4 +1288,5 @@ SYM_REF2(repeat_statement_c, statement_list, expression)
 /*  EXIT */
 SYM_REF0(exit_statement_c)
 
-
+/* continue */
+SYM_REF0(continue_statement_c)
