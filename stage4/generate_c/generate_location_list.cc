@@ -77,7 +77,7 @@ class generate_location_list_c: public iterator_visitor_c {
           if (typeid(*current_var_type_symbol) == typeid(lword_type_name_c)) return true;
           break;
         default:
-          if (typeid(*current_var_type_symbol) == typeid(bool_type_name_c)) return true;
+          /*if (typeid(*current_var_type_symbol) == typeid(bool_type_name_c))*/ return true;
       }
       return false;
     }

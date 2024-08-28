@@ -175,6 +175,9 @@ class get_datatype_info_c {
     /* This is only used from stage3 onwards. Stages 1 and 2 will never create any instances of invalid_type_name_c */
     static invalid_type_name_c     invalid_type_name;
 
+    /* object used to identify ANY datya type */
+    static generic_type_any_c      any_type_name;
+
     /**********************/
     /* B.1.3 - Data types */
     /**********************/

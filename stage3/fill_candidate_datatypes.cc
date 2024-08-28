@@ -1290,7 +1290,7 @@ void *fill_candidate_datatypes_c::visit(direct_variable_c *symbol) {
 		case 'd': case 'D': /* dword - 32 bits */ add_datatype_to_candidate_list(symbol, &get_datatype_info_c::dword_type_name); break;
 		case 'l': case 'L': /* lword - 64 bits */ add_datatype_to_candidate_list(symbol, &get_datatype_info_c::lword_type_name); break;
         	          /* if none of the above, then the empty string was used <=> boolean */
-		default:                        add_datatype_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name);  break;
+		default:                        add_datatype_to_candidate_list(symbol, &get_datatype_info_c::any_type_name);  break;
 	}
 	return NULL;
 }
@@ -1463,7 +1463,11 @@ void *fill_candidate_datatypes_c::visit(location_c *symbol) {
 
 	symbol->direct_variable->accept(*this);
 	for (unsigned int i = 0; i < symbol->direct_variable->candidate_datatypes.size(); i++) {
-        	switch (get_sizeof_datatype_c::getsize(symbol->direct_variable->candidate_datatypes[i])) {
+        symbol_c *candidate_datatype = symbol->direct_variable->candidate_datatypes[i];
+        if(get_datatype_info_c::is_ANY_generic_type(candidate_datatype)){
+            add_datatype_to_candidate_list(symbol, &get_datatype_info_c::any_type_name);
+        } else {
+        	switch (get_sizeof_datatype_c::getsize(candidate_datatype)) {
 			case  1: /* bit   -  1 bit  */
 					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::bool_type_name);
 					add_datatype_to_candidate_list(symbol, &get_datatype_info_c::safebool_type_name);
@@ -1506,7 +1510,8 @@ void *fill_candidate_datatypes_c::visit(location_c *symbol) {
 					break;
 			default: /* if none of the above, then no valid datatype allowed... */
 					break;
-		} /* switch() */
+			} /* switch() */
+		} /* if() */
 	} /* for */
 
 	return NULL;

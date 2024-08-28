@@ -1400,6 +1400,7 @@ bool get_datatype_info_c::is_ANY_INT_literal(symbol_c *type_symbol) {
 
 
 invalid_type_name_c      get_datatype_info_c::invalid_type_name;
+generic_type_any_c      get_datatype_info_c::any_type_name;
 
 /**********************/
 /* B.1.3 - Data types */
