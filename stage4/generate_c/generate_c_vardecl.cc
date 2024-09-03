@@ -861,7 +861,8 @@ class generate_c_vardecl_c: protected generate_c_base_and_typeid_c {
                   init_vf,
                   constructorinit_vf,
                   globalinit_vf,
-                  globalprototype_vf
+                  globalprototype_vf,
+                  location_list_vf
                  } varformat_t;
 
 
@@ -1765,6 +1766,31 @@ void *visit(located_var_decl_list_c *symbol) {
   return NULL;
 }
 
+/********************************************/
+/* B.1.4.1   Directly Represented Variables */
+/********************************************/
+
+void *visit(direct_variable_c *symbol) {
+  if(wanted_varformat == location_list_vf){
+      s4o.printlocation((symbol->value)+1);
+      s4o.print(",");
+      s4o.printlocation_comasep((symbol->value)+1);
+  } else {
+      // explicit call to base class method
+      return generate_c_base_c::visit(symbol); 
+  }
+  return NULL;
+}
+
+
+#define print_located_var_list_item                 \
+    s4o.print("__LOCATED_VAR(");                    \
+    this->current_var_type_symbol->accept(*this);   \
+    s4o.print(",");                                 \
+    symbol->location->accept(*this);                \
+    s4o.print(")\n");
+
+
 
 /*  [variable_name] location ':' located_var_spec_init */
 /* variable_name -> may be NULL ! */
@@ -1854,6 +1880,11 @@ void *visit(located_var_decl_c *symbol) {
         this->current_var_init_symbol->accept(*this);
       }
       s4o.print(");\n");
+      break;
+
+    case location_list_vf:
+      // use macro to avoid code duplication with visit(global_var_spec_c *symbol)
+      print_located_var_list_item
       break;
 
     default:
@@ -2119,6 +2150,10 @@ void *visit(global_var_spec_c *symbol) {
       s4o.print(")\n");
       break;
     
+    case location_list_vf:
+      print_located_var_list_item
+      break;
+
     default:
       ERROR;
   } /* switch() */
@@ -2226,6 +2261,12 @@ void *visit(global_var_list_c *symbol) {
         s4o.print(",");
         list->get_element(i)->accept(*this);
         s4o.print(")\n");
+      }
+      break;
+
+    case location_list_vf:
+      for(int i = 0; i < list->n; i++) {
+        list->get_element(i)->accept(*this);
       }
       break;
 
