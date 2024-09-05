@@ -1837,6 +1837,20 @@ void *visit(located_var_decl_c *symbol) {
       print_retain();
       s4o.print(")\n");
       if (this->current_var_init_symbol != NULL) {
+        int is_struct = get_datatype_info_c::is_structure(this->current_var_type_symbol);
+        if(is_struct){
+          s4o.print("\n");
+          s4o.print(s4o.indent_spaces + "{\n");
+          s4o.indent_right();
+          s4o.print(s4o.indent_spaces);
+          s4o.print("static const ");
+
+          this->current_var_type_symbol->accept(*this);
+
+          s4o.print(" temp = ");
+          this->current_var_init_symbol->accept(*this);
+          s4o.print(";\n");
+        }
         s4o.print(s4o.indent_spaces);
         s4o.print(INIT_LOCATED_VALUE);
         s4o.print("(");
@@ -1846,8 +1860,17 @@ void *visit(located_var_decl_c *symbol) {
         else
           symbol->location->accept(*this);
         s4o.print(",");
-        this->current_var_init_symbol->accept(*this);
+        if(is_struct){
+          s4o.print(" temp");
+        }else{
+            this->current_var_init_symbol->accept(*this);
+        }
         s4o.print(")");
+        if(is_struct){
+          s4o.print(";\n");
+          s4o.indent_left();
+          s4o.print(s4o.indent_spaces + "}");
+        }
       }
       break;
 
