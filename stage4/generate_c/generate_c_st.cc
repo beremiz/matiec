@@ -1256,11 +1256,15 @@ void *visit(for_statement_c *symbol) {
   //symbol->beg_expression->accept(*this);
   
   /* comparison // check for end of loop */
-  s4o.print(";\n" + s4o.indent_spaces + "while( ");
+  s4o.print(";\n");
+  s4o.print(s4o.indent_spaces + "{\n");
+  s4o.indent_right();
+  s4o.print(s4o.indent_spaces + "int __do_increment = 0;\n");
+  s4o.print(s4o.indent_spaces + "while( ");
   if (symbol->by_expression == NULL) {
     /* increment by 1 */    
     symbol->control_variable->accept(*this);
-    s4o.print(" <= ");
+    s4o.print(" < ");
     symbol->end_expression->accept(*this);
   } else {
     /* increment by user defined value  */
@@ -1275,21 +1279,25 @@ void *visit(for_statement_c *symbol) {
     symbol->by_expression->accept(*this);
     s4o.print(") > 0)? (");
     symbol->control_variable->accept(*this);
-    s4o.print(" <= (");
+    s4o.print(" + (");
+    symbol->by_expression->accept(*this);
+    s4o.print(") <= (");
     symbol->end_expression->accept(*this);
     s4o.print(")) : (");
     symbol->control_variable->accept(*this);
-    s4o.print(" >= (");
+    s4o.print(" + (");
+    symbol->by_expression->accept(*this);
+    s4o.print(") >= (");
     symbol->end_expression->accept(*this);
     s4o.print(")) ");
   }
   s4o.print(" ) {\n");
-  
-  /* the body part */
+
   s4o.indent_right();
-  symbol->statement_list->accept(*this);
 
   /* increment part */
+  s4o.print(s4o.indent_spaces + "if(__do_increment){\n");
+  s4o.indent_right();
   s4o.print(s4o.indent_spaces + "/* BY ... (of FOR loop) */\n");
   s4o.print(s4o.indent_spaces); 
   if (symbol->by_expression == NULL) {
@@ -1319,9 +1327,17 @@ void *visit(for_statement_c *symbol) {
     //symbol->by_expression->accept(*this);
     //s4o.print(")");
   }  
-  
+  s4o.print(";\n");
   s4o.indent_left();
-  s4o.print(";\n" + s4o.indent_spaces + "} /* END_FOR */");
+  s4o.print(s4o.indent_spaces + "} else __do_increment = 1;\n");
+
+  /*  the body part  */
+  symbol->statement_list->accept(*this);
+
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "}\n");
+  s4o.indent_left();
+  s4o.print(s4o.indent_spaces + "} /* END_FOR */");
   return NULL;
 }
 
@@ -1352,6 +1368,10 @@ void *visit(exit_statement_c *symbol) {
   return NULL;
 }
 
+void *visit(continue_statement_c *symbol) {
+  s4o.print("continue");
+  return NULL;
+}
 
 
 }; /* generate_c_st_c */
