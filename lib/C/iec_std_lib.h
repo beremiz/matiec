@@ -74,6 +74,7 @@ typedef struct {
 #endif
 */
 
+#if 0
 # if __WORDSIZE == 64
 #define __32b_sufix
 #define __64b_sufix L
@@ -84,7 +85,7 @@ typedef struct {
  */
 #define __64b_sufix L   
 #endif
-
+#endif
 
 #define __lit(type,value,...) (type)value##__VA_ARGS__
 // Keep this macro expention step to let sfx(__VA_ARGS__) change into L or LL
@@ -93,14 +94,14 @@ typedef struct {
 #define __BOOL_LITERAL(value) __literal(BOOL,value)
 #define __SINT_LITERAL(value) __literal(SINT,value)
 #define __INT_LITERAL(value) __literal(INT,value)
-#define __DINT_LITERAL(value) __literal(DINT,value,__32b_sufix)
-#define __LINT_LITERAL(value) __literal(LINT,value,__64b_sufix)
+#define __DINT_LITERAL(value) __literal(DINT,value,INT32_C())
+#define __LINT_LITERAL(value) __literal(LINT,value,INT64_C())
 #define __USINT_LITERAL(value) __literal(USINT,value)
 #define __UINT_LITERAL(value) __literal(UINT,value)
-#define __UDINT_LITERAL(value) __literal(UDINT,value,__32b_sufix)
-#define __ULINT_LITERAL(value) __literal(ULINT,value,__64b_sufix)
-#define __REAL_LITERAL(value) __literal(REAL,value,__32b_sufix)
-#define __LREAL_LITERAL(value) __literal(LREAL,value,__64b_sufix)
+#define __UDINT_LITERAL(value) __literal(UDINT,value,UINT32_C())
+#define __ULINT_LITERAL(value) __literal(ULINT,value,UINT64_C())
+#define __REAL_LITERAL(value) __literal(REAL,value,f)
+#define __LREAL_LITERAL(value) __literal(LREAL,value)
 #define __TIME_LITERAL(value) __literal(TIME,value)
 #define __DATE_LITERAL(value) __literal(DATE,value)
 #define __TOD_LITERAL(value) __literal(TOD,value)
@@ -108,8 +109,8 @@ typedef struct {
 #define __STRING_LITERAL(count,value) (STRING){count,value}
 #define __BYTE_LITERAL(value) __literal(BYTE,value)
 #define __WORD_LITERAL(value) __literal(WORD,value)
-#define __DWORD_LITERAL(value) __literal(DWORD,value,__32b_sufix)
-#define __LWORD_LITERAL(value) __literal(LWORD,value,__64b_sufix)
+#define __DWORD_LITERAL(value) __literal(DWORD,value,UINT32_C())
+#define __LWORD_LITERAL(value) __literal(LWORD,value,UINT64_C())
 
 
 typedef union __IL_DEFVAR_T {
