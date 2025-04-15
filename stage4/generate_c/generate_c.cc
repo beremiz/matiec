@@ -887,7 +887,7 @@ class generate_c_pous_c {
       /* (A.1) Function return type */
       s4o.print("// FUNCTION\n");
       symbol->type_name->accept(print_base); /* return type */
-      s4o.print(" ");
+      s4o.print(" ___");
       /* (A.2) Function name */
       symbol->derived_function_name->accept(print_base);
       s4o.print("(");

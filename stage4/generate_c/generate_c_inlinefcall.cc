@@ -161,7 +161,7 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
         }
 
       s4o.print(s4o.indent_spaces + INLINE_RESULT_TEMP_VAR),
-      s4o.print(" = ");
+      s4o.print(" = ___");
       function_name->accept(*this);
       if (f_decl != NULL) {
         /* function being called is overloaded! */

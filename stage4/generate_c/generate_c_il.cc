@@ -898,11 +898,13 @@ void *visit(il_function_call_c *symbol) {
   if (function_type_suffix != NULL) {
     function_type_suffix = default_literal_type(function_type_suffix);
   }
+  s4o.print("__");
   if (has_output_params) {
     fcall_number++;
-    s4o.print("__");
     fbname->accept(*this);
-    s4o.print("_");
+  }
+  s4o.print("_");
+  if (function_name != NULL) {
     function_name->accept(*this);
     if (fdecl_mutiplicity > 1) {
       /* function being called is overloaded! */
@@ -910,21 +912,15 @@ void *visit(il_function_call_c *symbol) {
       print_function_parameter_data_types_c overloaded_func_suf(&s4o);
       f_decl->accept(overloaded_func_suf);
     }
-    s4o.print(fcall_number);
+  }
+  if (has_output_params) {
+      s4o.print(fcall_number);
   }
   else {
-    if (function_name != NULL) {
-          function_name->accept(*this);
-          if (fdecl_mutiplicity > 1) {
-            /* function being called is overloaded! */
-            s4o.print("__");
-            print_function_parameter_data_types_c overloaded_func_suf(&s4o);
-            f_decl->accept(overloaded_func_suf);
-          }
-    }
     if (function_type_suffix != NULL)
       function_type_suffix->accept(*this);
   }
+  
   s4o.print("(");
   s4o.indent_right();
   s4o.print("\n"+s4o.indent_spaces);

@@ -452,7 +452,7 @@ const char *standard_function_names[] = {
 "RIGHT",
 "MID",
 "CONCAT",
-"CONCAT_DAT_TOD",
+"CONCAT_DATE_TOD",
 "INSERT",
 "DELETE",
 "REPLACE",

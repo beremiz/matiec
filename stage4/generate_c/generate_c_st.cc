@@ -843,29 +843,22 @@ void *visit(function_invocation_c *symbol) {
   int fdecl_mutiplicity =  function_symtable.count(symbol->function_name);
   if (fdecl_mutiplicity == 0) ERROR;
 
+  s4o.print("__");
   if (has_output_params) {
     fcall_number++;
-    s4o.print("__");
     fbname->accept(*this);
-    s4o.print("_");
-    function_name->accept(*this);
-    if (fdecl_mutiplicity > 1) {
-      /* function being called is overloaded! */
-      s4o.print("__");
-      print_function_parameter_data_types_c overloaded_func_suf(&s4o);
-      f_decl->accept(overloaded_func_suf);
-    }
-    s4o.print(fcall_number);
   }
-  else {
-    function_name->accept(*this);
-    if (fdecl_mutiplicity > 1) {
-      /* function being called is overloaded! */
-      s4o.print("__");
-      print_function_parameter_data_types_c overloaded_func_suf(&s4o);
-      f_decl->accept(overloaded_func_suf);
-    }
+  s4o.print("_");
+  function_name->accept(*this);
+  if (fdecl_mutiplicity > 1) {
+    /* function being called is overloaded! */
+    s4o.print("__");
+    print_function_parameter_data_types_c overloaded_func_suf(&s4o);
+    f_decl->accept(overloaded_func_suf);
   }
+
+  if (has_output_params) s4o.print(fcall_number);
+
   s4o.print("(");
   s4o.indent_right();
   s4o.print("\n"+s4o.indent_spaces);

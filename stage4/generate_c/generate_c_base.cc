@@ -240,6 +240,7 @@ class generate_c_base_c: public iterator_visitor_c {
     void *print_binary_function(const char *function,
           symbol_c *l_exp,
           symbol_c *r_exp) {
+      s4o.print("___");
       s4o.print(function);
       s4o.print("(");
       l_exp->accept(*this);
@@ -273,6 +274,7 @@ class generate_c_base_c: public iterator_visitor_c {
       // Print out the name of the function we will call.
       // It will be something like LE_TIME, LE_DATE, GT_DATE, ...
       //    (in other words, we are calling an overloaded function!)
+      s4o.print("___");  // the '___' part...
       s4o.print(function); // the GT, LE, ... part
       s4o.print("_");  // the '_' part...
       compare_type->accept(*this); // the TIME, DATE, ... part.
