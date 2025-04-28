@@ -1602,7 +1602,7 @@ static void DERIVATIVE_body__(DERIVATIVE *data__) {
   // Initialise TEMP variables
 
   if (__GET_VAR(data__->RUN,)) {
-    __SET_VAR(data__->,XOUT,,((((3.0 * (__GET_VAR(data__->XIN,) - __GET_VAR(data__->X3,))) + __GET_VAR(data__->X1,)) - __GET_VAR(data__->X2,)) / (10.0 * TIME_TO_REAL((BOOL)__BOOL_LITERAL(TRUE),
+    __SET_VAR(data__->,XOUT,,((((3.0 * (__GET_VAR(data__->XIN,) - __GET_VAR(data__->X3,))) + __GET_VAR(data__->X1,)) - __GET_VAR(data__->X2,)) / (10.0 * ___TIME_TO_REAL((BOOL)__BOOL_LITERAL(TRUE),
       NULL,
       (TIME)__GET_VAR(data__->CYCLE,)))));
     __SET_VAR(data__->,X3,,__GET_VAR(data__->X2,));
@@ -1692,7 +1692,7 @@ static void INTEGRAL_body__(INTEGRAL *data__) {
   if (__GET_VAR(data__->R1,)) {
     __SET_VAR(data__->,XOUT,,__GET_VAR(data__->X0,));
   } else if (__GET_VAR(data__->RUN,)) {
-    __SET_VAR(data__->,XOUT,,(__GET_VAR(data__->XOUT,) + (__GET_VAR(data__->XIN,) * TIME_TO_REAL((BOOL)__BOOL_LITERAL(TRUE),
+    __SET_VAR(data__->,XOUT,,(__GET_VAR(data__->XOUT,) + (__GET_VAR(data__->XIN,) * ___TIME_TO_REAL((BOOL)__BOOL_LITERAL(TRUE),
       NULL,
       (TIME)__GET_VAR(data__->CYCLE,)))));
   };
@@ -1787,13 +1787,13 @@ static void RAMP_body__(RAMP *data__) {
 
   __SET_VAR(data__->,BUSY,,__GET_VAR(data__->RUN,));
   if (__GET_VAR(data__->RUN,)) {
-    if (GE_TIME(__BOOL_LITERAL(TRUE), NULL, 2, __GET_VAR(data__->T,), __GET_VAR(data__->TR,))) {
+    if (___GE_TIME(__BOOL_LITERAL(TRUE), NULL, 2, __GET_VAR(data__->T,), __GET_VAR(data__->TR,))) {
       __SET_VAR(data__->,BUSY,,0);
       __SET_VAR(data__->,XOUT,,__GET_VAR(data__->X1,));
     } else {
-      __SET_VAR(data__->,XOUT,,(__GET_VAR(data__->XI,) + (((__GET_VAR(data__->X1,) - __GET_VAR(data__->XI,)) * TIME_TO_REAL((BOOL)__BOOL_LITERAL(TRUE),
+      __SET_VAR(data__->,XOUT,,(__GET_VAR(data__->XI,) + (((__GET_VAR(data__->X1,) - __GET_VAR(data__->XI,)) * ___TIME_TO_REAL((BOOL)__BOOL_LITERAL(TRUE),
         NULL,
-        (TIME)__GET_VAR(data__->T,))) / TIME_TO_REAL((BOOL)__BOOL_LITERAL(TRUE),
+        (TIME)__GET_VAR(data__->T,))) / ___TIME_TO_REAL((BOOL)__BOOL_LITERAL(TRUE),
         NULL,
         (TIME)__GET_VAR(data__->TR,)))));
       __SET_VAR(data__->,T,,__time_add(__GET_VAR(data__->T,), __GET_VAR(data__->CYCLE,)));

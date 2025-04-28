@@ -392,26 +392,26 @@ static inline TYPENAME ___##fname##_##TYPENAME##__##TYPENAME(EN_ENO_PARAMS TYPEN
   /**************/
 #define __abs_signed(TYPENAME) \
 /* explicitly typed function */\
-static inline TYPENAME ___##ABS_##TYPENAME(EN_ENO_PARAMS TYPENAME op){\
+static inline TYPENAME ___ABS_##TYPENAME(EN_ENO_PARAMS TYPENAME op){\
   TEST_EN(TYPENAME)\
   if (op < 0)\
     return -op;\
   return op;\
 }\
 /* overloaded function */\
-static inline TYPENAME ___##ABS__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS TYPENAME op) {\
-  return ABS_##TYPENAME(EN_ENO op);\
+static inline TYPENAME ___ABS__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS TYPENAME op) {\
+  return ___ABS_##TYPENAME(EN_ENO op);\
 }
 
 #define __abs_unsigned(TYPENAME) \
 /* explicitly typed function */\
-static inline TYPENAME ___##ABS_##TYPENAME(EN_ENO_PARAMS TYPENAME op){\
+static inline TYPENAME ___ABS_##TYPENAME(EN_ENO_PARAMS TYPENAME op){\
   TEST_EN(TYPENAME)\
   return op;\
 }\
 /* overloaded function */\
-static inline TYPENAME ___##ABS__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS TYPENAME op) {\
-  return ABS_##TYPENAME(EN_ENO op);\
+static inline TYPENAME ___ABS__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS TYPENAME op) {\
+  return ___ABS_##TYPENAME(EN_ENO op);\
 }
 
 __ANY_REAL(__abs_signed)
@@ -515,7 +515,7 @@ static inline TYPENAME ___##fname##TYPENAME(EN_ENO_PARAMS TYPENAME op1, TYPENAME
 }\
 /* overloaded function */\
 static inline TYPENAME ___##fname##_##TYPENAME##__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS TYPENAME op1, TYPENAME op2){\
-  return __##fname##TYPENAME(EN_ENO op1, op2);\
+  return ___##fname##TYPENAME(EN_ENO op1, op2);\
 }
 
   /**************/
@@ -554,7 +554,7 @@ static inline TYPENAME ___##DIV_##TYPENAME(EN_ENO_PARAMS TYPENAME op1, TYPENAME 
 }\
 /* The overloaded standard functions */\
 static inline TYPENAME ___##DIV__##TYPENAME##__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS TYPENAME op1, TYPENAME op2){\
-  return DIV_##TYPENAME(EN_ENO op1, op2);\
+  return ___DIV_##TYPENAME(EN_ENO op1, op2);\
 }
 __ANY_NUM(__div)
 
@@ -571,7 +571,7 @@ static inline TYPENAME ___##MOD_##TYPENAME(EN_ENO_PARAMS TYPENAME op1, TYPENAME 
 }\
 /* The overloaded standard functions */\
 static inline TYPENAME ___##MOD__##TYPENAME##__##TYPENAME##__##TYPENAME(EN_ENO_PARAMS TYPENAME op1, TYPENAME op2){\
-  return MOD_##TYPENAME(EN_ENO op1, op2);\
+  return ___MOD_##TYPENAME(EN_ENO op1, op2);\
 }
 __ANY_INT(__mod)
 
