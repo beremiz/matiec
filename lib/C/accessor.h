@@ -41,7 +41,7 @@
 	}
 #define __DECLARE_GLOBAL_PROTOTYPE(type, name)\
     extern type* __GET_GLOBAL_##name(void);
-#define __DECLARE_GLOBAL_PROTOTYPE(type, name)\
+#define __DECLARE_GLOBAL_PROTOTYPE_FB(type, name)\
     extern type_data__* __GET_GLOBAL_##name(void);
 #define __DECLARE_EXTERNAL(type, name)\
 	__IEC_##type##_p name;
