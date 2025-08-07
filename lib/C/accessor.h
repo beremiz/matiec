@@ -19,9 +19,9 @@
 		return &((*GLOBAL__##name).value);\
 	}
 #define __DECLARE_GLOBAL_FB(type, domain, name)\
-	type domain##__##name;\
-	static type *GLOBAL__##name = &(domain##__##name);\
-	type* __GET_GLOBAL_##name(void) {\
+	type##_data__ domain##__##name;\
+	static type##_data__ *GLOBAL__##name = &(domain##__##name);\
+	type##_data__* __GET_GLOBAL_##name(void) {\
 		return &(*GLOBAL__##name);\
 	}\
 	extern void type##_init__(type* data__, BOOL retain);
@@ -44,7 +44,7 @@
 #define __DECLARE_EXTERNAL(type, name)\
 	__IEC_##type##_p name;
 #define __DECLARE_EXTERNAL_FB(type, name)\
-	type* name;
+	type##_data__* name;
 #define __DECLARE_LOCATED(type, name)\
 	__IEC_##type##_p name;
 
@@ -89,7 +89,7 @@
 #define __GET_EXTERNAL(name, ...)\
 	((*(name.value)) __VA_ARGS__)
 #define __GET_EXTERNAL_FB(name, ...)\
-	__GET_VAR(((*name) __VA_ARGS__))
+	__GET_VAR(((*name##_data__) __VA_ARGS__))
 #define __GET_LOCATED(name, ...)\
 	((*(name.value)) __VA_ARGS__)
 
@@ -98,7 +98,7 @@
 #define __GET_EXTERNAL_BY_REF(name, ...)\
 	(&((*(name.value)) __VA_ARGS__))
 #define __GET_EXTERNAL_FB_BY_REF(name, ...)\
-	__GET_EXTERNAL_BY_REF(((*name) __VA_ARGS__))
+	__GET_EXTERNAL_BY_REF(((*name##_data__) __VA_ARGS__))
 #define __GET_LOCATED_BY_REF(name, ...)\
 	(&((*(name.value)) __VA_ARGS__))
 
@@ -107,7 +107,7 @@
 #define __GET_EXTERNAL_REF(name, ...)\
 	(&((*(name.value)) __VA_ARGS__))
 #define __GET_EXTERNAL_FB_REF(name, ...)\
-	(&(__GET_VAR(((*name) __VA_ARGS__))))
+	(&(__GET_VAR(((*name##_data__) __VA_ARGS__))))
 #define __GET_LOCATED_REF(name, ...)\
 	(&((*(name.value)) __VA_ARGS__))
 
@@ -116,7 +116,7 @@
 #define __GET_EXTERNAL_DREF(name, ...)\
 	(*((*(name.value)) __VA_ARGS__))
 #define __GET_EXTERNAL_FB_DREF(name, ...)\
-	(*(__GET_VAR(((*name) __VA_ARGS__))))
+	(*(__GET_VAR(((*name##_data__) __VA_ARGS__))))
 #define __GET_LOCATED_DREF(name, ...)\
 	(*((*(name.value)) __VA_ARGS__))
 
