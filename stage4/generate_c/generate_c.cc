@@ -89,6 +89,11 @@
 /* Idem as body, but for run CONFIG and RESOURCE function */
 #define FB_RUN_SUFFIX "_run__"
 
+/* Idem as body, but for data structure */
+#define FB_DATASTRUCTURE_SUFFIX "_data__"
+
+
+
 /* The FB body function is passed as the only parameter a pointer to the FB data
  * structure instance. The name of this parameter is given by the following constant.
  * In order not to clash with any variable in the IL and ST source codem the
@@ -1096,6 +1101,7 @@ class generate_c_pous_c {
         s4o.indent_left();
         s4o.print("} ");
         symbol->fblock_name->accept(print_base);
+        s4o.print(FB_DATASTRUCTURE_SUFFIX);
         s4o.print(";\n\n");
       }
       
@@ -1115,6 +1121,7 @@ class generate_c_pous_c {
     
       /* first and only parameter is a pointer to the data */
       symbol->fblock_name->accept(print_base);
+      s4o.print(FB_DATASTRUCTURE_SUFFIX);
       s4o.print(" *");
       s4o.print(FB_FUNCTION_PARAM);
       s4o.print(", BOOL retain)");
@@ -1166,6 +1173,7 @@ class generate_c_pous_c {
       s4o.print("(");
       /* first and only parameter is a pointer to the data */
       symbol->fblock_name->accept(print_base);
+      s4o.print(FB_DATASTRUCTURE_SUFFIX);
       s4o.print(" *");
       s4o.print(FB_FUNCTION_PARAM);
       s4o.print(")");
@@ -1305,6 +1313,7 @@ class generate_c_pous_c {
         s4o.indent_left();
         s4o.print("} ");
         symbol->program_type_name->accept(print_base);
+        s4o.print(FB_DATASTRUCTURE_SUFFIX);
         s4o.print(";\n\n");
       }
       
@@ -1324,6 +1333,7 @@ class generate_c_pous_c {
     
       /* first and only parameter is a pointer to the data */
       symbol->program_type_name->accept(print_base);
+      s4o.print(FB_DATASTRUCTURE_SUFFIX);
       s4o.print(" *");
       s4o.print(FB_FUNCTION_PARAM);
       s4o.print(", BOOL retain)");
@@ -1377,6 +1387,7 @@ class generate_c_pous_c {
       s4o.print("(");
       /* first and only parameter is a pointer to the data */
       symbol->program_type_name->accept(print_base);
+      s4o.print(FB_DATASTRUCTURE_SUFFIX);
       s4o.print(" *");
       s4o.print(FB_FUNCTION_PARAM);
       s4o.print(")");
@@ -1925,6 +1936,7 @@ END_RESOURCE
         case declare_dt:
           s4o.print(s4o.indent_spaces);
           symbol->program_type_name->accept(*this);
+          s4o.print(FB_DATASTRUCTURE_SUFFIX);
           s4o.print(" ");
           current_resource_name->accept(*this);
           s4o.print("__");
@@ -2020,7 +2032,9 @@ END_RESOURCE
       switch (wanted_declaretype) {
         case declare_dt:
           if (symbol->single_data_source != NULL) {
-            s4o.print(s4o.indent_spaces + "R_TRIG ");
+            s4o.print(s4o.indent_spaces + "R_TRIG");
+            s4o.print(FB_DATASTRUCTURE_SUFFIX);
+            s4o.print(" ");
             current_task_name->accept(*this);
             s4o.print("_R_TRIG;\n");
           }

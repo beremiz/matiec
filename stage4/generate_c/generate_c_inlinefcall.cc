@@ -132,6 +132,7 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
         }
       }
       fbname->accept(*this);
+      s4o.print(FB_DATASTRUCTURE_SUFFIX);
       s4o.print(" *");
       s4o.print(FB_FUNCTION_PARAM);
       s4o.indent_left();

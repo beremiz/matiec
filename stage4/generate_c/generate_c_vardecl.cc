@@ -1019,10 +1019,12 @@ class generate_c_vardecl_c: protected generate_c_base_and_typeid_c {
               s4o.print("(");
             }
             this->current_var_type_symbol->accept(*this);
-            if (is_fb)
+            if (is_fb){
+              s4o.print(FB_DATASTRUCTURE_SUFFIX);
               s4o.print(" ");
-            else
+            } else {
               s4o.print(",");
+            }
             print_variable_prefix();
           }
           else if (wanted_varformat == localinit_vf) {
@@ -2709,6 +2711,7 @@ void *visit(program_configuration_c *symbol) {
     case localinit_vf:
       s4o.print(s4o.indent_spaces);
       symbol->program_type_name->accept(*this);
+      s4o.print(FB_DATASTRUCTURE_SUFFIX);
       s4o.print(" ");
       symbol->program_name->accept(*this);
       if (wanted_varformat == localinit_vf) {
