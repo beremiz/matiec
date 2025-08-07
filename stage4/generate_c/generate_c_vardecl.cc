@@ -2280,7 +2280,10 @@ void *visit(global_var_list_c *symbol) {
     case globalprototype_vf:
       for(int i = 0; i < list->n; i++) {
         s4o.print(s4o.indent_spaces);
-        s4o.print(DECLARE_GLOBAL_PROTOTYPE);
+        if (is_fb)
+          s4o.print(DECLARE_GLOBAL_PROTOTYPE_FB);
+        else
+          s4o.print(DECLARE_GLOBAL_PROTOTYPE);
         s4o.print("(");
         this->current_var_type_symbol->accept(*this);
         s4o.print(",");
