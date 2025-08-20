@@ -267,13 +267,13 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
           s4o.print(s4o.indent_spaces + "else {\n");
           s4o.indent_right();
           // Calculate transition value for debug
-          s4o.print(s4o.indent_spaces + "if (__DEBUG) {\n");
+          s4o.print(s4o.indent_spaces + "#ifndef PLC_NO_DEBUG\n");
           s4o.indent_right();
           wanted_sfcgeneration = transitiontestdebug_sg;
           symbol->transition_condition->accept(*this);
           wanted_sfcgeneration = transitiontest_sg;
           s4o.indent_left();
-          s4o.print(s4o.indent_spaces + "}\n");
+          s4o.print(s4o.indent_spaces + "#endif\n");
           s4o.print(s4o.indent_spaces);
           s4o.print(SET_VAR);
           s4o.print("(");
@@ -362,7 +362,7 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
             s4o.print(");\n");
           }
           if (wanted_sfcgeneration == transitiontest_sg) {
-            s4o.print(s4o.indent_spaces + "if (__DEBUG) {\n");
+            s4o.print(s4o.indent_spaces + "#ifndef PLC_NO_DEBUG\n");
             s4o.indent_right();
             s4o.print(s4o.indent_spaces);
             s4o.print(SET_VAR);
@@ -378,7 +378,7 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
             print_transition_number();
             s4o.print("]));\n");
             s4o.indent_left();
-            s4o.print(s4o.indent_spaces + "}\n");
+            s4o.print(s4o.indent_spaces + "#endif\n");
           }
           break;
         default:
@@ -729,7 +729,7 @@ class generate_c_sfc_c: public generate_c_base_and_typeid_c {
       
       /* generate transition initializations */
       s4o.print(s4o.indent_spaces + "// Transitions initialization\n");
-      s4o.print(s4o.indent_spaces + "if (__DEBUG) {\n");
+      s4o.print(s4o.indent_spaces + "#ifndef PLC_NO_DEBUG\n");
       s4o.indent_right();
       s4o.print(s4o.indent_spaces + "for (i = 0; i < ");
       print_variable_prefix();
@@ -741,7 +741,7 @@ class generate_c_sfc_c: public generate_c_base_and_typeid_c {
       print_variable_prefix();
       s4o.print("__debug_transition_list[i];\n");
       s4o.indent_left();
-      s4o.print(s4o.indent_spaces + "}\n");
+      s4o.print(s4o.indent_spaces + "#endif\n");
       s4o.indent_left();
       s4o.print(s4o.indent_spaces + "}\n");
 

@@ -56,7 +56,6 @@
 #include "iec_types_all.h"
 
 extern TIME __CURRENT_TIME;
-extern BOOL __DEBUG;
 
 /* TODO
 typedef struct {

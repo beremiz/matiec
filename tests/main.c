@@ -46,8 +46,6 @@
  **/ 
 extern int common_ticktime__;
 
-IEC_BOOL __DEBUG;
-
 /*
  * Functions and variables provied by plc.c
  **/ 
