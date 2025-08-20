@@ -1307,7 +1307,7 @@ static void DERIVATIVE_body__(DERIVATIVE_data__ *data__) {
 // Initialise TEMP variables
 
 if (__GET_VAR(data__->RUN,)) {
-  __SET_VAR(data__->,XOUT,,((((3.0 * (__GET_VAR(data__->XIN,) - __GET_VAR(data__->X3,))) + __GET_VAR(data__->X1,)) - __GET_VAR(data__->X2,)) / (10.0 * TIME_TO_REAL((TIME)__GET_VAR(data__->CYCLE,)))));
+  __SET_VAR(data__->,XOUT,,(((((REAL)3.0 * (__GET_VAR(data__->XIN,) - __GET_VAR(data__->X3,))) + __GET_VAR(data__->X1,)) - __GET_VAR(data__->X2,)) / ((REAL)10.0 * TIME_TO_REAL((TIME)__GET_VAR(data__->CYCLE,)))));
   __SET_VAR(data__->,X3,,__GET_VAR(data__->X2,));
   __SET_VAR(data__->,X2,,__GET_VAR(data__->X1,));
   __SET_VAR(data__->,X1,,__GET_VAR(data__->XIN,));

@@ -497,10 +497,10 @@ static inline TYPENAME ___##fname(EN_ENO_PARAMS UINT param_count, TYPENAME op1, 
   UINT i;\
   TEST_EN(TYPENAME)\
   \
-  va_start (ap, op1);         /* Initialize the argument list.  */\
+  va_start (ap, (VA_ARGS_##TYPENAME) op1);         /* Initialize the argument list.  */\
   \
   for (i = 0; i < param_count - 1; i++){\
-    op1 = op1 OP (TYPENAME)va_arg (ap, VA_ARGS_##TYPENAME);\
+    op1 = op1 OP (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
   }\
   \
   va_end (ap);                  /* Clean up.  */\
@@ -760,10 +760,10 @@ static inline BOOL ___##fname(EN_ENO_PARAMS UINT param_count, BOOL op1, ...){ \
   UINT i; \
   TEST_EN(BOOL) \
 \
-  va_start (ap, op1);         /* Initialize the argument list.  */ \
+  va_start (ap, (VA_ARGS_BOOL) op1);         /* Initialize the argument list.  */ \
 \
   for (i = 0; i < param_count - 1; i++){ \
-    BOOL tmp = va_arg (ap, VA_ARGS_BOOL); \
+    BOOL tmp = (BOOL) va_arg (ap, VA_ARGS_BOOL); \
     op1 = (op1 && !tmp) || (!op1 && tmp); \
   } \
 \
@@ -863,10 +863,10 @@ static inline TYPENAME ___##fname(EN_ENO_PARAMS UINT param_count, TYPENAME op1, 
   UINT i;\
   TEST_EN(TYPENAME)\
   \
-  va_start (ap, op1);         /* Initialize the argument list.  */\
+  va_start (ap, (VA_ARGS_##TYPENAME) op1);         /* Initialize the argument list.  */\
   \
   for (i = 0; i < param_count - 1; i++){\
-    TYPENAME tmp = va_arg (ap, VA_ARGS_##TYPENAME);\
+    TYPENAME tmp = (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
     op1 = COND ? tmp : op1;\
   }\
   \
@@ -999,7 +999,7 @@ static inline in2_TYPENAME ___MUX__##in2_TYPENAME##__##in1_TYPENAME##__##in2_TYP
   \
   for (i = 0; i < param_count; i++){\
     if(K == i){\
-        tmp = va_arg (ap, VA_ARGS_##in2_TYPENAME);\
+        tmp = (in2_TYPENAME) va_arg (ap, VA_ARGS_##in2_TYPENAME);\
         va_end (ap);                  /* Clean up.  */\
         return tmp;\
     }else{\
@@ -1026,12 +1026,12 @@ static inline BOOL ___##fname(EN_ENO_PARAMS UINT param_count, TYPENAME op1, ...)
   UINT i;\
   TEST_EN(BOOL)\
   \
-  va_start (ap, op1);         /* Initialize the argument list.  */\
+  va_start (ap, (VA_ARGS_##TYPENAME) op1);         /* Initialize the argument list.  */\
   DBG(#fname #TYPENAME "\n")\
   DBG_TYPE(TYPENAME, op1)\
   \
   for (i = 0; i < param_count - 1; i++){\
-    TYPENAME tmp = va_arg (ap, VA_ARGS_##TYPENAME);\
+    TYPENAME tmp = (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
     DBG_TYPE(TYPENAME, tmp)\
     if(COND){\
         op1 = tmp;\
