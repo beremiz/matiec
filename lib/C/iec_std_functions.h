@@ -422,67 +422,67 @@ __ANY_UINT(__abs_unsigned)
   /**************/
   /*    SQRT    */
   /**************/
-#define __sqrt(TYPENAME) __numeric(SQRT_, TYPENAME, sqrt)
+#define __sqrt(TYPENAME) __numeric(SQRT_, TYPENAME, iec_lib_sqrt)
 __ANY_REAL(__sqrt)
 
 
 /**************/
   /*     LN     */
   /**************/
-#define __ln(TYPENAME) __numeric(LN_, TYPENAME, log)
+#define __ln(TYPENAME) __numeric(LN_, TYPENAME, iec_lib_log)
 __ANY_REAL(__ln)
 
 
   /**************/
   /*     LOG    */
   /**************/
-#define __log(TYPENAME) __numeric(LOG_, TYPENAME, log10)
+#define __log(TYPENAME) __numeric(LOG_, TYPENAME, iec_lib_log10)
 __ANY_REAL(__log)
 
 
   /**************/
   /*     EXP    */
   /**************/
-#define __exp(TYPENAME) __numeric(EXP_, TYPENAME, exp)
+#define __exp(TYPENAME) __numeric(EXP_, TYPENAME, iec_lib_exp)
 __ANY_REAL(__exp)
 
 
   /**************/
   /*     SIN    */
   /**************/
-#define __sin(TYPENAME) __numeric(SIN_, TYPENAME, sin)
+#define __sin(TYPENAME) __numeric(SIN_, TYPENAME, iec_lib_sin)
 __ANY_REAL(__sin)
 
 
   /**************/
   /*     COS    */
   /**************/
-#define __cos(TYPENAME) __numeric(COS_, TYPENAME, cos)
+#define __cos(TYPENAME) __numeric(COS_, TYPENAME, iec_lib_cos)
 __ANY_REAL(__cos)
 
   /**************/
   /*     TAN    */
   /**************/
-#define __tan(TYPENAME) __numeric(TAN_, TYPENAME, tan)
+#define __tan(TYPENAME) __numeric(TAN_, TYPENAME, iec_lib_tan)
 __ANY_REAL(__tan)
 
 
   /**************/
   /*    ASIN    */
   /**************/
-#define __asin(TYPENAME) __numeric(ASIN_, TYPENAME, asin)
+#define __asin(TYPENAME) __numeric(ASIN_, TYPENAME, iec_lib_asin)
 __ANY_REAL(__asin)
 
   /**************/
   /*    ACOS    */
   /**************/
-#define __acos(TYPENAME) __numeric(ACOS_, TYPENAME, acos)
+#define __acos(TYPENAME) __numeric(ACOS_, TYPENAME, iec_lib_acos)
 __ANY_REAL(__acos)
 
   /**************/
   /*    ATAN    */
   /**************/
-#define __atan(TYPENAME) __numeric(ATAN_, TYPENAME, atan)
+#define __atan(TYPENAME) __numeric(ATAN_, TYPENAME, iec_lib_atan)
 __ANY_REAL(__atan)
 
 
@@ -891,7 +891,7 @@ __iec_(TIME)
 #undef __iec_
 
 static inline int __str_cmp(uint8_t* str1, __strlen_t len1, uint8_t* str2, __strlen_t len2) { 
-    int cmp = memcmp(str1, str2, len1 < len2 ? len1 : len2);
+    int cmp = iec_lib_memcmp(str1, str2, len1 < len2 ? len1 : len2);
     return cmp ? cmp : (len1 > len2 ? 1 : (len1 < len2 ? - 1 : 0));
 }
 #define __STR_CMP(str1, str2) __str_cmp(str1.body, str1.len, str2.body, str2.len)
@@ -1261,7 +1261,7 @@ static inline STRING ___LEFT__STRING__STRING__##TYPENAME(EN_ENO_PARAMS STRING IN
     TEST_EN_COND(STRING, L < 0)\
     res = __INIT_STRING;\
     L = L < (TYPENAME)IN.len ? L : (TYPENAME)IN.len;\
-    memcpy(&res.body, &IN.body, (size_t)L);\
+    iec_lib_memcpy(&res.body, &IN.body, (size_t)L);\
     res.len = (__strlen_t)L;\
     return res;\
 }
@@ -1278,7 +1278,7 @@ static inline STRING ___RIGHT__STRING__STRING__##TYPENAME(EN_ENO_PARAMS STRING I
   TEST_EN_COND(STRING, L < 0)\
   res = __INIT_STRING;\
   L = L < (TYPENAME)IN.len ? L : (TYPENAME)IN.len;\
-  memcpy(&res.body, &IN.body[(TYPENAME)IN.len - L], (size_t)L);\
+  iec_lib_memcpy(&res.body, &IN.body[(TYPENAME)IN.len - L], (size_t)L);\
   res.len = (__strlen_t)L;\
   return res;\
 }
@@ -1297,7 +1297,7 @@ static inline STRING ___MID__STRING__STRING__##TYPENAME##__##TYPENAME(EN_ENO_PAR
   if(P <= (TYPENAME)IN.len){\
 	P -= 1; /* now can be used as [index]*/\
 	L = L + P <= (TYPENAME)IN.len ? L : (TYPENAME)IN.len - P;\
-	memcpy(&res.body, &IN.body[P] , (size_t)L);\
+	iec_lib_memcpy(&res.body, &IN.body[P] , (size_t)L);\
 	res.len = (__strlen_t)L;\
   }\
   return res;\
@@ -1325,7 +1325,7 @@ static inline STRING ___CONCAT(EN_ENO_PARAMS UINT param_count, ...){
     STRING tmp = va_arg(ap, STRING);
     __strlen_t charrem = STR_MAX_LEN - charcount;
     __strlen_t to_write = tmp.len > charrem ? charrem : tmp.len;
-    memcpy(&res.body[charcount], &tmp.body , to_write);
+    iec_lib_memcpy(&res.body[charcount], &tmp.body , to_write);
     charcount += to_write;
   }
 
@@ -1345,15 +1345,15 @@ static inline STRING __insert(STRING IN1, STRING IN2, __strlen_t P){
     res = __INIT_STRING;
 
     to_copy = P > IN1.len ? IN1.len : P;
-    memcpy(&res.body, &IN1.body , to_copy);
+    iec_lib_memcpy(&res.body, &IN1.body , to_copy);
     P = res.len = to_copy;
 
     to_copy = IN2.len + res.len > STR_MAX_LEN ? STR_MAX_LEN - res.len : IN2.len;
-    memcpy(&res.body[res.len], &IN2.body , to_copy);
+    iec_lib_memcpy(&res.body[res.len], &IN2.body , to_copy);
     res.len += to_copy;
 
     to_copy = IN1.len - P < STR_MAX_LEN - res.len ? IN1.len - P : STR_MAX_LEN - res.len ;
-    memcpy(&res.body[res.len], &IN1.body[P] , to_copy);
+    iec_lib_memcpy(&res.body[res.len], &IN1.body[P] , to_copy);
     res.len += to_copy;
 
     return res;
@@ -1378,12 +1378,12 @@ static inline STRING __delete(STRING IN, __strlen_t L, __strlen_t P){
     res = __INIT_STRING;
 
     to_copy = P > IN.len ? IN.len : P-1;
-    memcpy(&res.body, &IN.body , to_copy);
+    iec_lib_memcpy(&res.body, &IN.body , to_copy);
     P = res.len = to_copy;
 
     if( IN.len > P + L ){
         to_copy = IN.len - P - L;
-        memcpy(&res.body[res.len], &IN.body[P + L], to_copy);
+        iec_lib_memcpy(&res.body[res.len], &IN.body[P + L], to_copy);
         res.len += to_copy;
     }
 
@@ -1409,7 +1409,7 @@ static inline STRING __replace(STRING IN1, STRING IN2, __strlen_t L, __strlen_t 
     res = __INIT_STRING;
 
     to_copy = P > IN1.len ? IN1.len : P-1;
-    memcpy(&res.body, &IN1.body , to_copy);
+    iec_lib_memcpy(&res.body, &IN1.body , to_copy);
     P = res.len = to_copy;
 
     to_copy = IN2.len < L ? IN2.len : L;
@@ -1417,14 +1417,14 @@ static inline STRING __replace(STRING IN1, STRING IN2, __strlen_t L, __strlen_t 
     if( to_copy + res.len > STR_MAX_LEN )
        to_copy = STR_MAX_LEN - res.len;
 
-    memcpy(&res.body[res.len], &IN2.body , to_copy);
+    iec_lib_memcpy(&res.body[res.len], &IN2.body , to_copy);
     res.len += to_copy;
 
     P += L;
     if( res.len <  STR_MAX_LEN && P < IN1.len)
     {
         to_copy = IN1.len - P;
-        memcpy(&res.body[res.len], &IN1.body[P] , to_copy);
+        iec_lib_memcpy(&res.body[res.len], &IN1.body[P] , to_copy);
         res.len += to_copy;
     }
 

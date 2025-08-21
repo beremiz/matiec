@@ -29,17 +29,14 @@
 #ifndef _IEC_STD_LIB_H
 #define _IEC_STD_LIB_H
 
-
+/*
+ * Standard headers, exclusively for definitions, macros and inline code.
+ * Beware not to call directly any libc functions from these headers.
+ */
 #include <limits.h>
 #include <float.h>
-#include <math.h>
 #include <stdint.h>
-#include <ctype.h>
-#include <time.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stddef.h>
 #include <stdarg.h>
 
 #ifdef DEBUG_IEC
@@ -56,6 +53,46 @@
 #include "iec_types_all.h"
 
 extern TIME __CURRENT_TIME;
+
+/*
+ * Replacement for libc functions in case libc isn't directly available
+ */
+
+// Redirected snprintf function (calls runtime's implementation)
+int iec_lib_snprintf(char *__s, size_t __maxlen, const char *__format, ...);
+int iec_lib_snprintf(char *__s, size_t __maxlen, const char *__format, ...);
+double iec_lib_acos(double x);
+double iec_lib_asin(double x);
+double iec_lib_atan(double x);
+double iec_lib_cos(double x);
+double iec_lib_exp(double x);
+double iec_lib_fmod(double x, double y);
+double iec_lib_log(double x);
+double iec_lib_log10(double x);
+double iec_lib_pow(double x, double y);
+double iec_lib_sin(double x);
+double iec_lib_sqrt(double x);
+double iec_lib_tan(double x);
+
+#define iec_lib_memcpy(dest, src, n) __builtin_memcpy(dest, src, n)
+#define iec_lib_memcmp(s1, s2, n) __builtin_memcmp(s1, s2, n)
+
+// Replacement for toupper function
+static inline int iec_lib_toupper(int c) {
+    return (c >= 'a' && c <= 'z') ? c - 32 : c;
+}
+
+typedef struct {
+    int quot;
+    int rem;
+} iec_lib_div_t;
+
+static inline iec_lib_div_t iec_lib_div(int n, int d) {
+    iec_lib_div_t result;
+    result.quot = n / d;
+    result.rem = n % d;
+    return result;
+}
 
 /* TODO
 typedef struct {
@@ -137,7 +174,7 @@ typedef union __IL_DEFVAR_T {
 /* function that generates an IEC runtime error */
 static inline void __iec_error(void) {
   /* TODO... */
-  fprintf(stderr, "IEC 61131-3 runtime error.\n");
+  /* fprintf(stderr, "IEC 61131-3 runtime error.\n"); */
   /*exit(1);*/
 }
 
@@ -147,7 +184,7 @@ static inline void __iec_error(void) {
 /*******************/
 
 static inline double __expt(double in1, double in2) {
-  return pow(in1, in2);
+  return iec_lib_pow(in1, in2);
 }
 
 
@@ -362,8 +399,8 @@ static inline TIME __time_sub(TIME IN1, TIME IN2){
 }
 static inline TIME __time_mul(TIME IN1, LREAL IN2){
   LREAL s_f = IN1.tv_sec * IN2;
-  time_t s = (time_t)s_f;
-  div_t ns = div((int)((LREAL)IN1.tv_nsec * IN2), 1000000000);
+  uint64_t s = (uint64_t)s_f;
+  iec_lib_div_t ns = iec_lib_div((int)((LREAL)IN1.tv_nsec * IN2), 1000000000);
   TIME res = {(long)s + ns.quot,
 		      (long)ns.rem + (s_f - s) * 1000000000 };
   __normalize_timespec(&res);
@@ -371,7 +408,7 @@ static inline TIME __time_mul(TIME IN1, LREAL IN2){
 }
 static inline TIME __time_div(TIME IN1, LREAL IN2){
   LREAL s_f = IN1.tv_sec / IN2;
-  time_t s = (time_t)s_f;
+  uint64_t s = (uint64_t)s_f;
   TIME res = {(long)s,
               (long)(IN1.tv_nsec / IN2 + (s_f - s) * 1000000000) };
   __normalize_timespec(&res);
@@ -386,7 +423,7 @@ static inline TIME __time_div(TIME IN1, LREAL IN2){
     /*  REAL_TO_INT  */
     /*****************/
 static inline LINT __real_round(LREAL IN) {
-	return fmod(IN, 1) == 0 ? ((LINT)IN / 2) * 2 : (LINT)IN;
+	return iec_lib_fmod(IN, 1) == 0 ? ((LINT)IN / 2) * 2 : (LINT)IN;
 }
 static inline LINT __preal_to_sint(LREAL IN) {
    return IN >= 0 ? __real_round(IN + 0.5) : __real_round(IN - 0.5);
@@ -408,28 +445,28 @@ static inline STRING __bool_to_string(BOOL IN) {
 static inline STRING __bit_to_string(LWORD IN) {
     STRING res;
     res = __INIT_STRING;
-    res.len = snprintf((char*)res.body, STR_MAX_LEN, "16#%llx",(long long unsigned int)IN);
+    res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "16#%llx",(long long unsigned int)IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
 static inline STRING __real_to_string(LREAL IN) {
     STRING res;
     res = __INIT_STRING;
-    res.len = snprintf((char*)res.body, STR_MAX_LEN, "%.10g", IN);
+    res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "%.10g", IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
 static inline STRING __sint_to_string(LINT IN) {
     STRING res;
     res = __INIT_STRING;
-    res.len = snprintf((char*)res.body, STR_MAX_LEN, "%lld", (long long int)IN);
+    res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "%lld", (long long int)IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
 static inline STRING __uint_to_string(ULINT IN) {
     STRING res;
     res = __INIT_STRING;
-    res.len = snprintf((char*)res.body, STR_MAX_LEN, "%llu", (long long unsigned int)IN);
+    res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "%llu", (long long unsigned int)IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
@@ -438,9 +475,9 @@ static inline STRING __uint_to_string(ULINT IN) {
     /***************/
 static inline BOOL __string_to_bool(STRING IN) {
     int i;
-    if (IN.len == 1) return !memcmp(&IN.body,"1", IN.len);
-    for (i = 0; i < IN.len; i++) IN.body[i] = toupper(IN.body[i]);
-    return IN.len == 4 ? !memcmp(&IN.body,"TRUE", IN.len) : 0;
+    if (IN.len == 1) return !iec_lib_memcmp(&IN.body,"1", IN.len);
+    for (i = 0; i < IN.len; i++) IN.body[i] = iec_lib_toupper(IN.body[i]);
+    return IN.len == 4 ? !iec_lib_memcmp(&IN.body,"TRUE", IN.len) : 0;
 }
 
 static inline LINT __pstring_to_sint(STRING* IN) {
@@ -507,20 +544,107 @@ static inline LINT __pstring_to_sint(STRING* IN) {
     return res;
 }
 
+static inline LREAL __iec_lib_atof(char *str, __strlen_t l) {
+    double result = 0.0;
+    double fraction = 0.0;
+    double exponent = 1;
+    int divisor = 1;
+    int sign = 1;
+    int seen_dot = 0;
+    int seen_exponent = 0;
+    char* end = str + l; // l cant be 0 if is_real
+
+    // Handle sign
+    if (*str == '-') {
+        sign = -1;
+        str++;
+    }
+    // Parse digits
+    while (str < end) {
+        if (seen_exponent) {
+            if (*str >= '0' && *str <= '9') {
+                exponent = exponent * 10 + (*str - '0');
+            }
+            str++;
+        } else if (seen_dot) {
+            // Handle exponent only if . was seen already
+            if (*str == 'E') {
+                seen_exponent = 1;
+                str++;
+                if (str < end && *str == '-') {
+                    exponent = -1;
+                    str++;
+                }
+            } else {
+                if (*str >= '0' && *str <= '9') {
+                    fraction = fraction * 10.0 + (*str - '0');
+                    divisor *= 10;
+                }
+                str++;
+            }
+        } else if (*str == '.') {
+            seen_dot = 1;
+            str++;
+        } else {
+            if (*str >= '0' && *str <= '9') {
+                result = result * 10.0 + (*str - '0');
+            }
+            str++;
+        }
+    }
+
+    result += fraction / divisor;
+    if (seen_exponent) {
+        result *= iec_lib_pow(10, exponent);
+    }
+    return (LREAL) (sign * result);
+}
+
+static inline LREAL __string_to_lreal(STRING* IN) {
+    int is_real = 0;
+    char *str = (char*)IN->body;
+    __strlen_t l = IN->len;
+
+    if((l > 5
+       && str[0]=='R'
+       && str[1]=='E'
+       && str[2]=='A'
+       && str[3]=='L'
+       && str[4]=='#')) {
+        str += 5;
+        l -= 5;
+        is_real = 1;
+    } else if((l > 6
+       && str[0]=='L'
+       && str[1]=='R'
+       && str[2]=='E'
+       && str[3]=='A'
+       && str[4]=='L'
+       && str[5]=='#')) {
+        str += 6;
+        l -= 6;
+        is_real = 1;
+    } else {
+        /* search the dot */
+        __strlen_t _l = l;
+        while(_l > 0 && str[--_l] != '.');
+        is_real = (_l != 0);
+    }
+
+    if(is_real){
+        return __iec_lib_atof(str, l);
+    }else{
+        return (LREAL)__pstring_to_sint(IN);
+    }
+
+
+}
+
+
 static inline LINT  __string_to_sint(STRING IN) {return (LINT)__pstring_to_sint(&IN);}
 static inline LWORD __string_to_bit (STRING IN) {return (LWORD)__pstring_to_sint(&IN);}
 static inline ULINT __string_to_uint(STRING IN) {return (ULINT)__pstring_to_sint(&IN);}
-static inline LREAL __string_to_real(STRING IN) {
-    __strlen_t l;
-    l = IN.len;
-    /* search the dot */
-    while(l > 0 && IN.body[--l] != '.');
-    if(l != 0){
-        return atof((const char *)&IN.body);
-    }else{
-        return (LREAL)__pstring_to_sint(&IN);
-    }
-}
+static inline LREAL __string_to_real(STRING IN) {return (REAL)__string_to_lreal(&IN);}
 
     /***************/
     /*   TO_TIME   */
@@ -554,7 +678,7 @@ static inline TIME __string_to_time(STRING IN){
     l = IN.len;
     while(l > 0 && IN.body[--l] != '.');
     if(l != 0){
-        LREAL IN_val = atof((const char *)&IN.body);
+        LREAL IN_val = __iec_lib_atof(IN.body, IN.len);
         return  (TIME){(long)IN_val, (long)(IN_val - (LINT)IN_val)*1000000000};
     }else{
         return  (TIME){(long)__pstring_to_sint(&IN), 0};
@@ -570,25 +694,25 @@ static inline LREAL __time_to_real(TIME IN){
 static inline LINT __time_to_int(TIME IN) {return IN.tv_sec;}
 static inline STRING __time_to_string(TIME IN){
     STRING res;
-    div_t days;
+    iec_lib_div_t days;
     /*t#5d14h12m18s3.5ms*/
     res = __INIT_STRING;
-    days = div(IN.tv_sec, SECONDS_PER_DAY);
+    days = iec_lib_div(IN.tv_sec, SECONDS_PER_DAY);
     if(!days.rem && IN.tv_nsec == 0){
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd", days.quot);
+        res.len = iec_lib_snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd", days.quot);
     }else{
-        div_t hours = div(days.rem, SECONDS_PER_HOUR);
+        iec_lib_div_t hours = iec_lib_div(days.rem, SECONDS_PER_HOUR);
         if(!hours.rem && IN.tv_nsec == 0){
-            res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh", days.quot, hours.quot);
+            res.len = iec_lib_snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh", days.quot, hours.quot);
         }else{
-            div_t minuts = div(hours.rem, SECONDS_PER_MINUTE);
+            iec_lib_div_t minuts = iec_lib_div(hours.rem, SECONDS_PER_MINUTE);
             if(!minuts.rem && IN.tv_nsec == 0){
-                res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm", days.quot, hours.quot, minuts.quot);
+                res.len = iec_lib_snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm", days.quot, hours.quot, minuts.quot);
             }else{
                 if(IN.tv_nsec == 0){
-                    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm%ds", days.quot, hours.quot, minuts.quot, minuts.rem);
+                    res.len = iec_lib_snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm%ds", days.quot, hours.quot, minuts.quot, minuts.rem);
                 }else{
-                    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm%ds%gms", days.quot, hours.quot, minuts.quot, minuts.rem, (LREAL)IN.tv_nsec / 1000000);
+                    res.len = iec_lib_snprintf((char*)&res.body, STR_MAX_LEN, "T#%dd%dh%dm%ds%gms", days.quot, hours.quot, minuts.quot, minuts.rem, (LREAL)IN.tv_nsec / 1000000);
                 }
             }
         }
@@ -602,7 +726,7 @@ static inline STRING __date_to_string(DATE IN){
     /* D#1984-06-25 */
     broken_down_time = convert_seconds_to_date_and_time(IN.tv_sec);
     res = __INIT_STRING;
-    res.len = snprintf((char*)&res.body, STR_MAX_LEN, "D#%d-%2.2d-%2.2d",
+    res.len = iec_lib_snprintf((char*)&res.body, STR_MAX_LEN, "D#%d-%2.2d-%2.2d",
              broken_down_time.tm_year,
              broken_down_time.tm_mon,
              broken_down_time.tm_day);
@@ -612,7 +736,7 @@ static inline STRING __date_to_string(DATE IN){
 static inline STRING __tod_to_string(TOD IN){
     STRING res;
     tm broken_down_time;
-    time_t seconds;
+    uint64_t seconds;
     /* TOD#15:36:55.36 */
     seconds = IN.tv_sec;
     if (seconds >= SECONDS_PER_DAY){
@@ -622,12 +746,12 @@ static inline STRING __tod_to_string(TOD IN){
     broken_down_time = convert_seconds_to_date_and_time(seconds);
     res = __INIT_STRING;
     if(IN.tv_nsec == 0){
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%2.2d",
+        res.len = iec_lib_snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%2.2d",
                  broken_down_time.tm_hour,
                  broken_down_time.tm_min,
                  broken_down_time.tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%09.6f",
+        res.len = iec_lib_snprintf((char*)&res.body, STR_MAX_LEN, "TOD#%2.2d:%2.2d:%09.6f",
                  broken_down_time.tm_hour,
                  broken_down_time.tm_min,
                  (LREAL)broken_down_time.tm_sec + (LREAL)IN.tv_nsec / 1e9);
@@ -641,7 +765,7 @@ static inline STRING __dt_to_string(DT IN){
     /* DT#1984-06-25-15:36:55.36 */
     broken_down_time = convert_seconds_to_date_and_time(IN.tv_sec);
     if(IN.tv_nsec == 0){
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%2.2d",
+        res.len = iec_lib_snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%2.2d",
                  broken_down_time.tm_year,
                  broken_down_time.tm_mon,
                  broken_down_time.tm_day,
@@ -649,7 +773,7 @@ static inline STRING __dt_to_string(DT IN){
                  broken_down_time.tm_min,
                  broken_down_time.tm_sec);
     }else{
-        res.len = snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%09.6f",
+        res.len = iec_lib_snprintf((char*)&res.body, STR_MAX_LEN, "DT#%d-%2.2d-%2.2d-%2.2d:%2.2d:%09.6f",
                  broken_down_time.tm_year,
                  broken_down_time.tm_mon,
                  broken_down_time.tm_day,
