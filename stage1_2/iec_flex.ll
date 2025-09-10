@@ -1004,7 +1004,7 @@ incompl_location	%[IQM]\*
 <body_state>{enable_code_generation_pragma}			append_bodystate_buffer(yytext); /* in body state we do not process any tokens, we simply store them for later processing! */
 	/* Any other pragma we find, we just pass it up to the syntax parser...   */
 	/* Note that the <body_state> state is exclusive, so we have to include it here too. */
-<body_state>{pragma}					append_bodystate_buffer(yytext); /* in body state we do not process any tokens, we simply store them for later processing! */
+<body_state>{pragma}		{ append_bodystate_buffer(yytext); unput_bodystate_buffer(); BEGIN(st_state); /*printf("returning start_ST_body_token\n");*/ return start_ST_body_token;}
 {pragma}	{/* return the pragmma without the enclosing '{' and '}' */
 		 int cut = yytext[1]=='{'?2:1;
 		 yytext[strlen(yytext)-cut] = '\0';
