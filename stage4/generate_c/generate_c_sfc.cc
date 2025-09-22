@@ -599,14 +599,20 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
             if ( (strcmp(qualifier, "P" ) == 0) || 
                  (strcmp(qualifier, "P1") == 0) ||
                  (strcmp(qualifier, "P0") == 0)) {
-              if (strcmp(qualifier, "P0") == 0)
+              if (strcmp(qualifier, "P0") == 0) {
                 s4o.print(s4o.indent_spaces + "if (desactivated) ");
-              else
+                print_set_var_or_action_state(current_action, "1");
+                s4o.print("\n" + s4o.indent_spaces + "else if (activated || active)");
+                print_set_var_or_action_state(current_action, "0");
+                s4o.print(";\n");
+              }
+              else {
                 s4o.print(s4o.indent_spaces + "if (activated)    ");
-              print_set_var_or_action_state(current_action, "1");
-              s4o.print("\n" + s4o.indent_spaces + "else              ");
-              print_set_var_or_action_state(current_action, "0");
-              s4o.print(";\n");
+                print_set_var_or_action_state(current_action, "1");
+                s4o.print("\n" + s4o.indent_spaces + "else if (desactivated || active)");
+                print_set_var_or_action_state(current_action, "0");
+                s4o.print(";\n");
+              }
               return NULL;
             }
             /* SL qualifier */
