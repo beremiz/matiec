@@ -6721,7 +6721,11 @@ eol_list:
 instruction_list:
   il_instruction
 	{$$ = new instruction_list_c(locloc(@$)); $$->add_element($1);}
+| any_pragma eol_list
+	{$$ = new instruction_list_c(locloc(@1)); $$->add_element($1);} /* locloc(@1) is not a bug! We ignore trailing EOLs when determining symbol location! */
 | instruction_list il_instruction
+	{$$ = $1; $$->add_element($2);}
+| instruction_list any_pragma
 	{$$ = $1; $$->add_element($2);}
 ;
 
