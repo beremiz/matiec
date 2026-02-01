@@ -172,6 +172,12 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
             s4o.print(s4o.indent_spaces + "char desactivated = !active && ");
             print_step_argument(current_step, "prev_state");
             s4o.print(";\n\n");
+
+            // Avoid unused variable warnings
+            s4o.print(s4o.indent_spaces + "(void)active;\n");
+            s4o.print(s4o.indent_spaces + "(void)activated;\n");
+            s4o.print(s4o.indent_spaces + "(void)desactivated;\n\n");
+
             symbol->action_association_list->accept(*this);
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}\n\n");
@@ -204,6 +210,12 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
             s4o.print(s4o.indent_spaces + "char desactivated = !active && ");
             print_step_argument(current_step, "prev_state");
             s4o.print(";\n\n");
+
+            // Avoid unused variable warnings
+            s4o.print(s4o.indent_spaces + "(void)active;\n");
+            s4o.print(s4o.indent_spaces + "(void)activated;\n");
+            s4o.print(s4o.indent_spaces + "(void)desactivated;\n\n");
+            
             symbol->action_association_list->accept(*this);
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}\n\n");

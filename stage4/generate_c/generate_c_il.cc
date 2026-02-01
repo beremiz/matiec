@@ -229,11 +229,18 @@ class generate_c_il_c: public generate_c_base_and_typeid_c, il_default_variable_
     /* Declare an implicit IL variable... */
     void declare_implicit_variable(il_default_variable_c *implicit_var) {
       s4o.print(s4o.indent_spaces);
+      implicit_var->datatype = NULL;
+
       s4o.print(IL_DEFVAR_T);
       s4o.print(" ");
-      implicit_var->datatype = NULL;
       implicit_var->accept(*this);
       s4o.print(";\n");
+
+      // Avoid unused variable warnings
+      s4o.print("(void)");
+      implicit_var->accept(*this);
+      s4o.print(";\n");
+
     }
     
   public:  
