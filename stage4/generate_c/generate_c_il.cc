@@ -962,13 +962,13 @@ void *visit(il_function_call_c *symbol) {
         if (!has_output_params) {
           if (nb_param > 0)
             s4o.print(",\n"+s4o.indent_spaces);
-            if (param_value == NULL) {
-              s4o.print("NULL");
-            } else {
-              wanted_variablegeneration = fparam_output_vg;
-              param_value->accept(*this);
-              wanted_variablegeneration = expression_vg;
-            }
+          if (param_value == NULL) {
+            s4o.print("NULL");
+          } else {
+            wanted_variablegeneration = fparam_output_vg;
+            param_value->accept(*this);
+            wanted_variablegeneration = expression_vg;
+          }
           nb_param++;
         }
         break;
