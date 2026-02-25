@@ -385,19 +385,97 @@ class generate_c_base_c: public iterator_visitor_c {
 /******************************/
 /* B 1.2.1 - Numeric Literals */
 /******************************/
-    void *visit(real_c *symbol) {return print_striped_token(symbol);}
-    void *visit(integer_c *symbol) {return print_striped_token(symbol);}
-    void *visit(binary_integer_c *symbol) {return print_striped_binary_token(symbol, 2);}
-    void *visit(octal_integer_c *symbol) {s4o.print("0"); return print_striped_token(symbol, 2);}
-    void *visit(hex_integer_c *symbol) {s4o.print("0x"); return print_striped_token(symbol, 3);}
+    void *visit(real_c *symbol) {
+      if (NULL != symbol->datatype && get_datatype_info_c::is_ANY_REAL_compatible(symbol->datatype)) {
+        s4o.print("__");
+        symbol->datatype->accept(*this);
+        s4o.print("_LITERAL(");
+        print_striped_token(symbol);
+        s4o.print(")");
+        return NULL;
+      }
+      return print_striped_token(symbol);
+    }
+    void *visit(integer_c *symbol) {
+      if (NULL != symbol->datatype &&
+          (get_datatype_info_c::is_ANY_INT_compatible(symbol->datatype) ||
+           get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype))) {
+        s4o.print("__");
+        symbol->datatype->accept(*this);
+        s4o.print("_LITERAL(");
+        print_striped_token(symbol);
+        s4o.print(")");
+        return NULL;
+      }
+      return print_striped_token(symbol);
+    }
+    void *visit(binary_integer_c *symbol) {
+      if (NULL != symbol->datatype &&
+          (get_datatype_info_c::is_ANY_INT_compatible(symbol->datatype) ||
+           get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype))) {
+        s4o.print("__");
+        symbol->datatype->accept(*this);
+        s4o.print("_LITERAL(");
+        print_striped_binary_token(symbol, 2);
+        s4o.print(")");
+        return NULL;
+      }
+      return print_striped_binary_token(symbol, 2);
+    }
+    void *visit(octal_integer_c *symbol) {
+      if (NULL != symbol->datatype &&
+          (get_datatype_info_c::is_ANY_INT_compatible(symbol->datatype) ||
+           get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype))) {
+        s4o.print("__");
+        symbol->datatype->accept(*this);
+        s4o.print("_LITERAL(0");
+        print_striped_token(symbol, 2);
+        s4o.print(")");
+        return NULL;
+      }
+      s4o.print("0");
+      return print_striped_token(symbol, 2);
+    }
+    void *visit(hex_integer_c *symbol) {
+      if (NULL != symbol->datatype &&
+          (get_datatype_info_c::is_ANY_INT_compatible(symbol->datatype) ||
+           get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype))) {
+        s4o.print("__");
+        symbol->datatype->accept(*this);
+        s4o.print("_LITERAL(0x");
+        print_striped_token(symbol, 3);
+        s4o.print(")");
+        return NULL;
+      }
+      s4o.print("0x");
+      return print_striped_token(symbol, 3);
+    }
 
     void *visit(neg_real_c *symbol) {
+      if (NULL != symbol->datatype && get_datatype_info_c::is_ANY_REAL_compatible(symbol->datatype)) {
+        s4o.print("__");
+        symbol->datatype->accept(*this);
+        s4o.print("_LITERAL(-");
+        symbol->exp->accept(*this);
+        s4o.print(")");
+        return NULL;
+      }
       s4o.print("-");
       symbol->exp->accept(*this);
       return NULL;
     }
 
     void *visit(neg_integer_c *symbol) {
+      if (NULL != symbol->datatype &&
+          (get_datatype_info_c::is_ANY_INT_compatible(symbol->datatype) ||
+           get_datatype_info_c::is_ANY_BIT_compatible(symbol->datatype))) {
+        s4o.print("__");
+        symbol->datatype->accept(*this);
+        s4o.print("_LITERAL(-");
+        symbol->exp->accept(*this);
+        s4o.print(")");
+        return NULL;
+      }
       s4o.print("-");
       symbol->exp->accept(*this);
       return NULL;
