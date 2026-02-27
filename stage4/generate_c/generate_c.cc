@@ -888,16 +888,19 @@ class generate_c_pous_c {
       generate_c_base_and_typeid_c   print_base(&s4o);
       
       TRACE("function_declaration_c");
-    
-      /* (A) Function declaration... */
+
+      /* Functions have no struct declaration in .h file */
+      if (print_declaration) return;
+
+      /* (A) Function definition... */
       /* (A.1) Function return type */
-      s4o.print("// FUNCTION\n");
+      s4o.print("static ");
       symbol->type_name->accept(print_base); /* return type */
       s4o.print(" ___");
       /* (A.2) Function name */
       symbol->derived_function_name->accept(print_base);
       s4o.print("(");
-    
+
       /* (A.3) Function parameters */
       s4o.indent_right();
       vardecl = new generate_c_vardecl_c(&s4o,
@@ -909,15 +912,11 @@ class generate_c_pous_c {
                                          generate_c_vardecl_c::eno_vt);
       vardecl->print(symbol->var_declarations_list);
       delete vardecl;
-      
+
       s4o.indent_left();
-      
+
       s4o.print(")");
-      
-      /* If we only want the declaration/prototype, then return!! */
-      if (print_declaration) 
-        {s4o.print(";\n"); return;}
-      
+
       /* continue generating the function definition/code... */
       s4o.print("\n" + s4o.indent_spaces + "{\n");
     
@@ -1111,26 +1110,20 @@ class generate_c_pous_c {
         generate_c_inlinefcall_c *inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
         symbol->fblock_body->accept(*inlinedecl);
         delete inlinedecl;
-      }
-      
-      /* (B) Constructor */
-      /* (B.1) Constructor name... */
-      s4o.print(s4o.indent_spaces + "void ");
-      symbol->fblock_name->accept(print_base);
-      s4o.print(FB_INIT_SUFFIX);
-      s4o.print("(");
-    
-      /* first and only parameter is a pointer to the data */
-      symbol->fblock_name->accept(print_base);
-      s4o.print(FB_DATASTRUCTURE_SUFFIX);
-      s4o.print(" *");
-      s4o.print(FB_FUNCTION_PARAM);
-      s4o.print(", BOOL retain)");
 
-      if (print_declaration) {
-        s4o.print(";\n");
-      } else {
-        s4o.print(" {\n");
+        /* (B) Constructor */
+        /* (B.1) Constructor name... */
+        s4o.print(s4o.indent_spaces + "static void ");
+        symbol->fblock_name->accept(print_base);
+        s4o.print(FB_INIT_SUFFIX);
+        s4o.print("(");
+
+        /* first and only parameter is a pointer to the data */
+        symbol->fblock_name->accept(print_base);
+        s4o.print(FB_DATASTRUCTURE_SUFFIX);
+        s4o.print(" *");
+        s4o.print(FB_FUNCTION_PARAM);
+        s4o.print(", BOOL retain) {\n");
         s4o.indent_right();
       
         /* (B.2) Member initializations... */
@@ -1163,26 +1156,20 @@ class generate_c_pous_c {
         /* (C.2) Action definitions */
         sfcdecl->generate(symbol->fblock_body, generate_c_sfcdecl_c::actiondef_sd);
         delete sfcdecl;
-      }
-      
-      /* (C.3) Function declaration */
-      s4o.print("// Code part\n");
-      /* function interface */
-      s4o.print("void ");
-      symbol->fblock_name->accept(print_base);
-      s4o.print(FB_FUNCTION_SUFFIX);
-      s4o.print("(");
-      /* first and only parameter is a pointer to the data */
-      symbol->fblock_name->accept(print_base);
-      s4o.print(FB_DATASTRUCTURE_SUFFIX);
-      s4o.print(" *");
-      s4o.print(FB_FUNCTION_PARAM);
-      s4o.print(")");
 
-      if (print_declaration) {
-        s4o.print(";\n");
-      } else {
-        s4o.print(" {\n");
+        /* (C.3) Function definition */
+        s4o.print("// Code part\n");
+        /* function interface */
+        s4o.print("static void ");
+        symbol->fblock_name->accept(print_base);
+        s4o.print(FB_FUNCTION_SUFFIX);
+        s4o.print("(");
+        /* first and only parameter is a pointer to the data */
+        symbol->fblock_name->accept(print_base);
+        s4o.print(FB_DATASTRUCTURE_SUFFIX);
+        s4o.print(" *");
+        s4o.print(FB_FUNCTION_PARAM);
+        s4o.print(") {\n");
         s4o.indent_right();
 
         // Only generate the code that controls the execution of the function's body if the
@@ -1316,33 +1303,24 @@ class generate_c_pous_c {
         symbol->program_type_name->accept(print_base);
         s4o.print(FB_DATASTRUCTURE_SUFFIX);
         s4o.print(";\n\n");
-      }
-      
-      if (!print_declaration) {      
+      } else {
         /* (A.6) Function Block inline function declaration for function invocation */
         generate_c_inlinefcall_c *inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
         symbol->function_block_body->accept(*inlinedecl);
         delete inlinedecl;
-      }
-    
-      /* (B) Constructor */
-      /* (B.1) Constructor name... */
-      s4o.print(s4o.indent_spaces + "void ");
-      symbol->program_type_name->accept(print_base);
-      s4o.print(FB_INIT_SUFFIX);
-      s4o.print("(");
-    
-      /* first and only parameter is a pointer to the data */
-      symbol->program_type_name->accept(print_base);
-      s4o.print(FB_DATASTRUCTURE_SUFFIX);
-      s4o.print(" *");
-      s4o.print(FB_FUNCTION_PARAM);
-      s4o.print(", BOOL retain)");
+        /* (B) Constructor */
+        /* (B.1) Constructor name... */
+        s4o.print(s4o.indent_spaces + "static void ");
+        symbol->program_type_name->accept(print_base);
+        s4o.print(FB_INIT_SUFFIX);
+        s4o.print("(");
 
-      if (print_declaration) {
-        s4o.print(";\n");
-      } else {
-        s4o.print(" {\n");
+        /* first and only parameter is a pointer to the data */
+        symbol->program_type_name->accept(print_base);
+        s4o.print(FB_DATASTRUCTURE_SUFFIX);
+        s4o.print(" *");
+        s4o.print(FB_FUNCTION_PARAM);
+        s4o.print(", BOOL retain) {\n");
         s4o.indent_right();
       
         /* (B.2) Member initializations... */
@@ -1366,9 +1344,7 @@ class generate_c_pous_c {
       
         s4o.indent_left();
         s4o.print(s4o.indent_spaces + "}\n\n");
-      }
-    
-      if (!print_declaration) {    
+
         /* (C) Function with PROGRAM body */
         /* (C.1) Step definitions */
         sfcdecl = new generate_c_sfcdecl_c(&s4o, symbol, FB_FUNCTION_PARAM"->");
@@ -1377,26 +1353,20 @@ class generate_c_pous_c {
         /* (C.2) Action definitions */
         sfcdecl->generate(symbol->function_block_body, generate_c_sfcdecl_c::actiondef_sd);
         delete sfcdecl;
-      }
-      
-      /* (C.3) Function declaration */
-      s4o.print("// Code part\n");
-      /* function interface */
-      s4o.print("void ");
-      symbol->program_type_name->accept(print_base);
-      s4o.print(FB_FUNCTION_SUFFIX);
-      s4o.print("(");
-      /* first and only parameter is a pointer to the data */
-      symbol->program_type_name->accept(print_base);
-      s4o.print(FB_DATASTRUCTURE_SUFFIX);
-      s4o.print(" *");
-      s4o.print(FB_FUNCTION_PARAM);
-      s4o.print(")");
 
-      if (print_declaration) {
-        s4o.print(";\n");
-      } else {
-        s4o.print(" {\n");
+        /* (C.3) Function definition */
+        s4o.print("// Code part\n");
+        /* function interface */
+        s4o.print("static void ");
+        symbol->program_type_name->accept(print_base);
+        s4o.print(FB_FUNCTION_SUFFIX);
+        s4o.print("(");
+        /* first and only parameter is a pointer to the data */
+        symbol->program_type_name->accept(print_base);
+        s4o.print(FB_DATASTRUCTURE_SUFFIX);
+        s4o.print(" *");
+        s4o.print(FB_FUNCTION_PARAM);
+        s4o.print(") {\n");
         s4o.indent_right();
           
         /* (C.4) Initialize TEMP variables */
@@ -1433,6 +1403,80 @@ class generate_c_pous_c {
       }  
       return;
     }
+    /****************************************/
+    /* Forward declarations for .c file     */
+    /****************************************/
+    static void handle_function_fwd_decl(function_declaration_c *symbol, stage4out_c &s4o) {
+      generate_c_vardecl_c          *vardecl;
+      generate_c_base_and_typeid_c   print_base(&s4o);
+
+      s4o.print("static ");
+      symbol->type_name->accept(print_base);
+      s4o.print(" ___");
+      symbol->derived_function_name->accept(print_base);
+      s4o.print("(");
+      s4o.indent_right();
+      vardecl = new generate_c_vardecl_c(&s4o,
+                                         generate_c_vardecl_c::finterface_vf,
+                                         generate_c_vardecl_c::input_vt    |
+                                         generate_c_vardecl_c::output_vt   |
+                                         generate_c_vardecl_c::inoutput_vt |
+                                         generate_c_vardecl_c::en_vt       |
+                                         generate_c_vardecl_c::eno_vt);
+      vardecl->print(symbol->var_declarations_list);
+      delete vardecl;
+      s4o.indent_left();
+      s4o.print(");\n");
+    }
+
+    static void handle_function_block_fwd_decl(function_block_declaration_c *symbol, stage4out_c &s4o) {
+      generate_c_base_and_typeid_c print_base(&s4o);
+
+      s4o.print("static void ");
+      symbol->fblock_name->accept(print_base);
+      s4o.print(FB_INIT_SUFFIX);
+      s4o.print("(");
+      symbol->fblock_name->accept(print_base);
+      s4o.print(FB_DATASTRUCTURE_SUFFIX);
+      s4o.print(" *");
+      s4o.print(FB_FUNCTION_PARAM);
+      s4o.print(", BOOL retain);\n");
+
+      s4o.print("static void ");
+      symbol->fblock_name->accept(print_base);
+      s4o.print(FB_FUNCTION_SUFFIX);
+      s4o.print("(");
+      symbol->fblock_name->accept(print_base);
+      s4o.print(FB_DATASTRUCTURE_SUFFIX);
+      s4o.print(" *");
+      s4o.print(FB_FUNCTION_PARAM);
+      s4o.print(");\n");
+    }
+
+    static void handle_program_fwd_decl(program_declaration_c *symbol, stage4out_c &s4o) {
+      generate_c_base_and_typeid_c print_base(&s4o);
+
+      s4o.print("static void ");
+      symbol->program_type_name->accept(print_base);
+      s4o.print(FB_INIT_SUFFIX);
+      s4o.print("(");
+      symbol->program_type_name->accept(print_base);
+      s4o.print(FB_DATASTRUCTURE_SUFFIX);
+      s4o.print(" *");
+      s4o.print(FB_FUNCTION_PARAM);
+      s4o.print(", BOOL retain);\n");
+
+      s4o.print("static void ");
+      symbol->program_type_name->accept(print_base);
+      s4o.print(FB_FUNCTION_SUFFIX);
+      s4o.print("(");
+      symbol->program_type_name->accept(print_base);
+      s4o.print(FB_DATASTRUCTURE_SUFFIX);
+      s4o.print(" *");
+      s4o.print(FB_FUNCTION_PARAM);
+      s4o.print(");\n");
+    }
+
 }; /* generate_c_pous_c */
 
     
@@ -1532,6 +1576,8 @@ void *visit(configuration_declaration_c *symbol) {
   vardecl->print(symbol);
   delete vardecl;
   s4o.print("\n");
+
+  s4o.print("#include \"POUS.c\"\n\n");
 
   /* (A.3) Declare global prototypes in include file */
   vardecl = new generate_c_vardecl_c(&s4o_incl,
@@ -2543,11 +2589,18 @@ class generate_c_c: public iterator_visitor_c {
     const char *current_builddir;
 
     bool        allow_output;
-    
+
+    typedef enum {
+      pou_pass_headers_and_types,
+      pou_pass_fwd_decls,
+      pou_pass_definitions
+    } pou_generation_pass_t;
+    pou_generation_pass_t pou_generation_pass;
+
     unsigned long long common_ticktime;
 
   public:
-    generate_c_c(stage4out_c *s4o_ptr, const char *builddir): 
+    generate_c_c(stage4out_c *s4o_ptr, const char *builddir):
             s4o(*s4o_ptr),
             pous_s4o(builddir, "POUS", "c"),
             pous_incl_s4o(builddir, "POUS", "h"),
@@ -2559,6 +2612,7 @@ class generate_c_c: public iterator_visitor_c {
       current_builddir = builddir;
       current_configuration = NULL;
       allow_output = true;
+      pou_generation_pass = pou_pass_headers_and_types;
     }
             
     ~generate_c_c(void) {}
@@ -2605,11 +2659,26 @@ class generate_c_c: public iterator_visitor_c {
       
       pous_incl_s4o.print("#include \"accessor.h\"\n#include \"iec_std_lib.h\"\n\n");
 
+      /* First pass: type definitions + POU struct declarations to POUS.h */
+      pou_generation_pass = pou_pass_headers_and_types;
       for(int i = 0; i < symbol->n; i++) {
         symbol->get_element(i)->accept(*this);
       }
 
       pous_incl_s4o.print("#endif //__POUS_H\n");
+
+      /* Second pass: collect all POU forward declarations at the beginning of POUS.c */
+      pou_generation_pass = pou_pass_fwd_decls;
+      for(int i = 0; i < symbol->n; i++) {
+        symbol->get_element(i)->accept(*this);
+      }
+      pous_s4o.print("\n");
+
+      /* Third pass: generate all POU definitions in POUS.c */
+      pou_generation_pass = pou_pass_definitions;
+      for(int i = 0; i < symbol->n; i++) {
+        symbol->get_element(i)->accept(*this);
+      }
       
       generate_var_list_c generate_var_list(&variables_s4o, symbol);
       generate_var_list.generate_programs(symbol);
@@ -2643,6 +2712,7 @@ class generate_c_c: public iterator_visitor_c {
 
     /* helper symbol for data_type_declaration */
     void *visit(type_declaration_list_c *symbol) {
+      if (pou_generation_pass != pou_pass_headers_and_types) return NULL;
       for(int i = 0; i < symbol->n; i++) {
         symbol->get_element(i)->accept(generate_c_implicit_typedecl);
         symbol->get_element(i)->accept(generate_c_typedecl);
@@ -2659,6 +2729,7 @@ class generate_c_c: public iterator_visitor_c {
 #define handle_pou(fname,pname) \
       if (!allow_output) return NULL;\
       if (generate_pou_filepairs__) {\
+        if (pou_generation_pass != pou_pass_headers_and_types) return NULL;\
         const char *pou_name = get_datatype_info_c::get_id_str(pname);\
         stage4out_c s4o_c(current_builddir, pou_name, "c");\
         stage4out_c s4o_h(current_builddir, pou_name, "h");\
@@ -2667,8 +2738,9 @@ class generate_c_c: public iterator_visitor_c {
         s4o_h.print("#define __");  s4o_h.print(pou_name); s4o_h.print("_H\n");\
         generate_c_implicit_typedecl_c generate_c_implicit_typedecl__(&s4o_h);\
         symbol->accept(generate_c_implicit_typedecl__); /* generate implicitly delcared datatypes (arrays and ref_to) */\
-        generate_c_pous_c::fname(symbol, s4o_h, true); /* generate the <pou_name>.h file */\
-        generate_c_pous_c::fname(symbol, s4o_c, false);/* generate the <pou_name>.c file */\
+        generate_c_pous_c::fname(symbol, s4o_h, true); /* add types the <pou_name>.h file */\
+        generate_c_pous_c::fname##_fwd_decl(symbol, s4o_h); /* add fw decl to the <pou_name>.h file */\
+        generate_c_pous_c::fname(symbol, s4o_c, false);/* add functions the <pou_name>.c file */\
         s4o_h.print("#endif /* __");  s4o_h.print(pou_name); s4o_h.print("_H */\n");\
         /* add #include directives to the POUS.h and POUS.c files... */\
         pous_incl_s4o.print("#include \"");\
@@ -2677,10 +2749,17 @@ class generate_c_c: public iterator_visitor_c {
         pous_s4o.     print(pou_name);\
         pous_incl_s4o.print(".h\"\n");\
         pous_s4o.     print(".c\"\n");\
-      } else {\
-        symbol->accept(generate_c_implicit_typedecl);\
-        generate_c_pous_c::fname(symbol, pous_incl_s4o, true);\
-        generate_c_pous_c::fname(symbol, pous_s4o,      false);\
+      } else switch (pou_generation_pass) {\
+        case pou_pass_headers_and_types:\
+          symbol->accept(generate_c_implicit_typedecl);\
+          generate_c_pous_c::fname(symbol, pous_incl_s4o, true);\
+          break;\
+        case pou_pass_fwd_decls:\
+          generate_c_pous_c::fname##_fwd_decl(symbol, pous_s4o);\
+          break;\
+        case pou_pass_definitions:\
+          generate_c_pous_c::fname(symbol, pous_s4o, false);\
+          break;\
       }
 
 /***********************/
@@ -2712,6 +2791,7 @@ class generate_c_c: public iterator_visitor_c {
 /* B 1.7 Configuration elements */
 /********************************/
     void *visit(configuration_declaration_c *symbol) {
+      if (pou_generation_pass != pou_pass_definitions) return NULL;
       if (symbol->global_var_declarations != NULL)
         symbol->global_var_declarations->accept(generate_c_implicit_typedecl);
       static int configuration_count = 0;
