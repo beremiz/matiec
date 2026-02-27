@@ -1981,7 +1981,6 @@ END_RESOURCE
     void *visit(program_configuration_c *symbol) {
       switch (wanted_declaretype) {
         case declare_dt:
-          s4o.print(s4o.indent_spaces);
           symbol->program_type_name->accept(*this);
           s4o.print(FB_DATASTRUCTURE_SUFFIX);
           s4o.print(" ");
@@ -2052,7 +2051,7 @@ END_RESOURCE
       current_task_name = symbol->task_name;
       switch (wanted_declaretype) {
         case declare_dt:
-          s4o.print(s4o.indent_spaces + "BOOL ");
+          s4o.print(s4o.indent_spaces + "static BOOL ");
           current_task_name->accept(*this);
           s4o.print(";\n");
           symbol->task_initialization->accept(*this);
@@ -2079,7 +2078,7 @@ END_RESOURCE
       switch (wanted_declaretype) {
         case declare_dt:
           if (symbol->single_data_source != NULL) {
-            s4o.print(s4o.indent_spaces + "R_TRIG");
+            s4o.print(s4o.indent_spaces + "static R_TRIG");
             s4o.print(FB_DATASTRUCTURE_SUFFIX);
             s4o.print(" ");
             current_task_name->accept(*this);
