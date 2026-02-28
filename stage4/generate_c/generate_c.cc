@@ -1569,6 +1569,7 @@ void *visit(configuration_declaration_c *symbol) {
   s4o.print("\n");
   
   /* (A.2) Global variables */
+  s4o.print("#define GLOBAL_CAST\n");
   vardecl = new generate_c_vardecl_c(&s4o,
                                      generate_c_vardecl_c::local_vf,
                                      generate_c_vardecl_c::global_vt,
@@ -1893,6 +1894,7 @@ END_RESOURCE
 
       /* (A.2) Global variables... */
       if (current_global_vars != NULL) {
+        s4o.print("#define GLOBAL_CAST static\n");
         vardecl = new generate_c_vardecl_c(&s4o,
                                            generate_c_vardecl_c::local_vf,
                                            generate_c_vardecl_c::global_vt,

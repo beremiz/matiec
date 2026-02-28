@@ -8,34 +8,34 @@
 	__IEC_##type##_t name;
 #define __DECLARE_GLOBAL(type, domain, name)\
 	__IEC_##type##_t domain##__##name;\
-	static __IEC_##type##_t *GLOBAL__##name = &(domain##__##name);\
-	void __INIT_GLOBAL_##name(type value) {\
+	static __IEC_##type##_t* GLOBAL__##name = &(domain##__##name);\
+	GLOBAL_CAST void __INIT_GLOBAL_##name(type value) {\
 		(*GLOBAL__##name).value = value;\
 	}\
-	IEC_BYTE __IS_GLOBAL_##name##_FORCED(void) {\
+	GLOBAL_CAST IEC_BYTE __IS_GLOBAL_##name##_FORCED(void) {\
 		return (*GLOBAL__##name).flags & __IEC_FORCE_FLAG;\
 	}\
-	type* __GET_GLOBAL_##name(void) {\
+	GLOBAL_CAST type* __GET_GLOBAL_##name(void) {\
 		return &((*GLOBAL__##name).value);\
 	}
 #define __DECLARE_GLOBAL_FB(type, domain, name)\
 	type##_data__ domain##__##name;\
-	static type##_data__ *GLOBAL__##name = &(domain##__##name);\
-	type##_data__* __GET_GLOBAL_##name(void) {\
+	static type##_data__* GLOBAL__##name = &(domain##__##name);\
+	GLOBAL_CAST type##_data__* __GET_GLOBAL_##name(void) {\
 		return &(*GLOBAL__##name);\
 	}
 #define __DECLARE_GLOBAL_LOCATION(type, location)\
 	extern type *location;
 #define __DECLARE_GLOBAL_LOCATED(type, resource, name)\
 	__IEC_##type##_p resource##__##name;\
-	static __IEC_##type##_p *GLOBAL__##name = &(resource##__##name);\
-	void __INIT_GLOBAL_##name(type value) {\
+	static __IEC_##type##_p* GLOBAL__##name = &(resource##__##name);\
+	GLOBAL_CAST void __INIT_GLOBAL_##name(type value) {\
 		*((*GLOBAL__##name).value) = value;\
 	}\
-	IEC_BYTE __IS_GLOBAL_##name##_FORCED(void) {\
+	GLOBAL_CAST IEC_BYTE __IS_GLOBAL_##name##_FORCED(void) {\
 		return (*GLOBAL__##name).flags & __IEC_FORCE_FLAG;\
 	}\
-	type* __GET_GLOBAL_##name(void) {\
+	GLOBAL_CAST type* __GET_GLOBAL_##name(void) {\
 		return (*GLOBAL__##name).value;\
 	}
 #define __DECLARE_GLOBAL_PROTOTYPE(type, name)\
