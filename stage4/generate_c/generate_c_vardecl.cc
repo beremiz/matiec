@@ -241,16 +241,17 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
     /* array_initial_elements_list ',' array_initial_elements */
     void *visit(array_initial_elements_list_c *symbol) {
       switch (current_mode) {
-        case initializationvalue_am:
-          current_initialization_count = 0;
-          for (int i = 0; i < symbol->n; i++) {
-            if (current_initialization_count >= defined_values_count) {
-              if (defined_values_count >= array_size)
-                ERROR;
-              if (defined_values_count > 0)
-                s4o.print(",");
-              symbol->get_element(i)->accept(*this);
-              defined_values_count++;
+	        case initializationvalue_am:
+	          current_initialization_count = 0;
+	          for (int i = 0; i < symbol->n; i++) {
+	            if (current_initialization_count >= defined_values_count) {
+	              if (defined_values_count >= array_size)
+	                STAGE4_ERROR(symbol->get_element(i), symbol->get_element(i),
+	                             "Array initialization exceeds the array size declared in its type.");
+	              if (defined_values_count > 0)
+	                s4o.print(",");
+	              symbol->get_element(i)->accept(*this);
+	              defined_values_count++;
             }
             else {
               array_initial_elements_c *array_initial_element = dynamic_cast<array_initial_elements_c *>(symbol->get_element(i));
@@ -297,13 +298,14 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
               s4o.print(",");
             }
           }
-          else
-            current_initialization_count += initial_element_count - 1;
-          if (defined_values_count + initial_element_count > array_size)
-            ERROR;
-          for (unsigned long long int i = 0; i < initial_element_count; i++) {
-            if (i > 0)
-              s4o.print(",");
+	          else
+	            current_initialization_count += initial_element_count - 1;
+	          if (defined_values_count + initial_element_count > array_size)
+	            STAGE4_ERROR(symbol, symbol,
+	                         "Array initialization exceeds the array size declared in its type.");
+	          for (unsigned long long int i = 0; i < initial_element_count; i++) {
+	            if (i > 0)
+	              s4o.print(",");
             if (symbol->array_initial_element != NULL) {
               symbol->array_initial_element->accept(*this);
             }
@@ -2887,6 +2889,4 @@ SYM_REF2(fb_initialization_c, function_block_type_name, structure_initialization
 
 
 }; /* generate_c_vardecl_c */
-
-
 

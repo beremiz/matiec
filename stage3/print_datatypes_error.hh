@@ -161,6 +161,8 @@ class print_datatypes_error_c: public iterator_visitor_c {
     void *visit(simple_spec_init_c *symbol);
 //  void *visit(data_type_declaration_c *symbol); /* use base iterator_c method! */
     void *visit(enumerated_value_c *symbol);
+    void *visit(array_initial_elements_list_c *symbol);
+    void *visit(array_initial_elements_c *symbol);
 //  void *visit(structure_element_initialization_list_c *symbol);
     void *visit(structure_element_initialization_c *symbol);
 
@@ -341,7 +343,6 @@ class print_datatypes_error_c: public iterator_visitor_c {
     void *visit(repeat_statement_c *symbol);
 
 }; // print_datatypes_error_c
-
 
 
 
