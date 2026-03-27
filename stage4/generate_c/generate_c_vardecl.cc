@@ -247,7 +247,7 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
 	            if (current_initialization_count >= defined_values_count) {
 	              if (defined_values_count >= array_size)
 	                STAGE4_ERROR(symbol->get_element(i), symbol->get_element(i),
-	                             "Array initialization exceeds the array size declared in its type.");
+	                             "Invalid array initialization encountered during C code generation.");
 	              if (defined_values_count > 0)
 	                s4o.print(",");
 	              symbol->get_element(i)->accept(*this);
@@ -302,7 +302,7 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
 	            current_initialization_count += initial_element_count - 1;
 	          if (defined_values_count + initial_element_count > array_size)
 	            STAGE4_ERROR(symbol, symbol,
-	                         "Array initialization exceeds the array size declared in its type.");
+	                         "Invalid array initialization encountered during C code generation.");
 	          for (unsigned long long int i = 0; i < initial_element_count; i++) {
 	            if (i > 0)
 	              s4o.print(",");
@@ -2889,4 +2889,3 @@ SYM_REF2(fb_initialization_c, function_block_type_name, structure_initialization
 
 
 }; /* generate_c_vardecl_c */
-
