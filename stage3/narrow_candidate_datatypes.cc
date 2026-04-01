@@ -869,6 +869,7 @@ void *narrow_candidate_datatypes_c::narrow_var_declaration(symbol_c *type) {
 
 
 void *narrow_candidate_datatypes_c::visit(var1_init_decl_c             *symbol) {return narrow_var_declaration(symbol->spec_init);}
+void *narrow_candidate_datatypes_c::visit(edge_declaration_c           *symbol) {bool_type_name_c tmp_bool; return narrow_var_declaration(&tmp_bool);}
 void *narrow_candidate_datatypes_c::visit(array_var_init_decl_c        *symbol) {return narrow_var_declaration(symbol->array_spec_init);}
 void *narrow_candidate_datatypes_c::visit(structured_var_init_decl_c   *symbol) {return narrow_var_declaration(symbol->initialized_structure);}
 void *narrow_candidate_datatypes_c::visit(fb_name_decl_c               *symbol) {return narrow_var_declaration(symbol->fb_spec_init);}
@@ -1880,6 +1881,5 @@ void *narrow_candidate_datatypes_c::visit(repeat_statement_c *symbol) {
 		symbol->statement_list->accept(*this);
 	return NULL;
 }
-
 
 

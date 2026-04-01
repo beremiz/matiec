@@ -313,12 +313,9 @@ class print_function_parameter_data_types_c: public generate_c_base_and_typeid_c
     //void *visit(input_declaration_list_c *symbol) {// iterate through list}
 
     void *visit(edge_declaration_c *symbol) {
-      {STAGE4_ERROR(symbol, symbol, "R_EDGE and F_EDGE declarations are not currently supported"); ERROR;}
-      /* 
       current_type = &tmp_bool; 
       symbol->var1_list->accept(*this);
       current_type = NULL; 
-      */
       return NULL;
     }
     
@@ -2879,5 +2876,4 @@ class generate_c_c: public iterator_visitor_c {
 
 visitor_c *new_code_generator(stage4out_c *s4o, const char *builddir)  {return new generate_c_c(s4o, builddir);}
 void delete_code_generator(visitor_c *code_generator) {delete code_generator;}
-
 

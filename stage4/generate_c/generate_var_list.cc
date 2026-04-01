@@ -239,6 +239,7 @@ class generate_var_list_c: protected generate_c_base_and_typeid_c {
     std::list<SYMBOL> current_symbol_list;
     search_type_symbol_c *search_type_symbol;
     unsigned int is_retain;
+    bool_type_name_c tmp_bool;
 
   public:
     generate_var_list_c(stage4out_c *s4o_ptr, symbol_c *scope)
@@ -808,6 +809,16 @@ class generate_var_list_c: protected generate_c_base_and_typeid_c {
        */
       reset_var_type_symbol();
     
+      return NULL;
+    }
+
+    void *visit(edge_declaration_c *symbol) {
+      TRACE("edge_declaration_c");
+
+      update_var_type_symbol(&tmp_bool);
+      declare_variables(symbol->var1_list);
+      reset_var_type_symbol();
+
       return NULL;
     }
 

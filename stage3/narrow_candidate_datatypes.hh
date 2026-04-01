@@ -216,6 +216,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     /******************************************/
     /* B 1.4.3 - Declaration & Initialisation */
     /******************************************/
+    void *visit(edge_declaration_c *symbol);
     void *visit(var1_list_c                  *symbol);
     void *visit(location_c                   *symbol);
     void *visit(located_var_decl_c           *symbol);
@@ -392,5 +393,4 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
 
 
 #endif // #ifndef _NARROW_CANDIDATE_DATATYPES_HH
-
 

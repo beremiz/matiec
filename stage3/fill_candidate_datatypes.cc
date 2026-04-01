@@ -1457,6 +1457,7 @@ void *fill_candidate_datatypes_c::fill_var_declaration(symbol_c *var_list, symbo
 
 
 void *fill_candidate_datatypes_c::visit(var1_init_decl_c             *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->spec_init);}
+void *fill_candidate_datatypes_c::visit(edge_declaration_c           *symbol) {bool_type_name_c tmp_bool; return fill_var_declaration(symbol->var1_list, &tmp_bool);}
 void *fill_candidate_datatypes_c::visit(array_var_init_decl_c        *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->array_spec_init);}
 void *fill_candidate_datatypes_c::visit(structured_var_init_decl_c   *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->initialized_structure);}
 void *fill_candidate_datatypes_c::visit(fb_name_decl_c               *symbol) {return fill_var_declaration(symbol->fb_name_list,    symbol->fb_spec_init);}
@@ -2426,7 +2427,6 @@ void *fill_candidate_datatypes_c::visit(repeat_statement_c *symbol) {
 		symbol->statement_list->accept(*this);
 	return NULL;
 }
-
 
 
 

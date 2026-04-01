@@ -254,6 +254,7 @@ class constant_propagation_c : public constant_folding_c {
     void *visit(   global_var_declarations_c *symbol);
     void *visit(  external_declaration_c     *symbol);
     void *visit(global_var_decl_c            *symbol);
+    void *visit( edge_declaration_c          *symbol);
     void *visit( var1_init_decl_c            *symbol);
     void *visit(   fb_name_decl_c            *symbol);
 
@@ -334,4 +335,3 @@ class constant_propagation_c : public constant_folding_c {
     void *visit(repeat_statement_c *symbol);
     #endif // DO_CONSTANT_PROPAGATION__
 };
-

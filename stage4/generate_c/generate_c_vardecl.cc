@@ -909,6 +909,7 @@ class generate_c_vardecl_c: protected generate_c_base_and_typeid_c {
      */
     symbol_c *current_var_type_symbol;
     symbol_c *current_var_init_symbol;
+    bool_type_name_c tmp_bool;
     void update_type_init(symbol_c *symbol /* a spec_init_c, subrange_spec_init_c, etc... */ ) {
       this->current_var_type_symbol = spec_init_sperator_c::get_spec(symbol);
       this->current_var_init_symbol = spec_init_sperator_c::get_init(symbol);
@@ -1341,10 +1342,12 @@ void *visit(input_declaration_list_c *symbol) {
 
 void *visit(edge_declaration_c *symbol) {
   TRACE("edge_declaration_c");
-  // TO DO ...
+
+  current_var_type_symbol = &tmp_bool;
+  current_var_init_symbol = type_initial_value_c::get(&tmp_bool);
   symbol->var1_list->accept(*this);
-  s4o.print(" : BOOL ");
-  symbol->edge->accept(*this);
+  void_type_init();
+
   return NULL;
 }
 
