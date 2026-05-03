@@ -371,6 +371,16 @@ __ANY_NBIT(__to_anyuint_)
 #define VA_ARGS_TOD TOD
 #define VA_ARGS_DT DT
 
+/* Older GCC's va_start expansion looks like a function call to the compiler,
+ * which triggers -Wdouble-promotion when the last named argument is a REAL
+ * (float). The promoted value is never used by va_start, so suppress the
+ * diagnostic locally. */
+#define __VA_START(ap, last) \
+  _Pragma("GCC diagnostic push") \
+  _Pragma("GCC diagnostic ignored \"-Wdouble-promotion\"") \
+  va_start (ap, last); \
+  _Pragma("GCC diagnostic pop")
+
 
 #define __numeric(fname,TYPENAME, FUNC) \
 /* explicitly typed function */\
@@ -497,7 +507,7 @@ static inline TYPENAME ___##fname(EN_ENO_PARAMS UINT param_count, TYPENAME op1, 
   UINT i;\
   TEST_EN(TYPENAME)\
   \
-  va_start (ap, (VA_ARGS_##TYPENAME) op1);         /* Initialize the argument list.  */\
+  __VA_START (ap, op1);       /* Initialize the argument list.  */\
   \
   for (i = 0; i < param_count - 1; i++){\
     op1 = op1 OP (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
@@ -760,7 +770,7 @@ static inline BOOL ___##fname(EN_ENO_PARAMS UINT param_count, BOOL op1, ...){ \
   UINT i; \
   TEST_EN(BOOL) \
 \
-  va_start (ap, (VA_ARGS_BOOL) op1);         /* Initialize the argument list.  */ \
+  __VA_START (ap, op1);       /* Initialize the argument list.  */ \
 \
   for (i = 0; i < param_count - 1; i++){ \
     BOOL tmp = (BOOL) va_arg (ap, VA_ARGS_BOOL); \
@@ -863,7 +873,7 @@ static inline TYPENAME ___##fname(EN_ENO_PARAMS UINT param_count, TYPENAME op1, 
   UINT i;\
   TEST_EN(TYPENAME)\
   \
-  va_start (ap, (VA_ARGS_##TYPENAME) op1);         /* Initialize the argument list.  */\
+  __VA_START (ap, op1);       /* Initialize the argument list.  */\
   \
   for (i = 0; i < param_count - 1; i++){\
     TYPENAME tmp = (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
@@ -1026,7 +1036,7 @@ static inline BOOL ___##fname(EN_ENO_PARAMS UINT param_count, TYPENAME op1, ...)
   UINT i;\
   TEST_EN(BOOL)\
   \
-  va_start (ap, (VA_ARGS_##TYPENAME) op1);         /* Initialize the argument list.  */\
+  __VA_START (ap, op1);       /* Initialize the argument list.  */\
   DBG(#fname #TYPENAME "\n")\
   DBG_TYPE(TYPENAME, op1)\
   \

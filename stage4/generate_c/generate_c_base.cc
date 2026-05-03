@@ -57,6 +57,7 @@ typedef struct
   symbol_c *param_value;
   symbol_c *param_type;
   function_param_iterator_c::param_direction_t param_direction;
+  bool param_is_variadic;
 } FUNCTION_PARAM;
 
 #define DECLARE_PARAM_LIST()\
@@ -70,6 +71,7 @@ typedef struct
   param->param_value = value;\
   param->param_type = type;\
   param->param_direction = direction;\
+  param->param_is_variadic = false;\
   param_list.push_back(param);
 
 #define PARAM_LIST_ITERATOR() for(pt = param_list.begin(); pt != param_list.end(); pt++)
@@ -78,6 +80,7 @@ typedef struct
 #define PARAM_VALUE (*pt)->param_value
 #define PARAM_TYPE (*pt)->param_type
 #define PARAM_DIRECTION (*pt)->param_direction
+#define PARAM_IS_VARIADIC (*pt)->param_is_variadic
 
 #define CLEAR_PARAM_LIST()\
   PARAM_LIST_ITERATOR()\

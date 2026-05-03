@@ -179,8 +179,18 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
       PARAM_LIST_ITERATOR() {
         if (pt != param_list.begin())
         s4o.print(",\n" + s4o.indent_spaces);
-        if (PARAM_DIRECTION == function_param_iterator_c::direction_in)
+        if (PARAM_DIRECTION == function_param_iterator_c::direction_in) {
+          /* Cast variadic-position arguments to their default-promoted type
+           * to silence -Wdouble-promotion (REAL -> LREAL) and similar warnings
+           * triggered when passing through C variadic ... .
+           */
+          if (PARAM_IS_VARIADIC) {
+            s4o.print("(VA_ARGS_");
+            PARAM_TYPE->accept(*this);
+            s4o.print(")");
+          }
           PARAM_NAME->accept(*this);
+        }
         else if (PARAM_VALUE != NULL){
           s4o.print("&");
           s4o.print(TEMP_VAR);
@@ -647,6 +657,7 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
           found_first_extensible_parameter = true;
         }
         
+        bool is_variadic_position = false;
         if (fp_iterator.is_extensible_param()) {      
           /* since we are handling an extensible parameter, we must add the index to the
            * parameter name so we can go looking for the value passed to the correct
@@ -657,6 +668,8 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
           if ((res >= 32) || (res < 0)) ERROR;
           param_name = new identifier_c(strdup2(param_name->value, tmp));
           if (param_name->value == NULL) ERROR;
+          /* In the C runtime, the first extensible param is named (op1), the rest go through ... */
+          is_variadic_position = (fp_iterator.extensible_param_index() > fp_iterator.first_extensible_param_index());
         }
     
         symbol_c *param_type = fp_iterator.param_type();
@@ -702,6 +715,7 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
         }
 
         ADD_PARAM_LIST(param_name, param_value, param_type, fp_iterator.param_direction())
+        param->param_is_variadic = is_variadic_position;
       }
 
       if (function_call_param_iterator.next_nf() != NULL) ERROR;
@@ -821,6 +835,7 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
           found_first_extensible_parameter = true;
         }
     
+        bool is_variadic_position = false;
         if (fp_iterator.is_extensible_param()) {      
           /* since we are handling an extensible parameter, we must add the index to the
            * parameter name so we can go looking for the value passed to the correct
@@ -831,6 +846,8 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
           if ((res >= 32) || (res < 0)) ERROR;
           param_name = new identifier_c(strdup2(param_name->value, tmp));
           if (param_name->value == NULL) ERROR;
+          /* In the C runtime, the first extensible param is named (op1), the rest go through ... */
+          is_variadic_position = (fp_iterator.extensible_param_index() > fp_iterator.first_extensible_param_index());
         }
         
         symbol_c *param_type = fp_iterator.param_type();
@@ -864,6 +881,7 @@ class generate_c_inlinefcall_c: public generate_c_base_and_typeid_c {
         }
 
         ADD_PARAM_LIST(param_name, param_value, param_type, param_direction)
+        param->param_is_variadic = is_variadic_position;
       } /* for(...) */
       // symbol->parameter_assignment->accept(*this);
 
