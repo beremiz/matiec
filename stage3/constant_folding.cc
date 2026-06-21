@@ -1500,6 +1500,10 @@ bool constant_propagation_c::is_retain  (symbol_c *option) {return (NULL != dyna
  */
 // SYM_REF2(var1_init_decl_c, var1_list, spec_init)
 void *constant_propagation_c::visit(var1_init_decl_c *symbol) {return handle_var_list_decl(symbol->var1_list, symbol->spec_init);}
+void *constant_propagation_c::visit(edge_declaration_c *symbol) {
+  bool_type_name_c tmp_bool;
+  return handle_var_list_decl(symbol->var1_list, &tmp_bool);
+}
 
 /* | [var1_list ','] variable_name integer '..' */
 /* NOTE: This is an extension to the standard!!! */
@@ -2107,7 +2111,6 @@ void *constant_propagation_c::visit(repeat_statement_c *symbol) {
 }
 
 #endif  // DO_CONSTANT_PROPAGATION__
-
 
 
 

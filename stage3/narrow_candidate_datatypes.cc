@@ -642,12 +642,35 @@ void *narrow_candidate_datatypes_c::visit(array_spec_init_c *symbol) {return nar
 /* helper symbol for array_initialization */
 /* array_initial_elements_list ',' array_initial_elements */
 // SYM_LIST(array_initial_elements_list_c)
-// Not needed ???
+void *narrow_candidate_datatypes_c::visit(array_initial_elements_list_c *symbol) {
+	symbol_c *array_type = symbol->datatype;
+	if (!get_datatype_info_c::is_type_valid(array_type))
+		array_type = symbol->parent->datatype;
+
+	if (get_datatype_info_c::is_type_valid(array_type)) {
+		symbol_c *element_type = search_base_type_c::get_basetype_decl(get_datatype_info_c::get_array_storedtype_id(array_type));
+		for (int i = 0; i < symbol->n; i++) {
+			symbol_c *init_elem = symbol->get_element(i);
+			array_initial_elements_c *array_elem = dynamic_cast<array_initial_elements_c *>(init_elem);
+			if ((array_elem != NULL) && (array_elem->array_initial_element == NULL))
+				continue;
+			set_datatype(element_type, init_elem);
+			init_elem->accept(*this);
+		}
+	}
+	return NULL;
+}
 
 /* integer '(' [array_initial_element] ')' */
 /* array_initial_element may be NULL ! */
 // SYM_REF2(array_initial_elements_c, integer, array_initial_element)
-// Not needed ???
+void *narrow_candidate_datatypes_c::visit(array_initial_elements_c *symbol) {
+	if (symbol->array_initial_element == NULL)
+		return NULL;
+	set_datatype(symbol->datatype, symbol->array_initial_element);
+	symbol->array_initial_element->accept(*this);
+	return NULL;
+}
 
 /*  structure_type_name ':' structure_specification */
 // SYM_REF2(structure_type_declaration_c, structure_type_name, structure_specification)
@@ -846,6 +869,7 @@ void *narrow_candidate_datatypes_c::narrow_var_declaration(symbol_c *type) {
 
 
 void *narrow_candidate_datatypes_c::visit(var1_init_decl_c             *symbol) {return narrow_var_declaration(symbol->spec_init);}
+void *narrow_candidate_datatypes_c::visit(edge_declaration_c           *symbol) {bool_type_name_c tmp_bool; return narrow_var_declaration(&tmp_bool);}
 void *narrow_candidate_datatypes_c::visit(array_var_init_decl_c        *symbol) {return narrow_var_declaration(symbol->array_spec_init);}
 void *narrow_candidate_datatypes_c::visit(structured_var_init_decl_c   *symbol) {return narrow_var_declaration(symbol->initialized_structure);}
 void *narrow_candidate_datatypes_c::visit(fb_name_decl_c               *symbol) {return narrow_var_declaration(symbol->fb_spec_init);}
@@ -1857,8 +1881,5 @@ void *narrow_candidate_datatypes_c::visit(repeat_statement_c *symbol) {
 		symbol->statement_list->accept(*this);
 	return NULL;
 }
-
-
-
 
 

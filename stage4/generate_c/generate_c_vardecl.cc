@@ -241,16 +241,17 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
     /* array_initial_elements_list ',' array_initial_elements */
     void *visit(array_initial_elements_list_c *symbol) {
       switch (current_mode) {
-        case initializationvalue_am:
-          current_initialization_count = 0;
-          for (int i = 0; i < symbol->n; i++) {
-            if (current_initialization_count >= defined_values_count) {
-              if (defined_values_count >= array_size)
-                ERROR;
-              if (defined_values_count > 0)
-                s4o.print(",");
-              symbol->get_element(i)->accept(*this);
-              defined_values_count++;
+	        case initializationvalue_am:
+	          current_initialization_count = 0;
+	          for (int i = 0; i < symbol->n; i++) {
+	            if (current_initialization_count >= defined_values_count) {
+	              if (defined_values_count >= array_size)
+	                STAGE4_ERROR(symbol->get_element(i), symbol->get_element(i),
+	                             "Invalid array initialization encountered during C code generation.");
+	              if (defined_values_count > 0)
+	                s4o.print(",");
+	              symbol->get_element(i)->accept(*this);
+	              defined_values_count++;
             }
             else {
               array_initial_elements_c *array_initial_element = dynamic_cast<array_initial_elements_c *>(symbol->get_element(i));
@@ -297,13 +298,14 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
               s4o.print(",");
             }
           }
-          else
-            current_initialization_count += initial_element_count - 1;
-          if (defined_values_count + initial_element_count > array_size)
-            ERROR;
-          for (unsigned long long int i = 0; i < initial_element_count; i++) {
-            if (i > 0)
-              s4o.print(",");
+	          else
+	            current_initialization_count += initial_element_count - 1;
+	          if (defined_values_count + initial_element_count > array_size)
+	            STAGE4_ERROR(symbol, symbol,
+	                         "Invalid array initialization encountered during C code generation.");
+	          for (unsigned long long int i = 0; i < initial_element_count; i++) {
+	            if (i > 0)
+	              s4o.print(",");
             if (symbol->array_initial_element != NULL) {
               symbol->array_initial_element->accept(*this);
             }
@@ -907,6 +909,7 @@ class generate_c_vardecl_c: protected generate_c_base_and_typeid_c {
      */
     symbol_c *current_var_type_symbol;
     symbol_c *current_var_init_symbol;
+    bool_type_name_c tmp_bool;
     void update_type_init(symbol_c *symbol /* a spec_init_c, subrange_spec_init_c, etc... */ ) {
       this->current_var_type_symbol = spec_init_sperator_c::get_spec(symbol);
       this->current_var_init_symbol = spec_init_sperator_c::get_init(symbol);
@@ -1339,10 +1342,12 @@ void *visit(input_declaration_list_c *symbol) {
 
 void *visit(edge_declaration_c *symbol) {
   TRACE("edge_declaration_c");
-  // TO DO ...
+
+  current_var_type_symbol = &tmp_bool;
+  current_var_init_symbol = type_initial_value_c::get(&tmp_bool);
   symbol->var1_list->accept(*this);
-  s4o.print(" : BOOL ");
-  symbol->edge->accept(*this);
+  void_type_init();
+
   return NULL;
 }
 
@@ -2887,6 +2892,3 @@ SYM_REF2(fb_initialization_c, function_block_type_name, structure_initialization
 
 
 }; /* generate_c_vardecl_c */
-
-
-

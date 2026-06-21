@@ -263,6 +263,19 @@ void lvalue_check_c::check_assignment_to_il_list(symbol_c *lvalue) {
 
 
 
+void *lvalue_check_c::visit(array_variable_c *symbol) {
+	/* Keep traversal of complex lvalues explicit so subscript expressions keep getting checked even if the base iterator changes. */
+	if (symbol->subscripted_variable != NULL) symbol->subscripted_variable->accept(*this);
+	if (symbol->subscript_list != NULL)       symbol->subscript_list->accept(*this);
+	return NULL;
+}
+
+void *lvalue_check_c::visit(structured_variable_c *symbol) {
+	if (symbol->record_variable != NULL) symbol->record_variable->accept(*this);
+	return NULL;
+}
+
+
 void lvalue_check_c::verify_is_lvalue(symbol_c *lvalue) {
 	if (NULL == lvalue) return; // missing operand in source code being compiled. Error will be caught and reported by datatype checking!
 	int init_error_count = error_count;  /* stop the checks once an error has been found... */
@@ -579,7 +592,6 @@ void *lvalue_check_c::visit(for_statement_c *symbol) {
 	control_variables.pop_back();
 	return NULL;
 }
-
 
 
 

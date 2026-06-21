@@ -71,6 +71,12 @@ class lvalue_check_c: public iterator_visitor_c {
     virtual ~lvalue_check_c(void);
     int get_error_count();
 
+    /*********************/
+    /* B 1.4 - Variables */
+    /*********************/
+    void *visit(array_variable_c *symbol);
+    void *visit(structured_variable_c *symbol);
+
     /**************************************/
     /* B 1.5 - Program organisation units */
     /**************************************/
@@ -133,7 +139,6 @@ class lvalue_check_c: public iterator_visitor_c {
     void *visit(for_statement_c *symbol);
 
 }; /* lvalue_check_c */
-
 
 
 

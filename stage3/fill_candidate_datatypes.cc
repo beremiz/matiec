@@ -1145,10 +1145,58 @@ void *fill_candidate_datatypes_c::visit(array_spec_init_c *symbol) {return fill_
 /* helper symbol for array_initialization */
 /* array_initial_elements_list ',' array_initial_elements */
 // SYM_LIST(array_initial_elements_list_c)
+void *fill_candidate_datatypes_c::visit(array_initial_elements_list_c *symbol) {
+	/* Run a bottom->up pass first, then retry non-elementary elements with the candidate array types inherited from the parent. */
+	iterator_visitor_c::visit(symbol);
+
+	for (unsigned int i = 0; i < symbol->parent->candidate_datatypes.size(); i++) {
+		symbol_c *array_type = symbol->parent->candidate_datatypes[i];
+		symbol_c *element_type = search_base_type_c::get_basetype_decl(get_datatype_info_c::get_array_storedtype_id(array_type));
+		int flag_all_elem_ok = 1;
+
+		if (!get_datatype_info_c::is_type_valid(element_type))
+			continue;
+
+		for (int k = 0; k < symbol->n; k++) {
+			symbol_c *init_elem = symbol->get_element(k);
+			array_initial_elements_c *array_elem = dynamic_cast<array_initial_elements_c *>(init_elem);
+			symbol_c *typed_elem = init_elem;
+
+			/* "N()" repeats the default initial value of the array element type, so there is no explicit value to type-check. */
+			if ((array_elem != NULL) && (array_elem->array_initial_element == NULL))
+				continue;
+
+			if (array_elem != NULL)
+				typed_elem = array_elem->array_initial_element;
+
+			if (!get_datatype_info_c::is_ANY_ELEMENTARY(element_type)) {
+				add_datatype_to_candidate_list(init_elem, element_type);
+				add_datatype_to_candidate_list(typed_elem, element_type);
+				init_elem->accept(*this);
+			}
+
+			if (search_in_candidate_datatype_list(element_type, init_elem->candidate_datatypes) < 0)
+				flag_all_elem_ok = 0;
+		}
+
+		if (flag_all_elem_ok)
+			add_datatype_to_candidate_list(symbol, array_type);
+	}
+
+	return NULL;
+}
 
 /* integer '(' [array_initial_element] ')' */
 /* array_initial_element may be NULL ! */
 // SYM_REF2(array_initial_elements_c, integer, array_initial_element)
+void *fill_candidate_datatypes_c::visit(array_initial_elements_c *symbol) {
+	if (symbol->array_initial_element == NULL)
+		return NULL;
+
+	symbol->array_initial_element->accept(*this);
+	symbol->candidate_datatypes = symbol->array_initial_element->candidate_datatypes;
+	return NULL;
+}
 
 /*  structure_type_name ':' structure_specification */
 // SYM_REF2(structure_type_declaration_c, structure_type_name, structure_specification)
@@ -1409,6 +1457,7 @@ void *fill_candidate_datatypes_c::fill_var_declaration(symbol_c *var_list, symbo
 
 
 void *fill_candidate_datatypes_c::visit(var1_init_decl_c             *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->spec_init);}
+void *fill_candidate_datatypes_c::visit(edge_declaration_c           *symbol) {bool_type_name_c tmp_bool; return fill_var_declaration(symbol->var1_list, &tmp_bool);}
 void *fill_candidate_datatypes_c::visit(array_var_init_decl_c        *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->array_spec_init);}
 void *fill_candidate_datatypes_c::visit(structured_var_init_decl_c   *symbol) {return fill_var_declaration(symbol->var1_list,       symbol->initialized_structure);}
 void *fill_candidate_datatypes_c::visit(fb_name_decl_c               *symbol) {return fill_var_declaration(symbol->fb_name_list,    symbol->fb_spec_init);}
@@ -2378,9 +2427,6 @@ void *fill_candidate_datatypes_c::visit(repeat_statement_c *symbol) {
 		symbol->statement_list->accept(*this);
 	return NULL;
 }
-
-
-
 
 
 
