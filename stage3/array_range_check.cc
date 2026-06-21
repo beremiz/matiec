@@ -105,6 +105,52 @@ int array_range_check_c::get_error_count() {
 }
 
 
+unsigned long long int array_range_check_c::array_size(symbol_c *symbol) {
+	unsigned long long int size = 1;
+	array_dimension_iterator_c array_dimension_iterator(symbol);
+
+	for (subrange_c *dimension = array_dimension_iterator.next(); dimension != NULL; dimension = array_dimension_iterator.next()) {
+		if ((dimension->dimension != 0) && (size > (std::numeric_limits<unsigned long long int>::max() / dimension->dimension)))
+			return std::numeric_limits<unsigned long long int>::max();
+		size *= dimension->dimension;
+	}
+
+	return size;
+}
+
+
+unsigned long long int array_range_check_c::initialization_element_count(symbol_c *symbol) {
+	if (symbol == NULL)
+		return 0;
+
+	array_initial_elements_list_c *list = dynamic_cast<array_initial_elements_list_c *>(symbol);
+	if (list != NULL) {
+		unsigned long long int total = 0;
+		for (int i = 0; i < list->n; i++) {
+			unsigned long long int elem_count = initialization_element_count(list->get_element(i));
+			if (total > (std::numeric_limits<unsigned long long int>::max() - elem_count))
+				return std::numeric_limits<unsigned long long int>::max();
+			total += elem_count;
+		}
+		return total;
+	}
+
+	array_initial_elements_c *repeated = dynamic_cast<array_initial_elements_c *>(symbol);
+	if (repeated != NULL) {
+		if (VALID_CVALUE( int64, repeated->integer)) {
+			if (GET_CVALUE( int64, repeated->integer) < 0)
+				ERROR; /* the IEC 61131-3 syntax guarantees that this value will never be negative! */
+			return GET_CVALUE( int64, repeated->integer);
+		}
+		if (VALID_CVALUE(uint64, repeated->integer))
+			return GET_CVALUE(uint64, repeated->integer);
+		ERROR;
+	}
+
+	return 1;
+}
+
+
 
 void array_range_check_c::check_dimension_count(array_variable_c *symbol) {
 	int dimension_count;
@@ -187,6 +233,31 @@ void array_range_check_c::check_bounds(array_variable_c *symbol) {
 /* B 1.3.3 - Derived data types */
 /********************************/
 
+/* array_specification [ASSIGN array_initialization] */
+/* array_initialization may be NULL ! */
+// SYM_REF2(array_spec_init_c, array_specification, array_initialization)
+void *array_range_check_c::visit(array_spec_init_c *symbol) {
+	symbol->array_specification->accept(*this);
+
+	if (symbol->array_initialization != NULL) {
+		unsigned long long int size = array_size(symbol->array_specification);
+		unsigned long long int count = initialization_element_count(symbol->array_initialization);
+		if (count > size)
+			STAGE3_ERROR(0, symbol->array_initialization, symbol->array_initialization,
+			             "Array initialization exceeds the array size declared in its type.");
+	}
+
+	return NULL;
+}
+
+/* array_initialization:  '[' array_initial_elements_list ']' */
+/* helper symbol for array_initialization */
+/* array_initial_elements_list ',' array_initial_elements */
+// SYM_LIST(array_initial_elements_list_c)
+void *array_range_check_c::visit(array_initial_elements_list_c *symbol) {
+	return iterator_visitor_c::visit(symbol);
+}
+
 /*  signed_integer DOTDOT signed_integer */
 /* dimension will be filled in during stage 3 (array_range_check_c) with the number of elements in this subrange */
 // SYM_REF2(subrange_c, lower_limit, upper_limit, unsigned long long int dimension)
@@ -267,8 +338,6 @@ void *array_range_check_c::visit(array_initial_elements_c *symbol) {
 	if (VALID_CVALUE( int64, symbol->integer) && (GET_CVALUE( int64, symbol->integer) < 0)) 
 		ERROR; /* the IEC 61131-3 syntax guarantees that this value will never be negative! */
 
-	/* TODO: check that the total number of 'initial values' does not exceed the size of the array! */
-
 	return NULL;
 }
 
@@ -343,6 +412,5 @@ void *array_range_check_c::visit(program_declaration_c *symbol) {
 	// search_var_instance_decl = NULL;
 	return NULL;
 }
-
 
 

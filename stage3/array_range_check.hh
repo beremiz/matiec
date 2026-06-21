@@ -46,6 +46,8 @@ class array_range_check_c: public iterator_visitor_c {
 
     void check_dimension_count(array_variable_c *symbol);
     void check_bounds(array_variable_c *symbol);
+    unsigned long long int array_size(symbol_c *symbol);
+    unsigned long long int initialization_element_count(symbol_c *symbol);
 
   public:
     array_range_check_c(symbol_c *ignore);
@@ -63,6 +65,8 @@ class array_range_check_c: public iterator_visitor_c {
     /********************************/
     /* NOTE: we may later want to move the following 2 methods to a visitor that will focus on analysing the data type declarations! */
     void *visit(subrange_c *symbol);
+    void *visit(array_spec_init_c *symbol);
+    void *visit(array_initial_elements_list_c *symbol);
     void *visit(array_initial_elements_c *symbol);
   
     /*********************/
@@ -92,7 +96,6 @@ class array_range_check_c: public iterator_visitor_c {
     void *visit(program_declaration_c *symbol);
 
 }; /* array_range_check_c */
-
 
 
 
