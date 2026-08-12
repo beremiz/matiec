@@ -546,6 +546,23 @@ void *print_datatypes_error_c::visit(enumerated_value_c *symbol) {
 
 
 
+/* array_initialization:  '[' array_initial_elements_list ']' */
+/* helper symbol for array_initialization */
+/* array_initial_elements_list ',' array_initial_elements */
+// SYM_LIST(array_initial_elements_list_c)
+void *print_datatypes_error_c::visit(array_initial_elements_list_c *symbol) {
+	iterator_visitor_c::visit(symbol); /* print any errors in the initial values themselves... */
+	/* To reduce the number of error messages, we keep quiet whenever whoever we are the initial
+	 * value of (e.g. a structure element initialization) will be reporting this same error.
+	 */
+	if ((NULL != symbol->parent) && !get_datatype_info_c::is_type_valid(symbol->parent->datatype))
+		return NULL;
+	if (!get_datatype_info_c::is_type_valid(symbol->datatype))
+		STAGE3_ERROR(0, symbol, symbol, "Initial value is not compatible with the data type stored in the array.");
+	return NULL;
+}
+
+
 void *print_datatypes_error_c::visit(structure_element_initialization_c *symbol) {
 	symbol->value->accept(*this);
 	if (!get_datatype_info_c::is_type_valid(symbol->datatype))

@@ -642,7 +642,28 @@ void *narrow_candidate_datatypes_c::visit(array_spec_init_c *symbol) {return nar
 /* helper symbol for array_initialization */
 /* array_initial_elements_list ',' array_initial_elements */
 // SYM_LIST(array_initial_elements_list_c)
-// Not needed ???
+void *narrow_candidate_datatypes_c::visit(array_initial_elements_list_c *symbol) {
+	symbol_c *type = symbol->datatype;
+	 // to reduce number of error messages, we try to narrow with parent's spec_init->datatype
+	if (!get_datatype_info_c::is_type_valid(type) && (NULL != symbol->parent)) type = symbol->parent->datatype;
+
+	if (get_datatype_info_c::is_type_valid(type)) {
+		symbol_c *element_type = search_base_type_c::get_basetype_decl(get_datatype_info_c::get_array_storedtype_id(type));
+		for (int k = 0; (k < symbol->n) && get_datatype_info_c::is_type_valid(element_type); k++) {
+			symbol_c *array_elem = symbol->get_element(k);
+			/* integer '(' [array_initial_element] ')' -> the initial value is repeated 'integer' times */
+			array_initial_elements_c *repeated_elem = dynamic_cast<array_initial_elements_c *>(array_elem);
+			if (NULL != repeated_elem) {
+				if (NULL == repeated_elem->array_initial_element) continue; // e.g. '4()' -> repeat the default value
+				set_datatype(element_type, repeated_elem);
+				array_elem = repeated_elem->array_initial_element;
+			}
+			set_datatype(element_type, array_elem);
+			array_elem->accept(*this);
+		}
+	}
+	return NULL;
+}
 
 /* integer '(' [array_initial_element] ')' */
 /* array_initial_element may be NULL ! */

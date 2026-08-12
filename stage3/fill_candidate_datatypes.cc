@@ -1123,6 +1123,28 @@ void *fill_candidate_datatypes_c::visit(enumerated_value_c *symbol) {
 }
 
 
+/* Aggregate initial values (i.e. structure and array initializations) never determine any
+ * candidate_datatypes of their own with the bottom->up algorithm. They must instead be handed
+ * down the datatype they are expected to take, using the top->down algorithm.
+ */
+static bool is_aggregate_initial_value(symbol_c *symbol) {
+	return ((NULL != dynamic_cast<structure_element_initialization_list_c *>(symbol))
+	     || (NULL != dynamic_cast<array_initial_elements_list_c           *>(symbol)));
+}
+
+
+/* Return the datatypes an aggregate initial value should consider while running its (modified)
+ * bottom->up algorithm. They were handed down to us by the top->down algorithm, and are stored
+ * in our own candidate_datatypes when we are an element of an array initialization, or in our
+ * parent's candidate_datatypes when we are the value of a variable/structure element declaration.
+ */
+static std::vector <symbol_c *> get_tentative_datatypes(symbol_c *symbol) {
+	if (!symbol->candidate_datatypes.empty()) return symbol->candidate_datatypes;
+	if (NULL == symbol->parent)               return std::vector <symbol_c *>();
+	return symbol->parent->candidate_datatypes;
+}
+
+
 /*  identifier ':' array_spec_init */
 // SYM_REF2(array_type_declaration_c, identifier, array_spec_init)
 void *fill_candidate_datatypes_c::visit(array_type_declaration_c *symbol) {return fill_type_decl(symbol, symbol->identifier, symbol->array_spec_init);}
@@ -1145,6 +1167,42 @@ void *fill_candidate_datatypes_c::visit(array_spec_init_c *symbol) {return fill_
 /* helper symbol for array_initialization */
 /* array_initial_elements_list ',' array_initial_elements */
 // SYM_LIST(array_initial_elements_list_c)
+void *fill_candidate_datatypes_c::visit(array_initial_elements_list_c *symbol) {
+	// use bottom->up algorithm -> first let all elements determine their candidate_datatypes
+	iterator_visitor_c::visit(symbol);
+
+	std::vector <symbol_c *> tentative_datatypes = get_tentative_datatypes(symbol);
+	symbol->candidate_datatypes.clear();
+
+	for (unsigned int i = 0; i < tentative_datatypes.size(); i++) { // size() should always be 1 here -> a single array type!
+		symbol_c *element_type = search_base_type_c::get_basetype_decl(get_datatype_info_c::get_array_storedtype_id(tentative_datatypes[i]));
+		if (!get_datatype_info_c::is_type_valid(element_type)) continue; // not an array datatype!
+		// flag indicating all elements may take the datatype stored in the array
+		int flag_all_elem_ok = 1;
+		for (int k = 0; k < symbol->n; k++) {
+			symbol_c *array_elem = symbol->get_element(k);
+			/* integer '(' [array_initial_element] ')' -> the initial value is repeated 'integer' times */
+			array_initial_elements_c *repeated_elem = dynamic_cast<array_initial_elements_c *>(array_elem);
+			if (NULL != repeated_elem) {
+				if (NULL == repeated_elem->array_initial_element) continue; // e.g. '4()' -> repeat the default value
+				add_datatype_to_candidate_list(repeated_elem, element_type);
+				array_elem = repeated_elem->array_initial_element;
+			}
+			if (is_aggregate_initial_value(array_elem)) {
+				// for aggregate initial values, we must use a top->down algorithm!!
+				add_datatype_to_candidate_list(array_elem, element_type);
+				array_elem->accept(*this);
+			}
+			if (search_in_candidate_datatype_list(element_type, array_elem->candidate_datatypes) < 0) {
+				flag_all_elem_ok = 0; // the datatype stored in the array is not a candidate_datatype of this element
+			}
+		}
+		if (flag_all_elem_ok) {
+			add_datatype_to_candidate_list(symbol, tentative_datatypes[i]);
+		}
+	}
+	return NULL;
+}
 
 /* integer '(' [array_initial_element] ')' */
 /* array_initial_element may be NULL ! */
@@ -1175,12 +1233,15 @@ void *fill_candidate_datatypes_c::visit(structure_element_initialization_list_c 
 	// use bottom->up algorithm -> first let all elements determine their candidate_datatypes
 	iterator_visitor_c::visit(symbol); // call visit(structure_element_initialization_c *) on all elements
 
-	for (unsigned int i = 0; i < symbol->parent->candidate_datatypes.size(); i++) { // size() should always be 1 here -> a single structure or FB type!
-		// assume symbol->parent->candidate_datatypes[i] is a FB type
-		search_varfb_instance_type_c search_varfb_instance_type(symbol->parent->candidate_datatypes[i]);
-		// assume symbol->parent->candidate_datatypes[i] is a STRUCT data type
-		structure_element_declaration_list_c *struct_decl = dynamic_cast<structure_element_declaration_list_c *>(symbol->parent->candidate_datatypes[i]);
-		// flag indicating all struct_elem->structure_element_name are structure elements found in the symbol->parent->candidate_datatypes[i] datatype
+	std::vector <symbol_c *> tentative_datatypes = get_tentative_datatypes(symbol);
+	symbol->candidate_datatypes.clear();
+
+	for (unsigned int i = 0; i < tentative_datatypes.size(); i++) { // size() should always be 1 here -> a single structure or FB type!
+		// assume tentative_datatypes[i] is a FB type
+		search_varfb_instance_type_c search_varfb_instance_type(tentative_datatypes[i]);
+		// assume tentative_datatypes[i] is a STRUCT data type
+		structure_element_declaration_list_c *struct_decl = dynamic_cast<structure_element_declaration_list_c *>(tentative_datatypes[i]);
+		// flag indicating all struct_elem->structure_element_name are structure elements found in the tentative_datatypes[i] datatype
 		int flag_all_elem_ok = 1; // assume all found
 		for (int k = 0; k < symbol->n; k++) {
 			structure_element_initialization_c *struct_elem = dynamic_cast<structure_element_initialization_c *>(symbol->get_element(k));
@@ -1195,9 +1256,9 @@ void *fill_candidate_datatypes_c::visit(structure_element_initialization_list_c 
 				// parent is a FB type. Lets search there!!
 				type = search_varfb_instance_type.get_basetype_decl(struct_elem->structure_element_name);
 			}
-			if (!get_datatype_info_c::is_ANY_ELEMENTARY(type) && get_datatype_info_c::is_type_valid(type)) {
-				// for non-elementary datatypes, we must use a top->down algorithm!!
-				add_datatype_to_candidate_list(struct_elem, type); 
+			if (is_aggregate_initial_value(struct_elem->value) && get_datatype_info_c::is_type_valid(type)) {
+				// for aggregate initial values, we must use a top->down algorithm!!
+				add_datatype_to_candidate_list(struct_elem, type);
 				struct_elem->accept(*this);
 			}
 			if (search_in_candidate_datatype_list(type, struct_elem->candidate_datatypes) < 0) {
@@ -1205,7 +1266,7 @@ void *fill_candidate_datatypes_c::visit(structure_element_initialization_list_c 
 			}
 		}
 		if (flag_all_elem_ok) {
-			add_datatype_to_candidate_list(symbol, symbol->parent->candidate_datatypes[i]);
+			add_datatype_to_candidate_list(symbol, tentative_datatypes[i]);
 		}
 	}
 	return NULL;

@@ -183,7 +183,7 @@ class narrow_candidate_datatypes_c: public iterator_visitor_c {
     void *visit(array_spec_init_c *symbol);
 //  void *visit(array_specification_c *symbol);
 //  void *visit(array_subrange_list_c *symbol);
-//  void *visit(array_initial_elements_list_c *symbol);
+    void *visit(array_initial_elements_list_c *symbol);
 //  void *visit(array_initial_elements_c *symbol);
     void *visit(structure_type_declaration_c *symbol);
     void *visit(initialized_structure_c *symbol);
