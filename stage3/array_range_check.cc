@@ -37,6 +37,7 @@
  *   - Check whether array subscript values fall within the allowed range.
  *     Note that for the checking of subscript values to work correctly, we need to have constant folding working too:
  *     array_var[8 + 99] can not be checked without constant folding.
+ *   - Check whether the number of initial values given to an array does not exceed the number of elements it stores.
  */
 
 
@@ -263,11 +264,50 @@ void *array_range_check_c::visit(subrange_c *symbol) {
 /* integer '(' [array_initial_element] ')' */
 /* array_initial_element may be NULL ! */
 // SYM_REF2(array_initial_elements_c, integer, array_initial_element)
-void *array_range_check_c::visit(array_initial_elements_c *symbol) {
-	if (VALID_CVALUE( int64, symbol->integer) && (GET_CVALUE( int64, symbol->integer) < 0)) 
-		ERROR; /* the IEC 61131-3 syntax guarantees that this value will never be negative! */
+void *array_range_check_c::visit(array_initial_elements_list_c *symbol) {
+	/* the initial values may themselves contain arrays, that must be checked too... */
+	iterator_visitor_c::visit(symbol);
 
-	/* TODO: check that the total number of 'initial values' does not exceed the size of the array! */
+	/* The datatype is only set if the datatype analysis of this initialization was successfull.
+	 * Without it we have no way of knowing how many elements the array may store.
+	 * Note that narrow_candidate_datatypes_c always sets it to the array's base type declaration.
+	 */
+	array_specification_c *array_spec = NULL;
+	if (NULL != symbol->datatype) array_spec = dynamic_cast<array_specification_c *>(symbol->datatype);
+	if (NULL == array_spec) return NULL;
+
+	/* Determine how many elements the array may store, i.e. the product of all its dimensions.
+	 * Any overflow has already been reported by visit(subrange_c).
+	 */
+	unsigned long long int array_size = 1;
+	array_dimension_iterator_c array_dimension_iterator(array_spec);
+	for (subrange_c *dimension = array_dimension_iterator.next(); NULL != dimension; dimension = array_dimension_iterator.next())
+		array_size *= dimension->dimension;
+
+	/* Determine how many initial values are given... */
+	unsigned long long int initial_values_count = 0;
+	for (int i = 0; i < symbol->n; i++) {
+		/* integer '(' [array_initial_element] ')' -> the initial value is repeated 'integer' times */
+		array_initial_elements_c *repeated_element = dynamic_cast<array_initial_elements_c *>(symbol->get_element(i));
+		if (NULL == repeated_element)
+			initial_values_count++;
+		else if (VALID_CVALUE( int64, repeated_element->integer) && (GET_CVALUE( int64, repeated_element->integer) >= 0))
+			initial_values_count += GET_CVALUE( int64, repeated_element->integer);
+		else if (VALID_CVALUE(uint64, repeated_element->integer))
+			initial_values_count += GET_CVALUE(uint64, repeated_element->integer);
+		else return NULL; /* not a constant value -> already reported by the constant folding */
+	}
+
+	if (initial_values_count > array_size)
+		STAGE3_ERROR(0, symbol, symbol, "Too many initial values for array (array stores %llu element(s), but %llu initial value(s) are given).", array_size, initial_values_count);
+
+	return NULL;
+}
+
+
+void *array_range_check_c::visit(array_initial_elements_c *symbol) {
+	if (VALID_CVALUE( int64, symbol->integer) && (GET_CVALUE( int64, symbol->integer) < 0))
+		ERROR; /* the IEC 61131-3 syntax guarantees that this value will never be negative! */
 
 	return NULL;
 }

@@ -63,6 +63,7 @@ class array_range_check_c: public iterator_visitor_c {
     /********************************/
     /* NOTE: we may later want to move the following 2 methods to a visitor that will focus on analysing the data type declarations! */
     void *visit(subrange_c *symbol);
+    void *visit(array_initial_elements_list_c *symbol);
     void *visit(array_initial_elements_c *symbol);
   
     /*********************/
