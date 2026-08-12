@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Test the datatype checking of the initial values of structured and array variables.
+#
+#   ok_*.st    --> must be accepted by the compiler.
+#   bad_*.st   --> must be rejected by the compiler, with an error message.
+#                  Aborting with an 'Internal compiler error' is considered a failure,
+#                  as is generating C code for an invalid initial value!
+#   xfail_*.st --> valid code that the compiler is known not to handle (yet).
+#                  Reported as [XFAIL], and as [XPASS] once it starts working,
+#                  in which case it should be renamed to ok_*.st.
+
+IEC2C="../../iec2c"
+IEC2C_FLAGS="-f -l -p -I ../../lib"
+OUTDIR="./output"
+
+# assume no error to start with...
+error=0
+
+rm -rf $OUTDIR
+mkdir -p $OUTDIR
+
+for ff in `ls ok_*.st bad_*.st xfail_*.st`
+do
+  rm -rf $OUTDIR/*
+  $IEC2C $IEC2C_FLAGS -T $OUTDIR $ff > $ff.out 2> $ff.err
+  status=$?
+
+  case $ff in
+    xfail_*)
+      if test $status = 0
+        then echo "[XPASS]   " $ff "-> now accepted, please rename it to ok_"${ff#xfail_}
+        else echo "[XFAIL]   " $ff "-> known failure"
+      fi
+      continue
+      ;;
+    bad_*) expected_status=1 ;;
+    *)     expected_status=0 ;;
+  esac
+
+  if grep -q "Internal compiler error" $ff.err
+    then echo "[ERROR]   " $ff "-> internal compiler error"; error=1
+  elif test $expected_status = 0 -a $status != 0
+    then echo "[ERROR]   " $ff "-> should have been accepted"; error=1
+  elif test $expected_status = 1 -a $status = 0
+    then echo "[ERROR]   " $ff "-> should have been rejected"; error=1
+  else echo "[ O K ]   " $ff
+  fi
+done
+
+echo
+if `test $error = 1`
+  then echo "FAILURE -> At least one of the tests failed!"
+  else echo "SUCCESS -> All tests passed!"
+fi
+
+exit $error

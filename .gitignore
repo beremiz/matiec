@@ -5,7 +5,6 @@ configure
 iec2c
 iec2iec
 *.o
-**/Makefile
 **/Makefile.in
 *.Po
 *.a
@@ -13,3 +12,11 @@ autom4te.cache/*
 config/*
 stage1_2/*.cc
 stage1_2/*.hh
+stage4/generate_iec/Makefile
+stage4/generate_c/Makefile
+absyntax/Makefile
+absyntax_utils/Makefile
+stage1_2/Makefile
+stage3/Makefile
+stage4/Makefile
+/Makefile
