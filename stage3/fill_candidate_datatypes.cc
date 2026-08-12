@@ -126,6 +126,34 @@ class populate_globalenumvalue_symtable_c: public iterator_visitor_c {
     return symbol->enumerated_specification->accept(*this);
   }
 
+  /* NOTE: The initial values below may reference enumerated values (e.g. arr : ARRAY [1..2] OF colour := [RED, BLUE]),
+   *       but they never declare any. Just like for the enumerated_spec_init_c above, we must not visit them:
+   *       only the specification may contain an enumerated data type declaration!
+   */
+
+  /* simple_specification ASSIGN constant */
+  void *visit(simple_spec_init_c *symbol) {
+    return symbol->simple_specification->accept(*this);
+  }
+
+  /* array_specification [ASSIGN array_initialization} */
+  /* array_initialization may be NULL ! */
+  void *visit(array_spec_init_c *symbol) {
+    return symbol->array_specification->accept(*this);
+  }
+
+  /* structure_type_name ASSIGN structure_initialization */
+  /* structure_initialization may be NULL ! */
+  void *visit(initialized_structure_c *symbol) {
+    return symbol->structure_type_name->accept(*this);
+  }
+
+  /*  function_block_type_name ASSIGN structure_initialization */
+  /* structure_initialization -> may be NULL ! */
+  void *visit(fb_spec_init_c *symbol) {
+    return symbol->function_block_type_name->accept(*this);
+  }
+
   /* [enumerated_type_name '#'] identifier */
   void *visit(enumerated_value_c *symbol) {
     if (current_enumerated_type == NULL) ERROR;

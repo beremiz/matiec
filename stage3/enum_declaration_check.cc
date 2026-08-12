@@ -136,6 +136,42 @@ class populate_enumvalue_symtable_c: public iterator_visitor_c {
     return NULL;
   }
 
+  /* NOTE: The initial values below may reference enumerated values (e.g. arr : ARRAY [1..2] OF colour := [RED, BLUE]),
+   *       but they never declare any. Just like for the enumerated_spec_init_c above, we must not visit them:
+   *       only the specification may contain an enumerated data type declaration!
+   */
+
+  /* simple_specification ASSIGN constant */
+  void *visit(simple_spec_init_c *symbol) {
+    symbol->simple_specification->accept(*this);
+    /* DO NOT visit the symbol->constant   !!! */
+    return NULL;
+  }
+
+  /* array_specification [ASSIGN array_initialization} */
+  /* array_initialization may be NULL ! */
+  void *visit(array_spec_init_c *symbol) {
+    symbol->array_specification->accept(*this);
+    /* DO NOT visit the symbol->array_initialization   !!! */
+    return NULL;
+  }
+
+  /* structure_type_name ASSIGN structure_initialization */
+  /* structure_initialization may be NULL ! */
+  void *visit(initialized_structure_c *symbol) {
+    symbol->structure_type_name->accept(*this);
+    /* DO NOT visit the symbol->structure_initialization   !!! */
+    return NULL;
+  }
+
+  /*  function_block_type_name ASSIGN structure_initialization */
+  /* structure_initialization -> may be NULL ! */
+  void *visit(fb_spec_init_c *symbol) {
+    symbol->function_block_type_name->accept(*this);
+    /* DO NOT visit the symbol->structure_initialization   !!! */
+    return NULL;
+  }
+
   /* [enumerated_type_name '#'] identifier */
   void *visit(enumerated_value_c *symbol) {
     token_c *value = dynamic_cast <token_c *>(symbol->value);
