@@ -62,8 +62,9 @@ to help debug the lexical and syntax portions of the compilers.
 
 
 
- To compile/build these compilers, just
-$./configure; make
+ To compile/build these compilers, use CMake:
+$ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+$ cmake --build build
 
 
 

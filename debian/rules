@@ -21,8 +21,8 @@ build: build-stamp
 
 build-stamp:
 	dh_testdir
-	# Add here commands to compile the package.
-	$(MAKE)
+	cmake -S . -B build-debian -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build-debian
 	touch $@
 
 clean:
@@ -31,7 +31,7 @@ clean:
 	rm -f build-stamp
 
 	# Add here commands to clean up after the build process.
-	-$(MAKE) clean
+	rm -rf $(CURDIR)/build-debian
 
 	dh_clean 
 
@@ -48,7 +48,7 @@ install: build
 	mkdir -p $(CURDIR)/debian/matiec/usr/share/matiec
 	
 	cp -a lib $(CURDIR)/debian/matiec/usr/share/matiec
-	cp iec2c $(CURDIR)/debian/matiec/usr/share/matiec
+	cp build-debian/iec2c $(CURDIR)/debian/matiec/usr/share/matiec
 
 # Build architecture-independent files here.
 binary-indep: build install

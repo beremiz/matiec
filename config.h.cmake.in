@@ -1,0 +1,7 @@
+#ifndef MATIEC_CONFIG_H
+#define MATIEC_CONFIG_H
+
+#define PACKAGE_NAME "@PROJECT_NAME@"
+#define PACKAGE_VERSION "@PROJECT_VERSION@"
+
+#endif

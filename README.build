@@ -1,43 +1,35 @@
 
-Compile/Build 
-=============
+Compile / Build
+===============
 
-1) Compiling under Linux
-------------------------
-$ autoreconf -i
-$ ./configure
-$ make
+Requirements: CMake 3.16 or newer, a C++ compiler, Bison 2.4 or newer,
+and Flex.
 
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+    cmake --build build
 
-2) Cross-Compiling under Linux, for Windows
--------------------------------------------
-$ ./configure  --host=i586-pc-mingw32
-(or, to use static linking, which does not require installing any mingw dll's on windows)
-$ ./configure  --host=i586-pc-mingw32 LDFLAGS="-static"
-$ make
+The executables are generated as `build/iec2c` and `build/iec2iec`.
 
+Install
+-------
 
+    cmake --install build
 
+Use `-DCMAKE_INSTALL_PREFIX=/path` while configuring to select a custom
+installation prefix.
 
+Cross-compiling
+---------------
 
-Maintaining the Build Environment
-=================================
--> Add new files to Makefile.am or add a new makefile
-$ autoreconf
+Pass a CMake toolchain file when configuring:
 
+    cmake -S . -B build-windows \
+      -DCMAKE_TOOLCHAIN_FILE=/path/to/mingw-toolchain.cmake \
+      -DCMAKE_BUILD_TYPE=Release
+    cmake --build build-windows
 
--> Prepare clean project
-$ make distclean
+Clean build
+-----------
 
-
-
--> Remember to add these files to your .hgignore
-	Makefile
-	config.*
-	*.a
-	.deps
-
-
--> Send me TODO list to complete build system.
-	matteo.facchinetti@sirius-es.it
-
+Remove the selected build directory and configure it again. All generated
+files are kept outside the source tree.
