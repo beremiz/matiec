@@ -192,13 +192,25 @@ int main(int argc, char **argv) {
        *       In this way compiler front-end accepts paths with or without
        *       slash terminator.
        */
-      path_len = strlen(optarg) - 1;
+      path_len = strlen(optarg);
+      if (path_len == 0) {
+        fprintf(stderr, "Option -I requires a non-empty directory\n");
+        errflg++;
+        break;
+      }
+      path_len--;
       if (optarg[path_len] == '\\') optarg[path_len]= '\0';
       runtime_options.includedir = optarg;
       break;
     case 'T':
       /* NOTE: see note above */
-      path_len = strlen(optarg) - 1;
+      path_len = strlen(optarg);
+      if (path_len == 0) {
+        fprintf(stderr, "Option -T requires a non-empty directory\n");
+        errflg++;
+        break;
+      }
+      path_len--;
       if (optarg[path_len] == '\\') optarg[path_len]= '\0';
       builddir = optarg;
       break;
@@ -263,5 +275,4 @@ int main(int argc, char **argv) {
 
   return 0;
 }
-
 
