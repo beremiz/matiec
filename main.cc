@@ -225,7 +225,7 @@ int main(int argc, char **argv) {
     errflg++;
   }
 
-  if (optind > argc) {
+  if ((argc - optind) > 1) {
     fprintf(stderr, "Too many input files\n");
     errflg++;
   }
@@ -263,5 +263,4 @@ int main(int argc, char **argv) {
 
   return 0;
 }
-
 
