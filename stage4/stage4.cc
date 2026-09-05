@@ -55,6 +55,8 @@
 #define  LAST_(symbol1, symbol2) (((symbol1)->last_order  > (symbol2)->last_order)    ? (symbol1) : (symbol2))
 #include <stdarg.h>
 
+bool stage4out_c::output_error = false;
+
 void stage4err(const char *stage4_generator_id, symbol_c *symbol1, symbol_c *symbol2, const char *errmsg, ...) {
     va_list argptr;
     va_start(argptr, errmsg); /* second argument is last fixed pamater of stage4err() */
@@ -108,13 +110,25 @@ stage4out_c::stage4out_c(const char *dir, const char *radix, const char *extensi
 stage4out_c::~stage4out_c(void) {
   if(m_file)
   {
+    m_file->flush();
+    if (m_file->fail()) output_error = true;
     m_file->close();
+    if (m_file->fail()) output_error = true;
     delete m_file;
   }
 }
 
 void stage4out_c::flush(void) {
   out->flush();
+  if (out->fail()) output_error = true;
+}
+
+void stage4out_c::reset_output_error(void) {
+  output_error = false;
+}
+
+bool stage4out_c::has_output_error(void) {
+  return output_error;
 }
 
 void stage4out_c::enable_output(void) {
@@ -256,6 +270,7 @@ void delete_code_generator(visitor_c *code_generator);
 
 
 int stage4(symbol_c *tree_root, const char *builddir) {
+  stage4out_c::reset_output_error();
   stage4out_c s4o;
   visitor_c *generate_code = new_code_generator(&s4o, builddir);
 
@@ -265,6 +280,11 @@ int stage4(symbol_c *tree_root, const char *builddir) {
 
   delete_code_generator(generate_code);
 
+  s4o.flush();
+  if (stage4out_c::has_output_error()) {
+    fprintf(stderr, "Error writing generated output.\n");
+    return -1;
+  }
+
   return 0;
 }
-

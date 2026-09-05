@@ -56,6 +56,8 @@ class stage4out_c {
     ~stage4out_c(void);
     
     void flush(void);
+    static void reset_output_error(void);
+    static bool has_output_error(void);
     
     void enable_output(void);
     void disable_output(void);
@@ -97,6 +99,8 @@ class stage4out_c {
      * semantic analysers from analysing the code.
      */
     bool allow_output;
+
+    static bool output_error;
 
 };
 
