@@ -88,6 +88,10 @@ static inline int cmp_unsigned_signed(const uint64_t u, const int64_t s) {
   return -1;
 }
 
+static inline uint64_t magnitude_of_negative(const int64_t value) {
+  return (uint64_t)(-(value + 1)) + 1;
+}
+
 array_range_check_c::array_range_check_c(symbol_c *ignore) {
 	error_count = 0;
 	current_display_error_level = 0;
@@ -203,10 +207,18 @@ void *array_range_check_c::visit(subrange_c *symbol) {
 			STAGE3_ERROR(0, symbol, symbol, "Subrange has lower limit (%" PRId64 ") larger than upper limit (%" PRId64 ").", GET_CVALUE( int64, symbol->lower_limit), GET_CVALUE( int64, symbol->upper_limit));
 			dimension = std::numeric_limits< unsigned long long int >::max() - 1; // -1 because it will be incremented at the end of this function!! 
 		} else if (GET_CVALUE( int64, symbol->lower_limit) >= 0) {
-			dimension = GET_CVALUE( int64, symbol->upper_limit) - GET_CVALUE( int64, symbol->lower_limit);
+			dimension = (uint64_t)GET_CVALUE( int64, symbol->upper_limit) - (uint64_t)GET_CVALUE( int64, symbol->lower_limit);
+		} else if (GET_CVALUE( int64, symbol->upper_limit) < 0) {
+			dimension  = magnitude_of_negative(GET_CVALUE( int64, symbol->lower_limit));
+			dimension -= magnitude_of_negative(GET_CVALUE( int64, symbol->upper_limit));
 		} else {
-			dimension  = -GET_CVALUE( int64, symbol->lower_limit);
-			dimension +=  GET_CVALUE( int64, symbol->upper_limit);     
+			dimension = magnitude_of_negative(GET_CVALUE( int64, symbol->lower_limit));
+			if ((std::numeric_limits< unsigned long long int >::max() - dimension) < (uint64_t)GET_CVALUE( int64, symbol->upper_limit)) {
+				STAGE3_ERROR(0, symbol, symbol, "Number of elements in array subrange exceeds maximum number of elements (%llu).", std::numeric_limits< unsigned long long int >::max());
+				symbol->dimension = std::numeric_limits< unsigned long long int >::max();
+				return NULL;
+			} else
+				dimension += (uint64_t)GET_CVALUE( int64, symbol->upper_limit);
 		}
 	} else if (VALID_CVALUE(uint64, symbol->upper_limit) && VALID_CVALUE(uint64, symbol->lower_limit)) {
 		if  (GET_CVALUE(uint64, symbol->lower_limit)  >   GET_CVALUE(uint64, symbol->upper_limit)) {
@@ -219,11 +231,13 @@ void *array_range_check_c::visit(subrange_c *symbol) {
 		if (GET_CVALUE( int64, symbol->lower_limit) >= 0) {
 			dimension = GET_CVALUE(uint64, symbol->upper_limit) - GET_CVALUE( int64, symbol->lower_limit);
 		} else {
-			unsigned long long int lower_ull;
-			lower_ull  = -GET_CVALUE( int64, symbol->lower_limit);
-			dimension  =  GET_CVALUE(uint64, symbol->upper_limit) + lower_ull;     
-			if (dimension < lower_ull)
+			unsigned long long int lower_ull = magnitude_of_negative(GET_CVALUE( int64, symbol->lower_limit));
+			if ((std::numeric_limits< unsigned long long int >::max() - lower_ull) < GET_CVALUE(uint64, symbol->upper_limit)) {
 				STAGE3_ERROR(0, symbol, symbol, "Number of elements in array subrange exceeds maximum number of elements (%llu).", std::numeric_limits< unsigned long long int >::max());
+				symbol->dimension = std::numeric_limits< unsigned long long int >::max();
+				return NULL;
+			} else
+				dimension = GET_CVALUE(uint64, symbol->upper_limit) + lower_ull;
 		}
 	} else if (!VALID_CVALUE(uint64, symbol->upper_limit) && !VALID_CVALUE( int64, symbol->upper_limit)) {
 		STAGE3_ERROR(0, symbol->upper_limit, symbol->upper_limit, "Subrange upper limit is not a constant value.");
@@ -247,9 +261,12 @@ void *array_range_check_c::visit(subrange_c *symbol) {
 	 * Up to now, we have only determined dimension = upper_limit - lower_limit
 	 * We must first check whether this last increment will cause an overflow!
 	 */
-	if (dimension == std::numeric_limits< unsigned long long int >::max())
+	if (dimension == std::numeric_limits< unsigned long long int >::max()) {
 		STAGE3_ERROR(0, symbol, symbol, "Number of elements in array subrange exceeds maximum number of elements (%llu).", std::numeric_limits< unsigned long long int >::max());
-	
+		symbol->dimension = dimension;
+		return NULL;
+	}
+
 	/* correct value for dimension is actually ---> dimension = upper_limit - lower_limit + 1 */
 	dimension++; 
 	
@@ -281,8 +298,13 @@ void *array_range_check_c::visit(array_initial_elements_list_c *symbol) {
 	 */
 	unsigned long long int array_size = 1;
 	array_dimension_iterator_c array_dimension_iterator(array_spec);
-	for (subrange_c *dimension = array_dimension_iterator.next(); NULL != dimension; dimension = array_dimension_iterator.next())
-		array_size *= dimension->dimension;
+	for (subrange_c *dimension = array_dimension_iterator.next(); NULL != dimension; dimension = array_dimension_iterator.next()) {
+		if ((dimension->dimension != 0) && ((std::numeric_limits< unsigned long long int >::max() / dimension->dimension) < array_size)) {
+			STAGE3_ERROR(0, symbol, symbol, "Total number of elements in array exceeds maximum supported value (%llu).", std::numeric_limits< unsigned long long int >::max());
+			array_size = std::numeric_limits< unsigned long long int >::max();
+		} else
+			array_size *= dimension->dimension;
+	}
 
 	/* Determine how many initial values are given... */
 	unsigned long long int initial_values_count = 0;
@@ -291,10 +313,21 @@ void *array_range_check_c::visit(array_initial_elements_list_c *symbol) {
 		array_initial_elements_c *repeated_element = dynamic_cast<array_initial_elements_c *>(symbol->get_element(i));
 		if (NULL == repeated_element)
 			initial_values_count++;
-		else if (VALID_CVALUE( int64, repeated_element->integer) && (GET_CVALUE( int64, repeated_element->integer) >= 0))
-			initial_values_count += GET_CVALUE( int64, repeated_element->integer);
-		else if (VALID_CVALUE(uint64, repeated_element->integer))
-			initial_values_count += GET_CVALUE(uint64, repeated_element->integer);
+		else if (VALID_CVALUE( int64, repeated_element->integer) && (GET_CVALUE( int64, repeated_element->integer) >= 0)) {
+			uint64_t repeat_count = GET_CVALUE( int64, repeated_element->integer);
+			if ((std::numeric_limits< unsigned long long int >::max() - initial_values_count) < repeat_count) {
+				STAGE3_ERROR(0, repeated_element, repeated_element, "Number of initial values exceeds maximum supported value (%llu).", std::numeric_limits< unsigned long long int >::max());
+				initial_values_count = std::numeric_limits< unsigned long long int >::max();
+			} else
+				initial_values_count += repeat_count;
+		} else if (VALID_CVALUE(uint64, repeated_element->integer)) {
+			uint64_t repeat_count = GET_CVALUE(uint64, repeated_element->integer);
+			if ((std::numeric_limits< unsigned long long int >::max() - initial_values_count) < repeat_count) {
+				STAGE3_ERROR(0, repeated_element, repeated_element, "Number of initial values exceeds maximum supported value (%llu).", std::numeric_limits< unsigned long long int >::max());
+				initial_values_count = std::numeric_limits< unsigned long long int >::max();
+			} else
+				initial_values_count += repeat_count;
+		}
 		else return NULL; /* not a constant value -> already reported by the constant folding */
 	}
 
@@ -383,6 +416,4 @@ void *array_range_check_c::visit(program_declaration_c *symbol) {
 	// search_var_instance_decl = NULL;
 	return NULL;
 }
-
-
 
