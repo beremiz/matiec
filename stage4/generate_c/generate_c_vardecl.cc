@@ -81,6 +81,7 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
     unsigned long long int array_size;
     unsigned long long int defined_values_count;
     unsigned long long int current_initialization_count;
+    bool generating_array_initialization;
 
   public:
     generate_c_array_initialization_c(stage4out_c *s4o_ptr): generate_c_base_and_typeid_c(s4o_ptr) {}
@@ -90,6 +91,7 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
       array_size = 1;
       defined_values_count = 0;
       current_initialization_count = 0;
+      generating_array_initialization = false;
       array_base_type = array_default_value = array_default_initialization = NULL;
       
       current_mode = arraysize_am;
@@ -241,7 +243,15 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
     /* array_initial_elements_list ',' array_initial_elements */
     void *visit(array_initial_elements_list_c *symbol) {
       switch (current_mode) {
-        case initializationvalue_am:
+        case initializationvalue_am: {
+          if (generating_array_initialization) {
+            generate_c_array_initialization_c nested_array_initialization(&s4o);
+            nested_array_initialization.init_array_size(array_base_type);
+            nested_array_initialization.init_array_values(symbol);
+            break;
+          }
+
+          generating_array_initialization = true;
           current_initialization_count = 0;
           for (int i = 0; i < symbol->n; i++) {
             if (current_initialization_count >= defined_values_count) {
@@ -261,7 +271,9 @@ class generate_c_array_initialization_c: public generate_c_base_and_typeid_c {
             }
             current_initialization_count++;
           }
+          generating_array_initialization = false;
           break;
+        }
         default:
           break;
       }
@@ -2887,6 +2899,5 @@ SYM_REF2(fb_initialization_c, function_block_type_name, structure_initialization
 
 
 }; /* generate_c_vardecl_c */
-
 
 

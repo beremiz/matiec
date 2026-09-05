@@ -1,9 +1,4 @@
-(* Test of initial values for structured/array data types. *)
-
-(* KNOWN FAILURE: an array initialization nested inside another array initialization
- * aborts the C code generator (generate_c_vardecl.cc), as it counts the initial values
- * of every nesting level with the same set of counters.
- *)
+(* Test an array initialization nested inside another array initialization. *)
 
 TYPE
   arr_dint : ARRAY [1..2] OF DINT;

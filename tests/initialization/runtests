@@ -20,7 +20,8 @@ error=0
 rm -rf $OUTDIR
 mkdir -p $OUTDIR
 
-for ff in `ls ok_*.st bad_*.st xfail_*.st`
+shopt -s nullglob
+for ff in ok_*.st bad_*.st xfail_*.st
 do
   rm -rf $OUTDIR/*
   $IEC2C $IEC2C_FLAGS -T $OUTDIR $ff > $ff.out 2> $ff.err
