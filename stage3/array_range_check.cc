@@ -82,10 +82,15 @@
  *    first has a lesser value.
  */
 static inline int cmp_unsigned_signed(const uint64_t u, const int64_t s) {
-  const uint64_t INT64_MAX_uvar = INT64_MAX;
-  if (u <= INT64_MAX_uvar)
-    return ((int64_t)u - s);
-  return -1;
+  if (s < 0)
+    return 1;
+
+  const uint64_t unsigned_s = (uint64_t)s;
+  if (u < unsigned_s)
+    return -1;
+  if (u > unsigned_s)
+    return 1;
+  return 0;
 }
 
 array_range_check_c::array_range_check_c(symbol_c *ignore) {
@@ -383,6 +388,5 @@ void *array_range_check_c::visit(program_declaration_c *symbol) {
 	// search_var_instance_decl = NULL;
 	return NULL;
 }
-
 
 
