@@ -218,6 +218,49 @@ int check_extern_c::error_count = 0;
 std::set<symbol_c *> check_extern_c::checked_decl;
 
 
+class constant_function_block_check_c: public iterator_visitor_c {
+  private:
+    int error_count;
+    int current_display_error_level;
+    bool declarations_are_constant;
+
+    void *check_declarations(symbol_c *option, symbol_c *declarations) {
+      bool previous_state = declarations_are_constant;
+      declarations_are_constant = (NULL != dynamic_cast<constant_option_c *>(option));
+      if (NULL != declarations) declarations->accept(*this);
+      declarations_are_constant = previous_state;
+      return NULL;
+    }
+
+  public:
+    constant_function_block_check_c(void) {
+      error_count = 0;
+      current_display_error_level = 0;
+      declarations_are_constant = false;
+    }
+
+    int get_error_count(void) {return error_count;}
+
+    void *visit(var_declarations_c *symbol) {
+      return check_declarations(symbol->option, symbol->var_init_decl_list);
+    }
+
+    void *visit(external_var_declarations_c *symbol) {
+      return check_declarations(symbol->option, symbol->external_declaration_list);
+    }
+
+    void *visit(global_var_declarations_c *symbol) {
+      return check_declarations(symbol->option, symbol->global_var_decl_list);
+    }
+
+    void *visit(fb_spec_init_c *symbol) {
+      if (declarations_are_constant)
+        STAGE3_ERROR(0, symbol, symbol, "Function block instances may not be declared CONSTANT.");
+      return NULL;
+    }
+};
+
+
 
 
 
@@ -230,7 +273,9 @@ declaration_check_c::declaration_check_c(symbol_c *ignore) {
   current_display_error_level = 0;
   current_pou_decl = NULL;
   current_resource_decl = NULL;
-  error_count = 0;
+  constant_function_block_check_c constant_function_block_check;
+  if (NULL != ignore) ignore->accept(constant_function_block_check);
+  error_count = constant_function_block_check.get_error_count();
 }
 
 declaration_check_c::~declaration_check_c(void) {
@@ -238,7 +283,7 @@ declaration_check_c::~declaration_check_c(void) {
 }
 
 int declaration_check_c::get_error_count() {
-  return check_extern_c::error_count;
+  return error_count + check_extern_c::error_count;
 }
 
 /*****************************/
@@ -317,4 +362,3 @@ void *declaration_check_c::visit(program_configuration_c *symbol) {
   p_decl->accept(check_extern);
   return NULL;
 }
-
