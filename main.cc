@@ -68,7 +68,11 @@
 
 
 #include <stdio.h>
+#if defined(_MSC_VER)
+#include "util/getopt.hh"
+#else
 #include <getopt.h>
+#endif
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>

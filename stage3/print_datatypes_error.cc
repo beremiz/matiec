@@ -50,7 +50,7 @@
 #include <list>
 #include <string>
 #include <string.h>
-#include <strings.h>
+#include "../util/strcase.hh"
 
 
 

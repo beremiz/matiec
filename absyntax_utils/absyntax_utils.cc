@@ -49,7 +49,7 @@
 #include <sstream>
 #include <typeinfo>
 #include <list>
-#include <strings.h>
+#include "../util/strcase.hh"
 // #include <string.h>  /* required for strlen() */
 // #include <stdlib.h>  /* required for atoi() */
 // #include <errno.h>   /* required for errno */

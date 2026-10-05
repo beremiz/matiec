@@ -29,7 +29,7 @@
 #include <list>
 #include <map>
 #include <sstream>
-#include <strings.h>
+#include "../../util/strcase.hh"
 
 
 #include "../../util/symtable.hh"
@@ -53,8 +53,8 @@
 
 
 /* Macros to access the constant value of each expression (if it exists) from the annotation introduced to the symbol_c object by constant_folding_c in stage3! */
-#define VALID_CVALUE(dtype, symbol)           ((symbol)->const_value._##dtype.is_valid())
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.get()) 
+#define VALID_CVALUE(dtype, symbol)           ((symbol)->const_value.value_##dtype.is_valid())
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value.value_##dtype.get())
 
 
 
