@@ -47,7 +47,7 @@
 
 
 #include "function_call_param_iterator.hh"
-#include <strings.h>
+#include "../util/strcase.hh"
 #include "../main.hh" // required for ERROR() and ERROR_MSG() macros.
 
 

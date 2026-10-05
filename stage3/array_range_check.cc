@@ -70,8 +70,8 @@
 }
 
 
-#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value._##dtype.get())
-#define VALID_CVALUE(dtype, symbol)           ((symbol)->const_value._##dtype.is_valid())
+#define GET_CVALUE(dtype, symbol)             ((symbol)->const_value.value_##dtype.get())
+#define VALID_CVALUE(dtype, symbol)           ((symbol)->const_value.value_##dtype.is_valid())
 
 /*  The cmp_unsigned_signed function compares two numbers u and s.
  *  It returns an integer indicating the relationship between the numbers:

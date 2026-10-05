@@ -722,10 +722,10 @@ bool get_datatype_info_c::is_arraytype_equal_relaxed(symbol_c *first_type, symbo
      *  the get_datatype_info_c::is_type_equal() method is called.
      *  This is why we implement an alternative method in case the subrange limits have not yet been reduced to a cvalue!
      */
-    if (    (subrange_1->lower_limit->const_value._int64.is_valid() || subrange_1->lower_limit->const_value._uint64.is_valid())
-         && (subrange_2->lower_limit->const_value._int64.is_valid() || subrange_2->lower_limit->const_value._uint64.is_valid())
-         && (subrange_1->upper_limit->const_value._int64.is_valid() || subrange_1->upper_limit->const_value._uint64.is_valid())
-         && (subrange_2->upper_limit->const_value._int64.is_valid() || subrange_2->upper_limit->const_value._uint64.is_valid())
+    if (    (subrange_1->lower_limit->const_value.value_int64.is_valid() || subrange_1->lower_limit->const_value.value_uint64.is_valid())
+         && (subrange_2->lower_limit->const_value.value_int64.is_valid() || subrange_2->lower_limit->const_value.value_uint64.is_valid())
+         && (subrange_1->upper_limit->const_value.value_int64.is_valid() || subrange_1->upper_limit->const_value.value_uint64.is_valid())
+         && (subrange_2->upper_limit->const_value.value_int64.is_valid() || subrange_2->upper_limit->const_value.value_uint64.is_valid())
        ) {
       if (! (subrange_1->lower_limit->const_value == subrange_2->lower_limit->const_value)) return false;
       if (! (subrange_1->upper_limit->const_value == subrange_2->upper_limit->const_value)) return false;

@@ -51,7 +51,7 @@
 #include "spec_init_separator.hh"  /* no longer required, aready included by absyntax_utils.hh */
 #include <stdlib.h>  /* required for strtol() */
 #include <string.h>
-#include <strings.h>
+#include "../util/strcase.hh"
 #include <limits> // required for std::numeric_limits< XXX >::max()
 #include <errno.h> // required for errno
 #include "../main.hh" // required for ERROR() and ERROR_MSG() macros.

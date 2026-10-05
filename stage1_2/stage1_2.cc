@@ -45,7 +45,7 @@
 
 #include "../main.hh"
 #include "stage1_2.hh"
-#include "iec_bison.hh"
+#include <iec_bison.hh>
 #include "stage1_2_priv.hh"
 #include "create_enumtype_conversion_functions.hh"
 

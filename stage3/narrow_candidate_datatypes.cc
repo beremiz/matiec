@@ -59,7 +59,7 @@
 #include <list>
 #include <string>
 #include <string.h>
-#include <strings.h>
+#include "../util/strcase.hh"
 
 
 /* set to 1 to see debug info during execution */

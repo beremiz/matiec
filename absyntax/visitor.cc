@@ -49,7 +49,6 @@
 
 
 
-#include <unistd.h>
 
 #include <stdio.h>  /* required for NULL */
 #include "visitor.hh"

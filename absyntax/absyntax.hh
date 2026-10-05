@@ -136,10 +136,10 @@ class const_value_c {
 
     };
 
-    const_value__< int64_t>  _int64; /* status is initialised to UNDEFINED */
-    const_value__<uint64_t> _uint64; /* status is initialised to UNDEFINED */
-    const_value__<real64_t> _real64; /* status is initialised to UNDEFINED */
-    const_value__<bool    >   _bool; /* status is initialised to UNDEFINED */
+    const_value__< int64_t>  value_int64; /* status is initialised to UNDEFINED */
+    const_value__<uint64_t> value_uint64; /* status is initialised to UNDEFINED */
+    const_value__<real64_t> value_real64; /* status is initialised to UNDEFINED */
+    const_value__<bool    >   value_bool; /* status is initialised to UNDEFINED */
     
     /* default constructor and destructor */
      const_value_c(void) {};
@@ -147,11 +147,11 @@ class const_value_c {
     
     /* comparison operator */
     bool operator==(const const_value_c cv)
-      {return ((_int64==cv._int64) && (_uint64==cv._uint64) && (_real64==cv._real64) && (_bool==cv._bool));}                                                     
+      {return ((value_int64==cv.value_int64) && (value_uint64==cv.value_uint64) && (value_real64==cv.value_real64) && (value_bool==cv.value_bool));}
       
     /* return true if at least one of the const values (int, real, ...) is a valid const value */
     bool is_const(void) 
-      {return (_int64.is_valid() || _uint64.is_valid() || _real64.is_valid() || _bool.is_valid());}   
+      {return (value_int64.is_valid() || value_uint64.is_valid() || value_real64.is_valid() || value_bool.is_valid());}
 };
 
 // A forward declaration

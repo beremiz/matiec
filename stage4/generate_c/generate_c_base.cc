@@ -793,8 +793,8 @@ void *visit(symbolic_variable_c *symbol) {
 // a non-standard extension!!
 void *visit(symbolic_constant_c *symbol) {
   TRACE("symbolic_variable_c");
-  if      (symbol->const_value. _int64.is_valid()) s4o.print(symbol->const_value. _int64.get());
-  else if (symbol->const_value._uint64.is_valid()) s4o.print(symbol->const_value._uint64.get());
+  if      (symbol->const_value. value_int64.is_valid()) s4o.print(symbol->const_value. value_int64.get());
+  else if (symbol->const_value.value_uint64.is_valid()) s4o.print(symbol->const_value.value_uint64.get());
   else ERROR;
   return NULL;
 }
