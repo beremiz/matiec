@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 project(matiec VERSION 0.1 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
+include(CTest)
 
 find_package(BISON 2.4 REQUIRED)
 find_package(FLEX REQUIRED)
@@ -127,3 +128,7 @@ install(FILES COPYING DESTINATION "${CMAKE_INSTALL_DATADIR}/matiec")
 install(DIRECTORY lib/ DESTINATION "${CMAKE_INSTALL_DATADIR}/matiec/lib"
     FILES_MATCHING PATTERN "*.txt" PATTERN "*.h" PATTERN "*.pycpp"
     PATTERN "COPYING.LESSER")
+
+if(BUILD_TESTING)
+    add_subdirectory(cmake/tests)
+endif()
