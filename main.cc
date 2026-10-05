@@ -79,7 +79,12 @@
 #include <iostream>
 
 
+#ifdef MATIEC_CMAKE_BUILD
+#include <config/config.h>
+#include "util/library_path.hh"
+#else
 #include "config/config.h"
+#endif
 #include "absyntax/absyntax.hh"
 #include "absyntax_utils/absyntax_utils.hh"
 #include "stage1_2/stage1_2.hh"
@@ -161,7 +166,11 @@ int main(int argc, char **argv) {
   runtime_options.ref_standard_extensions = false; /* disable: Allow the use of REFerences (keywords REF_TO, REF, DREF, ^, NULL). */
   runtime_options.ref_nonstand_extensions = false; /* disable: Allow the use of non-standard extensions to REF_TO datatypes: REF_TO ANY, and REF_TO in struct elements! */
   runtime_options.nonliteral_in_array_size= false; /* disable: Allow the use of constant non-literals when specifying size of arrays (ARRAY [1..max] OF INT) */
-  runtime_options.includedir              = NULL;  /* Include directory, where included files will be searched for... */
+#ifdef MATIEC_CMAKE_BUILD
+  runtime_options.includedir              = matiec_default_library_directory();
+#else
+  runtime_options.includedir              = NULL;
+#endif
 
   /* Default values for the command line options... */
   runtime_options.relaxed_datatype_model    = false; /* by default use the strict datatype equivalence model */
