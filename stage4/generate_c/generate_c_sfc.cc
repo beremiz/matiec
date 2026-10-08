@@ -168,6 +168,22 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
       s4o.print(",,0);\n");
     }
 
+    /* prev_state = GET_VAR(X), after the step's actions were evaluated: prev_state holds
+     * the step activity at the end of the previous scan (edge memory of R_TRIG/F_TRIG used
+     * for 'activated'/'desactivated'), so the initial step set at init is seen as activated
+     * in the first scan. */
+    void print_step_prev_state_update(symbol_c *step_name) {
+      s4o.print(s4o.indent_spaces);
+      s4o.print(SET_VAR);
+      s4o.print("(");
+      print_step_argument(step_name, "prev_state", true);
+      s4o.print(",,");
+      s4o.print(GET_VAR);
+      s4o.print("(");
+      print_step_argument(step_name, "X");
+      s4o.print("));\n");
+    }
+
     void print_set_step(symbol_c *step_name) {
       s4o.print(s4o.indent_spaces);
       s4o.print(SET_VAR);
@@ -190,24 +206,23 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
       switch (wanted_sfcgeneration) {
         case steptmpinit_sg:
           // remember step activity
+          // The initial step is active from initialization but becomes activated in the
+          // first scan (prev_state is 0 after init), like a step set by a transition:
+          // its actions run in that scan and its successor transitions are tested
+          // from the next one (IEC 61131-3, SFC evolution: clearing time is never zero).
           s4o.print(s4o.indent_spaces + "IEC_BOOL ");
           symbol->step_name->accept(*this);
           s4o.print("_X = ");
           s4o.print(GET_VAR);
           s4o.print("(");
           print_step_argument(symbol->step_name, "X");
+          s4o.print(") && ");
+          s4o.print(GET_VAR);
+          s4o.print("(");
+          print_step_argument(symbol->step_name, "prev_state");
           s4o.print(");\n");
           break;
         case stepinit_sg:
-          /* prev_state = GET_VAR(X) */
-          s4o.print(s4o.indent_spaces);
-          s4o.print(SET_VAR);
-          s4o.print("(");
-          print_step_argument(symbol->step_name, "prev_state", true);
-          s4o.print(",,");
-          symbol->step_name->accept(*this);
-          s4o.print("_X);\n");
-
           /* if (X) T += elapsed_time */
           s4o.print(s4o.indent_spaces + "if (");
           symbol->step_name->accept(*this);
@@ -258,6 +273,7 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}\n\n");
           }
+          print_step_prev_state_update(symbol->step_name);
           break;
         default:
           break;
@@ -278,15 +294,6 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
           s4o.print(");\n");
           break;
         case stepinit_sg:
-          /* prev_state = GET_VAR(X) */
-          s4o.print(s4o.indent_spaces);
-          s4o.print(SET_VAR);
-          s4o.print("(");
-          print_step_argument(symbol->step_name, "prev_state", true);
-          s4o.print(",,");
-          symbol->step_name->accept(*this);
-          s4o.print("_X);\n");
-
           /* if (X) T += elapsed_time */
           s4o.print(s4o.indent_spaces + "if (");
           symbol->step_name->accept(*this);
@@ -337,6 +344,7 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
             s4o.indent_left();
             s4o.print(s4o.indent_spaces + "}\n\n");
           }
+          print_step_prev_state_update(symbol->step_name);
           break;
         default:
           break;
