@@ -47,7 +47,8 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
       steptmpinit_sg,
       stepinit_sg,
       actioninit_sg,
-      actionstateeval_sg
+      actionstateeval_sg,
+      actionprevq_sg
     } sfcgeneration_t;
 
   private:
@@ -436,11 +437,22 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
           print_action_state_eval(symbol->action_name);
           break;
         case actionbody_sg:
-          s4o.print(s4o.indent_spaces + "if(");
+          /* Executed while A = Q OR F_TRIG(Q) (IEC 61131-3 action control, 'final scan'):
+           * pass 0 runs the actions whose Q fell in this scan (one last execution, the step
+           * flags of the deactivated steps are already FALSE), pass 1 runs the active ones. */
+          s4o.print(s4o.indent_spaces + "if(__sfc_pass ? ");
           s4o.print(GET_VAR);
           s4o.print("(");
           print_action_argument(symbol->action_name, "Q");
-          s4o.print(")) {\n");
+          s4o.print(") : (!");
+          s4o.print(GET_VAR);
+          s4o.print("(");
+          print_action_argument(symbol->action_name, "Q");
+          s4o.print(") && ");
+          s4o.print(GET_VAR);
+          s4o.print("(");
+          print_action_argument(symbol->action_name, "prev_Q");
+          s4o.print("))) {\n");
           s4o.indent_right();
 
           // generate action code
@@ -448,6 +460,18 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
 
           s4o.indent_left();
           s4o.print(s4o.indent_spaces + "}\n\n");
+          break;
+        case actionprevq_sg:
+          /* prev_Q = Q: edge memory of the F_TRIG behind the final scan */
+          s4o.print(s4o.indent_spaces);
+          s4o.print(SET_VAR);
+          s4o.print("(");
+          print_action_argument(symbol->action_name, "prev_Q", true);
+          s4o.print(",,");
+          s4o.print(GET_VAR);
+          s4o.print("(");
+          print_action_argument(symbol->action_name, "Q");
+          s4o.print("));\n");
           break;
         default:
           break;
@@ -1003,8 +1027,23 @@ class generate_c_sfc_c: public generate_c_base_and_typeid_c {
           }
         }
       }
+      /* Two passes over the action bodies, each body emitted once: first the final scan of
+       * the actions deactivated in this scan, then the active actions (same order as
+       * CODESYS IEC actions), so a value written by an active action wins. */
+      s4o.print(s4o.indent_spaces + "{\n");
+      s4o.indent_right();
+      s4o.print(s4o.indent_spaces + "int __sfc_pass;\n");
+      s4o.print(s4o.indent_spaces + "for (__sfc_pass = 0; __sfc_pass < 2; __sfc_pass++) {\n");
+      s4o.indent_right();
       for(i = 0; i < symbol->n; i++) {
         generate_c_sfc_elements->generate(symbol->get_element(i), generate_c_sfc_elements_c::actionbody_sg);
+      }
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "}\n");
+      s4o.indent_left();
+      s4o.print(s4o.indent_spaces + "}\n");
+      for(i = 0; i < symbol->n; i++) {
+        generate_c_sfc_elements->generate(symbol->get_element(i), generate_c_sfc_elements_c::actionprevq_sg);
       }
       s4o.print("\n");
 
