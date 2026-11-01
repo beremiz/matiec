@@ -1477,7 +1477,8 @@ static inline STRING __replace(STRING IN1, STRING IN2, __strlen_t L, __strlen_t 
     iec_lib_memcpy(&res.body, &IN1.body , to_copy);
     P = res.len = to_copy;
 
-    to_copy = IN2.len < L ? IN2.len : L;
+    /* L counts the characters replaced in IN1; the whole of IN2 goes in */
+    to_copy = IN2.len;
 
     if( to_copy + res.len > STR_MAX_LEN )
        to_copy = STR_MAX_LEN - res.len;
