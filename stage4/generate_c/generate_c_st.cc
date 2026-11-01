@@ -821,6 +821,17 @@ void *visit(mul_expression_c *symbol) {
 void *visit(div_expression_c *symbol) {
   if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype))
     return print_binary_function("__time_div", symbol->l_exp, symbol->r_exp);
+  if (get_datatype_info_c::is_ANY_INT_compatible   (symbol->datatype)) {
+    /* An integer division by zero is undefined in C (SIGFPE on x86,
+     * 0 on AArch64). Give 0, as MOD below and as the DIV() function
+     * of iec_std_functions.h already do. */
+    s4o.print("((");
+    symbol->r_exp->accept(*this);
+    s4o.print(" == 0)?0:");
+    print_binary_expression(symbol->l_exp, symbol->r_exp, " / ");
+    s4o.print(")");
+    return NULL;
+  }
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " / ");
 }
 
