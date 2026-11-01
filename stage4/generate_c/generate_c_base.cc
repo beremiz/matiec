@@ -240,10 +240,15 @@ class generate_c_base_c: public iterator_visitor_c {
       return NULL;
     }
 
+    /* Standard functions get the "___" prefix of the C library; the helpers
+     * that implement operators on TIME (__time_add, ...) are named as is.
+     */
     void *print_binary_function(const char *function,
           symbol_c *l_exp,
-          symbol_c *r_exp) {
-      s4o.print("___");
+          symbol_c *r_exp,
+          bool std_function_prefix = true) {
+      if (std_function_prefix)
+        s4o.print("___");
       s4o.print(function);
       s4o.print("(");
       l_exp->accept(*this);
