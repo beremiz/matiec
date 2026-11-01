@@ -30,6 +30,10 @@
 #include <map>
 #include <sstream>
 #include "../../util/strcase.hh"
+#include <vector>
+#include <algorithm>
+#include <climits>
+#include <cstdlib>
 
 
 #include "../../util/symtable.hh"
@@ -88,6 +92,30 @@
 
 /* Idem as body, but for run CONFIG and RESOURCE function */
 #define FB_RUN_SUFFIX "_run__"
+
+/* The PRIORITY of the task a program instance is attached to, or LONG_MAX
+ * for a program without a task (it then runs after every task). */
+static long task_priority(list_c *tasks, symbol_c *task_name) {
+  if (task_name == NULL || tasks == NULL) return LONG_MAX;
+  identifier_c *wanted = dynamic_cast<identifier_c *>(task_name);
+  if (wanted == NULL) return LONG_MAX;
+  for (int j = 0; j < tasks->n; j++) {
+    task_configuration_c *task = dynamic_cast<task_configuration_c *>(tasks->get_element(j));
+    if (task == NULL) continue;
+    identifier_c *name = dynamic_cast<identifier_c *>(task->task_name);
+    if (name == NULL || strcasecmp(name->value, wanted->value) != 0) continue;
+    task_initialization_c *init = dynamic_cast<task_initialization_c *>(task->task_initialization);
+    if (init == NULL) return LONG_MAX;
+    integer_c *prio = dynamic_cast<integer_c *>(init->priority_data_source);
+    if (prio == NULL) return LONG_MAX;
+    return strtol(prio->value, NULL, 10);
+  }
+  return LONG_MAX;
+}
+
+static bool priority_before(const std::pair<long, int> &a, const std::pair<long, int> &b) {
+  return a.first < b.first;
+}
 
 /* Idem as body, but for data structure */
 #define FB_DATASTRUCTURE_SUFFIX "_data__"
@@ -1988,8 +2016,23 @@ END_RESOURCE
       /* (C.2) Task management... */
       symbol->task_configuration_list->accept(*this);
       
-      /* (C.3) Program run declaration... */
-      symbol->program_configuration_list->accept(*this);
+      /* (C.3) Program run declaration, in order of task priority (0 first;
+       * IEC 61131-3 6.8.2). Programs of equal priority, and programs
+       * without a task, keep their declaration order. */
+      {
+        list_c *progs = dynamic_cast<list_c *>(symbol->program_configuration_list);
+        list_c *tasks = dynamic_cast<list_c *>(symbol->task_configuration_list);
+        if (progs == NULL) ERROR;
+        std::vector<std::pair<long, int> > order;
+        for (int i = 0; i < progs->n; i++) {
+          program_configuration_c *prog = dynamic_cast<program_configuration_c *>(progs->get_element(i));
+          if (prog == NULL) ERROR;
+          order.push_back(std::make_pair(task_priority(tasks, prog->task_name), i));
+        }
+        std::stable_sort(order.begin(), order.end(), priority_before);
+        for (size_t k = 0; k < order.size(); k++)
+          progs->get_element(order[k].second)->accept(*this);
+      }
       
       s4o.indent_left();
       s4o.print("}\n\n");
