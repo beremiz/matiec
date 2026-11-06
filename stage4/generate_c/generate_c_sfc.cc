@@ -46,6 +46,7 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
       actionbody_sg,
       steptmpinit_sg,
       stepinit_sg,
+      stepprevstatemem_sg,
       actioninit_sg,
       actionstateeval_sg
     } sfcgeneration_t;
@@ -198,16 +199,21 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
           print_step_argument(symbol->step_name, "X");
           s4o.print(");\n");
           break;
-        case stepinit_sg:
+
+        case stepprevstatemem_sg:
           /* prev_state = GET_VAR(X) */
           s4o.print(s4o.indent_spaces);
           s4o.print(SET_VAR);
           s4o.print("(");
           print_step_argument(symbol->step_name, "prev_state", true);
           s4o.print(",,");
-          symbol->step_name->accept(*this);
-          s4o.print("_X);\n");
+          s4o.print(GET_VAR);
+          s4o.print("(");
+          print_step_argument(symbol->step_name, "X");
+          s4o.print("));\n");
+          break;
 
+        case stepinit_sg:
           /* if (X) T += elapsed_time */
           s4o.print(s4o.indent_spaces + "if (");
           symbol->step_name->accept(*this);
@@ -277,16 +283,21 @@ class generate_c_sfc_elements_c: public generate_c_base_and_typeid_c {
           print_step_argument(symbol->step_name, "X");
           s4o.print(");\n");
           break;
-        case stepinit_sg:
+
+        case stepprevstatemem_sg:
           /* prev_state = GET_VAR(X) */
           s4o.print(s4o.indent_spaces);
           s4o.print(SET_VAR);
           s4o.print("(");
           print_step_argument(symbol->step_name, "prev_state", true);
           s4o.print(",,");
-          symbol->step_name->accept(*this);
-          s4o.print("_X);\n");
+          s4o.print(GET_VAR);
+          s4o.print("(");
+          print_step_argument(symbol->step_name, "X");
+          s4o.print("));\n");
+          break;
 
+        case stepinit_sg:
           /* if (X) T += elapsed_time */
           s4o.print(s4o.indent_spaces + "if (");
           symbol->step_name->accept(*this);
@@ -948,6 +959,13 @@ class generate_c_sfc_c: public generate_c_base_and_typeid_c {
         for(pt = variable_list.begin(); pt != variable_list.end(); pt++) {
           generate_c_sfc_elements->print_action_state_eval(pt->symbol);
         }
+      }
+      s4o.print("\n");
+
+      /* generate step prev_state memory update */
+      s4o.print(s4o.indent_spaces + "// Steps previous state memory update\n");
+      for(i = 0; i < symbol->n; i++) {
+        generate_c_sfc_elements->generate(symbol->get_element(i), generate_c_sfc_elements_c::stepprevstatemem_sg);
       }
       s4o.print("\n");
 
