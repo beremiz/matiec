@@ -1490,6 +1490,9 @@ static inline STRING __replace(STRING IN1, STRING IN2, __strlen_t L, __strlen_t 
     if( res.len <  STR_MAX_LEN && P < IN1.len)
     {
         to_copy = IN1.len - P;
+        /* IN2 may be longer than the L characters it replaces */
+        if( to_copy + res.len > STR_MAX_LEN )
+           to_copy = STR_MAX_LEN - res.len;
         iec_lib_memcpy(&res.body[res.len], &IN1.body[P] , to_copy);
         res.len += to_copy;
     }
