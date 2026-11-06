@@ -801,26 +801,26 @@ void *visit(ge_expression_c *symbol) {
 void *visit(add_expression_c *symbol) {
   if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype) ||
       get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype))
-    return print_binary_function("__time_add", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_add", symbol->l_exp, symbol->r_exp, false);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " + ");
 }
 
 void *visit(sub_expression_c *symbol) {
   if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype) ||
       get_datatype_info_c::is_ANY_DATE_compatible  (symbol->datatype))
-    return print_binary_function("__time_sub", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_sub", symbol->l_exp, symbol->r_exp, false);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " - ");
 }
 
 void *visit(mul_expression_c *symbol) {
   if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype))
-    return print_binary_function("__time_mul", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_mul", symbol->l_exp, symbol->r_exp, false);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " * ");
 }
 
 void *visit(div_expression_c *symbol) {
   if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype))
-    return print_binary_function("__time_div", symbol->l_exp, symbol->r_exp);
+    return print_binary_function("__time_div", symbol->l_exp, symbol->r_exp, false);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " / ");
 }
 
