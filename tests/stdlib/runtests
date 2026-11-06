@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Unit tests of the C implementation of the standard functions (lib/C).
+#
+#   test_*.c --> built against lib/C with AddressSanitizer and UndefinedBehaviorSanitizer,
+#                then run. A test passes if it returns 0 and the sanitizers report nothing,
+#                so an out of bounds access in a STRING function is a failure even when
+#                it happens not to change the result.
+
+CC=${CC:-gcc}
+CC_FLAGS="-g -O1 -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=all -w -I../../lib/C"
+OUTDIR="./output"
+
+if ! type $CC > /dev/null 2>&1
+  then echo "NOTE: '$CC' not found, the tests cannot be built."; exit 1
+fi
+
+mkdir -p $OUTDIR
+error=0
+
+for ff in `ls test_*.c`
+do
+  exe=$OUTDIR/`basename $ff .c`
+  if ! $CC $CC_FLAGS $ff -o $exe > $exe.err 2>&1
+    then echo "[ERROR]   " $ff "-> does not build:"; sed "s/^/             /" $exe.err; error=1; continue
+  fi
+  if $exe > $exe.out 2>&1
+    then echo "[ O K ]   " $ff
+    else echo "[ERROR]   " $ff "->"; sed "s/^/             /" $exe.out; error=1
+  fi
+done
+
+echo
+if `test $error = 1`
+  then echo "FAILURE -> At least one of the tests failed!"
+  else echo "SUCCESS -> All tests passed!"
+fi
+
+exit $error
