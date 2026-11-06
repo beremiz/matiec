@@ -818,30 +818,37 @@ void *visit(mul_expression_c *symbol) {
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " * ");
 }
 
+/* print __div_<type>(l_exp, r_exp) or __mod_<type>(l_exp, r_exp), <type> being
+ * the elementary integer type the expression was given by stage 3. */
+void *print_int_div_mod(const char *prefix, symbol_c *datatype, symbol_c *l_exp, symbol_c *r_exp) {
+  symbol_c *basetype = search_base_type_c::get_basetype_decl(datatype);
+  if (NULL == basetype) ERROR;
+  s4o.print(prefix);
+  basetype->accept(*this);
+  s4o.print("(");
+  l_exp->accept(*this);
+  s4o.print(", ");
+  r_exp->accept(*this);
+  s4o.print(")");
+  return NULL;
+}
+
 void *visit(div_expression_c *symbol) {
   if (get_datatype_info_c::is_TIME_compatible      (symbol->datatype))
     return print_binary_function("__time_div", symbol->l_exp, symbol->r_exp);
-  if (get_datatype_info_c::is_ANY_INT_compatible   (symbol->datatype)) {
+  if (get_datatype_info_c::is_ANY_INT_compatible   (symbol->datatype))
     /* An integer division by zero is undefined in C (SIGFPE on x86,
-     * 0 on AArch64). Give 0, as MOD below and as the DIV() function
-     * of iec_std_functions.h already do. */
-    s4o.print("((");
-    symbol->r_exp->accept(*this);
-    s4o.print(" == 0)?0:");
-    print_binary_expression(symbol->l_exp, symbol->r_exp, " / ");
-    s4o.print(")");
-    return NULL;
-  }
+     * 0 on AArch64). __div_<type>() gives 0, as MOD and the DIV()
+     * function of iec_std_functions.h do; being a function, it
+     * evaluates each operand once (the divisor may be a call with
+     * VAR_OUTPUT or VAR_IN_OUT parameters). */
+    return print_int_div_mod("__div_", symbol->datatype, symbol->l_exp, symbol->r_exp);
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " / ");
 }
 
 void *visit(mod_expression_c *symbol) {
-  s4o.print("((");
-  symbol->r_exp->accept(*this);
-  s4o.print(" == 0)?0:");
-  print_binary_expression(symbol->l_exp, symbol->r_exp, " % ");
-  s4o.print(")");
-  return NULL;
+  /* see div_expression_c above */
+  return print_int_div_mod("__mod_", symbol->datatype, symbol->l_exp, symbol->r_exp);
 }
 
 void *visit(power_expression_c *symbol) {

@@ -406,6 +406,18 @@ static inline TIME __time_mul(TIME IN1, LREAL IN2){
   __normalize_timespec(&res);
   return res;
 }
+/* The integer / and MOD operators. A zero divisor gives 0 (in C it is undefined
+ * behaviour); as functions, they evaluate each operand once. */
+#define __iec_(TYPENAME)\
+static inline TYPENAME __div_##TYPENAME(TYPENAME IN1, TYPENAME IN2){\
+  return IN2 == 0 ? 0 : IN1 / IN2;\
+}\
+static inline TYPENAME __mod_##TYPENAME(TYPENAME IN1, TYPENAME IN2){\
+  return IN2 == 0 ? 0 : IN1 % IN2;\
+}
+__ANY_INT(__iec_)
+#undef __iec_
+
 static inline TIME __time_div(TIME IN1, LREAL IN2){
   LREAL s_f = IN1.tv_sec / IN2;
   uint64_t s = (uint64_t)s_f;
