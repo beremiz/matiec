@@ -129,8 +129,8 @@ class generate_c_sfcdecl_c: protected generate_c_base_and_typeid_c {
     }
 
     void print_action_decl(symbol_c *action_name) {
-      const char *suffixes[] = {"_Q", "_stored", "_set", "_reset"};
-      for (int i = 0; i < 4; i++) {
+      const char *suffixes[] = {"_Q", "_prev_Q", "_stored", "_set", "_reset"};
+      for (int i = 0; i < 5; i++) {
         s4o.print(s4o.indent_spaces + "__DECLARE_VAR(BOOL,");
         action_name->accept(*this);
         s4o.print(suffixes[i]);
@@ -160,6 +160,7 @@ class generate_c_sfcdecl_c: protected generate_c_base_and_typeid_c {
 
     void print_action_init(symbol_c *action_name) {
       print_set_var_init(action_name, "_Q", "0");
+      print_set_var_init(action_name, "_prev_Q", "0");
       print_set_var_init(action_name, "_stored", "0");
       print_set_var_init(action_name, "_set", "0");
       print_set_var_init(action_name, "_reset", "0");
