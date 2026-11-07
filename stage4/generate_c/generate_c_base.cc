@@ -243,7 +243,6 @@ class generate_c_base_c: public iterator_visitor_c {
     void *print_binary_function(const char *function,
           symbol_c *l_exp,
           symbol_c *r_exp) {
-      s4o.print("___");
       s4o.print(function);
       s4o.print("(");
       l_exp->accept(*this);
