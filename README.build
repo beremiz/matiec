@@ -9,6 +9,7 @@ Compile/Build
 $ autoreconf -i
 $ ./configure
 $ make
+$ make test         (or 'make check': runs the test suites of tests/)
 
 
 2) Cross-Compiling under Linux, for Windows

@@ -22,8 +22,9 @@ stage4/Makefile
 /Makefile
 tests/**/*.st.err
 tests/**/*.st.out
-tests/**/*.c
-tests/**/*.h
+tests/**/output/
+/tests/*.c
+/tests/*.h
 
 # Out-of-source CMake builds and local presets.
 /build*/

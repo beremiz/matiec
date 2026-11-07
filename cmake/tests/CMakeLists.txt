@@ -29,6 +29,20 @@ foreach(input IN LISTS initialization_tests)
             -P "${CMAKE_CURRENT_SOURCE_DIR}/run_initialization.cmake")
 endforeach()
 
+# The other test suites of tests/ are run by their runtests script, as the
+# autotools 'make check' does (tests/initialization/runtests runs the cases above).
+# tests/stdlib builds the C unit tests of lib/C with the sanitizers of a
+# GCC/Clang-compatible compiler.
+find_program(MATIEC_BASH bash)
+if(MATIEC_BASH AND MATIEC_TEST_C_COMPILER AND NOT WIN32)
+    add_test(NAME stdlib
+        COMMAND "${CMAKE_COMMAND}" -E env "CC=${MATIEC_TEST_C_COMPILER}"
+            "${MATIEC_BASH}" ./runtests
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/tests/stdlib")
+else()
+    message(STATUS "tests/stdlib disabled; it needs bash and a GCC/Clang-compatible C compiler on a POSIX host")
+endif()
+
 add_test(NAME iec2iec.roundtrip
     COMMAND "${CMAKE_COMMAND}"
         "-DCOMPILER=$<TARGET_FILE:iec2iec>"

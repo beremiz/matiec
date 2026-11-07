@@ -12,7 +12,9 @@
 #                  Reported as [XFAIL], and as [XPASS] once it starts working,
 #                  in which case it should be renamed to ok_*.st.
 
-IEC2C="../../iec2c"
+# IEC2C may name the compiler under test ('make check' does), the default
+# being the one of an in-tree build.
+IEC2C=${IEC2C:-../../iec2c}
 IEC2C_FLAGS="-f -l -p -I ../../lib"
 OUTDIR="./output"
 
@@ -45,7 +47,7 @@ mkdir -p $OUTDIR
 for ff in `ls ok_*.st bad_*.st xfail_*.st 2> /dev/null`
 do
   rm -rf $OUTDIR/*
-  $IEC2C $IEC2C_FLAGS -T $OUTDIR $ff > $ff.out 2> $ff.err
+  "$IEC2C" $IEC2C_FLAGS -T $OUTDIR $ff > $ff.out 2> $ff.err
   status=$?
 
   case $ff in
