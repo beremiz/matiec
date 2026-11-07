@@ -213,11 +213,11 @@ function_block bar90a
   XXXX := XXXX MOD XXXX;
   CASE (XXXX + 10) OF
     10: XXXX := 10; 
-    10..20:XXXX := 20;
+    11..20:XXXX := 20;
     ELSE XXXX := 20;
   END_CASE;
   FOR XXXX := 10 TO 20 BY 2 DO
-    XXXX := XXXX + 1;
+    e_1 := e_1 + 1;
   END_FOR;
   FOR e_1 := XXXX TO 20 DO
     XXXX := XXXX + 1;
@@ -255,7 +255,7 @@ function_block bar91
   XXXX.a_1 := e_1;
   e_1 := foo_f2(XXXX, XXXX, e_1, f_1);
   e_1 := foo_f2 (XXXX, XXXX);
-  e_1 := foo_f2 (c_1 => e_1, b_1 := XXXX, d_1 := 10.0, a_1 := XXXX);
+  e_1 := foo_f2 (c_1 => e_1, b_1 := XXXX, d_1 => f_1, a_1 := XXXX);
   e_1 := foo_f2 (b_1 := XXXX);
 end_function_block
 

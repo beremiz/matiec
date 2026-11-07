@@ -34,13 +34,21 @@ endforeach()
 # tests/stdlib builds the C unit tests of lib/C with the sanitizers of a
 # GCC/Clang-compatible compiler.
 find_program(MATIEC_BASH bash)
-if(MATIEC_BASH AND MATIEC_TEST_C_COMPILER AND NOT WIN32)
-    add_test(NAME stdlib
-        COMMAND "${CMAKE_COMMAND}" -E env "CC=${MATIEC_TEST_C_COMPILER}"
-            "${MATIEC_BASH}" ./runtests
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/tests/stdlib")
+if(NOT MATIEC_BASH OR WIN32)
+    message(STATUS "tests/stdlib and tests/syntax/identifier disabled; they need bash on a POSIX host")
 else()
-    message(STATUS "tests/stdlib disabled; it needs bash and a GCC/Clang-compatible C compiler on a POSIX host")
+    add_test(NAME syntax.identifier
+        COMMAND "${CMAKE_COMMAND}" -E env "IEC2IEC=$<TARGET_FILE:iec2iec>"
+            "${MATIEC_BASH}" ./runtests
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/tests/syntax/identifier")
+    if(MATIEC_TEST_C_COMPILER)
+        add_test(NAME stdlib
+            COMMAND "${CMAKE_COMMAND}" -E env "CC=${MATIEC_TEST_C_COMPILER}"
+                "${MATIEC_BASH}" ./runtests
+            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/tests/stdlib")
+    else()
+        message(STATUS "tests/stdlib disabled; it needs a GCC/Clang-compatible C compiler")
+    endif()
 endif()
 
 add_test(NAME iec2iec.roundtrip

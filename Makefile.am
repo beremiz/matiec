@@ -27,16 +27,15 @@ iec2iec_SOURCES = main.cc
 
 # 'make check', or its alias 'make test', runs the runtests script of each test
 # suite, from the suite's directory, against the compilers just built.
-# tests/syntax is not listed: its test cases predate the semantic checks of
-# stage 3, and the current compiler rejects all of them.
-TEST_SUITES = tests/initialization tests/stdlib
+TEST_SUITES = tests/initialization tests/stdlib tests/syntax/identifier
 
 check-local:
 	@failed=; \
 	for suite in $(TEST_SUITES); do \
 	  echo "*** $$suite"; \
 	  (cd "$(srcdir)/$$suite" && \
-	   IEC2C="$(abs_top_builddir)/iec2c" CC="$(CC)" ./runtests) || failed="$$failed $$suite"; \
+	   IEC2C="$(abs_top_builddir)/iec2c" IEC2IEC="$(abs_top_builddir)/iec2iec" CC="$(CC)" \
+	   ./runtests) || failed="$$failed $$suite"; \
 	done; \
 	if test -n "$$failed"; then echo "FAILED test suites:$$failed"; exit 1; fi
 

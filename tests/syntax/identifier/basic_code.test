@@ -27,18 +27,22 @@
 
 function bar0005 : int
  var
-  e_1, f_1 : int;
+  e_1, f_1 : word;
  end_var
+ LD e_1
  & 10
+ ST f_1
 end_function
 
 
 
 function bar0006 : int
  var
-  e_1, f_1 : int;
+  e_1, f_1 : word;
  end_var
+ LD e_1
  &N 10
+ ST f_1
 end_function
 
 
@@ -47,24 +51,30 @@ function bar0007 : int
  var
   e_1, f_1 : int;
  end_var
+ LD f_1
  ADD 10
+ ST f_1
 end_function
 
 
 
 function bar0008 : int
  var
-  e_1, f_1 : int;
+  e_1, f_1 : bool;
  end_var
+ LD f_1
  AND TRUE
+ ST f_1
 end_function
 
 
 function bar0009 : int
  var
-  e_1, f_1 : int;
+  e_1, f_1 : bool;
  end_var
+ LD f_1
  ANDN TRUE
+ ST f_1
 end_function
 
 
@@ -82,6 +92,7 @@ function_block bar0011
   e_1, f_1 : int;
   tt : TP;
  end_var
+ LD TRUE
  CALC tt
 end_function_block
 
@@ -91,6 +102,7 @@ function_block bar0012
   e_1, f_1 : int;
   tt : TP;
  end_var
+ LD FALSE
  CALCN tt
 end_function_block
 
@@ -100,6 +112,7 @@ function_block bar0013
   e_1, f_1 : int;
   tt : CTUD;
  end_var
+ LD TRUE
  CU tt
 end_function_block
 
@@ -109,6 +122,7 @@ function_block bar0014
   e_1, f_1 : int;
   tt : CTUD;
  end_var
+ LD TRUE
  CD tt
 end_function_block
 
@@ -118,6 +132,7 @@ function_block bar0015
   e_1, f_1 : int;
   tt : R_TRIG;
  end_var
+ LD TRUE
  CLK tt
 end_function_block
 
@@ -126,31 +141,42 @@ function bar0016 : int
  var
   e_1, f_1 : int;
  end_var
+ LD f_1
  DIV e_1
+ ST f_1
 end_function
 
 
 function bar0017 : int
  var
   e_1, f_1 : int;
+  g_1 : bool;
  end_var
+ LD f_1
  EQ e_1
+ ST g_1
 end_function
 
 
 function bar0018 : int
  var
   e_1, f_1 : int;
+  g_1 : bool;
  end_var
+ LD f_1
  GE e_1
+ ST g_1
 end_function
 
 
 function bar0019 : int
  var
   e_1, f_1 : int;
+  g_1 : bool;
  end_var
+ LD f_1
  GT e_1
+ ST g_1
 end_function
 
 
@@ -159,6 +185,7 @@ function_block bar0020
   e_1, f_1 : int;
   tt : TP;
  end_var
+ LD TRUE
  IN tt
 end_function_block
 
@@ -168,7 +195,8 @@ function bar0021 : int
   e_1, f_1 : int;
  end_var
  JMP ll
- ll: LD FALSE
+ ll: LD e_1
+ ST f_1
 end_function
 
 
@@ -177,8 +205,10 @@ function bar0022 : int
  var
   e_1, f_1 : int;
  end_var
+ LD TRUE
  JMPC ll
- ll: LD FALSE
+ ll: LD e_1
+ ST f_1
 end_function
 
 
@@ -186,41 +216,51 @@ function bar0023 : int
  var
   e_1, f_1 : int;
  end_var
+ LD FALSE
  JMPCN ll
- ll: LD FALSE
+ ll: LD e_1
+ ST f_1
 end_function
 
 
 
 function bar0024 : int
  var
-  e_1, f_1 : int;
+  e_1, f_1 : bool;
  end_var
  LD TRUE
+ ST e_1
 end_function
 
 
 function bar0025 : int
  var
-  e_1, f_1 : int;
+  e_1, f_1 : bool;
  end_var
  LDN TRUE
+ ST e_1
 end_function
 
 
 function bar0026 : int
  var
   e_1, f_1 : int;
+  g_1 : bool;
  end_var
+ LD f_1
  LE e_1
+ ST g_1
 end_function
 
 
 function bar0027 : int
  var
   e_1, f_1 : int;
+  g_1 : bool;
  end_var
+ LD f_1
  LT e_1
+ ST g_1
 end_function
 
 
@@ -228,7 +268,9 @@ function bar0028 : int
  var
   e_1, f_1 : int;
  end_var
+ LD f_1
  MOD e_1
+ ST f_1
 end_function
 
 
@@ -236,39 +278,50 @@ function bar0029 : int
  var
   e_1, f_1 : int;
  end_var
+ LD f_1
  MUL e_1
+ ST f_1
 end_function
 
 
 function bar0030 : int
  var
   e_1, f_1 : int;
+  g_1 : bool;
  end_var
+ LD f_1
  NE e_1
+ ST g_1
 end_function
 
 
 function bar0031 : int
  var
-  e_1, f_1 : int;
+  e_1, f_1 : bool;
  end_var
- NOT TRUE
+ LD f_1
+ NOT
+ ST f_1
 end_function
 
 
 function bar0032 : int
  var
-  e_1, f_1 : int;
+  e_1, f_1 : bool;
  end_var
+ LD f_1
  OR TRUE
+ ST f_1
 end_function
 
 
 function bar0033 : int
  var
-  e_1, f_1 : int;
+  e_1, f_1 : bool;
  end_var
+ LD f_1
  ORN TRUE
+ ST f_1
 end_function
 
 
@@ -277,6 +330,7 @@ function_block bar0034
   e_1, f_1 : int;
   tt : TP;
  end_var
+ LD T#1s
  PT tt
 end_function_block
 
@@ -286,6 +340,7 @@ function_block bar0035
   e_1, f_1 : int;
   tt : CTUD;
  end_var
+ LD 10
  PV tt
 end_function_block
 
@@ -294,6 +349,7 @@ function bar0036 : int
  var
   e_1, f_1 : bool;
  end_var
+ LD TRUE
  R e_1     (* IL operand *)
 end_function
 
@@ -303,6 +359,7 @@ function_block bar0037
   e_1, f_1 : int;
   tt : SR;
  end_var
+ LD TRUE
  R tt     (* FB call *)
 end_function_block
 
@@ -310,8 +367,9 @@ end_function_block
 function_block bar0038
  var
   e_1, f_1 : int;
-  tt : SR;
+  tt : RS;
  end_var
+ LD TRUE
  R1 tt     (* FB call *)
 end_function_block
 
@@ -328,6 +386,7 @@ function bar0040 : int
  var
   e_1, f_1 : bool;
  end_var
+ LD TRUE
  RETC
 end_function
 
@@ -336,6 +395,7 @@ function bar0041 : int
  var
   e_1, f_1 : bool;
  end_var
+ LD FALSE
  RETCN
 end_function
 
@@ -344,6 +404,7 @@ function bar0042 : int
  var
   e_1, f_1 : bool;
  end_var
+ LD TRUE
  S e_1
 end_function
 
@@ -353,6 +414,7 @@ function_block bar0043
   e_1, f_1 : int;
   tt : SR;
  end_var
+ LD TRUE
  S1 tt     (* FB call *)
 end_function_block
 
@@ -361,6 +423,7 @@ function bar0044 : int
  var
   e_1, f_1 : bool;
  end_var
+ LD TRUE
  ST e_1
 end_function
 
@@ -369,6 +432,7 @@ function bar0045 : int
  var
   e_1, f_1 : bool;
  end_var
+ LD TRUE
  STN e_1
 end_function
 
@@ -377,7 +441,9 @@ function bar0046 : int
  var
   e_1, f_1 : int;
  end_var
+ LD f_1
  SUB e_1
+ ST f_1
 end_function
 
 
@@ -385,7 +451,9 @@ function bar0047 : int
  var
   e_1, f_1 : bool;
  end_var
+ LD f_1
  XOR e_1
+ ST f_1
 end_function
 
 
@@ -393,7 +461,9 @@ function bar0048 : int
  var
   e_1, f_1 : bool;
  end_var
+ LD f_1
  XORN e_1
+ ST f_1
 end_function
 
 
@@ -438,6 +508,7 @@ function_block bar1002
  var
   e_1, f_1 : int;
   g_1 : int;
+  h_1 : real;
   fb : bar1000;
  end_var
   fb(g_1, 20);
@@ -446,15 +517,16 @@ function_block bar1002
   fb(a_1 := 10, b_1:=20, c_1=>e_1, d_1=>g_1);
   fb (c_1=>g_1, a_1:=20, d_1=>f_1);
   g_1 := fb.c_1;
-  fb.a_1 := g_1 + g_1 * 2 * (g_1) / bar1001(g_1, 10, g_1, e_1) MOD g_1 MOD g_1 ** g_1;
+  fb.a_1 := g_1 + g_1 * 2 * (g_1) / bar1001(g_1, 10, g_1, e_1) MOD g_1 MOD g_1;
+  h_1 := h_1 ** g_1;
   IF (g_1 >= 10) THEN g_1 := 10; END_IF;
   CASE (g_1 + 10) OF
     10: g_1 := 10; 
-    10..20:g_1 := 20;
+    11..20:g_1 := 20;
     ELSE g_1 := 20;
   END_CASE;
   FOR g_1 := 10 TO 20 BY 2 DO
-    g_1 := g_1 + 1;
+    f_1 := f_1 + 1;
   END_FOR;
   FOR e_1 := g_1 TO 20 DO
     g_1 := g_1 + 1;

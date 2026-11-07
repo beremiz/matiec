@@ -37,7 +37,8 @@ function foo : int
   e, f : bool;
  end_var
 
- XXXX: R e
+ XXXX: LD TRUE
+  R e
   JMP XXXX
 end_function
 
@@ -48,6 +49,7 @@ function bar : int
   e, f : bool;
  end_var
 
+  LD TRUE
   JMP XXXX
  XXXX: R e
 end_function

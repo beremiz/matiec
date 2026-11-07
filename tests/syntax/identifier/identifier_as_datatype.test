@@ -22,7 +22,7 @@
 
 
 TYPE
- XXXX : real := 50;
+ XXXX : real := 50.0;
 END_TYPE
 
 

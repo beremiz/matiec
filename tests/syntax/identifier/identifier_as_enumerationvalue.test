@@ -22,19 +22,19 @@
 
 
 TYPE
- enum_type00 : (enum_v1, XXXX, enum_v2) := XXXX;
+ enum_type00 : (enum_v1, XXXX, enum_v2) := enum_type00#XXXX;
 END_TYPE
 
 TYPE
- enum_type01 : (XXXX, enum_v2) := XXXX;
+ enum_type01 : (XXXX, enum_v2) := enum_type01#XXXX;
 END_TYPE
 
 TYPE
- enum_type02 : (enum_v1, XXXX) := XXXX;
+ enum_type02 : (enum_v1, XXXX) := enum_type02#XXXX;
 END_TYPE
 
 TYPE
- enum_type03 : (XXXX) := XXXX;
+ enum_type03 : (XXXX) := enum_type03#XXXX;
 END_TYPE
 
 
@@ -48,7 +48,6 @@ function foo : int
   c_1, d_1: enum_type00;
  end_var
   c_1 := enum_type00#XXXX;
-  c_1 := XXXX;
 end_function
 
 

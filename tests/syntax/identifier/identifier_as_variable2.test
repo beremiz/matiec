@@ -126,7 +126,6 @@ function_block bar92
  AND XXXX
  OR XXXX
  XOR XXXX
- NOT XXXX
 end_function_block
 
 
@@ -137,16 +136,22 @@ function_block bar93
  end_var
 
  (* IL operators that - acording to the standard - are also keywords *)
+ LD XXXX
  ADD XXXX
  SUB XXXX
  MUL XXXX
  DIV XXXX
  MOD XXXX
  GE XXXX
+ LD XXXX
  GT XXXX
+ LD XXXX
  LE XXXX
+ LD XXXX
  LT XXXX
+ LD XXXX
  EQ XXXX
+ LD XXXX
  NE XXXX
 
  (* Calling function with input parameter named XXXX *)
@@ -179,6 +184,7 @@ function_block bar95
   e_1, f_1 : int;
   XXXX : foo_fb;
   fb_1 : bar93;
+  fb_2 : bar94;
  end_var
  CAL XXXX(10)
  CAL XXXX (e_1)
@@ -194,29 +200,39 @@ function_block bar95
     c_1 => e_1
    )
 
+ LD TRUE
  CALC XXXX(10)
+ LD TRUE
  CALC XXXX (e_1)
+ LD TRUE
  CALC XXXX (10, e_1, e_1, f_1)
+ LD TRUE
  CALC XXXX (
     a_1 := 10,
     b_1 := e_1,
     c_1 => e_1,
     d_1 => f_1
    )
+ LD TRUE
  CALC XXXX (
     a_1 := 10,
     c_1 => e_1
    )
 
+ LD TRUE
  CALCN XXXX(10)
+ LD TRUE
  CALCN XXXX (e_1)
+ LD TRUE
  CALCN XXXX (10, e_1, e_1, f_1)
+ LD TRUE
  CALCN XXXX (
     a_1 := 10,
     b_1 := e_1,
     c_1 => e_1,
     d_1 => f_1
    )
+ LD TRUE
  CALCN XXXX (
     a_1 := 10,
     c_1 => e_1
@@ -226,8 +242,8 @@ function_block bar95
  ST XXXX.b_1
  LD fb_1.XXXX
  ST fb_1.XXXX
- LD fb_1.XXXX.a_1
- ST fb_1.XXXX.a_1
+ LD fb_2.XXXX.a_1
+ ST fb_2.XXXX.a_1
 
  LD XXXX
  foo_f2 XXXX, e_1, f_1
@@ -256,8 +272,10 @@ function_block bar96
   e_1, f_1 : int;
   XXXX : CTUD;
  end_var
+ LD TRUE
  CU XXXX
  CD XXXX
+ LD 10
  PV XXXX
 end_function_block
 
@@ -267,6 +285,7 @@ function_block bar97
   e_1, f_1 : int;
   XXXX : R_TRIG;
  end_var
+ LD TRUE
  CLK XXXX
 end_function_block
 
@@ -277,7 +296,9 @@ function_block bar98
   e_1, f_1 : int;
   XXXX : TP;
  end_var
+ LD TRUE
  IN XXXX
+ LD T#1s
  PT XXXX
 end_function_block
 
@@ -288,8 +309,20 @@ function_block bar99
   e_1, f_1 : int;
   XXXX : SR;
  end_var
- R1 XXXX
+ LD TRUE
  S1 XXXX
+ R XXXX
+end_function_block
+
+
+function_block bar99a
+ var
+  e_1, f_1 : int;
+  XXXX : RS;
+ end_var
+ LD TRUE
+ S XXXX
+ R1 XXXX
 end_function_block
 
 

@@ -45,7 +45,7 @@
 
 function XXXX : int
  var_input
-  a_1, b_1: int;
+  a_1, b_1, c_1: int;
  end_var
   XXXX := a_1 + b_1;
 end_function
@@ -73,6 +73,7 @@ function bar000 : int
  var
   e_1, f_1 : int;
  end_var
+  LD 20
   XXXX 10
   LD 20
   XXXX 30
@@ -103,6 +104,7 @@ function bar001 : int
  var
   e_1, f_1 : int;
  end_var
+  LD 20
   XXXX 10
 end_function
 
@@ -111,6 +113,7 @@ function bar002 : int
  var
   e_1, f_1 : int;
  end_var
+  LD 20
   XXXX 10, 20
 end_function
 

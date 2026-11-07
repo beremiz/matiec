@@ -151,8 +151,10 @@ large LREAL literals, and installation relocation through paths with spaces.
 The relocation test adds a function to its private installed library to verify
 that lookup uses that library rather than the source tree.
 The `stdlib` test runs `tests/stdlib/runtests`, the sanitizer-instrumented unit
-tests of `lib/C`. It needs `bash` and `MATIEC_TEST_C_COMPILER`, and is not
-run on Windows.
+tests of `lib/C`, and needs `MATIEC_TEST_C_COMPILER`. The `syntax.identifier`
+test runs `tests/syntax/identifier/runtests`, checking that IL operators, SFC
+qualifiers and task initialisers may be used as identifiers. Both need `bash`,
+and are not run on Windows.
 
 - `BUILD_TESTING=OFF`: omit tests.
 - `MATIEC_TEST_C_COMPILER=<path>`: GCC/Clang-compatible compiler for generated C.
