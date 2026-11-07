@@ -628,6 +628,9 @@ void *fill_candidate_datatypes_c::handle_S_and_R_operator(symbol_c *symbol, cons
 	 */
 	symbol_c *prev_instruction_type, *operand_type;
 
+	/* NULL selects the Set/Reset semantics, for later stages too. The AST constructors do not initialise it! */
+	called_fb_declaration = NULL;
+
 	if (NULL == prev_il_instruction) return NULL;
 	if (NULL == il_operand)          return NULL;
 
