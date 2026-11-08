@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Test that the generated C code, and the lib/C headers it includes, compile
+# without a single warning, with the warnings PLC builds get:
+#   - the compiler's default ones, as Beremiz Linux targets build PLC code,
+#     clang's -Wvarargs and -Wparentheses-equality among them.
+#   - with GCC, the -Wdouble-promotion Zephyr adds. Clang's variant of it also
+#     flags the long double arithmetic of lib/C, that is left as is.
+#
+#   ok_*.st --> must be accepted by the compiler, and the C code it generates must
+#               compile without a single diagnostic, wherever it comes from.
+
+# IEC2C may name the compiler under test ('make check' does), the default
+# being the one of an in-tree build.
+IEC2C=${IEC2C:-../../iec2c}
+IEC2C_FLAGS="-f -l -p -I ../../lib"
+OUTDIR="./output"
+
+CC=${CC:-gcc}
+CC_FLAGS="-fsyntax-only -I. -I../../../lib/C"
+
+if ! type $CC > /dev/null 2>&1
+  then echo "NOTE: '$CC' not found, the generated C code cannot be compiled."; exit 1
+fi
+if ! $CC -dM -E -x c /dev/null | grep -q __clang__
+  then CC_FLAGS="$CC_FLAGS -Wdouble-promotion"
+fi
+
+rm -rf $OUTDIR
+mkdir -p $OUTDIR
+error=0
+
+for ff in `ls ok_*.st`
+do
+  rm -rf $OUTDIR/*
+  if ! "$IEC2C" $IEC2C_FLAGS -T $OUTDIR $ff > $ff.out 2> $ff.err
+    then echo "[ERROR]   " $ff "-> should have been accepted:"; sed "s/^/             /" $ff.err; error=1; continue
+  fi
+  # NOTE: POUS.c is not compiled on its own, it is #include'd by all the files below!
+  cc_diagnostics=`cd $OUTDIR && for cfile in \`ls *.c | grep -v "^POUS\.c$"\`; do $CC $CC_FLAGS $cfile 2>&1; done`
+  if test -n "$cc_diagnostics"
+    then echo "[ERROR]   " $ff "-> the generated C code does not compile cleanly:"
+         echo "$cc_diagnostics" | sed "s/^/             /"
+         error=1
+    else echo "[ O K ]   " $ff
+  fi
+done
+
+echo
+if `test $error = 1`
+  then echo "FAILURE -> At least one of the tests failed!"
+  else echo "SUCCESS -> All tests passed!"
+fi
+
+exit $error

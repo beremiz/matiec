@@ -174,8 +174,11 @@ that lookup uses that library rather than the source tree.
 The `stdlib` test runs `tests/stdlib/runtests`, the sanitizer-instrumented unit
 tests of `lib/C`, and needs `MATIEC_TEST_C_COMPILER`. The `syntax.identifier`
 test runs `tests/syntax/identifier/runtests`, checking that IL operators, SFC
-qualifiers and task initialisers may be used as identifiers. Both need `bash`,
-and are not run on Windows.
+qualifiers and task initialisers may be used as identifiers. The `warnings`
+test runs `tests/warnings/runtests`, checking that the C code generated for
+calls of extensible functions and for conditions, with the `lib/C` headers it
+includes, compiles without a single warning by `MATIEC_TEST_C_COMPILER`. These
+three need `bash`, and are not run on Windows.
 
 - `BUILD_TESTING=OFF`: omit tests.
 - `MATIEC_TEST_C_COMPILER=<path>`: GCC/Clang-compatible compiler for generated C.

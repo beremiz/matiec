@@ -32,10 +32,11 @@ endforeach()
 # The other test suites of tests/ are run by their runtests script, as the
 # autotools 'make check' does (tests/initialization/runtests runs the cases above).
 # tests/stdlib builds the C unit tests of lib/C with the sanitizers of a
-# GCC/Clang-compatible compiler.
+# GCC/Clang-compatible compiler, and tests/warnings checks the C code generated
+# with that compiler's warnings.
 find_program(MATIEC_BASH bash)
 if(NOT MATIEC_BASH OR WIN32)
-    message(STATUS "tests/stdlib and tests/syntax/identifier disabled; they need bash on a POSIX host")
+    message(STATUS "tests/stdlib, tests/syntax/identifier and tests/warnings disabled; they need bash on a POSIX host")
 else()
     add_test(NAME syntax.identifier
         COMMAND "${CMAKE_COMMAND}" -E env "IEC2IEC=$<TARGET_FILE:iec2iec>"
@@ -46,8 +47,12 @@ else()
             COMMAND "${CMAKE_COMMAND}" -E env "CC=${MATIEC_TEST_C_COMPILER}"
                 "${MATIEC_BASH}" ./runtests
             WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/tests/stdlib")
+        add_test(NAME warnings
+            COMMAND "${CMAKE_COMMAND}" -E env "IEC2C=$<TARGET_FILE:iec2c>"
+                "CC=${MATIEC_TEST_C_COMPILER}" "${MATIEC_BASH}" ./runtests
+            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/tests/warnings")
     else()
-        message(STATUS "tests/stdlib disabled; it needs a GCC/Clang-compatible C compiler")
+        message(STATUS "tests/stdlib and tests/warnings disabled; they need a GCC/Clang-compatible C compiler")
     endif()
 endif()
 
