@@ -755,6 +755,15 @@ void *visit(equ_expression_c *symbol) {
       get_datatype_info_c::is_ANY_DATE_compatible  (symbol->l_exp->datatype) ||
       get_datatype_info_c::is_ANY_STRING_compatible(symbol->l_exp->datatype))
     return print_compare_function("EQ", symbol->l_exp->datatype, symbol->l_exp, symbol->r_exp);
+  if (   (NULL != dynamic_cast<    if_statement_c *>(symbol->parent))
+      || (NULL != dynamic_cast<elseif_statement_c *>(symbol->parent))
+      || (NULL != dynamic_cast< while_statement_c *>(symbol->parent))) {
+    /* The condition already is in parentheses, and clang warns about "if ((a == b))" */
+    symbol->l_exp->accept(*this);
+    s4o.print(" == ");
+    symbol->r_exp->accept(*this);
+    return NULL;
+  }
   return print_binary_expression(symbol->l_exp, symbol->r_exp, " == ");
 }
 
@@ -1336,22 +1345,23 @@ void *visit(case_list_c *symbol) {
      *     10..20,42,15..99:  <---- C code is for this line!
      * 
      *    else if ((__case_expression >= 10 && __case_expression <= 20) ||
-     *             (__case_expression == 42) ||
+     *             __case_expression == 42 ||
      *             (__case_expression >= 15 && __case_expression <= 99)) {
+     *
+     * clang warns about "if ((__case_expression == 42))", so only subranges get parentheses.
      */
     if (0 != i)  s4o.print(" ||\n" + s4o.indent_spaces + "         ");
-    s4o.print("(");
     subrange_c *subrange = dynamic_cast<subrange_c *>(symbol->get_element(i));
     if (NULL == subrange) {
       s4o.print("__case_expression == ");
       symbol->get_element(i)->accept(*this);
     } else {
-      s4o.print("__case_expression >= ");
+      s4o.print("(__case_expression >= ");
       subrange->lower_limit->accept(*this);
       s4o.print(" && __case_expression <= ");
       subrange->upper_limit->accept(*this);
+      s4o.print(")");
     }
-    s4o.print(")");
   }
   s4o.print(")");
   return NULL;

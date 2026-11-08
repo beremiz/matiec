@@ -710,7 +710,7 @@ __SET_VAR(data__->,CURRENT_TIME,,__CURRENT_TIME)
     __SET_VAR(data__->,STATE,,1);
     __SET_VAR(data__->,Q,,__BOOL_LITERAL(TRUE));
     __SET_VAR(data__->,START_TIME,,__GET_VAR(data__->CURRENT_TIME,));
-  } else if ((__GET_VAR(data__->STATE,) == 1)) {
+  } else if (__GET_VAR(data__->STATE,) == 1) {
     if (___LE_TIME(2, __time_add(__GET_VAR(data__->START_TIME,), __GET_VAR(data__->PT,)), __GET_VAR(data__->CURRENT_TIME,))) {
       __SET_VAR(data__->,STATE,,2);
       __SET_VAR(data__->,Q,,__BOOL_LITERAL(FALSE));
@@ -767,7 +767,7 @@ __SET_VAR(data__->,CURRENT_TIME,,__CURRENT_TIME)
       __SET_VAR(data__->,ET,,__time_to_timespec(1, 0, 0, 0, 0, 0));
       __SET_VAR(data__->,Q,,__BOOL_LITERAL(FALSE));
       __SET_VAR(data__->,STATE,,0);
-    } else if ((__GET_VAR(data__->STATE,) == 1)) {
+    } else if (__GET_VAR(data__->STATE,) == 1) {
       if (___LE_TIME(2, __time_add(__GET_VAR(data__->START_TIME,), __GET_VAR(data__->PT,)), __GET_VAR(data__->CURRENT_TIME,))) {
         __SET_VAR(data__->,STATE,,2);
         __SET_VAR(data__->,Q,,__BOOL_LITERAL(TRUE));
@@ -819,7 +819,7 @@ __SET_VAR(data__->,CURRENT_TIME,,__CURRENT_TIME)
     if (__GET_VAR(data__->IN,)) {
       __SET_VAR(data__->,ET,,__time_to_timespec(1, 0, 0, 0, 0, 0));
       __SET_VAR(data__->,STATE,,0);
-    } else if ((__GET_VAR(data__->STATE,) == 1)) {
+    } else if (__GET_VAR(data__->STATE,) == 1) {
       if (___LE_TIME(2, __time_add(__GET_VAR(data__->START_TIME,), __GET_VAR(data__->PT,)), __GET_VAR(data__->CURRENT_TIME,))) {
         __SET_VAR(data__->,STATE,,2);
         __SET_VAR(data__->,ET,,__GET_VAR(data__->PT,));
