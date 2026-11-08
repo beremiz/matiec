@@ -251,11 +251,11 @@ static inline IEC_TIMESPEC __time_to_timespec(int sign, double mseconds, double 
  */
 #define __time_to_timespec(sign,mseconds,seconds,minutes,hours,days) \
           ((IEC_TIMESPEC){\
-              /*tv_sec  =*/ ((int64_t)   (((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3))), \
+              /*tv_sec  =*/ ((int64_t)   (((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3L))), \
               /*tv_nsec =*/ ((int32_t)(( \
-                            ((long double)(((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3))) - \
-                            ((long int)   (((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3)))   \
-                            )*1e9))\
+                            ((long double)(((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3L))) - \
+                            ((long int)   (((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3L)))   \
+                            )*1e9L))\
         })
 
 
@@ -280,7 +280,7 @@ static inline IEC_TIMESPEC __tod_to_timespec(double seconds, double minutes, dou
               /*tv_nsec =*/ ((int32_t)(( \
                             ((long double)((((long double)hours)*60 + (long double)minutes)*60 + (long double)seconds)) - \
                             ((long int)   ((((long double)hours)*60 + (long double)minutes)*60 + (long double)seconds))   \
-                            )*1e9))\
+                            )*1e9L))\
         })
 
 
