@@ -265,9 +265,8 @@ __ANY_UINT(__iec_)
 #undef __iec_
 
 /******** [ANY_REAL]_TO_STRING   ************/ 
-#define __iec_(from_TYPENAME) __convert_type(from_TYPENAME, STRING, __real_to_string)
-__ANY_REAL(__iec_)
-#undef __iec_
+__convert_type(REAL, STRING, __real32_to_string)
+__convert_type(LREAL, STRING, __real_to_string)
 
 /******** [ANY_DATE]_TO_STRING   ************/ 
 __convert_type(DATE, STRING, __date_to_string)

@@ -449,10 +449,18 @@ static inline STRING __bit_to_string(LWORD IN) {
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
+/* Any LREAL is read back exactly from 17 significant digits, any REAL from 9 */
 static inline STRING __real_to_string(LREAL IN) {
     STRING res;
     res = __INIT_STRING;
-    res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "%.10g", IN);
+    res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "%.17g", IN);
+    if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
+    return res;
+}
+static inline STRING __real32_to_string(REAL IN) {
+    STRING res;
+    res = __INIT_STRING;
+    res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "%.9g", (LREAL)IN);
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
