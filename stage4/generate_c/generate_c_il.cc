@@ -944,6 +944,8 @@ void *visit(il_function_call_c *symbol) {
     }
     
     ADD_PARAM_LIST(param_name, param_value, param_type, fp_iterator.param_direction())
+    /* In the C runtime, extensible params go through ... */
+    param->param_is_variadic = fp_iterator.is_extensible_param();
   } /* for(...) */
 
   if (function_call_param_iterator.next_nf() != NULL) ERROR;
@@ -1021,6 +1023,8 @@ void *visit(il_function_call_c *symbol) {
         }
         if (param_value == NULL) ERROR;
         s4o.print("(");
+        if (PARAM_IS_VARIADIC)
+          s4o.print("VA_ARGS_");
         if (get_datatype_info_c::is_ANY_INT_literal(current_param_type))
           get_datatype_info_c::lint_type_name.accept(*this);
         else if (get_datatype_info_c::is_ANY_REAL_literal(current_param_type))
@@ -1344,6 +1348,8 @@ void *visit(il_formal_funct_call_c *symbol) {
     }
     
     ADD_PARAM_LIST(param_name, param_value, param_type, fp_iterator.param_direction())
+    /* In the C runtime, extensible params go through ... */
+    param->param_is_variadic = fp_iterator.is_extensible_param();
   }
   
   if (function_call_param_iterator.next_nf() != NULL) ERROR;
@@ -1426,6 +1432,8 @@ void *visit(il_formal_funct_call_c *symbol) {
         }
         if (param_value == NULL) ERROR;
         s4o.print("(");
+        if (PARAM_IS_VARIADIC)
+          s4o.print("VA_ARGS_");
         if      (get_datatype_info_c::is_ANY_INT_literal(current_param_type))
                  get_datatype_info_c::lint_type_name.accept(*this);
         else if (get_datatype_info_c::is_ANY_REAL_literal(current_param_type))

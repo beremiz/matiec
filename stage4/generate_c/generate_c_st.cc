@@ -943,6 +943,8 @@ void *visit(function_invocation_c *symbol) {
     }
     
     ADD_PARAM_LIST(param_name, param_value, param_type, param_direction)
+    /* In the C runtime, extensible params go through ... */
+    param->param_is_variadic = fp_iterator.is_extensible_param();
   } /* for(...) */
   // symbol->parameter_assignment->accept(*this);
   
@@ -1000,6 +1002,8 @@ void *visit(function_invocation_c *symbol) {
         }
         if (param_value == NULL) ERROR;
         s4o.print("(");
+        if (PARAM_IS_VARIADIC)
+          s4o.print("VA_ARGS_");
         if      (get_datatype_info_c::is_ANY_INT_literal(current_param_type))
           get_datatype_info_c::lint_type_name.accept(*this);
         else if (get_datatype_info_c::is_ANY_REAL_literal(current_param_type))

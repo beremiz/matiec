@@ -293,13 +293,23 @@ class generate_c_base_c: public iterator_visitor_c {
         s4o.print("__BOOL_LITERAL(TRUE), "); // function has EN parameter, pass TRUE
       if (search_var.get_vartype(&eno_var) == search_var_instance_decl_c::output_vt)
         s4o.print("NULL, "); // function has ENO parameter, pass NULL
-      if (strcmp(function, "NE") != 0) // All comparison library functions are extensible, except for 'NE'!!
+      bool is_extensible = (strcmp(function, "NE") != 0); // All comparison library functions are extensible, except for 'NE'!!
+      if (is_extensible)
         s4o.print("2, "); // function is extensible, so must first pass the number of parameters that follow
+      if (is_extensible) print_va_args_cast(compare_type);
       l_exp->accept(*this);
       s4o.print(", ");
+      if (is_extensible) print_va_args_cast(compare_type);
       r_exp->accept(*this);
       s4o.print(")");
       return NULL;
+    }
+
+    /* In the C runtime, extensible params go through ... and va_arg() reads them as VA_ARGS_<type> */
+    void print_va_args_cast(symbol_c *type) {
+      s4o.print("(VA_ARGS_");
+      type->accept(*this);
+      s4o.print(")");
     }
 
     void *print_check_function(symbol_c *type,

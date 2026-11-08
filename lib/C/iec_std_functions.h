@@ -362,6 +362,11 @@ __ANY_NBIT(__to_anyuint_)
 /***********************************/  
 
 /* workaround for va-args limitation on shorter than int params */
+/* Extensible functions take all their extensible operands through "...", and
+ * va_arg() reads each one as VA_ARGS_<type>, its type once default argument
+ * promotions applied. Callers cast operands to that type.
+ * Promotions must not apply to the last named parameter either, as va_start()
+ * behavior is undefined then: param_count is an UDINT. */
 #define VA_ARGS_REAL LREAL
 #define VA_ARGS_LREAL LREAL
 #define VA_ARGS_SINT DINT
@@ -383,16 +388,6 @@ __ANY_NBIT(__to_anyuint_)
 #define VA_ARGS_DATE DATE
 #define VA_ARGS_TOD TOD
 #define VA_ARGS_DT DT
-
-/* Older GCC's va_start expansion looks like a function call to the compiler,
- * which triggers -Wdouble-promotion when the last named argument is a REAL
- * (float). The promoted value is never used by va_start, so suppress the
- * diagnostic locally. */
-#define __VA_START(ap, last) \
-  _Pragma("GCC diagnostic push") \
-  _Pragma("GCC diagnostic ignored \"-Wdouble-promotion\"") \
-  va_start (ap, last); \
-  _Pragma("GCC diagnostic pop")
 
 
 #define __numeric(fname,TYPENAME, FUNC) \
@@ -529,14 +524,16 @@ __ANY_REAL(__atan)
 /*****************************************************/
 
 #define __arith_expand(fname,TYPENAME, OP)\
-static inline TYPENAME ___##fname(EN_ENO_PARAMS UINT param_count, TYPENAME op1, ...){\
+static inline TYPENAME ___##fname(EN_ENO_PARAMS UDINT param_count, ...){\
   va_list ap;\
   UINT i;\
+  TYPENAME op1;\
   TEST_EN(TYPENAME)\
   \
-  __VA_START (ap, op1);       /* Initialize the argument list.  */\
+  va_start (ap, param_count);   /* Initialize the argument list.  */\
+  op1 = (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
   \
-  for (i = 0; i < param_count - 1; i++){\
+  for (i = 1; i < param_count; i++){\
     op1 = op1 OP (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
   }\
   \
@@ -801,14 +798,16 @@ __ANY_NBIT(__iec_)
   /*     XOR    */
   /**************/
 #define __xorbool_expand(fname) \
-static inline BOOL ___##fname(EN_ENO_PARAMS UINT param_count, BOOL op1, ...){ \
+static inline BOOL ___##fname(EN_ENO_PARAMS UDINT param_count, ...){ \
   va_list ap; \
   UINT i; \
+  BOOL op1; \
   TEST_EN(BOOL) \
 \
-  __VA_START (ap, op1);       /* Initialize the argument list.  */ \
+  va_start (ap, param_count);   /* Initialize the argument list.  */ \
+  op1 = (BOOL) va_arg (ap, VA_ARGS_BOOL); \
 \
-  for (i = 0; i < param_count - 1; i++){ \
+  for (i = 1; i < param_count; i++){ \
     BOOL tmp = (BOOL) va_arg (ap, VA_ARGS_BOOL); \
     op1 = (op1 && !tmp) || (!op1 && tmp); \
   } \
@@ -910,14 +909,16 @@ __ANY(__iec_)
     /**************/
 
 #define __extrem_(fname,TYPENAME, COND) \
-static inline TYPENAME ___##fname(EN_ENO_PARAMS UINT param_count, TYPENAME op1, ...){\
+static inline TYPENAME ___##fname(EN_ENO_PARAMS UDINT param_count, ...){\
   va_list ap;\
   UINT i;\
+  TYPENAME op1;\
   TEST_EN(TYPENAME)\
   \
-  __VA_START (ap, op1);       /* Initialize the argument list.  */\
+  va_start (ap, param_count);   /* Initialize the argument list.  */\
+  op1 = (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
   \
-  for (i = 0; i < param_count - 1; i++){\
+  for (i = 1; i < param_count; i++){\
     TYPENAME tmp = (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
     op1 = COND ? tmp : op1;\
   }\
@@ -1040,7 +1041,7 @@ static inline STRING ___LIMIT__STRING__STRING__STRING__STRING(EN_ENO_PARAMS STRI
 /* The explicitly typed standard functions */
 #define __in1_anyint_(in2_TYPENAME)   __ANY_INT_1(__iec_,in2_TYPENAME)
 #define __iec_(in1_TYPENAME,in2_TYPENAME) \
-static inline in2_TYPENAME ___MUX__##in2_TYPENAME##__##in1_TYPENAME##__##in2_TYPENAME(EN_ENO_PARAMS in1_TYPENAME K, UINT param_count, ...){\
+static inline in2_TYPENAME ___MUX__##in2_TYPENAME##__##in1_TYPENAME##__##in2_TYPENAME(EN_ENO_PARAMS in1_TYPENAME K, UDINT param_count, ...){\
   va_list ap;\
   UINT i;\
   in2_TYPENAME tmp;\
@@ -1073,16 +1074,18 @@ __ANY(__in1_anyint_)
 /******************************************/
 
 #define __compare_(fname,TYPENAME, COND) \
-static inline BOOL ___##fname(EN_ENO_PARAMS UINT param_count, TYPENAME op1, ...){\
+static inline BOOL ___##fname(EN_ENO_PARAMS UDINT param_count, ...){\
   va_list ap;\
   UINT i;\
+  TYPENAME op1;\
   TEST_EN(BOOL)\
   \
-  __VA_START (ap, op1);       /* Initialize the argument list.  */\
+  va_start (ap, param_count);   /* Initialize the argument list.  */\
+  op1 = (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
   DBG(#fname #TYPENAME "\n")\
   DBG_TYPE(TYPENAME, op1)\
   \
-  for (i = 0; i < param_count - 1; i++){\
+  for (i = 1; i < param_count; i++){\
     TYPENAME tmp = (TYPENAME) va_arg (ap, VA_ARGS_##TYPENAME);\
     DBG_TYPE(TYPENAME, tmp)\
     if(COND){\
@@ -1274,7 +1277,6 @@ __ne_string(NE__BOOL__STRING__STRING, STRING) /* Overloaded function */
 #undef __ne_num
 #undef __ne_time
 #undef __ne_string
-#undef __VA_START
 
 
 
@@ -1374,7 +1376,7 @@ __ANY_INT(__mid)
     /*     CONCAT     */
     /******************/
 
-static inline STRING ___CONCAT(EN_ENO_PARAMS UINT param_count, ...){
+static inline STRING ___CONCAT(EN_ENO_PARAMS UDINT param_count, ...){
   UINT i;
   STRING res;
   va_list ap;
