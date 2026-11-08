@@ -1404,6 +1404,7 @@ void *visit(il_formal_funct_call_c *symbol) {
   }
   else {
     if (function_name != NULL) {
+      s4o.print("___");
       function_name->accept(*this);
       if (fdecl_mutiplicity > 1) {
         /* function being called is overloaded! */
