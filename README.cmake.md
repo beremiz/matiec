@@ -93,6 +93,27 @@ ctest --preset msvc
 Command-line options precede the input file. Clustered flags, attached option
 values, and `--` to terminate options are supported by the MSVC argument parser.
 
+## WebAssembly (emscripten)
+
+The `emscripten` preset builds `iec2c` with the [emsdk](https://emscripten.org)
+pointed to by `EMSDK`, as an ES module for web workers and node:
+`build-emscripten/bin/iec2c.mjs` and `iec2c.wasm`. Beremiz's standalone browser
+IDE runs it this way.
+
+```sh
+cmake --preset emscripten
+cmake --build --preset emscripten --parallel
+```
+
+The module's default export creates an instance; `callMain(argv)` runs `iec2c`
+once and returns its exit code, or throws an `ExitStatus` carrying it. Since iec2c
+keeps global state and exits on errors, use a new instance for each run. Pass
+`wasmModule` (a `WebAssembly.Module` compiled once) with an empty `wasmBinary` to
+create instances synchronously without compiling again
+(`cmake/emscripten_module_shim.js`). Files are in the module's `FS`; with
+`FS.filesystems.PROXYFS`, a directory of another emscripten module's file system
+can be mounted.
+
 ## macOS and other systems
 
 For macOS, install the command-line developer tools and the CMake, Ninja, Bison,

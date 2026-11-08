@@ -34,12 +34,26 @@
       "generator": "Visual Studio 17 2022",
       "architecture": "x64",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "emscripten",
+      "displayName": "WebAssembly, iec2c as an ES module for web workers and node (emsdk)",
+      "inherits": "base",
+      "generator": "Ninja",
+      "toolchainFile": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "BUILD_TESTING": "OFF",
+        "CMAKE_EXECUTABLE_SUFFIX_CXX": ".mjs",
+        "CMAKE_EXE_LINKER_FLAGS": "-sMODULARIZE=1 -sEXPORT_ES6=1 -sEXPORT_NAME=createIec2c -sINVOKE_RUN=0 -sEXIT_RUNTIME=1 -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=8MB -sWASM_ASYNC_COMPILATION=0 -sENVIRONMENT=worker,node -sFORCE_FILESYSTEM=1 -sEXPORTED_RUNTIME_METHODS=FS,callMain -lproxyfs.js --pre-js=${sourceDir}/cmake/emscripten_module_shim.js"
+      }
     }
   ],
   "buildPresets": [
     { "name": "native", "configurePreset": "native" },
     { "name": "mingw", "configurePreset": "mingw" },
-    { "name": "msvc", "configurePreset": "msvc", "configuration": "Release" }
+    { "name": "msvc", "configurePreset": "msvc", "configuration": "Release" },
+    { "name": "emscripten", "configurePreset": "emscripten", "targets": ["iec2c"] }
   ],
   "testPresets": [
     { "name": "native", "configurePreset": "native", "output": { "outputOnFailure": true } },
