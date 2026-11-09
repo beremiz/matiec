@@ -686,8 +686,10 @@ static inline TIME __string_to_time(STRING IN){
     l = IN.len;
     while(l > 0 && IN.body[--l] != '.');
     if(l != 0){
-        LREAL IN_val = __iec_lib_atof((char*)IN.body, IN.len);
-        return  (TIME){(long)IN_val, (long)(IN_val - (LINT)IN_val)*1000000000};
+        /* rounded to the nearest nanosecond: 0.3 is 0.29999999999999999 as an LREAL */
+        LREAL ns = __iec_lib_atof((char*)IN.body, IN.len) * 1e9;
+        LINT total = (LINT)(ns >= 0 ? ns + 0.5 : ns - 0.5);
+        return  (TIME){total / 1000000000, total % 1000000000};
     }else{
         return  (TIME){(long)__pstring_to_sint(&IN), 0};
     }
