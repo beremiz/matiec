@@ -13,8 +13,7 @@
 TIME __CURRENT_TIME;
 BOOL __DEBUG;
 
-/* only called for an exponent, none of the strings below has one */
-double iec_lib_pow(double x, double y) {abort();}
+double iec_lib_strtod(const char *nptr, char **endptr) {return strtod(nptr, endptr);}
 
 static int failures = 0;
 
@@ -45,5 +44,7 @@ int main(void) {
   expect("-0.3", 0, -300000000);
   expect(".5", 0, 500000000);
   expect("-.5", 0, -500000000);
+  expect("1.5E-3", 0, 1500000);
+  expect("1_000.5", 1000, 500000000);
   return failures;
 }

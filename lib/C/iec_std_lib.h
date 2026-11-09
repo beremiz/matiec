@@ -61,6 +61,8 @@ extern TIME __CURRENT_TIME;
 // Redirected snprintf function (calls runtime's implementation)
 int iec_lib_snprintf(char *__s, size_t __maxlen, const char *__format, ...);
 int iec_lib_snprintf(char *__s, size_t __maxlen, const char *__format, ...);
+double iec_lib_strtod(const char *nptr, char **endptr);
+float iec_lib_strtof(const char *nptr, char **endptr);
 double iec_lib_acos(double x);
 double iec_lib_asin(double x);
 double iec_lib_atan(double x);
@@ -443,18 +445,29 @@ static inline STRING __bit_to_string(LWORD IN) {
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
-/* Any LREAL is read back exactly from 17 significant digits, any REAL from 9 */
+/* As few significant digits as reading the value back needs: 6.8, not
+ * 6.7999999999999998. A number of up to 15 digits (DBL_DIG) is printed back
+ * as it was read, and any LREAL is read back from 17. For a REAL, 6 (FLT_DIG)
+ * to 9. */
 static inline STRING __real_to_string(LREAL IN) {
     STRING res;
+    int digits;
     res = __INIT_STRING;
-    res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "%.17g", IN);
+    for (digits = 15; ; digits++) {
+        res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "%.*g", digits, IN);
+        if (digits == 17 || iec_lib_strtod((char*)res.body, NULL) == IN) break;
+    }
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
 static inline STRING __real32_to_string(REAL IN) {
     STRING res;
+    int digits;
     res = __INIT_STRING;
-    res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "%.9g", (LREAL)IN);
+    for (digits = 6; ; digits++) {
+        res.len = iec_lib_snprintf((char*)res.body, STR_MAX_LEN, "%.*g", digits, (LREAL)IN);
+        if (digits == 9 || iec_lib_strtof((char*)res.body, NULL) == IN) break;
+    }
     if(res.len > STR_MAX_LEN) res.len = STR_MAX_LEN;
     return res;
 }
@@ -546,66 +559,14 @@ static inline LINT __pstring_to_sint(STRING* IN) {
     return res;
 }
 
-static inline LREAL __iec_lib_atof(char *str, __strlen_t l) {
-    double result = 0.0;
-    double fraction = 0.0;
-    double exponent = 1;
-    int divisor = 1;
-    int sign = 1;
-    int seen_dot = 0;
-    int seen_exponent = 0;
-    char* end = str + l; // l cant be 0 if is_real
-
-    // Handle sign
-    if (*str == '-') {
-        sign = -1;
-        str++;
-    }
-    // Parse digits
-    while (str < end) {
-        if (seen_exponent) {
-            if (*str >= '0' && *str <= '9') {
-                exponent = exponent * 10 + (*str - '0');
-            }
-            str++;
-        } else if (seen_dot) {
-            // Handle exponent only if . was seen already
-            if (*str == 'E') {
-                seen_exponent = 1;
-                str++;
-                if (str < end && *str == '-') {
-                    exponent = -1;
-                    str++;
-                }
-            } else {
-                if (*str >= '0' && *str <= '9') {
-                    fraction = fraction * 10.0 + (*str - '0');
-                    divisor *= 10;
-                }
-                str++;
-            }
-        } else if (*str == '.') {
-            seen_dot = 1;
-            str++;
-        } else {
-            if (*str >= '0' && *str <= '9') {
-                result = result * 10.0 + (*str - '0');
-            }
-            str++;
-        }
-    }
-
-    result += fraction / divisor;
-    if (seen_exponent) {
-        result *= iec_lib_pow(10, exponent);
-    }
-    return (LREAL) (sign * result);
-}
-
-static inline LREAL __string_to_lreal(STRING* IN) {
+/* The number in IN as a C string in buf, without its REAL# or LREAL# prefix
+ * nor its '_', for iec_lib_strtod() and iec_lib_strtof(). NULL if IN is an
+ * integer: without prefix, dot nor exponent. */
+static inline char *__real_cstring(char *buf, STRING* IN) {
     int is_real = 0;
     char *str = (char*)IN->body;
     __strlen_t l = IN->len;
+    char *c = buf;
 
     if((l > 5
        && str[0]=='R'
@@ -627,26 +588,33 @@ static inline LREAL __string_to_lreal(STRING* IN) {
         l -= 6;
         is_real = 1;
     } else {
-        /* search the dot */
+        /* search the dot, or the exponent but in digits of 16#1E */
         __strlen_t _l = l;
-        while(_l > 0 && str[_l - 1] != '.') _l--;
+        int hex = l > 2 && str[0]=='1' && str[1]=='6' && str[2]=='#';
+        while(_l > 0 && str[_l - 1] != '.' && (hex || (str[_l - 1] != 'E' && str[_l - 1] != 'e'))) _l--;
         is_real = (_l != 0);
     }
 
-    if(is_real){
-        return __iec_lib_atof(str, l);
-    }else{
-        return (LREAL)__pstring_to_sint(IN);
-    }
+    if(!is_real) return NULL;
+    for (; l > 0; str++, l--) if (*str != '_') *c++ = *str;
+    *c = '\0';
+    return buf;
+}
 
-
+static inline LREAL __string_to_lreal(STRING IN) {
+    char buf[STR_MAX_LEN + 1];
+    return __real_cstring(buf, &IN) ? iec_lib_strtod(buf, NULL) : (LREAL)__pstring_to_sint(&IN);
+}
+/* strtof(): rounding to an LREAL first may not give the REAL nearest to the number */
+static inline REAL __string_to_real(STRING IN) {
+    char buf[STR_MAX_LEN + 1];
+    return __real_cstring(buf, &IN) ? iec_lib_strtof(buf, NULL) : (REAL)__pstring_to_sint(&IN);
 }
 
 
 static inline LINT  __string_to_sint(STRING IN) {return (LINT)__pstring_to_sint(&IN);}
 static inline LWORD __string_to_bit (STRING IN) {return (LWORD)__pstring_to_sint(&IN);}
 static inline ULINT __string_to_uint(STRING IN) {return (ULINT)__pstring_to_sint(&IN);}
-static inline LREAL __string_to_real(STRING IN) {return (REAL)__string_to_lreal(&IN);}
 
     /***************/
     /*   TO_TIME   */
@@ -681,7 +649,7 @@ static inline TIME __string_to_time(STRING IN){
     while(l > 0 && IN.body[l - 1] != '.') l--;
     if(l != 0){
         /* rounded to the nearest nanosecond: 0.3 is 0.29999999999999999 as an LREAL */
-        LREAL ns = __iec_lib_atof((char*)IN.body, IN.len) * 1e9;
+        LREAL ns = __string_to_lreal(IN) * 1e9;
         LINT total = (LINT)(ns >= 0 ? ns + 0.5 : ns - 0.5);
         return  (TIME){total / 1000000000, total % 1000000000};
     }else{
