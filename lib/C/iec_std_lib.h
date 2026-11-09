@@ -629,7 +629,7 @@ static inline LREAL __string_to_lreal(STRING* IN) {
     } else {
         /* search the dot */
         __strlen_t _l = l;
-        while(_l > 0 && str[--_l] != '.');
+        while(_l > 0 && str[_l - 1] != '.') _l--;
         is_real = (_l != 0);
     }
 
@@ -678,7 +678,7 @@ static inline TIME __string_to_time(STRING IN){
     /* Quick hack : only transform seconds */
     /* search the dot */
     l = IN.len;
-    while(l > 0 && IN.body[--l] != '.');
+    while(l > 0 && IN.body[l - 1] != '.') l--;
     if(l != 0){
         /* rounded to the nearest nanosecond: 0.3 is 0.29999999999999999 as an LREAL */
         LREAL ns = __iec_lib_atof((char*)IN.body, IN.len) * 1e9;
