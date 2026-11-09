@@ -224,11 +224,9 @@ static inline void __normalize_timespec (IEC_TIMESPEC *ts) {
  *          tv_sec  = -4                 <-----  -1 *  3.8 is rounded down when converting a double to an int!
  *          tv_nsec = -7 800 000 000     <-----  -1 * (3.8 - -4)*1e9
  */
-/* NOTE: Due to the fact that the C compiler may round a tv_sec number away from zero, 
- *       the following macro may result in a timespec that is not normalized, i.e. with a tv_sec > 0, and a tv_nsec < 0 !!!!
- *       This is due to the rounding that C compiler applies when converting a (long double) to a (long int).
- *       To produce normalized timespec's we need to use floor(), but we cannot call any library functions since we want this macro to be 
- *       useable as a variable initializer.
+/* NOTE: The following macro truncates the seconds, and rounds the nanoseconds of their fraction to the nearest, as
+ *       T#0.3s is 0.29999999999999999 s: tv_sec and tv_nsec have the same sign. It calls no library function, since we want
+ *       this macro to be useable as a variable initializer.
  *       VAR x : TIME = T#3.5h; END_VAR --->  IEC_TIME x = __time_to_timespec(1, 0, 0, 0, 3.5, 0);
  */
 /*
@@ -249,14 +247,16 @@ static inline IEC_TIMESPEC __time_to_timespec(int sign, double mseconds, double 
  *       They are therefore commented out. This however means that any change to the definition of IEC_TIMESPEC may require this
  *       macro to be updated too!
  */
-#define __time_to_timespec(sign,mseconds,seconds,minutes,hours,days) \
+/* nanoseconds of the fraction of non negative seconds, rounded: 1000000000 carries to seconds */
+#define __sec_fraction_to_nsec(sec) ((int64_t)(((sec) - (int64_t)(sec))*1e9L + 0.5L))
+#define __sec_to_timespec(sign,sec) \
           ((IEC_TIMESPEC){\
-              /*tv_sec  =*/ ((int64_t)   (((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3L))), \
-              /*tv_nsec =*/ ((int32_t)(( \
-                            ((long double)(((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3L))) - \
-                            ((long int)   (((sign>=0)?1:-1)*((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3L)))   \
-                            )*1e9L))\
+              /*tv_sec  =*/ (sign) * ((int64_t)(sec) + __sec_fraction_to_nsec(sec) / 1000000000), \
+              /*tv_nsec =*/ (sign) * (int32_t)(__sec_fraction_to_nsec(sec) % 1000000000) \
         })
+#define __time_to_timespec(sign,mseconds,seconds,minutes,hours,days) \
+          __sec_to_timespec(((sign>=0)?1:-1), \
+              ((((long double)days*24 + (long double)hours)*60 + (long double)minutes)*60 + (long double)seconds + (long double)mseconds/1e3L))
 
 
 
@@ -275,13 +275,7 @@ static inline IEC_TIMESPEC __tod_to_timespec(double seconds, double minutes, dou
 }
 */
 #define __tod_to_timespec(seconds,minutes,hours) \
-          ((IEC_TIMESPEC){\
-              /*tv_sec  =*/ ((int64_t)   ((((long double)hours)*60 + (long double)minutes)*60 + (long double)seconds)), \
-              /*tv_nsec =*/ ((int32_t)(( \
-                            ((long double)((((long double)hours)*60 + (long double)minutes)*60 + (long double)seconds)) - \
-                            ((long int)   ((((long double)hours)*60 + (long double)minutes)*60 + (long double)seconds))   \
-                            )*1e9L))\
-        })
+          __sec_to_timespec(1, ((((long double)hours)*60 + (long double)minutes)*60 + (long double)seconds))
 
 
 #define EPOCH_YEAR 1970
