@@ -155,13 +155,17 @@ __DECLARE_COMPLEX_STRUCT(type)
 #define __INIT_GLOBAL_LOCATED(domain, name, location, retained)\
 	domain##__##name.value = location;\
 	__INIT_RETAIN(domain##__##name, retained)
+// Getter of the global is declared here, as POUs are also compiled where it
+// isn't, e.g. config.c for globals of resources
 #define __INIT_EXTERNAL(type, global, name, retained)\
     {\
+		extern type* __GET_GLOBAL_##global(void);\
 		name.value = __GET_GLOBAL_##global();\
 		__INIT_RETAIN(name, retained)\
     }
 #define __INIT_EXTERNAL_FB(type, global, name, retained)\
-	name = __GET_GLOBAL_##global();
+	{extern type##_data__* __GET_GLOBAL_##global(void);\
+	name = __GET_GLOBAL_##global();}
 #define __INIT_LOCATED(type, location, name, retained)\
 	{\
 		extern type *location;\

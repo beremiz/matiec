@@ -1147,11 +1147,6 @@ class generate_c_pous_c {
       }
 
       if (!print_declaration) {
-        /* (A.7) Function Block inline function declaration for function invocation */
-        generate_c_inlinefcall_c *inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
-        symbol->fblock_body->accept(*inlinedecl);
-        delete inlinedecl;
-
         /* (B) Constructor */
         /* (B.1) Constructor name... */
         s4o.print(s4o.indent_spaces + "static void ");
@@ -1193,10 +1188,17 @@ class generate_c_pous_c {
         /* (C) Function with FB body */
         delete sfcdecl;
 
-        /* (C.3) Function definition */
         /* Skip the executable body in init-only translation units (e.g. config.c),
          * which only need the constructor above. */
         s4o.print("#ifndef __POUS_INIT_ONLY__\n");
+
+        /* (A.7) Function Block inline function declaration for function invocation,
+         * these functions are called by the body only */
+        generate_c_inlinefcall_c *inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->fblock_name, symbol, FB_FUNCTION_PARAM"->");
+        symbol->fblock_body->accept(*inlinedecl);
+        delete inlinedecl;
+
+        /* (C.3) Function definition */
         s4o.print("// Code part\n");
         /* function interface */
         s4o.print("static void ");
@@ -1332,6 +1334,10 @@ class generate_c_pous_c {
         s4o.print(")\n\n");
 
       } else {
+        /* Skip program altogether in init-only translation units (e.g. config.c):
+         * programs are instantiated by resources only, config never constructs them. */
+        s4o.print("#ifndef __POUS_INIT_ONLY__\n");
+
         /* (A.7) Function Block inline function declaration for function invocation */
         generate_c_inlinefcall_c *inlinedecl = new generate_c_inlinefcall_c(&s4o, symbol->program_type_name, symbol, FB_FUNCTION_PARAM"->");
         symbol->function_block_body->accept(*inlinedecl);
@@ -1376,8 +1382,6 @@ class generate_c_pous_c {
         /* (C) Function with PROGRAM body */
 
         /* (C.3) Function definition */
-        /* Skip the executable body in init-only translation units (e.g. config.c). */
-        s4o.print("#ifndef __POUS_INIT_ONLY__\n");
         s4o.print("// Code part\n");
         /* function interface */
         s4o.print("static void ");
@@ -1478,6 +1482,8 @@ class generate_c_pous_c {
     static void handle_program_fwd_decl(program_declaration_c *symbol, stage4out_c &s4o) {
       generate_c_base_and_typeid_c print_base(&s4o);
 
+      /* No program in init-only translation units, see handle_program() */
+      s4o.print("#ifndef __POUS_INIT_ONLY__\n");
       s4o.print("static void ");
       symbol->program_type_name->accept(print_base);
       s4o.print(FB_INIT_SUFFIX);
@@ -1488,7 +1494,6 @@ class generate_c_pous_c {
       s4o.print(FB_FUNCTION_PARAM);
       s4o.print(", BOOL retain);\n");
 
-      s4o.print("#ifndef __POUS_INIT_ONLY__\n");
       s4o.print("static void ");
       symbol->program_type_name->accept(print_base);
       s4o.print(FB_FUNCTION_SUFFIX);
